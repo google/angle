@@ -428,7 +428,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
 {
     ASSERT(srcTexture);
 
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     invalidateSwizzleCacheLevel(level);
 
@@ -681,26 +681,26 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     // with compressed formats in the calling logic.
     ASSERT(!internalFormatInfo.compressed);
 
-    int width  = destBox ? destBox->width : static_cast<int>(image->getWidth());
-    int height = destBox ? destBox->height : static_cast<int>(image->getHeight());
-    int depth = destBox ? destBox->depth : static_cast<int>(image->getDepth());
-    UINT srcRowPitch =
+    const int width  = destBox ? destBox->width : static_cast<int>(image->getWidth());
+    const int height = destBox ? destBox->height : static_cast<int>(image->getHeight());
+    const int depth = destBox ? destBox->depth : static_cast<int>(image->getDepth());
+    const UINT srcRowPitch =
         internalFormatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength);
-    UINT srcDepthPitch = internalFormatInfo.computeDepthPitch(type, width, height, unpack.alignment,
-                                                              unpack.rowLength, unpack.imageHeight);
-    GLsizei srcSkipBytes = internalFormatInfo.computeSkipPixels(
+    const UINT srcDepthPitch = internalFormatInfo.computeDepthPitch(
+        type, width, height, unpack.alignment, unpack.rowLength, unpack.imageHeight);
+    const GLsizei srcSkipBytes = internalFormatInfo.computeSkipPixels(
         srcRowPitch, srcDepthPitch, unpack.skipImages, unpack.skipRows, unpack.skipPixels);
 
     const d3d11::TextureFormat &d3d11Format = d3d11::GetTextureFormatInfo(
         image->getInternalFormat(), mRenderer->getRenderer11DeviceCaps());
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3d11Format.texFormat);
 
-    size_t outputPixelSize = dxgiFormatInfo.pixelBytes;
+    const size_t outputPixelSize = dxgiFormatInfo.pixelBytes;
 
     UINT bufferRowPitch   = static_cast<unsigned int>(outputPixelSize) * width;
     UINT bufferDepthPitch = bufferRowPitch * height;
 
-    size_t neededSize              = bufferDepthPitch * depth;
+    const size_t neededSize        = bufferDepthPitch * depth;
     MemoryBuffer *conversionBuffer = nullptr;
     const uint8_t *data            = nullptr;
 
@@ -998,7 +998,7 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
 
 void TextureStorage11_2D::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
 
@@ -1011,7 +1011,7 @@ void TextureStorage11_2D::associateImage(Image11 *image, const gl::ImageIndex &i
 bool TextureStorage11_2D::isAssociatedImageValid(const gl::ImageIndex &index,
                                                  Image11 *expectedImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
@@ -1028,7 +1028,7 @@ bool TextureStorage11_2D::isAssociatedImageValid(const gl::ImageIndex &index,
 // disassociateImage allows an Image to end its association with a Storage.
 void TextureStorage11_2D::disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
 
@@ -1048,7 +1048,7 @@ void TextureStorage11_2D::disassociateImage(const gl::ImageIndex &index, Image11
 gl::Error TextureStorage11_2D::releaseAssociatedImage(const gl::ImageIndex &index,
                                                       Image11 *incomingImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
 
@@ -1174,7 +1174,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
 {
     ASSERT(!index.hasLayer());
 
-    int level = index.mipIndex;
+    const int level = index.mipIndex;
     ASSERT(level >= 0 && level < getLevelCount());
 
     // In GL ES 2.0, the application can only render to level zero of the texture (Section 4.4.3 of
@@ -2000,8 +2000,8 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZero
 
 void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
@@ -2018,8 +2018,8 @@ void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex 
 bool TextureStorage11_Cube::isAssociatedImageValid(const gl::ImageIndex &index,
                                                    Image11 *expectedImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
@@ -2039,8 +2039,8 @@ bool TextureStorage11_Cube::isAssociatedImageValid(const gl::ImageIndex &index,
 // disassociateImage allows an Image to end its association with a Storage.
 void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
@@ -2064,8 +2064,8 @@ void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image
 gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::ImageIndex &index,
                                                         Image11 *incomingImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
@@ -2197,8 +2197,8 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
 gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
                                                  RenderTargetD3D **outRT)
 {
-    int faceIndex = index.layerIndex;
-    int level     = index.mipIndex;
+    const int faceIndex = index.layerIndex;
+    const int level     = index.mipIndex;
 
     ASSERT(level >= 0 && level < getLevelCount());
     ASSERT(faceIndex >= 0 && faceIndex < CUBE_FACE_COUNT);
@@ -2586,7 +2586,7 @@ TextureStorage11_3D::~TextureStorage11_3D()
 
 void TextureStorage11_3D::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
 
@@ -2599,7 +2599,7 @@ void TextureStorage11_3D::associateImage(Image11 *image, const gl::ImageIndex &i
 bool TextureStorage11_3D::isAssociatedImageValid(const gl::ImageIndex &index,
                                                  Image11 *expectedImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
@@ -2616,7 +2616,7 @@ bool TextureStorage11_3D::isAssociatedImageValid(const gl::ImageIndex &index,
 // disassociateImage allows an Image to end its association with a Storage.
 void TextureStorage11_3D::disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
 
@@ -2636,7 +2636,7 @@ void TextureStorage11_3D::disassociateImage(const gl::ImageIndex &index, Image11
 gl::Error TextureStorage11_3D::releaseAssociatedImage(const gl::ImageIndex &index,
                                                       Image11 *incomingImage)
 {
-    GLint level = index.mipIndex;
+    const GLint level = index.mipIndex;
 
     ASSERT((0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS));
 
@@ -2741,7 +2741,7 @@ gl::Error TextureStorage11_3D::createSRV(int baseLevel,
 
 gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
 {
-    int mipLevel = index.mipIndex;
+    const int mipLevel = index.mipIndex;
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
     ASSERT(mRenderTargetFormat != DXGI_FORMAT_UNKNOWN);
@@ -2802,7 +2802,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
     }
     else
     {
-        int layer = index.layerIndex;
+        const int layer = index.layerIndex;
 
         LevelLayerKey key(mipLevel, layer);
         if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
@@ -3013,8 +3013,8 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
 
 void TextureStorage11_2DArray::associateImage(Image11 *image, const gl::ImageIndex &index)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < getLevelCount());
 
@@ -3028,8 +3028,8 @@ void TextureStorage11_2DArray::associateImage(Image11 *image, const gl::ImageInd
 bool TextureStorage11_2DArray::isAssociatedImageValid(const gl::ImageIndex &index,
                                                       Image11 *expectedImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     LevelLayerKey key(level, layerTarget);
 
@@ -3045,8 +3045,8 @@ bool TextureStorage11_2DArray::isAssociatedImageValid(const gl::ImageIndex &inde
 void TextureStorage11_2DArray::disassociateImage(const gl::ImageIndex &index,
                                                  Image11 *expectedImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     LevelLayerKey key(level, layerTarget);
 
@@ -3065,8 +3065,8 @@ void TextureStorage11_2DArray::disassociateImage(const gl::ImageIndex &index,
 gl::Error TextureStorage11_2DArray::releaseAssociatedImage(const gl::ImageIndex &index,
                                                            Image11 *incomingImage)
 {
-    GLint level       = index.mipIndex;
-    GLint layerTarget = index.layerIndex;
+    const GLint level       = index.mipIndex;
+    const GLint layerTarget = index.layerIndex;
 
     LevelLayerKey key(level, layerTarget);
 
@@ -3175,8 +3175,8 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
 {
     ASSERT(index.hasLayer());
 
-    int mipLevel = index.mipIndex;
-    int layer    = index.layerIndex;
+    const int mipLevel = index.mipIndex;
+    const int layer    = index.layerIndex;
 
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
