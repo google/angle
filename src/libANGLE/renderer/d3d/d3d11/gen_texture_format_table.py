@@ -248,14 +248,13 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
 }}  // namespace rx
 """
 
-def get_texture_format_item(idx, texture_format):
+def get_texture_format_item(idx, requirements_fn, angle_format):
     table_data = '';
 
-    tex_format = texture_format["texFormat"] if "texFormat" in texture_format else "DXGI_FORMAT_UNKNOWN"
-    srv_format = texture_format["srvFormat"] if "srvFormat" in texture_format else "DXGI_FORMAT_UNKNOWN"
-    rtv_format = texture_format["rtvFormat"] if "rtvFormat" in texture_format else "DXGI_FORMAT_UNKNOWN"
-    dsv_format = texture_format["dsvFormat"] if "dsvFormat" in texture_format else "DXGI_FORMAT_UNKNOWN"
-    requirements_fn = texture_format["requirementsFcn"] if "requirementsFcn" in texture_format else "AnyDevice"
+    tex_format = angle_format["texFormat"] if "texFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
+    srv_format = angle_format["srvFormat"] if "srvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
+    rtv_format = angle_format["rtvFormat"] if "rtvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
+    dsv_format = angle_format["dsvFormat"] if "dsvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
 
     if idx == 0:
         table_data += '            if (' + requirements_fn + '(renderer11DeviceCaps))\n'
@@ -272,24 +271,20 @@ def get_texture_format_item(idx, texture_format):
 
     return table_data
 
-def parse_json_into_switch_string(json_data):
+def parse_json_into_switch_string(json_map, json_data):
     table_data = ''
+    angle_format_map = {}
 
-    def format_sort(texture_format):
-        if 'requirementsFcn' in texture_format:
-            return texture_format['requirementsFcn']
-        elif 'texFormat' in texture_format:
-            return texture_format['texFormat']
-        else:
-            return texture_format
-
-    for internal_format_item in sorted(json_data.iteritems()):
+    for internal_format_item in sorted(json_map.iteritems()):
         internal_format = internal_format_item[0]
         table_data += '        case ' + internal_format + ':\n'
         table_data += '        {\n'
 
-        for idx, texture_format in enumerate(sorted(json_data[internal_format], key=format_sort)):
-            table_data += get_texture_format_item(idx, texture_format)
+        if isinstance(json_map[internal_format], basestring):
+            table_data += get_texture_format_item(0, "AnyDevice", json_data[json_map[internal_format]])
+        else:
+            for idx, requirements_map in enumerate(sorted(json_map[internal_format].iteritems())):
+                table_data += get_texture_format_item(idx, requirements_map[0], json_data[requirements_map[1]])
 
         table_data += '            else\n'
         table_data += '            {\n'
@@ -299,14 +294,27 @@ def parse_json_into_switch_string(json_data):
 
     return table_data
 
-with open('texture_format_data.json') as texture_format_json_file:
-    texture_format_data = texture_format_json_file.read();
-    texture_format_json_file.close()
-    json_data = json.loads(texture_format_data)
+def reject_duplicate_keys(pairs):
+    found_keys = {}
+    for key, value in pairs:
+        if key in found_keys:
+           raise ValueError("duplicate key: %r" % (key,))
+        else:
+           found_keys[key] = value
+    return found_keys
 
-    table_data = parse_json_into_switch_string(json_data)
-    output = template.format(data=table_data)
+with open('texture_format_map.json') as texture_format_map_file:
+    with open('texture_format_data.json') as texture_format_json_file:
+        texture_format_map = texture_format_map_file.read()
+        texture_format_data = texture_format_json_file.read()
+        texture_format_map_file.close()
+        texture_format_json_file.close()
+        json_map = json.loads(texture_format_map, object_pairs_hook=reject_duplicate_keys)
+        json_data = json.loads(texture_format_data, object_pairs_hook=reject_duplicate_keys)
 
-    with open('texture_format_table_autogen.cpp', 'wt') as out_file:
-        out_file.write(output)
-        out_file.close()
+        table_data = parse_json_into_switch_string(json_map, json_data)
+        output = template.format(data=table_data)
+
+        with open('texture_format_table_autogen.cpp', 'wt') as out_file:
+            out_file.write(output)
+            out_file.close()
