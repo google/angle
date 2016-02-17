@@ -274,12 +274,21 @@ def get_texture_format_item(idx, texture_format):
 
 def parse_json_into_switch_string(json_data):
     table_data = ''
+
+    def format_sort(texture_format):
+        if 'requirementsFcn' in texture_format:
+            return texture_format['requirementsFcn']
+        elif 'texFormat' in texture_format:
+            return texture_format['texFormat']
+        else:
+            return texture_format
+
     for internal_format_item in sorted(json_data.iteritems()):
         internal_format = internal_format_item[0]
         table_data += '        case ' + internal_format + ':\n'
         table_data += '        {\n'
 
-        for idx, texture_format in enumerate(sorted(json_data[internal_format])):
+        for idx, texture_format in enumerate(sorted(json_data[internal_format], key=format_sort)):
             table_data += get_texture_format_item(idx, texture_format)
 
         table_data += '            else\n'
