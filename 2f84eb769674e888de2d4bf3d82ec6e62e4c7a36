@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d8fa87c_bb5552cb",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:45:10Z",
+      "side": 1,
+      "message": "do you think we should use a struct type for the metadata inside the shader instead of a packed set of int values? this should make the resulting shader code more readable. we\u0027d have to make sure we respect HLSL packing rules.",
+      "range": {
+        "startLine": 254,
+        "startChar": 20,
+        "endLine": 254,
+        "endChar": 40
+      },
+      "revId": "2f84eb769674e888de2d4bf3d82ec6e62e4c7a36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd82644f_46f7b2a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:45:10Z",
+      "side": 1,
+      "message": "this is good.",
+      "range": {
+        "startLine": 2301,
+        "startChar": 4,
+        "endLine": 2304,
+        "endChar": 29
+      },
+      "revId": "2f84eb769674e888de2d4bf3d82ec6e62e4c7a36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
