@@ -15,6 +15,7 @@
 #include "common/platform.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.h"
 
 namespace rx
 {
@@ -37,6 +38,10 @@ struct LoadImageFunctionInfo
 struct DXGIFormatSet
 {
     DXGIFormatSet();
+    DXGIFormatSet(DXGI_FORMAT texFormat,
+                  DXGI_FORMAT srvFormat,
+                  DXGI_FORMAT rtvFormat,
+                  DXGI_FORMAT dsvFormat);
     DXGIFormatSet(const DXGIFormatSet &) = default;
     DXGIFormatSet &operator=(const DXGIFormatSet &) = default;
 
@@ -49,10 +54,7 @@ struct DXGIFormatSet
 struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
-                  DXGI_FORMAT texFormat,
-                  DXGI_FORMAT srvFormat,
-                  DXGI_FORMAT rtvFormat,
-                  DXGI_FORMAT dsvFormat,
+                  const DXGIFormatSet &formatSet,
                   InitializeTextureDataFunction internalFormatInitializer);
 
     DXGIFormatSet formatSet;
@@ -63,6 +65,8 @@ struct TextureFormat : public angle::NonCopyable
 
     LoadFunctionMap loadFunctions;
 };
+
+const DXGIFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat);
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalformat,
                                           const Renderer11DeviceCaps &renderer11DeviceCaps);

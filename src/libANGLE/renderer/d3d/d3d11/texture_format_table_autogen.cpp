@@ -111,24 +111,18 @@ DXGIFormatSet::DXGIFormatSet()
 // This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
 TextureFormat::TextureFormat(GLenum internalFormat,
-                             DXGI_FORMAT texFormat,
-                             DXGI_FORMAT srvFormat,
-                             DXGI_FORMAT rtvFormat,
-                             DXGI_FORMAT dsvFormat,
+                             const DXGIFormatSet &formatSet,
                              InitializeTextureDataFunction internalFormatInitializer)
-    : dataInitializerFunction(internalFormatInitializer)
+    : formatSet(formatSet), dataInitializerFunction(internalFormatInitializer)
 {
-    formatSet.texFormat = texFormat;
-    formatSet.srvFormat = srvFormat;
-    formatSet.rtvFormat = rtvFormat;
-    formatSet.dsvFormat = dsvFormat;
 
     // Compute the swizzle formats
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (internalFormat != GL_NONE && formatInfo.pixelBytes > 0)
     {
-        if (formatInfo.componentCount != 4 || texFormat == DXGI_FORMAT_UNKNOWN ||
-            srvFormat == DXGI_FORMAT_UNKNOWN || rtvFormat == DXGI_FORMAT_UNKNOWN)
+        if (formatInfo.componentCount != 4 || formatSet.texFormat == DXGI_FORMAT_UNKNOWN ||
+            formatSet.srvFormat == DXGI_FORMAT_UNKNOWN ||
+            formatSet.rtvFormat == DXGI_FORMAT_UNKNOWN)
         {
             // Get the maximum sized component
             unsigned int maxBits = 1;
@@ -172,9 +166,489 @@ TextureFormat::TextureFormat(GLenum internalFormat,
     }
 
     // Gather all the load functions for this internal format
-    loadFunctions = GetLoadFunctionsMap(internalFormat, texFormat);
+    loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet.texFormat);
 
     ASSERT(loadFunctions.size() != 0 || internalFormat == GL_NONE);
+}
+
+DXGIFormatSet::DXGIFormatSet(DXGI_FORMAT texFormat,
+                             DXGI_FORMAT srvFormat,
+                             DXGI_FORMAT rtvFormat,
+                             DXGI_FORMAT dsvFormat)
+    : texFormat(texFormat), srvFormat(srvFormat), rtvFormat(rtvFormat), dsvFormat(dsvFormat)
+{
+}
+
+const DXGIFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
+{
+    // clang-format off
+    switch (angleFormat)
+    {
+        case ANGLE_FORMAT_A8_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_A8_UNORM,
+                                                  DXGI_FORMAT_A8_UNORM,
+                                                  DXGI_FORMAT_A8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_B4G4R4A4_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                  DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                  DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_B5G5R5A1_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                  DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                  DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_B5G6R5_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_B5G6R5_UNORM,
+                                                  DXGI_FORMAT_B5G6R5_UNORM,
+                                                  DXGI_FORMAT_B5G6R5_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_B8G8R8A8_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_B8G8R8A8_UNORM,
+                                                  DXGI_FORMAT_B8G8R8A8_UNORM,
+                                                  DXGI_FORMAT_B8G8R8A8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_BC1_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_BC1_UNORM,
+                                                  DXGI_FORMAT_BC1_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_BC2_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_BC2_UNORM,
+                                                  DXGI_FORMAT_BC2_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_BC3_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_BC3_UNORM,
+                                                  DXGI_FORMAT_BC3_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D16_UNORM_FL10:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16_TYPELESS,
+                                                  DXGI_FORMAT_R16_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D16_UNORM);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D16_UNORM_FL9_3:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_D16_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D16_UNORM);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D24_UNORM_S8_UINT_FL10:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R24G8_TYPELESS,
+                                                  DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D24_UNORM_S8_UINT);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D24_UNORM_S8_UINT_FL9_3:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D24_UNORM_S8_UINT);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D32_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32_TYPELESS,
+                                                  DXGI_FORMAT_R32_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D32_FLOAT);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_D32_FLOAT_S8X24_UINT_FL10:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G8X24_TYPELESS,
+                                                  DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_NONE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R10G10B10A2_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R10G10B10A2_UINT,
+                                                  DXGI_FORMAT_R10G10B10A2_UINT,
+                                                  DXGI_FORMAT_R10G10B10A2_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R10G10B10A2_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R10G10B10A2_UNORM,
+                                                  DXGI_FORMAT_R10G10B10A2_UNORM,
+                                                  DXGI_FORMAT_R10G10B10A2_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R11G11B10_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R11G11B10_FLOAT,
+                                                  DXGI_FORMAT_R11G11B10_FLOAT,
+                                                  DXGI_FORMAT_R11G11B10_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16B16A16_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16B16A16_FLOAT,
+                                                  DXGI_FORMAT_R16G16B16A16_FLOAT,
+                                                  DXGI_FORMAT_R16G16B16A16_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16B16A16_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16B16A16_SINT,
+                                                  DXGI_FORMAT_R16G16B16A16_SINT,
+                                                  DXGI_FORMAT_R16G16B16A16_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16B16A16_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16B16A16_UINT,
+                                                  DXGI_FORMAT_R16G16B16A16_UINT,
+                                                  DXGI_FORMAT_R16G16B16A16_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16_FLOAT,
+                                                  DXGI_FORMAT_R16G16_FLOAT,
+                                                  DXGI_FORMAT_R16G16_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16_SINT,
+                                                  DXGI_FORMAT_R16G16_SINT,
+                                                  DXGI_FORMAT_R16G16_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16G16_UINT,
+                                                  DXGI_FORMAT_R16G16_UINT,
+                                                  DXGI_FORMAT_R16G16_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16_FLOAT,
+                                                  DXGI_FORMAT_R16_FLOAT,
+                                                  DXGI_FORMAT_R16_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16_SINT,
+                                                  DXGI_FORMAT_R16_SINT,
+                                                  DXGI_FORMAT_R16_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R16_UINT,
+                                                  DXGI_FORMAT_R16_UINT,
+                                                  DXGI_FORMAT_R16_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32B32A32_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT,
+                                                  DXGI_FORMAT_R32G32B32A32_FLOAT,
+                                                  DXGI_FORMAT_R32G32B32A32_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32B32A32_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32B32A32_SINT,
+                                                  DXGI_FORMAT_R32G32B32A32_SINT,
+                                                  DXGI_FORMAT_R32G32B32A32_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32B32A32_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32B32A32_UINT,
+                                                  DXGI_FORMAT_R32G32B32A32_UINT,
+                                                  DXGI_FORMAT_R32G32B32A32_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32_FLOAT,
+                                                  DXGI_FORMAT_R32G32_FLOAT,
+                                                  DXGI_FORMAT_R32G32_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32_SINT,
+                                                  DXGI_FORMAT_R32G32_SINT,
+                                                  DXGI_FORMAT_R32G32_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32G32_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32G32_UINT,
+                                                  DXGI_FORMAT_R32G32_UINT,
+                                                  DXGI_FORMAT_R32G32_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32_FLOAT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32_FLOAT,
+                                                  DXGI_FORMAT_R32_FLOAT,
+                                                  DXGI_FORMAT_R32_FLOAT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32_SINT,
+                                                  DXGI_FORMAT_R32_SINT,
+                                                  DXGI_FORMAT_R32_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R32_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R32_UINT,
+                                                  DXGI_FORMAT_R32_UINT,
+                                                  DXGI_FORMAT_R32_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_SINT,
+                                                  DXGI_FORMAT_R8G8B8A8_SINT,
+                                                  DXGI_FORMAT_R8G8B8A8_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_SNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_SNORM,
+                                                  DXGI_FORMAT_R8G8B8A8_SNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_UINT,
+                                                  DXGI_FORMAT_R8G8B8A8_UINT,
+                                                  DXGI_FORMAT_R8G8B8A8_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_UNORM_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                                  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_SINT,
+                                                  DXGI_FORMAT_R8G8_SINT,
+                                                  DXGI_FORMAT_R8G8_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_SNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_SNORM,
+                                                  DXGI_FORMAT_R8G8_SNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_SNORM_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_SNORM,
+                                                  DXGI_FORMAT_R8G8_SNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_UINT,
+                                                  DXGI_FORMAT_R8G8_UINT,
+                                                  DXGI_FORMAT_R8G8_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_UNORM,
+                                                  DXGI_FORMAT_R8G8_UNORM,
+                                                  DXGI_FORMAT_R8G8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8G8_UNORM_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8G8_UNORM,
+                                                  DXGI_FORMAT_R8G8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_SINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_SINT,
+                                                  DXGI_FORMAT_R8_SINT,
+                                                  DXGI_FORMAT_R8_SINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_SNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_SNORM,
+                                                  DXGI_FORMAT_R8_SNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_SNORM_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_SNORM,
+                                                  DXGI_FORMAT_R8_SNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_UINT,
+                                                  DXGI_FORMAT_R8_UINT,
+                                                  DXGI_FORMAT_R8_UINT,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_UNORM:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_UNORM,
+                                                  DXGI_FORMAT_R8_UNORM,
+                                                  DXGI_FORMAT_R8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R8_UNORM_NONRENDERABLE:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R8_UNORM,
+                                                  DXGI_FORMAT_R8_UNORM,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R9G9B9E5_SHAREDEXP:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
+                                                  DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_UNKNOWN);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_X24_TYPELESS_G8_UINT:
+        {
+            static const DXGIFormatSet formatInfo(DXGI_FORMAT_R24G8_TYPELESS,
+                                                  DXGI_FORMAT_X24_TYPELESS_G8_UINT,
+                                                  DXGI_FORMAT_UNKNOWN,
+                                                  DXGI_FORMAT_D24_UNORM_S8_UINT);
+            return formatInfo;
+        }
+
+        default:
+            break;
+    }
+    // clang-format on
+
+    UNREACHABLE();
+    static const DXGIFormatSet defaultInfo;
+    return defaultInfo;
 }
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
@@ -188,20 +662,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
@@ -213,20 +681,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_ALPHA16F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_ALPHA32F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
@@ -235,20 +697,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
@@ -260,40 +716,28 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_BGR5_A1_ANGLEX:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_B8G8R8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_BGRA4_ANGLEX:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_B8G8R8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_BGRA8_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_B8G8R8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_BGRA_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_B8G8R8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
@@ -302,10 +746,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8_UNORM,
-                                                         DXGI_FORMAT_R8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8_UNORM_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -319,10 +760,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8_UNORM,
-                                                         DXGI_FORMAT_R8G8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8_UNORM_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -336,10 +774,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_NONRENDERABLE),
                                                          Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
                 return textureFormat;
             }
@@ -353,10 +788,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_NONRENDERABLE),
                                                          Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
                 return textureFormat;
             }
@@ -370,10 +802,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -385,40 +814,28 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_BC1_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_BC2_UNORM,
-                                                     DXGI_FORMAT_BC2_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_BC2_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_BC3_UNORM,
-                                                     DXGI_FORMAT_BC3_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_BC3_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_BC1_UNORM),
                                                      nullptr);
             return textureFormat;
         }
@@ -427,10 +844,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8_SNORM,
-                                                         DXGI_FORMAT_R8_SNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8_SNORM_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -444,10 +858,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8_SNORM,
-                                                         DXGI_FORMAT_R8G8_SNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8_SNORM_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -461,10 +872,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -478,10 +886,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB_NONRENDERABLE),
                                                          Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
                 return textureFormat;
             }
@@ -495,10 +900,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB_NONRENDERABLE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -512,20 +914,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R24G8_TYPELESS,
-                                                         DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL10),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL9_3),
                                                          nullptr);
                 return textureFormat;
             }
@@ -539,20 +935,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R32G8X24_TYPELESS,
-                                                         DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D32_FLOAT_S8X24_UINT_FL10),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_NONE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -566,20 +956,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R16_TYPELESS,
-                                                         DXGI_FORMAT_R16_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D16_UNORM,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D16_UNORM_FL10),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_D16_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D16_UNORM,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D16_UNORM_FL9_3),
                                                          nullptr);
                 return textureFormat;
             }
@@ -593,20 +977,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R24G8_TYPELESS,
-                                                         DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL10),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL9_3),
                                                          nullptr);
                 return textureFormat;
             }
@@ -620,20 +998,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R32_TYPELESS,
-                                                         DXGI_FORMAT_R32_FLOAT,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D32_FLOAT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D32_FLOAT),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_NONE),
                                                          nullptr);
                 return textureFormat;
             }
@@ -647,10 +1019,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R24G8_TYPELESS,
-                                                         DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL10),
                                                          nullptr);
                 return textureFormat;
             }
@@ -662,410 +1031,287 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_BC1_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_BC1_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_ETC1_RGB8_OES:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_NONRENDERABLE),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_LUMINANCE:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_LUMINANCE16F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_FLOAT),
                                                      Initialize4ComponentData<GLhalf, 0x0000, 0x0000, 0x0000, gl::Float16One>);
             return textureFormat;
         }
         case GL_LUMINANCE32F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_FLOAT),
                                                      Initialize4ComponentData<GLfloat, 0x00000000, 0x00000000, 0x00000000, gl::Float32One>);
             return textureFormat;
         }
         case GL_LUMINANCE8_ALPHA8_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_LUMINANCE8_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_LUMINANCE_ALPHA:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_LUMINANCE_ALPHA16F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_LUMINANCE_ALPHA32F_EXT:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_NONE:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_NONE),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R11F_G11F_B10F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R11G11B10_FLOAT,
-                                                     DXGI_FORMAT_R11G11B10_FLOAT,
-                                                     DXGI_FORMAT_R11G11B10_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R11G11B10_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R16F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16_FLOAT,
-                                                     DXGI_FORMAT_R16_FLOAT,
-                                                     DXGI_FORMAT_R16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R16I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16_SINT,
-                                                     DXGI_FORMAT_R16_SINT,
-                                                     DXGI_FORMAT_R16_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R16UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16_UINT,
-                                                     DXGI_FORMAT_R16_UINT,
-                                                     DXGI_FORMAT_R16_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R32F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32_FLOAT,
-                                                     DXGI_FORMAT_R32_FLOAT,
-                                                     DXGI_FORMAT_R32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R32I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32_SINT,
-                                                     DXGI_FORMAT_R32_SINT,
-                                                     DXGI_FORMAT_R32_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R32UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32_UINT,
-                                                     DXGI_FORMAT_R32_UINT,
-                                                     DXGI_FORMAT_R32_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8_UNORM,
-                                                     DXGI_FORMAT_R8_UNORM,
-                                                     DXGI_FORMAT_R8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R8I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8_SINT,
-                                                     DXGI_FORMAT_R8_SINT,
-                                                     DXGI_FORMAT_R8_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R8UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8_UINT,
-                                                     DXGI_FORMAT_R8_UINT,
-                                                     DXGI_FORMAT_R8_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_R8_SNORM:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8_SNORM,
-                                                     DXGI_FORMAT_R8_SNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8_SNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG16F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16_FLOAT,
-                                                     DXGI_FORMAT_R16G16_FLOAT,
-                                                     DXGI_FORMAT_R16G16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG16I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16_SINT,
-                                                     DXGI_FORMAT_R16G16_SINT,
-                                                     DXGI_FORMAT_R16G16_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG16UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16_UINT,
-                                                     DXGI_FORMAT_R16G16_UINT,
-                                                     DXGI_FORMAT_R16G16_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG32F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32_FLOAT,
-                                                     DXGI_FORMAT_R32G32_FLOAT,
-                                                     DXGI_FORMAT_R32G32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG32I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32_SINT,
-                                                     DXGI_FORMAT_R32G32_SINT,
-                                                     DXGI_FORMAT_R32G32_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG32UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32_UINT,
-                                                     DXGI_FORMAT_R32G32_UINT,
-                                                     DXGI_FORMAT_R32G32_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8_UNORM,
-                                                     DXGI_FORMAT_R8G8_UNORM,
-                                                     DXGI_FORMAT_R8G8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG8I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8_SINT,
-                                                     DXGI_FORMAT_R8G8_SINT,
-                                                     DXGI_FORMAT_R8G8_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG8UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8_UINT,
-                                                     DXGI_FORMAT_R8G8_UINT,
-                                                     DXGI_FORMAT_R8G8_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RG8_SNORM:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8_SNORM,
-                                                     DXGI_FORMAT_R8G8_SNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8_SNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGB:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_RGB10_A2:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R10G10B10A2_UNORM,
-                                                     DXGI_FORMAT_R10G10B10A2_UNORM,
-                                                     DXGI_FORMAT_R10G10B10A2_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R10G10B10A2_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGB10_A2UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R10G10B10A2_UINT,
-                                                     DXGI_FORMAT_R10G10B10A2_UINT,
-                                                     DXGI_FORMAT_R10G10B10A2_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R10G10B10A2_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGB16F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_FLOAT),
                                                      Initialize4ComponentData<GLhalf, 0x0000, 0x0000, 0x0000, gl::Float16One>);
             return textureFormat;
         }
         case GL_RGB16I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_SINT),
                                                      Initialize4ComponentData<GLshort, 0x0000, 0x0000, 0x0000, 0x0001>);
             return textureFormat;
         }
         case GL_RGB16UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_UINT),
                                                      Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x0001>);
             return textureFormat;
         }
         case GL_RGB32F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_FLOAT),
                                                      Initialize4ComponentData<GLfloat, 0x00000000, 0x00000000, 0x00000000, gl::Float32One>);
             return textureFormat;
         }
         case GL_RGB32I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_SINT),
                                                      Initialize4ComponentData<GLint, 0x00000000, 0x00000000, 0x00000000, 0x00000001>);
             return textureFormat;
         }
         case GL_RGB32UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_UINT),
                                                      Initialize4ComponentData<GLuint, 0x00000000, 0x00000000, 0x00000000, 0x00000001>);
             return textureFormat;
         }
@@ -1074,20 +1320,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,false>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                          Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
                 return textureFormat;
             }
             else if (SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,true>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_B5G6R5_UNORM,
-                                                         DXGI_FORMAT_B5G6R5_UNORM,
-                                                         DXGI_FORMAT_B5G6R5_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_B5G6R5_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
@@ -1101,20 +1341,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,false>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
             else if (SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,true>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_B5G5R5A1_UNORM,
-                                                         DXGI_FORMAT_B5G5R5A1_UNORM,
-                                                         DXGI_FORMAT_B5G5R5A1_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_B5G5R5A1_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
@@ -1126,120 +1360,84 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_RGB8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_RGB8I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_SINT),
                                                      Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x01>);
             return textureFormat;
         }
         case GL_RGB8UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UINT),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0x01>);
             return textureFormat;
         }
         case GL_RGB8_SNORM:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_SNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_SNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_SNORM),
                                                      Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x7F>);
             return textureFormat;
         }
         case GL_RGB9_E5:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
-                                                     DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R9G9B9E5_SHAREDEXP),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA16F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA16I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_R16G16B16A16_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA16UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_R16G16B16A16_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R16G16B16A16_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA32F:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_FLOAT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA32I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_R32G32B32A32_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA32UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_R32G32B32A32_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R32G32B32A32_UINT),
                                                      nullptr);
             return textureFormat;
         }
@@ -1248,20 +1446,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,false>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
             else if (SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,true>(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_B4G4R4A4_UNORM,
-                                                         DXGI_FORMAT_B4G4R4A4_UNORM,
-                                                         DXGI_FORMAT_B4G4R4A4_UNORM,
-                                                         DXGI_FORMAT_UNKNOWN,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_B4G4R4A4_UNORM),
                                                          nullptr);
                 return textureFormat;
             }
@@ -1273,60 +1465,42 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         case GL_RGBA8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA8I:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_R8G8B8A8_SINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_SINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA8UI:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_R8G8B8A8_UINT,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UINT),
                                                      nullptr);
             return textureFormat;
         }
         case GL_RGBA8_SNORM:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_SNORM,
-                                                     DXGI_FORMAT_R8G8B8A8_SNORM,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_SNORM),
                                                      nullptr);
             return textureFormat;
         }
         case GL_SRGB8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                     DXGI_FORMAT_UNKNOWN,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB_NONRENDERABLE),
                                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>);
             return textureFormat;
         }
         case GL_SRGB8_ALPHA8:
         {
             static const TextureFormat textureFormat(internalFormat,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                     DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                                     DXGI_FORMAT_UNKNOWN,
+                                                     GetANGLEFormatSet(ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB),
                                                      nullptr);
             return textureFormat;
         }
@@ -1335,20 +1509,14 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_R24G8_TYPELESS,
-                                                         DXGI_FORMAT_X24_TYPELESS_G8_UINT,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_X24_TYPELESS_G8_UINT),
                                                          nullptr);
                 return textureFormat;
             }
             else if (OnlyFL9_3(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_UNKNOWN,
-                                                         DXGI_FORMAT_D24_UNORM_S8_UINT,
+                                                         GetANGLEFormatSet(ANGLE_FORMAT_D24_UNORM_S8_UINT_FL9_3),
                                                          nullptr);
                 return textureFormat;
             }
@@ -1363,8 +1531,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
     }
     // clang-format on
 
-    static const TextureFormat defaultInfo(GL_NONE, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN,
-                                           DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, nullptr);
+    static const TextureFormat defaultInfo(GL_NONE, DXGIFormatSet(), nullptr);
     return defaultInfo;
 }  // GetTextureFormatInfo
 
