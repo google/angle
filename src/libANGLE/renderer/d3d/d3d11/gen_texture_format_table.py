@@ -41,11 +41,6 @@ namespace
 
 typedef bool (*FormatSupportFunction)(const Renderer11DeviceCaps &);
 
-bool AnyDevice(const Renderer11DeviceCaps &deviceCaps)
-{{
-    return true;
-}}
-
 bool OnlyFL10Plus(const Renderer11DeviceCaps &deviceCaps)
 {{
     return (deviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0);
@@ -256,18 +251,24 @@ def get_texture_format_item(idx, requirements_fn, angle_format):
     rtv_format = angle_format["rtvFormat"] if "rtvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
     dsv_format = angle_format["dsvFormat"] if "dsvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
 
-    if idx == 0:
-        table_data += '            if (' + requirements_fn + '(renderer11DeviceCaps))\n'
-    else:
-        table_data += '            else if (' + requirements_fn + '(renderer11DeviceCaps))\n'
-    table_data += '            {\n'
-    table_data += '                static const TextureFormat textureFormat = GetD3D11FormatInfo(internalFormat,\n'
-    table_data += '                                                                              ' + tex_format + ',\n'
-    table_data += '                                                                              ' + srv_format + ',\n'
-    table_data += '                                                                              ' + rtv_format + ',\n'
-    table_data += '                                                                              ' + dsv_format + ');\n'
-    table_data += '                return textureFormat;\n'
-    table_data += '            }\n'
+    indent = '            '
+    if requirements_fn != None:
+        if idx == 0:
+            table_data += '            if (' + requirements_fn + '(renderer11DeviceCaps))\n'
+        else:
+            table_data += '            else if (' + requirements_fn + '(renderer11DeviceCaps))\n'
+        table_data += '            {\n'
+        indent += '    '
+
+    table_data += indent + 'static const TextureFormat textureFormat = GetD3D11FormatInfo(internalFormat,\n'
+    table_data += indent + '                                                              ' + tex_format + ',\n'
+    table_data += indent + '                                                              ' + srv_format + ',\n'
+    table_data += indent + '                                                              ' + rtv_format + ',\n'
+    table_data += indent + '                                                              ' + dsv_format + ');\n'
+    table_data += indent + 'return textureFormat;\n'
+
+    if requirements_fn != None:
+        table_data += '            }\n'
 
     return table_data
 
@@ -281,15 +282,15 @@ def parse_json_into_switch_string(json_map, json_data):
         table_data += '        {\n'
 
         if isinstance(json_map[internal_format], basestring):
-            table_data += get_texture_format_item(0, "AnyDevice", json_data[json_map[internal_format]])
+            table_data += get_texture_format_item(0, None, json_data[json_map[internal_format]])
         else:
             for idx, requirements_map in enumerate(sorted(json_map[internal_format].iteritems())):
                 table_data += get_texture_format_item(idx, requirements_map[0], json_data[requirements_map[1]])
+            table_data += '            else\n'
+            table_data += '            {\n'
+            table_data += '                break;\n'
+            table_data += '            }\n'
 
-        table_data += '            else\n'
-        table_data += '            {\n'
-        table_data += '                break;\n'
-        table_data += '            }\n'
         table_data += '        }\n'
 
     return table_data
