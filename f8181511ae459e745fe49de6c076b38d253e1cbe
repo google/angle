@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd7ab832_74c8591f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:34:11Z",
+      "side": 1,
+      "message": "please format this as:\n\nShort title (\u003c65 chars)\n\u003cspace\u003e\nLonger description paragraph (wrapped to \u003c71 chars)\n\nBUG\u003dangleproject:#### (you may need to open a bug on the issue tracker, or just add this line if you already created a bug)",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 62
+      },
+      "revId": "f8181511ae459e745fe49de6c076b38d253e1cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d76744b_f8967e67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:34:11Z",
+      "side": 1,
+      "message": "can you insert \u0027return;\u0027 after this line",
+      "range": {
+        "startLine": 17,
+        "startChar": 8,
+        "endLine": 17,
+        "endChar": 50
+      },
+      "revId": "f8181511ae459e745fe49de6c076b38d253e1cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd7ab832_d4d26dd1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:34:11Z",
+      "side": 1,
+      "message": "and remove else",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 8
+      },
+      "revId": "f8181511ae459e745fe49de6c076b38d253e1cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd82644f_c60ac270",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:34:11Z",
+      "side": 1,
+      "message": "insert return; after this line,",
+      "range": {
+        "startLine": 27,
+        "startChar": 8,
+        "endLine": 27,
+        "endChar": 9
+      },
+      "revId": "f8181511ae459e745fe49de6c076b38d253e1cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d8fa87c_7b228a8c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/copyvertex.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-17T15:34:11Z",
+      "side": 1,
+      "message": "and remove the else and scope?",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 5
+      },
+      "revId": "f8181511ae459e745fe49de6c076b38d253e1cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
