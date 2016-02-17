@@ -252,7 +252,7 @@ gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unp
     GLsizei inputSkipBytes = formatInfo.computeSkipPixels(
         inputRowPitch, inputDepthPitch, unpack.skipImages, unpack.skipRows, unpack.skipPixels);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
+    const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
 
     const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
@@ -282,7 +282,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
     GLsizei inputDepthPitch =
         formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
+    const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
     GLuint outputBlockWidth = dxgiFormatInfo.blockWidth;
     GLuint outputBlockHeight = dxgiFormatInfo.blockHeight;
@@ -370,7 +370,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     }
 
     // determine the offset coordinate into the destination buffer
-    const auto &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mDXGIFormat);
+    const auto &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLsizei rowOffset          = dxgiFormatInfo.pixelBytes * destOffset.x;
 
     uint8_t *dataOffset = static_cast<uint8_t *>(mappedImage.pData) +

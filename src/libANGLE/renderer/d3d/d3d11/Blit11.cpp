@@ -1052,7 +1052,8 @@ gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSu
     ASSERT(format == GetTextureFormat(dest));
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
-    unsigned int pixelSize = dxgiFormatInfo.pixelBytes;
+    const d3d11::DXGIFormatSize &dxgiFormatSizeInfo = d3d11::GetDXGIFormatSizeInfo(format);
+    unsigned int pixelSize                          = dxgiFormatSizeInfo.pixelBytes;
     unsigned int copyOffset = 0;
     unsigned int copySize = pixelSize;
     if (stencilOnly)

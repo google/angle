@@ -462,6 +462,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
     ASSERT(dstTexture);
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormat);
+    const d3d11::DXGIFormatSize &dxgiFormatSizeInfo = d3d11::GetDXGIFormatSizeInfo(mTextureFormat);
     if (!fullCopy && (dxgiFormatInfo.depthBits > 0 || dxgiFormatInfo.stencilBits > 0))
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
@@ -476,9 +477,9 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
         srcBox.left = copyArea.x;
         srcBox.top = copyArea.y;
         srcBox.right =
-            copyArea.x + roundUp(static_cast<UINT>(copyArea.width), dxgiFormatInfo.blockWidth);
-        srcBox.bottom =
-            copyArea.y + roundUp(static_cast<UINT>(copyArea.height), dxgiFormatInfo.blockHeight);
+            copyArea.x + roundUp(static_cast<UINT>(copyArea.width), dxgiFormatSizeInfo.blockWidth);
+        srcBox.bottom = copyArea.y +
+                        roundUp(static_cast<UINT>(copyArea.height), dxgiFormatSizeInfo.blockHeight);
         srcBox.front = copyArea.z;
         srcBox.back  = copyArea.z + copyArea.depth;
 
@@ -693,7 +694,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
 
     const d3d11::TextureFormat &d3d11Format = d3d11::GetTextureFormatInfo(
         image->getInternalFormat(), mRenderer->getRenderer11DeviceCaps());
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3d11Format.texFormat);
+    const d3d11::DXGIFormatSize &dxgiFormatInfo =
+        d3d11::GetDXGIFormatSizeInfo(d3d11Format.texFormat);
 
     const size_t outputPixelSize = dxgiFormatInfo.pixelBytes;
 

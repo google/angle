@@ -1323,7 +1323,7 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
 
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
 {
-    const DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
+    const DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(format);
 
     int upsampleCount = 0;
     // Don't expand the size of full textures that are at least (blockWidth x blockHeight) already.
@@ -1352,7 +1352,8 @@ void GenerateInitialTextureData(GLint internalFormat,
     const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(internalFormat, renderer11DeviceCaps);
     ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(d3dFormatInfo.texFormat);
+    const d3d11::DXGIFormatSize &dxgiFormatInfo =
+        d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);
 
     outSubresourceData->resize(mipLevels);
     outData->resize(mipLevels);
