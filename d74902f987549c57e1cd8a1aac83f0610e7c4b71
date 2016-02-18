@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "620e892a_3acfbd2a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "I\u0027m concerned this \u0027if\u0027 is a bit insufficient - we should be using information in the table to filter out the irrelevant formats. Won\u0027t all the BCx formats apply, as well as future support for NV12? or all the other potential \u0027weird\u0027 formats.",
+      "range": {
+        "startLine": 283,
+        "startChar": 43,
+        "endLine": 283,
+        "endChar": 95
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6243e950_4f2acd16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "this should be the python equivalent of an ASSERT if possible - seems like a programmer error if it\u0027s false",
+      "range": {
+        "startLine": 283,
+        "startChar": 11,
+        "endLine": 283,
+        "endChar": 38
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8240dd43_10b8643b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "can we make this error out the script?",
+      "range": {
+        "startLine": 286,
+        "startChar": 12,
+        "endLine": 286,
+        "endChar": 17
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6243e950_4f9d2d92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "I wonder if this would be better represented as bit counts for rgba/ds/l, plus a signed-unsigned-snorm-unorm enum.",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820b7d17_38a229d6",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "make sure you either uncomment these suppressions or remove the comments before you land.",
+      "range": {
+        "startLine": 1832,
+        "startChar": 0,
+        "endLine": 1836,
+        "endChar": 7
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
