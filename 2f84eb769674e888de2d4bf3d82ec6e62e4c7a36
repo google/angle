@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fdabfced_6ce39bed",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-18T11:52:54Z",
+      "side": 1,
+      "message": "I considered a struct type, but it seemed to be a bunch of effort to make sure the packing is right for little benefit.",
+      "parentUuid": "5d8fa87c_bb5552cb",
+      "range": {
+        "startLine": 254,
+        "startChar": 20,
+        "endLine": 254,
+        "endChar": 40
+      },
+      "revId": "2f84eb769674e888de2d4bf3d82ec6e62e4c7a36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd82644f_46f7b2a1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
