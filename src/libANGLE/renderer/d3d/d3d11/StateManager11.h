@@ -79,6 +79,7 @@ class StateManager11 final : angle::NonCopyable
     gl::Error syncFramebuffer(const gl::Framebuffer *framebuffer);
 
     void invalidateRenderTarget();
+    void invalidateBoundViews();
     void invalidateEverything();
     bool setRenderTargets(const RenderTargetArray &renderTargets,
                           ID3D11DepthStencilView *depthStencil);

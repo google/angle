@@ -780,6 +780,14 @@ void StateManager11::invalidateRenderTarget()
     mAppliedDSV = angle::DirtyPointer;
 }
 
+void StateManager11::invalidateBoundViews()
+{
+    mCurVertexSRVs.clear();
+    mCurPixelSRVs.clear();
+
+    invalidateRenderTarget();
+}
+
 void StateManager11::invalidateEverything()
 {
     mBlendStateIsDirty        = true;
@@ -791,10 +799,7 @@ void StateManager11::invalidateEverything()
     // We reset the current SRV data because it might not be in sync with D3D's state
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
     // remove it from its state.
-    mCurVertexSRVs.clear();
-    mCurPixelSRVs.clear();
-
-    invalidateRenderTarget();
+    invalidateBoundViews();
 }
 
 bool StateManager11::setRenderTargets(const RenderTargetArray &renderTargets,
