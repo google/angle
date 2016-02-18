@@ -46,6 +46,30 @@
       "revId": "b843db5b3302115b2880a16b1717332275e33fe8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c23655de_b5b3ca16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:56:42Z",
+      "side": 1,
+      "message": "Oh OK. I didn\u0027t notice that. it\u0027s fine to leave them. \n\n(At some point if we support multi-threading, the static initializers are all going to have to go away. We should at some point rewrite all our tables to use JSON as well, which will make such refactorings easier.)",
+      "parentUuid": "0234edda_cc424f86",
+      "range": {
+        "startLine": 476,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 51
+      },
+      "revId": "b843db5b3302115b2880a16b1717332275e33fe8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
