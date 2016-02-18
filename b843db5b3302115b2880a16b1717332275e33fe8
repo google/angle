@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c23655de_523394ac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:33:19Z",
+      "side": 1,
+      "message": "can you move these into each \u0027case\u0027 scope? similar to how the texture format tables work.",
+      "range": {
+        "startLine": 476,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 51
+      },
+      "revId": "b843db5b3302115b2880a16b1717332275e33fe8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
