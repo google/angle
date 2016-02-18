@@ -307,8 +307,6 @@
             'libANGLE/renderer/d3d/d3d11/IndexBuffer11.h',
             'libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp',
             'libANGLE/renderer/d3d/d3d11/InputLayoutCache.h',
-            'libANGLE/renderer/d3d/d3d11/internal_format_initializer_table.h',
-            'libANGLE/renderer/d3d/d3d11/internal_format_initializer_table.cpp',
             'libANGLE/renderer/d3d/d3d11/load_functions_table.h',
             'libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp',
             'libANGLE/renderer/d3d/d3d11/NativeWindow.h',
