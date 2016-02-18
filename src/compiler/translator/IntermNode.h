@@ -41,6 +41,7 @@ class TIntermLoop;
 class TInfoSink;
 class TInfoSinkBase;
 class TIntermRaw;
+class TIntermBranch;
 
 class TSymbolTable;
 
@@ -96,6 +97,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermSymbol *getAsSymbolNode() { return 0; }
     virtual TIntermLoop *getAsLoopNode() { return 0; }
     virtual TIntermRaw *getAsRawNode() { return 0; }
+    virtual TIntermBranch *getAsBranchNode() { return 0; }
 
     // Replace a child node. Return true if |original| is a child
     // node and it is replaced; otherwise, return false.
@@ -215,6 +217,7 @@ class TIntermBranch : public TIntermNode
           mExpression(e) { }
 
     void traverse(TIntermTraverser *it) override;
+    TIntermBranch *getAsBranchNode() override { return this; }
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
     TOperator getFlowOp() { return mFlowOp; }
