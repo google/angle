@@ -46,6 +46,30 @@
       "revId": "e30b2bce6c4b388bf65b2981b846c2254b06c366",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "422a657b_ee2e1fd6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-18T18:09:28Z",
+      "side": 1,
+      "message": "Done. Agreed, it\u0027s nicer this way.",
+      "parentUuid": "9d6840a0_9f61bbe4",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 4
+      },
+      "revId": "e30b2bce6c4b388bf65b2981b846c2254b06c366",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
