@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0206ad0a_3ca0d1bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "I think this code is good, but probably can be moved up the food chain at some point. gl::InternalFormat has redBits, greenBits, blueBits, alphaBits, luminanceBits, etc. A modification to this script code could generate that info. Can you add a mention of that in a comment?",
+      "range": {
+        "startLine": 246,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 34
+      },
+      "revId": "538245eb4dfe3eb934c28951038b6a03f8dd5f0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820b7d17_589b9d8f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-18T18:53:14Z",
+      "side": 1,
+      "message": "the width here is making these a bit hard to review - maybe we should turn on clang format for these files and just make sure we run git cl format manually.",
+      "range": {
+        "startLine": 731,
+        "startChar": 74,
+        "endLine": 731,
+        "endChar": 125
+      },
+      "revId": "538245eb4dfe3eb934c28951038b6a03f8dd5f0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
