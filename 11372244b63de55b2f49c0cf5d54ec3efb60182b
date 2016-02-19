@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "82b53dae_e8ee33a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 888,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-02-19T00:25:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82dc5dfe_f0594063",
+      "range": {
+        "startLine": 888,
+        "startChar": 98,
+        "endLine": 888,
+        "endChar": 112
+      },
+      "revId": "11372244b63de55b2f49c0cf5d54ec3efb60182b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22aad153_8570c2ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-02-19T00:01:57Z",
       "side": 1,
       "message": "add a new member to StateManager11: invalidateSRVCache() and make it call clear() on mCurVertexSRVs and mCurPixelSRVs. Call this new method internally in invalidateEverything(), and externally from here.",
+      "range": {
+        "startLine": 889,
+        "startChar": 8,
+        "endLine": 889,
+        "endChar": 61
+      },
+      "revId": "11372244b63de55b2f49c0cf5d54ec3efb60182b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2a3597e_a3485a03",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-02-19T00:25:46Z",
+      "side": 1,
+      "message": "I added a StateManager::invalidateBoundViews(), because in theory both RTVs and SRVs need to be invalidated.",
+      "parentUuid": "22aad153_8570c2ab",
       "range": {
         "startLine": 889,
         "startChar": 8,
