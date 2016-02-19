@@ -45,6 +45,30 @@
       "revId": "538245eb4dfe3eb934c28951038b6a03f8dd5f0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2bbb59e_cad7a308",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:58:26Z",
+      "side": 1,
+      "message": "Would it be possible to trigger clang format from the generating script? I don\u0027t think running it manually is very appealing, as an alternative to that I\u0027d rather just make the script generate the code in a nicer format.",
+      "parentUuid": "820b7d17_589b9d8f",
+      "range": {
+        "startLine": 731,
+        "startChar": 74,
+        "endLine": 731,
+        "endChar": 125
+      },
+      "revId": "538245eb4dfe3eb934c28951038b6a03f8dd5f0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
