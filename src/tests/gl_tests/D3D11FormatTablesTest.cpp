@@ -30,7 +30,8 @@ class D3D11FormatTablesTest : public ANGLETest
 // using it as a texture, a render target, and sampling from it in the shader. It
 // checks this against our speed-optimized baked tables, and validates they would
 // give the same result.
-// TODO(jmadill): Find out why in 9_3, some format queries return an error
+// TODO(jmadill): Find out why in 9_3, some format queries return an error.
+// The error seems to appear for formats that are not supported on 9_3.
 TEST_P(D3D11FormatTablesTest, TestFormatSupport)
 {
     ASSERT_EQ(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, GetParam().getRenderer());
@@ -75,39 +76,57 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
 
         // Bits for renderable
         bool renderable = false;
+        UINT renderSupport       = 0u;
+        DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
         if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
         {
-            UINT depthSupport;
-            bool depthSuccess = SUCCEEDED(device->CheckFormatSupport(formatInfo.dsvFormat, &depthSupport));
-            renderable = depthSuccess && ((depthSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0);
-        }
-        else
-        {
-            UINT rtSupport;
-            bool rtSuccess = SUCCEEDED(device->CheckFormatSupport(formatInfo.rtvFormat, &rtSupport));
-            renderable = rtSuccess && ((rtSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0);
-        }
-        EXPECT_EQ(renderable, textureInfo.renderable);
-
-        // Multisample counts
-        UINT renderSupport = false;
-        bool renderSuccess = SUCCEEDED(device->CheckFormatSupport(formatInfo.renderFormat, &renderSupport));
-
-        if (renderSuccess && ((renderSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0))
-        {
-            EXPECT_TRUE(!textureInfo.sampleCounts.empty());
-            for (unsigned int sampleCount = 1; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
-                 sampleCount *= 2)
+            renderFormat = formatInfo.dsvFormat;
+            bool depthSuccess =
+                SUCCEEDED(device->CheckFormatSupport(formatInfo.dsvFormat, &renderSupport));
+            renderable =
+                depthSuccess && ((renderSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0);
+            if (renderable)
             {
-                UINT qualityCount = 0;
-                bool sampleSuccess = SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount));
-                GLuint expectedCount = (!sampleSuccess || qualityCount == 0) ? 0 : 1;
-                EXPECT_EQ(expectedCount, textureInfo.sampleCounts.count(sampleCount));
+                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.dsvFormat);
             }
         }
         else
         {
-            EXPECT_TRUE(textureInfo.sampleCounts.empty());
+            renderFormat = formatInfo.rtvFormat;
+            bool rtSuccess =
+                SUCCEEDED(device->CheckFormatSupport(formatInfo.rtvFormat, &renderSupport));
+            renderable = rtSuccess && ((renderSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0);
+            if (renderable)
+            {
+                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.rtvFormat);
+            }
+        }
+        EXPECT_EQ(renderable, textureInfo.renderable);
+        if (!textureInfo.sampleCounts.empty())
+        {
+            EXPECT_TRUE(renderable);
+        }
+
+        // Multisample counts
+        if (renderable)
+        {
+            if ((renderSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET) != 0)
+            {
+                EXPECT_TRUE(!textureInfo.sampleCounts.empty());
+                for (unsigned int sampleCount = 1;
+                     sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
+                {
+                    UINT qualityCount  = 0;
+                    bool sampleSuccess = SUCCEEDED(device->CheckMultisampleQualityLevels(
+                        renderFormat, sampleCount, &qualityCount));
+                    GLuint expectedCount = (!sampleSuccess || qualityCount == 0) ? 0 : 1;
+                    EXPECT_EQ(expectedCount, textureInfo.sampleCounts.count(sampleCount));
+                }
+            }
+            else
+            {
+                EXPECT_TRUE(textureInfo.sampleCounts.empty());
+            }
         }
     }
 }

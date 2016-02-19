@@ -128,26 +128,6 @@ const TextureFormat GetD3D11FormatInfo(GLenum internalFormat,
     info.dsvFormat = dsvFormat;
     info.dataInitializerFunction = internalFormatInitializer;
 
-    // Given a GL internal format, the renderFormat is the DSV format if it is depth- or
-    // stencil-renderable,
-    // the RTV format if it is color-renderable, and the (nonrenderable) texture format otherwise.
-    if (dsvFormat != DXGI_FORMAT_UNKNOWN)
-    {{
-        info.renderFormat = dsvFormat;
-    }}
-    else if (rtvFormat != DXGI_FORMAT_UNKNOWN)
-    {{
-        info.renderFormat = rtvFormat;
-    }}
-    else if (texFormat != DXGI_FORMAT_UNKNOWN)
-    {{
-        info.renderFormat = texFormat;
-    }}
-    else
-    {{
-        info.renderFormat = DXGI_FORMAT_UNKNOWN;
-    }}
-
     // Compute the swizzle formats
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
     if (internalFormat != GL_NONE && formatInfo.pixelBytes > 0)
@@ -213,7 +193,6 @@ TextureFormat::TextureFormat()
       srvFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
-      renderFormat(DXGI_FORMAT_UNKNOWN),
       swizzleTexFormat(DXGI_FORMAT_UNKNOWN),
       swizzleSRVFormat(DXGI_FORMAT_UNKNOWN),
       swizzleRTVFormat(DXGI_FORMAT_UNKNOWN),

@@ -363,7 +363,17 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
     textureCaps.renderable = (support.query(formatInfo.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
                              (support.query(formatInfo.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
 
-    if (support.query(formatInfo.renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+    DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
+    if (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
+    {
+        renderFormat = formatInfo.dsvFormat;
+    }
+    else if (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
+    {
+        renderFormat = formatInfo.rtvFormat;
+    }
+    if (renderFormat != DXGI_FORMAT_UNKNOWN &&
+        support.query(renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
     {
         // Assume 1x
         textureCaps.sampleCounts.insert(1);
@@ -372,7 +382,8 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
              sampleCount *= 2)
         {
             UINT qualityCount = 0;
-            if (SUCCEEDED(device->CheckMultisampleQualityLevels(formatInfo.renderFormat, sampleCount, &qualityCount)))
+            if (SUCCEEDED(device->CheckMultisampleQualityLevels(renderFormat, sampleCount,
+                                                                &qualityCount)))
             {
                 // Assume we always support lower sample counts
                 if (qualityCount == 0)
