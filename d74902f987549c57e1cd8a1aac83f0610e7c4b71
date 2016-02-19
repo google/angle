@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "c2bbb59e_0ab93bf1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:39:11Z",
+      "side": 1,
+      "message": "Not necessarily - if there really was an RGB compressed format that\u0027s emulated with an RGBA compressed format, that could still need an initializer function. BC1 is a bit of a special case since the texture data specifies whether each block has alpha or not. This if statement is hit by COMPRESSED_RGB_S3TC_DXT1, which is conceptually an RGB format, where alpha in the data should be discarded when its being decoded. I\u0027m not sure if ANGLE actually works correctly in general in case you supply data with alpha to this format.\n\nI\u0027ll add a comment here explaining this, including a todo to investigate COMPRESSED_RGB_S3TC_DXT1 in depth, I don\u0027t think that belongs in this patch.\n\nSee https://www.opengl.org/registry/specs/EXT/texture_compression_s3tc.txt issue 4 for reference.",
+      "parentUuid": "620e892a_3acfbd2a",
+      "range": {
+        "startLine": 283,
+        "startChar": 43,
+        "endLine": 283,
+        "endChar": 95
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2bec18e_29be8dda",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:39:11Z",
+      "side": 1,
+      "message": "True, I think this can be left out, Python will raise an exception if there\u0027s an issue with missing texFormat.",
+      "parentUuid": "6243e950_4f2acd16",
+      "range": {
+        "startLine": 283,
+        "startChar": 11,
+        "endLine": 283,
+        "endChar": 38
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8240dd43_10b8643b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2016-02-18T18:53:14Z",
       "side": 1,
       "message": "can we make this error out the script?",
+      "range": {
+        "startLine": 286,
+        "startChar": 12,
+        "endLine": 286,
+        "endChar": 17
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "421b45b8_66a04ebd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:39:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8240dd43_10b8643b",
       "range": {
         "startLine": 286,
         "startChar": 12,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "625cc936_27157a83",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:39:11Z",
+      "side": 1,
+      "message": "It\u0027s a bit tricky. Bit counts don\u0027t really apply to compressed formats, but this kind of a channel list does. Making the component type more detailed (for the formats where it can be specified) is a good idea though.",
+      "parentUuid": "6243e950_4f9d2d92",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "820b7d17_38a229d6",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 3
@@ -105,6 +201,30 @@
       "writtenOn": "2016-02-18T18:53:14Z",
       "side": 1,
       "message": "make sure you either uncomment these suppressions or remove the comments before you land.",
+      "range": {
+        "startLine": 1832,
+        "startChar": 0,
+        "endLine": 1836,
+        "endChar": 7
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2bbb59e_cad24321",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-19T10:39:11Z",
+      "side": 1,
+      "message": "Whoops, yep, I had some bugs in the tests earlier, after fixing those they do pass on Intel.",
+      "parentUuid": "820b7d17_38a229d6",
       "range": {
         "startLine": 1832,
         "startChar": 0,
