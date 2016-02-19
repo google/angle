@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a2c4017e_19ca4b64",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-19T20:15:53Z",
+      "side": 1,
+      "message": "Thanks, some documentation should be OK. It\u0027s a bit complex.",
+      "parentUuid": "c2bbb59e_0ab93bf1",
+      "range": {
+        "startLine": 283,
+        "startChar": 43,
+        "endLine": 283,
+        "endChar": 95
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8240dd43_10b8643b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 3
@@ -178,6 +202,30 @@
       "side": 1,
       "message": "It\u0027s a bit tricky. Bit counts don\u0027t really apply to compressed formats, but this kind of a channel list does. Making the component type more detailed (for the formats where it can be specified) is a good idea though.",
       "parentUuid": "6243e950_4f9d2d92",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "d74902f987549c57e1cd8a1aac83f0610e7c4b71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2981592_0232ca49",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-19T20:15:53Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "625cc936_27157a83",
       "range": {
         "startLine": 9,
         "startChar": 4,
