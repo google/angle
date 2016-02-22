@@ -2388,6 +2388,8 @@ void Renderer11::applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants
         memcpy(&reinterpret_cast<uint8_t *>(mapping.pData)[sizeof(TShaderConstants)],
                samplerMetadata->getData(), samplerMetadata->sizeBytes());
         mDeviceContext->Unmap(driverConstantBuffer, 0);
+
+        samplerMetadata->markClean();
     }
 }
 

@@ -354,6 +354,7 @@ class Renderer11 : public RendererD3D
         const dx_SamplerMetadata *getData() const;
         size_t sizeBytes() const;
         bool isDirty() const { return mDirty; }
+        void markClean() { mDirty = false; }
 
       private:
         std::vector<dx_SamplerMetadata> mSamplerMetadata;
