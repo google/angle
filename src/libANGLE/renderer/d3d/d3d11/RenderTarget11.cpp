@@ -384,7 +384,8 @@ unsigned int SurfaceRenderTarget11::getSubresourceIndex() const
 
 DXGI_FORMAT SurfaceRenderTarget11::getDXGIFormat() const
 {
-    return d3d11::GetTextureFormatInfo(getInternalFormat(), mRenderer->getRenderer11DeviceCaps()).texFormat;
+    return d3d11::GetTextureFormatInfo(getInternalFormat(), mRenderer->getRenderer11DeviceCaps())
+        .formatSet.texFormat;
 }
 
 }

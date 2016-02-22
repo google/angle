@@ -109,24 +109,32 @@ bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
 }}
 
 // End Format Support Functions
+}}  // namespace
+
+DXGIFormatSet::DXGIFormatSet()
+    : texFormat(DXGI_FORMAT_UNKNOWN),
+      srvFormat(DXGI_FORMAT_UNKNOWN),
+      rtvFormat(DXGI_FORMAT_UNKNOWN),
+      dsvFormat(DXGI_FORMAT_UNKNOWN)
+{{
+}}
 
 // For sized GL internal formats, there are several possible corresponding D3D11 formats depending
 // on device capabilities.
 // This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
-const TextureFormat GetD3D11FormatInfo(GLenum internalFormat,
-                                       DXGI_FORMAT texFormat,
-                                       DXGI_FORMAT srvFormat,
-                                       DXGI_FORMAT rtvFormat,
-                                       DXGI_FORMAT dsvFormat,
-                                       InitializeTextureDataFunction internalFormatInitializer)
+TextureFormat::TextureFormat(GLenum internalFormat,
+                             DXGI_FORMAT texFormat,
+                             DXGI_FORMAT srvFormat,
+                             DXGI_FORMAT rtvFormat,
+                             DXGI_FORMAT dsvFormat,
+                             InitializeTextureDataFunction internalFormatInitializer)
+    : dataInitializerFunction(internalFormatInitializer)
 {{
-    TextureFormat info;
-    info.texFormat = texFormat;
-    info.srvFormat = srvFormat;
-    info.rtvFormat = rtvFormat;
-    info.dsvFormat = dsvFormat;
-    info.dataInitializerFunction = internalFormatInitializer;
+    formatSet.texFormat = texFormat;
+    formatSet.srvFormat = srvFormat;
+    formatSet.rtvFormat = rtvFormat;
+    formatSet.dsvFormat = dsvFormat;
 
     // Compute the swizzle formats
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
@@ -158,47 +166,28 @@ const TextureFormat GetD3D11FormatInfo(GLenum internalFormat,
 
             const SwizzleFormatInfo &swizzleInfo =
                 GetSwizzleFormatInfo(maxBits, formatInfo.componentType);
-            info.swizzleTexFormat = swizzleInfo.mTexFormat;
-            info.swizzleSRVFormat = swizzleInfo.mSRVFormat;
-            info.swizzleRTVFormat = swizzleInfo.mRTVFormat;
+            swizzleFormatSet.texFormat = swizzleInfo.mTexFormat;
+            swizzleFormatSet.srvFormat = swizzleInfo.mSRVFormat;
+            swizzleFormatSet.rtvFormat = swizzleInfo.mRTVFormat;
         }}
         else
         {{
             // The original texture format is suitable for swizzle operations
-            info.swizzleTexFormat = texFormat;
-            info.swizzleSRVFormat = srvFormat;
-            info.swizzleRTVFormat = rtvFormat;
+            swizzleFormatSet = formatSet;
         }}
     }}
     else
     {{
         // Not possible to swizzle with this texture format since it is either unsized or GL_NONE
-        info.swizzleTexFormat = DXGI_FORMAT_UNKNOWN;
-        info.swizzleSRVFormat = DXGI_FORMAT_UNKNOWN;
-        info.swizzleRTVFormat = DXGI_FORMAT_UNKNOWN;
+        ASSERT(swizzleFormatSet.texFormat == DXGI_FORMAT_UNKNOWN);
+        ASSERT(swizzleFormatSet.srvFormat == DXGI_FORMAT_UNKNOWN);
+        ASSERT(swizzleFormatSet.rtvFormat == DXGI_FORMAT_UNKNOWN);
     }}
 
     // Gather all the load functions for this internal format
-    info.loadFunctions = GetLoadFunctionsMap(internalFormat, texFormat);
+    loadFunctions = GetLoadFunctionsMap(internalFormat, texFormat);
 
-    ASSERT(info.loadFunctions.size() != 0 || internalFormat == GL_NONE);
-
-    return info;
-}}
-
-}}  // namespace
-
-TextureFormat::TextureFormat()
-    : texFormat(DXGI_FORMAT_UNKNOWN),
-      srvFormat(DXGI_FORMAT_UNKNOWN),
-      rtvFormat(DXGI_FORMAT_UNKNOWN),
-      dsvFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleTexFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleSRVFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleRTVFormat(DXGI_FORMAT_UNKNOWN),
-      dataInitializerFunction(NULL),
-      loadFunctions()
-{{
+    ASSERT(loadFunctions.size() != 0 || internalFormat == GL_NONE);
 }}
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
@@ -213,7 +202,8 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
     }}
     // clang-format on
 
-    static const TextureFormat defaultInfo;
+    static const TextureFormat defaultInfo(GL_NONE, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN,
+                                           DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, nullptr);
     return defaultInfo;
 }}  // GetTextureFormatInfo
 
@@ -312,12 +302,12 @@ def get_texture_format_item(idx, internal_format, requirements_fn, angle_format)
         table_data += '            {\n'
         indent += '    '
 
-    table_data += indent + 'static const TextureFormat textureFormat = GetD3D11FormatInfo(internalFormat,\n'
-    table_data += indent + '                                                              ' + tex_format + ',\n'
-    table_data += indent + '                                                              ' + srv_format + ',\n'
-    table_data += indent + '                                                              ' + rtv_format + ',\n'
-    table_data += indent + '                                                              ' + dsv_format + ',\n'
-    table_data += indent + '                                                              ' + internal_format_initializer + ');\n'
+    table_data += indent + 'static const TextureFormat textureFormat(internalFormat,\n'
+    table_data += indent + '                                         ' + tex_format + ',\n'
+    table_data += indent + '                                         ' + srv_format + ',\n'
+    table_data += indent + '                                         ' + rtv_format + ',\n'
+    table_data += indent + '                                         ' + dsv_format + ',\n'
+    table_data += indent + '                                         ' + internal_format_initializer + ');\n'
     table_data += indent + 'return textureFormat;\n'
 
     if requirements_fn != None:

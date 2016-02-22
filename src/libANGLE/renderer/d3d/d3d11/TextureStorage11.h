@@ -13,6 +13,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/d3d/TextureStorage.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
 #include <map>
 
@@ -103,13 +104,8 @@ class TextureStorage11 : public TextureStorage
     unsigned int mMipLevels;
 
     GLenum mInternalFormat;
-    DXGI_FORMAT mTextureFormat;
-    DXGI_FORMAT mShaderResourceFormat;
-    DXGI_FORMAT mRenderTargetFormat;
-    DXGI_FORMAT mDepthStencilFormat;
-    DXGI_FORMAT mSwizzleTextureFormat;
-    DXGI_FORMAT mSwizzleShaderResourceFormat;
-    DXGI_FORMAT mSwizzleRenderTargetFormat;
+    d3d11::DXGIFormatSet mTextureFormatSet;
+    d3d11::DXGIFormatSet mSwizzleFormatSet;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;

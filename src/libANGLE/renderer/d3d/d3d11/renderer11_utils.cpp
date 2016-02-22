@@ -358,19 +358,21 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
         }
     }
 
-    textureCaps.texturable = support.query(formatInfo.texFormat, texSupportMask);
-    textureCaps.filterable = support.query(formatInfo.srvFormat, D3D11_FORMAT_SUPPORT_SHADER_SAMPLE);
-    textureCaps.renderable = (support.query(formatInfo.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
-                             (support.query(formatInfo.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
+    textureCaps.texturable = support.query(formatInfo.formatSet.texFormat, texSupportMask);
+    textureCaps.filterable =
+        support.query(formatInfo.formatSet.srvFormat, D3D11_FORMAT_SUPPORT_SHADER_SAMPLE);
+    textureCaps.renderable =
+        (support.query(formatInfo.formatSet.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
+        (support.query(formatInfo.formatSet.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
 
     DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
-    if (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
+    if (formatInfo.formatSet.dsvFormat != DXGI_FORMAT_UNKNOWN)
     {
-        renderFormat = formatInfo.dsvFormat;
+        renderFormat = formatInfo.formatSet.dsvFormat;
     }
-    else if (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
+    else if (formatInfo.formatSet.rtvFormat != DXGI_FORMAT_UNKNOWN)
     {
-        renderFormat = formatInfo.rtvFormat;
+        renderFormat = formatInfo.formatSet.rtvFormat;
     }
     if (renderFormat != DXGI_FORMAT_UNKNOWN &&
         support.query(renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
@@ -1364,7 +1366,7 @@ void GenerateInitialTextureData(GLint internalFormat,
     ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
-        d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);
+        d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.formatSet.texFormat);
 
     outSubresourceData->resize(mipLevels);
     outData->resize(mipLevels);
