@@ -8,6 +8,7 @@
 #
 
 import json
+import math
 import pprint
 import re
 
@@ -51,7 +52,6 @@ template_texture_format_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/load_functions_table.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/swizzle_format_info.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
 
 namespace rx
@@ -135,11 +135,12 @@ bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
 // End Format Support Functions
 }}  // namespace
 
-DXGIFormatSet::DXGIFormatSet()
+ANGLEFormatSet::ANGLEFormatSet()
     : texFormat(DXGI_FORMAT_UNKNOWN),
       srvFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
-      dsvFormat(DXGI_FORMAT_UNKNOWN)
+      dsvFormat(DXGI_FORMAT_UNKNOWN),
+      swizzleFormat(ANGLE_FORMAT_NONE)
 {{
 }}
 
@@ -148,59 +149,11 @@ DXGIFormatSet::DXGIFormatSet()
 // This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
 TextureFormat::TextureFormat(GLenum internalFormat,
-                             const DXGIFormatSet &formatSet,
+                             const ANGLEFormatSet &formatSet,
                              InitializeTextureDataFunction internalFormatInitializer)
     : formatSet(formatSet), dataInitializerFunction(internalFormatInitializer)
 {{
-
-    // Compute the swizzle formats
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    if (internalFormat != GL_NONE && formatInfo.pixelBytes > 0)
-    {{
-        if (formatInfo.componentCount != 4 || formatSet.texFormat == DXGI_FORMAT_UNKNOWN ||
-            formatSet.srvFormat == DXGI_FORMAT_UNKNOWN ||
-            formatSet.rtvFormat == DXGI_FORMAT_UNKNOWN)
-        {{
-            // Get the maximum sized component
-            unsigned int maxBits = 1;
-            if (formatInfo.compressed)
-            {{
-                unsigned int compressedBitsPerBlock = formatInfo.pixelBytes * 8;
-                unsigned int blockSize =
-                    formatInfo.compressedBlockWidth * formatInfo.compressedBlockHeight;
-                maxBits = std::max(compressedBitsPerBlock / blockSize, maxBits);
-            }}
-            else
-            {{
-                maxBits = std::max(maxBits, formatInfo.alphaBits);
-                maxBits = std::max(maxBits, formatInfo.redBits);
-                maxBits = std::max(maxBits, formatInfo.greenBits);
-                maxBits = std::max(maxBits, formatInfo.blueBits);
-                maxBits = std::max(maxBits, formatInfo.luminanceBits);
-                maxBits = std::max(maxBits, formatInfo.depthBits);
-            }}
-
-            maxBits = roundUp(maxBits, 8U);
-
-            const SwizzleFormatInfo &swizzleInfo =
-                GetSwizzleFormatInfo(maxBits, formatInfo.componentType);
-            swizzleFormatSet.texFormat = swizzleInfo.mTexFormat;
-            swizzleFormatSet.srvFormat = swizzleInfo.mSRVFormat;
-            swizzleFormatSet.rtvFormat = swizzleInfo.mRTVFormat;
-        }}
-        else
-        {{
-            // The original texture format is suitable for swizzle operations
-            swizzleFormatSet = formatSet;
-        }}
-    }}
-    else
-    {{
-        // Not possible to swizzle with this texture format since it is either unsized or GL_NONE
-        ASSERT(swizzleFormatSet.texFormat == DXGI_FORMAT_UNKNOWN);
-        ASSERT(swizzleFormatSet.srvFormat == DXGI_FORMAT_UNKNOWN);
-        ASSERT(swizzleFormatSet.rtvFormat == DXGI_FORMAT_UNKNOWN);
-    }}
+    swizzleFormatSet = GetANGLEFormatSet(formatSet.swizzleFormat);
 
     // Gather all the load functions for this internal format
     loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet.texFormat);
@@ -208,15 +161,20 @@ TextureFormat::TextureFormat(GLenum internalFormat,
     ASSERT(loadFunctions.size() != 0 || internalFormat == GL_NONE);
 }}
 
-DXGIFormatSet::DXGIFormatSet(DXGI_FORMAT texFormat,
-                             DXGI_FORMAT srvFormat,
-                             DXGI_FORMAT rtvFormat,
-                             DXGI_FORMAT dsvFormat)
-    : texFormat(texFormat), srvFormat(srvFormat), rtvFormat(rtvFormat), dsvFormat(dsvFormat)
+ANGLEFormatSet::ANGLEFormatSet(DXGI_FORMAT texFormat,
+                               DXGI_FORMAT srvFormat,
+                               DXGI_FORMAT rtvFormat,
+                               DXGI_FORMAT dsvFormat,
+                               ANGLEFormat swizzleFormat)
+    : texFormat(texFormat),
+      srvFormat(srvFormat),
+      rtvFormat(rtvFormat),
+      dsvFormat(dsvFormat),
+      swizzleFormat(swizzleFormat)
 {{
 }}
 
-const DXGIFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
+const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
 {{
     // clang-format off
     switch (angleFormat)
@@ -228,7 +186,7 @@ const DXGIFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
     // clang-format on
 
     UNREACHABLE();
-    static const DXGIFormatSet defaultInfo;
+    static const ANGLEFormatSet defaultInfo;
     return defaultInfo;
 }}
 
@@ -244,7 +202,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
     }}
     // clang-format on
 
-    static const TextureFormat defaultInfo(GL_NONE, DXGIFormatSet(), nullptr);
+    static const TextureFormat defaultInfo(GL_NONE, ANGLEFormatSet(), nullptr);
     return defaultInfo;
 }}  // GetTextureFormatInfo
 
@@ -299,30 +257,80 @@ def get_internal_format_initializer(internal_format, angle_format):
             pass
         elif 'componentType' not in angle_format:
             raise ValueError('warning: internal format initializer could not be generated and may be needed for ' + internal_format)
-        elif angle_format['componentType'] == 'byte_uint':
+        elif angle_format['componentType'] == 'uint' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0x01>'
-        elif angle_format['componentType'] == 'byte_unorm':
+        elif angle_format['componentType'] == 'unorm' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>'
-        elif angle_format['componentType'] == 'byte_int':
+        elif angle_format['componentType'] == 'int' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x01>'
-        elif angle_format['componentType'] == 'byte_snorm':
+        elif angle_format['componentType'] == 'snorm' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x7F>'
-        elif angle_format['componentType'] == 'half':
+        elif angle_format['componentType'] == 'float' and angle_format['bits']['red'] == 16:
             internal_format_initializer = 'Initialize4ComponentData<GLhalf, 0x0000, 0x0000, 0x0000, gl::Float16One>'
-        elif angle_format['componentType'] == 'short_uint':
+        elif angle_format['componentType'] == 'uint' and angle_format['bits']['red'] == 16:
             internal_format_initializer = 'Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x0001>'
-        elif angle_format['componentType'] == 'short_int':
+        elif angle_format['componentType'] == 'int' and angle_format['bits']['red'] == 16:
             internal_format_initializer = 'Initialize4ComponentData<GLshort, 0x0000, 0x0000, 0x0000, 0x0001>'
-        elif angle_format['componentType'] == 'float':
+        elif angle_format['componentType'] == 'float' and angle_format['bits']['red'] == 32:
             internal_format_initializer = 'Initialize4ComponentData<GLfloat, 0x00000000, 0x00000000, 0x00000000, gl::Float32One>'
-        elif angle_format['componentType'] == 'int':
+        elif angle_format['componentType'] == 'int' and angle_format['bits']['red'] == 32:
             internal_format_initializer = 'Initialize4ComponentData<GLint, 0x00000000, 0x00000000, 0x00000000, 0x00000001>'
-        elif angle_format['componentType'] == 'uint':
+        elif angle_format['componentType'] == 'uint' and angle_format['bits']['red'] == 32:
             internal_format_initializer = 'Initialize4ComponentData<GLuint, 0x00000000, 0x00000000, 0x00000000, 0x00000001>'
         else:
             raise ValueError('warning: internal format initializer could not be generated and may be needed for ' + internal_format)
 
     return internal_format_initializer
+
+def get_swizzle_format_id(angle_format_id, angle_format):
+    if angle_format_id == 'ANGLE_FORMAT_NONE':
+        return 'ANGLE_FORMAT_NONE'
+    elif 'swizzleFormat' in angle_format:
+        # For some special formats like compressed formats that don't have a clearly defined number
+        # of bits per channel, swizzle format needs to be specified manually.
+        return angle_format['swizzleFormat']
+
+    if 'bits' not in angle_format:
+        raise ValueError('no bits information for determining swizzleformat for format: ' + angle_format_id)
+
+    bits = angle_format['bits']
+    max_component_bits = max(bits.itervalues())
+    channels_different = not all([component_bits == bits.itervalues().next() for component_bits in bits.itervalues()])
+
+    # The format itself can be used for swizzles if it can be accessed as a render target and
+    # sampled and the bit count for all 4 channels is the same.
+    if "rtvFormat" in angle_format and "srvFormat" in angle_format and not channels_different and len(angle_format['channels']) == 4:
+        return angle_format_id
+
+    b = int(math.ceil(float(max_component_bits) / 8) * 8)
+
+    # Depth formats need special handling, since combined depth/stencil formats don't have a clearly
+    # defined component type.
+    if angle_format['channels'].find('d') >= 0:
+        if b == 24 or b == 32:
+            return 'ANGLE_FORMAT_R32G32B32A32_FLOAT'
+        if b == 16:
+            return 'ANGLE_FORMAT_R16G16B16A16_UNORM'
+
+    if b == 24:
+        raise ValueError('unexpected 24-bit format when determining swizzleformat for format: ' + angle_format_id)
+
+    if 'componentType' not in angle_format:
+        raise ValueError('no component type information for determining swizzleformat for format: ' + angle_format_id)
+
+    component_type = angle_format['componentType']
+    if component_type == 'uint':
+        return 'ANGLE_FORMAT_R{}G{}B{}A{}_UINT'.format(b, b, b, b)
+    elif component_type == 'int':
+        return 'ANGLE_FORMAT_R{}G{}B{}A{}_SINT'.format(b, b, b, b)
+    elif component_type == 'unorm':
+        return 'ANGLE_FORMAT_R{}G{}B{}A{}_UNORM'.format(b, b, b, b)
+    elif component_type == 'snorm':
+        return 'ANGLE_FORMAT_R{}G{}B{}A{}_SNORM'.format(b, b, b, b)
+    elif component_type == 'float':
+        return 'ANGLE_FORMAT_R{}G{}B{}A{}_FLOAT'.format(b, b, b, b)
+    else:
+        raise ValueError('could not determine swizzleformat based on componentType for format: ' + angle_format_id)
 
 def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_id, angle_format):
     table_data = '';
@@ -382,11 +390,13 @@ def parse_json_into_switch_angle_format_string(json_data):
         srv_format = angle_format["srvFormat"] if "srvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         rtv_format = angle_format["rtvFormat"] if "rtvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         dsv_format = angle_format["dsvFormat"] if "dsvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
+        swizzle_format = get_swizzle_format_id(angle_format_item[0], angle_format)
         table_data += '        {\n'
-        table_data += '            static const DXGIFormatSet formatInfo(' + tex_format + ',\n'
-        table_data += '                                                  ' + srv_format + ',\n'
-        table_data += '                                                  ' + rtv_format + ',\n'
-        table_data += '                                                  ' + dsv_format + ');\n'
+        table_data += '            static const ANGLEFormatSet formatInfo(' + tex_format + ',\n'
+        table_data += '                                                   ' + srv_format + ',\n'
+        table_data += '                                                   ' + rtv_format + ',\n'
+        table_data += '                                                   ' + dsv_format + ',\n'
+        table_data += '                                                   ' + swizzle_format + ');\n'
         table_data += '            return formatInfo;\n'
         table_data += '        }\n'
     return table_data

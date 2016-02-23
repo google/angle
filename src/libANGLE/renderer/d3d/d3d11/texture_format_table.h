@@ -35,30 +35,33 @@ struct LoadImageFunctionInfo
     bool requiresConversion;
 };
 
-struct DXGIFormatSet
+struct ANGLEFormatSet
 {
-    DXGIFormatSet();
-    DXGIFormatSet(DXGI_FORMAT texFormat,
-                  DXGI_FORMAT srvFormat,
-                  DXGI_FORMAT rtvFormat,
-                  DXGI_FORMAT dsvFormat);
-    DXGIFormatSet(const DXGIFormatSet &) = default;
-    DXGIFormatSet &operator=(const DXGIFormatSet &) = default;
+    ANGLEFormatSet();
+    ANGLEFormatSet(DXGI_FORMAT texFormat,
+                   DXGI_FORMAT srvFormat,
+                   DXGI_FORMAT rtvFormat,
+                   DXGI_FORMAT dsvFormat,
+                   ANGLEFormat swizzleFormat);
+    ANGLEFormatSet(const ANGLEFormatSet &) = default;
+    ANGLEFormatSet &operator=(const ANGLEFormatSet &) = default;
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;
     DXGI_FORMAT rtvFormat;
     DXGI_FORMAT dsvFormat;
+
+    ANGLEFormat swizzleFormat;
 };
 
 struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
-                  const DXGIFormatSet &formatSet,
+                  const ANGLEFormatSet &formatSet,
                   InitializeTextureDataFunction internalFormatInitializer);
 
-    DXGIFormatSet formatSet;
-    DXGIFormatSet swizzleFormatSet;
+    ANGLEFormatSet formatSet;
+    ANGLEFormatSet swizzleFormatSet;
 
     InitializeTextureDataFunction dataInitializerFunction;
     typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
@@ -66,7 +69,7 @@ struct TextureFormat : public angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
-const DXGIFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat);
+const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat);
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalformat,
                                           const Renderer11DeviceCaps &renderer11DeviceCaps);

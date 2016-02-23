@@ -230,6 +230,13 @@ TEST_P(SwizzleTest, R8_2D)
     runTest2D();
 }
 
+TEST_P(SwizzleTest, RGB10_A2_2D)
+{
+    GLuint data[] = {20u | (40u << 10) | (60u << 20) | (2u << 30)};
+    init2DTexture(GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV, data);
+    runTest2D();
+}
+
 TEST_P(SwizzleTest, RGBA32F_2D)
 {
     GLfloat data[] = { 0.25f, 0.5f, 0.75f, 0.8f };

@@ -380,8 +380,6 @@
             'libANGLE/renderer/d3d/d3d11/StateManager11.h',
             'libANGLE/renderer/d3d/d3d11/SwapChain11.cpp',
             'libANGLE/renderer/d3d/d3d11/SwapChain11.h',
-            'libANGLE/renderer/d3d/d3d11/swizzle_format_info.h',
-            'libANGLE/renderer/d3d/d3d11/swizzle_format_info_autogen.cpp',
             'libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp',
             'libANGLE/renderer/d3d/d3d11/TextureStorage11.h',
             'libANGLE/renderer/d3d/d3d11/Trim11.cpp',
