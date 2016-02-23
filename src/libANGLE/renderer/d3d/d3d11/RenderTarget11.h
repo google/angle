@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
@@ -22,7 +23,7 @@ class Renderer11;
 class RenderTarget11 : public RenderTargetD3D
 {
   public:
-    RenderTarget11();
+    RenderTarget11(d3d11::ANGLEFormat angleFormat);
     virtual ~RenderTarget11();
 
     virtual ID3D11Resource *getTexture() const = 0;
@@ -38,18 +39,36 @@ class RenderTarget11 : public RenderTargetD3D
     void removeDirtyCallback(const NotificationCallback *callback);
     void signalDirty() override;
 
+    d3d11::ANGLEFormat getANGLEFormat() const { return mANGLEFormat; }
+
   protected:
     std::set<const NotificationCallback *> mDirtyCallbacks;
+
+    d3d11::ANGLEFormat mANGLEFormat;
 };
 
 class TextureRenderTarget11 : public RenderTarget11
 {
   public:
     // TextureRenderTarget11 takes ownership of any D3D11 resources it is given and will AddRef them
-    TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
-                           GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples);
-    TextureRenderTarget11(ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
-                           GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples);
+    TextureRenderTarget11(ID3D11RenderTargetView *rtv,
+                          ID3D11Resource *resource,
+                          ID3D11ShaderResourceView *srv,
+                          GLenum internalFormat,
+                          d3d11::ANGLEFormat angleFormat,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth,
+                          GLsizei samples);
+    TextureRenderTarget11(ID3D11DepthStencilView *dsv,
+                          ID3D11Resource *resource,
+                          ID3D11ShaderResourceView *srv,
+                          GLenum internalFormat,
+                          d3d11::ANGLEFormat angleFormat,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth,
+                          GLsizei samples);
     virtual ~TextureRenderTarget11();
 
     GLsizei getWidth() const override;
@@ -104,6 +123,10 @@ class SurfaceRenderTarget11 : public RenderTarget11
     DXGI_FORMAT getDXGIFormat() const override;
 
   private:
+    // The internal versions of the functions are needed so that they can be safely called
+    // from the constructor.
+    GLenum getInternalFormatInternal() const;
+
     SwapChain11 *mSwapChain;
     Renderer11 *mRenderer;
     bool mDepth;

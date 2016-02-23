@@ -3131,7 +3131,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target depth stencil view, result: 0x%X.", result);
             }
 
-            *outRT = new TextureRenderTarget11(dsv, texture, srv, format, width, height, 1, supportedSamples);
+            *outRT =
+                new TextureRenderTarget11(dsv, texture, srv, format, formatInfo.formatSet.format,
+                                          width, height, 1, supportedSamples);
 
             SafeRelease(dsv);
         }
@@ -3158,7 +3160,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 mDeviceContext->ClearRenderTargetView(rtv, clearValues);
             }
 
-            *outRT = new TextureRenderTarget11(rtv, texture, srv, format, width, height, 1, supportedSamples);
+            *outRT =
+                new TextureRenderTarget11(rtv, texture, srv, format, formatInfo.formatSet.format,
+                                          width, height, 1, supportedSamples);
 
             SafeRelease(rtv);
         }
@@ -3172,7 +3176,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     }
     else
     {
-        *outRT = new TextureRenderTarget11(reinterpret_cast<ID3D11RenderTargetView*>(NULL), NULL, NULL, format, width, height, 1, supportedSamples);
+        *outRT = new TextureRenderTarget11(reinterpret_cast<ID3D11RenderTargetView *>(nullptr),
+                                           nullptr, nullptr, format, d3d11::ANGLE_FORMAT_NONE,
+                                           width, height, 1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);
