@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62a5a9c6_0b9d4092",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T16:27:35Z",
+      "side": 1,
+      "message": "Here if getRenderTarget \u003d\u003d cachedRenderTarget, the code still shuffles callback around. How about something like:\n\nnewRT \u003d getRenderTarget\nif (newRT !\u003d cachedRT) {\n    if (cachedRT)\n        remove callback\n    if (newRT)\n        add callback\n}",
+      "revId": "d25e787d0ce1406c7c9cb49edc0bf941160ade78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62a5a9c6_cba638e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T16:27:35Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "d25e787d0ce1406c7c9cb49edc0bf941160ade78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82bb7df1_ea420918",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T16:27:35Z",
+      "side": 1,
+      "message": "Couldn\u0027t this be replaced with a std::unordered_set\u003cconst NotificationCallback*\u003e ?",
+      "revId": "d25e787d0ce1406c7c9cb49edc0bf941160ade78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
