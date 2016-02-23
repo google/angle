@@ -777,7 +777,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swap
     mTextureWidth  = texDesc.Width;
     mTextureHeight = texDesc.Height;
     mTextureDepth  = 1;
-    mHasKeyedMutex = (texDesc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX);
+    mHasKeyedMutex = (texDesc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX) != 0;
 
     mInternalFormat = swapchain->GetRenderTargetInternalFormat();
 
