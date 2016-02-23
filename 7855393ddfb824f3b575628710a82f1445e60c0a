@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c283b51b_6d8f7118",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-23T16:01:33Z",
+      "side": 1,
+      "message": "I\u0027m still considering if it makes sense to have a separate structure for ANGLEFormatInfo and the DXGIFormatSet, or should they be the one and the same. Follow-up patches add information like a reference to the swizzle format to ANGLEFormatInfo. Thoughts?",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
