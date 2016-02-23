@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "e2b0b90b_10bfb2d9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T22:18:26Z",
+      "side": 1,
+      "message": "UNREACHABLE here might allow you to remove the defaultInfo and default constructor of ANGLEFormatInfo.",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02e4ed24_698bc2da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T22:18:26Z",
+      "side": 1,
+      "message": "If we start to have a lot of arguments, it might be more readable to do:\n\nreplacements \u003d {\n     \"angle_format_cases\": ....,\n}\noutput_cpp \u003d template.format(**replacements)",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c283b51b_6d8f7118",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.h",
         "patchSetId": 7
@@ -31,6 +65,24 @@
       "side": 1,
       "message": "Can you link the patch in question? I think I\u0027m in favour of removing this class from what I\u0027m seeing in the current patch stack.",
       "parentUuid": "c283b51b_6d8f7118",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82bb7df1_73495006",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-23T22:18:26Z",
+      "side": 1,
+      "message": "ANGLEFormatInfo would be the same struct as DXGIFormatSet so let\u0027s merge them.",
+      "parentUuid": "22d0113b_522655fd",
       "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
