@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62be89e4_96fa9d23",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-23T16:14:31Z",
+      "side": 1,
+      "message": "nit: can you replace this with \u0027auto\u0027 to make the alignment less stretched?",
+      "range": {
+        "startLine": 222,
+        "startChar": 14,
+        "endLine": 222,
+        "endChar": 34
+      },
+      "revId": "e1d4af541d7a8c0d772ec5251cb19edc41cd05d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02e4ed24_13690bfa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-23T16:14:31Z",
+      "side": 1,
+      "message": "I like the default assignment and copy op you added to DXGIFormatSet, can we add them here as well? Or, make them non-copyable.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "e1d4af541d7a8c0d772ec5251cb19edc41cd05d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
