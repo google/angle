@@ -124,6 +124,16 @@ class FramebufferFormatsTest : public ANGLETest
         EXPECT_GL_NO_ERROR();
     }
 
+    void testZeroHeightRenderbuffer()
+    {
+        glGenRenderbuffers(1, &mRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  mRenderbuffer);
+        EXPECT_GL_NO_ERROR();
+    }
+
     void SetUp() override
     {
         ANGLETest::SetUp();
@@ -301,6 +311,18 @@ TEST_P(FramebufferFormatsTest, IncompleteCubeMap)
     ASSERT_NE(0u, mProgram);
     drawQuad(mProgram, "position", 0.5f);
     ASSERT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+}
+
+// Test that a renderbuffer with zero height but nonzero width is handled without crashes/asserts.
+TEST_P(FramebufferFormatsTest, ZeroHeightRenderbuffer)
+{
+    if (getClientVersion() < 3)
+    {
+        std::cout << "Test skipped due to missing ES3" << std::endl;
+        return;
+    }
+
+    testZeroHeightRenderbuffer();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

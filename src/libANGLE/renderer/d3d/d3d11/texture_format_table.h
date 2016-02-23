@@ -38,13 +38,16 @@ struct LoadImageFunctionInfo
 struct ANGLEFormatSet
 {
     ANGLEFormatSet();
-    ANGLEFormatSet(DXGI_FORMAT texFormat,
+    ANGLEFormatSet(ANGLEFormat format,
+                   DXGI_FORMAT texFormat,
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
                    ANGLEFormat swizzleFormat);
     ANGLEFormatSet(const ANGLEFormatSet &) = default;
     ANGLEFormatSet &operator=(const ANGLEFormatSet &) = default;
+
+    ANGLEFormat format;
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;
@@ -57,7 +60,7 @@ struct ANGLEFormatSet
 struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
-                  const ANGLEFormatSet &formatSet,
+                  const ANGLEFormat angleFormat,
                   InitializeTextureDataFunction internalFormatInitializer);
 
     ANGLEFormatSet formatSet;
