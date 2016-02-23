@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02e4ed24_b367d723",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1448,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-23T16:17:24Z",
+      "side": 1,
+      "message": "you can pull the storage format from the renderTarget\u0027s resource\u0027s desc.",
+      "range": {
+        "startLine": 1447,
+        "startChar": 4,
+        "endLine": 1448,
+        "endChar": 33
+      },
+      "revId": "443c0baddcb69b4b443e1c1d6c2c40a54ae8b247",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
