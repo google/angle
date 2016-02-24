@@ -39,6 +39,7 @@ struct ANGLEFormatSet
 {
     ANGLEFormatSet();
     ANGLEFormatSet(ANGLEFormat format,
+                   GLenum glInternalFormat,
                    DXGI_FORMAT texFormat,
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
@@ -48,6 +49,10 @@ struct ANGLEFormatSet
     ANGLEFormatSet &operator=(const ANGLEFormatSet &) = default;
 
     ANGLEFormat format;
+
+    // The closest matching GL internal format for the DXGI formats this format uses. Note that this
+    // may be a different internal format than the one this ANGLE format is used for.
+    GLenum glInternalFormat;
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;

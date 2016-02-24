@@ -3455,8 +3455,6 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
     const d3d11::TextureFormat &d3d11FormatInfo = d3d11::GetTextureFormatInfo(internalFormat, mRenderer11DeviceCaps);
-    const d3d11::DXGIFormat &dxgiFormatInfo =
-        d3d11::GetDXGIFormatInfo(d3d11FormatInfo.formatSet.texFormat);
 
     // sRGB formats do not work with D3D11 buffer SRVs
     if (internalFormatInfo.colorEncoding == GL_SRGB)
@@ -3477,7 +3475,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We don't support formats which we can't represent without conversion
-    if (dxgiFormatInfo.internalFormat != internalFormat)
+    if (d3d11FormatInfo.formatSet.glInternalFormat != internalFormat)
     {
         return false;
     }
