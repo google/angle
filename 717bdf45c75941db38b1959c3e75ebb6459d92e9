@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62a5a9c6_911f3a4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-02-24T17:51:16Z",
+      "side": 1,
+      "message": "Are these known to be only called when this framebuffer is currently bound?  Do we want to always invalidate the current render target in the state manager?",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 1
+      },
+      "revId": "717bdf45c75941db38b1959c3e75ebb6459d92e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
