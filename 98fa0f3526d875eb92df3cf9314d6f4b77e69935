@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c283b51b_4d38ed85",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:49:08Z",
+      "side": 1,
+      "message": "I added some comments.",
+      "parentUuid": "22d0113b_77182397",
+      "range": {
+        "startLine": 299,
+        "startChar": 4,
+        "endLine": 299,
+        "endChar": 25
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_935dfb51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/swizzle_format_data.json",
         "patchSetId": 1
@@ -88,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "22c49160_3bdaffeb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:49:08Z",
+      "side": 1,
+      "message": "Probably could, but it would need exceptions for depth/stencil formats and some other odd ones like the shared exponent format, we\u0027d also have to make sure that compressed formats would not accidentally get the information set. I think it makes more sense to specify these explicitly.",
+      "parentUuid": "c2c1f56d_d18ed8e9",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2c1f56d_f79f8c78",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
         "patchSetId": 1
@@ -99,6 +147,30 @@
       "writtenOn": "2016-02-23T18:58:15Z",
       "side": 1,
       "message": "nit: using auto here will help the alignment",
+      "range": {
+        "startLine": 109,
+        "startChar": 10,
+        "endLine": 109,
+        "endChar": 25
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02c30d5c_5a389585",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:49:08Z",
+      "side": 1,
+      "message": "Not relevant any more for the new version of the patch.",
+      "parentUuid": "c2c1f56d_f79f8c78",
       "range": {
         "startLine": 109,
         "startChar": 10,
