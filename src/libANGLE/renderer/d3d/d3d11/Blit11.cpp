@@ -626,10 +626,26 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
     source->GetDesc(&sourceSRVDesc);
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
-    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
+    GLenum componentType = dxgiFormatInfo.componentType;
+    if (componentType == GL_NONE)
+    {
+        // We're swizzling the depth component of a depth-stencil texture.
+        switch (sourceSRVDesc.Format)
+        {
+            case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+                componentType = GL_UNSIGNED_NORMALIZED;
+                break;
+            case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+                componentType = GL_FLOAT;
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
 
     GLenum shaderType = GL_NONE;
-    switch (sourceFormatInfo.componentType)
+    switch (componentType)
     {
       case GL_UNSIGNED_NORMALIZED:
       case GL_SIGNED_NORMALIZED:
@@ -774,9 +790,12 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
     source->GetDesc(&sourceSRVDesc);
 
     const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
+    GLenum componentType                    = dxgiFormatInfo.componentType;
 
-    bool isSigned = (internalFormatInfo.componentType == GL_INT);
+    ASSERT(componentType != GL_NONE);
+    ASSERT(componentType != GL_SIGNED_NORMALIZED);
+    bool isSigned = (componentType == GL_INT);
+
     ShaderDimension dimension = (sourceSRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE3D) ? SHADER_3D : SHADER_2D;
 
     const Shader *shader = nullptr;
