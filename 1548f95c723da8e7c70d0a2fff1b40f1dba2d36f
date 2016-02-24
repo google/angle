@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2981592_42620782",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:51:50Z",
+      "side": 1,
+      "message": "bits \u003d angle_format[\u0027bit\u0027]\nmax(bits.itervalues())",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2981592_62650b88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:51:50Z",
+      "side": 1,
+      "message": "When doing iteritems you usually want to use a destructuring assignement instead of indexing with 1:\n\nfor (name, size) in bits.iteritems()\n\nBut in this case you can use itervalues, or better:\n\nbits \u003d angle_format[\u0027bits\u0027]\nchannel_different \u003d not all([size \u003d\u003d bits[\u0027red\u0027] for size in bits.itervalues()])",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2def959_793f0a6c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:51:50Z",
+      "side": 1,
+      "message": "Can you move this import at the top?",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
