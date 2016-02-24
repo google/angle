@@ -136,6 +136,40 @@
     },
     {
       "key": {
+        "uuid": "62a5a9c6_91985a2f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:51:50Z",
+      "side": 1,
+      "message": "It seems alpha is missing here.",
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62a5a9c6_7195d6f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:51:50Z",
+      "side": 1,
+      "message": "uint?",
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2c1f56d_f79f8c78",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
         "patchSetId": 1
