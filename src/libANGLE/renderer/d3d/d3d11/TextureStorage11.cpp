@@ -3236,7 +3236,36 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
         }
         else
         {
-            UNREACHABLE();
+            ASSERT(mTextureFormatSet.dsvFormat != DXGI_FORMAT_UNKNOWN);
+
+            D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+            dsvDesc.Format                         = mTextureFormatSet.dsvFormat;
+            dsvDesc.ViewDimension                  = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+            dsvDesc.Texture2DArray.MipSlice        = mTopLevel + mipLevel;
+            dsvDesc.Texture2DArray.FirstArraySlice = layer;
+            dsvDesc.Texture2DArray.ArraySize       = 1;
+            dsvDesc.Flags                          = 0;
+
+            ID3D11DepthStencilView *dsv;
+            result = device->CreateDepthStencilView(texture, &dsvDesc, &dsv);
+
+            ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
+            if (FAILED(result))
+            {
+                SafeRelease(srv);
+                return gl::Error(GL_OUT_OF_MEMORY,
+                                 "Failed to create TexStorage2DArray DSV. Result: 0x%X.", result);
+            }
+
+            d3d11::SetDebugName(dsv, "TexStorage2DArray.RenderTargetDSV");
+
+            mRenderTargets[key] =
+                new TextureRenderTarget11(dsv, texture, srv, mInternalFormat,
+                                          getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+
+            // RenderTarget will take ownership of these resources
+            SafeRelease(dsv);
+            SafeRelease(srv);
         }
     }
 
