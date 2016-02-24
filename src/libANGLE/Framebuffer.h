@@ -119,6 +119,7 @@ class Framebuffer final : public LabeledObject
 
     size_t getDrawbufferStateCount() const;
     GLenum getDrawBufferState(size_t drawBuffer) const;
+    const std::vector<GLenum> &getDrawBufferStates() const;
     void setDrawBuffers(size_t count, const GLenum *buffers);
     const FramebufferAttachment *getDrawBuffer(size_t drawBuffer) const;
     bool hasEnabledDrawBuffer() const;

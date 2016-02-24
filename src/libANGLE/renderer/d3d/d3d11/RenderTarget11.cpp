@@ -178,6 +178,39 @@ static unsigned int getDSVSubresourceIndex(ID3D11Resource *resource, ID3D11Depth
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
+RenderTarget11::RenderTarget11()
+{
+}
+
+RenderTarget11::~RenderTarget11()
+{
+    signalDirty();
+}
+
+void RenderTarget11::addDirtyCallback(const NotificationCallback *callback)
+{
+    mDirtyCallbacks.insert(callback);
+}
+
+void RenderTarget11::removeDirtyCallback(const NotificationCallback *callback)
+{
+    mDirtyCallbacks.erase(callback);
+}
+
+void RenderTarget11::signalDirty()
+{
+    if (mDirtyCallbacks.empty())
+        return;
+
+    for (const auto &callback : mDirtyCallbacks)
+    {
+        (*callback)();
+    }
+
+    // Clear the signal list. We can't do this in the callback because it mutates the iterator.
+    mDirtyCallbacks.clear();
+}
+
 TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
                                              GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples)
     : mWidth(width),

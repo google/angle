@@ -960,6 +960,8 @@ gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
 
 gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTexture)
 {
+    bool lastSetting = mUseLevelZeroTexture;
+
     if (useLevelZeroTexture && mMipLevels > 1)
     {
         if (!mUseLevelZeroTexture && mTexture)
@@ -995,6 +997,22 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
         }
 
         mUseLevelZeroTexture = false;
+    }
+
+    if (lastSetting != mUseLevelZeroTexture)
+    {
+        // Mark everything as dirty to be conservative.
+        if (mLevelZeroRenderTarget)
+        {
+            mLevelZeroRenderTarget->signalDirty();
+        }
+        for (auto *renderTarget : mRenderTarget)
+        {
+            if (renderTarget)
+            {
+                renderTarget->signalDirty();
+            }
+        }
     }
 
     return gl::Error(GL_NO_ERROR);

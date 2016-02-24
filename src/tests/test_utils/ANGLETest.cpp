@@ -15,6 +15,14 @@
 namespace angle
 {
 
+namespace
+{
+float ColorNorm(GLubyte channelValue)
+{
+    return static_cast<float>(channelValue) / 255.0f;
+}
+}  // anonymous namespace
+
 GLColor::GLColor() : R(0), G(0), B(0), A(0)
 {
 }
@@ -26,6 +34,11 @@ GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b),
 GLColor::GLColor(GLuint colorValue) : R(0), G(0), B(0), A(0)
 {
     memcpy(&R, &colorValue, sizeof(GLuint));
+}
+
+Vector4 GLColor::toNormalizedVector() const
+{
+    return Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
 }
 
 GLColor ReadColor(GLint x, GLint y)

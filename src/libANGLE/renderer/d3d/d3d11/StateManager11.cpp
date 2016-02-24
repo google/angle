@@ -150,9 +150,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurNear(0.0f),
       mCurFar(0.0f),
       mViewportBounds(),
-      mCurPresentPathFastEnabled(false),
-      mCurPresentPathFastColorBufferHeight(0),
-      mAppliedDSV(angle::DirtyPointer)
+      mRenderTargetIsDirty(false)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -458,6 +456,9 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                 {
                     mViewportStateIsDirty = true;
                 }
+                break;
+            case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+                mRenderTargetIsDirty = true;
                 break;
             default:
                 break;
@@ -773,11 +774,7 @@ void StateManager11::setViewport(const gl::Caps *caps,
 
 void StateManager11::invalidateRenderTarget()
 {
-    for (auto &appliedRTV : mAppliedRTVs)
-    {
-        appliedRTV = angle::DirtyPointer;
-    }
-    mAppliedDSV = angle::DirtyPointer;
+    mRenderTargetIsDirty = true;
 }
 
 void StateManager11::invalidateBoundViews()
@@ -800,34 +797,6 @@ void StateManager11::invalidateEverything()
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
     // remove it from its state.
     invalidateBoundViews();
-}
-
-bool StateManager11::setRenderTargets(const RenderTargetArray &renderTargets,
-                                      ID3D11DepthStencilView *depthStencil)
-{
-    // TODO(jmadill): Use context caps?
-    UINT drawBuffers = mRenderer->getRendererCaps().maxDrawBuffers;
-
-    // Apply the render target and depth stencil
-    size_t arraySize = sizeof(uintptr_t) * drawBuffers;
-    if (memcmp(renderTargets.data(), mAppliedRTVs.data(), arraySize) == 0 &&
-        reinterpret_cast<uintptr_t>(depthStencil) == mAppliedDSV)
-    {
-        return false;
-    }
-
-    // The D3D11 blend state is heavily dependent on the current render target.
-    mBlendStateIsDirty = true;
-
-    for (UINT rtIndex = 0; rtIndex < drawBuffers; rtIndex++)
-    {
-        mAppliedRTVs[rtIndex] = reinterpret_cast<uintptr_t>(renderTargets[rtIndex]);
-    }
-    mAppliedDSV = reinterpret_cast<uintptr_t>(depthStencil);
-
-    mRenderer->getDeviceContext()->OMSetRenderTargets(drawBuffers, renderTargets.data(),
-                                                      depthStencil);
-    return true;
 }
 
 void StateManager11::setRenderTarget(ID3D11RenderTargetView *renderTarget,
@@ -954,6 +923,22 @@ void StateManager11::unsetConflictingSRVs(gl::SamplerType samplerType,
     }
 }
 
+void StateManager11::unsetConflictingAttachmentResources(
+    const gl::FramebufferAttachment *attachment,
+    ID3D11Resource *resource)
+{
+    // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
+    if (attachment->type() == GL_TEXTURE)
+    {
+        uintptr_t resourcePtr       = reinterpret_cast<uintptr_t>(resource);
+        const gl::ImageIndex &index = attachment->getTextureImageIndex();
+        // The index doesn't need to be corrected for the small compressed texture workaround
+        // because a rendertarget is never compressed.
+        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, index);
+        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, index);
+    }
+}
+
 void StateManager11::initialize(const gl::Caps &caps)
 {
     mCurVertexSRVs.initialize(caps.maxVertexTextureImageUnits);
@@ -965,85 +950,90 @@ void StateManager11::initialize(const gl::Caps &caps)
 
 gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
 {
+    const Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
+    gl::Error error = framebuffer11->invalidateSwizzles();
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (framebuffer11->hasAnyInternalDirtyBit())
+    {
+        ASSERT(framebuffer->id() != 0);
+        framebuffer11->syncInternalState();
+    }
+
+    if (!mRenderTargetIsDirty)
+    {
+        return gl::Error(GL_NO_ERROR);
+    }
+
+    mRenderTargetIsDirty = false;
+
+    // Check for zero-sized default framebuffer, which is a special case.
+    // in this case we do not wish to modify any state and just silently return false.
+    // this will not report any gl error but will cause the calling method to return.
+    if (framebuffer->id() == 0)
+    {
+        ASSERT(!framebuffer11->hasAnyInternalDirtyBit());
+        const gl::Extents &size = framebuffer->getFirstColorbuffer()->getSize();
+        if (size.width == 0 || size.height == 0)
+        {
+            return gl::Error(GL_NO_ERROR);
+        }
+    }
+
     // Get the color render buffer and serial
     // Also extract the render target dimensions and view
     unsigned int renderTargetWidth  = 0;
     unsigned int renderTargetHeight = 0;
-    DXGI_FORMAT renderTargetFormat  = DXGI_FORMAT_UNKNOWN;
-    RenderTargetArray framebufferRTVs;
+    RTVArray framebufferRTVs;
     bool missingColorRenderTarget = true;
 
     framebufferRTVs.fill(nullptr);
 
-    const Framebuffer11 *framebuffer11     = GetImplAs<Framebuffer11>(framebuffer);
-    const gl::AttachmentList &colorbuffers = framebuffer11->getColorAttachmentsForRender();
+    const auto &colorRTs = framebuffer11->getCachedColorRenderTargets();
 
-    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
+    size_t appliedRTIndex  = 0;
+    bool skipInactiveRTs   = mRenderer->getWorkarounds().mrtPerfWorkaround;
+    const auto &drawStates = framebuffer->getDrawBufferStates();
+
+    for (size_t rtIndex = 0; rtIndex < colorRTs.size(); ++rtIndex)
     {
-        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
+        const RenderTarget11 *renderTarget = colorRTs[rtIndex];
 
-        if (colorbuffer)
+        // Skip inactive rendertargets if the workaround is enabled.
+        if (skipInactiveRTs && (!renderTarget || drawStates[rtIndex] == GL_NONE))
         {
-            // the draw buffer must be either "none", "back" for the default buffer or the same
-            // index as this color (in order)
+            continue;
+        }
 
-            // check for zero-sized default framebuffer, which is a special case.
-            // in this case we do not wish to modify any state and just silently return false.
-            // this will not report any gl error but will cause the calling method to return.
-            const gl::Extents &size = colorbuffer->getSize();
-            if (size.width == 0 || size.height == 0)
-            {
-                return gl::Error(GL_NO_ERROR);
-            }
-
-            // Extract the render target dimensions and view
-            RenderTarget11 *renderTarget = NULL;
-            gl::Error error = colorbuffer->getRenderTarget(&renderTarget);
-            if (error.isError())
-            {
-                return error;
-            }
-            ASSERT(renderTarget);
-
-            framebufferRTVs[colorAttachment] = renderTarget->getRenderTargetView();
-            ASSERT(framebufferRTVs[colorAttachment]);
+        if (renderTarget)
+        {
+            framebufferRTVs[appliedRTIndex] = renderTarget->getRenderTargetView();
+            ASSERT(framebufferRTVs[appliedRTIndex]);
 
             if (missingColorRenderTarget)
             {
                 renderTargetWidth        = renderTarget->getWidth();
                 renderTargetHeight       = renderTarget->getHeight();
-                renderTargetFormat       = renderTarget->getDXGIFormat();
                 missingColorRenderTarget = false;
             }
-
-            // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
-            if (colorbuffer->type() == GL_TEXTURE)
-            {
-                uintptr_t rtResource =
-                    reinterpret_cast<uintptr_t>(GetViewResource(framebufferRTVs[colorAttachment]));
-                const gl::ImageIndex &index = colorbuffer->getTextureImageIndex();
-                // The index doesn't need to be corrected for the small compressed texture
-                // workaround
-                // because a rendertarget is never compressed.
-                unsetConflictingSRVs(gl::SAMPLER_VERTEX, rtResource, index);
-                unsetConflictingSRVs(gl::SAMPLER_PIXEL, rtResource, index);
-            }
         }
+
+        // Unset conflicting texture SRVs
+        const auto *attachment = framebuffer->getColorbuffer(rtIndex);
+        ASSERT(attachment);
+        unsetConflictingAttachmentResources(attachment, renderTarget->getTexture());
+
+        appliedRTIndex++;
     }
 
     // Get the depth stencil buffers
-    ID3D11DepthStencilView *framebufferDSV        = NULL;
-    const gl::FramebufferAttachment *depthStencil = framebuffer->getDepthOrStencilbuffer();
-    if (depthStencil)
+    ID3D11DepthStencilView *framebufferDSV = nullptr;
+    const auto *depthStencilRenderTarget = framebuffer11->getCachedDepthStencilRenderTarget();
+    if (depthStencilRenderTarget)
     {
-        RenderTarget11 *depthStencilRenderTarget = NULL;
-        gl::Error error = depthStencil->getRenderTarget(&depthStencilRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-        ASSERT(depthStencilRenderTarget);
-
         framebufferDSV = depthStencilRenderTarget->getDepthStencilView();
         ASSERT(framebufferDSV);
 
@@ -1055,29 +1045,23 @@ gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
             renderTargetHeight = depthStencilRenderTarget->getHeight();
         }
 
-        // Unbind render target SRVs from the shader here to prevent D3D11 warnings.
-        if (depthStencil->type() == GL_TEXTURE)
-        {
-            uintptr_t depthStencilResource =
-                reinterpret_cast<uintptr_t>(GetViewResource(framebufferDSV));
-            const gl::ImageIndex &index = depthStencil->getTextureImageIndex();
-            // The index doesn't need to be corrected for the small compressed texture workaround
-            // because a rendertarget is never compressed.
-            unsetConflictingSRVs(gl::SAMPLER_VERTEX, depthStencilResource, index);
-            unsetConflictingSRVs(gl::SAMPLER_PIXEL, depthStencilResource, index);
-        }
+        // Unset conflicting texture SRVs
+        const auto *attachment = framebuffer->getDepthOrStencilbuffer();
+        ASSERT(attachment);
+        unsetConflictingAttachmentResources(attachment, depthStencilRenderTarget->getTexture());
     }
 
-    if (setRenderTargets(framebufferRTVs, framebufferDSV))
-    {
-        setViewportBounds(renderTargetWidth, renderTargetHeight);
-    }
+    // TODO(jmadill): Use context caps?
+    UINT drawBuffers = mRenderer->getRendererCaps().maxDrawBuffers;
 
-    gl::Error error = framebuffer11->invalidateSwizzles();
-    if (error.isError())
-    {
-        return error;
-    }
+    // Apply the render target and depth stencil
+    mRenderer->getDeviceContext()->OMSetRenderTargets(drawBuffers, framebufferRTVs.data(),
+                                                      framebufferDSV);
+
+    // The D3D11 blend state is heavily dependent on the current render target.
+    mBlendStateIsDirty = true;
+
+    setViewportBounds(renderTargetWidth, renderTargetHeight);
 
     return gl::Error(GL_NO_ERROR);
 }

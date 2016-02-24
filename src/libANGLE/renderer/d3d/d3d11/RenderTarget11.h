@@ -12,6 +12,8 @@
 
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+
 namespace rx
 {
 class SwapChain11;
@@ -20,8 +22,8 @@ class Renderer11;
 class RenderTarget11 : public RenderTargetD3D
 {
   public:
-    RenderTarget11() { }
-    virtual ~RenderTarget11() { }
+    RenderTarget11();
+    virtual ~RenderTarget11();
 
     virtual ID3D11Resource *getTexture() const = 0;
     virtual ID3D11RenderTargetView *getRenderTargetView() const = 0;
@@ -31,6 +33,13 @@ class RenderTarget11 : public RenderTargetD3D
     virtual unsigned int getSubresourceIndex() const = 0;
 
     virtual DXGI_FORMAT getDXGIFormat() const = 0;
+
+    void addDirtyCallback(const NotificationCallback *callback);
+    void removeDirtyCallback(const NotificationCallback *callback);
+    void signalDirty() override;
+
+  protected:
+    std::set<const NotificationCallback *> mDirtyCallbacks;
 };
 
 class TextureRenderTarget11 : public RenderTarget11

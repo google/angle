@@ -240,5 +240,148 @@ TEST_P(StateChangeTestES3, ReadBufferAndDrawBuffersSync)
     ASSERT_GL_NO_ERROR();
 }
 
+class StateChangeRenderTest : public StateChangeTest
+{
+  protected:
+    StateChangeRenderTest() : mProgram(0), mRenderbuffer(0) {}
+
+    void SetUp() override
+    {
+        StateChangeTest::SetUp();
+
+        const std::string vertexShaderSource =
+            "attribute vec2 position;\n"
+            "void main() {\n"
+            "    gl_Position = vec4(position, 0, 1);\n"
+            "}";
+        const std::string fragmentShaderSource =
+            "uniform highp vec4 uniformColor;\n"
+            "void main() {\n"
+            "    gl_FragColor = uniformColor;\n"
+            "}";
+
+        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        ASSERT_NE(0u, mProgram);
+
+        glGenRenderbuffers(1, &mRenderbuffer);
+    }
+
+    void TearDown() override
+    {
+        glDeleteProgram(mProgram);
+        glDeleteRenderbuffers(1, &mRenderbuffer);
+
+        StateChangeTest::TearDown();
+    }
+
+    void setUniformColor(const GLColor &color)
+    {
+        glUseProgram(mProgram);
+        const Vector4 &normalizedColor = color.toNormalizedVector();
+        GLint uniformLocation = glGetUniformLocation(mProgram, "uniformColor");
+        ASSERT_NE(-1, uniformLocation);
+        glUniform4fv(uniformLocation, 1, normalizedColor.data());
+    }
+
+    GLuint mProgram;
+    GLuint mRenderbuffer;
+};
+
+// Test that re-creating a currently attached texture works as expected.
+TEST_P(StateChangeRenderTest, RecreateTexture)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+
+    // Draw with red to the FBO.
+    GLColor red(255, 0, 0, 255);
+    setUniformColor(red);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, red);
+
+    // Recreate the texture with green.
+    GLColor green(0, 255, 0, 255);
+    std::vector<GLColor> greenPixels(32 * 32, green);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 greenPixels.data());
+    EXPECT_PIXEL_COLOR_EQ(0, 0, green);
+
+    // Verify drawing blue gives blue. This covers the FBO sync with D3D dirty bits.
+    GLColor blue(0, 0, 255, 255);
+    setUniformColor(blue);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, blue);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that re-creating a currently attached renderbuffer works as expected.
+TEST_P(StateChangeRenderTest, RecreateRenderbuffer)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+
+    // Draw with red to the FBO.
+    GLColor red(255, 0, 0, 255);
+    setUniformColor(red);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, red);
+
+    // Recreate the renderbuffer and clear to green.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 32, 32);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    GLColor green(0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, green);
+
+    // Verify drawing blue gives blue. This covers the FBO sync with D3D dirty bits.
+    GLColor blue(0, 0, 255, 255);
+    setUniformColor(blue);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, blue);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that recreating a texture with GenerateMipmaps signals the FBO is dirty.
+TEST_P(StateChangeRenderTest, GenerateMipmap)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+
+    // Draw once to set the RenderTarget in D3D11
+    GLColor red(255, 0, 0, 255);
+    setUniformColor(red);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, red);
+
+    // This will trigger the texture to be re-created on FL9_3.
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Now ensure we don't have a stale render target.
+    GLColor blue(0, 0, 255, 255);
+    setUniformColor(blue);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, blue);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES2_OPENGL(),
+                       ES2_D3D11_FL9_3());
 ANGLE_INSTANTIATE_TEST(StateChangeTestES3, ES3_D3D11(), ES3_OPENGL());

@@ -81,8 +81,6 @@ class StateManager11 final : angle::NonCopyable
     void invalidateRenderTarget();
     void invalidateBoundViews();
     void invalidateEverything();
-    bool setRenderTargets(const RenderTargetArray &renderTargets,
-                          ID3D11DepthStencilView *depthStencil);
     void setRenderTarget(ID3D11RenderTargetView *renderTarget,
                          ID3D11DepthStencilView *depthStencil);
 
@@ -91,10 +89,12 @@ class StateManager11 final : angle::NonCopyable
     gl::Error onMakeCurrent(const gl::Data &data);
 
   private:
+    void setViewportBounds(const int width, const int height);
     void unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
                               const gl::ImageIndex &index);
-    void setViewportBounds(const int width, const int height);
+    void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
+                                             ID3D11Resource *resource);
 
     Renderer11 *mRenderer;
 
@@ -142,8 +142,7 @@ class StateManager11 final : angle::NonCopyable
     int mCurPresentPathFastColorBufferHeight;
 
     // Current RenderTarget state
-    std::array<uintptr_t, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> mAppliedRTVs;
-    uintptr_t mAppliedDSV;
+    bool mRenderTargetIsDirty;
 
     // Queries that are currently active in this state
     std::set<Query11 *> mCurrentQueries;

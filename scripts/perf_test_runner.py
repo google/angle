@@ -19,6 +19,7 @@ base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file_
 
 # You might have to re-order these to find the specific version you want.
 perftests_paths = [
+    os.path.join('out', 'Release_x64'),
     os.path.join('out', 'Release'),
     os.path.join('build', 'Release_x64'),
     os.path.join('build', 'Release_Win32')

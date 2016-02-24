@@ -1252,6 +1252,75 @@ TEST_P(ImageTest, Respecification)
     glDeleteTextures(1, &target);
 }
 
+// First render to a target texture, then respecify the source texture, orphaning it.
+// The target texture's FBO should be notified of the target texture's orphaning.
+TEST_P(ImageTest, RespecificationWithFBO)
+{
+    EGLWindow *window = getEGLWindow();
+    if (!extensionEnabled("OES_EGL_image") ||
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_image_base") ||
+        !eglDisplayExtensionEnabled(window->getDisplay(), "EGL_KHR_gl_texture_2D_image"))
+    {
+        std::cout << "Test skipped because OES_EGL_image, EGL_KHR_image_base or "
+                     "EGL_KHR_gl_texture_2D_image is not available."
+                  << std::endl;
+        return;
+    }
+
+    // Simple shader
+    const std::string &vertexSource =
+        "attribute vec2 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "}";
+    const std::string &fragmentSource =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);\n"
+        "}";
+    GLuint program = CompileProgram(vertexSource, fragmentSource);
+    ASSERT_NE(0u, program);
+
+    GLubyte originalData[4] = {255, 0, 255, 255};
+    GLubyte updateData[4]   = {0, 255, 0, 255};
+
+    // Create the Image
+    GLuint source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalData, &source, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTexture2D(image, &target);
+
+    // Render to the target texture
+    GLuint fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Respecify source with same parameters. This should not change the texture storage in D3D11.
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, updateData);
+
+    // Expect that the source texture has the updated data
+    verifyResults2D(source, updateData);
+
+    // Render to the target texture again and verify it gets the rendered pixels.
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Clean up
+    glDeleteTextures(1, &source);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    glDeleteTextures(1, &target);
+    glDeleteProgram(program);
+    glDeleteFramebuffers(1, &fbo);
+}
+
 // Test that respecifying a level of the target texture orphans it and keeps a copy of the EGLimage
 // data
 TEST_P(ImageTest, RespecificationOfOtherLevel)

@@ -17,6 +17,7 @@
 #include "angle_test_configs.h"
 #include "common/angleutils.h"
 #include "shader_utils.h"
+#include "Vector.h"
 
 #define EXPECT_GL_ERROR(err) EXPECT_EQ(static_cast<GLenum>(err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
@@ -46,6 +47,8 @@ struct GLColor
     GLColor();
     GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
     GLColor(GLuint colorValue);
+
+    Vector4 toNormalizedVector() const;
 
     GLubyte R, G, B, A;
 };
