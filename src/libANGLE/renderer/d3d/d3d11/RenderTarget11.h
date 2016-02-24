@@ -33,8 +33,6 @@ class RenderTarget11 : public RenderTargetD3D
 
     virtual unsigned int getSubresourceIndex() const = 0;
 
-    virtual DXGI_FORMAT getDXGIFormat() const = 0;
-
     void addDirtyCallback(const NotificationCallback *callback);
     void removeDirtyCallback(const NotificationCallback *callback);
     void signalDirty() override;
@@ -84,14 +82,11 @@ class TextureRenderTarget11 : public RenderTarget11
 
     unsigned int getSubresourceIndex() const override;
 
-    DXGI_FORMAT getDXGIFormat() const override;
-
   private:
     GLsizei mWidth;
     GLsizei mHeight;
     GLsizei mDepth;
     GLenum mInternalFormat;
-    DXGI_FORMAT mDXGIFormat;
     GLsizei mSamples;
 
     unsigned int mSubresourceIndex;
@@ -119,8 +114,6 @@ class SurfaceRenderTarget11 : public RenderTarget11
     ID3D11ShaderResourceView *getShaderResourceView() const override;
 
     unsigned int getSubresourceIndex() const override;
-
-    DXGI_FORMAT getDXGIFormat() const override;
 
   private:
     // The internal versions of the functions are needed so that they can be safely called
