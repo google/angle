@@ -122,6 +122,24 @@
     },
     {
       "key": {
+        "uuid": "a2b881d5_bfc51f08",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T16:15:19Z",
+      "side": 1,
+      "message": "In this case it would not technically result in incorrect behavior (no warnings either), but the Google C++ Style Guide says no virtual function calls in constructor. Further changes to this patch will likely remove the need for this hack though.",
+      "parentUuid": "a29b218c_a4c1d6a3",
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a29b218c_64cbcec0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
