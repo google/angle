@@ -460,10 +460,9 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
 
     ASSERT(dstTexture);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(mTextureFormatSet.texFormat);
     const d3d11::DXGIFormatSize &dxgiFormatSizeInfo =
         d3d11::GetDXGIFormatSizeInfo(mTextureFormatSet.texFormat);
-    if (!fullCopy && (dxgiFormatInfo.depthBits > 0 || dxgiFormatInfo.stencilBits > 0))
+    if (!fullCopy && mTextureFormatSet.dsvFormat != DXGI_FORMAT_UNKNOWN)
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
         Blit11 *blitter = mRenderer->getBlitter();
@@ -533,8 +532,7 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,
         // However, D3D10Level9 doesn't always perform CopySubresourceRegion correctly unless the
         // source box is specified. This is okay, since we don't perform CopySubresourceRegion on
         // depth/stencil textures on 9_3.
-        ASSERT(d3d11::GetDXGIFormatInfo(mTextureFormatSet.texFormat).depthBits == 0);
-        ASSERT(d3d11::GetDXGIFormatInfo(mTextureFormatSet.texFormat).stencilBits == 0);
+        ASSERT(mTextureFormatSet.dsvFormat == DXGI_FORMAT_UNKNOWN);
         srcBox.left   = region.x;
         srcBox.right  = region.x + region.width;
         srcBox.top    = region.y;
