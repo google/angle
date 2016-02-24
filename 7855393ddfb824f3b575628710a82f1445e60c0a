@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a220812e_1cfb3990",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:42:29Z",
+      "side": 1,
+      "message": "The default constructor is needed for TextureStorage11. Kept this as is.",
+      "parentUuid": "e2b0b90b_10bfb2d9",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_698bc2da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2016-02-23T22:18:26Z",
       "side": 1,
       "message": "If we start to have a lot of arguments, it might be more readable to do:\n\nreplacements \u003d {\n     \"angle_format_cases\": ....,\n}\noutput_cpp \u003d template.format(**replacements)",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a220812e_3cf87d90",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:42:29Z",
+      "side": 1,
+      "message": "That\u0027s true. Okay if I do a style cleanup here after the patch chain has gone in to avoid extra time spent rebasing?",
+      "parentUuid": "02e4ed24_698bc2da",
       "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -89,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "22dbb13a_86d490bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:42:29Z",
+      "side": 1,
+      "message": "Made them one and the same. Most places that store DXGIFormatSets would need to store also the other fields either way.",
+      "parentUuid": "82bb7df1_73495006",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2def959_1780d7e9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
         "patchSetId": 7
@@ -100,6 +154,30 @@
       "writtenOn": "2016-02-23T18:43:42Z",
       "side": 1,
       "message": "I understand the logic for making these private helper functions, but I think I would prefer seeing this and the below ANGLE format create function as proper constructors. I\u0027m not too worried about some rogue code using the constructor where it shouldn\u0027t, and it cleans up the generated code.",
+      "range": {
+        "startLine": 104,
+        "startChar": 20,
+        "endLine": 104,
+        "endChar": 41
+      },
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2b881d5_ff7a37c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T14:42:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2def959_1780d7e9",
       "range": {
         "startLine": 104,
         "startChar": 20,
