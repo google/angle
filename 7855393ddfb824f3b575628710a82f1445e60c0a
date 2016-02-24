@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "c2c1f56d_d4aa3b9a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:31:57Z",
+      "side": 1,
+      "message": "Sounds good, how about defaultInfo? (no need for rereview it is kept)",
+      "parentUuid": "a220812e_1cfb3990",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_698bc2da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 7
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "That\u0027s true. Okay if I do a style cleanup here after the patch chain has gone in to avoid extra time spent rebasing?",
       "parentUuid": "02e4ed24_698bc2da",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2def959_f932daa7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-24T15:31:57Z",
+      "side": 1,
+      "message": "Sure, this was a nitpick ;)",
+      "parentUuid": "a220812e_3cf87d90",
       "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
