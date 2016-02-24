@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "02c30d5c_9aef8d12",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-24T15:51:19Z",
+      "side": 1,
+      "message": "There\u0027s a bug here I just found with dEQP-GLES3.functional.fbo.* : zero sized framebuffer hits this.",
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82bb7df1_b1791d58",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
         "patchSetId": 2
