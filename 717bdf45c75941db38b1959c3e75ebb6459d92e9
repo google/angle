@@ -22,6 +22,30 @@
       "revId": "717bdf45c75941db38b1959c3e75ebb6459d92e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62a5a9c6_344dfc68",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-24T18:52:47Z",
+      "side": 1,
+      "message": "It\u0027s true that this can trigger off of dependent state changes to bound Textures/Renderbuffers on FBOs that are not bound to GL_DRAW_FRAMEBUFFER. I\u0027ll try updating this and see if it passes the bots.",
+      "parentUuid": "62a5a9c6_911f3a4e",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 1
+      },
+      "revId": "717bdf45c75941db38b1959c3e75ebb6459d92e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
