@@ -88,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "a220812e_3c1abd4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:47:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02e4ed24_e25c6727",
+      "range": {
+        "startLine": 347,
+        "startChar": 4,
+        "endLine": 355,
+        "endChar": 5
+      },
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_a23c1fc8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderTarget11.cpp",
         "patchSetId": 2
@@ -157,6 +181,24 @@
     },
     {
       "key": {
+        "uuid": "42c98578_7f89c3e1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3179,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:47:08Z",
+      "side": 1,
+      "message": "clang-format did format this. IntelliSense complains when using nullptr here, but it doesn\u0027t seem to affect actual compile, so changed to nullptr.",
+      "parentUuid": "a29b218c_64cbcec0",
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2c1f56d_b4a7c7d1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 2
@@ -168,6 +210,30 @@
       "writtenOn": "2016-02-24T15:33:05Z",
       "side": 1,
       "message": "I think we can do better than using reverse-lookup.\n\nmInternalFormat above gives the GL format associated with the swap chain. In d3d11::TextureFormat, we can look up the DXGI format info. Since this is pretty much 1:1 we should be able to use this, adding a new field to track with ANGLEFormat in TextureFormat if necessary.",
+      "range": {
+        "startLine": 791,
+        "startChar": 4,
+        "endLine": 796,
+        "endChar": 82
+      },
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c283b51b_508a4409",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:47:08Z",
+      "side": 1,
+      "message": "True, using the swap chain internal format to look up an angle format should work. I left the reverse lookup as a debug check.",
+      "parentUuid": "c2c1f56d_b4a7c7d1",
       "range": {
         "startLine": 791,
         "startChar": 4,
