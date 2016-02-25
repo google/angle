@@ -199,6 +199,24 @@
     },
     {
       "key": {
+        "uuid": "02e4ed24_e70d9217",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3179,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-25T15:37:30Z",
+      "side": 1,
+      "message": "Ah, I seem it makes sense, thanks!",
+      "parentUuid": "42c98578_7f89c3e1",
+      "revId": "0470f5b1669054bf3b98179d66c78aa5d99f63c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2c1f56d_b4a7c7d1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 2
