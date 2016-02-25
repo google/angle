@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82bb7df1_dda01b1b",
+        "filename": "src/tests/deqp_support/deqp_gles2_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-25T19:55:12Z",
+      "side": 1,
+      "message": "These are GLES3 expectations in a GLES2 expectation file.",
+      "revId": "ea9b92f6ad24b8643322e0b5cf03eaccfe9b0e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
