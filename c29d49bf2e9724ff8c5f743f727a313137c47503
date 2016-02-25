@@ -22,6 +22,24 @@
       "revId": "c29d49bf2e9724ff8c5f743f727a313137c47503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2def959_b277c4a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-25T18:13:34Z",
+      "side": 1,
+      "message": "I\u0027m slightly leaning towards the same opinion. Especially since the DXGI formats of the swapchain don\u0027t seem like they would vary a lot in practice.",
+      "parentUuid": "c2c1f56d_0c8f7ce7",
+      "revId": "c29d49bf2e9724ff8c5f743f727a313137c47503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
