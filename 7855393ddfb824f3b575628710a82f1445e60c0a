@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "62b209f8_bdee07a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:43:36Z",
+      "side": 1,
+      "message": "Compiler didn\u0027t like it if I left defaultInfo out. I added UNREACHABLE though.",
+      "parentUuid": "c2c1f56d_d4aa3b9a",
+      "revId": "7855393ddfb824f3b575628710a82f1445e60c0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02e4ed24_698bc2da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 7
