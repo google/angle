@@ -160,6 +160,30 @@
     },
     {
       "key": {
+        "uuid": "82affd8e_7ed9c96b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T16:06:31Z",
+      "side": 1,
+      "message": "Which format string were you thinking of parsing? There\u0027s a depth/stencil format \"X24_TYPELESS_G8_UINT\", plus they use R24/R32 in some of the DXGI formats - it would be easy for the automated parsing to go wrong there. Using the dsvFormat when it is available and the ANGLE format name when it\u0027s not might work, but sounds messy. Or we could mandate a certain format for the ANGLE format names, but I think spotting errors in the JSON is easier than spotting errors in a string.\n\nThe ability to use arbitrary ANGLE format name strings also adds flexibility in other ways - let\u0027s say we\u0027ll have a need to add more compressed formats with numbers in their names, it would be nice if we didn\u0027t need to worry about the parsing breaking in that case.",
+      "parentUuid": "62be89e4_29eb6f5b",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62a5a9c6_91985a2f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
         "patchSetId": 1
