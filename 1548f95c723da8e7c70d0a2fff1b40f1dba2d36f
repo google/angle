@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "82affd8e_fe25d9f0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:44:56Z",
+      "side": 1,
+      "message": "Done. Thanks for the python tips, it\u0027s been a while since I\u0027ve worked with it!",
+      "parentUuid": "c2981592_42620782",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2981592_62650b88",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "22c49160_9b76b3a8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:44:56Z",
+      "side": 1,
+      "message": "The second option won\u0027t work since all formats don\u0027t have a red channel, though this will:\n\nchannels_different \u003d not all([component_bits \u003d\u003d bits.itervalues().next() for component_bits in bits.itervalues()])",
+      "parentUuid": "c2981592_62650b88",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2def959_793f0a6c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2016-02-24T15:51:50Z",
       "side": 1,
       "message": "Can you move this import at the top?",
+      "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22c49160_db702bad",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:44:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2def959_793f0a6c",
       "revId": "1548f95c723da8e7c70d0a2fff1b40f1dba2d36f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
