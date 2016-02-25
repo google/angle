@@ -184,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "c2c1f56d_ec20c883",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-25T16:21:59Z",
+      "side": 1,
+      "message": "OK, fair point.\n\nThe X24_TYPELESS_G8_UINT format is an oddity. D3D11 needs two different SRV formats depending on if you\u0027re trying to sample from the depth or stencil components of a depth/stencil texture. This G8 format is a specialized SRV format from reading from stencil channels and is also useful for D24S8 as well as this X24S8 - I think we would rather be using X24S8 for the internal format though there isn\u0027t a DXGI format corresponding to this. I think I\u0027ll take a look myself here later, since this relates to multisampled DS blit, but feel free to rename these if you want.",
+      "parentUuid": "82affd8e_7ed9c96b",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62a5a9c6_91985a2f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
         "patchSetId": 1
