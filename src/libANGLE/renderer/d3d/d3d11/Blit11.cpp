@@ -1070,20 +1070,25 @@ gl::Error Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSu
     DXGI_FORMAT format = GetTextureFormat(source);
     ASSERT(format == GetTextureFormat(dest));
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
     const d3d11::DXGIFormatSize &dxgiFormatSizeInfo = d3d11::GetDXGIFormatSizeInfo(format);
     unsigned int pixelSize                          = dxgiFormatSizeInfo.pixelBytes;
     unsigned int copyOffset = 0;
     unsigned int copySize = pixelSize;
     if (stencilOnly)
     {
-        copyOffset = dxgiFormatInfo.depthBits / 8;
-        copySize = dxgiFormatInfo.stencilBits / 8;
+        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
 
-        // It would be expensive to have non-byte sized stencil sizes since it would
-        // require reading from the destination, currently there aren't any though.
-        ASSERT(dxgiFormatInfo.stencilBits % 8 == 0 &&
-               dxgiFormatInfo.depthBits   % 8 == 0);
+        // Stencil channel should be right after the depth channel. Some views to depth/stencil
+        // resources have red channel for depth, in which case the depth channel bit width is in
+        // redBits.
+        ASSERT((dxgiFormatInfo.redBits != 0) != (dxgiFormatInfo.depthBits != 0));
+        GLuint depthBits = dxgiFormatInfo.redBits + dxgiFormatInfo.depthBits;
+        // Known formats have either 24 or 32 bits of depth.
+        ASSERT(depthBits == 24 || depthBits == 32);
+        copyOffset = depthBits / 8;
+
+        // Stencil is assumed to be 8-bit - currently this is true for all possible formats.
+        copySize = 1;
     }
 
     D3D11_MAPPED_SUBRESOURCE sourceMapping;

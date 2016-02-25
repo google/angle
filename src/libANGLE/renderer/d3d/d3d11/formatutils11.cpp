@@ -226,22 +226,20 @@ static ColorFormatInfoMap BuildColorFormatInfoMap()
 struct DXGIDepthStencilInfo
 {
     unsigned int depthBits;
-    unsigned int depthOffset;
     unsigned int stencilBits;
-    unsigned int stencilOffset;
 };
 
 typedef std::map<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoMap;
 typedef std::pair<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoPair;
 
-static inline void InsertDXGIDepthStencilInfo(DepthStencilInfoMap *map, DXGI_FORMAT format, unsigned int depthBits,
-                                              unsigned int depthOffset, unsigned int stencilBits, unsigned int stencilOffset)
+static inline void InsertDXGIDepthStencilInfo(DepthStencilInfoMap *map,
+                                              DXGI_FORMAT format,
+                                              unsigned int depthBits,
+                                              unsigned int stencilBits)
 {
     DXGIDepthStencilInfo info;
     info.depthBits = depthBits;
-    info.depthOffset = depthOffset;
     info.stencilBits = stencilBits;
-    info.stencilOffset = stencilOffset;
 
     map->insert(std::make_pair(format, info));
 }
@@ -250,21 +248,23 @@ static DepthStencilInfoMap BuildDepthStencilInfoMap()
 {
     DepthStencilInfoMap map;
 
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R16_TYPELESS,             16, 0, 0,  0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R16_UNORM,                16, 0, 0,  0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D16_UNORM,                16, 0, 0,  0);
+    // clang-format off
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R16_TYPELESS,             16, 0);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R16_UNORM,                16, 0);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D16_UNORM,                16, 0);
 
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R24G8_TYPELESS,           24, 0, 8, 24);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    24, 0, 8, 24);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D24_UNORM_S8_UINT,        24, 0, 8, 24);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R24G8_TYPELESS,           24, 8);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    24, 8);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D24_UNORM_S8_UINT,        24, 8);
 
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_TYPELESS,             32, 0, 0,  0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_FLOAT,                32, 0, 0,  0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT,                32, 0, 0,  0);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_TYPELESS,             32, 0);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_FLOAT,                32, 0);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT,                32, 0);
 
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32G8X24_TYPELESS,        32, 0, 8, 32);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, 32, 0, 8, 32);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     32, 0, 8, 32);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32G8X24_TYPELESS,        32, 8);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, 32, 8);
+    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     32, 8);
+    // clang-format on
 
     return map;
 }
@@ -278,9 +278,7 @@ DXGIFormat::DXGIFormat()
       alphaBits(0),
       sharedBits(0),
       depthBits(0),
-      depthOffset(0),
       stencilBits(0),
-      stencilOffset(0),
       internalFormat(GL_NONE),
       componentType(GL_NONE),
       colorReadFunction(NULL),
@@ -332,9 +330,7 @@ void AddDXGIFormat(DXGIFormatInfoMap *map,
     {
         const DXGIDepthStencilInfo &dsInfo = dsInfoIter->second;
         info.depthBits = dsInfo.depthBits;
-        info.depthOffset = dsInfo.depthOffset;
         info.stencilBits = dsInfo.stencilBits;
-        info.stencilOffset = dsInfo.stencilOffset;
     }
 
     static const DXGIToESFormatMap dxgiToESMap = BuildDXGIToESFormatMap();
