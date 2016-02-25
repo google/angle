@@ -136,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "62be89e4_29eb6f5b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-25T15:47:02Z",
+      "side": 1,
+      "message": "I\u0027m not sure - The depth/stencil formats seem to have a constent pattern as well (DXXSY for X depth bits and Y stencil bits). You do similar pattern matching already for GL formats.\n\nIt seems as though any format without RXX GXX BXX AXX DXX SX seems to not need the bits information. Also the componentType could be parsed from the format name as well.\n\nI guess I\u0027m thinking parsing it from the format name should be pretty robust. Is there a good reason not to parse this from the name?\n\nI\u0027m thinking you could make a bunch of tokens:\n\n\"R8\", \"G8\", \"B8\", \"A8\" .. \"R32\", \"G32\", \"B32\", \"A32\" .. \"D24\", \"D32\", \"S8\" .. \"UNORM\", \"SNORM\", etc.\n\nAnd you could parse the info just from the presence of the tokens.",
+      "parentUuid": "22c49160_3bdaffeb",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 60
+      },
+      "revId": "98fa0f3526d875eb92df3cf9314d6f4b77e69935",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62a5a9c6_91985a2f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
         "patchSetId": 1
