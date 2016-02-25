@@ -41,14 +41,13 @@ Image11::~Image11()
     releaseStagingTexture();
 }
 
-gl::Error Image11::generateMipmap(Image11 *dest, Image11 *src)
+gl::Error Image11::generateMipmap(Image11 *dest,
+                                  Image11 *src,
+                                  const Renderer11DeviceCaps &rendererCaps)
 {
     ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
     ASSERT(src->getHeight() == 1 || src->getHeight() / 2 == dest->getHeight());
-
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(src->getDXGIFormat());
-    ASSERT(dxgiFormatInfo.mipGenerationFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE destMapped;
     gl::Error error = dest->map(D3D11_MAP_WRITE, &destMapped);
@@ -68,9 +67,11 @@ gl::Error Image11::generateMipmap(Image11 *dest, Image11 *src)
     const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(srcMapped.pData);
     uint8_t *destData = reinterpret_cast<uint8_t*>(destMapped.pData);
 
-    dxgiFormatInfo.mipGenerationFunction(src->getWidth(), src->getHeight(), src->getDepth(),
-                                         sourceData, srcMapped.RowPitch, srcMapped.DepthPitch,
-                                         destData, destMapped.RowPitch, destMapped.DepthPitch);
+    auto mipGenerationFunction = d3d11::GetTextureFormatInfo(src->getInternalFormat(), rendererCaps)
+                                     .formatSet.mipGenerationFunction;
+    mipGenerationFunction(src->getWidth(), src->getHeight(), src->getDepth(), sourceData,
+                          srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch,
+                          destMapped.DepthPitch);
 
     dest->unmap();
     src->unmap();

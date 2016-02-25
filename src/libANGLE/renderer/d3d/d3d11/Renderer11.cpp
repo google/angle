@@ -3499,7 +3499,7 @@ gl::Error Renderer11::generateMipmap(ImageD3D *dest, ImageD3D *src)
 {
     Image11 *dest11 = GetAs<Image11>(dest);
     Image11 *src11 = GetAs<Image11>(src);
-    return Image11::generateMipmap(dest11, src11);
+    return Image11::generateMipmap(dest11, src11, mRenderer11DeviceCaps);
 }
 
 gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage,

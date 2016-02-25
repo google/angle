@@ -25,6 +25,7 @@ namespace rx
 class Renderer11;
 class TextureHelper11;
 class TextureStorage11;
+struct Renderer11DeviceCaps;
 
 class Image11 : public ImageD3D
 {
@@ -32,7 +33,9 @@ class Image11 : public ImageD3D
     Image11(Renderer11 *renderer);
     virtual ~Image11();
 
-    static gl::Error generateMipmap(Image11 *dest, Image11 *src);
+    static gl::Error generateMipmap(Image11 *dest,
+                                    Image11 *src,
+                                    const Renderer11DeviceCaps &rendererCaps);
 
     virtual bool isDirty() const;
 

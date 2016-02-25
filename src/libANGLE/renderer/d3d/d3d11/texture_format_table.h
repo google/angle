@@ -44,7 +44,8 @@ struct ANGLEFormatSet
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
-                   ANGLEFormat swizzleFormat);
+                   ANGLEFormat swizzleFormat,
+                   MipGenerationFunction mipGenerationFunction);
     ANGLEFormatSet(const ANGLEFormatSet &) = default;
     ANGLEFormatSet &operator=(const ANGLEFormatSet &) = default;
 
@@ -60,6 +61,8 @@ struct ANGLEFormatSet
     DXGI_FORMAT dsvFormat;
 
     ANGLEFormat swizzleFormat;
+
+    MipGenerationFunction mipGenerationFunction;
 };
 
 struct TextureFormat : public angle::NonCopyable

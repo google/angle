@@ -45,7 +45,6 @@ struct DXGIFormat
     GLenum internalFormat;
     GLenum componentType;
 
-    MipGenerationFunction mipGenerationFunction;
     ColorReadFunction colorReadFunction;
 
     FastCopyFunctionMap fastCopyFunctions;
