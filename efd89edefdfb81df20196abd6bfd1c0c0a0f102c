@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2c1f56d_82d0f375",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-25T18:33:08Z",
+      "side": 1,
+      "message": "Maybe this could be glComponentType as the rest of the structure contains DXGI or ANGLE_ info.",
+      "revId": "efd89edefdfb81df20196abd6bfd1c0c0a0f102c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
