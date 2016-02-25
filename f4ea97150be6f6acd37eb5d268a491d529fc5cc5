@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c283b51b_9073dcf0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-25T09:49:07Z",
+      "side": 1,
+      "message": "This code will still need to be refactored - but texFormat probably works with the current format data. Still may be nicer to change this in a different patch before this one.",
+      "revId": "f4ea97150be6f6acd37eb5d268a491d529fc5cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
