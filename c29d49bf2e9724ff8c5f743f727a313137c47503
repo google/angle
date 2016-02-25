@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2c1f56d_0c8f7ce7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-25T15:52:54Z",
+      "side": 1,
+      "message": "it is kinda cool that we can do the reverse lookup to verify, but I think I\u0027d rather remove this code and the tables just to have the benefit of less code. Corentin your opinion?",
+      "range": {
+        "startLine": 788,
+        "startChar": 0,
+        "endLine": 802,
+        "endChar": 6
+      },
+      "revId": "c29d49bf2e9724ff8c5f743f727a313137c47503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
