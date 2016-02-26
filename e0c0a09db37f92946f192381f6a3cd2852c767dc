@@ -52,6 +52,24 @@
       "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02806d4d_ec380bb9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-26T15:22:55Z",
+      "side": 1,
+      "message": "It\u0027s only in desktop GL, I\u0027m not aware of ES extensions that would have it.",
+      "parentUuid": "c2c1f56d_21ab5be7",
+      "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
