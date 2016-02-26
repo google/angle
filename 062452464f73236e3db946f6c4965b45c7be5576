@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2c1f56d_6156f3a7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-26T15:52:10Z",
+      "side": 1,
+      "message": "Grammar looks weird here, but I\u0027m not a native english speaker so I might be wrong.\n\"make sure no code relies on them...\"",
+      "revId": "062452464f73236e3db946f6c4965b45c7be5576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

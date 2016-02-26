@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82bb7df1_3bd4bc35",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-26T15:52:10Z",
+      "side": 0,
+      "message": "Could this use the DXGI Depth Stencil table instead?",
+      "revId": "aab00a24970262ff7ea2581d50d05c3e14715a02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
