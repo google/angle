@@ -34,6 +34,24 @@
       "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2c1f56d_21ab5be7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-26T15:19:57Z",
+      "side": 1,
+      "message": "I found it in the table at the end of https://www.opengl.org/wiki/GLAPI/glTexImage2D but maybe it only appears in rarely supported extensions.",
+      "parentUuid": "22dbb13a_0c625f80",
+      "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
