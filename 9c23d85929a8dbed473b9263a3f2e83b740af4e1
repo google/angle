@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26bb568_0d3235d4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-26T19:24:37Z",
+      "side": 1,
+      "message": "you can remove these",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 36
+      },
+      "revId": "9c23d85929a8dbed473b9263a3f2e83b740af4e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02e4ed24_fb3c067a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-26T19:24:37Z",
+      "side": 1,
+      "message": "make this final, and define default copy and assignment operators",
+      "range": {
+        "startLine": 39,
+        "startChar": 11,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "9c23d85929a8dbed473b9263a3f2e83b740af4e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2981592_aa5ac155",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-26T19:24:37Z",
+      "side": 1,
+      "message": "move these to the cpp",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "9c23d85929a8dbed473b9263a3f2e83b740af4e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
