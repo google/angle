@@ -78,6 +78,8 @@ class TextureStorage11 : public TextureStorage
 
     gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, ID3D11ShaderResourceView **outSRV);
 
+    d3d11::ANGLEFormat getANGLEFormat() const;
+
   protected:
     TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags);
     int getLevelWidth(int mipLevel) const;

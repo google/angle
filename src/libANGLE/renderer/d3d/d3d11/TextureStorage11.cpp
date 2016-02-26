@@ -358,6 +358,11 @@ gl::Error TextureStorage11::getSRVLevels(GLint baseLevel,
     return gl::Error(GL_NO_ERROR);
 }
 
+d3d11::ANGLEFormat TextureStorage11::getANGLEFormat() const
+{
+    return mTextureFormatSet.format;
+}
+
 gl::Error TextureStorage11::generateSwizzles(GLenum swizzleRed,
                                              GLenum swizzleGreen,
                                              GLenum swizzleBlue,

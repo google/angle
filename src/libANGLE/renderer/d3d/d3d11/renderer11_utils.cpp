@@ -1526,6 +1526,7 @@ void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t
 TextureHelper11::TextureHelper11()
     : mTextureType(GL_NONE),
       mFormat(DXGI_FORMAT_UNKNOWN),
+      mANGLEFormat(d3d11::ANGLE_FORMAT_NONE),
       mSampleCount(0),
       mTexture2D(nullptr),
       mTexture3D(nullptr)
@@ -1536,6 +1537,7 @@ TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy)
     : mTextureType(toCopy.mTextureType),
       mExtents(toCopy.mExtents),
       mFormat(toCopy.mFormat),
+      mANGLEFormat(toCopy.mANGLEFormat),
       mSampleCount(toCopy.mSampleCount),
       mTexture2D(toCopy.mTexture2D),
       mTexture3D(toCopy.mTexture3D)
@@ -1544,9 +1546,11 @@ TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy)
 }
 
 // static
-TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResource)
+TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResource,
+                                                  d3d11::ANGLEFormat angleFormat)
 {
     TextureHelper11 newHelper;
+    newHelper.mANGLEFormat = angleFormat;
     newHelper.mTexture2D   = d3d11::DynamicCastComObject<ID3D11Texture2D>(genericResource);
     newHelper.mTexture3D   = d3d11::DynamicCastComObject<ID3D11Texture3D>(genericResource);
     newHelper.mTextureType = newHelper.mTexture2D ? GL_TEXTURE_2D : GL_TEXTURE_3D;
@@ -1555,9 +1559,11 @@ TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResourc
 }
 
 // static
-TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn)
+TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn,
+                                                  d3d11::ANGLEFormat angleFormat)
 {
     TextureHelper11 newHelper;
+    newHelper.mANGLEFormat = angleFormat;
     newHelper.mTexture2D   = texToOwn;
     newHelper.mTextureType = GL_TEXTURE_2D;
     newHelper.initDesc();
@@ -1565,9 +1571,11 @@ TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn)
 }
 
 // static
-TextureHelper11 TextureHelper11::MakeAndPossess3D(ID3D11Texture3D *texToOwn)
+TextureHelper11 TextureHelper11::MakeAndPossess3D(ID3D11Texture3D *texToOwn,
+                                                  d3d11::ANGLEFormat angleFormat)
 {
     TextureHelper11 newHelper;
+    newHelper.mANGLEFormat = angleFormat;
     newHelper.mTexture3D   = texToOwn;
     newHelper.mTextureType = GL_TEXTURE_3D;
     newHelper.initDesc();
@@ -1600,6 +1608,7 @@ void TextureHelper11::initDesc()
         mFormat         = desc3D.Format;
         mSampleCount    = 1;
     }
+    ASSERT(mFormat == d3d11::GetANGLEFormatSet(mANGLEFormat).texFormat);
 }
 
 TextureHelper11::~TextureHelper11()
@@ -1622,6 +1631,7 @@ TextureHelper11 &TextureHelper11::operator=(TextureHelper11 &&texture)
     mTextureType = texture.mTextureType;
     mExtents     = texture.mExtents;
     mFormat      = texture.mFormat;
+    mANGLEFormat = texture.mANGLEFormat;
     mSampleCount = texture.mSampleCount;
     mTexture2D   = texture.mTexture2D;
     mTexture3D = texture.mTexture3D;
@@ -1641,6 +1651,7 @@ void TextureHelper11::reset()
 
 gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
                                                         DXGI_FORMAT dxgiFormat,
+                                                        d3d11::ANGLEFormat angleFormat,
                                                         const gl::Extents &size,
                                                         ID3D11Device *device)
 {
@@ -1667,7 +1678,7 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
                              result);
         }
 
-        return TextureHelper11::MakeAndPossess2D(stagingTex);
+        return TextureHelper11::MakeAndPossess2D(stagingTex, angleFormat);
     }
     ASSERT(textureType == GL_TEXTURE_3D);
 
@@ -1690,7 +1701,7 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
                          result);
     }
 
-    return TextureHelper11::MakeAndPossess3D(stagingTex);
+    return TextureHelper11::MakeAndPossess3D(stagingTex, angleFormat);
 }
 
 bool UsePresentPathFast(const Renderer11 *renderer,

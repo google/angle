@@ -3575,7 +3575,8 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
     ASSERT(rt11->getTexture());
 
-    TextureHelper11 textureHelper = TextureHelper11::MakeAndReference(rt11->getTexture());
+    TextureHelper11 textureHelper =
+        TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getANGLEFormat());
     unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
     const gl::Extents &texSize = textureHelper.getExtents();
@@ -3607,8 +3608,9 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     }
 
     gl::Extents safeSize(safeArea.width, safeArea.height, 1);
-    auto errorOrResult = CreateStagingTexture(textureHelper.getTextureType(),
-                                              textureHelper.getFormat(), safeSize, mDevice);
+    auto errorOrResult =
+        CreateStagingTexture(textureHelper.getTextureType(), textureHelper.getFormat(),
+                             textureHelper.getANGLEFormat(), safeSize, mDevice);
     if (errorOrResult.isError())
     {
         return errorOrResult.getError();
@@ -3648,7 +3650,8 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
 
         mDeviceContext->ResolveSubresource(resolveTex2D, 0, textureHelper.getTexture2D(),
                                            sourceSubResource, textureHelper.getFormat());
-        resolvedTextureHelper = TextureHelper11::MakeAndReference(resolveTex2D);
+        resolvedTextureHelper =
+            TextureHelper11::MakeAndReference(resolveTex2D, textureHelper.getANGLEFormat());
 
         sourceSubResource = 0;
         srcTexture        = &resolvedTextureHelper;
@@ -3757,7 +3760,8 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
         }
         else
         {
-            ColorReadFunction colorReadFunction   = dxgiFormatInfo.colorReadFunction;
+            const auto &angleFormatInfo           = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
+            ColorReadFunction colorReadFunction   = angleFormatInfo.colorReadFunction;
             ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
 
             uint8_t temp[16]; // Maximum size of any Color<T> type used.

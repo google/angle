@@ -52,6 +52,7 @@ template_texture_format_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/load_functions_table.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/copyimage.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
 
@@ -144,7 +145,8 @@ ANGLEFormatSet::ANGLEFormatSet()
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
       swizzleFormat(ANGLE_FORMAT_NONE),
-      mipGenerationFunction(nullptr)
+      mipGenerationFunction(nullptr),
+      colorReadFunction(nullptr)
 {{
 }}
 
@@ -173,7 +175,8 @@ ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
                                DXGI_FORMAT rtvFormat,
                                DXGI_FORMAT dsvFormat,
                                ANGLEFormat swizzleFormat,
-                               MipGenerationFunction mipGenerationFunction)
+                               MipGenerationFunction mipGenerationFunction,
+                               ColorReadFunction colorReadFunction)
     : format(format),
       glInternalFormat(glInternalFormat),
       texFormat(texFormat),
@@ -181,7 +184,8 @@ ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
       swizzleFormat(swizzleFormat),
-      mipGenerationFunction(mipGenerationFunction)
+      mipGenerationFunction(mipGenerationFunction),
+      colorReadFunction(colorReadFunction)
 {{
 }}
 
@@ -424,6 +428,19 @@ def get_mip_generation_function(angle_format):
         return 'nullptr'
     return 'GenerateMip<' + channel_struct + '>'
 
+def get_color_read_function(angle_format):
+    channel_struct = get_channel_struct(angle_format)
+    if channel_struct == None:
+        return 'nullptr'
+    component_type_map = {
+        'uint': 'GLuint',
+        'int': 'GLint',
+        'unorm': 'GLfloat',
+        'snorm': 'GLfloat',
+        'float': 'GLfloat'
+    }
+    return 'ReadColor<' + channel_struct + ', '+ component_type_map[angle_format['componentType']] + '>'
+
 def parse_json_into_switch_angle_format_string(json_data):
     table_data = ''
     for angle_format_item in sorted(json_data.iteritems()):
@@ -436,6 +453,7 @@ def parse_json_into_switch_angle_format_string(json_data):
         dsv_format = angle_format["dsvFormat"] if "dsvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         swizzle_format = get_swizzle_format_id(angle_format_item[0], angle_format)
         mip_generation_function = get_mip_generation_function(angle_format)
+        color_read_function = get_color_read_function(angle_format)
         table_data += '        {\n'
         table_data += '            static const ANGLEFormatSet formatInfo(' + angle_format_item[0] + ',\n'
         table_data += '                                                   ' + gl_internal_format + ',\n'
@@ -444,7 +462,8 @@ def parse_json_into_switch_angle_format_string(json_data):
         table_data += '                                                   ' + rtv_format + ',\n'
         table_data += '                                                   ' + dsv_format + ',\n'
         table_data += '                                                   ' + swizzle_format + ',\n'
-        table_data += '                                                   ' + mip_generation_function + ');\n'
+        table_data += '                                                   ' + mip_generation_function + ',\n'
+        table_data += '                                                   ' + color_read_function + ');\n'
         table_data += '            return formatInfo;\n'
         table_data += '        }\n'
     return table_data

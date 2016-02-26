@@ -1322,7 +1322,8 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &rea
     ASSERT(renderTargetResource);
 
     unsigned int srcSubresource = renderTarget->getSubresourceIndex();
-    TextureHelper11 srcTexture  = TextureHelper11::MakeAndReference(renderTargetResource);
+    TextureHelper11 srcTexture =
+        TextureHelper11::MakeAndReference(renderTargetResource, renderTarget->getANGLEFormat());
 
     mQueuedPackCommand.reset(new PackPixelsParams(params));
 
@@ -1330,9 +1331,9 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &rea
     if (!mStagingTexture.getResource() || mStagingTexture.getFormat() != srcTexture.getFormat() ||
         mStagingTexture.getExtents() != srcTextureSize)
     {
-        auto textureOrError =
-            CreateStagingTexture(srcTexture.getTextureType(), srcTexture.getFormat(),
-                                 srcTextureSize, mRenderer->getDevice());
+        auto textureOrError = CreateStagingTexture(
+            srcTexture.getTextureType(), srcTexture.getFormat(), srcTexture.getANGLEFormat(),
+            srcTextureSize, mRenderer->getDevice());
         if (textureOrError.isError())
         {
             return textureOrError.getError();
