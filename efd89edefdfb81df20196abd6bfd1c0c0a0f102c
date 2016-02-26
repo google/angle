@@ -16,6 +16,24 @@
       "revId": "efd89edefdfb81df20196abd6bfd1c0c0a0f102c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b209f8_801abcaf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-26T14:44:27Z",
+      "side": 1,
+      "message": "The field is making use of the GL enums, but the information that the field carries applies to the data stored in D3D. Because of this I didn\u0027t put \"gl\" in the name.",
+      "parentUuid": "c2c1f56d_82d0f375",
+      "revId": "efd89edefdfb81df20196abd6bfd1c0c0a0f102c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
