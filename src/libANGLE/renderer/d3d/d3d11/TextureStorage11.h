@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/d3d/TextureStorage.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
+#include <array>
 #include <map>
 
 namespace gl
@@ -91,7 +92,7 @@ class TextureStorage11 : public TextureStorage
 
     virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture) = 0;
     virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) = 0;
-    gl::Error getSRVLevel(int mipLevel, ID3D11ShaderResourceView **outSRV);
+    gl::Error getSRVLevel(int mipLevel, bool blitSRV, ID3D11ShaderResourceView **outSRV);
 
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const = 0;
@@ -144,7 +145,8 @@ class TextureStorage11 : public TextureStorage
     typedef std::map<SRVKey, ID3D11ShaderResourceView *> SRVCache;
 
     SRVCache mSrvCache;
-    ID3D11ShaderResourceView *mLevelSRVs[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::array<ID3D11ShaderResourceView *, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mLevelSRVs;
+    std::array<ID3D11ShaderResourceView *, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mLevelBlitSRVs;
 };
 
 class TextureStorage11_2D : public TextureStorage11
@@ -277,6 +279,10 @@ class TextureStorage11_Cube : public TextureStorage11
   private:
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
+    gl::Error createRenderTargetSRV(ID3D11Resource *texture,
+                                    const gl::ImageIndex &index,
+                                    DXGI_FORMAT resourceFormat,
+                                    ID3D11ShaderResourceView **srv) const;
 
     static const size_t CUBE_FACE_COUNT = 6;
 
@@ -354,6 +360,10 @@ class TextureStorage11_2DArray : public TextureStorage11
   private:
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const;
+    gl::Error createRenderTargetSRV(ID3D11Resource *texture,
+                                    const gl::ImageIndex &index,
+                                    DXGI_FORMAT resourceFormat,
+                                    ID3D11ShaderResourceView **srv) const;
 
     typedef std::pair<int, int> LevelLayerKey;
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
