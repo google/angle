@@ -24,90 +24,6 @@ namespace rx
 namespace d3d11
 {
 
-typedef std::map<DXGI_FORMAT, GLenum> DXGIToESFormatMap;
-
-inline void AddDXGIToESEntry(DXGIToESFormatMap *map, DXGI_FORMAT key, GLenum value)
-{
-    map->insert(std::make_pair(key, value));
-}
-
-static DXGIToESFormatMap BuildDXGIToESFormatMap()
-{
-    DXGIToESFormatMap map;
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_UNKNOWN,                  GL_NONE);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_A8_UNORM,                 GL_ALPHA8_EXT);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8_UNORM,                 GL_R8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8_UNORM,               GL_RG8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8B8A8_UNORM,           GL_RGBA8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,      GL_SRGB8_ALPHA8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_B8G8R8A8_UNORM,           GL_BGRA8_EXT);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8_SNORM,                 GL_R8_SNORM);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8_SNORM,               GL_RG8_SNORM);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8B8A8_SNORM,           GL_RGBA8_SNORM);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8_UINT,                  GL_R8UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16_UINT,                 GL_R16UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_UINT,                 GL_R32UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8_UINT,                GL_RG8UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16_UINT,              GL_RG16UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32_UINT,              GL_RG32UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32_UINT,           GL_RGB32UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8B8A8_UINT,            GL_RGBA8UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16B16A16_UINT,        GL_RGBA16UI);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32A32_UINT,        GL_RGBA32UI);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8_SINT,                  GL_R8I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16_SINT,                 GL_R16I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_SINT,                 GL_R32I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8_SINT,                GL_RG8I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16_SINT,              GL_RG16I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32_SINT,              GL_RG32I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32_SINT,           GL_RGB32I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R8G8B8A8_SINT,            GL_RGBA8I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16B16A16_SINT,        GL_RGBA16I);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32A32_SINT,        GL_RGBA32I);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R10G10B10A2_UNORM,        GL_RGB10_A2);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R10G10B10A2_UINT,         GL_RGB10_A2UI);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16_FLOAT,                GL_R16F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16_FLOAT,             GL_RG16F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16G16B16A16_FLOAT,       GL_RGBA16F);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_FLOAT,                GL_R32F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32_FLOAT,             GL_RG32F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32_FLOAT,          GL_RGB32F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G32B32A32_FLOAT,       GL_RGBA32F);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R9G9B9E5_SHAREDEXP,       GL_RGB9_E5);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R11G11B10_FLOAT,          GL_R11F_G11F_B10F);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16_TYPELESS,             GL_DEPTH_COMPONENT16);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R16_UNORM,                GL_DEPTH_COMPONENT16);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D16_UNORM,                GL_DEPTH_COMPONENT16);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R24G8_TYPELESS,           GL_DEPTH24_STENCIL8_OES);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    GL_DEPTH24_STENCIL8_OES);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D24_UNORM_S8_UINT,        GL_DEPTH24_STENCIL8_OES);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32G8X24_TYPELESS,        GL_DEPTH32F_STENCIL8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, GL_DEPTH32F_STENCIL8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     GL_DEPTH32F_STENCIL8);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_R32_TYPELESS,             GL_DEPTH_COMPONENT32F);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_D32_FLOAT,                GL_DEPTH_COMPONENT32F);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_BC1_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT1_EXT);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_BC2_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_BC3_UNORM,                GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE);
-
-    AddDXGIToESEntry(&map, DXGI_FORMAT_B5G6R5_UNORM,             GL_RGB565);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_B5G5R5A1_UNORM,           GL_RGB5_A1);
-    AddDXGIToESEntry(&map, DXGI_FORMAT_B4G4R4A4_UNORM,           GL_RGBA4);
-
-    return map;
-}
-
 struct D3D11FastCopyFormat
 {
     GLenum destFormat;
@@ -279,7 +195,6 @@ DXGIFormat::DXGIFormat()
       sharedBits(0),
       depthBits(0),
       stencilBits(0),
-      internalFormat(GL_NONE),
       componentType(GL_NONE),
       fastCopyFunctions(),
       nativeMipmapSupport(NULL)
@@ -330,10 +245,6 @@ void AddDXGIFormat(DXGIFormatInfoMap *map,
         info.depthBits = dsInfo.depthBits;
         info.stencilBits = dsInfo.stencilBits;
     }
-
-    static const DXGIToESFormatMap dxgiToESMap = BuildDXGIToESFormatMap();
-    DXGIToESFormatMap::const_iterator dxgiToESIter = dxgiToESMap.find(dxgiFormat);
-    info.internalFormat = (dxgiToESIter != dxgiToESMap.end()) ? dxgiToESIter->second : GL_NONE;
 
     info.componentType = componentType;
 

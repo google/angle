@@ -3727,8 +3727,9 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    const d3d11::DXGIFormat &dxgiFormatInfo    = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
-    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(dxgiFormatInfo.internalFormat);
+    const auto &angleFormatInfo = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
+    const gl::InternalFormat &sourceFormatInfo =
+        gl::GetInternalFormatInfo(angleFormatInfo.glInternalFormat);
     if (sourceFormatInfo.format == params.format && sourceFormatInfo.type == params.type)
     {
         uint8_t *dest = pixelsOut + params.offset;
@@ -3739,6 +3740,8 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     }
     else
     {
+        const d3d11::DXGIFormat &dxgiFormatInfo =
+            d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
         ColorCopyFunction fastCopyFunc =
             dxgiFormatInfo.getFastCopyFunction(params.format, params.type);
         GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(params.format, params.type);
@@ -3760,7 +3763,6 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
         }
         else
         {
-            const auto &angleFormatInfo           = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
             ColorReadFunction colorReadFunction   = angleFormatInfo.colorReadFunction;
             ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
 

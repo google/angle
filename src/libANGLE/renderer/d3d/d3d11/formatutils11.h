@@ -40,7 +40,6 @@ struct DXGIFormat
     GLuint depthBits;
     GLuint stencilBits;
 
-    GLenum internalFormat;
     GLenum componentType;
 
     FastCopyFunctionMap fastCopyFunctions;
