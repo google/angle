@@ -16,6 +16,24 @@
       "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22dbb13a_0c625f80",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-26T09:12:18Z",
+      "side": 1,
+      "message": "There\u0027s no such format in GLES (not even 3.2).",
+      "parentUuid": "c2c1f56d_822eb340",
+      "revId": "e0c0a09db37f92946f192381f6a3cd2852c767dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
