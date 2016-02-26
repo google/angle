@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2b0b90b_b08b54d9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-26T19:06:59Z",
+      "side": 1,
+      "message": "nit: IsOpenGL",
+      "revId": "261b0e2e50803c76dd9b943acfc3a201f8ddaaf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
