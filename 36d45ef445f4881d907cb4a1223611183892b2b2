@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22d0113b_2c5db021",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-29T14:43:59Z",
+      "side": 1,
+      "message": "please also use a substitution set here",
+      "range": {
+        "startLine": 486,
+        "startChar": 8,
+        "endLine": 489,
+        "endChar": 82
+      },
+      "revId": "36d45ef445f4881d907cb4a1223611183892b2b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
