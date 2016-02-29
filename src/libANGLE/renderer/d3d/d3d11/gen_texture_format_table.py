@@ -136,8 +136,7 @@ bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
 }}  // namespace
 
 ANGLEFormatSet::ANGLEFormatSet()
-    : format(ANGLE_FORMAT_NONE),
-      texFormat(DXGI_FORMAT_UNKNOWN),
+    : texFormat(DXGI_FORMAT_UNKNOWN),
       srvFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
@@ -150,11 +149,10 @@ ANGLEFormatSet::ANGLEFormatSet()
 // This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
 TextureFormat::TextureFormat(GLenum internalFormat,
-                             const ANGLEFormat angleFormat,
+                             const ANGLEFormatSet &formatSet,
                              InitializeTextureDataFunction internalFormatInitializer)
-    : dataInitializerFunction(internalFormatInitializer)
+    : formatSet(formatSet), dataInitializerFunction(internalFormatInitializer)
 {{
-    formatSet        = GetANGLEFormatSet(angleFormat);
     swizzleFormatSet = GetANGLEFormatSet(formatSet.swizzleFormat);
 
     // Gather all the load functions for this internal format
@@ -163,14 +161,12 @@ TextureFormat::TextureFormat(GLenum internalFormat,
     ASSERT(loadFunctions.size() != 0 || internalFormat == GL_NONE);
 }}
 
-ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
-                               DXGI_FORMAT texFormat,
+ANGLEFormatSet::ANGLEFormatSet(DXGI_FORMAT texFormat,
                                DXGI_FORMAT srvFormat,
                                DXGI_FORMAT rtvFormat,
                                DXGI_FORMAT dsvFormat,
                                ANGLEFormat swizzleFormat)
-    : format(format),
-      texFormat(texFormat),
+    : texFormat(texFormat),
       srvFormat(srvFormat),
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
@@ -206,7 +202,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
     }}
     // clang-format on
 
-    static const TextureFormat defaultInfo(GL_NONE, ANGLE_FORMAT_NONE, nullptr);
+    static const TextureFormat defaultInfo(GL_NONE, ANGLEFormatSet(), nullptr);
     return defaultInfo;
 }}  // GetTextureFormatInfo
 
@@ -351,7 +347,7 @@ def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_
         indent += '    '
 
     table_data += indent + 'static const TextureFormat textureFormat(internalFormat,\n'
-    table_data += indent + '                                         ' + angle_format_id + ',\n'
+    table_data += indent + '                                         GetANGLEFormatSet(' + angle_format_id + '),\n'
     table_data += indent + '                                         ' + internal_format_initializer + ');\n'
     table_data += indent + 'return textureFormat;\n'
 
@@ -396,8 +392,7 @@ def parse_json_into_switch_angle_format_string(json_data):
         dsv_format = angle_format["dsvFormat"] if "dsvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         swizzle_format = get_swizzle_format_id(angle_format_item[0], angle_format)
         table_data += '        {\n'
-        table_data += '            static const ANGLEFormatSet formatInfo(' + angle_format_item[0] + ',\n'
-        table_data += '                                                   ' + tex_format + ',\n'
+        table_data += '            static const ANGLEFormatSet formatInfo(' + tex_format + ',\n'
         table_data += '                                                   ' + srv_format + ',\n'
         table_data += '                                                   ' + rtv_format + ',\n'
         table_data += '                                                   ' + dsv_format + ',\n'
@@ -436,9 +431,7 @@ with open('texture_format_map.json') as texture_format_map_file:
 
         texture_format_cases = parse_json_into_switch_texture_format_string(json_map, json_data)
         angle_format_cases = parse_json_into_switch_angle_format_string(json_data)
-        output_cpp = template_texture_format_table_autogen_cpp.format(
-            texture_format_info_cases=texture_format_cases,
-            angle_format_info_cases=angle_format_cases)
+        output_cpp = template_texture_format_table_autogen_cpp.format(texture_format_info_cases=texture_format_cases, angle_format_info_cases=angle_format_cases)
         with open('texture_format_table_autogen.cpp', 'wt') as out_file:
             out_file.write(output_cpp)
             out_file.close()

@@ -178,7 +178,7 @@ static unsigned int getDSVSubresourceIndex(ID3D11Resource *resource, ID3D11Depth
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-RenderTarget11::RenderTarget11(d3d11::ANGLEFormat angleFormat) : mANGLEFormat(angleFormat)
+RenderTarget11::RenderTarget11()
 {
 }
 
@@ -211,17 +211,9 @@ void RenderTarget11::signalDirty()
     mDirtyCallbacks.clear();
 }
 
-TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv,
-                                             ID3D11Resource *resource,
-                                             ID3D11ShaderResourceView *srv,
-                                             GLenum internalFormat,
-                                             d3d11::ANGLEFormat angleFormat,
-                                             GLsizei width,
-                                             GLsizei height,
-                                             GLsizei depth,
-                                             GLsizei samples)
-    : RenderTarget11(angleFormat),
-      mWidth(width),
+TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
+                                             GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples)
+    : mWidth(width),
       mHeight(height),
       mDepth(depth),
       mInternalFormat(internalFormat),
@@ -256,20 +248,11 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv,
         mRenderTarget->GetDesc(&desc);
         mDXGIFormat = desc.Format;
     }
-    ASSERT(mANGLEFormat != d3d11::ANGLE_FORMAT_NONE || (mWidth == 0 && mHeight == 0));
 }
 
-TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
-                                             ID3D11Resource *resource,
-                                             ID3D11ShaderResourceView *srv,
-                                             GLenum internalFormat,
-                                             d3d11::ANGLEFormat angleFormat,
-                                             GLsizei width,
-                                             GLsizei height,
-                                             GLsizei depth,
-                                             GLsizei samples)
-    : RenderTarget11(angleFormat),
-      mWidth(width),
+TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv,
+                                             GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLsizei samples)
+    : mWidth(width),
       mHeight(height),
       mDepth(depth),
       mInternalFormat(internalFormat),
@@ -304,7 +287,6 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
         mDepthStencil->GetDesc(&desc);
         mDXGIFormat = desc.Format;
     }
-    ASSERT(mANGLEFormat != d3d11::ANGLE_FORMAT_NONE || (mWidth == 0 && mHeight == 0));
 }
 
 TextureRenderTarget11::~TextureRenderTarget11()
@@ -370,19 +352,12 @@ DXGI_FORMAT TextureRenderTarget11::getDXGIFormat() const
     return mDXGIFormat;
 }
 
-SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain,
-                                             Renderer11 *renderer,
-                                             bool depth)
-    : RenderTarget11(d3d11::ANGLE_FORMAT_NONE),  // format will be determined in constructor body
-      mSwapChain(swapChain),
+SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain, Renderer11 *renderer, bool depth)
+    : mSwapChain(swapChain),
       mRenderer(renderer),
       mDepth(depth)
 {
     ASSERT(mSwapChain);
-
-    mANGLEFormat = d3d11::GetTextureFormatInfo(getInternalFormatInternal(),
-                                               mRenderer->getRenderer11DeviceCaps())
-                       .formatSet.format;
 }
 
 SurfaceRenderTarget11::~SurfaceRenderTarget11()
@@ -405,11 +380,6 @@ GLsizei SurfaceRenderTarget11::getDepth() const
 }
 
 GLenum SurfaceRenderTarget11::getInternalFormat() const
-{
-    return getInternalFormatInternal();
-}
-
-GLenum SurfaceRenderTarget11::getInternalFormatInternal() const
 {
     return (mDepth ? mSwapChain->GetDepthBufferInternalFormat() : mSwapChain->GetRenderTargetInternalFormat());
 }
@@ -437,8 +407,7 @@ ID3D11DepthStencilView *SurfaceRenderTarget11::getDepthStencilView() const
 
 ID3D11ShaderResourceView *SurfaceRenderTarget11::getShaderResourceView() const
 {
-    return (mDepth ? mSwapChain->getDepthStencilShaderResource()
-                   : mSwapChain->getRenderTargetShaderResource());
+    return (mDepth ? mSwapChain->getDepthStencilShaderResource() : mSwapChain->getRenderTargetShaderResource());
 }
 
 unsigned int SurfaceRenderTarget11::getSubresourceIndex() const
