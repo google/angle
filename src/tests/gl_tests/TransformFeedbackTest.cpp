@@ -145,7 +145,7 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
@@ -444,7 +444,7 @@ TEST_P(TransformFeedbackTest, MultiContext)
     }
 
 #if defined(ANGLE_PLATFORM_APPLE)
-    if ((isNVidia() || isAMD()) && GetParam() == ES3_OPENGL())
+    if ((IsNVIDIA() || IsAMD()) && GetParam() == ES3_OPENGL())
     {
         std::cout << "Test skipped on NVidia and AMD OpenGL on OSX." << std::endl;
         return;
@@ -452,7 +452,7 @@ TEST_P(TransformFeedbackTest, MultiContext)
 #endif
 
 #if defined(ANGLE_PLATFORM_LINUX)
-    if (isAMD() && GetParam() == ES3_OPENGL())
+    if (IsAMD() && GetParam() == ES3_OPENGL())
     {
         std::cout << "Test skipped on AMD OpenGL on Linux." << std::endl;
         return;

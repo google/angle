@@ -342,6 +342,12 @@ TEST_P(EGLPresentPathD3D11, ClientBufferPresentPathFast)
     createPbufferFromClientBufferSurface();
     makeCurrent();
 
+    if (IsIntel())
+    {
+        std::cout << "Test disabled on Intel." << std::endl;
+        return;
+    }
+
     drawQuadUsingGL();
 
     checkPixelsUsingGL();
@@ -368,6 +374,12 @@ TEST_P(EGLPresentPathD3D11, ClientBufferPresentPathCopy)
     initializeEGL(false);
     createPbufferFromClientBufferSurface();
     makeCurrent();
+
+    if (IsIntel())
+    {
+        std::cout << "Test disabled on Intel." << std::endl;
+        return;
+    }
 
     drawQuadUsingGL();
 

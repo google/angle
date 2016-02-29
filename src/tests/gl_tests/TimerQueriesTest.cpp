@@ -168,7 +168,7 @@ TEST_P(TimerQueriesTest, TimeElapsed)
 TEST_P(TimerQueriesTest, TimeElapsedTextureTest)
 {
     // OSX drivers don't seem to properly time non-draw calls so we skip the test on Mac
-    if (isOSX())
+    if (IsOSX())
     {
         std::cout << "Test skipped on OSX" << std::endl;
         return;

@@ -137,17 +137,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     int getWindowHeight() const;
     bool isMultisampleEnabled() const;
 
-    bool isIntel() const;
-    bool isAMD() const;
-    bool isNVidia() const;
-    // Note: FL9_3 is explicitly *not* considered D3D11.
-    bool isD3D11() const;
-    bool isD3D11_FL93() const;
-    // Is a D3D9-class renderer.
-    bool isD3D9() const;
-    // Is D3D9 or SM9_3 renderer.
-    bool isD3DSM3() const;
-    bool isOSX() const;
+    bool isOpenGL() const;
     EGLint getPlatformRenderer() const;
 
     void ignoreD3D11SDKLayersWarnings();
@@ -173,5 +163,17 @@ class ANGLETestEnvironment : public testing::Environment
     virtual void SetUp();
     virtual void TearDown();
 };
+
+bool IsIntel();
+bool IsAMD();
+bool IsNVIDIA();
+// Note: FL9_3 is explicitly *not* considered D3D11.
+bool IsD3D11();
+bool IsD3D11_FL93();
+// Is a D3D9-class renderer.
+bool IsD3D9();
+// Is D3D9 or SM9_3 renderer.
+bool IsD3DSM3();
+bool IsOSX();
 
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_

@@ -41,7 +41,7 @@ class VertexAttributeTest : public ANGLETest
     void runTest(const TestData& test)
     {
         // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-        if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+        if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
         {
             std::cout << "Test skipped on AMD OpenGL." << std::endl;
             return;
@@ -289,7 +289,7 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 TEST_P(VertexAttributeTest, MaxAttribs)
 {
     // TODO(jmadill): Figure out why we get this error on AMD/OpenGL and Intel.
-    if ((isIntel() || isAMD()) && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if ((IsIntel() || IsAMD()) && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel and AMD." << std::endl;
         return;
@@ -316,7 +316,7 @@ TEST_P(VertexAttributeTest, MaxAttribs)
 TEST_P(VertexAttributeTest, MaxAttribsPlusOne)
 {
     // TODO(jmadill): Figure out why we get this error on AMD/ES2/OpenGL
-    if (isAMD() && GetParam() == ES2_OPENGL())
+    if (IsAMD() && GetParam() == ES2_OPENGL())
     {
         std::cout << "Test disabled on AMD/ES2/OpenGL" << std::endl;
         return;
@@ -337,7 +337,7 @@ TEST_P(VertexAttributeTest, MaxAttribsPlusOne)
 TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
