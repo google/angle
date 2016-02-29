@@ -641,6 +641,12 @@ egl::Error DisplayWGL::waitNative(EGLint engine,
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error DisplayWGL::getDriverVersion(std::string *version) const
+{
+    *version = "";
+    return egl::Error(EGL_SUCCESS);
+}
+
 egl::Error DisplayWGL::registerD3DDevice(IUnknown *device, HANDLE *outHandle)
 {
     ASSERT(device != nullptr);

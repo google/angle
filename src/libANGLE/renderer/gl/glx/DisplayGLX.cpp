@@ -18,6 +18,8 @@
 #include "libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h"
 #include "libANGLE/renderer/gl/glx/WindowSurfaceGLX.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "third_party/libXNVCtrl/NVCtrl.h"
+#include "third_party/libXNVCtrl/NVCtrlLib.h"
 
 namespace rx
 {
@@ -70,6 +72,7 @@ DisplayGLX::DisplayGLX()
       mMinSwapInterval(0),
       mMaxSwapInterval(0),
       mCurrentSwapInterval(-1),
+      mXDisplay(nullptr),
       mEGLDisplay(nullptr)
 {
 }
@@ -81,24 +84,24 @@ DisplayGLX::~DisplayGLX()
 egl::Error DisplayGLX::initialize(egl::Display *display)
 {
     mEGLDisplay = display;
-    Display *xDisplay = display->getNativeDisplayId();
+    mXDisplay             = display->getNativeDisplayId();
     const auto &attribMap = display->getAttributeMap();
 
     // ANGLE_platform_angle allows the creation of a default display
     // using EGL_DEFAULT_DISPLAY (= nullptr). In this case just open
     // the display specified by the DISPLAY environment variable.
-    if (xDisplay == EGL_DEFAULT_DISPLAY)
+    if (mXDisplay == EGL_DEFAULT_DISPLAY)
     {
         mUsesNewXDisplay = true;
-        xDisplay = XOpenDisplay(NULL);
-        if (!xDisplay)
+        mXDisplay = XOpenDisplay(NULL);
+        if (!mXDisplay)
         {
             return egl::Error(EGL_NOT_INITIALIZED, "Could not open the default X display.");
         }
     }
 
     std::string glxInitError;
-    if (!mGLX.initialize(xDisplay, DefaultScreen(xDisplay), &glxInitError))
+    if (!mGLX.initialize(mXDisplay, DefaultScreen(mXDisplay), &glxInitError))
     {
         return egl::Error(EGL_NOT_INITIALIZED, glxInitError.c_str());
     }
@@ -235,7 +238,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         visualTemplate.visualid = getGLXFBConfigAttrib(mContextConfig, GLX_VISUAL_ID);
 
         int numVisuals       = 0;
-        XVisualInfo *visuals = XGetVisualInfo(xDisplay, VisualIDMask, &visualTemplate, &numVisuals);
+        XVisualInfo *visuals =
+            XGetVisualInfo(mXDisplay, VisualIDMask, &visualTemplate, &numVisuals);
         if (numVisuals <= 0)
         {
             return egl::Error(EGL_NOT_INITIALIZED,
@@ -300,6 +304,9 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     std::string rendererString =
         reinterpret_cast<const char*>(mFunctionsGL->getString(GL_RENDERER));
     mIsMesa = rendererString.find("Mesa") != std::string::npos;
+
+    std::string version;
+    getDriverVersion(&version);
 
     return DisplayGL::initialize(display);
 }
@@ -711,6 +718,20 @@ egl::Error DisplayGLX::waitClient() const
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error DisplayGLX::getDriverVersion(std::string *version) const
+{
+    VendorID vendor = GetVendorID(mFunctionsGL);
+
+    switch (vendor)
+    {
+        case VENDOR_ID_NVIDIA:
+            return getNVIDIADriverVersion(version);
+        default:
+            *version = "";
+            return egl::Error(EGL_SUCCESS);
+    }
+}
+
 egl::Error DisplayGLX::waitNative(EGLint engine,
                                   egl::Surface *drawSurface,
                                   egl::Surface *readSurface) const
@@ -857,6 +878,31 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
     }
+    return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error DisplayGLX::getNVIDIADriverVersion(std::string *version) const
+{
+    *version = "";
+
+    int eventBase = 0;
+    int errorBase = 0;
+    if (XNVCTRLQueryExtension(mXDisplay, &eventBase, &errorBase))
+    {
+        int screenCount = ScreenCount(mXDisplay);
+        for (int screen = 0; screen < screenCount; ++screen)
+        {
+            char *buffer = nullptr;
+            if (XNVCTRLIsNvScreen(mXDisplay, screen) &&
+                XNVCTRLQueryStringAttribute(mXDisplay, screen, 0,
+                                            NV_CTRL_STRING_NVIDIA_DRIVER_VERSION, &buffer))
+            {
+                *version = buffer;
+                XFree(buffer);
+            }
+        }
+    }
+
     return egl::Error(EGL_SUCCESS);
 }
 }

@@ -57,6 +57,8 @@ class DisplayWGL : public DisplayGL
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
+    egl::Error getDriverVersion(std::string *version) const override;
+
     egl::Error registerD3DDevice(IUnknown *device, HANDLE *outHandle);
     void releaseD3DDevice(HANDLE handle);
 

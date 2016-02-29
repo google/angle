@@ -613,7 +613,7 @@
                                 'defines':
                                 [
                                     'ANGLE_USE_X11',
-                                ]
+                                ],
                             }],
                         ],
                     }],
@@ -732,16 +732,20 @@
                             [
                                 'ANGLE_USE_X11',
                             ],
+                            'dependencies':
+                            [
+                                '<(angle_path)/src/third_party/libXNVCtrl/libXNVCtrl.gyp:libXNVCtrl',
+                            ],
                             'sources':
                             [
                                 '<@(libangle_gl_glx_sources)',
                             ],
                             'link_settings': {
                                 'ldflags': [
-                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi)',
+                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi xext)',
                                 ],
                                 'libraries': [
-                                    '<!@(<(pkg-config) --libs-only-l x11 xi) -ldl',
+                                    '<!@(<(pkg-config) --libs-only-l x11 xi xext) -ldl',
                                 ],
                             },
                         }],

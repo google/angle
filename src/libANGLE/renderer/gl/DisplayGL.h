@@ -36,6 +36,8 @@ class DisplayGL : public DisplayImpl
 
     egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
 
+    virtual egl::Error getDriverVersion(std::string *version) const = 0;
+
   protected:
     RendererGL *getRenderer() const { return mRenderer; };
     const gl::Version &getMaxSupportedESVersion() const;

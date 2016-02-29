@@ -269,4 +269,10 @@ egl::Error DisplayCGL::waitNative(EGLint engine,
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::Error(EGL_SUCCESS);
 }
+
+egl::Error DisplayCGL::getDriverVersion(std::string *version) const
+{
+    *version = "";
+    return egl::Error(EGL_SUCCESS);
+}
 }

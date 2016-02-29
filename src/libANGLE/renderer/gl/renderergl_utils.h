@@ -30,6 +30,7 @@ class FunctionsGL;
 struct WorkaroundsGL;
 
 VendorID GetVendorID(const FunctionsGL *functions);
+std::string GetDriverVersion(const FunctionsGL *functions);
 
 namespace nativegl_gl
 {
