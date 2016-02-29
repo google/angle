@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a26ec178_4326bafd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-02-29T19:14:38Z",
+      "side": 1,
+      "message": "now you can make this inherit from angle::NonCopyable and remove the default copy and assignment (which would still have the problem with the destructor)",
+      "range": {
+        "startLine": 39,
+        "startChar": 11,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "d8098461163f419309c96358306e496ecf2e29d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
