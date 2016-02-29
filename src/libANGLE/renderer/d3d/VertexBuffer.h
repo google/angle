@@ -84,9 +84,6 @@ class VertexBufferInterface : angle::NonCopyable
                                             unsigned int *outStreamOffset,
                                             const uint8_t *sourceData);
 
-    bool directStoragePossible(const gl::VertexAttribute &attrib,
-                               GLenum currentValueType) const;
-
     VertexBuffer* getVertexBuffer() const;
 
   protected:

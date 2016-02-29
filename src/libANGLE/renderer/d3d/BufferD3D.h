@@ -68,6 +68,8 @@ class BufferD3D : public BufferImpl
                             bool primitiveRestartEnabled,
                             gl::IndexRange *outRange) override;
 
+    BufferFactoryD3D *getFactory() const { return mFactory; }
+
   protected:
     void updateSerial();
     void updateD3DBufferUsage(GLenum usage);

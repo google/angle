@@ -8,11 +8,11 @@
 // class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
+
+#include "common/mathutil.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/VertexAttribute.h"
-
-#include "common/mathutil.h"
 
 namespace rx
 {
@@ -172,41 +172,6 @@ VertexBuffer* VertexBufferInterface::getVertexBuffer() const
     return mVertexBuffer;
 }
 
-bool VertexBufferInterface::directStoragePossible(const gl::VertexAttribute &attrib,
-                                                  GLenum currentValueType) const
-{
-    gl::Buffer *buffer = attrib.buffer.get();
-    BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
-
-    if (!storage || !storage->supportsDirectBinding())
-    {
-        return false;
-    }
-
-    // Alignment restrictions: In D3D, vertex data must be aligned to
-    //  the format stride, or to a 4-byte boundary, whichever is smaller.
-    //  (Undocumented, and experimentally confirmed)
-    size_t alignment = 4;
-    bool requiresConversion = false;
-
-    if (attrib.type != GL_FLOAT)
-    {
-        gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValueType);
-
-        unsigned int outputElementSize;
-        getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-        alignment = std::min<size_t>(outputElementSize, 4);
-
-        // TODO(jmadill): add VertexFormatCaps
-        requiresConversion = (mFactory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0;
-    }
-
-    bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
-                     (static_cast<size_t>(attrib.offset) % alignment == 0);
-
-    return !requiresConversion && isAligned;
-}
-
 StreamingVertexBufferInterface::StreamingVertexBufferInterface(BufferFactoryD3D *factory, std::size_t initialSize)
     : VertexBufferInterface(factory, true)
 {
@@ -329,4 +294,4 @@ void StaticVertexBufferInterface::commit()
         mIsCommitted = true;
     }
 }
-}
+}  // namespace rx

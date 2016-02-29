@@ -10,24 +10,30 @@
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
 #include "libANGLE/Buffer.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/VertexBuffer.h"
-
-namespace
-{
-    enum { INITIAL_STREAM_BUFFER_SIZE = 1024*1024 };
-    // This has to be at least 4k or else it fails on ATI cards.
-    enum { CONSTANT_VERTEX_BUFFER_SIZE = 4096 };
-}
 
 namespace rx
 {
+namespace
+{
+enum
+{
+    INITIAL_STREAM_BUFFER_SIZE = 1024 * 1024
+};
+// This has to be at least 4k or else it fails on ATI cards.
+enum
+{
+    CONSTANT_VERTEX_BUFFER_SIZE = 4096
+};
 
-static int ElementsInBuffer(const gl::VertexAttribute &attrib, unsigned int size)
+int ElementsInBuffer(const gl::VertexAttribute &attrib, unsigned int size)
 {
     // Size cannot be larger than a GLsizei
     if (size > static_cast<unsigned int>(std::numeric_limits<int>::max()))
@@ -40,6 +46,61 @@ static int ElementsInBuffer(const gl::VertexAttribute &attrib, unsigned int size
             (stride - static_cast<GLsizei>(ComputeVertexAttributeTypeSize(attrib)))) /
            stride;
 }
+
+bool DirectStoragePossible(const gl::VertexAttribute &attrib)
+{
+    // Current value attribs may not use direct storage.
+    if (!attrib.enabled)
+    {
+        return false;
+    }
+
+    gl::Buffer *buffer = attrib.buffer.get();
+    if (!buffer)
+    {
+        return false;
+    }
+
+    BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
+    ASSERT(bufferD3D);
+    if (!bufferD3D->supportsDirectBinding())
+    {
+        return false;
+    }
+
+    StaticVertexBufferInterface *staticBuffer =
+        bufferD3D->getStaticVertexBuffer(attrib, D3D_BUFFER_CREATE_IF_NECESSARY);
+    // Dynamic buffers can not be stored directly.
+    if (!staticBuffer)
+    {
+        return false;
+    }
+
+    // Alignment restrictions: In D3D, vertex data must be aligned to the format stride, or to a
+    // 4-byte boundary, whichever is smaller. (Undocumented, and experimentally confirmed)
+    size_t alignment        = 4;
+    bool requiresConversion = false;
+
+    if (attrib.type != GL_FLOAT)
+    {
+        gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
+
+        unsigned int outputElementSize;
+        staticBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
+        alignment = std::min<size_t>(outputElementSize, 4);
+
+        // TODO(jmadill): add VertexFormatCaps
+        BufferFactoryD3D *factory = bufferD3D->getFactory();
+        requiresConversion =
+            (factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0;
+    }
+
+    bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
+                     (static_cast<size_t>(attrib.offset) % alignment == 0);
+
+    return !requiresConversion && isAligned;
+}
+}  // anonymous namespace
 
 VertexDataManager::CurrentValueState::CurrentValueState()
     : buffer(nullptr),
@@ -236,9 +297,8 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
     StaticVertexBufferInterface *staticBuffer =
         bufferImpl ? bufferImpl->getStaticVertexBuffer(attrib, D3D_BUFFER_CREATE_IF_NECESSARY)
                    : NULL;
-    VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
-    if (!vertexBuffer->directStoragePossible(attrib, translatedAttrib.currentValueType))
+    if (!DirectStoragePossible(attrib))
     {
         if (staticBuffer)
         {
@@ -283,24 +343,22 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     ASSERT(buffer || attrib.pointer);
     ASSERT(attrib.enabled);
 
-    BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : NULL;
-    StaticVertexBufferInterface *staticBuffer =
-        storage ? storage->getStaticVertexBuffer(attrib, D3D_BUFFER_DO_NOT_CREATE) : NULL;
-    VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
-    bool directStorage = vertexBuffer->directStoragePossible(attrib, translated->currentValueType);
+    BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
+    auto *staticBuffer =
+        storage ? storage->getStaticVertexBuffer(attrib, D3D_BUFFER_DO_NOT_CREATE) : nullptr;
+    auto *vertexBuffer =
+        staticBuffer ? staticBuffer : static_cast<VertexBufferInterface *>(mStreamingBuffer);
+    translated->vertexBuffer = vertexBuffer->getVertexBuffer();
 
     // Instanced vertices do not apply the 'start' offset
     GLint firstVertexIndex = (attrib.divisor > 0 ? 0 : start);
 
-    translated->vertexBuffer = vertexBuffer->getVertexBuffer();
-
-    if (directStorage)
+    if (DirectStoragePossible(attrib))
     {
         translated->storage = storage;
         translated->serial = storage->getSerial();
         translated->stride  = static_cast<unsigned int>(ComputeVertexAttributeStride(attrib));
         translated->offset = static_cast<unsigned int>(attrib.offset + translated->stride * firstVertexIndex);
-
         return gl::Error(GL_NO_ERROR);
     }
 
@@ -429,4 +487,4 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
     return gl::Error(GL_NO_ERROR);
 }
 
-}
+}  // namespace rx
