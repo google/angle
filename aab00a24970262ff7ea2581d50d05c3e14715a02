@@ -16,6 +16,24 @@
       "revId": "aab00a24970262ff7ea2581d50d05c3e14715a02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82affd8e_e16e1c3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-02-29T11:02:29Z",
+      "side": 0,
+      "message": "It can\u0027t be used, since some of the formats processed here are conceptually red/green formats, and in the follow-up patches will be recorded as such to make things consistent.",
+      "parentUuid": "82bb7df1_3bd4bc35",
+      "revId": "aab00a24970262ff7ea2581d50d05c3e14715a02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
