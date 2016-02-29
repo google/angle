@@ -45,6 +45,24 @@
       "revId": "60c3fa7212106fc12242c012a299c12ddc621913",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02feade5_5fa46f13",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-02-29T18:21:14Z",
+      "side": 1,
+      "message": "I think that the std::deque operations use move assignements when available so defining these would help.",
+      "parentUuid": "22ef3134_00cf2829",
+      "revId": "60c3fa7212106fc12242c012a299c12ddc621913",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
