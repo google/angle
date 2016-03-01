@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ea9d1e_a7cda97d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:17:05Z",
+      "side": 1,
+      "message": "please open an issue in the ANGLE issue tracker to cover this bug and label this as BUG\u003dangleproject:#### to track it",
+      "revId": "7d3cc807dc5ccaecd8ad584d5c0ca88f0fc6795c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
