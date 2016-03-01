@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_80120b75",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:21:03Z",
+      "side": 1,
+      "message": "can you restyle this as\n\n const auto \u0026formatSet \u003d d3d11::GetANGLEFormatSet(...);\n DXGI_FORMAT drawDXGIFormat \u003d (colorBlit ? formatSet.rtvFormat : formatSet.dsvFormat);",
+      "range": {
+        "startLine": 3953,
+        "startChar": 25,
+        "endLine": 3953,
+        "endChar": 87
+      },
+      "revId": "db94ae4d6ce4acdd54305f94e876a4084635b54b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
