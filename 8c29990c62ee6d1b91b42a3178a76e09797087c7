@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02feade5_36ed4819",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T14:55:48Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 132,
+        "startChar": 97,
+        "endLine": 132,
+        "endChar": 104
+      },
+      "revId": "8c29990c62ee6d1b91b42a3178a76e09797087c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02feade5_56f0d4f4",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T14:55:48Z",
+      "side": 1,
+      "message": "nit: comment before every test",
+      "range": {
+        "startLine": 315,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 6
+      },
+      "revId": "8c29990c62ee6d1b91b42a3178a76e09797087c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
