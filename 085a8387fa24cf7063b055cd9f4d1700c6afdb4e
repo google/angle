@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ea9d1e_874d05b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-01T20:20:56Z",
+      "side": 1,
+      "message": "nit: for conciseness I believe we can use {16} here.",
+      "revId": "085a8387fa24cf7063b055cd9f4d1700c6afdb4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
