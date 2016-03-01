@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22ef3134_a6c1276b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:00:30Z",
+      "side": 1,
+      "message": "I\u0027m not sure I agree with this. I think the swizzle shader needs to be chosen according to the component type of the SRV the shader takes as input. Hence, the decision should be made on the DXGI format of the SRV. Maybe you can explain if I\u0027m missing something?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "63cd1ebe47a6584f9bd6c1308236ceb60ada7e59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
