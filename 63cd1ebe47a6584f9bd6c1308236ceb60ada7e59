@@ -22,6 +22,30 @@
       "revId": "63cd1ebe47a6584f9bd6c1308236ceb60ada7e59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2b881d5_68158b82",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-01T15:47:14Z",
+      "side": 1,
+      "message": "You have a point. The changes in this patch may not be strictly necessary to keep things working. I\u0027d still rather keep these changes, since without these reviewing the correctness of the last patch sets in the chain is a major pain - there\u0027s 3 lookup tables involved here, two of which are being changed. It\u0027s much better to make things simpler to get rid of risks.\n\nI think I should change the commit message, but keep the changes themselves intact.",
+      "parentUuid": "22ef3134_a6c1276b",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "63cd1ebe47a6584f9bd6c1308236ceb60ada7e59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
