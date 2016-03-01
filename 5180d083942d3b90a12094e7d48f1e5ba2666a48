@@ -70,6 +70,30 @@
       "revId": "5180d083942d3b90a12094e7d48f1e5ba2666a48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_4743fd8a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:46:30Z",
+      "side": 1,
+      "message": "Nevermind, I see it. That\u0027s fine then, it shouldn\u0027t ever be used as storage for a FBO attachment.",
+      "parentUuid": "02feade5_761070de",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 30,
+        "endChar": 4
+      },
+      "revId": "5180d083942d3b90a12094e7d48f1e5ba2666a48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
