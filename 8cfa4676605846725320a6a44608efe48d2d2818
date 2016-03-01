@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22ef3134_29a048bc",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:24:46Z",
+      "side": 1,
+      "message": "there\u0027s a few places where you return an empty string -- can you comment here, and in the other places if this is TODO or when/if we will never need the values?",
+      "range": {
+        "startLine": 273,
+        "startChar": 0,
+        "endLine": 277,
+        "endChar": 1
+      },
+      "revId": "8cfa4676605846725320a6a44608efe48d2d2818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_bbb8f8ee",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-01T15:24:46Z",
+      "side": 1,
+      "message": "it seems odd to me that you just throw away the value.. maybe you can make it a member with a comment to do something with it, or bake it into the renderer description?",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 309,
+        "endChar": 31
+      },
+      "revId": "8cfa4676605846725320a6a44608efe48d2d2818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
