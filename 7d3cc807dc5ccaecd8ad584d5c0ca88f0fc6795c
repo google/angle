@@ -16,6 +16,24 @@
       "revId": "7d3cc807dc5ccaecd8ad584d5c0ca88f0fc6795c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_47d5bdfe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-01T15:21:10Z",
+      "side": 1,
+      "message": "I think issue 1233 would work here. It is the tracking issue for this new CGL backend: \"Make the Mac port work with CAOpenGLLayer\"",
+      "parentUuid": "82ea9d1e_a7cda97d",
+      "revId": "7d3cc807dc5ccaecd8ad584d5c0ca88f0fc6795c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
