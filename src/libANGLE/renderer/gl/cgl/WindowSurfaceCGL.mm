@@ -250,7 +250,7 @@ egl::Error WindowSurfaceCGL::swap()
     unsigned height = getHeight();
     auto &texture   = *mSwapState.beingRendered;
 
-    if (texture.width != width || texture.height != texture.height)
+    if (texture.width != width || texture.height != height)
     {
         mStateManager->bindTexture(GL_TEXTURE_2D, texture.texture);
         mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
