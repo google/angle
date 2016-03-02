@@ -237,6 +237,12 @@ gl::Context *DisplayD3D::createContext(const egl::Config *config,
     return new gl::Context(config, shareContext, mRenderer, attribs);
 }
 
+StreamImpl *DisplayD3D::createStream(const egl::AttributeMap &attribs)
+{
+    ASSERT(mRenderer != nullptr);
+    return mRenderer->createStream(attribs);
+}
+
 egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
 {
     return egl::Error(EGL_SUCCESS);

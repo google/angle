@@ -482,6 +482,9 @@ struct DisplayExtensions
 
     // KHR_create_context_no_error
     bool createContextNoError;
+
+    // EGL_KHR_stream
+    bool stream;
 };
 
 struct DeviceExtensions

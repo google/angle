@@ -12,6 +12,7 @@
 #include "libANGLE/Error.h"
 
 #include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 namespace gl
 {
@@ -26,6 +27,7 @@ struct Config;
 class Device;
 class Display;
 class Image;
+class Stream;
 class Surface;
 
 // Object validation
@@ -57,6 +59,21 @@ Error ValidateCreateDeviceANGLE(EGLint device_type,
                                 void *native_device,
                                 const EGLAttrib *attrib_list);
 Error ValidateReleaseDeviceANGLE(Device *device);
+
+Error ValidateCreateStreamKHR(const Display *display, const AttributeMap &attributes);
+Error ValidateDestroyStreamKHR(const Display *display, const Stream *stream);
+Error ValidateStreamAttribKHR(const Display *display,
+                              const Stream *stream,
+                              EGLint attribute,
+                              EGLint value);
+Error ValidateQueryStreamKHR(const Display *display,
+                             const Stream *stream,
+                             EGLenum attribute,
+                             EGLint *value);
+Error ValidateQueryStreamu64KHR(const Display *display,
+                                const Stream *stream,
+                                EGLenum attribute,
+                                EGLuint64KHR *value);
 
 // Other validation
 Error ValidateCompatibleConfigs(const Display *display,

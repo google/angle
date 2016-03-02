@@ -46,6 +46,11 @@ EXPORTS
     eglDestroyImageKHR               @52
     eglCreateDeviceANGLE             @53
     eglReleaseDeviceANGLE            @54
+    eglCreateStreamKHR               @55
+    eglDestroyStreamKHR              @56
+    eglStreamAttribKHR               @57
+    eglQueryStreamKHR                @58
+    eglQueryStreamu64KHR             @59
 
     ; 1.5 entry points
     eglCreateSync                    @38

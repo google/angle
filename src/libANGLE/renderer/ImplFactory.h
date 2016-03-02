@@ -30,6 +30,7 @@ class ShaderImpl;
 class TextureImpl;
 class TransformFeedbackImpl;
 class VertexArrayImpl;
+class StreamImpl;
 
 class ImplFactory : angle::NonCopyable
 {

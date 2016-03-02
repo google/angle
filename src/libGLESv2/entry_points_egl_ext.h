@@ -43,6 +43,22 @@ ANGLE_EXPORT EGLDeviceEXT EGLAPIENTRY CreateDeviceANGLE(EGLint device_type,
                                                         void *native_device,
                                                         const EGLAttrib *attrib_list);
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY ReleaseDeviceANGLE(EGLDeviceEXT device);
+
+// EGL_KHR_stream
+ANGLE_EXPORT EGLStreamKHR EGLAPIENTRY CreateStreamKHR(EGLDisplay dpy, const EGLint *attrib_list);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY DestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamAttribKHR(EGLDisplay dpy,
+                                                    EGLStreamKHR stream,
+                                                    EGLenum attribute,
+                                                    EGLint value);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY QueryStreamKHR(EGLDisplay dpy,
+                                                   EGLStreamKHR stream,
+                                                   EGLenum attribute,
+                                                   EGLint *value);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY QueryStreamu64KHR(EGLDisplay dpy,
+                                                      EGLStreamKHR stream,
+                                                      EGLenum attribute,
+                                                      EGLuint64KHR *value);
 }
 
 #endif // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

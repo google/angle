@@ -14,6 +14,7 @@
 #include "libANGLE/Device.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
 
 #include <EGL/eglext.h>
@@ -174,6 +175,28 @@ Error ValidateImage(const Display *display, const Image *image)
     }
 
     return Error(EGL_SUCCESS);
+}
+
+Error ValidateStream(const Display *display, const Stream *stream)
+{
+    Error error = ValidateDisplay(display);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.stream)
+    {
+        return Error(EGL_BAD_ACCESS, "Stream extension not active");
+    }
+
+    if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
+    {
+        return Error(EGL_BAD_STREAM_KHR, "Invalid stream");
+    }
+
+    return Error(GL_NO_ERROR);
 }
 
 Error ValidateCreateContext(Display *display, Config *configuration, gl::Context *shareContext,
@@ -1050,6 +1073,138 @@ Error ValidateReleaseDeviceANGLE(Device *device)
     if (owningDisplay != nullptr)
     {
         return Error(EGL_BAD_DEVICE_EXT, "Device must have been created using eglCreateDevice");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateCreateStreamKHR(const Display *display, const AttributeMap &attributes)
+{
+    Error error = ValidateDisplay(display);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.stream)
+    {
+        return Error(EGL_BAD_ALLOC, "Stream extension not active");
+    }
+
+    for (const auto &attributeIter : attributes)
+    {
+        EGLint attribute = attributeIter.first;
+        EGLint value     = attributeIter.second;
+
+        switch (attribute)
+        {
+            case EGL_STREAM_STATE_KHR:
+            case EGL_PRODUCER_FRAME_KHR:
+            case EGL_CONSUMER_FRAME_KHR:
+                return Error(EGL_BAD_ACCESS, "Attempt to initialize readonly parameter");
+            case EGL_CONSUMER_LATENCY_USEC_KHR:
+                // Technically not in spec but a latency < 0 makes no sense so we check it
+                if (value < 0)
+                {
+                    return Error(EGL_BAD_PARAMETER, "Latency must be positive");
+                }
+                break;
+            default:
+                return Error(EGL_BAD_ATTRIBUTE, "Invalid stream attribute");
+        }
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateDestroyStreamKHR(const Display *display, const Stream *stream)
+{
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateStreamAttribKHR(const Display *display,
+                              const Stream *stream,
+                              EGLint attribute,
+                              EGLint value)
+{
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (stream->getState() == EGL_STREAM_STATE_DISCONNECTED_KHR)
+    {
+        return Error(EGL_BAD_STATE_KHR, "Bad stream state");
+    }
+
+    switch (attribute)
+    {
+        case EGL_STREAM_STATE_KHR:
+        case EGL_PRODUCER_FRAME_KHR:
+        case EGL_CONSUMER_FRAME_KHR:
+            return Error(EGL_BAD_ACCESS, "Attribute is read only");
+        case EGL_CONSUMER_LATENCY_USEC_KHR:
+            if (value < 0)
+            {
+                return Error(EGL_BAD_PARAMETER, "Stream consumer latency must be positive");
+            }
+            break;
+        default:
+            return Error(EGL_BAD_ATTRIBUTE, "Invalid attribute");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateQueryStreamKHR(const Display *display,
+                             const Stream *stream,
+                             EGLenum attribute,
+                             EGLint *value)
+{
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    switch (attribute)
+    {
+        case EGL_STREAM_STATE_KHR:
+        case EGL_CONSUMER_LATENCY_USEC_KHR:
+            break;
+        default:
+            return Error(EGL_BAD_ATTRIBUTE, "Invalid attribute");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateQueryStreamu64KHR(const Display *display,
+                                const Stream *stream,
+                                EGLenum attribute,
+                                EGLuint64KHR *value)
+{
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    switch (attribute)
+    {
+        case EGL_CONSUMER_FRAME_KHR:
+        case EGL_PRODUCER_FRAME_KHR:
+            break;
+        default:
+            return Error(EGL_BAD_ATTRIBUTE, "Invalid attribute");
     }
 
     return Error(EGL_SUCCESS);

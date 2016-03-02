@@ -265,6 +265,9 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     bool presentPathFastEnabled() const { return mPresentPathFastEnabled; }
 
+    // Stream creation
+    virtual StreamImpl *createStream(const egl::AttributeMap &attribs) = 0;
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) = 0;

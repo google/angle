@@ -12,6 +12,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/Stream.h"
 #include "libANGLE/validationEGL.h"
 
 #include "common/debug.h"
@@ -548,6 +549,152 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY ReleaseDeviceANGLE(EGLDeviceEXT device)
     }
 
     SafeDelete(dev);
+
+    return EGL_TRUE;
+}
+
+// EGL_KHR_stream
+EGLStreamKHR EGLAPIENTRY CreateStreamKHR(EGLDisplay dpy, const EGLint *attrib_list)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, const EGLAttrib* attrib_list = 0x%0.8p)", dpy, attrib_list);
+
+    Display *display = static_cast<Display *>(dpy);
+    AttributeMap attributes(attrib_list);
+
+    Error error = ValidateCreateStreamKHR(display, attributes);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_NO_STREAM_KHR;
+    }
+
+    Stream *stream;
+    error = display->createStream(attributes, &stream);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_NO_STREAM_KHR;
+    }
+
+    return static_cast<EGLStreamKHR>(stream);
+}
+
+EGLBoolean EGLAPIENTRY DestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR = 0x%0.8p)", dpy, stream);
+
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+
+    Error error = ValidateDestroyStreamKHR(display, streamObject);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    display->destroyStream(streamObject);
+    return EGL_TRUE;
+}
+
+EGLBoolean EGLAPIENTRY StreamAttribKHR(EGLDisplay dpy,
+                                       EGLStreamKHR stream,
+                                       EGLenum attribute,
+                                       EGLint value)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, EGLenum attribute = 0x%X, "
+        "EGLint value = 0x%X)",
+        dpy, stream, attribute, value);
+
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+
+    Error error = ValidateStreamAttribKHR(display, streamObject, attribute, value);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    switch (attribute)
+    {
+        case EGL_CONSUMER_LATENCY_USEC_KHR:
+            streamObject->setConsumerLatency(value);
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    return EGL_TRUE;
+}
+
+EGLBoolean EGLAPIENTRY QueryStreamKHR(EGLDisplay dpy,
+                                      EGLStreamKHR stream,
+                                      EGLenum attribute,
+                                      EGLint *value)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, EGLenum attribute = 0x%X, "
+        "EGLint value = 0x%0.8p)",
+        dpy, stream, attribute, value);
+
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+
+    Error error = ValidateQueryStreamKHR(display, streamObject, attribute, value);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    switch (attribute)
+    {
+        case EGL_STREAM_STATE_KHR:
+            *value = streamObject->getState();
+            break;
+        case EGL_CONSUMER_LATENCY_USEC_KHR:
+            *value = streamObject->getConsumerLatency();
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    return EGL_TRUE;
+}
+
+EGLBoolean EGLAPIENTRY QueryStreamu64KHR(EGLDisplay dpy,
+                                         EGLStreamKHR stream,
+                                         EGLenum attribute,
+                                         EGLuint64KHR *value)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, EGLenum attribute = 0x%X, "
+        "EGLuint64KHR value = 0x%0.8p)",
+        dpy, stream, attribute, value);
+
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+
+    Error error = ValidateQueryStreamu64KHR(display, streamObject, attribute, value);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    switch (attribute)
+    {
+        case EGL_PRODUCER_FRAME_KHR:
+            *value = streamObject->getProducerFrame();
+            break;
+        case EGL_CONSUMER_FRAME_KHR:
+            *value = streamObject->getConsumerFrame();
+            break;
+        default:
+            UNREACHABLE();
+    }
 
     return EGL_TRUE;
 }

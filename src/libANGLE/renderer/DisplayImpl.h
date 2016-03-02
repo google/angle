@@ -38,6 +38,7 @@ class SurfaceImpl;
 class ImageImpl;
 struct ConfigDesc;
 class DeviceImpl;
+class StreamImpl;
 
 class DisplayImpl : angle::NonCopyable
 {
@@ -67,6 +68,8 @@ class DisplayImpl : angle::NonCopyable
     virtual gl::Context *createContext(const egl::Config *config,
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs) = 0;
+
+    virtual StreamImpl *createStream(const egl::AttributeMap &attribs) = 0;
 
     virtual egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) = 0;
 

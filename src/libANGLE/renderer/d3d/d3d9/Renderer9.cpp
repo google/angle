@@ -770,6 +770,13 @@ TransformFeedbackImpl* Renderer9::createTransformFeedback()
     return new TransformFeedbackD3D();
 }
 
+StreamImpl *Renderer9::createStream(const egl::AttributeMap &attribs)
+{
+    // Streams are not supported under D3D9
+    UNREACHABLE();
+    return nullptr;
+}
+
 bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.

@@ -288,4 +288,37 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY eglGetProcAddress(const cha
     return egl::GetProcAddress(procname);
 }
 
+EGLStreamKHR EGLAPIENTRY eglCreateStreamKHR(EGLDisplay dpy, const EGLint *attrib_list)
+{
+    return egl::CreateStreamKHR(dpy, attrib_list);
+}
+
+EGLBoolean EGLAPIENTRY eglDestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
+{
+    return egl::DestroyStreamKHR(dpy, stream);
+}
+
+EGLBoolean EGLAPIENTRY eglStreamAttribKHR(EGLDisplay dpy,
+                                          EGLStreamKHR stream,
+                                          EGLenum attribute,
+                                          EGLint value)
+{
+    return egl::StreamAttribKHR(dpy, stream, attribute, value);
+}
+
+EGLBoolean EGLAPIENTRY eglQueryStreamKHR(EGLDisplay dpy,
+                                         EGLStreamKHR stream,
+                                         EGLenum attribute,
+                                         EGLint *value)
+{
+    return egl::QueryStreamKHR(dpy, stream, attribute, value);
+}
+
+EGLBoolean EGLAPIENTRY eglQueryStreamu64KHR(EGLDisplay dpy,
+                                            EGLStreamKHR stream,
+                                            EGLenum attribute,
+                                            EGLuint64KHR *value)
+{
+    return egl::QueryStreamu64KHR(dpy, stream, attribute, value);
+}
 }

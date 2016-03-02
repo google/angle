@@ -28,6 +28,7 @@
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/Stream.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ImageImpl.h"
 #include "third_party/trace_event/trace_event.h"
@@ -299,6 +300,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mAttributeMap(),
       mConfigSet(),
       mContextSet(),
+      mStreamSet(),
       mInitialized(false),
       mCaps(),
       mDisplayExtensions(),
@@ -436,6 +438,11 @@ void Display::terminate()
     while (!mImageSet.empty())
     {
         destroyImage(*mImageSet.begin());
+    }
+
+    while (!mStreamSet.empty())
+    {
+        destroyStream(*mStreamSet.begin());
     }
 
     while (!mImplementation->getSurfaceSet().empty())
@@ -699,6 +706,24 @@ Error Display::createImage(gl::Context *context,
     return egl::Error(EGL_SUCCESS);
 }
 
+Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
+{
+    ASSERT(isInitialized());
+
+    rx::StreamImpl *streamImpl = mImplementation->createStream(attribs);
+    ASSERT(streamImpl != nullptr);
+
+    Stream *stream = new Stream(streamImpl, attribs);
+
+    ASSERT(stream != nullptr);
+    mStreamSet.insert(stream);
+
+    ASSERT(outStream != nullptr);
+    *outStream = stream;
+
+    return Error(EGL_SUCCESS);
+}
+
 Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
                              gl::Context **outContext)
 {
@@ -788,6 +813,12 @@ void Display::destroyImage(egl::Image *image)
     mImageSet.erase(iter);
 }
 
+void Display::destroyStream(egl::Stream *stream)
+{
+    mStreamSet.erase(stream);
+    SafeDelete(stream);
+}
+
 void Display::destroyContext(gl::Context *context)
 {
     mContextSet.erase(context);
@@ -852,6 +883,11 @@ bool Display::isValidSurface(Surface *surface) const
 bool Display::isValidImage(const Image *image) const
 {
     return mImageSet.find(const_cast<Image *>(image)) != mImageSet.end();
+}
+
+bool Display::isValidStream(const Stream *stream) const
+{
+    return mStreamSet.find(const_cast<Stream *>(stream)) != mStreamSet.end();
 }
 
 bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
