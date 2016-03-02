@@ -22,6 +22,30 @@
       "revId": "bc21e18b8ec49ac543b8941272da36cbf79fb4cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2b881d5_c8da175f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3179,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-02T14:45:44Z",
+      "side": 1,
+      "message": "Ah, apparently using either implicit conversion or static_cast is required here: http://en.cppreference.com/w/cpp/language/reinterpret_cast\n\nCould patch this up with a small commit too, but resubmit is fine.",
+      "parentUuid": "e211990a_e705ea30",
+      "range": {
+        "startLine": 3179,
+        "startChar": 43,
+        "endLine": 3179,
+        "endChar": 94
+      },
+      "revId": "bc21e18b8ec49ac543b8941272da36cbf79fb4cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
