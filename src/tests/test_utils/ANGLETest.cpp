@@ -433,60 +433,56 @@ void ANGLETest::SetWindowVisible(bool isVisible)
     mOSWindow->setVisible(isVisible);
 }
 
-bool IsIntel()
+bool ANGLETest::isIntel() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Intel") != std::string::npos);
 }
 
-bool IsAMD()
+bool ANGLETest::isAMD() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("AMD") != std::string::npos) ||
            (rendererString.find("ATI") != std::string::npos);
 }
 
-bool IsNVIDIA()
+bool ANGLETest::isNVidia() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("NVIDIA") != std::string::npos);
 }
 
-bool IsD3D11()
+bool ANGLETest::isD3D11() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Direct3D11 vs_5_0") != std::string::npos);
 }
 
-bool IsD3D11_FL93()
+bool ANGLETest::isD3D11_FL93() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Direct3D11 vs_4_0_") != std::string::npos);
 }
 
-bool IsD3D9()
+bool ANGLETest::isD3D9() const
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
     return (rendererString.find("Direct3D9") != std::string::npos);
 }
 
-bool IsD3DSM3()
+bool ANGLETest::isD3DSM3() const
 {
-    return IsD3D9() || IsD3D11_FL93();
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return isD3D9() || isD3D11_FL93();
 }
 
-bool IsOSX()
+bool ANGLETest::isOSX() const
 {
-#if defined(__APPLE__)
+#ifdef __APPLE__
     return true;
 #else
     return false;
 #endif
-}
-
-bool ANGLETest::isOpenGL() const
-{
-    return getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
 }
 
 EGLint ANGLETest::getPlatformRenderer() const

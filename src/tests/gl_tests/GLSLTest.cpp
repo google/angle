@@ -462,13 +462,21 @@ TEST_P(GLSLTest, NamelessScopedStructs)
 
 TEST_P(GLSLTest, ScopedStructsOrderBug)
 {
+#if defined(__APPLE__)
     // TODO(geofflang): Find out why this doesn't compile on Apple OpenGL drivers
     // (http://anglebug.com/1292)
+    if (getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test disabled on Apple OpenGL." << std::endl;
+        return;
+    }
+#endif
+
     // TODO(geofflang): Find out why this doesn't compile on AMD OpenGL drivers
     // (http://anglebug.com/1291)
-    if (isOpenGL() && (IsOSX() || !IsNVIDIA()))
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
-        std::cout << "Test disabled on this OpenGL configuration." << std::endl;
+        std::cout << "Test disabled on AMD OpenGL." << std::endl;
         return;
     }
 
@@ -804,7 +812,7 @@ TEST_P(GLSLTest, MaxVaryingVec4)
 #if defined(__APPLE__)
     // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
     // (http://anglebug.com/1291)
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
         return;
@@ -829,7 +837,7 @@ TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusTwoSpecialVariables)
 TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
 {
     // TODO(geofflang): Figure out why this fails on OpenGL AMD (http://anglebug.com/1291)
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test disabled on OpenGL." << std::endl;
         return;
@@ -885,7 +893,7 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
-    if (IsD3D9())
+    if (isD3D9())
     {
         std::cout << "Test disabled on D3D9." << std::endl;
         return;
@@ -900,7 +908,7 @@ TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
-    if (IsD3D9())
+    if (isD3D9())
     {
         std::cout << "Test disabled on D3D9." << std::endl;
         return;
@@ -915,7 +923,7 @@ TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
-    if (IsD3D9())
+    if (isD3D9())
     {
         std::cout << "Test disabled on D3D9." << std::endl;
         return;
@@ -931,7 +939,7 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 #if defined(__APPLE__)
     // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
     // (http://anglebug.com/1291)
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
         return;
@@ -947,7 +955,7 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 // Disabled because of a failure in D3D9
 TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
-    if (IsD3DSM3())
+    if (isD3DSM3())
     {
         std::cout << "Test disabled on SM3." << std::endl;
         return;
@@ -963,7 +971,7 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 #if defined(__APPLE__)
     // TODO(geofflang): Find out why this doesn't compile on Apple AND OpenGL drivers
     // (http://anglebug.com/1291)
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test disabled on Apple AMD OpenGL." << std::endl;
         return;

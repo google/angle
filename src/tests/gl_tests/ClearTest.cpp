@@ -139,7 +139,7 @@ TEST_P(ClearTest, RGBA8Framebuffer)
 TEST_P(ClearTest, ClearIssue)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;
@@ -275,7 +275,7 @@ TEST_P(ClearTestES3, BadFBOSerialBug)
 TEST_P(ClearTestES3, SRGBClear)
 {
     // TODO(jmadill): figure out why this fails
-    if (IsIntel() && GetParam() == ES3_OPENGL())
+    if (isIntel() && GetParam() == ES3_OPENGL())
     {
         std::cout << "Test skipped on Intel due to failures." << std::endl;
         return;
@@ -303,7 +303,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 {
     // TODO(cwallez) figure out why it is broken on Intel on Mac
 #if defined(ANGLE_PLATFORM_APPLE)
-    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel on Mac." << std::endl;
         return;
@@ -311,7 +311,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 #endif
 
     // TODO(jmadill): figure out why this fails
-    if (IsIntel() && GetParam() == ES3_OPENGL())
+    if (isIntel() && GetParam() == ES3_OPENGL())
     {
         std::cout << "Test skipped on Intel due to failures." << std::endl;
         return;
@@ -356,7 +356,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
-    if (IsD3D11() && (IsNVIDIA() || IsIntel()))
+    if (isD3D11() && (isNVidia() || isIntel()))
     {
         std::cout << "Test skipped on Nvidia and Intel D3D11." << std::endl;
         return;
