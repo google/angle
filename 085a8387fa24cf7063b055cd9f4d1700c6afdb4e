@@ -16,6 +16,24 @@
       "revId": "085a8387fa24cf7063b055cd9f4d1700c6afdb4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02feade5_57160bdd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-02T18:34:21Z",
+      "side": 1,
+      "message": "Done, I had this originally to work around a VS2013 compiler bug, but it might be fixed by the explicit unsigned-ness now.",
+      "parentUuid": "82ea9d1e_874d05b5",
+      "revId": "085a8387fa24cf7063b055cd9f4d1700c6afdb4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
