@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e211990a_e705ea30",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-02T14:38:58Z",
+      "side": 1,
+      "message": "this reinterpret_cast is triggering an error in Clang... we should probably roll back this commit and re-submit it. \n\nSee the new bot here:\n\nhttps://build.chromium.org/p/chromium.gpu.fyi/waterfall?builder\u003dGPU%20Win%20Clang%20Builder%20(dbg)\n\nAnd this particular failure is evident in the logs\n\nhttps://build.chromium.org/p/chromium.gpu.fyi/builders/GPU%20Win%20Clang%20Builder%20%28dbg%29/builds/782/steps/compile/logs/stdio\n\n..\\..\\third_party\\angle\\src\\libANGLE\\renderer\\d3d\\d3d11\\Renderer11.cpp(3179,44) :  error: reinterpret_cast from \u0027nullptr_t\u0027 to \u0027ID3D11RenderTargetView *\u0027 is not allowed\n        *outRT \u003d new TextureRenderTarget11(reinterpret_cast\u003cID3D11RenderTargetView *\u003e(nullptr),",
+      "range": {
+        "startLine": 3179,
+        "startChar": 43,
+        "endLine": 3179,
+        "endChar": 94
+      },
+      "revId": "bc21e18b8ec49ac543b8941272da36cbf79fb4cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
