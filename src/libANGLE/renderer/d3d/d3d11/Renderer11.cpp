@@ -4185,6 +4185,42 @@ GLenum Renderer11::getVertexComponentType(gl::VertexFormatType vertexFormatType)
     return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel).nativeFormat).componentType;
 }
 
+gl::ErrorOrResult<unsigned int> Renderer11::getVertexSpaceRequired(
+    const gl::VertexAttribute &attrib,
+    GLsizei count,
+    GLsizei instances) const
+{
+    if (!attrib.enabled)
+    {
+        return 16u;
+    }
+
+    unsigned int elementCount = 0;
+    if (instances == 0 || attrib.divisor == 0)
+    {
+        elementCount = count;
+    }
+    else
+    {
+        // Round up to divisor, if possible
+        elementCount = UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
+    }
+
+    gl::VertexFormatType formatType      = gl::GetVertexFormatType(attrib);
+    const D3D_FEATURE_LEVEL featureLevel = mRenderer11DeviceCaps.featureLevel;
+    const d3d11::VertexFormat &vertexFormatInfo =
+        d3d11::GetVertexFormatInfo(formatType, featureLevel);
+    const d3d11::DXGIFormatSize &dxgiFormatInfo =
+        d3d11::GetDXGIFormatSizeInfo(vertexFormatInfo.nativeFormat);
+    unsigned int elementSize = dxgiFormatInfo.pixelBytes;
+    if (elementSize > std::numeric_limits<unsigned int>::max() / elementCount)
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "New vertex buffer size would result in an overflow.");
+    }
+
+    return elementSize * elementCount;
+}
+
 void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                               gl::Extensions *outExtensions, gl::Limitations *outLimitations) const
 {

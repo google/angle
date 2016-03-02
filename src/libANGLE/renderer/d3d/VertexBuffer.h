@@ -44,8 +44,6 @@ class VertexBuffer : angle::NonCopyable
                                             GLsizei instances,
                                             unsigned int offset,
                                             const uint8_t *sourceData) = 0;
-    virtual gl::Error getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances,
-                                       unsigned int *outSpaceRequired) const = 0;
 
     virtual unsigned int getBufferSize() const = 0;
     virtual gl::Error setBufferSize(unsigned int size) = 0;

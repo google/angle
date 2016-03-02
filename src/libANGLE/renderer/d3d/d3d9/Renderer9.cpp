@@ -2752,6 +2752,38 @@ GLenum Renderer9::getVertexComponentType(gl::VertexFormatType vertexFormatType) 
     return d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType).componentType;
 }
 
+gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::VertexAttribute &attrib,
+                                                                  GLsizei count,
+                                                                  GLsizei instances) const
+{
+    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, GL_FLOAT);
+    const d3d9::VertexFormat &d3d9VertexInfo =
+        d3d9::GetVertexFormatInfo(getCapsDeclTypes(), vertexFormatType);
+
+    if (!attrib.enabled)
+    {
+        return 16u;
+    }
+
+    unsigned int elementCount = 0;
+    if (instances == 0 || attrib.divisor == 0)
+    {
+        elementCount = static_cast<unsigned int>(count);
+    }
+    else
+    {
+        // Round up to divisor, if possible
+        elementCount = UnsignedCeilDivide(static_cast<unsigned int>(instances), attrib.divisor);
+    }
+
+    if (d3d9VertexInfo.outputElementSize > std::numeric_limits<unsigned int>::max() / elementCount)
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "New vertex buffer size would result in an overflow.");
+    }
+
+    return static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
+}
+
 void Renderer9::generateCaps(gl::Caps *outCaps,
                              gl::TextureCapsMap *outTextureCaps,
                              gl::Extensions *outExtensions,

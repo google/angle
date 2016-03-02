@@ -98,14 +98,13 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
                                                        unsigned int *outStreamOffset,
                                                        const uint8_t *sourceData)
 {
-    gl::Error error(GL_NO_ERROR);
-
-    unsigned int spaceRequired;
-    error = mVertexBuffer->getSpaceRequired(attrib, count, instances, &spaceRequired);
-    if (error.isError())
+    auto errorOrSpaceRequired = mFactory->getVertexSpaceRequired(attrib, count, instances);
+    if (errorOrSpaceRequired.isError())
     {
-        return error;
+        return errorOrSpaceRequired.getError();
     }
+
+    unsigned int spaceRequired = errorOrSpaceRequired.getResult();
 
     // Align to 16-byte boundary
     unsigned int alignedSpaceRequired = roundUp(spaceRequired, 16u);
@@ -117,7 +116,7 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
         return gl::Error(GL_OUT_OF_MEMORY, "Internal error, new vertex buffer write position would overflow.");
     }
 
-    error = reserveSpace(mReservedSpace);
+    gl::Error error = reserveSpace(mReservedSpace);
     if (error.isError())
     {
         return error;
@@ -142,14 +141,13 @@ gl::Error VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute
 
 gl::Error VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances)
 {
-    gl::Error error(GL_NO_ERROR);
-
-    unsigned int requiredSpace;
-    error = mVertexBuffer->getSpaceRequired(attrib, count, instances, &requiredSpace);
-    if (error.isError())
+    auto errorOrRequiredSpace = mFactory->getVertexSpaceRequired(attrib, count, instances);
+    if (errorOrRequiredSpace.isError())
     {
-        return error;
+        return errorOrRequiredSpace.getError();
     }
+
+    unsigned int requiredSpace = errorOrRequiredSpace.getResult();
 
     // Align to 16-byte boundary
     unsigned int alignedRequiredSpace = roundUp(requiredSpace, 16u);

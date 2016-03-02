@@ -68,37 +68,36 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib)
         return false;
     }
 
-    StaticVertexBufferInterface *staticBuffer =
-        bufferD3D->getStaticVertexBuffer(attrib, D3D_BUFFER_CREATE_IF_NECESSARY);
-    // Dynamic buffers can not be stored directly.
-    if (!staticBuffer)
-    {
-        return false;
-    }
-
     // Alignment restrictions: In D3D, vertex data must be aligned to the format stride, or to a
     // 4-byte boundary, whichever is smaller. (Undocumented, and experimentally confirmed)
-    size_t alignment        = 4;
-    bool requiresConversion = false;
+    size_t alignment = 4;
 
     if (attrib.type != GL_FLOAT)
     {
         gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
 
-        unsigned int outputElementSize;
-        staticBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-        alignment = std::min<size_t>(outputElementSize, 4);
-
         // TODO(jmadill): add VertexFormatCaps
         BufferFactoryD3D *factory = bufferD3D->getFactory();
-        requiresConversion =
-            (factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0;
+
+        auto errorOrElementSize = factory->getVertexSpaceRequired(attrib, 1, 0);
+        if (errorOrElementSize.isError())
+        {
+            ERR("Unlogged error in DirectStoragePossible.");
+            return false;
+        }
+
+        alignment = std::min<size_t>(errorOrElementSize.getResult(), 4);
+
+        // CPU-converted vertex data must be converted (naturally).
+        if ((factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0)
+        {
+            return false;
+        }
     }
 
-    bool isAligned = (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
-                     (static_cast<size_t>(attrib.offset) % alignment == 0);
-
-    return !requiresConversion && isAligned;
+    // Final alignment check - unaligned data must be converted.
+    return (static_cast<size_t>(ComputeVertexAttributeStride(attrib)) % alignment == 0) &&
+           (static_cast<size_t>(attrib.offset) % alignment == 0);
 }
 }  // anonymous namespace
 
@@ -380,16 +379,21 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     }
 
     unsigned int streamOffset = 0;
-    unsigned int outputElementSize = 0;
+
+    auto errorOrOutputElementSize = mFactory->getVertexSpaceRequired(attrib, 1, 0);
+    if (errorOrOutputElementSize.isError())
+    {
+        return errorOrOutputElementSize.getError();
+    }
+
+    translated->storage = nullptr;
+    translated->stride  = errorOrOutputElementSize.getResult();
+    translated->serial  = vertexBuffer->getSerial();
+
+    gl::Error error(GL_NO_ERROR);
 
     if (staticBuffer)
     {
-        gl::Error error = staticBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-        if (error.isError())
-        {
-            return error;
-        }
-
         if (!staticBuffer->lookupAttribute(attrib, &streamOffset))
         {
             // Convert the entire buffer
@@ -414,9 +418,9 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
         unsigned int firstElementOffset =
             (static_cast<unsigned int>(attrib.offset) /
              static_cast<unsigned int>(ComputeVertexAttributeStride(attrib))) *
-            outputElementSize;
+            translated->stride;
         ASSERT(attrib.divisor == 0 || firstVertexIndex == 0);
-        unsigned int startOffset = firstVertexIndex * outputElementSize;
+        unsigned int startOffset = firstVertexIndex * translated->stride;
         if (streamOffset + firstElementOffset + startOffset < streamOffset)
         {
             return gl::Error(GL_OUT_OF_MEMORY);
@@ -427,11 +431,6 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
     else
     {
         size_t totalCount = ComputeVertexAttributeElementCount(attrib, count, instances);
-        gl::Error error = mStreamingBuffer->getVertexBuffer()->getSpaceRequired(attrib, 1, 0, &outputElementSize);
-        if (error.isError())
-        {
-            return error;
-        }
 
         error = mStreamingBuffer->storeVertexAttributes(
             attrib, translated->currentValueType, firstVertexIndex,
@@ -442,9 +441,6 @@ gl::Error VertexDataManager::storeAttribute(TranslatedAttribute *translated,
         }
     }
 
-    translated->storage = nullptr;
-    translated->serial = vertexBuffer->getSerial();
-    translated->stride = outputElementSize;
     translated->offset = streamOffset;
 
     return gl::Error(GL_NO_ERROR);

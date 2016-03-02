@@ -88,6 +88,10 @@ class BufferFactoryD3D
     // TODO(jmadill): add VertexFormatCaps
     virtual VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const = 0;
     virtual GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const = 0;
+    virtual gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(
+        const gl::VertexAttribute &attrib,
+        GLsizei count,
+        GLsizei instances) const = 0;
 };
 
 class RendererD3D : public Renderer, public BufferFactoryD3D
