@@ -254,7 +254,14 @@ class ProgramD3D : public ProgramImpl
     class VertexExecutable
     {
       public:
-        typedef std::vector<bool> Signature;
+        enum HLSLAttribType
+        {
+            FLOAT,
+            UNSIGNED_INT,
+            SIGNED_INT,
+        };
+
+        typedef std::vector<HLSLAttribType> Signature;
 
         VertexExecutable(const gl::InputLayout &inputLayout,
                          const Signature &signature,
@@ -271,6 +278,8 @@ class ProgramD3D : public ProgramImpl
         ShaderExecutableD3D *shaderExecutable() const { return mShaderExecutable; }
 
       private:
+        static HLSLAttribType GetAttribType(GLenum type);
+
         gl::InputLayout mInputs;
         Signature mSignature;
         ShaderExecutableD3D *mShaderExecutable;

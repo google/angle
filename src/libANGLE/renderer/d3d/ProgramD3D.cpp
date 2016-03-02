@@ -509,24 +509,44 @@ ProgramD3D::VertexExecutable::~VertexExecutable()
 }
 
 // static
+ProgramD3D::VertexExecutable::HLSLAttribType ProgramD3D::VertexExecutable::GetAttribType(
+    GLenum type)
+{
+    switch (type)
+    {
+        case GL_INT:
+            return HLSLAttribType::SIGNED_INT;
+        case GL_UNSIGNED_INT:
+            return HLSLAttribType::UNSIGNED_INT;
+        case GL_SIGNED_NORMALIZED:
+        case GL_UNSIGNED_NORMALIZED:
+        case GL_FLOAT:
+            return HLSLAttribType::FLOAT;
+        default:
+            UNREACHABLE();
+            return HLSLAttribType::FLOAT;
+    }
+}
+
+// static
 void ProgramD3D::VertexExecutable::getSignature(RendererD3D *renderer,
                                                 const gl::InputLayout &inputLayout,
                                                 Signature *signatureOut)
 {
-    signatureOut->resize(inputLayout.size());
+    signatureOut->assign(inputLayout.size(), HLSLAttribType::FLOAT);
 
     for (size_t index = 0; index < inputLayout.size(); ++index)
     {
         gl::VertexFormatType vertexFormatType = inputLayout[index];
-        bool converted = false;
-        if (vertexFormatType != gl::VERTEX_FORMAT_INVALID)
-        {
-            VertexConversionType conversionType =
-                renderer->getVertexConversionType(vertexFormatType);
-            converted = ((conversionType & VERTEX_CONVERT_GPU) != 0);
-        }
+        if (vertexFormatType == gl::VERTEX_FORMAT_INVALID)
+            continue;
 
-        (*signatureOut)[index] = converted;
+        VertexConversionType conversionType = renderer->getVertexConversionType(vertexFormatType);
+        if ((conversionType & VERTEX_CONVERT_GPU) == 0)
+            continue;
+
+        GLenum componentType = renderer->getVertexComponentType(vertexFormatType);
+        (*signatureOut)[index] = GetAttribType(componentType);
     }
 }
 
@@ -535,9 +555,9 @@ bool ProgramD3D::VertexExecutable::matchesSignature(const Signature &signature) 
     size_t limit = std::max(mSignature.size(), signature.size());
     for (size_t index = 0; index < limit; ++index)
     {
-        // treat undefined indexes as 'not converted'
-        bool a = index < signature.size() ? signature[index] : false;
-        bool b = index < mSignature.size() ? mSignature[index] : false;
+        // treat undefined indexes as FLOAT
+        auto a = index < signature.size() ? signature[index] : HLSLAttribType::FLOAT;
+        auto b = index < mSignature.size() ? mSignature[index] : HLSLAttribType::FLOAT;
         if (a != b)
             return false;
     }
