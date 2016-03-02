@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26bb568_025749d4",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-02T23:28:07Z",
+      "side": 1,
+      "message": "With unnormalized int32 vs float tests below, I think we might get some float precision issues here that would cause the test to fail. It would be good to divide by the max(test, expected), not sure how to handle the zero though.",
+      "revId": "08a0d7d6baaad6e02e2cbec84a0ca0b2c7d5923c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
