@@ -46,6 +46,30 @@
       "revId": "bc21e18b8ec49ac543b8941272da36cbf79fb4cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02594de9_a1b8c9ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-02T14:47:25Z",
+      "side": 1,
+      "message": "Up to you. Personally I prefer revert and resubmit because then if something goes wrong again, you only have to revert one CL.",
+      "parentUuid": "a2b881d5_c8da175f",
+      "range": {
+        "startLine": 3179,
+        "startChar": 43,
+        "endLine": 3179,
+        "endChar": 94
+      },
+      "revId": "bc21e18b8ec49ac543b8941272da36cbf79fb4cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
