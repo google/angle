@@ -99,7 +99,7 @@ TEST_P(UniformTest, GetUniformNoCurrentProgram)
 TEST_P(UniformTest, UniformArrayLocations)
 {
     // TODO(geofflang): Figure out why this is broken on Intel OpenGL
-    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;

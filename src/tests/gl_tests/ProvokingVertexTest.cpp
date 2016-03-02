@@ -142,7 +142,7 @@ TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
 {
     // TODO(cwallez) figure out why it is broken on AMD on Mac
 #if defined(ANGLE_PLATFORM_APPLE)
-    if (isAMD())
+    if (IsAMD())
     {
         std::cout << "Test skipped on AMD on Mac." << std::endl;
         return;
@@ -253,7 +253,7 @@ TEST_P(ProvokingVertexTest, FlatTriStrip)
 TEST_P(ProvokingVertexTest, FlatTriStripPrimitiveRestart)
 {
     // TODO(jmadill): Implement on the D3D back-end.
-    if (isD3D11())
+    if (IsD3D11())
     {
         std::cout << "Test disabled on D3D11." << std::endl;
         return;

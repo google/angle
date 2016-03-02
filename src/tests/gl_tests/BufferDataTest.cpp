@@ -288,7 +288,7 @@ class IndexedBufferCopyTest : public ANGLETest
 TEST_P(IndexedBufferCopyTest, IndexRangeBug)
 {
     // TODO(geofflang): Figure out why this fails on AMD OpenGL (http://anglebug.com/1291)
-    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test disabled on AMD OpenGL." << std::endl;
         return;

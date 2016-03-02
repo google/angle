@@ -166,7 +166,7 @@ TEST_P(CopyTexImageTest, RGBToL)
 {
     // TODO (geofflang): Figure out why CopyTex[Sub]Image doesn't work with
     // RGB->L on older Intel chips
-    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;
@@ -269,7 +269,7 @@ TEST_P(CopyTexImageTest, SubImageRGBToL)
 {
     // TODO (geofflang): Figure out why CopyTex[Sub]Image doesn't work with
     // RGB->L on older Intel chips
-    if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;

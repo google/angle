@@ -142,7 +142,7 @@ class SwizzleTest : public ANGLETest
     void runTest2D()
     {
         // TODO(jmadill): Figure out why this fails on Intel.
-        if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+        if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
         {
             std::cout << "Test skipped on Intel." << std::endl;
             return;

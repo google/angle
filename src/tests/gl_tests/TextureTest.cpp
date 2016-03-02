@@ -148,7 +148,7 @@ class Texture2DTest : public TexCoordDrawTest
     void testFloatCopySubImage(int sourceImageChannels, int destImageChannels)
     {
         // TODO(jmadill): Figure out why this is broken on Intel D3D11
-        if (isIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        if (IsIntel() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
         {
             std::cout << "Test skipped on Intel D3D11." << std::endl;
             return;
@@ -1222,7 +1222,7 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGB_RG)
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_RGB)
 {
     // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
-    if (isD3D11_FL93())
+    if (IsD3D11_FL93())
     {
         std::cout << "Test skipped on Feature Level 9_3." << std::endl;
         return;
@@ -1244,7 +1244,7 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RG)
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 {
     // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
-    if (isD3D11_FL93())
+    if (IsD3D11_FL93())
     {
         std::cout << "Test skipped on Feature Level 9_3." << std::endl;
         return;
@@ -1256,7 +1256,7 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGB)
 TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 {
     // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
-    if (isD3D11_FL93())
+    if (IsD3D11_FL93())
     {
         std::cout << "Test skipped on Feature Level 9_3." << std::endl;
         return;
@@ -1559,7 +1559,7 @@ TEST_P(SamplerTypeMixTestES3, SamplerTypeMixDraw)
 // Calling textureSize() on the samplers hits the D3D sampler metadata workaround.
 TEST_P(TextureSizeTextureArrayTest, BaseLevelVariesInTextureArray)
 {
-    if ((isAMD() || isIntel()) && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if ((IsAMD() || IsIntel()) && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
     {
         std::cout << "Test skipped on Intel and AMD D3D." << std::endl;
         return;
@@ -1653,7 +1653,7 @@ TEST_P(Texture2DTestES3, TextureLuminance16ImplicitAlpha1)
 {
     if (extensionEnabled("GL_OES_texture_half_float"))
     {
-        if (isNVidia() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+        if (IsNVIDIA() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
         {
             std::cout << "Test skipped on NVIDIA" << std::endl;
             return;
@@ -1674,9 +1674,9 @@ TEST_P(Texture2DTestES3, TextureLuminance16ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB8UIImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1695,9 +1695,9 @@ TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB8UIImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DIntegerAlpha1TestES3, TextureRGB8IImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1717,9 +1717,9 @@ TEST_P(Texture2DIntegerAlpha1TestES3, TextureRGB8IImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB16UIImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1738,9 +1738,9 @@ TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB16UIImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DIntegerAlpha1TestES3, TextureRGB16IImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1759,9 +1759,9 @@ TEST_P(Texture2DIntegerAlpha1TestES3, TextureRGB16IImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB32UIImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -1780,9 +1780,9 @@ TEST_P(Texture2DUnsignedIntegerAlpha1TestES3, TextureRGB32UIImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DIntegerAlpha1TestES3, TextureRGB32IImplicitAlpha1)
 {
-    if (isOSX() && isIntel())
+    if (IsIntel())
     {
-        std::cout << "Test disabled on OSX Intel." << std::endl;
+        std::cout << "Test disabled on Intel." << std::endl;
         return;
     }
     glActiveTexture(GL_TEXTURE0);
@@ -2068,7 +2068,7 @@ class TextureLimitsTest : public ANGLETest
 TEST_P(TextureLimitsTest, MaxVertexTextures)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
@@ -2085,7 +2085,7 @@ TEST_P(TextureLimitsTest, MaxVertexTextures)
 TEST_P(TextureLimitsTest, MaxFragmentTextures)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
@@ -2102,7 +2102,7 @@ TEST_P(TextureLimitsTest, MaxFragmentTextures)
 TEST_P(TextureLimitsTest, MaxCombinedTextures)
 {
     // TODO(jmadill): Investigate workaround.
-    if (isIntel() && GetParam() == ES2_OPENGL())
+    if (IsIntel() && GetParam() == ES2_OPENGL())
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
@@ -2143,7 +2143,7 @@ TEST_P(TextureLimitsTest, ExcessiveFragmentTextures)
 TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;
@@ -2160,7 +2160,7 @@ TEST_P(TextureLimitsTest, MaxActiveVertexTextures)
 TEST_P(TextureLimitsTest, MaxActiveFragmentTextures)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (isIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel." << std::endl;
         return;

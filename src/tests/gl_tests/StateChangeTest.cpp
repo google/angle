@@ -75,7 +75,7 @@ class StateChangeTestES3 : public StateChangeTest
 // Ensure that CopyTexImage2D syncs framebuffer changes.
 TEST_P(StateChangeTest, CopyTexImage2DSync)
 {
-    if (isAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         // TODO(geofflang): Fix on Linux AMD drivers (http://anglebug.com/1291)
         std::cout << "Test disabled on AMD OpenGL." << std::endl;
