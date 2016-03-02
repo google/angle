@@ -11,10 +11,30 @@ using namespace angle;
 namespace
 {
 
+GLsizei TypeStride(GLenum attribType)
+{
+    switch (attribType)
+    {
+        case GL_UNSIGNED_BYTE:
+        case GL_BYTE:
+            return 1;
+        case GL_UNSIGNED_SHORT:
+        case GL_SHORT:
+            return 2;
+        case GL_UNSIGNED_INT:
+        case GL_INT:
+        case GL_FLOAT:
+            return 4;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 class VertexAttributeTest : public ANGLETest
 {
   protected:
-    VertexAttributeTest()
+    VertexAttributeTest() : mProgram(0), mTestAttrib(-1), mExpectedAttrib(-1), mBuffer(0)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -23,22 +43,25 @@ class VertexAttributeTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
-
-        mProgram = 0;
-        mTestAttrib = -1;
-        mExpectedAttrib = -1;
     }
+
+    enum class Source
+    {
+        BUFFER,
+        IMMEDIATE,
+    };
 
     struct TestData
     {
         GLenum type;
         GLboolean normalized;
+        Source source;
 
         const void *inputData;
         const GLfloat *expectedData;
     };
 
-    void runTest(const TestData& test)
+    void runTest(const TestData &test)
     {
         // TODO(geofflang): Figure out why this is broken on AMD OpenGL
         if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -55,9 +78,27 @@ class VertexAttributeTest : public ANGLETest
 
         for (GLint i = 0; i < 4; i++)
         {
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glVertexAttribPointer(mTestAttrib, i + 1, test.type, test.normalized, 0, test.inputData);
-            glVertexAttribPointer(mExpectedAttrib, i + 1, GL_FLOAT, GL_FALSE, 0, test.expectedData);
+            GLint typeSize = i + 1;
+
+            if (test.source == Source::BUFFER)
+            {
+                GLsizei dataSize = mVertexCount * TypeStride(test.type) * typeSize;
+                glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+                glBufferData(GL_ARRAY_BUFFER, dataSize, test.inputData, GL_STATIC_DRAW);
+                glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
+                                      nullptr);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+            }
+            else
+            {
+                ASSERT_EQ(Source::IMMEDIATE, test.source);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+                glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
+                                      test.inputData);
+            }
+
+            glVertexAttribPointer(mExpectedAttrib, typeSize, GL_FLOAT, GL_FALSE, 0,
+                                  test.expectedData);
 
             glEnableVertexAttribArray(mTestAttrib);
             glEnableVertexAttribArray(mExpectedAttrib);
@@ -91,7 +132,8 @@ class VertexAttributeTest : public ANGLETest
             void main(void)
             {
                 gl_Position = position;
-                color = vec4(lessThan(abs(test - expected), vec4(1.0 / 64.0)));
+                vec4 threshold = max(abs(expected) * 0.01, 1.0 / 64.0);
+                color          = vec4(lessThanEqual(abs(test - expected), threshold));
             }
         );
 
@@ -120,11 +162,14 @@ class VertexAttributeTest : public ANGLETest
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glDisable(GL_DEPTH_TEST);
+
+        glGenBuffers(1, &mBuffer);
     }
 
     void TearDown() override
     {
         glDeleteProgram(mProgram);
+        glDeleteBuffers(1, &mBuffer);
 
         ANGLETest::TearDown();
     }
@@ -179,6 +224,7 @@ class VertexAttributeTest : public ANGLETest
     GLuint mProgram;
     GLint mTestAttrib;
     GLint mExpectedAttrib;
+    GLuint mBuffer;
 };
 
 TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
@@ -190,7 +236,7 @@ TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = { GL_UNSIGNED_BYTE, GL_FALSE, inputData, expectedData };
+    TestData data = {GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -203,7 +249,7 @@ TEST_P(VertexAttributeTest, UnsignedByteNormalized)
         expectedData[i] = inputData[i] / 255.0f;
     }
 
-    TestData data = { GL_UNSIGNED_BYTE, GL_TRUE, inputData, expectedData };
+    TestData data = {GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -216,7 +262,7 @@ TEST_P(VertexAttributeTest, ByteUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = { GL_BYTE, GL_FALSE, inputData, expectedData };
+    TestData data = {GL_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -229,7 +275,7 @@ TEST_P(VertexAttributeTest, ByteNormalized)
         expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / 255.0f;
     }
 
-    TestData data = { GL_BYTE, GL_TRUE, inputData, expectedData };
+    TestData data = {GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -242,7 +288,7 @@ TEST_P(VertexAttributeTest, UnsignedShortUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = { GL_UNSIGNED_SHORT, GL_FALSE, inputData, expectedData };
+    TestData data = {GL_UNSIGNED_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -255,7 +301,7 @@ TEST_P(VertexAttributeTest, UnsignedShortNormalized)
         expectedData[i] = inputData[i] / 65535.0f;
     }
 
-    TestData data = { GL_UNSIGNED_SHORT, GL_TRUE, inputData, expectedData };
+    TestData data = {GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -268,7 +314,7 @@ TEST_P(VertexAttributeTest, ShortUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = { GL_SHORT, GL_FALSE, inputData, expectedData };
+    TestData data = {GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
     runTest(data);
 }
 
@@ -281,7 +327,75 @@ TEST_P(VertexAttributeTest, ShortNormalized)
         expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / 65535.0f;
     }
 
-    TestData data = { GL_SHORT, GL_TRUE, inputData, expectedData };
+    TestData data = {GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
+    runTest(data);
+}
+
+class VertexAttributeTestES3 : public VertexAttributeTest
+{
+  protected:
+    VertexAttributeTestES3() {}
+};
+
+TEST_P(VertexAttributeTestES3, IntUnnormalized)
+{
+    GLint lo                      = std::numeric_limits<GLint>::min();
+    GLint hi                      = std::numeric_limits<GLint>::max();
+    GLint inputData[mVertexCount] = {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1};
+    GLfloat expectedData[mVertexCount];
+    for (size_t i = 0; i < mVertexCount; i++)
+    {
+        expectedData[i] = static_cast<GLfloat>(inputData[i]);
+    }
+
+    TestData data = {GL_INT, GL_FALSE, Source::BUFFER, inputData, expectedData};
+    runTest(data);
+}
+
+TEST_P(VertexAttributeTestES3, IntNormalized)
+{
+    GLint lo                      = std::numeric_limits<GLint>::min();
+    GLint hi                      = std::numeric_limits<GLint>::max();
+    GLint inputData[mVertexCount] = {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1};
+    GLfloat expectedData[mVertexCount];
+    for (size_t i = 0; i < mVertexCount; i++)
+    {
+        expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / static_cast<GLfloat>(0xFFFFFFFFu);
+    }
+
+    TestData data = {GL_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
+    runTest(data);
+}
+
+TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
+{
+    GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
+    GLuint hi                      = std::numeric_limits<GLuint>::max();
+    GLuint inputData[mVertexCount] = {0,       1,   2,       3,      254,    255, 256,
+                                      mid - 1, mid, mid + 1, hi - 2, hi - 1, hi};
+    GLfloat expectedData[mVertexCount];
+    for (size_t i = 0; i < mVertexCount; i++)
+    {
+        expectedData[i] = static_cast<GLfloat>(inputData[i]);
+    }
+
+    TestData data = {GL_UNSIGNED_INT, GL_FALSE, Source::BUFFER, inputData, expectedData};
+    runTest(data);
+}
+
+TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
+{
+    GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
+    GLuint hi                      = std::numeric_limits<GLuint>::max();
+    GLuint inputData[mVertexCount] = {0,       1,   2,       3,      254,    255, 256,
+                                      mid - 1, mid, mid + 1, hi - 2, hi - 1, hi};
+    GLfloat expectedData[mVertexCount];
+    for (size_t i = 0; i < mVertexCount; i++)
+    {
+        expectedData[i] = static_cast<GLfloat>(inputData[i]) / static_cast<GLfloat>(hi);
+    }
+
+    TestData data = {GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
     runTest(data);
 }
 
@@ -367,4 +481,6 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
 
-} // namespace
+ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+
+}  // anonymous namespace

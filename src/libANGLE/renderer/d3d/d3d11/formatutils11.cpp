@@ -998,12 +998,14 @@ const VertexFormat &GetVertexFormatInfo(gl::VertexFormatType vertexFormatType, D
         // GL_UNSIGNED_INT -- normalized
         case gl::VERTEX_FORMAT_UINT1_NORM:
         {
-            static const VertexFormat info(VERTEX_CONVERT_NONE, DXGI_FORMAT_R32_FLOAT, &CopyTo32FVertexData<GLuint, 1, 1, true>);
+            static const VertexFormat info(VERTEX_CONVERT_CPU, DXGI_FORMAT_R32_FLOAT,
+                                           &CopyTo32FVertexData<GLuint, 1, 1, true>);
             return info;
         }
         case gl::VERTEX_FORMAT_UINT2_NORM:
         {
-            static const VertexFormat info(VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32_FLOAT, &CopyTo32FVertexData<GLuint, 2, 2, true>);
+            static const VertexFormat info(VERTEX_CONVERT_CPU, DXGI_FORMAT_R32G32_FLOAT,
+                                           &CopyTo32FVertexData<GLuint, 2, 2, true>);
             return info;
         }
         case gl::VERTEX_FORMAT_UINT3_NORM:
@@ -1013,7 +1015,8 @@ const VertexFormat &GetVertexFormatInfo(gl::VertexFormatType vertexFormatType, D
         }
         case gl::VERTEX_FORMAT_UINT4_NORM:
         {
-            static const VertexFormat info(VERTEX_CONVERT_NONE, DXGI_FORMAT_R32G32B32A32_FLOAT, &CopyTo32FVertexData<GLuint, 4, 4, true>);
+            static const VertexFormat info(VERTEX_CONVERT_CPU, DXGI_FORMAT_R32G32B32A32_FLOAT,
+                                           &CopyTo32FVertexData<GLuint, 4, 4, true>);
             return info;
         }
 
