@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_47df6781",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-03T15:42:58Z",
+      "side": 1,
+      "message": "This assert should be above the assignment to outStream",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_931aad4c",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-03T15:42:58Z",
+      "side": 1,
+      "message": "Please reduce this header list, the vast majority of them are not needed.",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_b200499b",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-03T15:42:58Z",
+      "side": 1,
+      "message": "This constructor is currently unused.",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a26ec178_a3cbe3be",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-03T15:42:58Z",
+      "side": 1,
+      "message": "nit: attempt to initialize",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02594de9_b5b55fb0",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-03T15:42:58Z",
+      "side": 1,
+      "message": "This is not explicitly in the spec but it makes sense so maybe we should add a comment about it? Also the stream extension specs are pretty loose in general :(",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
