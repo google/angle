@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_07beff2a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2439,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "record an error string for new errors.\n\nmy feeling is for this the \u003e\u003d ES3 check should be pulled out into a first validation switch, and the parameter should be queried in a second function calling into the Texture object, but it\u0027s fine if you just put an error message for now.",
+      "range": {
+        "startLine": 2439,
+        "startChar": 43,
+        "endLine": 2439,
+        "endChar": 58
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22ef3134_b742e5e5",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2442,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "use c++ casts",
+      "range": {
+        "startLine": 2442,
+        "startChar": 22,
+        "endLine": 2442,
+        "endChar": 31
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_3b3dbe74",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2447,
+        "startChar": 43,
+        "endLine": 2447,
+        "endChar": 58
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2b0b90b_7b95a0f4",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 2450,
+        "startChar": 22,
+        "endLine": 2450,
+        "endChar": 31
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e32149_67b38b64",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2592,
+        "startChar": 43,
+        "endLine": 2592,
+        "endChar": 58
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_731db944",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2600,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T15:39:56Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 2600,
+        "startChar": 43,
+        "endLine": 2600,
+        "endChar": 58
+      },
+      "revId": "c64ef3f2a9c98018eb5796edde5a5f33a3b17d7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
