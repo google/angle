@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e27a7932_ce3cfac9",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-03T17:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22ef3134_8ac69c10",
+      "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82d1bd8e_c8054f31",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-03-03T17:44:21Z",
       "side": 1,
       "message": "nit: there is no other window surface.",
+      "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a26ec178_16bb0fa3",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-03T17:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82d1bd8e_c8054f31",
       "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a26ec178_f6b51baf",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-03T17:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a26ec178_366973fa",
+      "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e211990a_f58e2b1a",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "a2e32149_e21f894c",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-03T17:55:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e211990a_f58e2b1a",
+      "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2b0b90b_db7f143b",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 2
@@ -81,6 +153,24 @@
       "writtenOn": "2016-03-03T17:44:21Z",
       "side": 1,
       "message": "This leaks the previous stream.",
+      "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82d1bd8e_e883f3c3",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-03T17:55:46Z",
+      "side": 1,
+      "message": "There is no previous stream. All the previous stream creations should fail as they are caught in the validation layer and return EGL_NO_STREAM.",
+      "parentUuid": "e2b0b90b_db7f143b",
       "revId": "04fe4b3c2f3d5ff661d6b8eca7f8e64201893b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
