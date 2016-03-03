@@ -1930,8 +1930,8 @@ GLint Context::getSamplerParameteri(GLuint sampler, GLenum pname)
       case GL_TEXTURE_WRAP_T:             return static_cast<GLint>(samplerObject->getWrapT());
       case GL_TEXTURE_WRAP_R:             return static_cast<GLint>(samplerObject->getWrapR());
       case GL_TEXTURE_MAX_ANISOTROPY_EXT: return static_cast<GLint>(samplerObject->getMaxAnisotropy());
-      case GL_TEXTURE_MIN_LOD:            return uiround<GLint>(samplerObject->getMinLod());
-      case GL_TEXTURE_MAX_LOD:            return uiround<GLint>(samplerObject->getMaxLod());
+      case GL_TEXTURE_MIN_LOD:            return iround<GLint>(samplerObject->getMinLod());
+      case GL_TEXTURE_MAX_LOD:            return iround<GLint>(samplerObject->getMaxLod());
       case GL_TEXTURE_COMPARE_MODE:       return static_cast<GLint>(samplerObject->getCompareMode());
       case GL_TEXTURE_COMPARE_FUNC:       return static_cast<GLint>(samplerObject->getCompareFunc());
       default:                            UNREACHABLE(); return 0;

@@ -2433,7 +2433,26 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
             }
             *params = texture->getSamplerState().maxLod;
             break;
-
+          case GL_TEXTURE_COMPARE_MODE:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM,
+                          "GL_TEXTURE_COMPARE_MODE not available in ES versions < 3.0"));
+                return;
+            }
+            *params = static_cast<GLfloat>(texture->getCompareMode());
+            break;
+          case GL_TEXTURE_COMPARE_FUNC:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM,
+                          "GL_TEXTURE_COMPARE_FUNC not available in ES versions < 3.0"));
+                return;
+            }
+            *params = static_cast<GLfloat>(texture->getCompareFunc());
+            break;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return;
@@ -2561,7 +2580,7 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 context->recordError(Error(GL_INVALID_ENUM));
                 return;
             }
-            *params = (GLint)texture->getMinLod();
+            *params = iround<GLint>(texture->getMinLod());
             break;
           case GL_TEXTURE_MAX_LOD:
             if (context->getClientVersion() < 3)
@@ -2569,9 +2588,28 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 context->recordError(Error(GL_INVALID_ENUM));
                 return;
             }
-            *params = (GLint)texture->getMaxLod();
+            *params = iround<GLint>(texture->getMaxLod());
             break;
-
+          case GL_TEXTURE_COMPARE_MODE:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM,
+                          "GL_TEXTURE_COMPARE_MODE not available in ES versions < 3.0"));
+                return;
+            }
+            *params = texture->getCompareMode();
+            break;
+          case GL_TEXTURE_COMPARE_FUNC:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM,
+                          "GL_TEXTURE_COMPARE_FUNC not available in ES versions < 3.0"));
+                return;
+            }
+            *params = texture->getCompareFunc();
+            break;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return;
