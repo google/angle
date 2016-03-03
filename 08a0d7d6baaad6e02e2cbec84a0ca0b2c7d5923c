@@ -16,6 +16,24 @@
       "revId": "08a0d7d6baaad6e02e2cbec84a0ca0b2c7d5923c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_8e7112b1",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T17:54:42Z",
+      "side": 1,
+      "message": "I rewrote this a bit to be a bit more tolerant.",
+      "parentUuid": "c26bb568_025749d4",
+      "revId": "08a0d7d6baaad6e02e2cbec84a0ca0b2c7d5923c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
