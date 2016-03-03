@@ -22,6 +22,30 @@
       "revId": "2cc17f253b075e52889cc8de6058f20eb85e145c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_51de6bf9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-03T18:42:43Z",
+      "side": 1,
+      "message": "We use 4 space indents for case labels now in ANGLE for better synergy with clang-format.",
+      "parentUuid": "e2b0b90b_fbb1b02a",
+      "range": {
+        "startLine": 517,
+        "startChar": 8,
+        "endLine": 517,
+        "endChar": 12
+      },
+      "revId": "2cc17f253b075e52889cc8de6058f20eb85e145c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
