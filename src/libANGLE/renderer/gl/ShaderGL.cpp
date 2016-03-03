@@ -77,14 +77,21 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
         GLint infoLogLength = 0;
         mFunctions->getShaderiv(mShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        std::vector<char> buf(infoLogLength);
-        mFunctions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);
+        if (infoLogLength > 0)
+        {
+            std::vector<char> buf(infoLogLength);
+            mFunctions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);
 
-        mFunctions->deleteShader(mShaderID);
-        mShaderID = 0;
+            mFunctions->deleteShader(mShaderID);
+            mShaderID = 0;
 
-        *infoLog = &buf[0];
-        TRACE("\n%s", infoLog->c_str());
+            *infoLog = &buf[0];
+            TRACE("\n%s", infoLog->c_str());
+        }
+        else
+        {
+            TRACE("\nShader compilation failed with no info log.");
+        }
         return false;
     }
 
