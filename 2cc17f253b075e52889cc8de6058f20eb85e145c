@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2b0b90b_fbb1b02a",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-03-03T18:36:16Z",
+      "side": 1,
+      "message": "nit: wrong format. only two space is needed.",
+      "range": {
+        "startLine": 517,
+        "startChar": 8,
+        "endLine": 517,
+        "endChar": 12
+      },
+      "revId": "2cc17f253b075e52889cc8de6058f20eb85e145c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
