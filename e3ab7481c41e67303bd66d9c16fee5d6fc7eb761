@@ -22,6 +22,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2b881d5_4ee36fc2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-04T14:59:18Z",
+      "side": 1,
+      "message": "Well, at its heart an ANGLE format contains necessary parameters for implementing one or more GL formats. The DXGI formats are just formats for specific resources and views in the D3D API. Sometimes it\u0027s not as clear which one should be used to make decisions about more parameters, but I wouldn\u0027t get too hung up on that. I\u0027ve developed these patches to lay a low-risk path to the functionality we want - I think if there are no functional issues in this code, there are higher-value things for us to chase rather than polish the design too much.",
+      "parentUuid": "e211990a_45576cd3",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
