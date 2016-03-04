@@ -3021,28 +3021,6 @@ gl::Error Renderer11::copyImage2DArray(const gl::Framebuffer *framebuffer, const
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer11::unapplyRenderTargets()
-{
-    setOneTimeRenderTarget(NULL);
-}
-
-// When finished with this rendertarget, markAllStateDirty must be called.
-void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView)
-{
-    ID3D11RenderTargetView *rtvArray[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
-
-    rtvArray[0] = renderTargetView;
-
-    mDeviceContext->OMSetRenderTargets(getRendererCaps().maxDrawBuffers, rtvArray, NULL);
-
-    // Do not preserve the serial for this one-time-use render target
-    for (size_t rtIndex = 0; rtIndex < ArraySize(mAppliedRTVs); rtIndex++)
-    {
-        mAppliedRTVs[rtIndex] = angle::DirtyPointer;
-    }
-    mAppliedDSV = angle::DirtyPointer;
-}
-
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format, mRenderer11DeviceCaps);

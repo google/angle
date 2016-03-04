@@ -257,8 +257,6 @@ class Renderer11 : public RendererD3D
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
     void markAllStateDirty();
-    void unapplyRenderTargets();
-    void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
     gl::Error packPixels(const TextureHelper11 &textureHelper,
                          const PackPixelsParams &params,
                          uint8_t *pixelsOut);
@@ -389,10 +387,6 @@ class Renderer11 : public RendererD3D
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
 
     RenderStateCache mStateCache;
-
-    // current render target states
-    uintptr_t mAppliedRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    uintptr_t mAppliedDSV;
 
     // Currently applied sampler states
     std::vector<bool> mForceSetVertexSamplerStates;

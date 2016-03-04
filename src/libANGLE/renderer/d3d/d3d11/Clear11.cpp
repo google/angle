@@ -521,8 +521,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl
         deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
         // Apply render targets
-        deviceContext->OMSetRenderTargets(static_cast<unsigned int>(rtvs.size()),
-                                          (rtvs.empty() ? nullptr : &rtvs[0]), dsv);
+        mRenderer->getStateManager()->setOneTimeRenderTargets(rtvs, dsv);
 
         // Draw the clear quad
         deviceContext->Draw(4, 0);

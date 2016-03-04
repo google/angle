@@ -238,7 +238,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     deviceContext->OMSetDepthStencilState(mCopyDepthStencilState, 0xFFFFFFFF);
     deviceContext->RSSetState(mCopyRasterizerState);
 
-    mRenderer->setOneTimeRenderTarget(textureRTV);
+    stateManager->setOneTimeRenderTarget(textureRTV, nullptr);
 
     if (!StructEquals(mParamsData, shaderParams))
     {

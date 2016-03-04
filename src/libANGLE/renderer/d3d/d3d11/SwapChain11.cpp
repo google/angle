@@ -744,8 +744,10 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     deviceContext->PSSetShader(mPassThroughPS, NULL, 0);
     deviceContext->GSSetShader(NULL, NULL, 0);
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply render targets
-    mRenderer->setOneTimeRenderTarget(mBackBufferRTView);
+    stateManager->setOneTimeRenderTarget(mBackBufferRTView, nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -758,7 +760,6 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     deviceContext->RSSetViewports(1, &viewport);
 
     // Apply textures
-    auto stateManager = mRenderer->getStateManager();
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, mOffscreenSRView);
     deviceContext->PSSetSamplers(0, 1, &mPassThroughSampler);
 
@@ -770,7 +771,6 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     // cleanup is caught under the current eglSwapBuffers() PIX/Graphics Diagnostics call rather than the next one.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
 
-    mRenderer->unapplyRenderTargets();
     mRenderer->markAllStateDirty();
 
     return EGL_SUCCESS;

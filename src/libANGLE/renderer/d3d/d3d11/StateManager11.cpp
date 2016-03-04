@@ -799,10 +799,22 @@ void StateManager11::invalidateEverything()
     invalidateBoundViews();
 }
 
-void StateManager11::setRenderTarget(ID3D11RenderTargetView *renderTarget,
-                                     ID3D11DepthStencilView *depthStencil)
+void StateManager11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTarget,
+                                            ID3D11DepthStencilView *depthStencil)
 {
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &renderTarget, depthStencil);
+    mRenderTargetIsDirty = true;
+}
+
+void StateManager11::setOneTimeRenderTargets(
+    const std::vector<ID3D11RenderTargetView *> &renderTargets,
+    ID3D11DepthStencilView *depthStencil)
+{
+    UINT count               = static_cast<UINT>(renderTargets.size());
+    auto renderTargetPointer = (!renderTargets.empty() ? renderTargets.data() : nullptr);
+
+    mRenderer->getDeviceContext()->OMSetRenderTargets(count, renderTargetPointer, depthStencil);
+    mRenderTargetIsDirty = true;
 }
 
 void StateManager11::onBeginQuery(Query11 *query)
