@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_9c71b8ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T18:19:09Z",
+      "side": 1,
+      "message": "nit: can mention the extension",
+      "range": {
+        "startLine": 9,
+        "startChar": 38,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "83ed5b082041136413302123cc0ec5a37b647919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22ef3134_aa842fcd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T18:19:09Z",
+      "side": 1,
+      "message": "associate this with an ANGLE issue with BUG\u003dangleproject:####. A new issue or your existing egl sync one is fine.",
+      "revId": "83ed5b082041136413302123cc0ec5a37b647919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
