@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26bb568_205b5a5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "nit: dity -\u003e dirty",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e32149_9a637819",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "nit: the * could be merged in the auto",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e32149_1a58085d",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "nit: currrently -\u003e currently",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22ef3134_55b8b00e",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "Why std::move an int? Returning the variable should work, or in the worst case {alignedSpaceRequired} should.",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26bb568_40844ecc",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "nit: Streamin-\u003eStreaming",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_ab43af37",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "Could static_assert(std::is_integral\u003cT\u003e::value, \"\")",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2b0b90b_889dbf94",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "Mean test :D",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_4bf01b47",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-04T20:46:07Z",
+      "side": 1,
+      "message": "Here the vector is filled with 4 times 0, 1, ..., 2^16-1 but the call to drawQuads below only tests 0, 1, 2, 3 (maybe 4 and 5 too).",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
