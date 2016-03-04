@@ -1606,6 +1606,13 @@ void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
         *params = mUnpack.pixelBuffer.id();
         break;
+      case GL_READ_BUFFER:
+          *params = mReadFramebuffer->getReadBufferState();
+          break;
+      case GL_SAMPLER_BINDING:
+          ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
+          *params = getSamplerId(static_cast<GLuint>(mActiveSampler));
+          break;
       case GL_DEBUG_LOGGED_MESSAGES:
           *params = static_cast<GLint>(mDebug.getMessageCount());
           break;

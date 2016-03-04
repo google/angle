@@ -1459,6 +1459,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
       case GL_COPY_READ_BUFFER_BINDING:
       case GL_COPY_WRITE_BUFFER_BINDING:
+      case GL_SAMPLER_BINDING:
+      case GL_READ_BUFFER:
       case GL_TEXTURE_BINDING_3D:
       case GL_TEXTURE_BINDING_2D_ARRAY:
       case GL_MAX_3D_TEXTURE_SIZE:

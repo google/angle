@@ -78,14 +78,6 @@
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec4 = FAIL
 1094 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_variable.vertex_id = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_rbo = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.sampler_binding_getboolean = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.sampler_binding_getinteger = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.sampler_binding_getinteger64 = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.sampler_binding_getfloat = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.read_buffer_getboolean = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.read_buffer_getinteger = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.read_buffer_getinteger64 = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.integers.read_buffer_getfloat = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
