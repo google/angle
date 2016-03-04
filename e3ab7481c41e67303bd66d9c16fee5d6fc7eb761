@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e211990a_45576cd3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T13:46:18Z",
+      "side": 1,
+      "message": "Hm, I don\u0027t like how this duplicates the RenderTarget extraction in Buffer11::PackStorage::packPixels. One idea is to store an ANGLEFormat in TextureHelper11 instead of a DXGI format. Although I\u0027m beginning to wonder exactly what the difference between an ANGLE format and DXGI format is, and when they should be used.",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
