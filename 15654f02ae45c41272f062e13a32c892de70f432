@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "82d1bd8e_f783cac3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c26bb568_205b5a5d",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2e32149_9a637819",
         "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2016-03-04T20:46:07Z",
       "side": 1,
       "message": "nit: the * could be merged in the auto",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_aea73d7f",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "Done, although I like using auto * and auto \u0026 explicitly. We may have to make a style rule just to resolve the ambiguity.",
+      "parentUuid": "a2e32149_9a637819",
       "revId": "15654f02ae45c41272f062e13a32c892de70f432",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a26ec178_4b30f5e5",
+        "filename": "src/libANGLE/renderer/d3d/BufferD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2e32149_1a58085d",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22ef3134_55b8b00e",
         "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2016-03-04T20:46:07Z",
       "side": 1,
       "message": "Why std::move an int? Returning the variable should work, or in the worst case {alignedSpaceRequired} should.",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_ea967472",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "It compiles fine but produces an intellisense error. Seems harmless to leave the std::move in, but I\u0027m open to other solutions that don\u0027t confuse intellisense.",
+      "parentUuid": "22ef3134_55b8b00e",
       "revId": "15654f02ae45c41272f062e13a32c892de70f432",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "a2e32149_7a43141d",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c26bb568_40844ecc",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e211990a_ab43af37",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 4
@@ -98,6 +188,24 @@
       "writtenOn": "2016-03-04T20:46:07Z",
       "side": 1,
       "message": "Could static_assert(std::is_integral\u003cT\u003e::value, \"\")",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_43f59b34",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e211990a_ab43af37",
       "revId": "15654f02ae45c41272f062e13a32c892de70f432",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "e211990a_6e9d252e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "!",
+      "parentUuid": "e2b0b90b_889dbf94",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e211990a_4bf01b47",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 4
@@ -132,6 +258,24 @@
       "writtenOn": "2016-03-04T20:46:07Z",
       "side": 1,
       "message": "Here the vector is filled with 4 times 0, 1, ..., 2^16-1 but the call to drawQuads below only tests 0, 1, 2, 3 (maybe 4 and 5 too).",
+      "revId": "15654f02ae45c41272f062e13a32c892de70f432",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e27a7932_0af8a0d7",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T22:40:12Z",
+      "side": 1,
+      "message": "It uses 6 vertices, but it uses far more bytes. For instance, for float4 vectors, it uses 16 bytes per vertex. Also it uses strides of up to 4x, so something like 64 bytes per vertex in that case. I wanted to be sure I didn\u0027t have an overflow error.",
+      "parentUuid": "e211990a_4bf01b47",
       "revId": "15654f02ae45c41272f062e13a32c892de70f432",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
