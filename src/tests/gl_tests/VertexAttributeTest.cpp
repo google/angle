@@ -31,6 +31,22 @@ GLsizei TypeStride(GLenum attribType)
     }
 }
 
+template <typename T>
+GLfloat Normalize(T value)
+{
+    static_assert(std::is_integral<T>::value, "Integer required.");
+    if (std::is_signed<T>::value)
+    {
+        typedef typename std::make_unsigned<T>::type unsigned_type;
+        return (2.0f * static_cast<GLfloat>(value) + 1.0f) /
+               static_cast<GLfloat>(std::numeric_limits<unsigned_type>::max());
+    }
+    else
+    {
+        return static_cast<GLfloat>(value) / static_cast<GLfloat>(std::numeric_limits<T>::max());
+    }
+}
+
 class VertexAttributeTest : public ANGLETest
 {
   protected:
@@ -246,7 +262,7 @@ TEST_P(VertexAttributeTest, UnsignedByteNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = inputData[i] / 255.0f;
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
@@ -272,7 +288,7 @@ TEST_P(VertexAttributeTest, ByteNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / 255.0f;
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
@@ -298,7 +314,7 @@ TEST_P(VertexAttributeTest, UnsignedShortNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = inputData[i] / 65535.0f;
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
@@ -324,7 +340,7 @@ TEST_P(VertexAttributeTest, ShortNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / 65535.0f;
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
@@ -360,7 +376,7 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = ((2.0f * inputData[i]) + 1.0f) / static_cast<GLfloat>(0xFFFFFFFFu);
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
@@ -392,7 +408,7 @@ TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
     GLfloat expectedData[mVertexCount];
     for (size_t i = 0; i < mVertexCount; i++)
     {
-        expectedData[i] = static_cast<GLfloat>(inputData[i]) / static_cast<GLfloat>(hi);
+        expectedData[i] = Normalize(inputData[i]);
     }
 
     TestData data = {GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
@@ -470,6 +486,164 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
 }
 
+class VertexAttributeCachingTest : public VertexAttributeTest
+{
+  protected:
+    VertexAttributeCachingTest() {}
+
+    template <typename DestT>
+    static std::vector<GLfloat> GetExpectedData(const std::vector<GLubyte> &srcData,
+                                                GLenum attribType,
+                                                GLboolean normalized);
+};
+
+// static
+template <typename DestT>
+std::vector<GLfloat> VertexAttributeCachingTest::GetExpectedData(
+    const std::vector<GLubyte> &srcData,
+    GLenum attribType,
+    GLboolean normalized)
+{
+    std::vector<GLfloat> expectedData;
+
+    const DestT *typedSrcPtr = reinterpret_cast<const DestT *>(srcData.data());
+    size_t iterations        = srcData.size() / TypeStride(attribType);
+
+    if (normalized)
+    {
+        for (size_t index = 0; index < iterations; ++index)
+        {
+            expectedData.push_back(Normalize(typedSrcPtr[index]));
+        }
+    }
+    else
+    {
+        for (size_t index = 0; index < iterations; ++index)
+        {
+            expectedData.push_back(static_cast<GLfloat>(typedSrcPtr[index]));
+        }
+    }
+
+    return expectedData;
+}
+
+// In D3D11, we must sometimes translate buffer data into static attribute caches. We also use a
+// cache management scheme which garbage collects old attributes after we start using too much
+// cache data. This test tries to make as many attribute caches from a single buffer as possible
+// to stress-test the caching code.
+TEST_P(VertexAttributeCachingTest, BufferMulticaching)
+{
+    if (IsAMD() && isOpenGL())
+    {
+        std::cout << "Test skipped on AMD OpenGL." << std::endl;
+        return;
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+
+    std::vector<GLubyte> srcData;
+    for (size_t count = 0; count < 4; ++count)
+    {
+        for (GLubyte i = 0; i < std::numeric_limits<GLubyte>::max(); ++i)
+        {
+            srcData.push_back(i);
+        }
+    }
+
+    glBufferData(GL_ARRAY_BUFFER, srcData.size(), srcData.data(), GL_STATIC_DRAW);
+
+    GLint viewportSize[4];
+    glGetIntegerv(GL_VIEWPORT, viewportSize);
+
+    struct AttribData
+    {
+        AttribData(GLenum typeIn, GLint sizeIn, GLboolean normalizedIn, GLsizei strideIn)
+            : type(typeIn), size(sizeIn), normalized(normalizedIn), stride(strideIn)
+        {
+        }
+
+        GLenum type;
+        GLint size;
+        GLboolean normalized;
+        GLsizei stride;
+    };
+
+    std::vector<GLenum> attribTypes;
+    attribTypes.push_back(GL_BYTE);
+    attribTypes.push_back(GL_UNSIGNED_BYTE);
+    attribTypes.push_back(GL_SHORT);
+    attribTypes.push_back(GL_UNSIGNED_SHORT);
+
+    if (getClientVersion() >= 3)
+    {
+        attribTypes.push_back(GL_INT);
+        attribTypes.push_back(GL_UNSIGNED_INT);
+    }
+
+    std::vector<AttribData> datas;
+
+    const GLint maxSize     = 4;
+    const GLsizei maxStride = 4;
+
+    for (GLenum attribType : attribTypes)
+    {
+        for (GLint attribSize = 1; attribSize <= maxSize; ++attribSize)
+        {
+            for (GLsizei stride = 1; stride <= maxStride; ++stride)
+            {
+                datas.push_back(AttribData(attribType, attribSize, GL_FALSE, stride));
+                if (attribType != GL_FLOAT)
+                {
+                    datas.push_back(AttribData(attribType, attribSize, GL_TRUE, stride));
+                }
+            }
+        }
+    }
+
+    std::map<GLenum, std::vector<GLfloat>> expectedData;
+    std::map<GLenum, std::vector<GLfloat>> normExpectedData;
+
+    expectedData[GL_BYTE]          = GetExpectedData<GLbyte>(srcData, GL_BYTE, GL_FALSE);
+    expectedData[GL_UNSIGNED_BYTE] = GetExpectedData<GLubyte>(srcData, GL_UNSIGNED_BYTE, GL_FALSE);
+    expectedData[GL_SHORT] = GetExpectedData<GLshort>(srcData, GL_SHORT, GL_FALSE);
+    expectedData[GL_UNSIGNED_SHORT] =
+        GetExpectedData<GLushort>(srcData, GL_UNSIGNED_SHORT, GL_FALSE);
+    expectedData[GL_INT]          = GetExpectedData<GLint>(srcData, GL_INT, GL_FALSE);
+    expectedData[GL_UNSIGNED_INT] = GetExpectedData<GLuint>(srcData, GL_UNSIGNED_INT, GL_FALSE);
+
+    normExpectedData[GL_BYTE] = GetExpectedData<GLbyte>(srcData, GL_BYTE, GL_TRUE);
+    normExpectedData[GL_UNSIGNED_BYTE] =
+        GetExpectedData<GLubyte>(srcData, GL_UNSIGNED_BYTE, GL_TRUE);
+    normExpectedData[GL_SHORT] = GetExpectedData<GLshort>(srcData, GL_SHORT, GL_TRUE);
+    normExpectedData[GL_UNSIGNED_SHORT] =
+        GetExpectedData<GLushort>(srcData, GL_UNSIGNED_SHORT, GL_TRUE);
+    normExpectedData[GL_INT]          = GetExpectedData<GLint>(srcData, GL_INT, GL_TRUE);
+    normExpectedData[GL_UNSIGNED_INT] = GetExpectedData<GLuint>(srcData, GL_UNSIGNED_INT, GL_TRUE);
+
+    glEnableVertexAttribArray(mTestAttrib);
+    glEnableVertexAttribArray(mExpectedAttrib);
+
+    ASSERT_GL_NO_ERROR();
+
+    for (const auto &data : datas)
+    {
+        const auto &expected =
+            (data.normalized) ? normExpectedData[data.type] : expectedData[data.type];
+
+        GLsizei baseStride = static_cast<GLsizei>(data.size) * data.stride;
+        GLsizei stride     = TypeStride(data.type) * baseStride;
+
+        glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+        glVertexAttribPointer(mTestAttrib, data.size, data.type, data.normalized, stride, nullptr);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glVertexAttribPointer(mExpectedAttrib, data.size, GL_FLOAT, GL_FALSE,
+                              sizeof(GLfloat) * baseStride, expected.data());
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 255, 255, 255);
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels 10_0+, so we should test them separately.
 ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
@@ -482,5 +656,11 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(VertexAttributeCachingTest,
+                       ES2_D3D9(),
+                       ES2_D3D11(),
+                       ES3_D3D11(),
+                       ES3_OPENGL());
 
 }  // anonymous namespace

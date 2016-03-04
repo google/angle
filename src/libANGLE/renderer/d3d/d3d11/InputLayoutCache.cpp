@@ -252,8 +252,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
 
         if (attribIndex < unsortedAttributes.size() && attrib.active)
         {
-            VertexBuffer11 *vertexBuffer = GetAs<VertexBuffer11>(attrib.vertexBuffer);
-            Buffer11 *bufferStorage      = attrib.storage ? GetAs<Buffer11>(attrib.storage) : nullptr;
+            Buffer11 *bufferStorage = attrib.storage ? GetAs<Buffer11>(attrib.storage) : nullptr;
 
             // If indexed pointsprite emulation is active, then we need to take a less efficent code path.
             // Emulated indexed pointsprite rendering requires that the vertex buffers match exactly to
@@ -261,7 +260,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(
             // on the number of points indicated by the index list or how many duplicates are found on the index list.
             if (bufferStorage == nullptr)
             {
-                buffer = vertexBuffer->getBuffer();
+                ASSERT(attrib.vertexBuffer.get());
+                buffer = GetAs<VertexBuffer11>(attrib.vertexBuffer.get())->getBuffer();
             }
             else if (instancedPointSpritesActive && (indexInfo != nullptr))
             {

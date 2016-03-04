@@ -21,7 +21,6 @@ class VertexBuffer11 : public VertexBuffer
 {
   public:
     explicit VertexBuffer11(Renderer11 *const renderer);
-    ~VertexBuffer11() override;
 
     gl::Error initialize(unsigned int size, bool dynamicUsage) override;
 
@@ -42,6 +41,7 @@ class VertexBuffer11 : public VertexBuffer
     ID3D11Buffer *getBuffer() const;
 
   private:
+    ~VertexBuffer11() override;
     gl::Error mapResource();
 
     Renderer11 *const mRenderer;

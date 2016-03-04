@@ -55,10 +55,11 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
+    mTranslatedAttribCache.clear();
     mScratchMemoryBuffer.resize(0);
     for (auto &incompleteTexture : mIncompleteTextures)
     {
-        incompleteTexture.second.set(NULL);
+        incompleteTexture.second.set(nullptr);
     }
     mIncompleteTextures.clear();
 

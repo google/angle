@@ -269,13 +269,14 @@ Buffer11::~Buffer11()
 
 gl::Error Buffer11::setData(const void *data, size_t size, GLenum usage)
 {
+    updateD3DBufferUsage(usage);
+
     gl::Error error = setSubData(data, size, 0);
     if (error.isError())
     {
         return error;
     }
 
-    updateD3DBufferUsage(usage);
     return error;
 }
 
@@ -361,7 +362,7 @@ gl::Error Buffer11::setSubData(const void *data, size_t size, size_t offset)
     }
 
     mSize = std::max(mSize, requiredSize);
-    invalidateStaticData(D3D_BUFFER_INVALIDATE_WHOLE_CACHE);
+    invalidateStaticData();
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -417,7 +418,7 @@ gl::Error Buffer11::copySubData(BufferImpl *source,
     copyDest->setDataRevision(copyDest->getDataRevision() + 1);
 
     mSize = std::max<size_t>(mSize, destOffset + size);
-    invalidateStaticData(D3D_BUFFER_INVALIDATE_WHOLE_CACHE);
+    invalidateStaticData();
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -457,7 +458,7 @@ gl::Error Buffer11::mapRange(size_t offset, size_t length, GLbitfield access, GL
     {
         // Update the data revision immediately, since the data might be changed at any time
         mMappedStorage->setDataRevision(mMappedStorage->getDataRevision() + 1);
-        invalidateStaticData(D3D_BUFFER_INVALIDATE_WHOLE_CACHE);
+        invalidateStaticData();
     }
 
     uint8_t *mappedBuffer = mMappedStorage->map(offset, length, access);
@@ -492,7 +493,7 @@ void Buffer11::markTransformFeedbackUsage()
         transformFeedbackStorage->setDataRevision(transformFeedbackStorage->getDataRevision() + 1);
     }
 
-    invalidateStaticData(D3D_BUFFER_INVALIDATE_WHOLE_CACHE);
+    invalidateStaticData();
 }
 
 void Buffer11::markBufferUsage()
@@ -848,7 +849,7 @@ bool Buffer11::supportsDirectBinding() const
     // Do not support direct buffers for dynamic data. The streaming buffer
     // offers better performance for data which changes every frame.
     // Check for absence of static buffer interfaces to detect dynamic data.
-    return (mStaticVertexBuffer && mStaticIndexBuffer);
+    return (!mStaticVertexBuffers.empty() && mStaticIndexBuffer);
 }
 
 Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)

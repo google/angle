@@ -19,7 +19,6 @@ class VertexBuffer9 : public VertexBuffer
 {
   public:
     explicit VertexBuffer9(Renderer9 *renderer);
-    ~VertexBuffer9() override;
 
     gl::Error initialize(unsigned int size, bool dynamicUsage) override;
 
@@ -38,6 +37,7 @@ class VertexBuffer9 : public VertexBuffer
     IDirect3DVertexBuffer9 *getBuffer() const;
 
   private:
+    ~VertexBuffer9() override;
     Renderer9 *mRenderer;
 
     IDirect3DVertexBuffer9 *mVertexBuffer;

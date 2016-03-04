@@ -27,18 +27,6 @@ enum D3DBufferUsage
     D3D_BUFFER_USAGE_DYNAMIC,
 };
 
-enum D3DBufferInvalidationType
-{
-    D3D_BUFFER_INVALIDATE_WHOLE_CACHE,
-    D3D_BUFFER_INVALIDATE_DEFAULT_BUFFER_ONLY,
-};
-
-enum D3DStaticBufferCreationType
-{
-    D3D_BUFFER_CREATE_IF_NECESSARY,
-    D3D_BUFFER_DO_NOT_CREATE,
-};
-
 class BufferD3D : public BufferImpl
 {
   public:
@@ -52,13 +40,11 @@ class BufferD3D : public BufferImpl
     virtual void markTransformFeedbackUsage() = 0;
     virtual gl::Error getData(const uint8_t **outData) = 0;
 
-    StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute,
-                                                       D3DStaticBufferCreationType creationType);
+    StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute);
     StaticIndexBufferInterface *getStaticIndexBuffer();
 
     void initializeStaticData();
-    void invalidateStaticData(D3DBufferInvalidationType invalidationType);
-    void reinitOutOfDateStaticData();
+    void invalidateStaticData();
 
     void promoteStaticUsage(int dataSize);
 
@@ -79,9 +65,8 @@ class BufferD3D : public BufferImpl
     unsigned int mSerial;
     static unsigned int mNextSerial;
 
-    StaticVertexBufferInterface *mStaticVertexBuffer;
+    std::vector<std::unique_ptr<StaticVertexBufferInterface>> mStaticVertexBuffers;
     StaticIndexBufferInterface *mStaticIndexBuffer;
-    std::vector<StaticVertexBufferInterface *> *mStaticBufferCache;
     unsigned int mStaticBufferCacheTotalSize;
     unsigned int mStaticVertexBufferOutOfDate;
     unsigned int mUnmodifiedDataUse;

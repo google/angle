@@ -28,19 +28,24 @@ class BufferFactoryD3D;
 class StreamingVertexBufferInterface;
 class VertexBuffer;
 
+class VertexBufferBinding final
+{
+  public:
+    VertexBufferBinding();
+    VertexBufferBinding(const VertexBufferBinding &other);
+    ~VertexBufferBinding();
+
+    void set(VertexBuffer *vertexBuffer);
+    VertexBuffer *get() const;
+    VertexBufferBinding &operator=(const VertexBufferBinding &other);
+
+  private:
+    VertexBuffer *mBoundVertexBuffer;
+};
+
 struct TranslatedAttribute
 {
-    TranslatedAttribute()
-        : active(false),
-          attribute(NULL),
-          currentValueType(GL_NONE),
-          offset(0),
-          stride(0),
-          vertexBuffer(NULL),
-          storage(NULL),
-          serial(0),
-          divisor(0)
-    {}
+    TranslatedAttribute();
 
     bool active;
 
@@ -49,7 +54,7 @@ struct TranslatedAttribute
     unsigned int offset;
     unsigned int stride;   // 0 means not to advance the read pointer at all
 
-    VertexBuffer *vertexBuffer;
+    VertexBufferBinding vertexBuffer;
     BufferD3D *storage;
     unsigned int serial;
     unsigned int divisor;
@@ -91,7 +96,7 @@ class VertexDataManager : angle::NonCopyable
                                 TranslatedAttribute *translated,
                                 CurrentValueState *cachedState);
 
-    void hintUnmapAllResources(const std::vector<gl::VertexAttribute> &vertexAttributes);
+    void unmapStreamingBuffer();
 
     BufferFactoryD3D *const mFactory;
 
