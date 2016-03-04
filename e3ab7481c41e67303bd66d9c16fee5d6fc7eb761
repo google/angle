@@ -46,6 +46,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_c54b7c27",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T15:05:36Z",
+      "side": 1,
+      "message": "ANGLE puts a lot of effort into keeping the code pretty streamlined so I\u0027d like to maintain that overriding goal. In this case, take a look at replacing the DXGI format in TextureHelper11 with the ANGLE format. Also see if you can get rid of the GetDesc call, which was a bit of a hack.",
+      "parentUuid": "a2b881d5_4ee36fc2",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
