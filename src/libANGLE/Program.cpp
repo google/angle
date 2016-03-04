@@ -859,9 +859,8 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
         if (total < maxCount)
         {
             shaders[total] = mData.mAttachedVertexShader->getHandle();
+            total++;
         }
-
-        total++;
     }
 
     if (mData.mAttachedFragmentShader)
@@ -869,9 +868,8 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
         if (total < maxCount)
         {
             shaders[total] = mData.mAttachedFragmentShader->getHandle();
+            total++;
         }
-
-        total++;
     }
 
     if (count)
