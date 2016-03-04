@@ -34,6 +34,9 @@
 998 WIN LINUX MAC : dEQP-GLES2.performance.* = SKIP
 998 WIN LINUX MAC : dEQP-GLES2.stress.* = SKIP
 
+// Tests that we fail because they're not in line with the WebGL spec
+1335 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.conditional_inclusion.basic_2* = FAIL
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temporary entries: they should be removed once the bugs are fixed.
