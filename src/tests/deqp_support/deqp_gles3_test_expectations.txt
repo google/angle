@@ -67,7 +67,6 @@
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_invalid_program = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.state.get_buffer_pointerv = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.state.get_framebuffer_attachment_parameteriv = FAIL
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.scalar = FAIL
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec2 = FAIL
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec3 = FAIL
@@ -77,7 +76,6 @@
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec3 = FAIL
 1093 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_fragment.vec4 = FAIL
 1094 WIN LINUX : dEQP-GLES3.functional.shaders.builtin_variable.vertex_id = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.state_query.fbo.framebuffer_attachment_x_size_rbo = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
