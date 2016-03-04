@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2e32149_66a703e5",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T15:48:47Z",
+      "side": 1,
+      "message": "can you add a TRACE call with shader compile failed with no error log, like in the program case?",
+      "range": {
+        "startLine": 90,
+        "startChar": 8,
+        "endLine": 90,
+        "endChar": 9
+      },
+      "revId": "ec40dbf58f7f30a423739f185bae358de20111bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
