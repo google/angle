@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c26bb568_6f9865a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-04T13:14:27Z",
+      "side": 1,
+      "message": "seeing as we assume the stencil channel is the second channel, and we don\u0027t care about the type of the first channel (depth/red), I\u0027d rather you just compute copyOffset as (redBits + depthBits) / 8, with an assert that one is zero and the other is nonzero, with a comment.",
+      "range": {
+        "startLine": 1079,
+        "startChar": 15,
+        "endLine": 1079,
+        "endChar": 24
+      },
+      "revId": "4709107373514a09356cf60524706b369b1f9b8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
