@@ -26,7 +26,7 @@ BufferD3D::BufferD3D(BufferFactoryD3D *factory)
       mStaticBufferCacheTotalSize(0),
       mStaticVertexBufferOutOfDate(false),
       mUnmodifiedDataUse(0),
-      mUsage(D3D_BUFFER_USAGE_STATIC)
+      mUsage(D3DBufferUsage::STATIC)
 {
     updateSerial();
 }
@@ -54,7 +54,7 @@ void BufferD3D::updateD3DBufferUsage(GLenum usage)
         case GL_STATIC_DRAW:
         case GL_STATIC_READ:
         case GL_STATIC_COPY:
-            mUsage = D3D_BUFFER_USAGE_STATIC;
+            mUsage = D3DBufferUsage::STATIC;
             initializeStaticData();
             break;
 
@@ -64,7 +64,7 @@ void BufferD3D::updateD3DBufferUsage(GLenum usage)
         case GL_DYNAMIC_READ:
         case GL_DYNAMIC_COPY:
         case GL_DYNAMIC_DRAW:
-            mUsage = D3D_BUFFER_USAGE_DYNAMIC;
+            mUsage = D3DBufferUsage::DYNAMIC;
             break;
         default:
             UNREACHABLE();
@@ -150,7 +150,7 @@ void BufferD3D::invalidateStaticData()
 
     // If the buffer was created with a static usage then we recreate the static
     // buffers so that they are populated the next time we use this buffer.
-    if (mUsage == D3D_BUFFER_USAGE_STATIC)
+    if (mUsage == D3DBufferUsage::STATIC)
     {
         initializeStaticData();
     }

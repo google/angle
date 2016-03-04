@@ -38,9 +38,10 @@ gl::Error Buffer9::setData(const void* data, size_t size, GLenum usage)
         memcpy(mMemory.data(), data, size);
     }
 
+    updateD3DBufferUsage(usage);
+
     invalidateStaticData();
 
-    updateD3DBufferUsage(usage);
     return gl::Error(GL_NO_ERROR);
 }
 

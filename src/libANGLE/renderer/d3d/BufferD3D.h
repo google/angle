@@ -21,10 +21,10 @@ class BufferFactoryD3D;
 class StaticIndexBufferInterface;
 class StaticVertexBufferInterface;
 
-enum D3DBufferUsage
+enum class D3DBufferUsage
 {
-    D3D_BUFFER_USAGE_STATIC,
-    D3D_BUFFER_USAGE_DYNAMIC,
+    STATIC,
+    DYNAMIC,
 };
 
 class BufferD3D : public BufferImpl
@@ -55,6 +55,7 @@ class BufferD3D : public BufferImpl
                             gl::IndexRange *outRange) override;
 
     BufferFactoryD3D *getFactory() const { return mFactory; }
+    D3DBufferUsage getUsage() const { return mUsage; }
 
   protected:
     void updateSerial();
