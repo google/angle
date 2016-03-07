@@ -1515,8 +1515,8 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
     {
         numIndicesPerInstance = count;
     }
-    return mInputLayoutCache.applyVertexBuffers(mTranslatedAttribCache, mode, state.getProgram(),
-                                                indexInfo, numIndicesPerInstance);
+    return mInputLayoutCache.applyVertexBuffers(state, mTranslatedAttribCache, mode, indexInfo,
+                                                numIndicesPerInstance);
 }
 
 gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,

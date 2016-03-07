@@ -134,8 +134,6 @@ class ProgramD3DMetadata : angle::NonCopyable
 class ProgramD3D : public ProgramImpl
 {
   public:
-    typedef int SemanticIndexArray[gl::MAX_VERTEX_ATTRIBS];
-
     ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer);
     virtual ~ProgramD3D();
 
@@ -238,12 +236,10 @@ class ProgramD3D : public ProgramImpl
 
     unsigned int getSerial() const;
 
-    void sortAttributesByLayout(
-        const std::vector<TranslatedAttribute> &unsortedAttributes,
-        int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
-        const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const;
-    const SemanticIndexArray &getSemanticIndexes() const { return mSemanticIndexes; }
-    const SemanticIndexArray &getAttributesByLayout() const { return mAttributesByLayout; }
+    const AttribIndexArray &getAttribLocationToD3DSemantics() const
+    {
+        return mAttribLocationToD3DSemantic;
+    }
 
     void updateCachedInputLayout(const gl::State &state);
     const gl::InputLayout &getCachedInputLayout() const { return mCachedInputLayout; }
@@ -350,8 +346,7 @@ class ProgramD3D : public ProgramImpl
     D3DUniform *getD3DUniformByName(const std::string &name);
     D3DUniform *getD3DUniformFromLocation(GLint location);
 
-    void initSemanticIndex();
-    void initAttributesByLayout();
+    void initAttribLocationsToD3DSemantic();
 
     void reset();
     void assignUniformBlockRegisters();
@@ -394,8 +389,7 @@ class ProgramD3D : public ProgramImpl
     // Cache for getPixelExecutableForFramebuffer
     std::vector<GLenum> mPixelShaderOutputFormatCache;
 
-    SemanticIndexArray mSemanticIndexes;
-    SemanticIndexArray mAttributesByLayout;
+    AttribIndexArray mAttribLocationToD3DSemantic;
 
     unsigned int mSerial;
 

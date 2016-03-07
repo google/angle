@@ -94,6 +94,8 @@ class BufferFactoryD3D
         GLsizei instances) const = 0;
 };
 
+using AttribIndexArray = std::array<int, gl::MAX_VERTEX_ATTRIBS>;
+
 class RendererD3D : public Renderer, public BufferFactoryD3D
 {
   public:

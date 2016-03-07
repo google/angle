@@ -102,7 +102,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
     D3DVERTEXELEMENT9 *element = &elements[0];
 
     ProgramD3D *programD3D      = GetImplAs<ProgramD3D>(program);
-    const auto &semanticIndexes = programD3D->getSemanticIndexes();
+    const auto &semanticIndexes = programD3D->getAttribLocationToD3DSemantics();
 
     for (size_t i = 0; i < attributes.size(); i++)
     {

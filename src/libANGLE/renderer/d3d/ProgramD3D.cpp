@@ -79,28 +79,6 @@ bool IsRowMajorLayout(const sh::ShaderVariable &var)
     return false;
 }
 
-struct AttributeSorter
-{
-    AttributeSorter(const ProgramD3D::SemanticIndexArray &semanticIndices)
-        : originalIndices(&semanticIndices)
-    {
-    }
-
-    bool operator()(int a, int b)
-    {
-        int indexA = (*originalIndices)[a];
-        int indexB = (*originalIndices)[b];
-
-        if (indexA == -1)
-            return false;
-        if (indexB == -1)
-            return true;
-        return (indexA < indexB);
-    }
-
-    const ProgramD3D::SemanticIndexArray *originalIndices;
-};
-
 // true if varying x has a higher priority in packing than y
 bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 {
@@ -772,10 +750,9 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
         return LinkResult(false, gl::Error(GL_NO_ERROR));
     }
 
-    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
+    for (int &index : mAttribLocationToD3DSemantic)
     {
-        stream->readInt(&mSemanticIndexes[i]);
+        stream->readInt(&index);
     }
 
     const unsigned int psSamplerCount = stream->readInt<unsigned int>();
@@ -983,7 +960,6 @@ LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     }
 
     initializeUniformStorage();
-    initAttributesByLayout();
 
     return LinkResult(true, gl::Error(GL_NO_ERROR));
 }
@@ -999,10 +975,9 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 
     stream->writeInt(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
-    // TODO(jmadill): replace MAX_VERTEX_ATTRIBS
-    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; ++i)
+    for (int d3dSemantic : mAttribLocationToD3DSemantic)
     {
-        stream->writeInt(mSemanticIndexes[i]);
+        stream->writeInt(d3dSemantic);
     }
 
     stream->writeInt(mSamplersPS.size());
@@ -1465,7 +1440,7 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
         mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(varyingPacking);
     }
 
-    initSemanticIndex();
+    initAttribLocationsToD3DSemantic();
 
     defineUniformsAndAssignRegisters();
 
@@ -2173,8 +2148,7 @@ void ProgramD3D::reset()
     mUsedPixelSamplerRange  = 0;
     mDirtySamplerMapping    = true;
 
-    std::fill(mSemanticIndexes, mSemanticIndexes + ArraySize(mSemanticIndexes), -1);
-    std::fill(mAttributesByLayout, mAttributesByLayout + ArraySize(mAttributesByLayout), -1);
+    mAttribLocationToD3DSemantic.fill(-1);
 
     mStreamOutVaryings.clear();
 
@@ -2191,7 +2165,7 @@ unsigned int ProgramD3D::issueSerial()
     return mCurrentSerial++;
 }
 
-void ProgramD3D::initSemanticIndex()
+void ProgramD3D::initAttribLocationsToD3DSemantic()
 {
     const gl::Shader *vertexShader = mData.getAttachedVertexShader();
     ASSERT(vertexShader != nullptr);
@@ -2199,40 +2173,13 @@ void ProgramD3D::initSemanticIndex()
     // Init semantic index
     for (const sh::Attribute &attribute : mData.getAttributes())
     {
-        int attributeIndex = attribute.location;
-        int index          = vertexShader->getSemanticIndex(attribute.name);
-        int regs           = gl::VariableRegisterCount(attribute.type);
+        int d3dSemantic = vertexShader->getSemanticIndex(attribute.name);
+        int regCount    = gl::VariableRegisterCount(attribute.type);
 
-        for (int reg = 0; reg < regs; ++reg)
+        for (int reg = 0; reg < regCount; ++reg)
         {
-            mSemanticIndexes[attributeIndex + reg] = index + reg;
+            mAttribLocationToD3DSemantic[attribute.location + reg] = d3dSemantic + reg;
         }
-    }
-
-    initAttributesByLayout();
-}
-
-void ProgramD3D::initAttributesByLayout()
-{
-    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
-    {
-        mAttributesByLayout[i] = i;
-    }
-
-    std::sort(&mAttributesByLayout[0], &mAttributesByLayout[gl::MAX_VERTEX_ATTRIBS],
-              AttributeSorter(mSemanticIndexes));
-}
-
-void ProgramD3D::sortAttributesByLayout(
-    const std::vector<TranslatedAttribute> &unsortedAttributes,
-    int sortedSemanticIndicesOut[gl::MAX_VERTEX_ATTRIBS],
-    const rx::TranslatedAttribute *sortedAttributesOut[gl::MAX_VERTEX_ATTRIBS]) const
-{
-    for (size_t attribIndex = 0; attribIndex < unsortedAttributes.size(); ++attribIndex)
-    {
-        int oldIndex                          = mAttributesByLayout[attribIndex];
-        sortedSemanticIndicesOut[attribIndex] = mSemanticIndexes[oldIndex];
-        sortedAttributesOut[attribIndex]      = &unsortedAttributes[oldIndex];
     }
 }
 
@@ -2241,19 +2188,19 @@ void ProgramD3D::updateCachedInputLayout(const gl::State &state)
     mCachedInputLayout.clear();
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
-    for (unsigned int attributeIndex : angle::IterateBitSet(mData.getActiveAttribLocationsMask()))
+    for (unsigned int locationIndex : angle::IterateBitSet(mData.getActiveAttribLocationsMask()))
     {
-        int semanticIndex = mSemanticIndexes[attributeIndex];
+        int d3dSemantic = mAttribLocationToD3DSemantic[locationIndex];
 
-        if (semanticIndex != -1)
+        if (d3dSemantic != -1)
         {
-            if (mCachedInputLayout.size() < static_cast<size_t>(semanticIndex + 1))
+            if (mCachedInputLayout.size() < static_cast<size_t>(d3dSemantic + 1))
             {
-                mCachedInputLayout.resize(semanticIndex + 1, gl::VERTEX_FORMAT_INVALID);
+                mCachedInputLayout.resize(d3dSemantic + 1, gl::VERTEX_FORMAT_INVALID);
             }
-            mCachedInputLayout[semanticIndex] =
-                GetVertexFormatType(vertexAttributes[attributeIndex],
-                                    state.getVertexAttribCurrentValue(attributeIndex).Type);
+            mCachedInputLayout[d3dSemantic] =
+                GetVertexFormatType(vertexAttributes[locationIndex],
+                                    state.getVertexAttribCurrentValue(locationIndex).Type);
         }
     }
 }
@@ -2357,4 +2304,4 @@ bool ProgramD3D::getUniformBlockMemberInfo(const std::string &memberUniformName,
     *memberInfoOut = infoIter->second;
     return true;
 }
-}
+}  // namespace rx
