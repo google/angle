@@ -118,8 +118,8 @@ void skipUntilEOD(pp::Lexer *lexer, pp::Token *token)
 
 bool isMacroNameReserved(const std::string &name)
 {
-    // Names prefixed with "GL_" are reserved.
-    return (name.substr(0, 3) == "GL_");
+    // Names prefixed with "GL_" and the name "defined" are reserved.
+    return name == "defined" || (name.substr(0, 3) == "GL_");
 }
 
 bool hasDoubleUnderscores(const std::string &name)
