@@ -118,6 +118,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a24de15b_d406b26c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-07T15:57:47Z",
+      "side": 1,
+      "message": "Okay, I think the point got across now. TextureHelper11 is going to be bit of a weird class if it will both store texture information passed in from outside and also query some of the information from D3D. However, that could be okay as an interim solution until we either refactor it to only store information passed from outside or maybe refactor the code that\u0027s using it so it isn\u0027t needed. There could be enough benefits to doing it this way that I can at least explore it as an option.\n\nI\u0027ll also reorder the patches so that the already +2\u0027ed one can go in first.",
+      "parentUuid": "372a157b_4e63f3bb",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
