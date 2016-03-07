@@ -582,9 +582,14 @@
 
 // Linux only failures
 
+// UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
+1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
+
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.conversion.* = FAIL
+1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.*_out_of_bounds_blit_from_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.* = FAIL
-1323 LINUX : dEQP-GLES3.functional.ubo.* = FAIL
+1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_* = FAIL
+
 1323 LINUX : dEQP-GLES3.functional.default_vertex_attrib.int.vertex_attribi_4i = FAIL
 1323 LINUX : dEQP-GLES3.functional.default_vertex_attrib.int.vertex_attribi_4iv = FAIL
 1323 LINUX : dEQP-GLES3.functional.default_vertex_attrib.ivec2.vertex_attribi_4i = FAIL
@@ -681,6 +686,7 @@
 1323 LINUX : dEQP-GLES3.functional.shaders.functions.array_arguments.copy_global_inout_on_call_vertex = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
+1323 LINUX : dEQP-GLES3.functional.shaders.linkage.varying.rules.differing_interpolation_2 = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_2_dynamic_fragment = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_dynamic_fragment = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_dynamic_vertex = FAIL
