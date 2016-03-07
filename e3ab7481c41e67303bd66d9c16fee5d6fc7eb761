@@ -94,6 +94,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "372a157b_4e63f3bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-07T14:58:07Z",
+      "side": 1,
+      "message": "Dang, sorry we\u0027re not getting through to each other here. I do agree getting rid of the reverse mapping is great, and I also think it\u0027s possible with my suggestion, but let me explain a different way.\n\nI looked where TextureHelper11 was created, and it\u0027s either coming from a) RenderTarget11 or from b) CreateStagingTexture. With a) you have an ANGLEFormat from the RenderTarget11 itself (thanks to your changes) and in b) it seems as though we\u0027re creating a staging texture from another TextureHelper11. This means if the first TextureHelper11 had an ANGLEFormat, we can get it from the first, for the staging TextureHelper11.\n\nNet result is I believe you can pass in an ANGLEFormat to the TextureHelper11 init methods. We can keep this information though the pipeline, and use it later in the code.\n\nAs a partial aside, it should also be able to pass in the Texture Size as well. If it\u0027s possible to pass in the sample count (not immediately obvious if it is) you could remove the initDesc() method. But that\u0027s just gravy, if it\u0027s even possible.\n\nDoes this seem to make a bit more sense? If not, let\u0027s chat tomorrow around 10AM EST? I really want to keep these patches landing at a good speed.",
+      "parentUuid": "57430950_8ff8b590",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
