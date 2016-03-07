@@ -211,16 +211,18 @@ TString StructureHLSL::define(const TStructure &structure, bool useHLSLRowMajorP
     return string;
 }
 
-void StructureHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
+TString StructureHLSL::addConstructor(const TType &type,
+                                      const TString &name,
+                                      const TIntermSequence *parameters)
 {
     if (name == "")
     {
-        return;   // Nameless structures don't have constructors
+        return TString();  // Nameless structures don't have constructors
     }
 
     if (type.getStruct() && mStructNames.find(name) != mStructNames.end())
     {
-        return;   // Already added
+        return TString(name);  // Already added
     }
 
     TType ctorType = type;
@@ -230,6 +232,8 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
 
     typedef std::vector<TType> ParameterArray;
     ParameterArray ctorParameters;
+
+    TString constructorFunctionName;
 
     const TStructure* structure = type.getStruct();
     if (structure)
@@ -265,13 +269,16 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
         {
             ctorParameters.push_back(*fields[i]->type());
         }
+        constructorFunctionName = TString(name);
     }
     else if (parameters)
     {
-        for (TIntermSequence::const_iterator parameter = parameters->begin(); parameter != parameters->end(); parameter++)
+        for (auto parameter : *parameters)
         {
-            ctorParameters.push_back((*parameter)->getAsTyped()->getType());
+            const TType &paramType = parameter->getAsTyped()->getType();
+            ctorParameters.push_back(paramType);
         }
+        constructorFunctionName = TString(name) + DisambiguateFunctionName(parameters);
     }
     else UNREACHABLE();
 
@@ -283,7 +290,7 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
     }
     else   // Built-in type
     {
-        constructor += TypeString(ctorType) + " " + name + "(";
+        constructor += TypeString(ctorType) + " " + constructorFunctionName + "(";
     }
 
     for (unsigned int parameter = 0; parameter < ctorParameters.size(); parameter++)
@@ -465,6 +472,8 @@ void StructureHLSL::addConstructor(const TType &type, const TString &name, const
     }
 
     mConstructors.insert(constructor);
+
+    return constructorFunctionName;
 }
 
 std::string StructureHLSL::structsHeader() const

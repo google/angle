@@ -11,6 +11,7 @@
 #define COMPILER_TRANSLATOR_UTILSHLSL_H_
 
 #include <vector>
+#include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Types.h"
 
 #include "angle_gl.h"
@@ -73,6 +74,9 @@ TString QualifiedStructNameString(const TStructure &structure, bool useHLSLRowMa
 TString InterpolationString(TQualifier qualifier);
 TString QualifierString(TQualifier qualifier);
 int HLSLTextureCoordsCount(const TBasicType samplerType);
+// Parameters may need to be included in function names to disambiguate between overloaded
+// functions.
+TString DisambiguateFunctionName(const TIntermSequence *parameters);
 }
 
 #endif // COMPILER_TRANSLATOR_UTILSHLSL_H_

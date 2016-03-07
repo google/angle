@@ -49,8 +49,6 @@
 
 // TODO(jmadill): triage these into temporary and permanent suppressions
 
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_hole.mat2 = FAIL
-1030 WIN : dEQP-GLES2.functional.attribute_location.bind_relink_hole.mat2 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16 = FAIL

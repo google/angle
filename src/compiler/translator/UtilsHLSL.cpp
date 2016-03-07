@@ -435,4 +435,23 @@ int HLSLTextureCoordsCount(const TBasicType samplerType)
     }
     return 0;
 }
+
+TString DisambiguateFunctionName(const TIntermSequence *parameters)
+{
+    TString disambiguatingString;
+    for (auto parameter : *parameters)
+    {
+        const TType &paramType = parameter->getAsTyped()->getType();
+        // Disambiguation is needed for float2x2 and float4 parameters. These are the only parameter
+        // types that HLSL thinks are identical. float2x3 and float3x2 are different types, for
+        // example. Other parameter types are not added to function names to avoid making function
+        // names longer.
+        if (paramType.getObjectSize() == 4 && paramType.getBasicType() == EbtFloat)
+        {
+            disambiguatingString += "_" + TypeString(paramType);
+        }
+    }
+    return disambiguatingString;
 }
+
+}  // namespace sh

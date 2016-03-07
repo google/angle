@@ -1428,6 +1428,142 @@ TEST_P(GLSLTest, VerifyMaxFragmentUniformVectorsExceeded)
     CompileGLSLWithUniformsAndSamplers(0, maxUniforms + 1, 0, 0, false);
 }
 
+// Test that two constructors which have vec4 and mat2 parameters get disambiguated (issue in
+// HLSL).
+TEST_P(GLSLTest_ES3, AmbiguousConstructorCall2x2)
+{
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}";
+
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 a_vec;\n"
+        "in mat2 a_mat;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_vec) + vec4(a_mat);\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Test that two constructors which have mat2x3 and mat3x2 parameters get disambiguated.
+// This was suspected to be an issue in HLSL, but HLSL seems to be able to natively choose between
+// the function signatures in this case.
+TEST_P(GLSLTest_ES3, AmbiguousConstructorCall2x3)
+{
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}";
+
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in mat3x2 a_matA;\n"
+        "in mat2x3 a_matB;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_matA) + vec4(a_matB);\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Test that two functions which have vec4 and mat2 parameters get disambiguated (issue in HLSL).
+TEST_P(GLSLTest_ES3, AmbiguousFunctionCall2x2)
+{
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}";
+
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 a_vec;\n"
+        "in mat2 a_mat;\n"
+        "vec4 foo(vec4 a)\n"
+        "{\n"
+        "    return a;\n"
+        "}\n"
+        "vec4 foo(mat2 a)\n"
+        "{\n"
+        "    return vec4(a[0][0]);\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = foo(a_vec) + foo(a_mat);\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Test that an user-defined function with a large number of float4 parameters doesn't fail due to
+// the function name being too long.
+TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
+{
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}";
+
+    std::stringstream vertexShaderStream;
+    const unsigned int paramCount = 1024u;
+
+    vertexShaderStream << "#version 300 es\n"
+                          "precision highp float;\n"
+                          "in vec4 a_vec;\n"
+                          "vec4 lotsOfVec4Parameters(";
+    for (unsigned int i = 0; i < paramCount; ++i)
+    {
+        vertexShaderStream << "vec4 a" << i << ", ";
+    }
+    vertexShaderStream << "vec4 aLast)\n"
+                          "{\n"
+                          "    return ";
+    for (unsigned int i = 0; i < paramCount; ++i)
+    {
+        vertexShaderStream << "a" << i << " + ";
+    }
+    vertexShaderStream << "aLast;\n"
+                          "}\n"
+                          "void main()\n"
+                          "{\n"
+                          "    gl_Position = lotsOfVec4Parameters(";
+    for (unsigned int i = 0; i < paramCount; ++i)
+    {
+        vertexShaderStream << "a_vec, ";
+    }
+    vertexShaderStream << "a_vec);\n"
+                          "}";
+
+    GLuint program = CompileProgram(vertexShaderStream.str(), fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
