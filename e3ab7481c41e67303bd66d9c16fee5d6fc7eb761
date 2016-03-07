@@ -70,6 +70,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57430950_8ff8b590",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-07T09:02:15Z",
+      "side": 1,
+      "message": "What you\u0027re asking here doesn\u0027t make sense to me. TextureHelper11 specifically wraps getting information from a texture resource given only the resource handle. The class could be removed entirely in favor of a different architecture, but there\u0027s very little that could be changed inside the class. The DXGI format of a texture can\u0027t be mapped back to the ANGLE format in a straightforward way - and a while back you asked to get rid of the reverse mapping from [texFormat, srvFormat, dsvFormat, rtvFormat], which I agreed was a good idea.",
+      "parentUuid": "e211990a_c54b7c27",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
