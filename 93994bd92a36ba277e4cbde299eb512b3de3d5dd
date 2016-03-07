@@ -16,6 +16,24 @@
       "revId": "93994bd92a36ba277e4cbde299eb512b3de3d5dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d79c592c_1b3bbb22",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-07T18:43:43Z",
+      "side": 1,
+      "message": "This was actually dead code, removed. (ISTR it was a const * because the const \u0026 didn\u0027t work with the assignment operator needed by std::sort.)",
+      "parentUuid": "77400d43_9647acf5",
+      "revId": "93994bd92a36ba277e4cbde299eb512b3de3d5dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
