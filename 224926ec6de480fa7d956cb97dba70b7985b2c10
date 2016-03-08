@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "979d8172_dafbb98b",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-03-08T20:44:57Z",
+      "side": 1,
+      "message": "I don\u0027t see the point of this change.  To me we should not pass more info than necessary to a class.",
+      "revId": "224926ec6de480fa7d956cb97dba70b7985b2c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
