@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "979d8172_179b5ca0",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-03-08T20:37:11Z",
+      "side": 1,
+      "message": "This is against coding style.  You can only use alias if it is intended to be used by client. Here you are not.",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
