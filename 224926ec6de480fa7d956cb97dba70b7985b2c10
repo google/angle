@@ -16,6 +16,24 @@
       "revId": "224926ec6de480fa7d956cb97dba70b7985b2c10",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_1a79c1a2",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T20:59:12Z",
+      "side": 1,
+      "message": "Let me try to explain.\n\nWe want the GL layer objects (eg gl::TransformFeedback, gl::Buffer, gl::Texture) to contain their GL state to a gl::TransformFeedback::Data structure, which we pass in to the Impl level constructor (rx::TransformFeedbackImpl, rx::BufferImpl, rx::TextureImpl). The Data state struct is a private member of the GL object, and we want to pass it in by const reference. This requires us to create the Impl object in the cpp file of the GL object.\n\nIt\u0027s a bit complex to explain but you can see a prior example in gl::Framebuffer::Framebuffer.\n\nThe refactor here is incomplete, but adding a gl::TransformFeedback::Data structure would allow us to avoid using the bindGenericBuffer and bindIndexedBuffer Impl methods, and use a dirty bit scheme instead.",
+      "parentUuid": "979d8172_dafbb98b",
+      "revId": "224926ec6de480fa7d956cb97dba70b7985b2c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
