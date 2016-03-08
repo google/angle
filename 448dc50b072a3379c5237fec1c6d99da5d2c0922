@@ -22,6 +22,30 @@
       "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_1ad621c7",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T20:54:56Z",
+      "side": 1,
+      "message": "Can you elaborate? I checked the discussion link on the c++11 allowed features (https://groups.google.com/a/chromium.org/forum/#!topic/chromium-dev/8dOAMzgR4ao) but it\u0027s quite long and I didn\u0027t see the portion you are referencing.",
+      "parentUuid": "979d8172_179b5ca0",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
