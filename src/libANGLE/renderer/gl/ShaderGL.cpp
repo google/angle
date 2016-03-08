@@ -77,7 +77,9 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
         GLint infoLogLength = 0;
         mFunctions->getShaderiv(mShaderID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        if (infoLogLength > 0)
+        // Info log length includes the null terminator, so 1 means that the info log is an empty
+        // string.
+        if (infoLogLength > 1)
         {
             std::vector<char> buf(infoLogLength);
             mFunctions->getShaderInfoLog(mShaderID, infoLogLength, nullptr, &buf[0]);

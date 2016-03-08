@@ -118,7 +118,10 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
         mFunctions->getProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
         std::string warning;
-        if (infoLogLength > 0)
+
+        // Info log length includes the null terminator, so 1 means that the info log is an empty
+        // string.
+        if (infoLogLength > 1)
         {
             std::vector<char> buf(infoLogLength);
             mFunctions->getProgramInfoLog(mProgramID, infoLogLength, nullptr, &buf[0]);

@@ -46,7 +46,9 @@ GLuint CompileShader(GLenum type, const std::string &source)
         GLint infoLogLength;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        if (infoLogLength > 0)
+        // Info log length includes the null terminator, so 1 means that the info log is an empty
+        // string.
+        if (infoLogLength > 1)
         {
             std::vector<GLchar> infoLog(infoLogLength);
             glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
@@ -123,10 +125,19 @@ GLuint CompileProgramWithTransformFeedback(
         GLint infoLogLength;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        std::vector<GLchar> infoLog(infoLogLength);
-        glGetProgramInfoLog(program, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+        // Info log length includes the null terminator, so 1 means that the info log is an empty
+        // string.
+        if (infoLogLength > 1)
+        {
+            std::vector<GLchar> infoLog(infoLogLength);
+            glGetProgramInfoLog(program, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
 
-        std::cerr << "program link failed: " << &infoLog[0];
+            std::cerr << "program link failed: " << &infoLog[0];
+        }
+        else
+        {
+            std::cerr << "program link failed. <Empty log message>";
+        }
 
         glDeleteProgram(program);
         return 0;
