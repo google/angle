@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97be618f_0b2934cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/InputLayoutCache.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-08T15:46:17Z",
+      "side": 1,
+      "message": "Does this branch mean that all attributes will a default or leftover constant value? Would that impact GPU performance?",
+      "revId": "66e5f4687ac203e30467efdc5c15b67f890aecb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97be618f_eb7620de",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-08T15:46:17Z",
+      "side": 1,
+      "message": "nit: no need to check if it is already set (unless you are planning on adding more code here.)",
+      "revId": "66e5f4687ac203e30467efdc5c15b67f890aecb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
