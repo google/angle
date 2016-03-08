@@ -142,6 +142,30 @@
       "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_3a6da598",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-03-08T21:11:52Z",
+      "side": 1,
+      "message": "My interpretation is different.  Internal means it is only used by this class, this .cpp file.  If you use it in another class, that\u0027s public API.  Public is not to your project, but to your encapsulation of this class/namespace.\n\nSo in that sense. gl is public, not internal.",
+      "parentUuid": "979d8172_fa487d2f",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
