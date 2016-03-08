@@ -210,7 +210,6 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         translated->serial = buffer->getSerial();
         translated->startIndex = (offset >> srcTypeInfo.bytesShift);
         translated->startOffset = offset;
-        buffer->promoteStaticUsage(count << srcTypeInfo.bytesShift);
         return gl::Error(GL_NO_ERROR);
     }
     else
@@ -247,6 +246,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         {
             return error;
         }
+        buffer->promoteStaticUsage(count << srcTypeInfo.bytesShift);
     }
     else
     {
