@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 143
+#define ANGLE_SH_VERSION 144
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -299,11 +299,15 @@ typedef struct
     // Default is SH_CLAMP_WITH_CLAMP_INTRINSIC.
     ShArrayIndexClampingStrategy ArrayIndexClampingStrategy;
 
-    // The maximum complexity an expression can be.
+    // The maximum complexity an expression can be when SH_LIMIT_EXPRESSION_COMPLEXITY is turned on.
     int MaxExpressionComplexity;
 
     // The maximum depth a call stack can be.
     int MaxCallStackDepth;
+
+    // The maximum number of parameters a function can have when SH_LIMIT_EXPRESSION_COMPLEXITY is
+    // turned on.
+    int MaxFunctionParameters;
 } ShBuiltInResources;
 
 //

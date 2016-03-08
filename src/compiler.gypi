@@ -98,6 +98,8 @@
             'compiler/translator/ValidateGlobalInitializer.h',
             'compiler/translator/ValidateLimitations.cpp',
             'compiler/translator/ValidateLimitations.h',
+            'compiler/translator/ValidateMaxParameters.h',
+            'compiler/translator/ValidateMaxParameters.cpp',
             'compiler/translator/ValidateOutputs.cpp',
             'compiler/translator/ValidateOutputs.h',
             'compiler/translator/ValidateSwitch.cpp',

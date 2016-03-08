@@ -178,7 +178,8 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     resources->ArrayIndexClampingStrategy = SH_CLAMP_WITH_CLAMP_INTRINSIC;
 
     resources->MaxExpressionComplexity = 256;
-    resources->MaxCallStackDepth = 256;
+    resources->MaxCallStackDepth       = 256;
+    resources->MaxFunctionParameters   = 1024;
 }
 
 //
