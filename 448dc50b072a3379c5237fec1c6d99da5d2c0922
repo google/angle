@@ -118,6 +118,30 @@
       "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_fa487d2f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T21:09:49Z",
+      "side": 1,
+      "message": "My interpretation is that if a namespace is public (EG something we expose via the ANGLE platform, ShaderLang header or GL apis) it\u0027s a client API and all other namespaces are internal. Here gl:: is only used internally in libANGLE.",
+      "parentUuid": "979d8172_fa16bd26",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
