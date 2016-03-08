@@ -70,6 +70,30 @@
       "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_3a3765df",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T21:02:01Z",
+      "side": 1,
+      "message": "Thanks, I think you\u0027re mistaken though, this is not a public API. No client code. See this line:\n\n\"However, local convenience aliases are fine in function definitions, private sections of classes, explicitly marked internal namespaces, and in .cc files:\"\n\nHere gl:: is an internal namespace.",
+      "parentUuid": "979d8172_bac6f511",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
