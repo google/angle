@@ -166,6 +166,30 @@
       "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "979d8172_c5891ae5",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T21:50:57Z",
+      "side": 1,
+      "message": "Ah dang, yes you\u0027re right. I\u0027ve updated the comment to explain the intended usage and how to use, as per the Google style guide.",
+      "parentUuid": "979d8172_3a6da598",
+      "range": {
+        "startLine": 308,
+        "startChar": 6,
+        "endLine": 308,
+        "endChar": 17
+      },
+      "revId": "448dc50b072a3379c5237fec1c6d99da5d2c0922",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
