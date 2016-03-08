@@ -10,6 +10,10 @@
 #ifndef LIBANGLE_CONTEXT_H_
 #define LIBANGLE_CONTEXT_H_
 
+#include <set>
+#include <string>
+
+#include "angle_gl.h"
 #include "common/angleutils.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Caps.h"
@@ -19,12 +23,6 @@
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
-
-#include "angle_gl.h"
-
-#include <string>
-#include <set>
-#include <map>
 
 namespace rx
 {
@@ -439,24 +437,19 @@ class Context final : public ValidationContext
 
     TextureMap mZeroTextures;
 
-    typedef std::map<GLuint, Framebuffer*> FramebufferMap;
-    FramebufferMap mFramebufferMap;
+    ResourceMap<Framebuffer> mFramebufferMap;
     HandleAllocator mFramebufferHandleAllocator;
 
-    typedef std::map<GLuint, FenceNV*> FenceNVMap;
-    FenceNVMap mFenceNVMap;
+    ResourceMap<FenceNV> mFenceNVMap;
     HandleAllocator mFenceNVHandleAllocator;
 
-    typedef std::map<GLuint, Query*> QueryMap;
-    QueryMap mQueryMap;
+    ResourceMap<Query> mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
-    typedef std::map<GLuint, VertexArray*> VertexArrayMap;
-    VertexArrayMap mVertexArrayMap;
+    ResourceMap<VertexArray> mVertexArrayMap;
     HandleAllocator mVertexArrayHandleAllocator;
 
-    typedef std::map<GLuint, TransformFeedback*> TransformFeedbackMap;
-    TransformFeedbackMap mTransformFeedbackMap;
+    ResourceMap<TransformFeedback> mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackAllocator;
 
     std::string mRendererString;

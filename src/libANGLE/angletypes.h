@@ -15,6 +15,7 @@
 #include <stdint.h>
 
 #include <bitset>
+#include <unordered_map>
 
 namespace gl
 {
@@ -301,6 +302,11 @@ typedef std::bitset<MAX_VERTEX_ATTRIBS> AttributesMask;
 
 // Use in Program
 typedef std::bitset<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> UniformBlockBindingMask;
+
+// A map of GL objects indexed by object ID. The specific map implementation may change.
+// Client code should treat it as a std::map.
+template <class ResourceT>
+using ResourceMap = std::unordered_map<GLuint, ResourceT *>;
 }
 
 namespace rx

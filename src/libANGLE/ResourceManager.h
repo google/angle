@@ -15,8 +15,6 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/HandleAllocator.h"
 
-#include <map>
-
 namespace rx
 {
 class ImplFactory;
@@ -82,31 +80,24 @@ class ResourceManager : angle::NonCopyable
     rx::ImplFactory *mFactory;
     std::size_t mRefCount;
 
-    typedef std::map<GLuint, Buffer*> BufferMap;
-    BufferMap mBufferMap;
+    ResourceMap<Buffer> mBufferMap;
     HandleAllocator mBufferHandleAllocator;
 
-    typedef std::map<GLuint, Shader*> ShaderMap;
-    ShaderMap mShaderMap;
+    ResourceMap<Shader> mShaderMap;
 
-    typedef std::map<GLuint, Program*> ProgramMap;
-    ProgramMap mProgramMap;
+    ResourceMap<Program> mProgramMap;
     HandleAllocator mProgramShaderHandleAllocator;
 
-    typedef std::map<GLuint, Texture*> TextureMap;
-    TextureMap mTextureMap;
+    ResourceMap<Texture> mTextureMap;
     HandleAllocator mTextureHandleAllocator;
 
-    typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
-    RenderbufferMap mRenderbufferMap;
+    ResourceMap<Renderbuffer> mRenderbufferMap;
     HandleAllocator mRenderbufferHandleAllocator;
 
-    typedef std::map<GLuint, Sampler*> SamplerMap;
-    SamplerMap mSamplerMap;
+    ResourceMap<Sampler> mSamplerMap;
     HandleAllocator mSamplerHandleAllocator;
 
-    typedef std::map<GLuint, FenceSync*> FenceMap;
-    FenceMap mFenceSyncMap;
+    ResourceMap<FenceSync> mFenceSyncMap;
     HandleAllocator mFenceSyncHandleAllocator;
 };
 
