@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d7bd39cb_93a85ca6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T18:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97be618f_2629cfcf",
+      "revId": "1db7359b27073997e3d8b285b2d0ab2f8e3514f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97be618f_8683dbf7",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2016-03-08T17:46:18Z",
       "side": 1,
       "message": "Should we use mediump as highp support is optional?",
+      "range": {
+        "startLine": 222,
+        "startChar": 21,
+        "endLine": 222,
+        "endChar": 26
+      },
+      "revId": "1db7359b27073997e3d8b285b2d0ab2f8e3514f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7c23d56_74bba8e8",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T18:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97be618f_8683dbf7",
       "range": {
         "startLine": 222,
         "startChar": 21,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "773acdf7_66aa0ab0",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T18:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97be618f_e622d7e8",
+      "range": {
+        "startLine": 513,
+        "startChar": 13,
+        "endLine": 513,
+        "endChar": 24
+      },
+      "revId": "1db7359b27073997e3d8b285b2d0ab2f8e3514f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97be618f_a6885f14",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 10
@@ -76,6 +142,30 @@
       "writtenOn": "2016-03-08T17:46:18Z",
       "side": 1,
       "message": "same here, should we use mediump?",
+      "range": {
+        "startLine": 521,
+        "startChar": 21,
+        "endLine": 521,
+        "endChar": 26
+      },
+      "revId": "1db7359b27073997e3d8b285b2d0ab2f8e3514f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773acdf7_c68e765d",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T18:55:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97be618f_a6885f14",
       "range": {
         "startLine": 521,
         "startChar": 21,
