@@ -162,7 +162,6 @@ InputLayoutCache::InputLayoutCache()
       mPointSpriteVertexBuffer(nullptr),
       mPointSpriteIndexBuffer(nullptr),
       mCacheSize(kDefaultCacheSize),
-      mCounter(0),
       mDevice(nullptr),
       mDeviceContext(nullptr)
 {

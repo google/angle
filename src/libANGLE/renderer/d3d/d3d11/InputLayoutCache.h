@@ -106,7 +106,6 @@ class InputLayoutCache : angle::NonCopyable
     ID3D11Buffer *mPointSpriteIndexBuffer;
 
     unsigned int mCacheSize;
-    unsigned long long mCounter;
 
     ID3D11Device *mDevice;
     ID3D11DeviceContext *mDeviceContext;
