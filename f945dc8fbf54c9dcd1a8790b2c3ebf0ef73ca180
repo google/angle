@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97be618f_cbc6bc61",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-08T15:00:12Z",
+      "side": 1,
+      "message": "Oh, I forgot about this. I not sure if * works in the middle of an expression, just at the end.\n\nSee failure in https://build.chromium.org/p/tryserver.chromium.angle/builders/linux_angle_rel_ng/builds/904",
+      "range": {
+        "startLine": 589,
+        "startChar": 13,
+        "endLine": 589,
+        "endChar": 97
+      },
+      "revId": "f945dc8fbf54c9dcd1a8790b2c3ebf0ef73ca180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
