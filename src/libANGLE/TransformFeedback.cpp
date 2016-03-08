@@ -8,14 +8,15 @@
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
 
 namespace gl
 {
 
-TransformFeedback::TransformFeedback(rx::TransformFeedbackImpl *impl, GLuint id, const Caps &caps)
+TransformFeedback::TransformFeedback(rx::ImplFactory *implFactory, GLuint id, const Caps &caps)
     : RefCountObject(id),
-      mImplementation(impl),
+      mImplementation(implFactory->createTransformFeedback()),
       mLabel(),
       mActive(false),
       mPrimitiveMode(GL_NONE),
@@ -23,7 +24,7 @@ TransformFeedback::TransformFeedback(rx::TransformFeedbackImpl *impl, GLuint id,
       mGenericBuffer(),
       mIndexedBuffers(caps.maxTransformFeedbackSeparateAttributes)
 {
-    ASSERT(impl != NULL);
+    ASSERT(mImplementation != nullptr);
 }
 
 TransformFeedback::~TransformFeedback()

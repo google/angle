@@ -69,10 +69,10 @@ class ResourceManager : angle::NonCopyable
 
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
-    void checkBufferAllocation(GLuint handle);
-    void checkTextureAllocation(GLuint handle, GLenum type);
-    void checkRenderbufferAllocation(GLuint handle);
-    void checkSamplerAllocation(GLuint sampler);
+    Buffer *checkBufferAllocation(GLuint handle);
+    Texture *checkTextureAllocation(GLuint handle, GLenum type);
+    Renderbuffer *checkRenderbufferAllocation(GLuint handle);
+    Sampler *checkSamplerAllocation(GLuint samplerHandle);
 
     bool isSampler(GLuint sampler);
 
@@ -110,6 +110,6 @@ class ResourceManager : angle::NonCopyable
     HandleAllocator mFenceSyncHandleAllocator;
 };
 
-}
+}  // namespace gl
 
 #endif // LIBANGLE_RESOURCEMANAGER_H_

@@ -108,24 +108,30 @@ class Context final : public ValidationContext
     GLuint createVertexArray();
     void deleteVertexArray(GLuint vertexArray);
 
-    void bindArrayBuffer(GLuint buffer);
-    void bindElementArrayBuffer(GLuint buffer);
+    void bindArrayBuffer(GLuint bufferHandle);
+    void bindElementArrayBuffer(GLuint bufferHandle);
     void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
     void bindDrawFramebuffer(GLuint framebufferHandle);
-    void bindRenderbuffer(GLuint renderbuffer);
-    void bindVertexArray(GLuint vertexArray);
-    void bindSampler(GLuint textureUnit, GLuint sampler);
-    void bindGenericUniformBuffer(GLuint buffer);
-    void bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
-    void bindGenericTransformFeedbackBuffer(GLuint buffer);
-    void bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
-    void bindCopyReadBuffer(GLuint buffer);
-    void bindCopyWriteBuffer(GLuint buffer);
-    void bindPixelPackBuffer(GLuint buffer);
-    void bindPixelUnpackBuffer(GLuint buffer);
+    void bindRenderbuffer(GLuint renderbufferHandle);
+    void bindVertexArray(GLuint vertexArrayHandle);
+    void bindSampler(GLuint textureUnit, GLuint samplerHandle);
+    void bindGenericUniformBuffer(GLuint bufferHandle);
+    void bindIndexedUniformBuffer(GLuint bufferHandle,
+                                  GLuint index,
+                                  GLintptr offset,
+                                  GLsizeiptr size);
+    void bindGenericTransformFeedbackBuffer(GLuint bufferHandle);
+    void bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
+                                            GLuint index,
+                                            GLintptr offset,
+                                            GLsizeiptr size);
+    void bindCopyReadBuffer(GLuint bufferHandle);
+    void bindCopyWriteBuffer(GLuint bufferHandle);
+    void bindPixelPackBuffer(GLuint bufferHandle);
+    void bindPixelUnpackBuffer(GLuint bufferHandle);
     void useProgram(GLuint program);
-    void bindTransformFeedback(GLuint transformFeedback);
+    void bindTransformFeedback(GLuint transformFeedbackHandle);
 
     Error beginQuery(GLenum target, GLuint query);
     Error endQuery(GLenum target);
@@ -397,8 +403,8 @@ class Context final : public ValidationContext
     void syncStateForTexImage();
     void syncStateForClear();
     void syncStateForBlit();
-    void checkVertexArrayAllocation(GLuint vertexArray);
-    void checkTransformFeedbackAllocation(GLuint transformFeedback);
+    VertexArray *checkVertexArrayAllocation(GLuint vertexArrayHandle);
+    TransformFeedback *checkTransformFeedbackAllocation(GLuint transformFeedback);
     Framebuffer *checkFramebufferAllocation(GLuint framebufferHandle);
 
     void detachBuffer(GLuint buffer);
