@@ -142,6 +142,30 @@
       "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37f215a8_2e0e278a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-08T10:25:05Z",
+      "side": 1,
+      "message": "I now changed the patch so that the ANGLE format is stored in TextureHelper11, in the end it does streamline the code a bit.",
+      "parentUuid": "a24de15b_d406b26c",
+      "range": {
+        "startLine": 359,
+        "startChar": 8,
+        "endLine": 370,
+        "endChar": 75
+      },
+      "revId": "e3ab7481c41e67303bd66d9c16fee5d6fc7eb761",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
