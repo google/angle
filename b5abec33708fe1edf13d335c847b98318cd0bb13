@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97be618f_e66ad7b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-08T18:03:50Z",
+      "side": 1,
+      "message": "nit: initialied -\u003e initialized",
+      "revId": "b5abec33708fe1edf13d335c847b98318cd0bb13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
