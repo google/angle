@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de195a_4dc49009",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-03-09T18:58:58Z",
+      "side": 1,
+      "message": "Nit: weird expression alignment. Either line them all up or don\u0027t line up this one.",
+      "revId": "6e646e90bc8505820d9cab8e406e5b48fc5d7168",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_ed7d7c8e",
+        "filename": "src/tests/compiler_tests/ExpressionLimit_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-03-09T18:58:58Z",
+      "side": 1,
+      "message": "Nit: weird expression alignment.",
+      "revId": "6e646e90bc8505820d9cab8e406e5b48fc5d7168",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
