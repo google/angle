@@ -578,7 +578,6 @@
 1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
 
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.conversion.* = FAIL
-1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.*_out_of_bounds_blit_from_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.* = FAIL
 1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_* = FAIL
 
@@ -637,6 +636,7 @@
 1323 LINUX : dEQP-GLES3.functional.draw.random.210 = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_nearest_scale_blit_from_default = FAIL
+1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_from_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_to_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_scale_blit_from_default = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_scale_blit_to_default = FAIL
