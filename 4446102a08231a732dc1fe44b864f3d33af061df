@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de195a_00e76acf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T22:57:07Z",
+      "side": 1,
+      "message": "Our test expectations file should actually be able to handle the different set of failures. You can specify NVIDIA and INTEL in the pre-conditions and it\u0027ll only apply to those particular configs. This is of interest as we only run the dEQP-GLES3 tests on NVIDIA hardware on the bots currently. Can you sort these failures into the appropriate categories of both/Intel-only/Nvidia-only?",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 69
+      },
+      "revId": "4446102a08231a732dc1fe44b864f3d33af061df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
