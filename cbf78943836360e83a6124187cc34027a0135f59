@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d7de195a_97c4c77c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T17:52:08Z",
+      "side": 1,
+      "message": "True.",
+      "parentUuid": "77656d95_28f84b67",
+      "range": {
+        "startLine": 3888,
+        "startChar": 8,
+        "endLine": 3893,
+        "endChar": 9
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7de195a_743cb9c5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 17
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "\"auto \u0026\" I suppose?",
       "parentUuid": "d7de195a_341d1154",
+      "range": {
+        "startLine": 290,
+        "startChar": 4,
+        "endLine": 290,
+        "endChar": 31
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_17b0d724",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T17:52:08Z",
+      "side": 1,
+      "message": "Yes, looks good.",
+      "parentUuid": "77656d95_c803af2f",
       "range": {
         "startLine": 290,
         "startChar": 4,
@@ -319,6 +367,30 @@
       "side": 1,
       "message": "I\u0027d prefer not changing this in the same CL, since it will mean touching a ton of code. I can do this separately.",
       "parentUuid": "d7de195a_d42b6d7a",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 44
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_37fab3d1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T17:52:08Z",
+      "side": 1,
+      "message": "Sounds good.",
+      "parentUuid": "77656d95_683c03c6",
       "range": {
         "startLine": 109,
         "startChar": 0,
