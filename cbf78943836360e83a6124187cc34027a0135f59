@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de195a_346bd1c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "do we want to maybe set the BlitShaderSRV to non-nullptr (duplicate of the normal SRV) for this case?",
+      "range": {
+        "startLine": 3888,
+        "startChar": 8,
+        "endLine": 3893,
+        "endChar": 9
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_743cb9c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "you can use .fill here with std::array",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 85,
+        "endChar": 36
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_341d1154",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "with std::array, probably use auto here",
+      "range": {
+        "startLine": 290,
+        "startChar": 4,
+        "endLine": 290,
+        "endChar": 31
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_d4eecd6a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "nit: probably make this a full-line comment above the ViewDimension assignment",
+      "range": {
+        "startLine": 2218,
+        "startChar": 69,
+        "endLine": 2219,
+        "endChar": 96
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_b4f3414f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "I feel like it\u0027s probably possible for these two formats to be equal - why not re-use SRVs in this case, like with the getSRVLevel code?",
+      "range": {
+        "startLine": 2298,
+        "startChar": 8,
+        "endLine": 2303,
+        "endChar": 25
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_5403fdf2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "same question here, if the formats match, i think we should re-use the same SRV",
+      "range": {
+        "startLine": 3255,
+        "startChar": 9,
+        "endLine": 3261,
+        "endChar": 9
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_d42b6d7a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "I didn\u0027t notice this before, but we can fix it in this CL - you can use a const pointer for these format sets, since they\u0027re guaranteed to be immutable objects from the format table. This will save some copy operations and a small bit of memory.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 44
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_b459012e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-09T13:49:12Z",
+      "side": 1,
+      "message": "make these use std::array\u003c\u003e, then you can use array.fill to init them to nullptr",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 83
+      },
+      "revId": "cbf78943836360e83a6124187cc34027a0135f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
