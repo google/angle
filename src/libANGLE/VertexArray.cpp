@@ -29,9 +29,7 @@ VertexArray::Data::~Data()
 }
 
 VertexArray::VertexArray(rx::ImplFactory *factory, GLuint id, size_t maxAttribs)
-    : mId(id),
-      mVertexArray(factory->createVertexArray(mData)),
-      mData(maxAttribs)
+    : mId(id), mData(maxAttribs), mVertexArray(factory->createVertexArray(mData))
 {
 }
 

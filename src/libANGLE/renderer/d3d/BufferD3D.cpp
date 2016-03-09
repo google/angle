@@ -161,13 +161,13 @@ void BufferD3D::invalidateStaticData()
 // Creates static buffers if sufficient used data has been left unmodified
 void BufferD3D::promoteStaticUsage(int dataSize)
 {
-    if (mStaticVertexBuffers.empty() && !mStaticIndexBuffer)
+    if (mUsage == D3DBufferUsage::DYNAMIC)
     {
         mUnmodifiedDataUse += dataSize;
 
         if (mUnmodifiedDataUse > 3 * getSize())
         {
-            initializeStaticData();
+            updateD3DBufferUsage(GL_STATIC_DRAW);
         }
     }
 }

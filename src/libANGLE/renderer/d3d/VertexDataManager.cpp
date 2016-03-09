@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
+#include "common/BitSetIterator.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Program.h"
@@ -201,7 +202,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
     const gl::VertexArray *vertexArray = state.getVertexArray();
     const auto &vertexAttributes       = vertexArray->getVertexAttributes();
 
-    mDynamicAttributeIndexesCache.clear();
+    mDynamicAttribsMaskCache.reset();
     const gl::Program *program = state.getProgram();
 
     translatedAttribs->clear();
@@ -241,7 +242,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
             }
             case VertexStorageType::DYNAMIC:
                 // Dynamic attributes must be handled together.
-                mDynamicAttributeIndexesCache.push_back(attribIndex);
+                mDynamicAttribsMaskCache.set(attribIndex);
                 break;
             case VertexStorageType::DIRECT:
                 // Update translated data for direct attributes.
@@ -262,12 +263,12 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
         }
     }
 
-    if (mDynamicAttributeIndexesCache.empty())
+    if (mDynamicAttribsMaskCache.none())
     {
         gl::Error(GL_NO_ERROR);
     }
 
-    return storeDynamicAttribs(translatedAttribs, mDynamicAttributeIndexesCache, start, count,
+    return storeDynamicAttribs(translatedAttribs, mDynamicAttribsMaskCache, start, count,
                                instances);
 }
 
@@ -365,13 +366,13 @@ gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated,
 
 gl::Error VertexDataManager::storeDynamicAttribs(
     std::vector<TranslatedAttribute> *translatedAttribs,
-    const std::vector<size_t> &dynamicAttribIndexes,
+    const gl::AttributesMask &dynamicAttribsMask,
     GLint start,
     GLsizei count,
     GLsizei instances)
 {
     // Reserve the required space for the dynamic buffers.
-    for (size_t attribIndex : dynamicAttribIndexes)
+    for (auto attribIndex : angle::IterateBitSet(dynamicAttribsMask))
     {
         const auto &dynamicAttrib = (*translatedAttribs)[attribIndex];
         gl::Error error = reserveSpaceForAttrib(dynamicAttrib, count, instances);
@@ -382,7 +383,7 @@ gl::Error VertexDataManager::storeDynamicAttribs(
     }
 
     // Store dynamic attributes
-    for (size_t attribIndex : dynamicAttribIndexes)
+    for (auto attribIndex : angle::IterateBitSet(dynamicAttribsMask))
     {
         auto *dynamicAttrib = &(*translatedAttribs)[attribIndex];
         gl::Error error = storeDynamicAttrib(dynamicAttrib, start, count, instances);
@@ -391,8 +392,14 @@ gl::Error VertexDataManager::storeDynamicAttribs(
             unmapStreamingBuffer();
             return error;
         }
+    }
 
-        // Promote static usage of dynamic buffers.
+    unmapStreamingBuffer();
+
+    // Promote static usage of dynamic buffers.
+    for (auto attribIndex : angle::IterateBitSet(dynamicAttribsMask))
+    {
+        auto *dynamicAttrib = &(*translatedAttribs)[attribIndex];
         gl::Buffer *buffer = dynamicAttrib->attribute->buffer.get();
         if (buffer)
         {
@@ -402,7 +409,6 @@ gl::Error VertexDataManager::storeDynamicAttribs(
         }
     }
 
-    unmapStreamingBuffer();
     return gl::Error(GL_NO_ERROR);
 }
 

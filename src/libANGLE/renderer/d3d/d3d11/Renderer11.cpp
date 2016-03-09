@@ -833,9 +833,6 @@ void Renderer11::initializeDevice()
     ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel",
                                 angleFeatureLevel,
                                 NUM_ANGLE_FEATURE_LEVELS);
-
-    // TODO(jmadill): use context caps, and place in common D3D location
-    mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
 }
 
 void Renderer11::populateRenderer11DeviceCaps()
@@ -1498,7 +1495,17 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
                                         GLsizei instances,
                                         TranslatedIndexData *indexInfo)
 {
-    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, &mTranslatedAttribCache, instances);
+    const auto &vertexArray = state.getVertexArray();
+    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+
+    gl::Error error = vertexArray11->updateDirtyAndDynamicAttribs(mVertexDataManager, state, first,
+                                                                  count, instances);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = mStateManager.updateCurrentValueAttribs(state, mVertexDataManager);
     if (error.isError())
     {
         return error;
@@ -1515,8 +1522,10 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
     {
         numIndicesPerInstance = count;
     }
-    return mInputLayoutCache.applyVertexBuffers(state, mTranslatedAttribCache, mode, indexInfo,
-                                                numIndicesPerInstance);
+    const auto &vertexArrayAttribs  = vertexArray11->getTranslatedAttribs();
+    const auto &currentValueAttribs = mStateManager.getCurrentValueAttribs();
+    return mInputLayoutCache.applyVertexBuffers(state, vertexArrayAttribs, currentValueAttribs,
+                                                mode, indexInfo, numIndicesPerInstance);
 }
 
 gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
@@ -2462,6 +2471,7 @@ void Renderer11::markAllStateDirty()
 
 void Renderer11::releaseDeviceResources()
 {
+    mStateManager.deinitialize();
     mStateCache.clear();
     mInputLayoutCache.clear();
 
@@ -3404,7 +3414,7 @@ BufferImpl *Renderer11::createBuffer()
 
 VertexArrayImpl *Renderer11::createVertexArray(const gl::VertexArray::Data &data)
 {
-    return new VertexArray11(data);
+    return new VertexArray11(data, this);
 }
 
 QueryImpl *Renderer11::createQuery(GLenum type)
@@ -4255,4 +4265,5 @@ egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
     *device = static_cast<DeviceImpl *>(mEGLDevice);
     return egl::Error(EGL_SUCCESS);
 }
-}
+
+}  // namespace rx

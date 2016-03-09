@@ -127,7 +127,7 @@ class Buffer11::BufferStorage : angle::NonCopyable
 class Buffer11::NativeStorage : public Buffer11::BufferStorage
 {
   public:
-    NativeStorage(Renderer11 *renderer, BufferUsage usage);
+    NativeStorage(Renderer11 *renderer, BufferUsage usage, const NotificationSet *onStorageChanged);
     ~NativeStorage() override;
 
     bool isMappable() const override { return mUsage == BUFFER_USAGE_STAGING; }
@@ -149,6 +149,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
                                unsigned int bufferSize);
 
     ID3D11Buffer *mNativeStorage;
+    const NotificationSet *mOnStorageChanged;
 };
 
 // A emulated indexed buffer storage represents an underlying D3D11 buffer for data
@@ -664,23 +665,7 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
 
     if (!newStorage)
     {
-        if (usage == BUFFER_USAGE_PIXEL_PACK)
-        {
-            newStorage = new PackStorage(mRenderer);
-        }
-        else if (usage == BUFFER_USAGE_SYSTEM_MEMORY)
-        {
-            newStorage = new SystemMemoryStorage(mRenderer);
-        }
-        else if (usage == BUFFER_USAGE_EMULATED_INDEXED_VERTEX)
-        {
-            newStorage = new EmulatedIndexedStorage(mRenderer);
-        }
-        else
-        {
-            // buffer is not allocated, create it
-            newStorage = new NativeStorage(mRenderer, usage);
-        }
+        newStorage = allocateStorage(usage);
     }
 
     // resize buffer
@@ -698,6 +683,23 @@ Buffer11::BufferStorage *Buffer11::getBufferStorage(BufferUsage usage)
     return newStorage;
 }
 
+Buffer11::BufferStorage *Buffer11::allocateStorage(BufferUsage usage) const
+{
+    switch (usage)
+    {
+        case BUFFER_USAGE_PIXEL_PACK:
+            return new PackStorage(mRenderer);
+        case BUFFER_USAGE_SYSTEM_MEMORY:
+            return new SystemMemoryStorage(mRenderer);
+        case BUFFER_USAGE_EMULATED_INDEXED_VERTEX:
+            return new EmulatedIndexedStorage(mRenderer);
+        case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
+            return new NativeStorage(mRenderer, usage, &mDirectBufferDirtyCallbacks);
+        default:
+            return new NativeStorage(mRenderer, usage, nullptr);
+    }
+}
+
 Buffer11::BufferStorage *Buffer11::getConstantBufferRangeStorage(GLintptr offset, GLsizeiptr size)
 {
     BufferStorage *newStorage;
@@ -709,7 +711,7 @@ Buffer11::BufferStorage *Buffer11::getConstantBufferRangeStorage(GLintptr offset
 
         if (!cacheEntry->storage)
         {
-            cacheEntry->storage  = new NativeStorage(mRenderer, BUFFER_USAGE_UNIFORM);
+            cacheEntry->storage  = allocateStorage(BUFFER_USAGE_UNIFORM);
             cacheEntry->lruCount = ++mMaxConstantBufferLruCount;
         }
 
@@ -848,8 +850,43 @@ bool Buffer11::supportsDirectBinding() const
 {
     // Do not support direct buffers for dynamic data. The streaming buffer
     // offers better performance for data which changes every frame.
-    // Check for absence of static buffer interfaces to detect dynamic data.
-    return (!mStaticVertexBuffers.empty() && mStaticIndexBuffer);
+    return (mUsage == D3DBufferUsage::STATIC);
+}
+
+void Buffer11::initializeStaticData()
+{
+    BufferD3D::initializeStaticData();
+
+    // Notify when static data changes.
+    mStaticBufferDirtyCallbacks.signal();
+}
+
+void Buffer11::invalidateStaticData()
+{
+    BufferD3D::invalidateStaticData();
+
+    // Notify when static data changes.
+    mStaticBufferDirtyCallbacks.signal();
+}
+
+void Buffer11::addStaticBufferDirtyCallback(const NotificationCallback *callback)
+{
+    mStaticBufferDirtyCallbacks.add(callback);
+}
+
+void Buffer11::removeStaticBufferDirtyCallback(const NotificationCallback *callback)
+{
+    mStaticBufferDirtyCallbacks.remove(callback);
+}
+
+void Buffer11::addDirectBufferDirtyCallback(const NotificationCallback *callback)
+{
+    mDirectBufferDirtyCallbacks.add(callback);
+}
+
+void Buffer11::removeDirectBufferDirtyCallback(const NotificationCallback *callback)
+{
+    mDirectBufferDirtyCallbacks.remove(callback);
 }
 
 Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
@@ -874,8 +911,10 @@ gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, s
     return gl::Error(GL_NO_ERROR);
 }
 
-Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer, BufferUsage usage)
-    : BufferStorage(renderer, usage), mNativeStorage(nullptr)
+Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
+                                       BufferUsage usage,
+                                       const NotificationSet *onStorageChanged)
+    : BufferStorage(renderer, usage), mNativeStorage(nullptr), mOnStorageChanged(onStorageChanged)
 {
 }
 
@@ -986,6 +1025,12 @@ gl::Error Buffer11::NativeStorage::resize(size_t size, bool preserveData)
     mNativeStorage = newBuffer;
 
     mBufferSize = bufferDesc.ByteWidth;
+
+    // Notify that the storage has changed.
+    if (mOnStorageChanged)
+    {
+        mOnStorageChanged->signal();
+    }
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -1426,4 +1471,4 @@ void Buffer11::SystemMemoryStorage::unmap()
 {
     // No-op
 }
-}
+}  // namespace rx

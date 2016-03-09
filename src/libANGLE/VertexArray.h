@@ -114,10 +114,10 @@ class VertexArray final : public LabeledObject
   private:
     GLuint mId;
 
-    rx::VertexArrayImpl *mVertexArray;
-
     Data mData;
     DirtyBits mDirtyBits;
+
+    rx::VertexArrayImpl *mVertexArray;
 };
 
 }

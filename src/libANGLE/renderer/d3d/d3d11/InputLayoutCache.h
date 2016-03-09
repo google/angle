@@ -46,7 +46,8 @@ class InputLayoutCache : angle::NonCopyable
     void markDirty();
 
     gl::Error applyVertexBuffers(const gl::State &state,
-                                 const std::vector<TranslatedAttribute> &attributes,
+                                 const std::vector<TranslatedAttribute> &vertexArrayAttribs,
+                                 const std::vector<TranslatedAttribute> &currentValueAttribs,
                                  GLenum mode,
                                  TranslatedIndexData *indexInfo,
                                  GLsizei numIndicesPerInstance);
