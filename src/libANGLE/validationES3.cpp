@@ -1355,7 +1355,9 @@ bool ValidateES3RenderbufferStorageParameters(gl::Context *context, GLenum targe
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
     if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
     {
-        context->recordError(Error(GL_INVALID_VALUE));
+        context->recordError(
+            Error(GL_INVALID_OPERATION,
+                  "Samples must not be greater than maximum supported value for the format."));
         return false;
     }
 
@@ -1440,7 +1442,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
         return true;
     }
 
-    if (src != GL_BACK && (src < GL_COLOR_ATTACHMENT0 || src > GL_COLOR_ATTACHMENT15))
+    if (src != GL_BACK && (src < GL_COLOR_ATTACHMENT0 || src > GL_COLOR_ATTACHMENT31))
     {
         context->recordError(gl::Error(GL_INVALID_ENUM, "Unknown enum for 'src' in ReadBuffer"));
         return false;

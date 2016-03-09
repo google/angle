@@ -50,8 +50,6 @@
 // Windows and Linux failures
 
 1101 WIN LINUX : dEQP-GLES3.functional.lifetime.delete_active.transform_feedback = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.buffer.draw_buffers = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.buffer.renderbuffer_storage_multisample = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
