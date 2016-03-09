@@ -1940,4 +1940,34 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
     return true;
 }
 
+bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+    switch (primitiveMode)
+    {
+        case GL_TRIANGLES:
+        case GL_LINES:
+        case GL_POINTS:
+            break;
+
+        default:
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid primitive mode."));
+            return false;
+    }
+
+    TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
+    ASSERT(transformFeedback != nullptr);
+
+    if (transformFeedback->isActive())
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Transform feedback is already active."));
+        return false;
+    }
+    return true;
+}
+
 }  // namespace gl

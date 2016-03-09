@@ -746,41 +746,12 @@ void GL_APIENTRY BeginTransformFeedback(GLenum primitiveMode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateBeginTransformFeedback(context, primitiveMode))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        switch (primitiveMode)
-        {
-          case GL_TRIANGLES:
-          case GL_LINES:
-          case GL_POINTS:
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != NULL);
-
-        if (transformFeedback->isActive())
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (transformFeedback->isPaused())
-        {
-            transformFeedback->resume();
-        }
-        else
-        {
-            transformFeedback->begin(primitiveMode);
-        }
+        context->beginTransformFeedback(primitiveMode);
     }
 }
 

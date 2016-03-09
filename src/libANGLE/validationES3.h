@@ -289,6 +289,8 @@ bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *arrays)
 bool ValidateGenOrDeleteES3(Context *context, GLint n);
 bool ValidateGenOrDeleteCountES3(Context *context, GLint count);
 
+bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_

@@ -2423,6 +2423,19 @@ bool ValidateBindVertexArrayBase(Context *context, GLuint array)
     return true;
 }
 
+bool ValidateLinkProgram(Context *context, GLuint program)
+{
+    if (context->hasActiveTransformFeedback(program))
+    {
+        // ES 3.0.4 section 2.15 page 91
+        context->recordError(Error(GL_INVALID_OPERATION,
+                                   "Cannot link program while program is associated with an active "
+                                   "transform feedback object."));
+        return false;
+    }
+    return true;
+}
+
 bool ValidateProgramBinaryBase(Context *context,
                                GLuint program,
                                GLenum binaryFormat,
@@ -2440,6 +2453,15 @@ bool ValidateProgramBinaryBase(Context *context,
         programBinaryFormats.end())
     {
         context->recordError(Error(GL_INVALID_ENUM, "Program binary format is not valid."));
+        return false;
+    }
+
+    if (context->hasActiveTransformFeedback(program))
+    {
+        // ES 3.0.4 section 2.15 page 91
+        context->recordError(Error(GL_INVALID_OPERATION,
+                                   "Cannot change program binary while program is associated with "
+                                   "an active transform feedback object."));
         return false;
     }
 
@@ -2462,6 +2484,45 @@ bool ValidateGetProgramBinaryBase(Context *context,
     if (!programObject->isLinked())
     {
         context->recordError(Error(GL_INVALID_OPERATION, "Program is not linked."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUseProgram(Context *context, GLuint program)
+{
+    if (program != 0)
+    {
+        Program *programObject = context->getProgram(program);
+        if (!programObject)
+        {
+            // ES 3.1.0 section 7.3 page 72
+            if (context->getShader(program))
+            {
+                context->recordError(
+                    Error(GL_INVALID_OPERATION,
+                          "Attempted to use a single shader instead of a shader program."));
+                return false;
+            }
+            else
+            {
+                context->recordError(Error(GL_INVALID_VALUE, "Program invalid."));
+                return false;
+            }
+        }
+        if (!programObject->isLinked())
+        {
+            context->recordError(Error(GL_INVALID_OPERATION, "Program not linked."));
+            return false;
+        }
+    }
+    if (context->getState().isTransformFeedbackActiveUnpaused())
+    {
+        // ES 3.0.4 section 2.15 page 91
+        context->recordError(
+            Error(GL_INVALID_OPERATION,
+                  "Cannot change active program while transform feedback is unpaused."));
         return false;
     }
 

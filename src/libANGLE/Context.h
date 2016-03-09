@@ -370,6 +370,10 @@ class Context final : public ValidationContext
     Error flush();
     Error finish();
 
+    void beginTransformFeedback(GLenum primitiveMode);
+
+    bool hasActiveTransformFeedback(GLuint program) const;
+
     void insertEventMarker(GLsizei length, const char *marker);
     void pushGroupMarker(GLsizei length, const char *marker);
     void popGroupMarker();

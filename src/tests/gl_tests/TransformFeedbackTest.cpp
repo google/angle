@@ -132,6 +132,8 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
     glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
     glEndTransformFeedback();
 
+    glUseProgram(0);
+
     // Check how many primitives were written and verify that some were written even if
     // no pixels were rendered
     GLuint primitivesWritten = 0;
@@ -305,6 +307,8 @@ TEST_P(TransformFeedbackTest, VertexOnly)
                                                    tfVaryings, GL_INTERLEAVED_ATTRIBS);
     ASSERT_NE(0u, mProgram);
 
+    glUseProgram(mProgram);
+
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
 
@@ -324,6 +328,8 @@ TEST_P(TransformFeedbackTest, VertexOnly)
     drawQuad(mProgram, "position", 0.5f);
     glEndTransformFeedback();
     ASSERT_GL_NO_ERROR();
+
+    glUseProgram(0);
 
     GLvoid *mappedBuffer =
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 6, GL_MAP_READ_BIT);
@@ -678,9 +684,11 @@ TEST_P(TransformFeedbackTest, PackingBug)
     glVertexAttribPointer(attrib1Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib1Data);
     glVertexAttribPointer(attrib2Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib2Data);
 
+    glUseProgram(mProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
     drawQuad(mProgram, "position", 0.5f);
     glEndTransformFeedback();
+    glUseProgram(0);
     ASSERT_GL_NO_ERROR();
 
     const GLvoid *mapPointer =

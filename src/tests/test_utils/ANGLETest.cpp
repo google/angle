@@ -166,9 +166,14 @@ void ANGLETest::drawQuad(GLuint program,
                          GLfloat positionAttribZ,
                          GLfloat positionAttribXYScale)
 {
-    GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
+    GLint previousProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &previousProgram);
+    if (previousProgram != static_cast<GLint>(program))
+    {
+        glUseProgram(program);
+    }
 
-    glUseProgram(program);
+    GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
     const GLfloat vertices[] = {
         -1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
@@ -188,7 +193,10 @@ void ANGLETest::drawQuad(GLuint program,
     glDisableVertexAttribArray(positionLocation);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 
-    glUseProgram(0);
+    if (previousProgram != static_cast<GLint>(program))
+    {
+        glUseProgram(previousProgram);
+    }
 }
 
 void ANGLETest::drawIndexedQuad(GLuint program,

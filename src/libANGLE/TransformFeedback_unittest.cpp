@@ -71,7 +71,7 @@ TEST_F(TransformFeedbackTest, SideEffectsOfStartAndStop)
 
     EXPECT_FALSE(mFeedback->isActive());
     EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->begin(GL_TRIANGLES);
+    mFeedback->begin(GL_TRIANGLES, nullptr);
     EXPECT_TRUE(mFeedback->isActive());
     EXPECT_EQ(static_cast<GLenum>(GL_TRIANGLES), mFeedback->getPrimitiveMode());
     EXPECT_CALL(*mImpl, end());
@@ -85,7 +85,7 @@ TEST_F(TransformFeedbackTest, SideEffectsOfPauseAndResume)
 
     EXPECT_FALSE(mFeedback->isActive());
     EXPECT_CALL(*mImpl, begin(GL_TRIANGLES));
-    mFeedback->begin(GL_TRIANGLES);
+    mFeedback->begin(GL_TRIANGLES, nullptr);
     EXPECT_FALSE(mFeedback->isPaused());
     EXPECT_CALL(*mImpl, pause());
     mFeedback->pause();

@@ -2957,6 +2957,11 @@ void GL_APIENTRY LinkProgram(GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!context->skipValidation() && !ValidateLinkProgram(context, program))
+        {
+            return;
+        }
+
         Program *programObject = GetValidProgram(context, program);
         if (!programObject)
         {
@@ -3822,25 +3827,8 @@ void GL_APIENTRY UseProgram(GLuint program)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = context->getProgram(program);
-
-        if (!programObject && program != 0)
+        if (!context->skipValidation() && !ValidateUseProgram(context, program))
         {
-            if (context->getShader(program))
-            {
-                context->recordError(Error(GL_INVALID_OPERATION));
-                return;
-            }
-            else
-            {
-                context->recordError(Error(GL_INVALID_VALUE));
-                return;
-            }
-        }
-
-        if (program != 0 && !programObject->isLinked())
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
