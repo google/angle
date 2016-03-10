@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d7de195a_c9daa65e",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-10T16:47:55Z",
+      "side": 1,
+      "message": "This is interesting.\n\nThe spec is pretty clear that an active transform feedback must be associated with a single program.\n\nI think in this case you should use a BindingPointer to link the Program to the TransformFeedback when the XFB is active. That keeps the state contained to the GL object, which we have from the ID in any case.\n\nThen the hasActiveTransformFeedback operation could be completed by iterating the list of TransformFeedback objects in the Context. This is slower, but because it\u0027s only called during LinkProgram and ProgramBinary operations, this is an acceptable cost. This will let you remove the std::set, and the add and remove methods.\n\nThere\u0027s also the question of what happens if the call DeleteProgram on a program that\u0027s associated with an active transform feedback - how do we handle that?",
+      "range": {
+        "startLine": 428,
+        "startChar": 0,
+        "endLine": 431,
+        "endChar": 54
+      },
+      "revId": "5e00a60153e723efa27704557d89805e821194fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7de195a_297c8af7",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 1
@@ -13,6 +36,24 @@
       "writtenOn": "2016-03-10T16:31:51Z",
       "side": 1,
       "message": "nit: the convention is now to put this in ValidateUseProgram.",
+      "revId": "5e00a60153e723efa27704557d89805e821194fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_dc026258",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3860,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-10T16:47:55Z",
+      "side": 1,
+      "message": "So the full new pattern is:\n\n void GL_APIENTRY EntryPoint(params...)\n {\n   EVENT(\"...\", ...);\n   \n   Context *context \u003d GetValidGlobalContext();\n   if (context\n   {\n      if (!context-\u003eskipValidation() \u0026\u0026 !ValidateEntryPont(context, params...)\n      {\n         return;\n      }\n      \n      (return) context-\u003eentryPoint(params...);\n   }\n }\n\nHere the return is absent if the entryPoint returns void.\n\nIn this case we\u0027d make a new validation function in validationES2.cpp, called ValidateUseProgram, and move all the validation logic to that function.\n\nIn the above LinkProgram case, we\u0027d also make a new context method, Context::linkProgram(GLuint program). This method would retrieve the object from the handle, and call link, setting an error if appropriate. I\u0027m not sure what the null ValidProgram represents, but that check would either be removed, moved to the validator, or made to no-op in the Context method.",
+      "parentUuid": "d7de195a_297c8af7",
       "revId": "5e00a60153e723efa27704557d89805e821194fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
