@@ -63,7 +63,10 @@ VertexBufferInterface::VertexBufferInterface(BufferFactoryD3D *factory, bool dyn
 
 VertexBufferInterface::~VertexBufferInterface()
 {
-    mVertexBuffer->release();
+    if (mVertexBuffer)
+    {
+        mVertexBuffer->release();
+    }
 }
 
 unsigned int VertexBufferInterface::getSerial() const
