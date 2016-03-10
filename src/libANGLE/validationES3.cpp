@@ -1116,28 +1116,6 @@ bool ValidateES3TexStorage3DParameters(Context *context,
                                                height, depth);
 }
 
-bool ValidateGenQueries(gl::Context *context, GLsizei n, const GLuint *ids)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
-        return false;
-    }
-
-    return ValidateGenQueriesBase(context, n, ids);
-}
-
-bool ValidateDeleteQueries(gl::Context *context, GLsizei n, const GLuint *ids)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
-        return false;
-    }
-
-    return ValidateDeleteQueriesBase(context, n, ids);
-}
-
 bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
 {
     if (context->getClientVersion() < 3)
@@ -1527,28 +1505,6 @@ bool ValidateBindVertexArray(Context *context, GLuint array)
     return ValidateBindVertexArrayBase(context, array);
 }
 
-bool ValidateDeleteVertexArrays(Context *context, GLsizei n)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return ValidateDeleteVertexArraysBase(context, n);
-}
-
-bool ValidateGenVertexArrays(Context *context, GLsizei n)
-{
-    if (context->getClientVersion() < 3)
-    {
-        context->recordError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return ValidateGenVertexArraysBase(context, n);
-}
-
 bool ValidateIsVertexArray(Context *context)
 {
     if (context->getClientVersion() < 3)
@@ -1866,6 +1822,86 @@ bool ValidateCompressedTexSubImage3D(Context *context,
 
     return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, 0, 0, 0,
                                            width, height, depth, 0, GL_NONE, GL_NONE, data);
+}
+
+bool ValidateGenQueries(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDeleteES3(context, n);
+}
+
+bool ValidateDeleteQueries(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDeleteES3(context, n);
+}
+
+bool ValidateGenSamplers(Context *context, GLint count, GLuint *)
+{
+    return ValidateGenOrDeleteCountES3(context, count);
+}
+
+bool ValidateDeleteSamplers(Context *context, GLint count, const GLuint *)
+{
+    return ValidateGenOrDeleteCountES3(context, count);
+}
+
+bool ValidateGenTransformFeedbacks(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDeleteES3(context, n);
+}
+
+bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const GLuint *ids)
+{
+    if (!ValidateGenOrDeleteES3(context, n))
+    {
+        return false;
+    }
+    for (GLint i = 0; i < n; ++i)
+    {
+        auto *transformFeedback = context->getTransformFeedback(ids[i]);
+        if (transformFeedback != nullptr && transformFeedback->isActive())
+        {
+            // ES 3.0.4 section 2.15.1 page 86
+            context->recordError(
+                Error(GL_INVALID_OPERATION, "Attempt to delete active transform feedback."));
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ValidateGenVertexArrays(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDeleteES3(context, n);
+}
+
+bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDeleteES3(context, n);
+}
+
+bool ValidateGenOrDeleteES3(Context *context, GLint n)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+    if (count < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "count < 0"));
+        return false;
+    }
+    return true;
 }
 
 }  // namespace gl

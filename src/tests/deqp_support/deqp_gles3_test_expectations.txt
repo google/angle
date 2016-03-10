@@ -57,8 +57,6 @@
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.shader.link_program = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.shader.use_program = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.shader.sampler_parameterfv = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.shader.gen_transform_feedbacks = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.shader.delete_transform_feedbacks = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.fragment.begin_query = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.vertex_array.vertex_attrib_i_pointer = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL

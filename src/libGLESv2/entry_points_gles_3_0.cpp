@@ -199,7 +199,7 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGenQueries(context, n, ids))
+        if (!context->skipValidation() && !ValidateGenQueries(context, n, ids))
         {
             return;
         }
@@ -218,7 +218,7 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDeleteQueries(context, n, ids))
+        if (!context->skipValidation() && !ValidateDeleteQueries(context, n, ids))
         {
             return;
         }
@@ -609,7 +609,7 @@ void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint* arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDeleteVertexArrays(context, n))
+        if (!context->skipValidation() && !ValidateDeleteVertexArrays(context, n, arrays))
         {
             return;
         }
@@ -631,7 +631,7 @@ void GL_APIENTRY GenVertexArrays(GLsizei n, GLuint* arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGenVertexArrays(context, n))
+        if (!context->skipValidation() && !ValidateGenVertexArrays(context, n, arrays))
         {
             return;
         }
@@ -2327,15 +2327,8 @@ void GL_APIENTRY GenSamplers(GLsizei count, GLuint* samplers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateGenSamplers(context, count, samplers))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (count < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -2353,15 +2346,8 @@ void GL_APIENTRY DeleteSamplers(GLsizei count, const GLuint* samplers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateDeleteSamplers(context, count, samplers))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (count < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -2627,9 +2613,8 @@ void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateDeleteTransformFeedbacks(context, n, ids))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -2647,9 +2632,8 @@ void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint* ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateGenTransformFeedbacks(context, n, ids))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 

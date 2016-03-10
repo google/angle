@@ -1050,7 +1050,7 @@ bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n)
         return false;
     }
 
-    return ValidateDeleteVertexArraysBase(context, n);
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateGenVertexArraysOES(Context *context, GLsizei n)
@@ -1061,7 +1061,7 @@ bool ValidateGenVertexArraysOES(Context *context, GLsizei n)
         return false;
     }
 
-    return ValidateGenVertexArraysBase(context, n);
+    return ValidateGenOrDelete(context, n);
 }
 
 bool ValidateIsVertexArrayOES(Context *context)

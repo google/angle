@@ -34,7 +34,7 @@ void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGenQueriesEXT(context, n, ids))
+        if (!context->skipValidation() && !ValidateGenQueriesEXT(context, n))
         {
             return;
         }
@@ -53,7 +53,7 @@ void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDeleteQueriesEXT(context, n, ids))
+        if (!context->skipValidation() && !ValidateDeleteQueriesEXT(context, n))
         {
             return;
         }

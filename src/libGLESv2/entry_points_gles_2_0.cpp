@@ -813,9 +813,8 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint* buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateDeleteBuffers(context, n, buffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -833,9 +832,8 @@ void GL_APIENTRY DeleteFramebuffers(GLsizei n, const GLuint* framebuffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateDeleteFramebuffers(context, n, framebuffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -886,9 +884,8 @@ void GL_APIENTRY DeleteRenderbuffers(GLsizei n, const GLuint* renderbuffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateDeleteRenderbuffers(context, n, renderbuffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -936,9 +933,8 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint* textures)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateDeleteTextures(context, n, textures))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -1250,9 +1246,8 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint* buffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateGenBuffers(context, n, buffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -1348,9 +1343,8 @@ void GL_APIENTRY GenFramebuffers(GLsizei n, GLuint* framebuffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateGenFramebuffers(context, n, framebuffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -1368,9 +1362,8 @@ void GL_APIENTRY GenRenderbuffers(GLsizei n, GLuint* renderbuffers)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateGenRenderbuffers(context, n, renderbuffers))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -1388,9 +1381,8 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint* textures)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (n < 0)
+        if (!context->skipValidation() && !ValidateGenTextures(context, n, textures))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 

@@ -105,10 +105,8 @@ bool ValidateReadnPixelsEXT(Context *context,
                             GLsizei bufSize,
                             GLvoid *pixels);
 
-bool ValidateGenQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids);
-bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
-bool ValidateDeleteQueriesBase(gl::Context *context, GLsizei n, const GLuint *ids);
-bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n);
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n);
 bool ValidateBeginQueryBase(Context *context, GLenum target, GLuint id);
 bool ValidateBeginQueryEXT(Context *context, GLenum target, GLuint id);
 bool ValidateEndQueryBase(Context *context, GLenum target);
@@ -202,8 +200,6 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
                                                   egl::Image *image);
 
 bool ValidateBindVertexArrayBase(Context *context, GLuint array);
-bool ValidateDeleteVertexArraysBase(Context *context, GLsizei n);
-bool ValidateGenVertexArraysBase(Context *context, GLsizei n);
 
 bool ValidateProgramBinaryBase(Context *context,
                                GLuint program,
@@ -236,6 +232,17 @@ bool ValidateCopyTexSubImage2D(Context *context,
                                GLint y,
                                GLsizei width,
                                GLsizei height);
+
+bool ValidateGenBuffers(Context *context, GLint n, GLuint *buffers);
+bool ValidateDeleteBuffers(Context *context, GLint n, const GLuint *buffers);
+bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *framebuffers);
+bool ValidateDeleteFramebuffers(Context *context, GLint n, const GLuint *framebuffers);
+bool ValidateGenRenderbuffers(Context *context, GLint n, GLuint *renderbuffers);
+bool ValidateDeleteRenderbuffers(Context *context, GLint n, const GLuint *renderbuffers);
+bool ValidateGenTextures(Context *context, GLint n, GLuint *textures);
+bool ValidateDeleteTextures(Context *context, GLint n, const GLuint *textures);
+
+bool ValidateGenOrDelete(Context *context, GLint n);
 
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
