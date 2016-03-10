@@ -19,7 +19,7 @@ class Renderer11;
 class VertexArray11 : public VertexArrayImpl
 {
   public:
-    VertexArray11(const gl::VertexArray::Data &data, Renderer11 *renderer);
+    VertexArray11(const gl::VertexArray::Data &data);
     ~VertexArray11() override;
 
     void syncState(const gl::VertexArray::DirtyBits &dirtyBits) override;
@@ -35,7 +35,6 @@ class VertexArray11 : public VertexArrayImpl
     void updateVertexAttribStorage(size_t attribIndex);
     void markBufferDataDirty(size_t attribIndex);
 
-    Renderer11 *mRenderer;
     std::vector<VertexStorageType> mAttributeStorageTypes;
     std::vector<TranslatedAttribute> mTranslatedAttribs;
 

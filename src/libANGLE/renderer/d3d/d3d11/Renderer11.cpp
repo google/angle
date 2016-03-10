@@ -3414,7 +3414,7 @@ BufferImpl *Renderer11::createBuffer()
 
 VertexArrayImpl *Renderer11::createVertexArray(const gl::VertexArray::Data &data)
 {
-    return new VertexArray11(data, this);
+    return new VertexArray11(data);
 }
 
 QueryImpl *Renderer11::createQuery(GLenum type)

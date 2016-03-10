@@ -37,9 +37,8 @@ size_t GetAttribIndex(unsigned long dirtyBit)
 }
 }  // anonymous namespace
 
-VertexArray11::VertexArray11(const gl::VertexArray::Data &data, Renderer11 *renderer)
+VertexArray11::VertexArray11(const gl::VertexArray::Data &data)
     : VertexArrayImpl(data),
-      mRenderer(renderer),
       mAttributeStorageTypes(data.getVertexAttributes().size(), VertexStorageType::CURRENT_VALUE),
       mTranslatedAttribs(data.getVertexAttributes().size()),
       mCurrentBuffers(data.getVertexAttributes().size())
