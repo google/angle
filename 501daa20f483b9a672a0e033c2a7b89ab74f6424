@@ -69,6 +69,30 @@
       "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77656d95_28960b70",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-10T16:24:21Z",
+      "side": 1,
+      "message": "After a quick look, dEQP is actually consistent, it\u0027s just not covering all the error conditions in all cases. I\u0027ll upload a fixed version of the patch that matches the resolution of the Khronos discussion.",
+      "parentUuid": "77656d95_88a4d7e2",
+      "range": {
+        "startLine": 1445,
+        "startChar": 63,
+        "endLine": 1445,
+        "endChar": 84
+      },
+      "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
