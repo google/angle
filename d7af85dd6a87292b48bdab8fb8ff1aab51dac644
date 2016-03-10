@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de195a_c9c1866c",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-10T16:25:39Z",
+      "side": 1,
+      "message": "nit: the offset could be based on mVertexCount",
+      "revId": "d7af85dd6a87292b48bdab8fb8ff1aab51dac644",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
