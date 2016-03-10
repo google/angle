@@ -1298,7 +1298,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 
         // Make sure to add the level offset for our tiny compressed texture workaround
         gl::TextureState textureState = texture->getTextureState();
-        textureState.baseLevel += storage11->getTopLevel();
+        textureState.baseLevel        = texture->getEffectiveBaseLevel() + storage11->getTopLevel();
 
         error = storage11->getSRV(textureState, &textureSRV);
         if (error.isError())
@@ -2413,8 +2413,8 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
 
 void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
 {
-    unsigned int baseLevel = texture.getBaseLevel();
-    GLenum internalFormat = texture.getInternalFormat(texture.getTarget(), texture.getBaseLevel());
+    unsigned int baseLevel = texture.getEffectiveBaseLevel();
+    GLenum internalFormat = texture.getInternalFormat(texture.getTarget(), baseLevel);
     if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
     {
         mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);

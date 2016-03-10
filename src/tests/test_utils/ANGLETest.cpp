@@ -15,6 +15,12 @@
 namespace angle
 {
 
+const GLColor GLColor::red   = GLColor(255u, 0u, 0u, 255u);
+const GLColor GLColor::green = GLColor(0u, 255u, 0u, 255u);
+const GLColor GLColor::blue  = GLColor(0u, 0u, 255u, 255u);
+const GLColor GLColor::cyan  = GLColor(0u, 255u, 255u, 255u);
+const GLColor GLColor::black = GLColor(0u, 0u, 0u, 255u);
+
 namespace
 {
 float ColorNorm(GLubyte channelValue)

@@ -117,7 +117,7 @@ TextureGL::TextureGL(GLenum type,
       mWorkarounds(workarounds),
       mStateManager(stateManager),
       mBlitter(blitter),
-      mLevelInfo(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS),
+      mLevelInfo(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1),
       mAppliedTextureState(),
       mTextureID(0)
 {
@@ -712,7 +712,9 @@ static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
     }
 }
 
-void TextureGL::syncState(size_t textureUnit, const gl::TextureState &textureState) const
+void TextureGL::syncState(size_t textureUnit,
+                          const gl::TextureState &textureState,
+                          const GLuint effectiveBaseLevel) const
 {
     // Callback lamdba to bind this texture only if needed.
     bool textureApplied   = false;
@@ -732,7 +734,7 @@ void TextureGL::syncState(size_t textureUnit, const gl::TextureState &textureSta
     SyncTextureStateMember(mFunctions, applyTextureFunc, textureState, mAppliedTextureState, mTextureType, GL_TEXTURE_BASE_LEVEL, &gl::TextureState::baseLevel);
     SyncTextureStateMember(mFunctions, applyTextureFunc, textureState, mAppliedTextureState, mTextureType, GL_TEXTURE_MAX_LEVEL, &gl::TextureState::maxLevel);
 
-    const LevelInfoGL &levelInfo = mLevelInfo[textureState.baseLevel];
+    const LevelInfoGL &levelInfo = mLevelInfo[effectiveBaseLevel];
     SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, textureState, mAppliedTextureState, mTextureType, GL_TEXTURE_SWIZZLE_R, &gl::TextureState::swizzleRed);
     SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, textureState, mAppliedTextureState, mTextureType, GL_TEXTURE_SWIZZLE_G, &gl::TextureState::swizzleGreen);
     SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, textureState, mAppliedTextureState, mTextureType, GL_TEXTURE_SWIZZLE_B, &gl::TextureState::swizzleBlue);

@@ -729,7 +729,8 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
                     bindTexture(textureType, textureGL->getTextureID());
                 }
 
-                textureGL->syncState(textureUnitIndex, texture->getTextureState());
+                textureGL->syncState(textureUnitIndex, texture->getTextureState(),
+                                     texture->getEffectiveBaseLevel());
             }
             else
             {

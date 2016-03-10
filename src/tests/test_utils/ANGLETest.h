@@ -52,6 +52,12 @@ struct GLColor
     Vector4 toNormalizedVector() const;
 
     GLubyte R, G, B, A;
+
+    static const GLColor red;
+    static const GLColor green;
+    static const GLColor blue;
+    static const GLColor cyan;
+    static const GLColor black;
 };
 
 // Useful to cast any type to GLubyte.

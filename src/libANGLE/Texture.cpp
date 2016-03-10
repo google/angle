@@ -54,8 +54,10 @@ Texture::Texture(rx::ImplFactory *factory, GLuint id, GLenum target)
       mTexture(factory->createTexture(target)),
       mLabel(),
       mTextureState(),
+      mEffectiveBaseLevel(0),
       mTarget(target),
-      mImageDescs(IMPLEMENTATION_MAX_TEXTURE_LEVELS * (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
+      mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
+                  (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
       mCompletenessCache(),
       mBoundSurface(nullptr),
       mBoundStream(nullptr)
@@ -239,7 +241,30 @@ const SamplerState &Texture::getSamplerState() const
 
 void Texture::setBaseLevel(GLuint baseLevel)
 {
-    mTextureState.baseLevel = baseLevel;
+    if (mTextureState.baseLevel != baseLevel)
+    {
+        mTextureState.baseLevel       = baseLevel;
+        mCompletenessCache.cacheValid = false;
+        updateEffectiveBaseLevel();
+        mTexture->setBaseLevel(mEffectiveBaseLevel);
+    }
+}
+
+void Texture::updateEffectiveBaseLevel()
+{
+    mEffectiveBaseLevel = mTextureState.baseLevel;
+    if (mTextureState.immutableFormat && mEffectiveBaseLevel > mTextureState.immutableLevels - 1)
+    {
+        mEffectiveBaseLevel = mTextureState.immutableLevels - 1;
+    }
+    // Ensure that this class doesn't access out-of-range memory when querying effective base level
+    // properties.
+    if (mEffectiveBaseLevel > gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+    {
+        // gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS is still an out-of-range level, but the arrays
+        // for level data have an extra dummy level for querying out-of-range base level properties.
+        mEffectiveBaseLevel = gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS;
+    }
 }
 
 GLuint Texture::getBaseLevel() const
@@ -247,9 +272,18 @@ GLuint Texture::getBaseLevel() const
     return mTextureState.baseLevel;
 }
 
+GLuint Texture::getEffectiveBaseLevel() const
+{
+    return mEffectiveBaseLevel;
+}
+
 void Texture::setMaxLevel(GLuint maxLevel)
 {
-    mTextureState.maxLevel = maxLevel;
+    if (mTextureState.maxLevel != maxLevel)
+    {
+        mTextureState.maxLevel        = maxLevel;
+        mCompletenessCache.cacheValid = false;
+    }
 }
 
 GLuint Texture::getMaxLevel() const
@@ -309,7 +343,7 @@ GLenum Texture::getInternalFormat(GLenum target, size_t level) const
 
 bool Texture::isSamplerComplete(const SamplerState &samplerState, const ContextState &data) const
 {
-    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mTextureState.baseLevel);
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mEffectiveBaseLevel);
     const TextureCaps &textureCaps = data.textureCaps->get(baseImageDesc.internalFormat);
     if (!mCompletenessCache.cacheValid ||
         mCompletenessCache.samplerState != samplerState ||
@@ -506,6 +540,7 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
 
     mTextureState.immutableFormat = true;
     mTextureState.immutableLevels = static_cast<GLuint>(levels);
+    updateEffectiveBaseLevel();
     clearImageDescs();
     setImageDescChain(levels, size, internalFormat);
 
@@ -715,11 +750,19 @@ GLenum Texture::getBaseImageTarget() const
 bool Texture::computeSamplerCompleteness(const SamplerState &samplerState,
                                          const ContextState &data) const
 {
-    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mTextureState.baseLevel);
+    if (mTextureState.baseLevel > mTextureState.maxLevel)
+    {
+        return false;
+    }
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mEffectiveBaseLevel);
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 || baseImageDesc.size.depth == 0)
     {
         return false;
     }
+    // The cases where the texture is incomplete because base level is out of range should be
+    // handled by the above condition.
+    ASSERT(mTextureState.baseLevel < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS ||
+           mTextureState.immutableFormat);
 
     if (mTarget == GL_TEXTURE_CUBE_MAP && baseImageDesc.size.width != baseImageDesc.size.height)
     {
@@ -792,7 +835,7 @@ bool Texture::computeMipmapCompleteness() const
 
     size_t maxLevel = std::min<size_t>(expectedMipLevels, mTextureState.maxLevel + 1);
 
-    for (size_t level = mTextureState.baseLevel; level < maxLevel; level++)
+    for (size_t level = mEffectiveBaseLevel; level < maxLevel; level++)
     {
         if (mTarget == GL_TEXTURE_CUBE_MAP)
         {
@@ -825,7 +868,7 @@ bool Texture::computeLevelCompleteness(GLenum target, size_t level) const
         return true;
     }
 
-    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mTextureState.baseLevel);
+    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mEffectiveBaseLevel);
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 || baseImageDesc.size.depth == 0)
     {
         return false;
@@ -843,8 +886,8 @@ bool Texture::computeLevelCompleteness(GLenum target, size_t level) const
         return false;
     }
 
-    ASSERT(level >= mTextureState.baseLevel);
-    const size_t relativeLevel = level - mTextureState.baseLevel;
+    ASSERT(level >= mEffectiveBaseLevel);
+    const size_t relativeLevel = level - mEffectiveBaseLevel;
     if (levelImageDesc.size.width != std::max(1, baseImageDesc.size.width >> relativeLevel))
     {
         return false;

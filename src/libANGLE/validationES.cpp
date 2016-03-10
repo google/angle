@@ -1008,16 +1008,24 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
 
       case GL_TEXTURE_BASE_LEVEL:
       case GL_TEXTURE_MAX_LEVEL:
-        if (param < 0)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return false;
-        }
-        return true;
-
+          if (target == GL_TEXTURE_EXTERNAL_OES)
+          {
+              // This is not specified, but in line with the spirit of OES_EGL_image_external spec,
+              // which generally forbids setting mipmap related parameters on external textures.
+              context->handleError(
+                  Error(GL_INVALID_OPERATION,
+                        "Setting the base level or max level of external textures not supported"));
+              return false;
+          }
+          if (param < 0)
+          {
+              context->handleError(Error(GL_INVALID_VALUE));
+              return false;
+          }
+          return true;
       default:
           context->handleError(Error(GL_INVALID_ENUM));
-        return false;
+          return false;
     }
 }
 

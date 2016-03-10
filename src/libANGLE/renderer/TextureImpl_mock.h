@@ -37,6 +37,8 @@ class MockTextureImpl : public TextureImpl
 
     MOCK_METHOD2(getAttachmentRenderTarget, gl::Error(const gl::FramebufferAttachment::Target &, FramebufferAttachmentRenderTarget **));
 
+    MOCK_METHOD1(setBaseLevel, void(GLuint));
+
     MOCK_METHOD0(destructor, void());
 };
 

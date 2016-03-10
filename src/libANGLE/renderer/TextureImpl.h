@@ -71,6 +71,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
 
     virtual gl::Error generateMipmaps(const gl::TextureState &textureState) = 0;
 
+    virtual void setBaseLevel(GLuint baseLevel) = 0;
+
     virtual void bindTexImage(egl::Surface *surface) = 0;
     virtual void releaseTexImage() = 0;
 };
