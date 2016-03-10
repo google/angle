@@ -14,6 +14,7 @@
 namespace gl
 {
 class Context;
+struct IndexRange;
 class ValidationContext;
 
 bool ValidateES3TexImageParametersBase(ValidationContext *context,
@@ -161,6 +162,15 @@ bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numA
                                    const GLenum *attachments);
 
 bool ValidateClearBuffer(ValidationContext *context);
+
+bool ValidateDrawRangeElements(Context *context,
+                               GLenum mode,
+                               GLuint start,
+                               GLuint end,
+                               GLsizei count,
+                               GLenum type,
+                               const GLvoid *indices,
+                               IndexRange *indexRange);
 
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params);
 

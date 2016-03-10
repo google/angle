@@ -1388,6 +1388,42 @@ bool ValidateClearBuffer(ValidationContext *context)
     return true;
 }
 
+bool ValidateDrawRangeElements(Context *context,
+                               GLenum mode,
+                               GLuint start,
+                               GLuint end,
+                               GLsizei count,
+                               GLenum type,
+                               const GLvoid *indices,
+                               IndexRange *indexRange)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+
+    if (end < start)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "end < start"));
+        return false;
+    }
+
+    if (!ValidateDrawElements(context, mode, count, type, indices, 0, indexRange))
+    {
+        return false;
+    }
+
+    if (indexRange->end > end || indexRange->start < start)
+    {
+        // GL spec says that behavior in this case is undefined - generating an error is fine.
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Indices are out of the start, end range."));
+        return false;
+    }
+    return true;
+}
+
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params)
 {
     if (context->getClientVersion() < 3)

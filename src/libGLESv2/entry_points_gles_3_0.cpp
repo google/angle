@@ -52,21 +52,11 @@ void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
         IndexRange indexRange;
-        if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
+        if (!context->skipValidation() &&
+            !ValidateDrawRangeElements(context, mode, start, end, count, type, indices,
+                                       &indexRange))
         {
-            return;
-        }
-        if (indexRange.end > end || indexRange.start < start)
-        {
-            // GL spec says that behavior in this case is undefined - generating an error is fine.
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
