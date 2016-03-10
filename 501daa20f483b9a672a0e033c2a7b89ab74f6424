@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7de195a_493c76a9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2576,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-10T15:27:23Z",
+      "side": 1,
+      "message": "nit: can you say either \u0027Earlier 3.0 specs\u0027 or name the specific point release? Since 3.0 specs includes the newer fixed specs.",
+      "range": {
+        "startLine": 2576,
+        "startChar": 15,
+        "endLine": 2576,
+        "endChar": 18
+      },
+      "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7de195a_89325ece",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-10T15:27:23Z",
+      "side": 1,
+      "message": "this is interesting, I think there\u0027s a bit of underspecification here. The enums defined in the header can change between GL version (eg there\u0027s no law to say that ES can\u0027t define up to GL_COLOR_ATTACHMENT41 in a new point release) and there\u0027s upper limit to GL_MAX_COLOR_ATTACHMENTS that I saw (might have missed it?)\n\nIf that\u0027s the case then it\u0027s not 100% clear when it\u0027s correct to return INVALID_ENUM or INVALID_OPERATION. That\u0027s a pretty edge case, so this LGTM, but I\u0027m a bit curious so I\u0027ll ping Shannon and Pyry.",
+      "range": {
+        "startLine": 1445,
+        "startChar": 63,
+        "endLine": 1445,
+        "endChar": 84
+      },
+      "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
