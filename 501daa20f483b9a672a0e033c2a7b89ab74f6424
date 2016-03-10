@@ -45,6 +45,30 @@
       "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77656d95_88a4d7e2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-10T16:07:38Z",
+      "side": 1,
+      "message": "Right, the spec is quite ambiguous as you say. It seems like dEQP tests we have are actually inconsistent in how they test ReadBuffer vs. DrawBuffers, maybe this still warrants some further investigation.",
+      "parentUuid": "d7de195a_89325ece",
+      "range": {
+        "startLine": 1445,
+        "startChar": 63,
+        "endLine": 1445,
+        "endChar": 84
+      },
+      "revId": "501daa20f483b9a672a0e033c2a7b89ab74f6424",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
