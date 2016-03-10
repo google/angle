@@ -68,13 +68,16 @@ bool ValidateDrawAttribs(ValidationContext *context, GLint primcount, GLint maxV
                     GLint64 attribSize =
                         static_cast<GLint64>(ComputeVertexAttributeTypeSize(attrib));
                     GLint64 attribDataSize = (maxVertexElement - 1) * attribStride + attribSize;
+                    GLint64 attribOffset   = static_cast<GLint64>(attrib.offset);
 
                     // [OpenGL ES 3.0.2] section 2.9.4 page 40:
                     // We can return INVALID_OPERATION if our vertex attribute does not have
                     // enough backing data.
-                    if (attribDataSize > buffer->getSize())
+                    if (attribDataSize + attribOffset > buffer->getSize())
                     {
-                        context->recordError(Error(GL_INVALID_OPERATION));
+                        context->recordError(
+                            Error(GL_INVALID_OPERATION,
+                                  "Vertex buffer is not big enough for the draw call"));
                         return false;
                     }
                 }
@@ -2017,7 +2020,7 @@ bool ValidateDrawElements(ValidationContext *context,
         return false;
     }
 
-    if (!ValidateDrawAttribs(context, primcount, static_cast<GLsizei>(indexRangeOut->end)))
+    if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(indexRangeOut->vertexCount())))
     {
         return false;
     }

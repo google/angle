@@ -67,15 +67,60 @@ class VertexAttributeTest : public ANGLETest
         IMMEDIATE,
     };
 
-    struct TestData
+    struct TestData final : angle::NonCopyable
     {
+        TestData(GLenum typeIn,
+                 GLboolean normalizedIn,
+                 Source sourceIn,
+                 const void *inputDataIn,
+                 const GLfloat *expectedDataIn)
+            : type(typeIn),
+              normalized(normalizedIn),
+              bufferOffset(0),
+              source(Source::BUFFER),
+              inputData(inputDataIn),
+              expectedData(expectedDataIn)
+        {
+        }
+
         GLenum type;
         GLboolean normalized;
+        size_t bufferOffset;
         Source source;
 
         const void *inputData;
         const GLfloat *expectedData;
     };
+
+    void setupTest(const TestData &test, GLint typeSize)
+    {
+        if (mProgram == 0)
+        {
+            initBasicProgram();
+        }
+
+        if (test.source == Source::BUFFER)
+        {
+            GLsizei dataSize = mVertexCount * TypeStride(test.type) * typeSize;
+            glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+            glBufferData(GL_ARRAY_BUFFER, dataSize, test.inputData, GL_STATIC_DRAW);
+            glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
+                                  reinterpret_cast<GLvoid *>(test.bufferOffset));
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        else
+        {
+            ASSERT_EQ(Source::IMMEDIATE, test.source);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
+                                  test.inputData);
+        }
+
+        glVertexAttribPointer(mExpectedAttrib, typeSize, GL_FLOAT, GL_FALSE, 0, test.expectedData);
+
+        glEnableVertexAttribArray(mTestAttrib);
+        glEnableVertexAttribArray(mExpectedAttrib);
+    }
 
     void runTest(const TestData &test)
     {
@@ -100,29 +145,7 @@ class VertexAttributeTest : public ANGLETest
         for (GLint i = 0; i < 4; i++)
         {
             GLint typeSize = i + 1;
-
-            if (test.source == Source::BUFFER)
-            {
-                GLsizei dataSize = mVertexCount * TypeStride(test.type) * typeSize;
-                glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-                glBufferData(GL_ARRAY_BUFFER, dataSize, test.inputData, GL_STATIC_DRAW);
-                glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
-                                      nullptr);
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-            }
-            else
-            {
-                ASSERT_EQ(Source::IMMEDIATE, test.source);
-                glBindBuffer(GL_ARRAY_BUFFER, 0);
-                glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
-                                      test.inputData);
-            }
-
-            glVertexAttribPointer(mExpectedAttrib, typeSize, GL_FLOAT, GL_FALSE, 0,
-                                  test.expectedData);
-
-            glEnableVertexAttribArray(mTestAttrib);
-            glEnableVertexAttribArray(mExpectedAttrib);
+            setupTest(test, typeSize);
 
             drawQuad(mProgram, "position", 0.5f);
 
@@ -250,7 +273,7 @@ TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = {GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -263,7 +286,7 @@ TEST_P(VertexAttributeTest, UnsignedByteNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -276,7 +299,7 @@ TEST_P(VertexAttributeTest, ByteUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = {GL_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -289,7 +312,7 @@ TEST_P(VertexAttributeTest, ByteNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -302,7 +325,7 @@ TEST_P(VertexAttributeTest, UnsignedShortUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = {GL_UNSIGNED_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_UNSIGNED_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -315,7 +338,7 @@ TEST_P(VertexAttributeTest, UnsignedShortNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -328,7 +351,7 @@ TEST_P(VertexAttributeTest, ShortUnnormalized)
         expectedData[i] = inputData[i];
     }
 
-    TestData data = {GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -341,7 +364,7 @@ TEST_P(VertexAttributeTest, ShortNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData};
+    TestData data(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
     runTest(data);
 }
 
@@ -362,7 +385,7 @@ TEST_P(VertexAttributeTestES3, IntUnnormalized)
         expectedData[i] = static_cast<GLfloat>(inputData[i]);
     }
 
-    TestData data = {GL_INT, GL_FALSE, Source::BUFFER, inputData, expectedData};
+    TestData data(GL_INT, GL_FALSE, Source::BUFFER, inputData, expectedData);
     runTest(data);
 }
 
@@ -377,7 +400,7 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
+    TestData data(GL_INT, GL_TRUE, Source::BUFFER, inputData, expectedData);
     runTest(data);
 }
 
@@ -393,7 +416,7 @@ TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
         expectedData[i] = static_cast<GLfloat>(inputData[i]);
     }
 
-    TestData data = {GL_UNSIGNED_INT, GL_FALSE, Source::BUFFER, inputData, expectedData};
+    TestData data(GL_UNSIGNED_INT, GL_FALSE, Source::BUFFER, inputData, expectedData);
     runTest(data);
 }
 
@@ -409,7 +432,7 @@ TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data = {GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData, expectedData};
+    TestData data(GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData, expectedData);
     runTest(data);
 }
 
@@ -482,6 +505,44 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
     drawQuad(program, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
+}
+
+// Verify that drawing with a large out-of-range offset generates INVALID_OPERATION.
+TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
+{
+    GLfloat inputData[mVertexCount];
+    GLfloat expectedData[mVertexCount];
+    for (size_t count = 0; count < mVertexCount; ++count)
+    {
+        inputData[count]    = static_cast<GLfloat>(count);
+        expectedData[count] = inputData[count];
+    }
+
+    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData, expectedData);
+    data.bufferOffset = mVertexCount * TypeStride(GL_FLOAT);
+
+    setupTest(data, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
+TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
+{
+    GLfloat inputData[mVertexCount];
+    GLfloat expectedData[mVertexCount];
+    for (size_t count = 0; count < mVertexCount; ++count)
+    {
+        inputData[count]    = static_cast<GLfloat>(count);
+        expectedData[count] = inputData[count];
+    }
+
+    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData, expectedData);
+    data.bufferOffset = (mVertexCount - 3) * TypeStride(GL_FLOAT);
+
+    setupTest(data, 1);
+    drawIndexedQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 class VertexAttributeCachingTest : public VertexAttributeTest
