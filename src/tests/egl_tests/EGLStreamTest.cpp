@@ -38,14 +38,14 @@ class EGLStreamTest : public ANGLETest
 TEST_P(EGLStreamTest, StreamValidationTest)
 {
     EGLWindow *window            = getEGLWindow();
-    const char *extensionsString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    EGLDisplay display           = window->getDisplay();
+
+    const char *extensionsString = eglQueryString(display, EGL_EXTENSIONS);
     if (strstr(extensionsString, "EGL_KHR_stream") == nullptr)
     {
         std::cout << "Stream extension not supported" << std::endl;
         return;
     }
-
-    EGLDisplay display = window->getDisplay();
 
     const EGLint streamAttributesBad[] = {
         EGL_STREAM_STATE_KHR,
@@ -97,7 +97,7 @@ TEST_P(EGLStreamTest, StreamValidationTest)
     // Create an actual stream
     stream = eglCreateStreamKHR(display, streamAttributes);
     ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(EGL_NO_STREAM_KHR, stream);
+    ASSERT_NE(EGL_NO_STREAM_KHR, stream);
 
     // Assert it is in the created state
     EGLint state;

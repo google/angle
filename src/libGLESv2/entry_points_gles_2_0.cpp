@@ -205,31 +205,8 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Texture *textureObject = context->getTexture(texture);
-
-        if (textureObject && textureObject->getTarget() != target && texture != 0)
+        if (!ValidateBindTexture(context, target, texture))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        switch (target)
-        {
-          case GL_TEXTURE_2D:
-          case GL_TEXTURE_CUBE_MAP:
-            break;
-
-          case GL_TEXTURE_3D:
-          case GL_TEXTURE_2D_ARRAY:
-            if (context->getClientVersion() < 3)
-            {
-                context->recordError(Error(GL_INVALID_ENUM));
-                return;
-            }
-            break;
-
-          default:
-            context->recordError(Error(GL_INVALID_ENUM));
             return;
         }
 

@@ -147,6 +147,7 @@ Extensions::Extensions()
       eglImage(false),
       eglImageExternal(false),
       eglImageExternalEssl3(false),
+      eglStreamConsumerExternal(false),
       unpackSubimage(false),
       packSubimage(false),
       vertexArrayObject(false),
@@ -219,6 +220,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_OES_EGL_image",                    eglImage,                  &extensionStrings);
     InsertExtensionString("GL_OES_EGL_image_external",           eglImageExternal,          &extensionStrings);
     InsertExtensionString("GL_OES_EGL_image_external_essl3",     eglImageExternalEssl3,     &extensionStrings);
+    InsertExtensionString("GL_NV_EGL_stream_consumer_external",  eglStreamConsumerExternal, &extensionStrings);
     InsertExtensionString("GL_EXT_unpack_subimage",              unpackSubimage,            &extensionStrings);
     InsertExtensionString("GL_NV_pack_subimage",                 packSubimage,              &extensionStrings);
     InsertExtensionString("GL_EXT_color_buffer_float",           colorBufferFloat,          &extensionStrings);
@@ -636,7 +638,9 @@ DisplayExtensions::DisplayExtensions()
       flexibleSurfaceCompatibility(false),
       directComposition(false),
       createContextNoError(false),
-      stream(false)
+      stream(false),
+      streamConsumerGLTexture(false),
+      streamConsumerGLTextureYUV(false)
 {
 }
 
@@ -666,6 +670,8 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_gl_renderbuffer_image",                 glRenderbufferImage,            &extensionStrings);
     InsertExtensionString("EGL_KHR_get_all_proc_addresses",                getAllProcAddresses,            &extensionStrings);
     InsertExtensionString("EGL_KHR_stream",                                stream,                         &extensionStrings);
+    InsertExtensionString("EGL_KHR_stream_consumer_gltexture",             streamConsumerGLTexture,        &extensionStrings);
+    InsertExtensionString("EGL_NV_stream_consumer_gltexture_yuv",          streamConsumerGLTextureYUV,     &extensionStrings);
     InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",      flexibleSurfaceCompatibility,   &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                   createContextNoError,           &extensionStrings);

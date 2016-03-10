@@ -1972,4 +1972,43 @@ bool ValidateFlushMappedBufferRangeEXT(Context *context,
     return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
 }
 
+bool ValidateBindTexture(Context *context, GLenum target, GLuint texture)
+{
+    Texture *textureObject = context->getTexture(texture);
+    if (textureObject && textureObject->getTarget() != target && texture != 0)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Invalid texture"));
+        return false;
+    }
+
+    switch (target)
+    {
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_CUBE_MAP:
+            break;
+
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_2D_ARRAY:
+            if (context->getClientVersion() < 3)
+            {
+                context->recordError(Error(GL_INVALID_ENUM, "GLES 3.0 disabled"));
+                return false;
+            }
+            break;
+        case GL_TEXTURE_EXTERNAL_OES:
+            if (!context->getExtensions().eglStreamConsumerExternal)
+            {
+                context->recordError(
+                    Error(GL_INVALID_ENUM, "External texture extension not enabled"));
+                return false;
+            }
+            break;
+        default:
+            context->recordError(Error(GL_INVALID_ENUM, "Invalid target"));
+            return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

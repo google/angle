@@ -16,6 +16,7 @@ namespace gl
 {
 class Context;
 class ValidationContext;
+class Texture;
 
 bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
@@ -167,6 +168,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLenum format,
                                      GLsizei imageSize,
                                      const GLvoid *data);
+bool ValidateBindTexture(Context *context, GLenum target, GLuint texture);
 
 bool ValidateGetBufferPointervOES(Context *context, GLenum target, GLenum pname, void **params);
 bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access);

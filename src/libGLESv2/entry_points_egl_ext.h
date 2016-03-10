@@ -59,6 +59,16 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY QueryStreamu64KHR(EGLDisplay dpy,
                                                       EGLStreamKHR stream,
                                                       EGLenum attribute,
                                                       EGLuint64KHR *value);
+
+// EGL_KHR_stream_consumer_gltexture
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamConsumerGLTextureExternalKHR(EGLDisplay dpy,
+                                                                       EGLStreamKHR stream);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR stream);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR stream);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY
+StreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
+                                         EGLStreamKHR stream,
+                                         const EGLAttrib *attrib_list);
 }
 
 #endif // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

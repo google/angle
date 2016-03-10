@@ -1502,12 +1502,15 @@ bool ValidateStateQuery(gl::Context *context, GLenum pname, GLenum *nativeType, 
       case GL_TEXTURE_BINDING_CUBE_MAP:
       case GL_TEXTURE_BINDING_3D:
       case GL_TEXTURE_BINDING_2D_ARRAY:
-        if (context->getState().getActiveSampler() >= caps.maxCombinedTextureImageUnits)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
         break;
+      case GL_TEXTURE_BINDING_EXTERNAL_OES:
+          if (!context->getExtensions().eglStreamConsumerExternal)
+          {
+              context->recordError(
+                  Error(GL_INVALID_ENUM, "NV_EGL_stream_consumer_external extension not enabled"));
+              return false;
+          }
+          break;
 
       case GL_IMPLEMENTATION_COLOR_READ_TYPE:
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT:

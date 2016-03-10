@@ -9,6 +9,7 @@
 #include "libGLESv2/entry_points_egl_ext.h"
 #include "libGLESv2/global_state.h"
 
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/Surface.h"
@@ -577,6 +578,7 @@ EGLStreamKHR EGLAPIENTRY CreateStreamKHR(EGLDisplay dpy, const EGLint *attrib_li
         return EGL_NO_STREAM_KHR;
     }
 
+    SetGlobalError(error);
     return static_cast<EGLStreamKHR>(stream);
 }
 
@@ -595,6 +597,7 @@ EGLBoolean EGLAPIENTRY DestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
     }
 
     display->destroyStream(streamObject);
+    SetGlobalError(error);
     return EGL_TRUE;
 }
 
@@ -623,10 +626,14 @@ EGLBoolean EGLAPIENTRY StreamAttribKHR(EGLDisplay dpy,
         case EGL_CONSUMER_LATENCY_USEC_KHR:
             streamObject->setConsumerLatency(value);
             break;
+        case EGL_CONSUMER_ACQUIRE_TIMEOUT_USEC_KHR:
+            streamObject->setConsumerAcquireTimeout(value);
+            break;
         default:
             UNREACHABLE();
     }
 
+    SetGlobalError(error);
     return EGL_TRUE;
 }
 
@@ -658,10 +665,14 @@ EGLBoolean EGLAPIENTRY QueryStreamKHR(EGLDisplay dpy,
         case EGL_CONSUMER_LATENCY_USEC_KHR:
             *value = streamObject->getConsumerLatency();
             break;
+        case EGL_CONSUMER_ACQUIRE_TIMEOUT_USEC_KHR:
+            *value = streamObject->getConsumerAcquireTimeout();
+            break;
         default:
             UNREACHABLE();
     }
 
+    SetGlobalError(error);
     return EGL_TRUE;
 }
 
@@ -697,6 +708,81 @@ EGLBoolean EGLAPIENTRY QueryStreamu64KHR(EGLDisplay dpy,
             UNREACHABLE();
     }
 
+    SetGlobalError(error);
     return EGL_TRUE;
+}
+
+EGLBoolean EGLAPIENTRY StreamConsumerGLTextureExternalKHR(EGLDisplay dpy, EGLStreamKHR stream)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR = 0x%0.8p)", dpy, stream);
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+    gl::Context *context = gl::GetValidGlobalContext();
+
+    Error error = ValidateStreamConsumerGLTextureExternalKHR(display, context, streamObject);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+    SetGlobalError(error);
+    return EGL_FALSE;
+}
+
+EGLBoolean EGLAPIENTRY StreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR stream)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR = 0x%0.8p)", dpy, stream);
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+    gl::Context *context = gl::GetValidGlobalContext();
+
+    Error error = ValidateStreamConsumerAcquireKHR(display, context, streamObject);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+    SetGlobalError(error);
+    return EGL_FALSE;
+}
+
+EGLBoolean EGLAPIENTRY StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR stream)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR = 0x%0.8p)", dpy, stream);
+    Display *display     = static_cast<Display *>(dpy);
+    Stream *streamObject = static_cast<Stream *>(stream);
+    gl::Context *context = gl::GetValidGlobalContext();
+
+    Error error = ValidateStreamConsumerReleaseKHR(display, context, streamObject);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+    SetGlobalError(error);
+    return EGL_FALSE;
+}
+
+EGLBoolean EGLAPIENTRY StreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
+                                                                EGLStreamKHR stream,
+                                                                const EGLAttrib *attrib_list)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLStreamKHR stream = 0x%0.8p, EGLAttrib attrib_list = 0x%0.8p",
+        dpy, stream, attrib_list);
+    Display *display        = static_cast<Display *>(dpy);
+    Stream *streamObject    = static_cast<Stream *>(stream);
+    gl::Context *context    = gl::GetValidGlobalContext();
+    AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
+
+    Error error = ValidateStreamConsumerGLTextureExternalAttribsNV(display, context, streamObject,
+                                                                   attributes);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+    SetGlobalError(error);
+    return EGL_FALSE;
 }
 }
