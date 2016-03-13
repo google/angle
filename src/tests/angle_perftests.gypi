@@ -19,6 +19,7 @@
             '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.h',
             '<(angle_path)/src/tests/perf_tests/BufferSubData.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/DynamicPromotionPerfTest.cpp',
             '<(angle_path)/src/tests/perf_tests/EGLInitializePerf.cpp',
             '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/InstancingPerf.cpp',
