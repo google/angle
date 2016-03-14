@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "373e959c_ae62b7b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-14T09:24:56Z",
+      "side": 1,
+      "message": "This doesn\u0027t look right - if blitSRV is true the SRV should be created with blitSRVFormat, not srvFormat. Odd that I didn\u0027t catch this in testing before, I\u0027ll have to see if more coverage is needed.",
+      "revId": "32d7c790a4c4e8c47ad34000d1195255a3e86282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
