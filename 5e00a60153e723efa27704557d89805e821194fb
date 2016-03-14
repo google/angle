@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "373e959c_8efedbc9",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-14T15:18:04Z",
+      "side": 1,
+      "message": "I\u0027ll change this so that the program association is stored in the transform feedback object instead.\n\nThe GLES 3.0 spec says about DeleteProgram that \"If program is not the current program for any GL context, it is deleted immediately.\" It doesn\u0027t seem to matter whether it is associated with an active transform feedback. Possibly you could still call EndTransformFeedback in this case and everything would be fine. EndTransformFeedback performs an implicit ResumeTransformFeedback, but at least dEQP doesn\u0027t expect EndTransformFeedback on a paused transform feedback to trigger all the errors that ResumeTransformFeedback would trigger. This is a matter of interpretation, so maybe it warrants more discussion.",
+      "parentUuid": "d7de195a_c9daa65e",
+      "range": {
+        "startLine": 428,
+        "startChar": 0,
+        "endLine": 431,
+        "endChar": 54
+      },
+      "revId": "5e00a60153e723efa27704557d89805e821194fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7de195a_297c8af7",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 1
@@ -54,6 +78,24 @@
       "side": 1,
       "message": "So the full new pattern is:\n\n void GL_APIENTRY EntryPoint(params...)\n {\n   EVENT(\"...\", ...);\n   \n   Context *context \u003d GetValidGlobalContext();\n   if (context\n   {\n      if (!context-\u003eskipValidation() \u0026\u0026 !ValidateEntryPont(context, params...)\n      {\n         return;\n      }\n      \n      (return) context-\u003eentryPoint(params...);\n   }\n }\n\nHere the return is absent if the entryPoint returns void.\n\nIn this case we\u0027d make a new validation function in validationES2.cpp, called ValidateUseProgram, and move all the validation logic to that function.\n\nIn the above LinkProgram case, we\u0027d also make a new context method, Context::linkProgram(GLuint program). This method would retrieve the object from the handle, and call link, setting an error if appropriate. I\u0027m not sure what the null ValidProgram represents, but that check would either be removed, moved to the validator, or made to no-op in the Context method.",
       "parentUuid": "d7de195a_297c8af7",
+      "revId": "5e00a60153e723efa27704557d89805e821194fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "373e959c_4e14f3cf",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3860,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-14T15:18:04Z",
+      "side": 1,
+      "message": "What about cases where both the validation and the implementation need to look up the same object, isn\u0027t it better to avoid duplicating the lookup between the validation and the implementation? That could cause slowness that might not be caught by small perf tests that only deal with a very small number of objects.\n\nWould it be the best if I change functions to follow the new pattern also in the follow-up patch sets, which have very minor changes to existing validation in some of the entry point functions?",
+      "parentUuid": "d7de195a_dc026258",
       "revId": "5e00a60153e723efa27704557d89805e821194fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
