@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c5c0e36_aa9dafdd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-15T19:29:34Z",
+      "side": 1,
+      "message": "This format is weird, does it really have 32 unused bits?",
+      "revId": "5af5408aa9c13bcd60d9125a93ad1c1952078e74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
