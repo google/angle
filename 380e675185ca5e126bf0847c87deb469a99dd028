@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57bb093b_dee4c026",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-15T15:29:50Z",
+      "side": 1,
+      "message": "Olli, the intent is to eventually auto-generate this file solely based on the GL entry point. As such the generator won\u0027t know which Gen functions map to ValidateGenOrDelete, only that it should call ValidateGenQueries(context, n, ids). I know it\u0027s a pain to refactor all these but if you could add those additional validators that then inside call ValidateGenOrDelete as you have it here it would work towards auto-generation which would help us with the command buffer refactor.",
+      "range": {
+        "startLine": 202,
+        "startChar": 43,
+        "endLine": 202,
+        "endChar": 65
+      },
+      "revId": "380e675185ca5e126bf0847c87deb469a99dd028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
