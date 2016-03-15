@@ -16,6 +16,24 @@
       "revId": "5af5408aa9c13bcd60d9125a93ad1c1952078e74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c5c0e36_4a03d3a8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/formatutils11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-15T19:40:23Z",
+      "side": 1,
+      "message": "It\u0027s more like a sampling mask for reading back the depth channel from D32S8X24. You can\u0027t create a texture of this format, only a SRV.",
+      "parentUuid": "5c5c0e36_aa9dafdd",
+      "revId": "5af5408aa9c13bcd60d9125a93ad1c1952078e74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
