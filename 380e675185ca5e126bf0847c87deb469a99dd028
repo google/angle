@@ -22,6 +22,30 @@
       "revId": "380e675185ca5e126bf0847c87deb469a99dd028",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "373e959c_11c76eb9",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-16T08:58:05Z",
+      "side": 1,
+      "message": "Sounds reasonable, auto-generating this code would be nice. I\u0027ll change these.",
+      "parentUuid": "57bb093b_dee4c026",
+      "range": {
+        "startLine": 202,
+        "startChar": 43,
+        "endLine": 202,
+        "endChar": 65
+      },
+      "revId": "380e675185ca5e126bf0847c87deb469a99dd028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
