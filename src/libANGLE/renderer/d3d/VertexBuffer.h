@@ -80,7 +80,7 @@ class VertexBufferInterface : angle::NonCopyable
 
     unsigned int getSerial() const;
 
-    VertexBuffer *getVertexBuffer() const;
+    VertexBuffer* getVertexBuffer() const;
 
   protected:
     gl::Error discard();

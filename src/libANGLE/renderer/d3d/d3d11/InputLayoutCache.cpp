@@ -94,8 +94,7 @@ Optional<size_t> FindFirstNonInstanced(
 }
 
 void SortAttributesByLayout(const gl::Program *program,
-                            const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-                            const std::vector<TranslatedAttribute> &currentValueAttribs,
+                            const std::vector<TranslatedAttribute> &unsortedAttributes,
                             AttribIndexArray *sortedD3DSemanticsOut,
                             std::vector<const TranslatedAttribute *> *sortedAttributesOut)
 {
@@ -113,17 +112,7 @@ void SortAttributesByLayout(const gl::Program *program,
         }
 
         (*sortedD3DSemanticsOut)[d3dSemantic] = d3dSemantic;
-
-        const auto *arrayAttrib = &vertexArrayAttribs[locationIndex];
-        if (arrayAttrib->attribute && arrayAttrib->attribute->enabled)
-        {
-            (*sortedAttributesOut)[d3dSemantic] = arrayAttrib;
-        }
-        else
-        {
-            ASSERT(currentValueAttribs[locationIndex].attribute);
-            (*sortedAttributesOut)[d3dSemantic] = &currentValueAttribs[locationIndex];
-        }
+        (*sortedAttributesOut)[d3dSemantic] = &unsortedAttributes[locationIndex];
     }
 }
 
@@ -220,8 +209,7 @@ void InputLayoutCache::markDirty()
 
 gl::Error InputLayoutCache::applyVertexBuffers(
     const gl::State &state,
-    const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-    const std::vector<TranslatedAttribute> &currentValueAttribs,
+    const std::vector<TranslatedAttribute> &unsortedAttributes,
     GLenum mode,
     TranslatedIndexData *indexInfo,
     GLsizei numIndicesPerInstance)
@@ -235,7 +223,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
     bool instancedPointSpritesActive = programUsesInstancedPointSprites && (mode == GL_POINTS);
 
     AttribIndexArray sortedSemanticIndices;
-    SortAttributesByLayout(program, vertexArrayAttribs, currentValueAttribs, &sortedSemanticIndices,
+    SortAttributesByLayout(program, unsortedAttributes, &sortedSemanticIndices,
                            &mCurrentAttributes);
 
     // If we are using FL 9_3, make sure the first attribute is not instanced

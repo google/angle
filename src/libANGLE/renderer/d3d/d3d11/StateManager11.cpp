@@ -150,9 +150,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurNear(0.0f),
       mCurFar(0.0f),
       mViewportBounds(),
-      mRenderTargetIsDirty(false),
-      mDirtyCurrentValueAttribs(),
-      mCurrentValueAttribs()
+      mRenderTargetIsDirty(false)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -193,9 +191,6 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurRasterState.polygonOffsetUnits  = 0.0f;
     mCurRasterState.pointDrawMode       = false;
     mCurRasterState.multiSample         = false;
-
-    // Initially all current value attributes must be updated on first use.
-    mDirtyCurrentValueAttribs.flip();
 }
 
 StateManager11::~StateManager11()
@@ -246,7 +241,7 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
         return;
     }
 
-    for (auto dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (unsigned int dirtyBit : angle::IterateBitSet(dirtyBits))
     {
         switch (dirtyBit)
         {
@@ -466,13 +461,6 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                 mRenderTargetIsDirty = true;
                 break;
             default:
-                if (dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
-                    dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX)
-                {
-                    size_t attribIndex =
-                        static_cast<size_t>(dirtyBit - gl::State::DIRTY_BIT_CURRENT_VALUE_0);
-                    mDirtyCurrentValueAttribs.set(attribIndex);
-                }
                 break;
         }
     }
@@ -970,13 +958,6 @@ void StateManager11::initialize(const gl::Caps &caps)
 
     // Initialize cached NULL SRV block
     mNullSRVs.resize(caps.maxTextureImageUnits, nullptr);
-
-    mCurrentValueAttribs.resize(caps.maxVertexAttributes);
-}
-
-void StateManager11::deinitialize()
-{
-    mCurrentValueAttribs.clear();
 }
 
 gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
@@ -1095,42 +1076,6 @@ gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
     setViewportBounds(renderTargetWidth, renderTargetHeight);
 
     return gl::Error(GL_NO_ERROR);
-}
-
-gl::Error StateManager11::updateCurrentValueAttribs(const gl::State &state,
-                                                    VertexDataManager *vertexDataManager)
-{
-    const auto &activeAttribsMask  = state.getProgram()->getActiveAttribLocationsMask();
-    const auto &dirtyActiveAttribs = (activeAttribsMask & mDirtyCurrentValueAttribs);
-    const auto &vertexAttributes   = state.getVertexArray()->getVertexAttributes();
-
-    for (auto attribIndex : angle::IterateBitSet(dirtyActiveAttribs))
-    {
-        if (vertexAttributes[attribIndex].enabled)
-            continue;
-
-        mDirtyCurrentValueAttribs.reset(attribIndex);
-
-        const auto &currentValue =
-            state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
-        auto currentValueAttrib              = &mCurrentValueAttribs[attribIndex];
-        currentValueAttrib->currentValueType = currentValue.Type;
-        currentValueAttrib->attribute        = &vertexAttributes[attribIndex];
-
-        gl::Error error = vertexDataManager->storeCurrentValue(currentValue, currentValueAttrib,
-                                                               static_cast<size_t>(attribIndex));
-        if (error.isError())
-        {
-            return error;
-        }
-    }
-
-    return gl::Error(GL_NO_ERROR);
-}
-
-const std::vector<TranslatedAttribute> &StateManager11::getCurrentValueAttribs() const
-{
-    return mCurrentValueAttribs;
 }
 
 }  // namespace rx

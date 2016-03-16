@@ -189,17 +189,23 @@ RenderTarget11::~RenderTarget11()
 
 void RenderTarget11::addDirtyCallback(const NotificationCallback *callback)
 {
-    mDirtyCallbacks.add(callback);
+    mDirtyCallbacks.insert(callback);
 }
 
 void RenderTarget11::removeDirtyCallback(const NotificationCallback *callback)
 {
-    mDirtyCallbacks.remove(callback);
+    mDirtyCallbacks.erase(callback);
 }
 
 void RenderTarget11::signalDirty()
 {
-    mDirtyCallbacks.signal();
+    if (mDirtyCallbacks.empty())
+        return;
+
+    for (const auto &callback : mDirtyCallbacks)
+    {
+        (*callback)();
+    }
 
     // Clear the signal list. We can't do this in the callback because it mutates the iterator.
     mDirtyCallbacks.clear();

@@ -393,7 +393,6 @@ class Renderer9 : public RendererD3D
     UINT mMaxNullColorbufferLRU;
 
     DeviceD3D *mEGLDevice;
-    std::vector<TranslatedAttribute> mTranslatedAttribCache;
 };
 
 }

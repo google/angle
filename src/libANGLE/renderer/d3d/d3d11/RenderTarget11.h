@@ -41,7 +41,8 @@ class RenderTarget11 : public RenderTargetD3D
     d3d11::ANGLEFormat getANGLEFormat() const { return mANGLEFormat; }
 
   protected:
-    NotificationSet mDirtyCallbacks;
+    std::set<const NotificationCallback *> mDirtyCallbacks;
+
     d3d11::ANGLEFormat mANGLEFormat;
 };
 

@@ -10,10 +10,9 @@
 #ifndef LIBANGLE_RENDERER_D3D_VERTEXDATAMANAGER_H_
 #define LIBANGLE_RENDERER_D3D_VERTEXDATAMANAGER_H_
 
-#include "common/angleutils.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/VertexAttribute.h"
+#include "common/angleutils.h"
 
 namespace gl
 {
@@ -93,7 +92,7 @@ class VertexDataManager : angle::NonCopyable
                                        GLsizei instances);
 
     gl::Error storeDynamicAttribs(std::vector<TranslatedAttribute> *translatedAttribs,
-                                  const gl::AttributesMask &dynamicAttribsMask,
+                                  const std::vector<size_t> &dynamicAttribIndexes,
                                   GLint start,
                                   GLsizei count,
                                   GLsizei instances);
@@ -128,7 +127,7 @@ class VertexDataManager : angle::NonCopyable
 
     StreamingVertexBufferInterface *mStreamingBuffer;
     std::vector<CurrentValueState> mCurrentValueCache;
-    gl::AttributesMask mDynamicAttribsMaskCache;
+    std::vector<size_t> mDynamicAttributeIndexesCache;
 };
 
 }  // namespace rx

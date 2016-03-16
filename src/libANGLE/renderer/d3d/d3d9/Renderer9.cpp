@@ -154,8 +154,6 @@ void Renderer9::release()
 {
     RendererD3D::cleanup();
 
-    mTranslatedAttribCache.clear();
-
     releaseDeviceResources();
 
     SafeDelete(mEGLDevice);
@@ -366,6 +364,7 @@ void Renderer9::initializeDevice()
     mVertexDataManager = new VertexDataManager(this);
     mIndexDataManager = new IndexDataManager(this, getRendererClass());
 
+    // TODO(jmadill): use context caps, and place in common D3D location
     mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
 }
 
