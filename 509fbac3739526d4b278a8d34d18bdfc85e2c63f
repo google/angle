@@ -22,6 +22,24 @@
       "revId": "509fbac3739526d4b278a8d34d18bdfc85e2c63f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bcd26ae5_3882512b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-16T21:11:34Z",
+      "side": 1,
+      "message": "THe CQ is going to fail (unrelated to this) so I\u0027ll add that before I manually land the patch.",
+      "parentUuid": "bcd26ae5_9897bd6d",
+      "revId": "509fbac3739526d4b278a8d34d18bdfc85e2c63f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
