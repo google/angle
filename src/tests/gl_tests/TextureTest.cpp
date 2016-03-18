@@ -11,6 +11,18 @@ using namespace angle;
 namespace
 {
 
+template <typename T>
+void FillWithRGBA(size_t pixelCount, T red, T green, T blue, T alpha, T *outArray)
+{
+    for (size_t i = 0u; i < pixelCount; ++i)
+    {
+        outArray[i * 4u]      = red;
+        outArray[i * 4u + 1u] = green;
+        outArray[i * 4u + 2u] = blue;
+        outArray[i * 4u + 3u] = alpha;
+    }
+}
+
 class TexCoordDrawTest : public ANGLETest
 {
   protected:
@@ -1031,13 +1043,7 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
 
     // Fill with red
     std::vector<GLubyte> pixels(4 * 16 * 16);
-    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
-    {
-        pixels[pixelId * 4 + 0] = 255;
-        pixels[pixelId * 4 + 1] = 0;
-        pixels[pixelId * 4 + 2] = 0;
-        pixels[pixelId * 4 + 3] = 255;
-    }
+    FillWithRGBA<GLubyte>(16u * 16u, 255u, 0u, 0u, 255u, pixels.data());
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
@@ -1052,25 +1058,13 @@ TEST_P(Texture2DTestWithDrawScale, MipmapsTwice)
     EXPECT_PIXEL_EQ(px, py, 255, 0, 0, 255);
 
     // Fill with blue
-    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
-    {
-        pixels[pixelId * 4 + 0] = 0;
-        pixels[pixelId * 4 + 1] = 0;
-        pixels[pixelId * 4 + 2] = 255;
-        pixels[pixelId * 4 + 3] = 255;
-    }
+    FillWithRGBA<GLubyte>(16u * 16u, 0u, 0u, 255u, 255u, pixels.data());
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // Fill with green
-    for (size_t pixelId = 0; pixelId < 16 * 16; ++pixelId)
-    {
-        pixels[pixelId * 4 + 0] = 0;
-        pixels[pixelId * 4 + 1] = 255;
-        pixels[pixelId * 4 + 2] = 0;
-        pixels[pixelId * 4 + 3] = 255;
-    }
+    FillWithRGBA<GLubyte>(16u * 16u, 0u, 255u, 0u, 255u, pixels.data());
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -1387,22 +1381,10 @@ TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     GLubyte texDataRed[4u * 4u * 4u];
-    for (size_t i = 0u; i < 4u * 4u; ++i)
-    {
-        texDataRed[i * 4u]      = 255u;
-        texDataRed[i * 4u + 1u] = 0u;
-        texDataRed[i * 4u + 2u] = 0u;
-        texDataRed[i * 4u + 3u] = 255u;
-    }
+    FillWithRGBA<GLubyte>(4u * 4u, 255u, 0u, 0u, 255u, texDataRed);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed);
     GLubyte texDataGreen[2u * 2u * 4u];
-    for (size_t i = 0u; i < 2u * 2u; ++i)
-    {
-        texDataGreen[i * 4u]      = 0u;
-        texDataGreen[i * 4u + 1u] = 255u;
-        texDataGreen[i * 4u + 2u] = 0u;
-        texDataGreen[i * 4u + 3u] = 255u;
-    }
+    FillWithRGBA<GLubyte>(2u * 2u, 0u, 255u, 0u, 255u, texDataGreen);
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataGreen);
     glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataGreen);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
