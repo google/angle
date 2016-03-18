@@ -160,11 +160,11 @@ TextureFormat::TextureFormat(GLenum internalFormat,
                              InitializeTextureDataFunction internalFormatInitializer)
     : dataInitializerFunction(internalFormatInitializer)
 {{
-    formatSet        = GetANGLEFormatSet(angleFormat);
-    swizzleFormatSet = GetANGLEFormatSet(formatSet.swizzleFormat);
+    formatSet        = &GetANGLEFormatSet(angleFormat);
+    swizzleFormatSet = &GetANGLEFormatSet(formatSet->swizzleFormat);
 
     // Gather all the load functions for this internal format
-    loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet.texFormat);
+    loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet->texFormat);
 
     ASSERT(loadFunctions.size() != 0 || internalFormat == GL_NONE);
 }}

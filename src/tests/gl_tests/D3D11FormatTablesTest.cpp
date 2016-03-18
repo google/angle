@@ -65,14 +65,14 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
 
         UINT texSupport;
         bool texSuccess =
-            SUCCEEDED(device->CheckFormatSupport(formatInfo.formatSet.texFormat, &texSupport));
+            SUCCEEDED(device->CheckFormatSupport(formatInfo.formatSet->texFormat, &texSupport));
         bool textureable = texSuccess && ((texSupport & texSupportMask) == texSupportMask);
         EXPECT_EQ(textureable, textureInfo.texturable);
 
         // Bits for filtering
         UINT filterSupport;
         bool filterSuccess =
-            SUCCEEDED(device->CheckFormatSupport(formatInfo.formatSet.srvFormat, &filterSupport));
+            SUCCEEDED(device->CheckFormatSupport(formatInfo.formatSet->srvFormat, &filterSupport));
         bool filterable = filterSuccess && ((filterSupport & D3D11_FORMAT_SUPPORT_SHADER_SAMPLE) != 0);
         EXPECT_EQ(filterable, textureInfo.filterable);
 
@@ -82,25 +82,25 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
         DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
         if (internalFormatInfo.depthBits > 0 || internalFormatInfo.stencilBits > 0)
         {
-            renderFormat      = formatInfo.formatSet.dsvFormat;
+            renderFormat      = formatInfo.formatSet->dsvFormat;
             bool depthSuccess = SUCCEEDED(
-                device->CheckFormatSupport(formatInfo.formatSet.dsvFormat, &renderSupport));
+                device->CheckFormatSupport(formatInfo.formatSet->dsvFormat, &renderSupport));
             renderable =
                 depthSuccess && ((renderSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL) != 0);
             if (renderable)
             {
-                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.formatSet.dsvFormat);
+                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.formatSet->dsvFormat);
             }
         }
         else
         {
-            renderFormat   = formatInfo.formatSet.rtvFormat;
+            renderFormat   = formatInfo.formatSet->rtvFormat;
             bool rtSuccess = SUCCEEDED(
-                device->CheckFormatSupport(formatInfo.formatSet.rtvFormat, &renderSupport));
+                device->CheckFormatSupport(formatInfo.formatSet->rtvFormat, &renderSupport));
             renderable = rtSuccess && ((renderSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET) != 0);
             if (renderable)
             {
-                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.formatSet.rtvFormat);
+                EXPECT_NE(DXGI_FORMAT_UNKNOWN, formatInfo.formatSet->rtvFormat);
             }
         }
         EXPECT_EQ(renderable, textureInfo.renderable);

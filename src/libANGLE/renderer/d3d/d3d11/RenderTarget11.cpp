@@ -381,7 +381,7 @@ SurfaceRenderTarget11::SurfaceRenderTarget11(SwapChain11 *swapChain,
 
     mANGLEFormat = d3d11::GetTextureFormatInfo(getInternalFormatInternal(),
                                                mRenderer->getRenderer11DeviceCaps())
-                       .formatSet.format;
+                       .formatSet->format;
 }
 
 SurfaceRenderTarget11::~SurfaceRenderTarget11()

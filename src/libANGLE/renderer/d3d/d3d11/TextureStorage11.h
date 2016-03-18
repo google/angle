@@ -107,8 +107,8 @@ class TextureStorage11 : public TextureStorage
     unsigned int mMipLevels;
 
     GLenum mInternalFormat;
-    d3d11::ANGLEFormatSet mTextureFormatSet;
-    d3d11::ANGLEFormatSet mSwizzleFormatSet;
+    const d3d11::ANGLEFormatSet *mTextureFormatSet;
+    const d3d11::ANGLEFormatSet *mSwizzleFormatSet;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;

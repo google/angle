@@ -78,8 +78,8 @@ struct TextureFormat : public angle::NonCopyable
                   const ANGLEFormat angleFormat,
                   InitializeTextureDataFunction internalFormatInitializer);
 
-    ANGLEFormatSet formatSet;
-    ANGLEFormatSet swizzleFormatSet;
+    const ANGLEFormatSet *formatSet;
+    const ANGLEFormatSet *swizzleFormatSet;
 
     InitializeTextureDataFunction dataInitializerFunction;
     typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;

@@ -208,7 +208,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
         if (offscreenTextureDesc.Width != (UINT)backbufferWidth ||
             offscreenTextureDesc.Height != (UINT)backbufferHeight ||
-            offscreenTextureDesc.Format != backbufferFormatInfo.formatSet.texFormat ||
+            offscreenTextureDesc.Format != backbufferFormatInfo.formatSet->texFormat ||
             offscreenTextureDesc.MipLevels != 1 || offscreenTextureDesc.ArraySize != 1)
         {
             ERR("Invalid texture parameters in the shared offscreen texture pbuffer");
@@ -223,7 +223,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
         D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
         offscreenTextureDesc.Width = backbufferWidth;
         offscreenTextureDesc.Height = backbufferHeight;
-        offscreenTextureDesc.Format               = backbufferFormatInfo.formatSet.texFormat;
+        offscreenTextureDesc.Format               = backbufferFormatInfo.formatSet->texFormat;
         offscreenTextureDesc.MipLevels = 1;
         offscreenTextureDesc.ArraySize = 1;
         offscreenTextureDesc.SampleDesc.Count = 1;
@@ -281,7 +281,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     mKeyedMutex = d3d11::DynamicCastComObject<IDXGIKeyedMutex>(mOffscreenTexture);
 
     D3D11_RENDER_TARGET_VIEW_DESC offscreenRTVDesc;
-    offscreenRTVDesc.Format             = backbufferFormatInfo.formatSet.rtvFormat;
+    offscreenRTVDesc.Format             = backbufferFormatInfo.formatSet->rtvFormat;
     offscreenRTVDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     offscreenRTVDesc.Texture2D.MipSlice = 0;
 
@@ -290,7 +290,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     d3d11::SetDebugName(mOffscreenRTView, "Offscreen back buffer render target");
 
     D3D11_SHADER_RESOURCE_VIEW_DESC offscreenSRVDesc;
-    offscreenSRVDesc.Format                    = backbufferFormatInfo.formatSet.srvFormat;
+    offscreenSRVDesc.Format                    = backbufferFormatInfo.formatSet->srvFormat;
     offscreenSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     offscreenSRVDesc.Texture2D.MostDetailedMip = 0;
     offscreenSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
@@ -337,7 +337,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         D3D11_TEXTURE2D_DESC depthStencilTextureDesc;
         depthStencilTextureDesc.Width = backbufferWidth;
         depthStencilTextureDesc.Height = backbufferHeight;
-        depthStencilTextureDesc.Format             = depthBufferFormatInfo.formatSet.texFormat;
+        depthStencilTextureDesc.Format             = depthBufferFormatInfo.formatSet->texFormat;
         depthStencilTextureDesc.MipLevels = 1;
         depthStencilTextureDesc.ArraySize = 1;
         depthStencilTextureDesc.SampleDesc.Count = 1;
@@ -345,7 +345,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
         depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-        if (depthBufferFormatInfo.formatSet.srvFormat != DXGI_FORMAT_UNKNOWN)
+        if (depthBufferFormatInfo.formatSet->srvFormat != DXGI_FORMAT_UNKNOWN)
         {
             depthStencilTextureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
         }
@@ -373,7 +373,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         d3d11::SetDebugName(mDepthStencilTexture, "Offscreen depth stencil texture");
 
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilDesc;
-        depthStencilDesc.Format             = depthBufferFormatInfo.formatSet.dsvFormat;
+        depthStencilDesc.Format             = depthBufferFormatInfo.formatSet->dsvFormat;
         depthStencilDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         depthStencilDesc.Flags = 0;
         depthStencilDesc.Texture2D.MipSlice = 0;
@@ -382,10 +382,10 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mDepthStencilDSView, "Offscreen depth stencil view");
 
-        if (depthBufferFormatInfo.formatSet.srvFormat != DXGI_FORMAT_UNKNOWN)
+        if (depthBufferFormatInfo.formatSet->srvFormat != DXGI_FORMAT_UNKNOWN)
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
-            depthStencilSRVDesc.Format                    = depthBufferFormatInfo.formatSet.srvFormat;
+            depthStencilSRVDesc.Format                    = depthBufferFormatInfo.formatSet->srvFormat;
             depthStencilSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
             depthStencilSRVDesc.Texture2D.MostDetailedMip = 0;
             depthStencilSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
