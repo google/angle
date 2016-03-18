@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_a3b7d1fc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2511,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 0,
+      "message": "gross, thanks for fixing this.",
+      "range": {
+        "startLine": 2511,
+        "startChar": 58,
+        "endLine": 2511,
+        "endChar": 82
+      },
+      "revId": "00f394ec669faa3a778180991204caa474eb1dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

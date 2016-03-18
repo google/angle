@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_e894086a",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "under \u0027C++11 Standard Library Features To Be Discussed\u0027 still, not allowed in https://chromium-cpp.appspot.com/. I think you can probably just use a C function type here.",
+      "range": {
+        "startLine": 506,
+        "startChar": 21,
+        "endLine": 506,
+        "endChar": 70
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_08719c1c",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "can we use const \u0026 here?",
+      "range": {
+        "startLine": 508,
+        "startChar": 26,
+        "endLine": 508,
+        "endChar": 32
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_e86d2842",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "banned, see https://chromium-cpp.appspot.com/",
+      "range": {
+        "startLine": 516,
+        "startChar": 4,
+        "endLine": 516,
+        "endChar": 13
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_4399b593",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "comment before every test",
+      "range": {
+        "startLine": 534,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 6
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_a39eb17a",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "nit: no ;",
+      "range": {
+        "startLine": 539,
+        "startChar": 62,
+        "endLine": 539,
+        "endChar": 63
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_23b2c111",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "stylistically i would probably override UniformTestES3 and change the SetUp to init mProgram to this",
+      "range": {
+        "startLine": 576,
+        "startChar": 1,
+        "endLine": 593,
+        "endChar": 66
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_63bdd9dd",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-18T03:27:15Z",
+      "side": 1,
+      "message": "this syntax is also banned currently",
+      "range": {
+        "startLine": 598,
+        "startChar": 33,
+        "endLine": 598,
+        "endChar": 47
+      },
+      "revId": "a391cdb04e543a408ac0b341bd1a557c1e8a1cdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
