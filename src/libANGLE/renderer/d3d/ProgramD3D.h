@@ -322,7 +322,7 @@ class ProgramD3D : public ProgramImpl
                        sh::HLSLBlockEncoder *encoder,
                        D3DUniformMap *uniformMap);
     void assignAllSamplerRegisters();
-    void assignSamplerRegisters(const D3DUniform *d3dUniform);
+    void assignSamplerRegisters(D3DUniform *d3dUniform);
 
     static void AssignSamplers(unsigned int startSamplerIndex,
                                GLenum samplerType,

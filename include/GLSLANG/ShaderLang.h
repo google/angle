@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 144
+#define ANGLE_SH_VERSION 145
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -454,16 +454,10 @@ COMPILER_EXPORT bool ShGetInterfaceBlockRegister(const ShHandle handle,
                                                  const std::string &interfaceBlockName,
                                                  unsigned int *indexOut);
 
-// Gives the compiler-assigned register for uniforms in the default
-// interface block.
-// The method writes the value to the output variable "indexOut".
-// Returns true if it found a valid default uniform, false otherwise.
-// Parameters:
-// handle: Specifies the compiler
-// interfaceBlockName: Specifies the uniform
-// indexOut: output variable that stores the assigned register
-COMPILER_EXPORT bool ShGetUniformRegister(const ShHandle handle,
-                                          const std::string &uniformName,
-                                          unsigned int *indexOut);
+// Gives a map from uniform names to compiler-assigned registers in the default
+// interface block. Note that the map contains also registers of samplers that
+// have been extracted from structs.
+COMPILER_EXPORT const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(
+    const ShHandle handle);
 
 #endif // GLSLANG_SHADERLANG_H_

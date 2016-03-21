@@ -13,6 +13,7 @@
 #include "libANGLE/Shader.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
+#include "libANGLE/renderer/d3d/ProgramD3D.h"
 
 // Definitions local to the translation unit
 namespace
@@ -139,6 +140,18 @@ int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStre
     return additionalOptions;
 }
 
+bool ShaderD3D::hasUniform(const D3DUniform *d3dUniform) const
+{
+    return mUniformRegisterMap.find(d3dUniform->name) != mUniformRegisterMap.end();
+}
+
+const std::map<std::string, unsigned int> &GetUniformRegisterMap(
+    const std::map<std::string, unsigned int> *uniformRegisterMap)
+{
+    ASSERT(uniformRegisterMap);
+    return *uniformRegisterMap;
+}
+
 bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog)
 {
     // TODO(jmadill): We shouldn't need to cache this.
@@ -164,19 +177,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
 
     ShHandle compilerHandle = compiler->getCompilerHandle(mData.getShaderType());
 
-    for (const sh::Uniform &uniform : mData.getUniforms())
-    {
-        if (uniform.staticUse && !uniform.isBuiltIn())
-        {
-            unsigned int index = static_cast<unsigned int>(-1);
-            bool getUniformRegisterResult =
-                ShGetUniformRegister(compilerHandle, uniform.name, &index);
-            UNUSED_ASSERTION_VARIABLE(getUniformRegisterResult);
-            ASSERT(getUniformRegisterResult);
-
-            mUniformRegisterMap[uniform.name] = index;
-        }
-    }
+    mUniformRegisterMap = GetUniformRegisterMap(ShGetUniformRegisterMap(compilerHandle));
 
     for (const sh::InterfaceBlock &interfaceBlock : mData.getInterfaceBlocks())
     {

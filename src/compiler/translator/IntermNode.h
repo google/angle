@@ -738,6 +738,16 @@ class TIntermTraverser : angle::NonCopyable
         return mPath.size() == 0 ? NULL : mPath.back();
     }
 
+    // Return the nth ancestor of the node being traversed. getAncestorNode(0) == getParentNode()
+    TIntermNode *getAncestorNode(unsigned int n)
+    {
+        if (mPath.size() > n)
+        {
+            return mPath[mPath.size() - n - 1u];
+        }
+        return nullptr;
+    }
+
     void pushParentBlock(TIntermAggregate *node);
     void incrementParentBlockPos();
     void popParentBlock();

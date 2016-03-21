@@ -179,14 +179,14 @@ TString TextureTypeSuffix(const TBasicType type)
     }
 }
 
-TString DecorateUniform(const TString &string, const TType &type)
+TString DecorateUniform(const TName &name, const TType &type)
 {
     if (type.getBasicType() == EbtSamplerExternalOES)
     {
-        return "ex_" + string;
+        return "ex_" + name.getString();
     }
 
-    return Decorate(string);
+    return DecorateIfNeeded(name);
 }
 
 TString DecorateField(const TString &string, const TStructure &structure)

@@ -182,26 +182,29 @@ TString StructureHLSL::define(const TStructure &structure, bool useHLSLRowMajorP
     string += declareString + "\n"
               "{\n";
 
-    for (unsigned int i = 0; i < fields.size(); i++)
+    for (const TField *field : fields)
     {
-        const TField &field = *fields[i];
-        const TType &fieldType = *field.type();
-        const TStructure *fieldStruct = fieldType.getStruct();
-        const TString &fieldTypeString = fieldStruct ?
-                                         QualifiedStructNameString(*fieldStruct, useHLSLRowMajorPacking,
-                                                                   useStd140Packing) :
-                                         TypeString(fieldType);
-
-        if (padHelper)
+        const TType &fieldType = *field->type();
+        if (!IsSampler(fieldType.getBasicType()))
         {
-            string += padHelper->prePaddingString(fieldType);
-        }
+            const TStructure *fieldStruct = fieldType.getStruct();
+            const TString &fieldTypeString =
+                fieldStruct ? QualifiedStructNameString(*fieldStruct, useHLSLRowMajorPacking,
+                                                        useStd140Packing)
+                            : TypeString(fieldType);
 
-        string += "    " + fieldTypeString + " " + DecorateField(field.name(), structure) + ArrayString(fieldType) + ";\n";
+            if (padHelper)
+            {
+                string += padHelper->prePaddingString(fieldType);
+            }
 
-        if (padHelper)
-        {
-            string += padHelper->postPaddingString(fieldType, useHLSLRowMajorPacking);
+            string += "    " + fieldTypeString + " " + DecorateField(field->name(), structure) +
+                      ArrayString(fieldType) + ";\n";
+
+            if (padHelper)
+            {
+                string += padHelper->postPaddingString(fieldType, useHLSLRowMajorPacking);
+            }
         }
     }
 
@@ -265,9 +268,13 @@ TString StructureHLSL::addConstructor(const TType &type,
         }
 
         const TFieldList &fields = structure->fields();
-        for (unsigned int i = 0; i < fields.size(); i++)
+        for (const TField *field : fields)
         {
-            ctorParameters.push_back(*fields[i]->type());
+            const TType *fieldType = field->type();
+            if (!IsSampler(fieldType->getBasicType()))
+            {
+                ctorParameters.push_back(*fieldType);
+            }
         }
         constructorFunctionName = TString(name);
     }
@@ -310,7 +317,15 @@ TString StructureHLSL::addConstructor(const TType &type,
 
     if (ctorType.getStruct())
     {
-        constructor += "    " + name + " structure = {";
+        constructor += "    " + name + " structure";
+        if (ctorParameters.empty())
+        {
+            constructor += ";\n";
+        }
+        else
+        {
+            constructor += " = { ";
+        }
     }
     else
     {
@@ -369,7 +384,15 @@ TString StructureHLSL::addConstructor(const TType &type,
     }
     else
     {
-        size_t remainingComponents = ctorType.getObjectSize();
+        size_t remainingComponents = 0;
+        if (ctorType.getStruct())
+        {
+            remainingComponents = ctorParameters.size();
+        }
+        else
+        {
+            remainingComponents = ctorType.getObjectSize();
+        }
         size_t parameterIndex = 0;
 
         while (remainingComponents > 0)
@@ -382,10 +405,9 @@ TString StructureHLSL::addConstructor(const TType &type,
 
             if (ctorType.getStruct())
             {
-                ASSERT(remainingComponents == parameterSize || moreParameters);
-                ASSERT(parameterSize <= remainingComponents);
+                ASSERT(remainingComponents == 1 || moreParameters);
 
-                remainingComponents -= parameterSize;
+                --remainingComponents;
             }
             else if (parameter.isScalar())
             {
@@ -461,9 +483,13 @@ TString StructureHLSL::addConstructor(const TType &type,
 
     if (ctorType.getStruct())
     {
-        constructor += "};\n"
-                        "    return structure;\n"
-                        "}\n";
+        if (!ctorParameters.empty())
+        {
+            constructor += "};\n";
+        }
+        constructor +=
+            "    return structure;\n"
+            "}\n";
     }
     else
     {

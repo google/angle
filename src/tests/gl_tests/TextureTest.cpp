@@ -139,6 +139,8 @@ class Texture2DTest : public TexCoordDrawTest
         );
     }
 
+    virtual const char *getTextureUniformName() { return "tex"; }
+
     void SetUp() override
     {
         TexCoordDrawTest::SetUp();
@@ -146,7 +148,7 @@ class Texture2DTest : public TexCoordDrawTest
 
         ASSERT_GL_NO_ERROR();
 
-        mTexture2DUniformLocation = glGetUniformLocation(mProgram, "tex");
+        mTexture2DUniformLocation = glGetUniformLocation(mProgram, getTextureUniformName());
         ASSERT_NE(-1, mTexture2DUniformLocation);
     }
 
@@ -919,6 +921,152 @@ class SamplerTypeMixTestES3 : public TexCoordDrawTest
     GLint mTexture2DShadowUniformLocation;
     GLint mTextureCubeShadowUniformLocation;
     GLint mDepthRefUniformLocation;
+};
+
+class SamplerInStructTest : public Texture2DTest
+{
+  protected:
+    SamplerInStructTest() : Texture2DTest() {}
+
+    const char *getTextureUniformName() override { return "us.tex"; }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "precision highp float;\n"
+            "struct S\n"
+            "{\n"
+            "    vec4 a;\n"
+            "    highp sampler2D tex;\n"
+            "};\n"
+            "uniform S us;\n"
+            "varying vec2 texcoord;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = texture2D(us.tex, texcoord + us.a.x);\n"
+            "}\n");
+    }
+
+    void runSamplerInStructTest()
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mTexture2D);
+        GLubyte texDataGreen[1u * 1u * 4u];
+        FillWithRGBA<GLubyte>(1u * 1u, 0u, 255u, 0u, 255u, texDataGreen);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataGreen);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    }
+};
+
+class SamplerInStructAsFunctionParameterTest : public SamplerInStructTest
+{
+  protected:
+    SamplerInStructAsFunctionParameterTest() : SamplerInStructTest() {}
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "precision highp float;\n"
+            "struct S\n"
+            "{\n"
+            "    vec4 a;\n"
+            "    highp sampler2D tex;\n"
+            "};\n"
+            "uniform S us;\n"
+            "varying vec2 texcoord;\n"
+            "vec4 sampleFrom(S s) {\n"
+            "    return texture2D(s.tex, texcoord + s.a.x);\n"
+            "}\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = sampleFrom(us);\n"
+            "}\n");
+    }
+};
+
+class SamplerInStructArrayAsFunctionParameterTest : public SamplerInStructTest
+{
+  protected:
+    SamplerInStructArrayAsFunctionParameterTest() : SamplerInStructTest() {}
+
+    const char *getTextureUniformName() override { return "us[0].tex"; }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "precision highp float;\n"
+            "struct S\n"
+            "{\n"
+            "    vec4 a;\n"
+            "    highp sampler2D tex;\n"
+            "};\n"
+            "uniform S us[1];\n"
+            "varying vec2 texcoord;\n"
+            "vec4 sampleFrom(S s) {\n"
+            "    return texture2D(s.tex, texcoord + s.a.x);\n"
+            "}\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = sampleFrom(us[0]);\n"
+            "}\n");
+    }
+};
+
+class SamplerInNestedStructAsFunctionParameterTest : public SamplerInStructTest
+{
+  protected:
+    SamplerInNestedStructAsFunctionParameterTest() : SamplerInStructTest() {}
+
+    const char *getTextureUniformName() override { return "us[0].sub.tex"; }
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "precision highp float;\n"
+            "struct SUB\n"
+            "{\n"
+            "    vec4 a;\n"
+            "    highp sampler2D tex;\n"
+            "};\n"
+            "struct S\n"
+            "{\n"
+            "    SUB sub;\n"
+            "};\n"
+            "uniform S us[1];\n"
+            "varying vec2 texcoord;\n"
+            "vec4 sampleFrom(SUB s) {\n"
+            "    return texture2D(s.tex, texcoord + s.a.x);\n"
+            "}\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = sampleFrom(us[0].sub);\n"
+            "}\n");
+    }
+};
+
+class SamplerInStructAndOtherVariableTest : public SamplerInStructTest
+{
+  protected:
+    SamplerInStructAndOtherVariableTest() : SamplerInStructTest() {}
+
+    std::string getFragmentShaderSource() override
+    {
+        return std::string(
+            "precision highp float;\n"
+            "struct S\n"
+            "{\n"
+            "    vec4 a;\n"
+            "    highp sampler2D tex;\n"
+            "};\n"
+            "uniform S us;\n"
+            "uniform float us_tex;\n"
+            "varying vec2 texcoord;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragColor = texture2D(us.tex, texcoord + us.a.x + us_tex);\n"
+            "}\n");
+    }
 };
 
 TEST_P(Texture2DTest, NegativeAPISubImage)
@@ -1864,6 +2012,39 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1)
     EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
+// Use a sampler in a uniform struct.
+TEST_P(SamplerInStructTest, SamplerInStruct)
+{
+    runSamplerInStructTest();
+}
+
+// Use a sampler in a uniform struct that's passed as a function parameter.
+TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParameter)
+{
+    runSamplerInStructTest();
+}
+
+// Use a sampler in a uniform struct array with a struct from the array passed as a function
+// parameter.
+TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFunctionParameter)
+{
+    runSamplerInStructTest();
+}
+
+// Use a sampler in a struct inside a uniform struct with the nested struct passed as a function
+// parameter.
+TEST_P(SamplerInNestedStructAsFunctionParameterTest, SamplerInNestedStructAsFunctionParameter)
+{
+    runSamplerInStructTest();
+}
+
+// Make sure that there isn't a name conflict between sampler extracted from a struct and a
+// similarly named uniform.
+TEST_P(SamplerInStructAndOtherVariableTest, SamplerInStructAndOtherVariable)
+{
+    runSamplerInStructTest();
+}
+
 class TextureLimitsTest : public ANGLETest
 {
   protected:
@@ -2310,6 +2491,36 @@ ANGLE_INSTANTIATE_TEST(ShadowSamplerPlusSampler3DTestES3,
 ANGLE_INSTANTIATE_TEST(SamplerTypeMixTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DArrayTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureSizeTextureArrayTest, ES3_D3D11(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(SamplerInStructTest,
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerInStructAsFunctionParameterTest,
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerInStructArrayAsFunctionParameterTest,
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerInNestedStructAsFunctionParameterTest,
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
+                       ES2_D3D11(),
+                       ES2_D3D11_FL9_3(),
+                       ES2_D3D9(),
+                       ES2_OPENGL(),
+                       ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 
 } // namespace

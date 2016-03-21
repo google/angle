@@ -18,6 +18,7 @@ namespace rx
 class DynamicHLSL;
 class RendererD3D;
 struct D3DCompilerWorkarounds;
+struct D3DUniform;
 
 class ShaderD3D : public ShaderImpl
 {
@@ -33,7 +34,13 @@ class ShaderD3D : public ShaderImpl
 
     // D3D-specific methods
     void uncompile();
+
+    bool hasUniform(const D3DUniform *d3dUniform) const;
+
+    // Query regular uniforms with their name. Query sampler fields of structs with field selection
+    // using dot (.) operator.
     unsigned int getUniformRegister(const std::string &uniformName) const;
+
     unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
     void appendDebugInfo(const std::string &info) const { mDebugInfo += info; }
 

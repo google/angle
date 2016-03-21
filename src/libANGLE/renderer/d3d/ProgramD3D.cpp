@@ -1347,16 +1347,6 @@ LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
 {
     reset();
 
-    // TODO(jmadill): structures containing samplers
-    for (const gl::LinkedUniform &linkedUniform : mData.getUniforms())
-    {
-        if (linkedUniform.isSampler() && linkedUniform.isField())
-        {
-            infoLog << "Structures containing samplers not currently supported in D3D.";
-            return LinkResult(false, gl::Error(GL_NO_ERROR));
-        }
-    }
-
     const gl::Shader *vertexShader   = mData.getAttachedVertexShader();
     const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
 
@@ -1820,7 +1810,8 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
                                    const sh::Uniform &uniform,
                                    D3DUniformMap *uniformMap)
 {
-    if (uniform.isBuiltIn())
+    // Samplers get their registers assigned in assignAllSamplerRegisters.
+    if (uniform.isBuiltIn() || gl::IsSamplerType(uniform.type))
     {
         defineUniform(shader->getType(), uniform, uniform.name, nullptr, uniformMap);
         return;
@@ -1869,7 +1860,17 @@ void ProgramD3D::defineUniform(GLenum shaderType,
                 const sh::ShaderVariable &field  = uniform.fields[fieldIndex];
                 const std::string &fieldFullName = (fullName + elementString + "." + field.name);
 
-                defineUniform(shaderType, field, fieldFullName, encoder, uniformMap);
+                // Samplers get their registers assigned in assignAllSamplerRegisters.
+                // Also they couldn't use the same encoder as the rest of the struct, since they are
+                // extracted out of the struct by the shader translator.
+                if (gl::IsSamplerType(field.type))
+                {
+                    defineUniform(shaderType, field, fieldFullName, nullptr, uniformMap);
+                }
+                else
+                {
+                    defineUniform(shaderType, field, fieldFullName, encoder, uniformMap);
+                }
             }
 
             if (encoder)
@@ -2066,7 +2067,7 @@ size_t ProgramD3D::getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock)
 
 void ProgramD3D::assignAllSamplerRegisters()
 {
-    for (const D3DUniform *d3dUniform : mD3DUniforms)
+    for (D3DUniform *d3dUniform : mD3DUniforms)
     {
         if (d3dUniform->isSampler())
         {
@@ -2075,20 +2076,23 @@ void ProgramD3D::assignAllSamplerRegisters()
     }
 }
 
-void ProgramD3D::assignSamplerRegisters(const D3DUniform *d3dUniform)
+void ProgramD3D::assignSamplerRegisters(D3DUniform *d3dUniform)
 {
     ASSERT(d3dUniform->isSampler());
-    ASSERT(d3dUniform->vsRegisterIndex != GL_INVALID_INDEX ||
-           d3dUniform->psRegisterIndex != GL_INVALID_INDEX);
-
-    if (d3dUniform->vsRegisterIndex != GL_INVALID_INDEX)
+    const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(mData.getAttachedVertexShader());
+    const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(mData.getAttachedFragmentShader());
+    ASSERT(vertexShaderD3D->hasUniform(d3dUniform) || fragmentShaderD3D->hasUniform(d3dUniform));
+    if (vertexShaderD3D->hasUniform(d3dUniform))
     {
+        d3dUniform->vsRegisterIndex = vertexShaderD3D->getUniformRegister(d3dUniform->name);
+        ASSERT(d3dUniform->vsRegisterIndex != GL_INVALID_INDEX);
         AssignSamplers(d3dUniform->vsRegisterIndex, d3dUniform->type, d3dUniform->arraySize,
                        mSamplersVS, &mUsedVertexSamplerRange);
     }
-
-    if (d3dUniform->psRegisterIndex != GL_INVALID_INDEX)
+    if (fragmentShaderD3D->hasUniform(d3dUniform))
     {
+        d3dUniform->psRegisterIndex = fragmentShaderD3D->getUniformRegister(d3dUniform->name);
+        ASSERT(d3dUniform->psRegisterIndex != GL_INVALID_INDEX);
         AssignSamplers(d3dUniform->psRegisterIndex, d3dUniform->type, d3dUniform->arraySize,
                        mSamplersPS, &mUsedPixelSamplerRange);
     }
