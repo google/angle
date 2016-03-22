@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_0bd32b80",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-22T23:06:47Z",
+      "side": 0,
+      "message": "I believe this should be GLint",
+      "range": {
+        "startLine": 505,
+        "startChar": 50,
+        "endLine": 505,
+        "endChar": 53
+      },
+      "revId": "3ea54ba890f25fcce9213d8ab7c7f8a9fdf10cad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
