@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_5f9b28e7",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 21
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-22T13:57:05Z",
+      "side": 1,
+      "message": "for these Intel or NVIDIA specific failures, let\u0027s sort them into separate groups as in\n\n// Windows failures\n\n// Windows NVIDIA failures\n\n// Windows Intel failures\n\nIn this specific case, this huge block of failures is \u0027untriaged\u0027 and you should move them out of this block into the permanent entries above the large comment.\n\nI guess one last question is if you can make small repro cases that we can send to the NVIDIA / Intel driver teams for investigation.",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 111
+      },
+      "revId": "28d5168584e475144fc073376be3bdb8a9df92f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
