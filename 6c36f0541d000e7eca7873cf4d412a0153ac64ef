@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_df5a5f54",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-23T20:56:21Z",
+      "side": 1,
+      "message": "to clarify my previous suggestion: make a new class that inherits from UniformTestES3, override SetUp and init the mProgram. this would allow you to remove the glDeleteProgram call and ensure that in any case if the test exits prematurely the fixture gets cleaned up.",
+      "range": {
+        "startLine": 541,
+        "startChar": 7,
+        "endLine": 541,
+        "endChar": 21
+      },
+      "revId": "6c36f0541d000e7eca7873cf4d412a0153ac64ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
