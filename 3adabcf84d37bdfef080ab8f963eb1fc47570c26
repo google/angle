@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_65bf6426",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: don\u0027t use non-const references.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_25f8ccd5",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "Here we do the PCA only on unique colors in the block. If the distribution of these colors in the block isn\u0027t uniform then this PCA will not represent accurately the distribution of pixel colors in the block.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_e53b547b",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: ditto.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_97d8cbf2",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: could be moved next to the loop and should be in the following case: kPowerIterations.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_d79fe376",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "If I understand correctly, muv is supposed to be the average value of each channel. Here it is a sum of \"length\" values with potentially length !\u003d 8 so we should divide by length.\nAlso if length \u003d 8 then you\u0027d want to use (muv+7) / 8 (no need for the \u003e\u003e trick and adding 8 is the same as adding +1 to the final result, +7 is what you want to do a ceil).\n\nDividing by an unknown length here might be slow but if pixels was all the color values of the block then we could divide by a constant power of two, which would be fast.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_b786afd4",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "The power iteration algorithm is supposed to normalize the vector at each step, and what we care about is only the eigenvalue and eigenvector. So I don\u0027t think we need to normalize the matrix when converting to float here.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_f7c66713",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: comment that explains that this is a good starting point for the power iterations.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_f78f87a5",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: comment // From the eigenvalue and eigenvector, choose the axis to project colors on. When projecting colors we want to do integer computations for speed, so we normalize the eigenvector to the [0, 512] range.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_97344bdc",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "nit: should be a constant in the for kConstantName.\nInstead of a magnitude that depends on the normalization of the matrix, we should check for the first eigenvalue.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_77bf1726",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "Here we choose minColor and maxColor based on the axis but the vector from min to max might not be aligned with the axis. Maybe we should project them on the axis as a last step ?.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_051ca8f8",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "Update the comment here.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_e5aa34e2",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T23:31:15Z",
+      "side": 1,
+      "message": "The comment needs updating here.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
