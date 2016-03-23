@@ -2508,7 +2508,7 @@ void Program::getUniformInternal(GLint location, DestT *dataOut) const
         return;
     }
 
-    int components = VariableComponentCount(uniform.type);
+    int components = VariableComponentCount(uniform.type) * uniform.elementCount();
 
     switch (componentType)
     {
