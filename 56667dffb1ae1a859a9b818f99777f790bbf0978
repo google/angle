@@ -128,6 +128,30 @@
     },
     {
       "key": {
+        "uuid": "a2e32149_3d6234e5",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82ea9d1e_d515ec5f",
+      "range": {
+        "startLine": 73,
+        "startChar": 1,
+        "endLine": 76,
+        "endChar": 5
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e211990a_2d16a1dc",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 1
@@ -139,6 +163,30 @@
       "writtenOn": "2016-03-03T18:26:50Z",
       "side": 1,
       "message": "put this in a default case",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 13
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82ea9d1e_07e446f9",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e211990a_2d16a1dc",
       "range": {
         "startLine": 100,
         "startChar": 0,
@@ -174,6 +222,30 @@
     },
     {
       "key": {
+        "uuid": "82d1bd8e_c8b70f4d",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82ea9d1e_b5f9486f",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 116,
+        "endChar": 13
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a26ec178_86011255",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 1
@@ -197,6 +269,30 @@
     },
     {
       "key": {
+        "uuid": "02feade5_629d402e",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a26ec178_86011255",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 1
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82ea9d1e_ac490109",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 1
@@ -208,6 +304,30 @@
       "writtenOn": "2016-03-03T18:26:50Z",
       "side": 1,
       "message": "for implementing this on OpenGL we might want to use an Impl object to map to the native Stream extension when available. Hence we might want a StreamImpl class. Corentin any thoughts?",
+      "range": {
+        "startLine": 37,
+        "startChar": 6,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a26ec178_76ce0bd2",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "I\u0027ll probably add one to handle at least the D3D texture injection logic, which may be different for D3D9 and D3D11 if we do it. This is being implemented for a very specific use case though and while it should be made easy to extend, I don\u0027t think there are that many other use cases at the moment.",
+      "parentUuid": "82ea9d1e_ac490109",
       "range": {
         "startLine": 37,
         "startChar": 6,
@@ -381,6 +501,24 @@
     },
     {
       "key": {
+        "uuid": "82d1bd8e_68654388",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "I\u0027m not sure a maximum is too good an idea as it could cause undefined behavior in Chromium if say a timing metric was used to set this but was higher than expected due to some hickup. I\u0027ll look into it more but I don\u0027t think that this attribute is that important in our use case. It might be better to internally clamp the attribute rather than completely reject it. I think rejecting negative numbers is fine as there is no way they are sensible and reflect bugs in the client.",
+      "parentUuid": "82d1bd8e_48015fe7",
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a26ec178_1630efe4",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 1
@@ -415,6 +553,30 @@
       "writtenOn": "2016-03-03T18:26:50Z",
       "side": 1,
       "message": "validate the stream state in this method",
+      "range": {
+        "startLine": 1120,
+        "startChar": 6,
+        "endLine": 1120,
+        "endChar": 29
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2e32149_9d28a063",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure I do unless I am missing something?",
+      "parentUuid": "e27a7932_ee3f7669",
       "range": {
         "startLine": 1120,
         "startChar": 6,
@@ -519,6 +681,30 @@
     },
     {
       "key": {
+        "uuid": "a2e32149_1d6bf083",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "The code is based on another EGL test which uses this. I\u0027ll look into updating it.",
+      "parentUuid": "a2e32149_ddb4e800",
+      "range": {
+        "startLine": 20,
+        "startChar": 29,
+        "endLine": 20,
+        "endChar": 42
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02feade5_68d88838",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 1
@@ -542,6 +728,30 @@
     },
     {
       "key": {
+        "uuid": "e27a7932_0cf0ca82",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02feade5_68d88838",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 15
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c26bb568_ed0a2bb7",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 1
@@ -553,6 +763,30 @@
       "writtenOn": "2016-03-03T18:26:50Z",
       "side": 1,
       "message": "use ASSERT_EGL_SUCCESS for these",
+      "range": {
+        "startLine": 215,
+        "startChar": 4,
+        "endLine": 215,
+        "endChar": 15
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e211990a_b0fcc15e",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c26bb568_ed0a2bb7",
       "range": {
         "startLine": 215,
         "startChar": 4,
