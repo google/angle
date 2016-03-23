@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_e59d142e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T22:44:56Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it be clamped to gl::IMPLEMENTION_MAX_TEXTURE_LEVELS  - 1 instead?",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_a544bc26",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1508,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T22:44:56Z",
+      "side": 1,
+      "message": "Level 0 could be set to a third color like black so we know it isn\u0027t used. Same comment for the other texture dimensionalities.",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_c56450b5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-23T22:44:56Z",
+      "side": 1,
+      "message": "This test could have a range of [0, 0] then move to a range of [0, 1] that has inconsistent dimensions. Same for texture3D",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
