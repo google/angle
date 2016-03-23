@@ -336,24 +336,27 @@ void FramebufferGL::syncDrawState() const
 
 void FramebufferGL::syncClearState(GLbitfield mask)
 {
-    if (mWorkarounds.doesSRGBClearsOnLinearFramebufferAttachments &&
-        (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
+    if (mFunctions->standard == STANDARD_GL_DESKTOP)
     {
-        bool hasSRBAttachment = false;
-        for (const auto &attachment : mData.getColorAttachments())
+        if (mWorkarounds.doesSRGBClearsOnLinearFramebufferAttachments &&
+            (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
         {
-            if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
+            bool hasSRBAttachment = false;
+            for (const auto &attachment : mData.getColorAttachments())
             {
-                hasSRBAttachment = true;
-                break;
+                if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
+                {
+                    hasSRBAttachment = true;
+                    break;
+                }
             }
-        }
 
-        mStateManager->setFramebufferSRGBEnabled(hasSRBAttachment);
-    }
-    else
-    {
-        mStateManager->setFramebufferSRGBEnabled(!mIsDefault);
+            mStateManager->setFramebufferSRGBEnabled(hasSRBAttachment);
+        }
+        else
+        {
+            mStateManager->setFramebufferSRGBEnabled(!mIsDefault);
+        }
     }
 }
 
