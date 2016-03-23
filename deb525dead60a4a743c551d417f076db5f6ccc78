@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c21d2e1_3035b0b9",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_f58cbb27",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 69
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_b5052337",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-03-22T17:20:10Z",
       "side": 1,
       "message": "Instead of implementing these switches here, I would add getters and setters to the Stream class.  The switches then move to the entry point.  We\u0027ve slowly done this with the other classes (Queries, Textures, etc) and helps with the readability of the class.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 5
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_10306cc6",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_b5052337",
       "range": {
         "startLine": 36,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7c21d2e1_b08b609d",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_951e1fa4",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 39
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_75fd6b7f",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 5
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "7c21d2e1_f094b8bc",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_75fd6b7f",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_d50ed784",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 5
@@ -105,6 +201,30 @@
       "writtenOn": "2016-03-22T17:20:10Z",
       "side": 1,
       "message": "I don\u0027t think any of these are needed.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 14
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_d08ff4a5",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_d50ed784",
       "range": {
         "startLine": 32,
         "startChar": 0,
@@ -174,6 +294,30 @@
       "writtenOn": "2016-03-22T17:20:10Z",
       "side": 1,
       "message": "This logic is repeated a lot.  How about adding a \n\n   ValidateStream(display, stream)\n\nthat does the same check.",
+      "range": {
+        "startLine": 1206,
+        "startChar": 4,
+        "endLine": 1221,
+        "endChar": 5
+      },
+      "revId": "deb525dead60a4a743c551d417f076db5f6ccc78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_7060c8b0",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-23T17:20:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_3575b39b",
       "range": {
         "startLine": 1206,
         "startChar": 4,
