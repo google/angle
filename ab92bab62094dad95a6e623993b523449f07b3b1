@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_884d0b40",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T22:09:17Z",
+      "side": 1,
+      "message": "I think if you just have:\nmUnused \u003d mScanning;\nmScanning \u003d mPending;\nmPending \u003d mDrawing;\nmDrawing \u003d nullptr;\n\nin the end of presentScreen, it would be more clear, and you can get rid of pageFlipHandler.",
+      "range": {
+        "startLine": 511,
+        "startChar": 0,
+        "endLine": 511,
+        "endChar": 68
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_e8312fe9",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T22:09:17Z",
+      "side": 1,
+      "message": "Change to assert, it\u0027s more clear this way.",
+      "range": {
+        "startLine": 548,
+        "startChar": 4,
+        "endLine": 548,
+        "endChar": 6
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_776fe2ca",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -105,6 +151,30 @@
       "writtenOn": "2016-03-24T21:43:12Z",
       "side": 1,
       "message": "I think you never delete these?",
+      "range": {
+        "startLine": 750,
+        "startChar": 23,
+        "endLine": 750,
+        "endChar": 26
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_88486b57",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T22:09:17Z",
+      "side": 1,
+      "message": "Never mind, I just got confused with all the pointer exchanges.",
+      "parentUuid": "3ca2fa11_a813a7ad",
       "range": {
         "startLine": 750,
         "startChar": 23,
