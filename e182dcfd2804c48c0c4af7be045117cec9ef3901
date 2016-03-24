@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_fc148663",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T14:03:10Z",
+      "side": 1,
+      "message": "won\u0027t this leak the previous mProgram? this would be fixed by making a new fixture.",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 28
+      },
+      "revId": "e182dcfd2804c48c0c4af7be045117cec9ef3901",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
