@@ -1380,6 +1380,13 @@
                         {
                             'sources': [ '<@(deqp_libtester_sources_unix)', ],
                         }],
+                        ['OS=="linux"',
+                        {
+                            'link_settings':
+                            {
+                                'libraries': ['-lrt']
+                            },
+                        }],
                     ],
                 },
 

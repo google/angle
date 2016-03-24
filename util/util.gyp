@@ -158,7 +158,7 @@
                         ],
                         'libraries':
                         [
-                            '<!@(<(pkg-config) --libs-only-l x11 xi) -lrt',
+                            '<!@(<(pkg-config) --libs-only-l x11 xi)',
                         ],
                     },
                 }],
