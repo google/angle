@@ -65,7 +65,11 @@ std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
 }  // namespace angle
 
 ANGLETest::ANGLETest()
-    : mEGLWindow(nullptr), mWidth(16), mHeight(16), mIgnoreD3D11SDKLayersWarnings(false)
+    : mEGLWindow(nullptr),
+      mWidth(16),
+      mHeight(16),
+      mIgnoreD3D11SDKLayersWarnings(false),
+      mQuadVertexBuffer(0)
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
@@ -73,6 +77,10 @@ ANGLETest::ANGLETest()
 
 ANGLETest::~ANGLETest()
 {
+    if (mQuadVertexBuffer)
+    {
+        glDeleteBuffers(1, &mQuadVertexBuffer);
+    }
     SafeDelete(mEGLWindow);
 }
 
@@ -176,6 +184,58 @@ void ANGLETest::drawQuad(GLuint program,
     glEnableVertexAttribArray(positionLocation);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+
+    glUseProgram(0);
+}
+
+void ANGLETest::drawIndexedQuad(GLuint program,
+                                const std::string &positionAttribName,
+                                GLfloat positionAttribZ)
+{
+    drawIndexedQuad(program, positionAttribName, positionAttribZ, 1.0f);
+}
+
+void ANGLETest::drawIndexedQuad(GLuint program,
+                                const std::string &positionAttribName,
+                                GLfloat positionAttribZ,
+                                GLfloat positionAttribXYScale)
+{
+    GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
+
+    glUseProgram(program);
+
+    GLuint prevBinding = 0;
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, reinterpret_cast<GLint *>(&prevBinding));
+
+    if (mQuadVertexBuffer == 0)
+    {
+        glGenBuffers(1, &mQuadVertexBuffer);
+        const GLfloat vertices[] = {
+            -1.0f * positionAttribXYScale, 1.0f * positionAttribXYScale,  positionAttribZ,
+            -1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
+            1.0f * positionAttribXYScale,  -1.0f * positionAttribXYScale, positionAttribZ,
+            1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale,  positionAttribZ,
+        };
+        glBindBuffer(GL_ARRAY_BUFFER, mQuadVertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 4, vertices, GL_STATIC_DRAW);
+    }
+    else
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, mQuadVertexBuffer);
+    }
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+    glBindBuffer(GL_ARRAY_BUFFER, prevBinding);
+
+    const GLushort indices[] = {
+        0, 1, 2, 0, 2, 3,
+    };
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
     glDisableVertexAttribArray(positionLocation);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
