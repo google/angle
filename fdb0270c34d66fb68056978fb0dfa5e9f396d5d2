@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ca2fa11_8215eace",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T20:55:15Z",
+      "side": 1,
+      "message": "you don\u0027t need to define this if you\u0027re just calling the base",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 49
+      },
+      "revId": "fdb0270c34d66fb68056978fb0dfa5e9f396d5d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_62127ee6",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T20:55:15Z",
+      "side": 1,
+      "message": "this would also be unnecessary",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "fdb0270c34d66fb68056978fb0dfa5e9f396d5d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_e2d66e3b",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T20:55:15Z",
+      "side": 1,
+      "message": "all of these are backwards - should be ASSERT_EQ(expected, actual), so ASSERT_EQ(EGL_NO_STREAM_KHR, stream). However, I think there may be some warning generated due to mismatched types, so you may not be able to use the code like this.",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 13
+      },
+      "revId": "fdb0270c34d66fb68056978fb0dfa5e9f396d5d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_a2b58617",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T20:55:15Z",
+      "side": 1,
+      "message": "git cl format should adjust the comment here, also it should be // anonymous namespace",
+      "range": {
+        "startLine": 137,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 14
+      },
+      "revId": "fdb0270c34d66fb68056978fb0dfa5e9f396d5d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
