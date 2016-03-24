@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c21d2e1_da08aa0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "nit: various KHR stream extensions",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_3ae2a61a",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "Validation here is missing the checks for valid texture units, I assume it will be added in future patches that add functionality.",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_ba3a1679",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "There could be a check for \u003c 0 like for the latency (even though it isn\u0027t speced).",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_ba25f647",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "nit: the reason seems to be that we use -1 as a tag value for planeCount \u003d default.",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_9a5632a6",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1390,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "In this type of case with a range of enums, we usually put code in the default: case and check for the range manually.",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c21d2e1_fa4e4e3a",
+        "filename": "src/libEGL/libEGL.def",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-24T00:29:32Z",
+      "side": 1,
+      "message": "nit: you realigned for eglStreamConsumerLTextureExternalKHR but not for eglStreamConsumerGLTextureExternalAttribsNV",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
