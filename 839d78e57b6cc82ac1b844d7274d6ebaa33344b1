@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ca2fa11_3d037b5f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2010,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T21:04:46Z",
+      "side": 1,
+      "message": "I think I would rather you pass in either the gl::State or just the gl::Program to transformFeedback-\u003ebegin() and associate with the program inside ::begin",
+      "range": {
+        "startLine": 2009,
+        "startChar": 4,
+        "endLine": 2010,
+        "endChar": 60
+      },
+      "revId": "839d78e57b6cc82ac1b844d7274d6ebaa33344b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_ddf4f7a9",
+        "filename": "src/libANGLE/TransformFeedback.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T21:04:46Z",
+      "side": 1,
+      "message": "can we call this hasBoundProgram to disambiguate it a bit more from \u0027bindProgram\u0027 (and generally ANGLE uses is or has verbs for query funcs)",
+      "range": {
+        "startLine": 48,
+        "startChar": 9,
+        "endLine": 48,
+        "endChar": 21
+      },
+      "revId": "839d78e57b6cc82ac1b844d7274d6ebaa33344b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_3d441b94",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T21:04:46Z",
+      "side": 1,
+      "message": "I think we\u0027re starting to get a few too many drawQuad permutations here. Try quering the current program in drawQuad, and reset it to the previous value after the draw, and seeing if end2end_tests can handle that use pattern.",
+      "range": {
+        "startLine": 168,
+        "startChar": 16,
+        "endLine": 168,
+        "endChar": 42
+      },
+      "revId": "839d78e57b6cc82ac1b844d7274d6ebaa33344b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
