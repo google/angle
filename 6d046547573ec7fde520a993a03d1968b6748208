@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_91cc1eb0",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-24T17:54:36Z",
+      "side": 1,
+      "message": "Yeah texture unit validation will require a fairly deep check in the internal state so I may validate it inside the implementation instead at a superficial validation function.",
+      "parentUuid": "7c21d2e1_3ae2a61a",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_ba3a1679",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2016-03-24T00:29:32Z",
       "side": 1,
       "message": "There could be a check for \u003c 0 like for the latency (even though it isn\u0027t speced).",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_d15346b3",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-24T17:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_ba3a1679",
       "revId": "6d046547573ec7fde520a993a03d1968b6748208",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_f1d12246",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1383,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-24T17:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_ba25f647",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_9a5632a6",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 4
@@ -81,6 +135,24 @@
       "writtenOn": "2016-03-24T00:29:32Z",
       "side": 1,
       "message": "In this type of case with a range of enums, we usually put code in the default: case and check for the range manually.",
+      "revId": "6d046547573ec7fde520a993a03d1968b6748208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_d1d6a63b",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1390,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-24T17:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_9a5632a6",
       "revId": "6d046547573ec7fde520a993a03d1968b6748208",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
