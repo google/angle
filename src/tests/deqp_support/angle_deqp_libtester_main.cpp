@@ -89,7 +89,7 @@ bool FindDataDir(std::string *dataDir)
             return true;
         }
 
-        std::string directory = angle::GetExecutableDirectory() + searchDir;
+        std::string directory = angle::GetExecutableDirectory() + "/" + searchDir;
         if (deIsDir(directory.c_str()))
         {
             *dataDir = directory;
