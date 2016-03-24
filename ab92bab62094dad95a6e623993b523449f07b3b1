@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_08a47be1",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T22:46:32Z",
+      "side": 1,
+      "message": "Thought about this a bit more, and indeed, these changes happen simultaneously.\nIf !mPending, then pageFlipHandler is not called, but it\u0027s still the same, as mUnused and mScanning are null anyway.\nIf mPending, and the previous flip completed, then the whole queue shifts.\nIf mPendind and the the previous flip didn\u0027t complete, then no change.",
+      "parentUuid": "3ca2fa11_884d0b40",
+      "range": {
+        "startLine": 511,
+        "startChar": 0,
+        "endLine": 511,
+        "endChar": 68
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_e8312fe9",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -59,6 +83,30 @@
       "writtenOn": "2016-03-24T22:09:17Z",
       "side": 1,
       "message": "Change to assert, it\u0027s more clear this way.",
+      "range": {
+        "startLine": 548,
+        "startChar": 4,
+        "endLine": 548,
+        "endChar": 6
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_084f5b0b",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T22:46:32Z",
+      "side": 1,
+      "message": "Sorry, I forgot that you do not poll indefinitely, but just check if the previous flip completed already.\nAt least assert(mDrawing), as this is only called from drawBuffer, which would set mDrawing.\nAnd if you decide to simplify pageFlipHandler, then you can just check for (pfd.revents \u0026 POLLIN) instead of !mPending.",
+      "parentUuid": "3ca2fa11_e8312fe9",
       "range": {
         "startLine": 548,
         "startChar": 4,
