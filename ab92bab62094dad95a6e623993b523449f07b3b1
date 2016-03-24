@@ -1,0 +1,348 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ca2fa11_d4bcd498",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "I think the sort order is (usually) such that the first mode is the best, not the last",
+      "range": {
+        "startLine": 321,
+        "startChar": 57,
+        "endLine": 321,
+        "endChar": 74
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_776fe2ca",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Is it possible to refactor CompileProgram() from shader_utils so it can be used both here and from samples?",
+      "range": {
+        "startLine": 570,
+        "startChar": 19,
+        "endLine": 570,
+        "endChar": 29
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_37539ae5",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Is there some ANGLE coding standard for this?",
+      "range": {
+        "startLine": 576,
+        "startChar": 1,
+        "endLine": 576,
+        "endChar": 10
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_f753d20b",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 718,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Unused?",
+      "range": {
+        "startLine": 718,
+        "startChar": 17,
+        "endLine": 718,
+        "endChar": 29
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_62939e11",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "//TODO: find out why\neglClientWaitSyncKHR(display, fence, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, EGL_FOREVER_KHR)\nhangs here, but works in Chrome.",
+      "range": {
+        "startLine": 785,
+        "startChar": 90,
+        "endLine": 785,
+        "endChar": 91
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_bd600be2",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Since you don\u0027t support PBuffers, perhaps remove PbufferSurfaceCros class?",
+      "range": {
+        "startLine": 854,
+        "startChar": 4,
+        "endLine": 854,
+        "endChar": 17
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_c226d254",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "EGL1.5 supports EGL_CONTEXT_MAJOR_VERSION and EGL_CONTEXT_MINOR_VERSION",
+      "range": {
+        "startLine": 882,
+        "startChar": 9,
+        "endLine": 882,
+        "endChar": 53
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_22187604",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "I believe in this case you are supposed to try only the exact version, not the others.",
+      "range": {
+        "startLine": 897,
+        "startChar": 17,
+        "endLine": 897,
+        "endChar": 23
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_e2af8ec3",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Is it OK not to initialize the other members?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_9d138fae",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "You had a comment about magic number before, I think it\u0027s a nice idea.",
+      "range": {
+        "startLine": 950,
+        "startChar": 11,
+        "endLine": 950,
+        "endChar": 15
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_7d4ea3b3",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "fjhenigman@ :)\n\nIf seriously, then \"mEGL.queryString(EGL_VENDOR)\"",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_dd6997fa",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Why not forward the waitXXX to native EGL?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_ddea3795",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 982,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this check what native EGL supports?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_9d2b8f1b",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/WindowSurfaceCros.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Unused?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 21
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_5da6471f",
+        "filename": "util/cros/CrosPixmap.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "There will be no pixmaps on ChromeOS, right?\nCan we remove this class?",
+      "range": {
+        "startLine": 7,
+        "startChar": 19,
+        "endLine": 7,
+        "endChar": 59
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ca2fa11_dde07748",
+        "filename": "util/cros/CrosWindow.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-24T21:37:45Z",
+      "side": 1,
+      "message": "Is it a hack that this struct is the same as DisplayDRM::NativeWindow?",
+      "range": {
+        "startLine": 48,
+        "startChar": 6,
+        "endLine": 48,
+        "endChar": 13
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
