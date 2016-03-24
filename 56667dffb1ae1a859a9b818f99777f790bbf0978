@@ -589,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_2274f60c",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-24T20:55:15Z",
+      "side": 1,
+      "message": "If an error occurs, EGL_FALSE is returned and an error is\n    generated.\n\n        - EGL_BAD_STATE_KHR is generated if \u003cstream\u003e is in\n          EGL_STREAM_STATE_DISCONNECTED_KHR state.",
+      "parentUuid": "a2e32149_9d28a063",
+      "range": {
+        "startLine": 1120,
+        "startChar": 6,
+        "endLine": 1120,
+        "endChar": 29
+      },
+      "revId": "56667dffb1ae1a859a9b818f99777f790bbf0978",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e211990a_354ee339",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 1
