@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1cdb763a_2682dcf5",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-24T06:17:27Z",
+      "side": 1,
+      "message": "It\u0027s an invalid base level, so I think it makes more sense to change it to 0.",
+      "parentUuid": "7c21d2e1_e59d142e",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_a544bc26",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "bcb50adc_ce730325",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1508,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-24T06:17:27Z",
+      "side": 1,
+      "message": "That kind of a case is already covered by another test, but I suppose it would be ok to test that here too.",
+      "parentUuid": "7c21d2e1_a544bc26",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_c56450b5",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2016-03-23T22:44:56Z",
       "side": 1,
       "message": "This test could have a range of [0, 0] then move to a range of [0, 1] that has inconsistent dimensions. Same for texture3D",
+      "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cdb763a_4687e804",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1747,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-24T06:17:27Z",
+      "side": 1,
+      "message": "True, that would be more elegant. Will do. There\u0027s no corresponding 3D test right now though - I should probably add it and make it such that only depth is inconsistent, it would add a bit more coverage.",
+      "parentUuid": "7c21d2e1_c56450b5",
       "revId": "b4bc73ee0f658dbc7bd46e2935f1e9b2ff467b9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
