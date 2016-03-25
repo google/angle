@@ -22,6 +22,30 @@
       "revId": "e182dcfd2804c48c0c4af7be045117cec9ef3901",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_a5c98898",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T23:32:45Z",
+      "side": 1,
+      "message": "gtest uses a test fixture instance only for one test. So here we are guaranteed that mProgram is 0 before CompileProgram.",
+      "parentUuid": "7c21d2e1_fc148663",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 605,
+        "endChar": 28
+      },
+      "revId": "e182dcfd2804c48c0c4af7be045117cec9ef3901",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
