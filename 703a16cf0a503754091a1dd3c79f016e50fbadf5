@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "913af1f4_a33d24c2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1570,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T20:33:49Z",
+      "side": 1,
+      "message": "nit: isPartOfSamplerInStruct?",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "913af1f4_23bf54d6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T20:33:49Z",
+      "side": 1,
+      "message": "Just to be sure I understand correctly: here we are creating a dummy encoder so that the sampler2d doesn\u0027t get encoded but the rest goes through?",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "910bd117_8d02112d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1865,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T20:33:49Z",
+      "side": 1,
+      "message": "nit: assert shaderD3D is not null",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
