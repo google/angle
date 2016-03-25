@@ -2,6 +2,80 @@
   "comments": [
     {
       "key": {
+        "uuid": "9c4da65c_14d11a1b",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Usually we would use egl::Error, is it not used because it would cause include problems?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_3450ded5",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "nit: could use egl::Error here.",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_749b46e8",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Could you comment somewhere that the framebuffer isn\u0027t created on resize like the others because it is used as the default framebuffer for this surface?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_d46232a7",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 1
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_d4bcd498",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -153,6 +227,30 @@
       "writtenOn": "2016-03-24T21:37:45Z",
       "side": 1,
       "message": "Is there some ANGLE coding standard for this?",
+      "range": {
+        "startLine": 576,
+        "startChar": 1,
+        "endLine": 576,
+        "endChar": 10
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_94542aa0",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "I know of only one ifdefed out test code in OSWindow so I don\u0027t think we have a standard. I\u0027m slightly in favor of defines myself.",
+      "parentUuid": "3ca2fa11_37539ae5",
       "range": {
         "startLine": 576,
         "startChar": 1,
@@ -327,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "9c4da65c_7460a67a",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "3ca2fa11_22187604",
+      "range": {
+        "startLine": 897,
+        "startChar": 17,
+        "endLine": 897,
+        "endChar": 23
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_e2af8ec3",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -401,6 +523,24 @@
     },
     {
       "key": {
+        "uuid": "9c4da65c_f453b6b2",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Also you might want to have a Buffer::resize call here.",
+      "parentUuid": "3ca2fa11_dd6997fa",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_ddea3795",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -412,6 +552,126 @@
       "writtenOn": "2016-03-24T21:37:45Z",
       "side": 1,
       "message": "Shouldn\u0027t this check what native EGL supports?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_34c8de1e",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Unused?",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 2
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_b47cce91",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Same as in CrOSWindow.h, can you make these use sized types?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_f45f3615",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Unused?",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 69
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_74c26600",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Unused?",
+      "range": {
+        "startLine": 163,
+        "startChar": 0,
+        "endLine": 176,
+        "endChar": 29
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_741ee650",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/PbufferSurfaceCros.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Will this every be implemented on ChromeOS?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_7418a653",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/WindowSurfaceCros.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Unused?",
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -441,6 +701,23 @@
     },
     {
       "key": {
+        "uuid": "9c4da65c_94d6eac5",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/WindowSurfaceCros.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Unused?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_5da6471f",
         "filename": "util/cros/CrosPixmap.cpp",
         "patchSetId": 16
@@ -458,6 +735,57 @@
         "endLine": 7,
         "endChar": 59
       },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_744b46a2",
+        "filename": "util/cros/CrosWindow.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "When you\u0027ll want to finish this class, you might find window_test useful. Also you can add a define to OSWindow to have debug printing of the events.",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_b434ce32",
+        "filename": "util/cros/CrosWindow.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Is this the regular ChromeOS native window type? I\u0027m not sure on ChromeOS (the only ANGLE user will be Chrome) but on other systems we want to have ANGLE\u0027s native window type match the OS\u0027s native window type.",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c4da65c_f43e560e",
+        "filename": "util/cros/CrosWindow.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T01:47:46Z",
+      "side": 1,
+      "message": "Since this is read from WindowSurface, it would be nice to have sized int32_t types.",
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
