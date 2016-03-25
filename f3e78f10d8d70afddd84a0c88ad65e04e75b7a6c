@@ -16,6 +16,24 @@
       "revId": "f3e78f10d8d70afddd84a0c88ad65e04e75b7a6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "910bd117_d8620d7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-25T02:52:41Z",
+      "side": 1,
+      "message": "Yeah it\u0027s a bit odd. The reason is there\u0027s no good implicit conversion from a value type to RValue-reference, and I really want the constructor to only take RValue reference, for the heavyweight types like the Textures. I\u0027m willing to bet there\u0027s a C++11 solution to this but I don\u0027t know what it is.",
+      "parentUuid": "9c4da65c_91b0bc28",
+      "revId": "f3e78f10d8d70afddd84a0c88ad65e04e75b7a6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
