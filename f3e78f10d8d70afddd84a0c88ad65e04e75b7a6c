@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c4da65c_91b0bc28",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-25T00:47:51Z",
+      "side": 1,
+      "message": "Using std::move here and above is weird. Isn\u0027t there an implicit conversion from T to gl::ErrorOrResult\u003cT\u003e?",
+      "revId": "f3e78f10d8d70afddd84a0c88ad65e04e75b7a6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
