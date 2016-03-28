@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "d1cc697f_d8c90a98",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "make this a local static method by placing it in a namespace {} block",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 11
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_3352175a",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "do we not have PFNEGL types for these? I think Geoff actually wrote some manually for the GL functions, I think we should do that here if we already have a precedent.",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 14
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c4da65c_14d11a1b",
         "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
         "patchSetId": 16
@@ -13,6 +59,139 @@
       "writtenOn": "2016-03-25T01:47:46Z",
       "side": 1,
       "message": "Usually we would use egl::Error, is it not used because it would cause include problems?",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_b8b52613",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "+1 for using egl::Error",
+      "parentUuid": "9c4da65c_14d11a1b",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_931843c0",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "I like having patterns like this, but maybe call this ANGLE_GET_PROC_OR_ERROR just to be super safe.",
+      "range": {
+        "startLine": 131,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 25
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_38c1166b",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "nit: each namespace should have a closing comment: // namespace \u003cname\u003e",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 1
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_13b19309",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "I\u0027d be happier to see you just use string constants for making shaders if at all possible. You figured out a version workaround but that still ends up concatenating the shader into one big line unless you hard code \"\\n\"s, at which point I think it looks better as a string constant.",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 21
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_987ea2ee",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "can you comment as to what this is and why we define it, which header it might be found it otherwise?",
+      "range": {
+        "startLine": 34,
+        "startChar": 1,
+        "endLine": 34,
+        "endChar": 7
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_53ba3be6",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "statics go at the top of the file, and should be \"C\"apitialized. I\u0027d also prefer using a namespace {} block",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 6
+      },
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -76,6 +255,52 @@
     },
     {
       "key": {
+        "uuid": "d1cc697f_13c8b36f",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "should this also be override?",
+      "range": {
+        "startLine": 270,
+        "startChar": 4,
+        "endLine": 270,
+        "endChar": 11
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_53e15be4",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "same comment about local statics",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 316,
+        "endChar": 6
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_d4bcd498",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -92,6 +317,52 @@
         "startChar": 57,
         "endLine": 321,
         "endChar": 74
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_93ebe3c4",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "same comment",
+      "range": {
+        "startLine": 333,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 6
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_33dcd72d",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "nit: I feel like for a list like this, with no grouping or pairs, we should be okay using the default formatting. remove the clang-format",
+      "range": {
+        "startLine": 435,
+        "startChar": 4,
+        "endLine": 435,
+        "endChar": 23
       },
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -263,6 +534,29 @@
     },
     {
       "key": {
+        "uuid": "d1cc697f_9302035b",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "again I\u0027d rather see these simply use string constants and do away with the clang format override",
+      "range": {
+        "startLine": 595,
+        "startChar": 8,
+        "endLine": 595,
+        "endChar": 27
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ca2fa11_f753d20b",
         "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
         "patchSetId": 16
@@ -344,6 +638,30 @@
       "writtenOn": "2016-03-24T21:37:45Z",
       "side": 1,
       "message": "//TODO: find out why\neglClientWaitSyncKHR(display, fence, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, EGL_FOREVER_KHR)\nhangs here, but works in Chrome.",
+      "range": {
+        "startLine": 785,
+        "startChar": 90,
+        "endLine": 785,
+        "endChar": 91
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_53379b34",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/DisplayDRM.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "This for loop, with the hard-coded 99 usleep is pretty mysterious, a comment would help.",
+      "parentUuid": "3ca2fa11_62939e11",
       "range": {
         "startLine": 785,
         "startChar": 90,
@@ -661,6 +979,29 @@
     },
     {
       "key": {
+        "uuid": "3ca2fa11_3d537be5",
+        "filename": "src/libANGLE/renderer/gl/egl/cros/PbufferSurfaceCros.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "I\u0027d rather see the suffix as \"CrOS\", eg  PbufferSurfaceCrOS, etc. I keep seeing \u0027Cros\u0027 pronounced as \"kroz\" or \"krosse\", and I think now\u0027s the time to change it.",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c4da65c_7418a653",
         "filename": "src/libANGLE/renderer/gl/egl/cros/WindowSurfaceCros.cpp",
         "patchSetId": 16
@@ -769,6 +1110,29 @@
       "writtenOn": "2016-03-25T01:47:46Z",
       "side": 1,
       "message": "Is this the regular ChromeOS native window type? I\u0027m not sure on ChromeOS (the only ANGLE user will be Chrome) but on other systems we want to have ANGLE\u0027s native window type match the OS\u0027s native window type.",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_93668323",
+        "filename": "util/cros/CrosWindow.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-28T20:25:31Z",
+      "side": 1,
+      "message": "not sure why you use an anonymous struct but we don\u0027t really use them in ANGLE anywhere that I know - better to define the type and member separately to be style-consistent.",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 10
+      },
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
