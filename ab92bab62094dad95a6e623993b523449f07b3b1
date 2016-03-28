@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "d1cc697f_3374d499",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-28T23:30:18Z",
+      "side": 1,
+      "message": "I have all the types in my version. I was going to add them in my CL, but I can give them to Frank right away.",
+      "parentUuid": "d1cc697f_3352175a",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 14
+      },
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c4da65c_14d11a1b",
         "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
         "patchSetId": 16
@@ -1110,6 +1134,24 @@
       "writtenOn": "2016-03-25T01:47:46Z",
       "side": 1,
       "message": "Is this the regular ChromeOS native window type? I\u0027m not sure on ChromeOS (the only ANGLE user will be Chrome) but on other systems we want to have ANGLE\u0027s native window type match the OS\u0027s native window type.",
+      "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1cc697f_933680c6",
+        "filename": "util/cros/CrosWindow.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-03-28T23:30:18Z",
+      "side": 1,
+      "message": "ChromeOS doesn\u0027t have a windowing system. Chrome will use EGL just to create the GL context, not the surfaces. It will work with EGLImage / FBOs afterwards, and swap manually, much like Frank\u0027s DisplayDRM::Buffer, which will be testing only.",
+      "parentUuid": "9c4da65c_b434ce32",
       "revId": "ab92bab62094dad95a6e623993b523449f07b3b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
