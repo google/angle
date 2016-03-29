@@ -306,6 +306,7 @@ class Renderer11 : public RendererD3D
   private:
     gl::Error drawArraysImpl(const gl::Data &data,
                              GLenum mode,
+                             GLint startVertex,
                              GLsizei count,
                              GLsizei instances) override;
     gl::Error drawElementsImpl(const gl::Data &data,

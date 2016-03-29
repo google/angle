@@ -285,8 +285,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     void initializeDebugAnnotator();
     gl::DebugAnnotator *mAnnotator;
 
-    std::vector<TranslatedAttribute> mTranslatedAttribCache;
-
     bool mPresentPathFastEnabled;
 
   private:
@@ -306,6 +304,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     virtual gl::Error drawArraysImpl(const gl::Data &data,
                                      GLenum mode,
+                                     GLint startVertex,
                                      GLsizei count,
                                      GLsizei instances) = 0;
     virtual gl::Error drawElementsImpl(const gl::Data &data,

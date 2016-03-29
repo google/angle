@@ -834,9 +834,6 @@ void Renderer11::initializeDevice()
     ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel",
                                 angleFeatureLevel,
                                 NUM_ANGLE_FEATURE_LEVELS);
-
-    // TODO(jmadill): use context caps, and place in common D3D location
-    mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
 }
 
 void Renderer11::populateRenderer11DeviceCaps()
@@ -1523,7 +1520,17 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
                                         GLsizei instances,
                                         TranslatedIndexData *indexInfo)
 {
-    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count, &mTranslatedAttribCache, instances);
+    const auto &vertexArray = state.getVertexArray();
+    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+
+    gl::Error error = vertexArray11->updateDirtyAndDynamicAttribs(mVertexDataManager, state, first,
+                                                                  count, instances);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    error = mStateManager.updateCurrentValueAttribs(state, mVertexDataManager);
     if (error.isError())
     {
         return error;
@@ -1540,8 +1547,21 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
     {
         numIndicesPerInstance = count;
     }
-    return mInputLayoutCache.applyVertexBuffers(state, mTranslatedAttribCache, mode, indexInfo,
-                                                numIndicesPerInstance);
+    const auto &vertexArrayAttribs  = vertexArray11->getTranslatedAttribs();
+    const auto &currentValueAttribs = mStateManager.getCurrentValueAttribs();
+    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(state, vertexArrayAttribs, currentValueAttribs,
+                                                   mode, first, indexInfo, numIndicesPerInstance));
+
+    // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
+    // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
+    // allocation. This in turn will signal that the buffer is dirty. Since we just resolved the
+    // dirty-ness in VertexArray11::updateDirtyAndDynamicAttribs, this can make us do a needless
+    // update on the second draw call.
+    // Hence we clear the flags here, after we've applied vertex data, since we know everything
+    // is clean. This is a bit of a hack.
+    vertexArray11->clearDirtyAndPromoteDynamicAttribs(state, count);
+
+    return gl::NoError();
 }
 
 gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
@@ -1668,6 +1688,7 @@ gl::Error Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 
 gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
                                      GLenum mode,
+                                     GLint startVertex,
                                      GLsizei count,
                                      GLsizei instances)
 {
@@ -1760,7 +1781,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::Data &data,
             // offsets.
             for (GLsizei i = 0; i < instances; i++)
             {
-                gl::Error error = mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(i);
+                gl::Error error =
+                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(startVertex, i);
                 if (error.isError())
                 {
                     return error;
@@ -1826,7 +1848,8 @@ gl::Error Renderer11::drawElementsImpl(const gl::Data &data,
             // offsets.
             for (GLsizei i = 0; i < instances; i++)
             {
-                gl::Error error = mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(i);
+                gl::Error error =
+                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(minIndex, i);
                 if (error.isError())
                 {
                     return error;
@@ -2504,6 +2527,7 @@ void Renderer11::markAllStateDirty()
 
 void Renderer11::releaseDeviceResources()
 {
+    mStateManager.deinitialize();
     mStateCache.clear();
     mInputLayoutCache.clear();
 
@@ -4339,4 +4363,5 @@ egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
     *device = static_cast<DeviceImpl *>(mEGLDevice);
     return egl::Error(EGL_SUCCESS);
 }
-}
+
+}  // namespace rx

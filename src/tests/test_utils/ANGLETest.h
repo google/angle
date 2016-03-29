@@ -12,6 +12,7 @@
 
 #include <gtest/gtest.h>
 #include <algorithm>
+#include <array>
 
 #include "angle_gl.h"
 #include "angle_test_configs.h"
@@ -114,6 +115,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ,
                          GLfloat positionAttribXYScale);
+    static std::array<Vector3, 6> GetQuadVertices();
     void drawIndexedQuad(GLuint program,
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ);

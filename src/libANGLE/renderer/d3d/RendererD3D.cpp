@@ -55,7 +55,6 @@ RendererD3D::~RendererD3D()
 
 void RendererD3D::cleanup()
 {
-    mTranslatedAttribCache.clear();
     mScratchMemoryBuffer.resize(0);
     for (auto &incompleteTexture : mIncompleteTextures)
     {
@@ -199,7 +198,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
 
     if (!skipDraw(data, mode))
     {
-        ANGLE_TRY(drawArraysImpl(data, mode, count, instances));
+        ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
 
         if (data.state->isTransformFeedbackActiveUnpaused())
         {

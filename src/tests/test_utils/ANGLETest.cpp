@@ -154,6 +154,19 @@ void ANGLETest::swapBuffers()
     }
 }
 
+// static
+std::array<Vector3, 6> ANGLETest::GetQuadVertices()
+{
+    std::array<Vector3, 6> vertices;
+    vertices[0] = Vector3(-1.0f, 1.0f, 0.5f);
+    vertices[1] = Vector3(-1.0f, -1.0f, 0.5f);
+    vertices[2] = Vector3(1.0f, -1.0f, 0.5f);
+    vertices[3] = Vector3(-1.0f, 1.0f, 0.5f);
+    vertices[4] = Vector3(1.0f, -1.0f, 0.5f);
+    vertices[5] = Vector3(1.0f, 1.0f, 0.5f);
+    return vertices;
+}
+
 void ANGLETest::drawQuad(GLuint program,
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ)
@@ -175,17 +188,15 @@ void ANGLETest::drawQuad(GLuint program,
 
     GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
-    const GLfloat vertices[] = {
-        -1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
-        -1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
-         1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
+    auto quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.x *= positionAttribXYScale;
+        vertex.y *= positionAttribXYScale;
+        vertex.z = positionAttribZ;
+    }
 
-        -1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
-         1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
-         1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale, positionAttribZ,
-    };
-
-    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
     glEnableVertexAttribArray(positionLocation);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -221,14 +232,15 @@ void ANGLETest::drawIndexedQuad(GLuint program,
     if (mQuadVertexBuffer == 0)
     {
         glGenBuffers(1, &mQuadVertexBuffer);
-        const GLfloat vertices[] = {
-            -1.0f * positionAttribXYScale, 1.0f * positionAttribXYScale,  positionAttribZ,
-            -1.0f * positionAttribXYScale, -1.0f * positionAttribXYScale, positionAttribZ,
-            1.0f * positionAttribXYScale,  -1.0f * positionAttribXYScale, positionAttribZ,
-            1.0f * positionAttribXYScale,  1.0f * positionAttribXYScale,  positionAttribZ,
-        };
+        auto quadVertices = GetQuadVertices();
+        for (Vector3 &vertex : quadVertices)
+        {
+            vertex.x *= positionAttribXYScale;
+            vertex.y *= positionAttribXYScale;
+            vertex.z = positionAttribZ;
+        }
         glBindBuffer(GL_ARRAY_BUFFER, mQuadVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 4, vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 4, quadVertices.data(), GL_STATIC_DRAW);
     }
     else
     {
