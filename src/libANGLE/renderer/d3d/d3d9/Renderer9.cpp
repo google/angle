@@ -1218,9 +1218,10 @@ gl::Error Renderer9::applyIndexBuffer(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer9::applyTransformFeedbackBuffers(const gl::State& state)
+gl::Error Renderer9::applyTransformFeedbackBuffers(const gl::State &state)
 {
     ASSERT(!state.isTransformFeedbackActiveUnpaused());
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer9::drawArraysImpl(const gl::Data &data,

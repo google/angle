@@ -53,7 +53,13 @@ class ErrorOrResult
 {
   public:
     ErrorOrResult(const gl::Error &error) : mError(error) {}
-    ErrorOrResult(T &&result) : mError(GL_NO_ERROR), mResult(std::move(result)) {}
+    ErrorOrResult(gl::Error &&error) : mError(std::move(error)) {}
+
+    template <typename ArgT>
+    ErrorOrResult(ArgT &&result)
+        : mError(GL_NO_ERROR), mResult(std::forward<T>(result))
+    {
+    }
 
     bool isError() const { return mError.isError(); }
     const gl::Error &getError() const { return mError; }

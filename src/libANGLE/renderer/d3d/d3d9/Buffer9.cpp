@@ -104,9 +104,10 @@ gl::Error Buffer9::unmap(GLboolean *result)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-void Buffer9::markTransformFeedbackUsage()
+gl::Error Buffer9::markTransformFeedbackUsage()
 {
     UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
-}
+}  // namespace rx

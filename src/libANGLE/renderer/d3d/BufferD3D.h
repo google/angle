@@ -37,7 +37,7 @@ class BufferD3D : public BufferImpl
 
     virtual size_t getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
-    virtual void markTransformFeedbackUsage() = 0;
+    virtual gl::Error markTransformFeedbackUsage() = 0;
     virtual gl::Error getData(const uint8_t **outData) = 0;
 
     StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute);
