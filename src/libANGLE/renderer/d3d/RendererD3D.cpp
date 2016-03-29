@@ -137,31 +137,19 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
 
     programD3D->updateSamplerMapping();
 
-    gl::Error error = generateSwizzles(data);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(generateSwizzles(data));
 
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
-    error = updateState(data, mode);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(updateState(data, mode));
 
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
 
-    error = applyIndexBuffer(data, indices, count, mode, type, &indexInfo);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
 
     applyTransformFeedbackBuffers(*data.state);
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the API validation
@@ -169,41 +157,18 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
     ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
 
     size_t vertexCount = indexInfo.indexRange.vertexCount();
-    error = applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
-                              static_cast<GLsizei>(vertexCount), instances, &indexInfo);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyTextures(data);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyShaders(data, mode);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = programD3D->applyUniformBuffers(data);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    ANGLE_TRY(applyTextures(data));
+    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
-        error = drawElementsImpl(data, indexInfo, mode, count, type, indices, instances);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(drawElementsImpl(data, indexInfo, mode, count, type, indices, instances));
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
@@ -219,68 +184,30 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
 
     programD3D->updateSamplerMapping();
 
-    gl::Error error = generateSwizzles(data);
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(generateSwizzles(data));
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
-    error = updateState(data, mode);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    applyTransformFeedbackBuffers(*data.state);
-
-    error = applyVertexBuffer(*data.state, mode, first, count, instances, nullptr);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyTextures(data);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyShaders(data, mode);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = programD3D->applyUniformBuffers(data);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(updateState(data, mode));
+    ANGLE_TRY(applyTransformFeedbackBuffers(*data.state));
+    ANGLE_TRY(applyVertexBuffer(*data.state, mode, first, count, instances, nullptr));
+    ANGLE_TRY(applyTextures(data));
+    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
-        error = drawArraysImpl(data, mode, count, instances);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(drawArraysImpl(data, mode, count, instances));
 
         if (data.state->isTransformFeedbackActiveUnpaused())
         {
-            error = markTransformFeedbackUsage(data);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(markTransformFeedbackUsage(data));
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType type)
@@ -299,33 +226,19 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType ty
             ASSERT(texture);
             if (texture->getTextureState().swizzleRequired())
             {
-                gl::Error error = generateSwizzle(texture);
-                if (error.isError())
-                {
-                    return error;
-                }
+                ANGLE_TRY(generateSwizzle(texture));
             }
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererD3D::generateSwizzles(const gl::Data &data)
 {
-    gl::Error error = generateSwizzles(data, gl::SAMPLER_VERTEX);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = generateSwizzles(data, gl::SAMPLER_PIXEL);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    ANGLE_TRY(generateSwizzles(data, gl::SAMPLER_VERTEX));
+    ANGLE_TRY(generateSwizzles(data, gl::SAMPLER_PIXEL));
+    return gl::NoError();
 }
 
 unsigned int RendererD3D::GetBlendSampleMask(const gl::Data &data, int samples)
@@ -371,11 +284,7 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data, GLenum drawMode)
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     programD3D->updateCachedInputLayout(*data.state);
 
-    gl::Error error = applyShadersImpl(data, drawMode);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(applyShadersImpl(data, drawMode));
 
     return programD3D->applyUniforms(drawMode);
 }
@@ -411,45 +320,23 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
                 !std::binary_search(framebufferTextures.begin(),
                                     framebufferTextures.begin() + framebufferTextureCount, texture))
             {
-                gl::Error error = setSamplerState(shaderType, samplerIndex, texture, samplerState);
-                if (error.isError())
-                {
-                    return error;
-                }
-
-                error = setTexture(shaderType, samplerIndex, texture);
-                if (error.isError())
-                {
-                    return error;
-                }
+                ANGLE_TRY(setSamplerState(shaderType, samplerIndex, texture, samplerState));
+                ANGLE_TRY(setTexture(shaderType, samplerIndex, texture));
             }
             else
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the incomplete texture.
                 gl::Texture *incompleteTexture = getIncompleteTexture(textureType);
 
-                gl::Error error = setSamplerState(shaderType, samplerIndex, incompleteTexture,
-                                                  incompleteTexture->getSamplerState());
-                if (error.isError())
-                {
-                    return error;
-                }
-
-                error = setTexture(shaderType, samplerIndex, incompleteTexture);
-                if (error.isError())
-                {
-                    return error;
-                }
+                ANGLE_TRY(setSamplerState(shaderType, samplerIndex, incompleteTexture,
+                                          incompleteTexture->getSamplerState()));
+                ANGLE_TRY(setTexture(shaderType, samplerIndex, incompleteTexture));
             }
         }
         else
         {
             // No texture bound to this slot even though it is used by the shader, bind a NULL texture
-            gl::Error error = setTexture(shaderType, samplerIndex, NULL);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(setTexture(shaderType, samplerIndex, nullptr));
         }
     }
 
@@ -458,7 +345,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
                                                             : data.caps->maxVertexTextureImageUnits;
     clearTextures(shaderType, samplerRange, samplerCount);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererD3D::applyTextures(const gl::Data &data)
@@ -466,19 +353,9 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data)
     FramebufferTextureArray framebufferTextures;
     size_t framebufferSerialCount = getBoundFramebufferTextures(data, &framebufferTextures);
 
-    gl::Error error = applyTextures(data, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = applyTextures(data, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    ANGLE_TRY(applyTextures(data, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount));
+    ANGLE_TRY(applyTextures(data, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount));
+    return gl::NoError();
 }
 
 bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
@@ -522,15 +399,11 @@ gl::Error RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
         if (binding.get() != nullptr)
         {
             BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
-            auto error = bufferD3D->markTransformFeedbackUsage();
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(bufferD3D->markTransformFeedbackUsage());
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 size_t RendererD3D::getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray)
@@ -711,4 +584,4 @@ gl::DebugAnnotator *RendererD3D::getAnnotator()
     ASSERT(mAnnotator);
     return mAnnotator;
 }
-}
+}  // namespace rx

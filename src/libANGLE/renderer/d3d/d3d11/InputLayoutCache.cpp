@@ -241,11 +241,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
         }
     }
 
-    gl::Error error = updateInputLayout(state, mode, sortedSemanticIndices, numIndicesPerInstance);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(updateInputLayout(state, mode, sortedSemanticIndices, numIndicesPerInstance));
 
     bool dirtyBuffers = false;
     size_t minDiff    = gl::MAX_VERTEX_ATTRIBS;
@@ -280,11 +276,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                 if (indexInfo->srcIndexData.srcBuffer != nullptr)
                 {
                     const uint8_t *bufferData = nullptr;
-                    error = indexInfo->srcIndexData.srcBuffer->getData(&bufferData);
-                    if (error.isError())
-                    {
-                        return error;
-                    }
+                    ANGLE_TRY(indexInfo->srcIndexData.srcBuffer->getData(&bufferData));
                     ASSERT(bufferData != nullptr);
 
                     ptrdiff_t offset =
@@ -293,23 +285,14 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                     indexInfo->srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                auto bufferOrError =
-                    bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData, attrib);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                buffer = bufferOrError.getResult();
+                ANGLE_TRY_RESULT(
+                    bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData, attrib),
+                    buffer);
             }
             else
             {
-                auto bufferOrError =
-                    bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                buffer = bufferOrError.getResult();
+                ANGLE_TRY_RESULT(
+                    bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK), buffer);
             }
 
             vertexStride = attrib.stride;
@@ -428,7 +411,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
             &mCurrentVertexOffsets[minDiff]);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error InputLayoutCache::updateVertexOffsetsForPointSpritesEmulation(GLsizei emulatedInstanceId)
@@ -449,7 +432,7 @@ gl::Error InputLayoutCache::updateVertexOffsetsForPointSpritesEmulation(GLsizei 
     mDeviceContext->IASetVertexBuffers(0, gl::MAX_VERTEX_ATTRIBS, mCurrentBuffers.data(),
                                        mCurrentVertexStrides.data(), mCurrentVertexOffsets.data());
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
@@ -509,12 +492,8 @@ gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
         }
         else
         {
-            gl::Error error = createInputLayout(sortedSemanticIndices, mode, program,
-                                                numIndicesPerInstance, &inputLayout);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(createInputLayout(sortedSemanticIndices, mode, program, numIndicesPerInstance,
+                                        &inputLayout));
             if (mLayoutMap.size() >= mCacheSize)
             {
                 TRACE("Overflowed the limit of %u input layouts, purging half the cache.",
@@ -544,7 +523,7 @@ gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
         mCurrentIL = inputLayout;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error InputLayoutCache::createInputLayout(const AttribIndexArray &sortedSemanticIndices,
@@ -636,12 +615,7 @@ gl::Error InputLayoutCache::createInputLayout(const AttribIndexArray &sortedSema
     const gl::InputLayout &shaderInputLayout = GetInputLayout(mCurrentAttributes);
 
     ShaderExecutableD3D *shader = nullptr;
-    gl::Error error =
-        programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr));
 
     ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 
@@ -654,7 +628,7 @@ gl::Error InputLayoutCache::createInputLayout(const AttribIndexArray &sortedSema
                          "Failed to create internal input layout, HRESULT: 0x%08x", result);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 }  // namespace rx

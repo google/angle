@@ -363,7 +363,7 @@ Error Display::initialize()
 
     if (isInitialized())
     {
-        return Error(EGL_SUCCESS);
+        return egl::Error(EGL_SUCCESS);
     }
 
     Error error = mImplementation->initialize(this);
@@ -421,7 +421,7 @@ Error Display::initialize()
 
     mInitialized = true;
 
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 void Display::terminate()
@@ -548,7 +548,7 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface;
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface)
@@ -579,7 +579,7 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface;
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLClientBuffer shareHandle,
@@ -611,7 +611,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface;
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::createPixmapSurface(const Config *configuration, NativePixmapType nativePixmap, const AttributeMap &attribs,
@@ -643,7 +643,7 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface;
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::createImage(gl::Context *context,
@@ -696,7 +696,7 @@ Error Display::createImage(gl::Context *context,
     image->addRef();
     mImageSet.insert(image);
 
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
@@ -721,7 +721,7 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
 
     ASSERT(outContext != nullptr);
     *outContext = context;
-    return Error(EGL_SUCCESS);
+    return egl::Error(EGL_SUCCESS);
 }
 
 Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)

@@ -94,13 +94,8 @@ gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
     GLsizei count,
     GLsizei instances) const
 {
-    auto errorOrSpaceRequired = mFactory->getVertexSpaceRequired(attrib, count, instances);
-    if (errorOrSpaceRequired.isError())
-    {
-        return errorOrSpaceRequired.getError();
-    }
-
-    unsigned int spaceRequired = errorOrSpaceRequired.getResult();
+    unsigned int spaceRequired = 0;
+    ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(attrib, count, instances), spaceRequired);
 
     // Align to 16-byte boundary
     unsigned int alignedSpaceRequired = roundUp(spaceRequired, 16u);
@@ -141,24 +136,16 @@ gl::Error StreamingVertexBufferInterface::reserveSpace(unsigned int size)
     unsigned int curBufferSize = getBufferSize();
     if (size > curBufferSize)
     {
-        gl::Error error = setBufferSize(std::max(size, 3 * curBufferSize / 2));
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(setBufferSize(std::max(size, 3 * curBufferSize / 2)));
         mWritePosition = 0;
     }
     else if (mWritePosition + size > curBufferSize)
     {
-        gl::Error error = discard();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(discard());
         mWritePosition = 0;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error StreamingVertexBufferInterface::storeDynamicAttribute(const gl::VertexAttribute &attrib,
@@ -169,55 +156,37 @@ gl::Error StreamingVertexBufferInterface::storeDynamicAttribute(const gl::Vertex
                                                                 unsigned int *outStreamOffset,
                                                                 const uint8_t *sourceData)
 {
-    auto spaceRequiredOrError = getSpaceRequired(attrib, count, instances);
-    if (spaceRequiredOrError.isError())
-    {
-        return spaceRequiredOrError.getError();
-    }
-
-    unsigned int alignedSpaceRequired = spaceRequiredOrError.getResult();
+    unsigned int spaceRequired = 0;
+    ANGLE_TRY_RESULT(getSpaceRequired(attrib, count, instances), spaceRequired);
 
     // Protect against integer overflow
-    if (!IsUnsignedAdditionSafe(mWritePosition, alignedSpaceRequired))
+    if (!IsUnsignedAdditionSafe(mWritePosition, spaceRequired))
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Internal error, new vertex buffer write position would overflow.");
     }
 
-    gl::Error error = reserveSpace(mReservedSpace);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(reserveSpace(mReservedSpace));
     mReservedSpace = 0;
 
-    error = mVertexBuffer->storeVertexAttributes(attrib, currentValueType, start, count, instances,
-                                                 mWritePosition, sourceData);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mVertexBuffer->storeVertexAttributes(attrib, currentValueType, start, count,
+                                                   instances, mWritePosition, sourceData));
 
     if (outStreamOffset)
     {
         *outStreamOffset = mWritePosition;
     }
 
-    mWritePosition += alignedSpaceRequired;
+    mWritePosition += spaceRequired;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error StreamingVertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attrib,
                                                              GLsizei count,
                                                              GLsizei instances)
 {
-    auto errorOrRequiredSpace = mFactory->getVertexSpaceRequired(attrib, count, instances);
-    if (errorOrRequiredSpace.isError())
-    {
-        return errorOrRequiredSpace.getError();
-    }
-
-    unsigned int requiredSpace = errorOrRequiredSpace.getResult();
+    unsigned int requiredSpace = 0;
+    ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(attrib, count, instances), requiredSpace);
 
     // Align to 16-byte boundary
     unsigned int alignedRequiredSpace = roundUp(requiredSpace, 16u);
@@ -234,7 +203,7 @@ gl::Error StreamingVertexBufferInterface::reserveVertexSpace(const gl::VertexAtt
 
     mReservedSpace += alignedRequiredSpace;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 // StaticVertexBufferInterface Implementation
@@ -293,24 +262,17 @@ gl::Error StaticVertexBufferInterface::storeStaticAttribute(const gl::VertexAttr
                                                             GLsizei instances,
                                                             const uint8_t *sourceData)
 {
-    auto spaceRequiredOrError = getSpaceRequired(attrib, count, instances);
-    if (spaceRequiredOrError.isError())
-    {
-        return spaceRequiredOrError.getError();
-    }
-
-    setBufferSize(spaceRequiredOrError.getResult());
+    unsigned int spaceRequired = 0;
+    ANGLE_TRY_RESULT(getSpaceRequired(attrib, count, instances), spaceRequired);
+    setBufferSize(spaceRequired);
 
     ASSERT(attrib.enabled);
-    gl::Error error = mVertexBuffer->storeVertexAttributes(attrib, GL_NONE, start, count, instances,
-                                                           0, sourceData);
-    if (!error.isError())
-    {
-        mSignature.set(attrib);
-        mVertexBuffer->hintUnmapResource();
-    }
+    ANGLE_TRY(mVertexBuffer->storeVertexAttributes(attrib, GL_NONE, start, count, instances, 0,
+                                                   sourceData));
 
-    return error;
+    mSignature.set(attrib);
+    mVertexBuffer->hintUnmapResource();
+    return gl::NoError();
 }
 
 }  // namespace rx
