@@ -601,7 +601,7 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
         "    color = vec4(1, 0, 0, 1);\n"
         "}";
 
-    GLuint mProgram = CompileProgram(vertexShader, fragmentShader);
+    mProgram = CompileProgram(vertexShader, fragmentShader);
     ASSERT_NE(0u, mProgram);
 
     glUseProgram(mProgram);
