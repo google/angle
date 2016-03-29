@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51031991_7514b2d7",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-29T19:51:43Z",
+      "side": 1,
+      "message": "This should have the attrib list as an argument and we should probably just go ahead and make it pure to match the rest.",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 58
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51031991_150b3eb6",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-29T19:51:43Z",
+      "side": 1,
+      "message": "This should be moved down to the RendererD3D class.",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
