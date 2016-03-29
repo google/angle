@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5177990e_a6998649",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "I did briefly consider this, though now that I think of it more maybe the uniform API wouldn\u0027t cause too much trouble. But tree transformations are currently a bit hard to write and not very readable, and there\u0027s no pressing need to do this change with transformations.\n\nI think using the angle_ prefix combined with the original variable name is good either way - this is the only way to make querying registers for these added uniforms simple, and makes the HLSL output more readable.",
+      "parentUuid": "d1cc697f_101b4659",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 29
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "913af1f4_a33d24c2",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "d1e62928_5290b40a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1570,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Made it \"ancestorEvaluatesToSamplerInStruct\". Self is not included in the checked nodes, the first node checked is the parent node.",
+      "parentUuid": "d1cc697f_30a76a7e",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_704d726e",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -71,6 +113,30 @@
       "writtenOn": "2016-03-28T22:41:40Z",
       "side": 1,
       "message": "ASSERT, this is our usual policy for internal errors",
+      "range": {
+        "startLine": 2181,
+        "startChar": 4,
+        "endLine": 2181,
+        "endChar": 6
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d198e991_e2d486c4",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2181,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Of course, this if can be removed. I don\u0027t think that the code generally asserts to avoid null pointer access though, since that should terminate the program either way?",
+      "parentUuid": "d1cc697f_704d726e",
       "range": {
         "startLine": 2181,
         "startChar": 4,
@@ -106,6 +172,30 @@
     },
     {
       "key": {
+        "uuid": "5177990e_06a97a56",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2612,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cc697f_309daa23",
+      "range": {
+        "startLine": 2612,
+        "startChar": 47,
+        "endLine": 2612,
+        "endChar": 50
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_b060dad8",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -117,6 +207,30 @@
       "writtenOn": "2016-03-28T22:41:40Z",
       "side": 1,
       "message": "comment here would be good, as this is the key logic you\u0027re adding",
+      "range": {
+        "startLine": 3391,
+        "startChar": 13,
+        "endLine": 3391,
+        "endChar": 42
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1b08d0b_5b132380",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3391,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cc697f_b060dad8",
       "range": {
         "startLine": 3391,
         "startChar": 13,
@@ -152,6 +266,30 @@
     },
     {
       "key": {
+        "uuid": "5177990e_e60c5e5e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3414,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cc697f_1077c6a0",
+      "range": {
+        "startLine": 3414,
+        "startChar": 16,
+        "endLine": 3414,
+        "endChar": 21
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_aeacfcc4",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 5
@@ -163,6 +301,30 @@
       "writtenOn": "2016-03-28T22:41:40Z",
       "side": 1,
       "message": "you can make this return by value, since either move-assignment or RVO will ensure we don\u0027t do a full copy. You can also keep a const\u0026 to the RV in the calling code to ensure there is no copy.",
+      "range": {
+        "startLine": 249,
+        "startChar": 17,
+        "endLine": 249,
+        "endChar": 37
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5177990e_66014e26",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "I don\u0027t think that copies can be fully avoided here without having the out parameter. The symbols need to be gathered from possibly multiple nested levels of structs. If this returns by value the return value of the recursive function calls would still need to be copied to the vector created for the return value.",
+      "parentUuid": "d1cc697f_aeacfcc4",
       "range": {
         "startLine": 249,
         "startChar": 17,
@@ -198,6 +360,30 @@
     },
     {
       "key": {
+        "uuid": "f1bdedca_f3f5106e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cc697f_2e98eca0",
+      "range": {
+        "startLine": 212,
+        "startChar": 4,
+        "endLine": 213,
+        "endChar": 17
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_30b12a0a",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 5
@@ -209,6 +395,30 @@
       "writtenOn": "2016-03-28T22:41:40Z",
       "side": 1,
       "message": "can\u0027t this be initialized as\n\n TVector\u003cTVector\u003cconst TIntermSymbol *\u003e\u003e groupedSamplerUniforms(HLSL_TEXTURE_MAX + 1, nullptr);",
+      "range": {
+        "startLine": 239,
+        "startChar": 5,
+        "endLine": 240,
+        "endChar": 56
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1bdedca_3307883f",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Changed to initialization with the constructor that just takes count as parameter (it\u0027s a vector inside a vector).",
+      "parentUuid": "d1cc697f_30b12a0a",
       "range": {
         "startLine": 239,
         "startChar": 5,
@@ -267,6 +477,54 @@
     },
     {
       "key": {
+        "uuid": "5177990e_2607563f",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Unfortunately it\u0027s not quite that straightforward: outputHLSLSamplerUniformGroup doesn\u0027t know whether it\u0027s dealing with regular uniforms or samplers extracted from structs, so it still needs the if statement. Still, the code is maybe a bit cleaner with your suggestion.",
+      "parentUuid": "d1cc697f_50f30eb1",
+      "range": {
+        "startLine": 284,
+        "startChar": 24,
+        "endLine": 284,
+        "endChar": 47
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5177990e_46fc5257",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1cc697f_70e1f2e4",
+      "range": {
+        "startLine": 284,
+        "startChar": 24,
+        "endLine": 284,
+        "endChar": 47
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "913af1f4_23bf54d6",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -302,6 +560,42 @@
     },
     {
       "key": {
+        "uuid": "5177990e_2652f60f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "The encoder is created so that calling defineUniform with the sampler doesn\u0027t affect the register mapping for the other struct members, and so that the sampler gets the right register assigned.",
+      "parentUuid": "913af1f4_23bf54d6",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5177990e_666dce8f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Agreed that this is a cleaner way to implement this. I don\u0027t see any issues here.",
+      "parentUuid": "d1cc697f_f31a6f53",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "910bd117_8d02112d",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -319,6 +613,24 @@
     },
     {
       "key": {
+        "uuid": "5177990e_c67be249",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1865,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Code was refactored so that this is no longer relevant. Also, I think usually assert to check for nullptr is unnecessary?",
+      "parentUuid": "910bd117_8d02112d",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_d06b9eea",
         "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
         "patchSetId": 5
@@ -330,6 +642,30 @@
       "writtenOn": "2016-03-28T22:41:40Z",
       "side": 1,
       "message": "at this point I think we should change the API for ShGetUniformRegister to just return the whole map. This API is not used by Chrome or Firefox AFAIK. The change would eliminate the need for this fairly large block of code.\n\nNote to return a const \u0026 and copy the map inside ShaderD3D, because of complications with the memory boundary of DLLs. (See prior examples for ShGetUniforms, ShGetVaryings, etc)",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 10
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5177990e_c6d2027a",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-29T14:52:39Z",
+      "side": 1,
+      "message": "Note that this code also maps \"us[0].tex\" to \"angle_us_0_tex\". This mapping wouldn\u0027t fit in very nicely to the translator side either I think. So changing the ShGetUniformRegister API isn\u0027t enough in itself to make this code unnecessary. I didn\u0027t do any changes here yet, but can consider them if you still think changing this would be better.",
+      "parentUuid": "d1cc697f_d06b9eea",
       "range": {
         "startLine": 142,
         "startChar": 0,
