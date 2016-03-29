@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51031991_bb4b3b01",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-29T21:41:45Z",
+      "side": 1,
+      "message": "Can we get egl::Success() too?",
+      "revId": "53e2abc412e2745a64bc01796d483dcc447fc13a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51031991_1bd00f70",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-29T21:41:45Z",
+      "side": 1,
+      "message": "Interesting, I had never realized a whole macro instanciation was on the same line so you could use __LINE__ consistently. Nice!",
+      "revId": "53e2abc412e2745a64bc01796d483dcc447fc13a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51031991_3b7ceb41",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-29T21:41:45Z",
+      "side": 1,
+      "message": "nit: I\u0027m in favor of always having curly brackets for control flow",
+      "revId": "53e2abc412e2745a64bc01796d483dcc447fc13a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51031991_7b3f036a",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-29T21:41:45Z",
+      "side": 1,
+      "message": "nit: Could use an anonymous struct trick to force a semicolon after this macro.",
+      "revId": "53e2abc412e2745a64bc01796d483dcc447fc13a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51031991_1ba24f1c",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-29T21:41:45Z",
+      "side": 1,
+      "message": "typo: ANLGE -\u003e ANGLE",
+      "revId": "53e2abc412e2745a64bc01796d483dcc447fc13a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
