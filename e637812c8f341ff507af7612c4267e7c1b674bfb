@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_99bb9b39",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "+1 for making it pure, attrib list seems fine",
+      "parentUuid": "51031991_7514b2d7",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 58
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51031991_150b3eb6",
         "filename": "src/libANGLE/renderer/ImplFactory.h",
         "patchSetId": 9
@@ -41,6 +65,260 @@
         "startChar": 4,
         "endLine": 73,
         "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_59d3c37e",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "51031991_150b3eb6",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_f9bad731",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "you can leave this out for now",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 22
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_39ad2ff6",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "would it make sense to define some methods here? what operations would a stream support? Perhaps looking at the attribute list would be a start.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 2
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_d9b51343",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "namespace comment",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 1
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_d9343390",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_397fef39",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: these three should be sorted alphabetically (Stream11 should still be first)",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_19822b7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_79a2471d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: can leave this out for now",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 16
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_592f4365",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: // namespace rx",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_99d47b6d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: UNREACHABLE()",
+      "range": {
+        "startLine": 775,
+        "startChar": 4,
+        "endLine": 775,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_d9def38a",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T16:48:22Z",
+      "side": 1,
+      "message": "nit: UNREACHABLE()",
+      "range": {
+        "startLine": 330,
+        "startChar": 3,
+        "endLine": 330,
+        "endChar": 19
       },
       "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
