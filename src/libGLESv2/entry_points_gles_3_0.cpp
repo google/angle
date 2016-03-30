@@ -2374,25 +2374,9 @@ void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateSamplerParameteri(context, sampler, pname, param))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateSamplerObjectParameter(context, pname))
-        {
-            return;
-        }
-
-        if (!ValidateTexParamParameters(context, pname, param))
-        {
-            return;
-        }
-
-        if (!context->isSampler(sampler))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -2412,25 +2396,9 @@ void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateSamplerParameterf(context, sampler, pname, param))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateSamplerObjectParameter(context, pname))
-        {
-            return;
-        }
-
-        if (!ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
-        {
-            return;
-        }
-
-        if (!context->isSampler(sampler))
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 

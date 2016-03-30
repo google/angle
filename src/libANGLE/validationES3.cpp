@@ -1970,4 +1970,37 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
     return true;
 }
 
+bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+
+    if (!context->isSampler(sampler))
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!ValidateSamplerObjectParameter(context, pname))
+    {
+        return false;
+    }
+
+    if (!ValidateTexParamParameters(context, pname, param))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param)
+{
+    // The only float parameters are MIN_LOD and MAX_LOD. For these any value is permissible, so
+    // ValidateSamplerParameteri can be used for validation here.
+    return ValidateSamplerParameteri(context, sampler, pname, static_cast<GLint>(param));
+}
+
 }  // namespace gl

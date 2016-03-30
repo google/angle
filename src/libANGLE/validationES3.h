@@ -291,6 +291,9 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count);
 
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 
+bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
+bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_
