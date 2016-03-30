@@ -1882,4 +1882,94 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     return true;
 }
 
+bool ValidateGetBufferPointervOES(Context *context, GLenum target, GLenum pname, void **params)
+{
+    if (!context->getExtensions().mapBuffer)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Map buffer extension not available."));
+        return false;
+    }
+
+    return ValidateGetBufferPointervBase(context, target, pname, params);
+}
+
+bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
+{
+    if (!context->getExtensions().mapBuffer)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Map buffer extension not available."));
+        return false;
+    }
+
+    if (!ValidBufferTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid buffer target."));
+        return false;
+    }
+
+    Buffer *buffer = context->getState().getTargetBuffer(target);
+
+    if (buffer == nullptr)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Attempted to map buffer object zero."));
+        return false;
+    }
+
+    if (access != GL_WRITE_ONLY_OES)
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Non-write buffer mapping not supported."));
+        return false;
+    }
+
+    if (buffer->isMapped())
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Buffer is already mapped."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUnmapBufferOES(Context *context, GLenum target)
+{
+    if (!context->getExtensions().mapBuffer)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Map buffer extension not available."));
+        return false;
+    }
+
+    return ValidateUnmapBufferBase(context, target);
+}
+
+bool ValidateMapBufferRangeEXT(Context *context,
+                               GLenum target,
+                               GLintptr offset,
+                               GLsizeiptr length,
+                               GLbitfield access)
+{
+    if (!context->getExtensions().mapBufferRange)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Map buffer range extension not available."));
+        return false;
+    }
+
+    return ValidateMapBufferRangeBase(context, target, offset, length, access);
+}
+
+bool ValidateFlushMappedBufferRangeEXT(Context *context,
+                                       GLenum target,
+                                       GLintptr offset,
+                                       GLsizeiptr length)
+{
+    if (!context->getExtensions().mapBufferRange)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Map buffer range extension not available."));
+        return false;
+    }
+
+    return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
+}
+
 }  // namespace gl

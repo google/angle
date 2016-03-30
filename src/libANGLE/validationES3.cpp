@@ -2009,4 +2009,55 @@ bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, G
     return ValidateSamplerParameteri(context, sampler, pname, static_cast<GLint>(param));
 }
 
+bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+
+    return ValidateGetBufferPointervBase(context, target, pname, params);
+}
+
+bool ValidateUnmapBuffer(Context *context, GLenum target)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    return ValidateUnmapBufferBase(context, target);
+}
+
+bool ValidateMapBufferRange(Context *context,
+                            GLenum target,
+                            GLintptr offset,
+                            GLsizeiptr length,
+                            GLbitfield access)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+
+    return ValidateMapBufferRangeBase(context, target, offset, length, access);
+}
+
+bool ValidateFlushMappedBufferRange(Context *context,
+                                    GLenum target,
+                                    GLintptr offset,
+                                    GLsizeiptr length)
+{
+    if (context->getClientVersion() < 3)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
+        return false;
+    }
+
+    return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
+}
+
 }  // namespace gl

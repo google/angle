@@ -2684,6 +2684,75 @@ void Context::compressedTexSubImage3D(GLenum target,
     }
 }
 
+void Context::getBufferPointerv(GLenum target, GLenum /*pname*/, void **params)
+{
+    Buffer *buffer = getState().getTargetBuffer(target);
+    ASSERT(buffer);
+
+    if (!buffer->isMapped())
+    {
+        *params = nullptr;
+    }
+    else
+    {
+        *params = buffer->getMapPointer();
+    }
+}
+
+GLvoid *Context::mapBuffer(GLenum target, GLenum access)
+{
+    Buffer *buffer = getState().getTargetBuffer(target);
+    ASSERT(buffer);
+
+    Error error = buffer->map(access);
+    if (error.isError())
+    {
+        recordError(error);
+        return nullptr;
+    }
+
+    return buffer->getMapPointer();
+}
+
+GLboolean Context::unmapBuffer(GLenum target)
+{
+    Buffer *buffer = getState().getTargetBuffer(target);
+    ASSERT(buffer);
+
+    GLboolean result;
+    Error error = buffer->unmap(&result);
+    if (error.isError())
+    {
+        recordError(error);
+        return GL_FALSE;
+    }
+
+    return result;
+}
+
+GLvoid *Context::mapBufferRange(GLenum target,
+                                GLintptr offset,
+                                GLsizeiptr length,
+                                GLbitfield access)
+{
+    Buffer *buffer = getState().getTargetBuffer(target);
+    ASSERT(buffer);
+
+    Error error = buffer->mapRange(offset, length, access);
+    if (error.isError())
+    {
+        recordError(error);
+        return nullptr;
+    }
+
+    return buffer->getMapPointer();
+}
+
+void Context::flushMappedBufferRange(GLenum /*target*/, GLintptr /*offset*/, GLsizeiptr /*length*/)
+{
+    // We do not currently support a non-trivial implementation of FlushMappedBufferRange
+}
+
 void Context::syncStateForReadPixels()
 {
     syncRendererState(mReadPixelsDirtyBits, mReadPixelsDirtyObjects);

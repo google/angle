@@ -2660,6 +2660,191 @@ bool ValidateCopyTexSubImage2D(Context *context,
                                                yoffset, 0, x, y, width, height, 0);
 }
 
+bool ValidateGetBufferPointervBase(Context *context, GLenum target, GLenum pname, void **params)
+{
+    if (!ValidBufferTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Buffer target not valid: 0x%X", target));
+        return false;
+    }
+
+    if (pname != GL_BUFFER_MAP_POINTER)
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "pname not valid: 0x%X", pname));
+        return false;
+    }
+
+    Buffer *buffer = context->getState().getTargetBuffer(target);
+
+    // GLES 3.0 section 2.10.1: "Attempts to attempts to modify or query buffer object state for a
+    // target bound to zero generate an INVALID_OPERATION error."
+    // GLES 3.1 section 6.6 explicitly specifies this error.
+    if (!buffer)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Can not get pointer for reserved buffer name zero."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUnmapBufferBase(Context *context, GLenum target)
+{
+    if (!ValidBufferTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid buffer target."));
+        return false;
+    }
+
+    Buffer *buffer = context->getState().getTargetBuffer(target);
+
+    if (buffer == nullptr || !buffer->isMapped())
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Buffer not mapped."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateMapBufferRangeBase(Context *context,
+                                GLenum target,
+                                GLintptr offset,
+                                GLsizeiptr length,
+                                GLbitfield access)
+{
+    if (!ValidBufferTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid buffer target."));
+        return false;
+    }
+
+    if (offset < 0 || length < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Invalid offset or length."));
+        return false;
+    }
+
+    Buffer *buffer = context->getState().getTargetBuffer(target);
+
+    if (!buffer)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Attempted to map buffer object zero."));
+        return false;
+    }
+
+    // Check for buffer overflow
+    size_t offsetSize = static_cast<size_t>(offset);
+    size_t lengthSize = static_cast<size_t>(length);
+
+    if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
+        offsetSize + lengthSize > static_cast<size_t>(buffer->getSize()))
+    {
+        context->recordError(
+            Error(GL_INVALID_VALUE, "Mapped range does not fit into buffer dimensions."));
+        return false;
+    }
+
+    // Check for invalid bits in the mask
+    GLbitfield allAccessBits = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT |
+                               GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_FLUSH_EXPLICIT_BIT |
+                               GL_MAP_UNSYNCHRONIZED_BIT;
+
+    if (access & ~(allAccessBits))
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Invalid access bits: 0x%X.", access));
+        return false;
+    }
+
+    if (length == 0)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Buffer mapping length is zero."));
+        return false;
+    }
+
+    if (buffer->isMapped())
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Buffer is already mapped."));
+        return false;
+    }
+
+    // Check for invalid bit combinations
+    if ((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) == 0)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Need to map buffer for either reading or writing."));
+        return false;
+    }
+
+    GLbitfield writeOnlyBits =
+        GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
+
+    if ((access & GL_MAP_READ_BIT) != 0 && (access & writeOnlyBits) != 0)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION,
+                                   "Invalid access bits when mapping buffer for reading: 0x%X.",
+                                   access));
+        return false;
+    }
+
+    if ((access & GL_MAP_WRITE_BIT) == 0 && (access & GL_MAP_FLUSH_EXPLICIT_BIT) != 0)
+    {
+        context->recordError(Error(
+            GL_INVALID_OPERATION,
+            "The explicit flushing bit may only be set if the buffer is mapped for writing."));
+        return false;
+    }
+    return true;
+}
+
+bool ValidateFlushMappedBufferRangeBase(Context *context,
+                                        GLenum target,
+                                        GLintptr offset,
+                                        GLsizeiptr length)
+{
+    if (offset < 0 || length < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Invalid offset/length parameters."));
+        return false;
+    }
+
+    if (!ValidBufferTarget(context, target))
+    {
+        context->recordError(Error(GL_INVALID_ENUM, "Invalid buffer target."));
+        return false;
+    }
+
+    Buffer *buffer = context->getState().getTargetBuffer(target);
+
+    if (buffer == nullptr)
+    {
+        context->recordError(Error(GL_INVALID_OPERATION, "Attempted to flush buffer object zero."));
+        return false;
+    }
+
+    if (!buffer->isMapped() || (buffer->getAccessFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) == 0)
+    {
+        context->recordError(Error(
+            GL_INVALID_OPERATION, "Attempted to flush a buffer not mapped for explicit flushing."));
+        return false;
+    }
+
+    // Check for buffer overflow
+    size_t offsetSize = static_cast<size_t>(offset);
+    size_t lengthSize = static_cast<size_t>(length);
+
+    if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
+        offsetSize + lengthSize > static_cast<size_t>(buffer->getMapLength()))
+    {
+        context->recordError(
+            Error(GL_INVALID_VALUE, "Flushed range does not fit into buffer mapping dimensions."));
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateGenBuffers(Context *context, GLint n, GLuint *)
 {
     return ValidateGenOrDelete(context, n);

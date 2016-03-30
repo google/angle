@@ -235,6 +235,18 @@ bool ValidateCopyTexSubImage2D(Context *context,
                                GLsizei width,
                                GLsizei height);
 
+bool ValidateGetBufferPointervBase(Context *context, GLenum target, GLenum pname, void **params);
+bool ValidateUnmapBufferBase(Context *context, GLenum target);
+bool ValidateMapBufferRangeBase(Context *context,
+                                GLenum target,
+                                GLintptr offset,
+                                GLsizeiptr length,
+                                GLbitfield access);
+bool ValidateFlushMappedBufferRangeBase(Context *context,
+                                        GLenum target,
+                                        GLintptr offset,
+                                        GLsizeiptr length);
+
 bool ValidateGenBuffers(Context *context, GLint n, GLuint *buffers);
 bool ValidateDeleteBuffers(Context *context, GLint n, const GLuint *buffers);
 bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *framebuffers);

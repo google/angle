@@ -325,13 +325,12 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() && !ValidateUnmapBuffer(context, target))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return GL_FALSE;
         }
 
-        return UnmapBufferOES(target);
+        return context->unmapBuffer(target);
     }
 
     return GL_FALSE;
@@ -344,13 +343,13 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateGetBufferPointerv(context, target, pname, params))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        GetBufferPointervOES(target, pname, params);
+        context->getBufferPointerv(target, pname, params);
     }
 }
 
@@ -547,16 +546,16 @@ GLvoid *GL_APIENTRY MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr le
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateMapBufferRange(context, target, offset, length, access))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
+            return nullptr;
         }
 
-        return MapBufferRangeEXT(target, offset, length, access);
+        return context->mapBufferRange(target, offset, length, access);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
@@ -566,13 +565,13 @@ void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateFlushMappedBufferRange(context, target, offset, length))
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        FlushMappedBufferRangeEXT(target, offset, length);
+        context->flushMappedBufferRange(target, offset, length);
     }
 }
 

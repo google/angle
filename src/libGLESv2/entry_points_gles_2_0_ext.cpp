@@ -826,28 +826,13 @@ void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void** params
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidBufferTarget(context, target))
+        if (!context->skipValidation() &&
+            !ValidateGetBufferPointervOES(context, target, pname, params))
         {
-            context->recordError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        if (pname != GL_BUFFER_MAP_POINTER)
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Buffer *buffer = context->getState().getTargetBuffer(target);
-
-        if (!buffer || !buffer->isMapped())
-        {
-            *params = NULL;
-        }
-        else
-        {
-            *params = buffer->getMapPointer();
-        }
+        context->getBufferPointerv(target, pname, params);
     }
 }
 
@@ -858,43 +843,15 @@ void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidBufferTarget(context, target))
+        if (!context->skipValidation() && !ValidateMapBufferOES(context, target, access))
         {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return NULL;
+            return nullptr;
         }
 
-        Buffer *buffer = context->getState().getTargetBuffer(target);
-
-        if (buffer == NULL)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        if (access != GL_WRITE_ONLY_OES)
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return NULL;
-        }
-
-        if (buffer->isMapped())
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        Error error = buffer->map(access);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return NULL;
-        }
-
-        return buffer->getMapPointer();
+        return context->mapBuffer(target, access);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
@@ -904,29 +861,12 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidBufferTarget(context, target))
+        if (!context->skipValidation() && !ValidateUnmapBufferOES(context, target))
         {
-            context->recordError(Error(GL_INVALID_ENUM));
             return GL_FALSE;
         }
 
-        Buffer *buffer = context->getState().getTargetBuffer(target);
-
-        if (buffer == NULL || !buffer->isMapped())
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return GL_FALSE;
-        }
-
-        GLboolean result;
-        Error error = buffer->unmap(&result);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return GL_FALSE;
-        }
-
-        return result;
+        return context->unmapBuffer(target);
     }
 
     return GL_FALSE;
@@ -940,91 +880,16 @@ void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr l
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidBufferTarget(context, target))
+        if (!context->skipValidation() &&
+            !ValidateMapBufferRangeEXT(context, target, offset, length, access))
         {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return NULL;
+            return nullptr;
         }
 
-        if (offset < 0 || length < 0)
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return NULL;
-        }
-
-        Buffer *buffer = context->getState().getTargetBuffer(target);
-
-        if (buffer == NULL)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        // Check for buffer overflow
-        size_t offsetSize = static_cast<size_t>(offset);
-        size_t lengthSize = static_cast<size_t>(length);
-
-        if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-            offsetSize + lengthSize > static_cast<size_t>(buffer->getSize()))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return NULL;
-        }
-
-        // Check for invalid bits in the mask
-        GLbitfield allAccessBits = GL_MAP_READ_BIT |
-                                   GL_MAP_WRITE_BIT |
-                                   GL_MAP_INVALIDATE_RANGE_BIT |
-                                   GL_MAP_INVALIDATE_BUFFER_BIT |
-                                   GL_MAP_FLUSH_EXPLICIT_BIT |
-                                   GL_MAP_UNSYNCHRONIZED_BIT;
-
-        if (access & ~(allAccessBits))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return NULL;
-        }
-
-        if (length == 0 || buffer->isMapped())
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        // Check for invalid bit combinations
-        if ((access & (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT)) == 0)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        GLbitfield writeOnlyBits = GL_MAP_INVALIDATE_RANGE_BIT |
-                                   GL_MAP_INVALIDATE_BUFFER_BIT |
-                                   GL_MAP_UNSYNCHRONIZED_BIT;
-
-        if ((access & GL_MAP_READ_BIT) != 0 && (access & writeOnlyBits) != 0)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        if ((access & GL_MAP_WRITE_BIT) == 0 && (access & GL_MAP_FLUSH_EXPLICIT_BIT) != 0)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return NULL;
-        }
-
-        Error error = buffer->mapRange(offset, length, access);
-        if (error.isError())
-        {
-            context->recordError(error);
-            return NULL;
-        }
-
-        return buffer->getMapPointer();
+        return context->mapBufferRange(target, offset, length, access);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
@@ -1034,44 +899,13 @@ void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsiz
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (offset < 0 || length < 0)
+        if (!context->skipValidation() &&
+            !ValidateFlushMappedBufferRangeEXT(context, target, offset, length))
         {
-            context->recordError(Error(GL_INVALID_VALUE));
             return;
         }
 
-        if (!ValidBufferTarget(context, target))
-        {
-            context->recordError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Buffer *buffer = context->getState().getTargetBuffer(target);
-
-        if (buffer == NULL)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!buffer->isMapped() || (buffer->getAccessFlags() & GL_MAP_FLUSH_EXPLICIT_BIT) == 0)
-        {
-            context->recordError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // Check for buffer overflow
-        size_t offsetSize = static_cast<size_t>(offset);
-        size_t lengthSize = static_cast<size_t>(length);
-
-        if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-            offsetSize + lengthSize > static_cast<size_t>(buffer->getMapLength()))
-        {
-            context->recordError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        // We do not currently support a non-trivial implementation of FlushMappedBufferRange
+        context->flushMappedBufferRange(target, offset, length);
     }
 }
 

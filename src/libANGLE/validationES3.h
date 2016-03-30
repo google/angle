@@ -294,6 +294,18 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
 bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
 
+bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params);
+bool ValidateUnmapBuffer(Context *context, GLenum target);
+bool ValidateMapBufferRange(Context *context,
+                            GLenum target,
+                            GLintptr offset,
+                            GLsizeiptr length,
+                            GLbitfield access);
+bool ValidateFlushMappedBufferRange(Context *context,
+                                    GLenum target,
+                                    GLintptr offset,
+                                    GLsizeiptr length);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_
