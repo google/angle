@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b168d59f_8a1b2958",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-03-30T23:45:13Z",
+      "side": 1,
+      "message": "nit: throw -\u003e returns\nthrow sounds like a C++ exception is raised.",
+      "revId": "d8d134be363180be98a37f08b36029e5bf6e6de3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
