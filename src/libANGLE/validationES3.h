@@ -201,7 +201,7 @@ bool ValidateGetProgramBinary(Context *context,
                               GLsizei *length,
                               GLenum *binaryFormat,
                               void *binary);
-bool ValidateProgramParameter(Context *context, GLuint program, GLenum pname, GLint value);
+bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value);
 bool ValidateBlitFramebuffer(Context *context,
                              GLint srcX0,
                              GLint srcY0,

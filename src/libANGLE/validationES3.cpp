@@ -1583,11 +1583,11 @@ bool ValidateGetProgramBinary(Context *context,
     return ValidateGetProgramBinaryBase(context, program, bufSize, length, binaryFormat, binary);
 }
 
-bool ValidateProgramParameter(Context *context, GLuint program, GLenum pname, GLint value)
+bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value)
 {
     if (context->getClientVersion() < 3)
     {
-        context->recordError(Error(GL_INVALID_OPERATION));
+        context->recordError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
     }
 
@@ -1599,6 +1599,12 @@ bool ValidateProgramParameter(Context *context, GLuint program, GLenum pname, GL
     switch (pname)
     {
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
+            if (value != GL_FALSE && value != GL_TRUE)
+            {
+                context->recordError(Error(
+                    GL_INVALID_VALUE, "Invalid value, expected GL_FALSE or GL_TRUE: %i", value));
+                return false;
+            }
             break;
 
         default:

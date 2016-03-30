@@ -147,6 +147,8 @@ class Context final : public ValidationContext
     GLint getSamplerParameteri(GLuint sampler, GLenum pname);
     GLfloat getSamplerParameterf(GLuint sampler, GLenum pname);
 
+    void programParameteri(GLuint program, GLenum pname, GLint value);
+
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
     FenceSync *getFenceSync(GLsync handle) const;

@@ -2712,23 +2712,13 @@ void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateProgramParameter(context, program, pname, value))
+        if (!context->skipValidation() &&
+            !ValidateProgramParameteri(context, program, pname, value))
         {
             return;
         }
 
-        gl::Program *programObject = context->getProgram(program);
-        ASSERT(programObject != nullptr);
-
-        switch (pname)
-        {
-            case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
-                programObject->setBinaryRetrievableHint(value != GL_FALSE);
-                break;
-
-            default:
-                UNREACHABLE();
-        }
+        context->programParameteri(program, pname, value);
     }
 }
 
