@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b168d59f_d99c338d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "At this point we might want to shift to use a string stream.",
+      "range": {
+        "startLine": 3383,
+        "startChar": 4,
+        "endLine": 3383,
+        "endChar": 11
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1e37549_f51c80b3",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "is there a dEQP test for a structure with all samplers? if not, we should make sure this is covered.",
+      "range": {
+        "startLine": 320,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1e37549_55328c39",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer just allowing the output variable to be nullptr instead of using the overloading here.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 1
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1e37549_352f08d0",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 1
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
