@@ -62,11 +62,13 @@ class Buffer11 : public BufferD3D
     Buffer11(Renderer11 *renderer);
     virtual ~Buffer11();
 
-    ID3D11Buffer *getBuffer(BufferUsage usage);
-    ID3D11Buffer *getEmulatedIndexedBuffer(SourceIndexData *indexInfo, const TranslatedAttribute *attribute);
-    ID3D11Buffer *getConstantBufferRange(GLintptr offset, GLsizeiptr size);
-    ID3D11ShaderResourceView *getSRV(DXGI_FORMAT srvFormat);
-    bool isMapped() const { return mMappedStorage != NULL; }
+    gl::ErrorOrResult<ID3D11Buffer *> getBuffer(BufferUsage usage);
+    gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(
+        SourceIndexData *indexInfo,
+        const TranslatedAttribute &attribute);
+    gl::ErrorOrResult<ID3D11Buffer *> getConstantBufferRange(GLintptr offset, GLsizeiptr size);
+    gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);
+    bool isMapped() const { return mMappedStorage != nullptr; }
     gl::Error packPixels(const gl::FramebufferAttachment &readAttachment,
                          const PackPixelsParams &params);
     size_t getTotalCPUBufferMemoryBytes() const;
@@ -83,7 +85,7 @@ class Buffer11 : public BufferD3D
     virtual gl::Error map(GLenum access, GLvoid **mapPtr);
     virtual gl::Error mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr);
     virtual gl::Error unmap(GLboolean *result);
-    virtual void markTransformFeedbackUsage();
+    virtual gl::Error markTransformFeedbackUsage();
 
   private:
     class BufferStorage;
@@ -120,20 +122,19 @@ class Buffer11 : public BufferD3D
 
     unsigned int mReadUsageCount;
 
-    void markBufferUsage();
-    NativeStorage *getStagingStorage();
-    PackStorage *getPackStorage();
-    gl::Error getSystemMemoryStorage(SystemMemoryStorage **storageOut);
+    gl::Error markBufferUsage();
+    gl::ErrorOrResult<NativeStorage *> getStagingStorage();
+    gl::ErrorOrResult<PackStorage *> getPackStorage();
+    gl::ErrorOrResult<SystemMemoryStorage *> getSystemMemoryStorage();
 
-    void updateBufferStorage(BufferStorage *storage, size_t sourceOffset, size_t storageSize);
-    BufferStorage *getBufferStorage(BufferUsage usage);
-    BufferStorage *getLatestBufferStorage() const;
+    gl::Error updateBufferStorage(BufferStorage *storage, size_t sourceOffset, size_t storageSize);
+    gl::ErrorOrResult<BufferStorage *> getBufferStorage(BufferUsage usage);
+    gl::ErrorOrResult<BufferStorage *> getLatestBufferStorage() const;
 
-    BufferStorage *getConstantBufferRangeStorage(GLintptr offset, GLsizeiptr size);
-
-    void invalidateEmulatedIndexedBuffer();
+    gl::ErrorOrResult<BufferStorage *> getConstantBufferRangeStorage(GLintptr offset,
+                                                                     GLsizeiptr size);
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_

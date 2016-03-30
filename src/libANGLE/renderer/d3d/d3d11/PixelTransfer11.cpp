@@ -208,18 +208,23 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     DXGI_FORMAT srvFormat = sourceFormatInfo.formatSet->srvFormat;
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
     Buffer11 *bufferStorage11 = GetAs<Buffer11>(sourceBuffer.getImplementation());
-    ID3D11ShaderResourceView *bufferSRV = bufferStorage11->getSRV(srvFormat);
-    ASSERT(bufferSRV != NULL);
+    auto srvOrError = bufferStorage11->getSRV(srvFormat);
+    if (srvOrError.isError())
+    {
+        return srvOrError.getError();
+    }
+    ID3D11ShaderResourceView *bufferSRV = srvOrError.getResult();
+    ASSERT(bufferSRV != nullptr);
 
     ID3D11RenderTargetView *textureRTV = GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();
-    ASSERT(textureRTV != NULL);
+    ASSERT(textureRTV != nullptr);
 
     CopyShaderParams shaderParams;
     setBufferToTextureCopyParams(destArea, destSize, sourceFormat, unpack, offset, &shaderParams);
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    ID3D11Buffer *nullBuffer = NULL;
+    ID3D11Buffer *nullBuffer = nullptr;
     UINT zero = 0;
 
     // Are we doing a 2D or 3D copy?

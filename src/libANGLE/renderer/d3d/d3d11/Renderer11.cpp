@@ -1288,11 +1288,22 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
 
             if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
             {
-                constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+                auto bufferOrError = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                constantBuffer = bufferOrError.getResult();
             }
             else
             {
-                constantBuffer = bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+                auto bufferOrError =
+                    bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                constantBuffer = bufferOrError.getResult();
             }
 
             if (!constantBuffer)
@@ -1349,11 +1360,22 @@ gl::Error Renderer11::setUniformBuffers(const gl::Data &data,
 
             if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
             {
-                constantBuffer = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+                auto bufferOrError = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                constantBuffer = bufferOrError.getResult();
             }
             else
             {
-                constantBuffer = bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+                auto bufferOrError =
+                    bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                constantBuffer = bufferOrError.getResult();
             }
 
             if (!constantBuffer)
@@ -1542,7 +1564,12 @@ gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
     if (indexInfo->storage)
     {
         Buffer11 *storage = GetAs<Buffer11>(indexInfo->storage);
-        buffer = storage->getBuffer(BUFFER_USAGE_INDEX);
+        auto indexOrError = storage->getBuffer(BUFFER_USAGE_INDEX);
+        if (indexOrError.isError())
+        {
+            return indexOrError.getError();
+        }
+        buffer = indexOrError.getResult();
     }
     else
     {
@@ -1564,7 +1591,7 @@ gl::Error Renderer11::applyIndexBuffer(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
+gl::Error Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
 {
     size_t numXFBBindings = 0;
     bool requiresUpdate = false;
@@ -1579,11 +1606,16 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
         {
             const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
 
-            ID3D11Buffer *d3dBuffer = NULL;
+            ID3D11Buffer *d3dBuffer = nullptr;
             if (binding.get() != nullptr)
             {
                 Buffer11 *storage = GetImplAs<Buffer11>(binding.get());
-                d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+                auto bufferOrError = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                d3dBuffer = bufferOrError.getResult();
             }
 
             // TODO: mAppliedTFBuffers and friends should also be kept in a vector.
@@ -1603,7 +1635,12 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
             if (binding.get() != nullptr)
             {
                 Buffer11 *storage = GetImplAs<Buffer11>(binding.get());
-                ID3D11Buffer *d3dBuffer = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+                auto bufferOrError = storage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
+                if (bufferOrError.isError())
+                {
+                    return bufferOrError.getError();
+                }
+                ID3D11Buffer *d3dBuffer = bufferOrError.getResult();
 
                 mCurrentD3DOffsets[i] = (mAppliedTFBuffers[i] != d3dBuffer || mAppliedTFOffsets[i] != binding.getOffset()) ?
                                         static_cast<UINT>(binding.getOffset()) : -1;
@@ -1611,7 +1648,7 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
             }
             else
             {
-                mAppliedTFBuffers[i] = NULL;
+                mAppliedTFBuffers[i]  = nullptr;
                 mCurrentD3DOffsets[i] = 0;
             }
             mAppliedTFOffsets[i] = binding.getOffset();
@@ -1622,6 +1659,8 @@ void Renderer11::applyTransformFeedbackBuffers(const gl::State &state)
         mDeviceContext->SOSetTargets(static_cast<unsigned int>(numXFBBindings), mAppliedTFBuffers,
                                      mCurrentD3DOffsets);
     }
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer11::drawArraysImpl(const gl::Data &data,

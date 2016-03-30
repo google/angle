@@ -111,7 +111,7 @@ gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
                          "Vertex buffer overflow in VertexBufferInterface::getSpaceRequired.");
     }
 
-    return std::move(alignedSpaceRequired);
+    return alignedSpaceRequired;
 }
 
 gl::Error VertexBufferInterface::discard()
