@@ -272,11 +272,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
 
         if (data.state->isTransformFeedbackActiveUnpaused())
         {
-            error = markTransformFeedbackUsage(data);
-            if (error.isError())
-            {
-                return error;
-            }
+            markTransformFeedbackUsage(data);
         }
     }
 
@@ -513,7 +509,7 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
     return false;
 }
 
-gl::Error RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
+void RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
 {
     const gl::TransformFeedback *transformFeedback = data.state->getCurrentTransformFeedback();
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
@@ -522,15 +518,9 @@ gl::Error RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
         if (binding.get() != nullptr)
         {
             BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
-            auto error = bufferD3D->markTransformFeedbackUsage();
-            if (error.isError())
-            {
-                return error;
-            }
+            bufferD3D->markTransformFeedbackUsage();
         }
     }
-
-    return gl::Error(GL_NO_ERROR);
 }
 
 size_t RendererD3D::getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray)

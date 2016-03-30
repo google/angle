@@ -293,23 +293,11 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                     indexInfo->srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                auto bufferOrError =
-                    bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData, attrib);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                buffer = bufferOrError.getResult();
+                buffer = bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData, &attrib);
             }
             else
             {
-                auto bufferOrError =
-                    bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                buffer = bufferOrError.getResult();
+                buffer = bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK);
             }
 
             vertexStride = attrib.stride;

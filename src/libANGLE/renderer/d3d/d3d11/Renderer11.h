@@ -148,7 +148,7 @@ class Renderer11 : public RendererD3D
                                GLenum mode,
                                GLenum type,
                                TranslatedIndexData *indexInfo) override;
-    gl::Error applyTransformFeedbackBuffers(const gl::State &state) override;
+    void applyTransformFeedbackBuffers(const gl::State &state) override;
 
     // lost device
     bool testDeviceLost() override;

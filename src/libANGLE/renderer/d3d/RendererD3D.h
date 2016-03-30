@@ -180,7 +180,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                        GLenum mode,
                                        GLenum type,
                                        TranslatedIndexData *indexInfo) = 0;
-    virtual gl::Error applyTransformFeedbackBuffers(const gl::State &state) = 0;
+    virtual void applyTransformFeedbackBuffers(const gl::State& state) = 0;
 
     virtual unsigned int getReservedVertexUniformVectors() const = 0;
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
@@ -326,7 +326,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::Error applyTextures(const gl::Data &data);
 
     bool skipDraw(const gl::Data &data, GLenum drawMode);
-    gl::Error markTransformFeedbackUsage(const gl::Data &data);
+    void markTransformFeedbackUsage(const gl::Data &data);
 
     size_t getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray);
     gl::Texture *getIncompleteTexture(GLenum type);

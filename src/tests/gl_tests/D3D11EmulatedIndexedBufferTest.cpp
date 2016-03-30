@@ -107,10 +107,9 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
 
     void emulateAndCompare(rx::SourceIndexData *srcData)
     {
-        auto bufferOrError = mSourceBuffer->getEmulatedIndexedBuffer(srcData, mTranslatedAttribute);
-        ASSERT_FALSE(bufferOrError.isError());
-        ID3D11Buffer *emulatedBuffer = bufferOrError.getResult();
+        ID3D11Buffer* emulatedBuffer = mSourceBuffer->getEmulatedIndexedBuffer(srcData, &mTranslatedAttribute);
         ASSERT_TRUE(emulatedBuffer != nullptr);
+
         compareContents(emulatedBuffer);
     }
 

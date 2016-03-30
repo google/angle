@@ -99,7 +99,7 @@ class MockBufferD3D : public rx::BufferD3D
     MOCK_METHOD1(unmap, gl::Error(GLboolean *));
 
     // BufferD3D
-    MOCK_METHOD0(markTransformFeedbackUsage, gl::Error());
+    MOCK_METHOD0(markTransformFeedbackUsage, void());
 
     // inlined for speed
     bool supportsDirectBinding() const override { return false; }
