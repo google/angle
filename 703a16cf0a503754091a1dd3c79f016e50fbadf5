@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b1e37549_6a6feb34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "I think that\u0027s fine, I do agree the tree transformations as they are now are not particularly readable.",
+      "parentUuid": "5177990e_a6998649",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 29
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "913af1f4_a33d24c2",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 5
@@ -137,6 +161,30 @@
       "side": 1,
       "message": "Of course, this if can be removed. I don\u0027t think that the code generally asserts to avoid null pointer access though, since that should terminate the program either way?",
       "parentUuid": "d1cc697f_704d726e",
+      "range": {
+        "startLine": 2181,
+        "startChar": 4,
+        "endLine": 2181,
+        "endChar": 6
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1e37549_2a75e306",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2181,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "We do in a few places to catch early NULL before it is dereferenced. I\u0027m not really sure what the expected behaviour on null is, but I\u0027m fine if you don\u0027t want the ASSERT. (It serves as partial documentation I would say, to make explicit our implicit assumptions)",
+      "parentUuid": "d198e991_e2d486c4",
       "range": {
         "startLine": 2181,
         "startChar": 4,
@@ -431,6 +479,30 @@
     },
     {
       "key": {
+        "uuid": "b1e37549_b5979866",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "Sounds good. I\u0027m not super familiar with vector, but does this initialize to nullptr?",
+      "parentUuid": "f1bdedca_3307883f",
+      "range": {
+        "startLine": 239,
+        "startChar": 5,
+        "endLine": 240,
+        "endChar": 56
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_70e1f2e4",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 5
@@ -525,6 +597,30 @@
     },
     {
       "key": {
+        "uuid": "b1e37549_55a72cce",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "Ok, looks good. I didn\u0027t notice the nested functions.",
+      "parentUuid": "5177990e_2607563f",
+      "range": {
+        "startLine": 284,
+        "startChar": 24,
+        "endLine": 284,
+        "endChar": 47
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "913af1f4_23bf54d6",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -590,6 +686,24 @@
       "side": 1,
       "message": "Agreed that this is a cleaner way to implement this. I don\u0027t see any issues here.",
       "parentUuid": "d1cc697f_f31a6f53",
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1e37549_75aeb0a9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "Looks much better!",
+      "parentUuid": "5177990e_666dce8f",
       "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -666,6 +780,30 @@
       "side": 1,
       "message": "Note that this code also maps \"us[0].tex\" to \"angle_us_0_tex\". This mapping wouldn\u0027t fit in very nicely to the translator side either I think. So changing the ShGetUniformRegister API isn\u0027t enough in itself to make this code unnecessary. I didn\u0027t do any changes here yet, but can consider them if you still think changing this would be better.",
       "parentUuid": "d1cc697f_d06b9eea",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 10
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_39a44fc8",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T15:24:23Z",
+      "side": 1,
+      "message": "Hm, I didn\u0027t notice the mapping. I\u0027ve given this some thought - I don\u0027t think the ANGLE-side code should be aware of the specifics of the name mapping, this seems like a layering violation.\n\nI think we should rework the code a bit to get the uniforms map to store the same uniform name that the ShaderD3D would query. To do this, I think you could:\n\n 1) In TStructure::createSamplerSymbols, generate a TMap from the unmapped name (with . and []) to the new symbol.\n 2) This will require passing around a few more params for the unmapped name.\n 3) Take the unmapped name as a parameter to  UniformHLSL::assignSamplerInStructUniformRegister, use that to init the uniform map\n 4) In UniformHLSL::uniformsHeader, you will have the unampped name from createSamplerSymbols for the \"old\" style samplers\n 5) In \"4.1+\" style, store the unmapped name in the sampler group for later use\n 6) Then switch to the new map query here, pulling in the whole std::map.\n\nThis will add some code to the translator-side, but will clean up the ANGLE-side, and the remove need for the ANGLE-side mapping and struct traversal.",
+      "parentUuid": "5177990e_c6d2027a",
       "range": {
         "startLine": 142,
         "startChar": 0,
