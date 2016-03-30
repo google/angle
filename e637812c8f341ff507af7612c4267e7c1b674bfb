@@ -49,6 +49,54 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_224c1446",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51031991_7514b2d7",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 58
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_42490835",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_99bb9b39",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 58
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51031991_150b3eb6",
         "filename": "src/libANGLE/renderer/ImplFactory.h",
         "patchSetId": 9
@@ -96,6 +144,54 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_a2866498",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_59d3c37e",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_82432013",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51031991_150b3eb6",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b168d59f_f9bad731",
         "filename": "src/libANGLE/renderer/StreamImpl.h",
         "patchSetId": 9
@@ -107,6 +203,30 @@
       "writtenOn": "2016-03-30T16:48:22Z",
       "side": 1,
       "message": "you can leave this out for now",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 22
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_0251d0b0",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_f9bad731",
       "range": {
         "startLine": 11,
         "startChar": 0,
@@ -142,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_e24bfcff",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "I\u0027d rather not put in any implementation details at all yet until I have everything is sorted. It is probable that the only attributes that would make it to this layer would be ones defined in the custom extension, as most attributes are for stream-level bookkeeping or aren\u0027t relevant to the implementation.",
+      "parentUuid": "b168d59f_39ad2ff6",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 2
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b168d59f_d9b51343",
         "filename": "src/libANGLE/renderer/StreamImpl.h",
         "patchSetId": 9
@@ -153,6 +297,30 @@
       "writtenOn": "2016-03-30T16:48:22Z",
       "side": 1,
       "message": "namespace comment",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 1
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_2266d492",
+        "filename": "src/libANGLE/renderer/StreamImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_d9b51343",
       "range": {
         "startLine": 27,
         "startChar": 0,
@@ -211,6 +379,30 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_021f10f7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_397fef39",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 29
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b168d59f_19822b7b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.cpp",
         "patchSetId": 9
@@ -222,6 +414,30 @@
       "writtenOn": "2016-03-30T16:48:22Z",
       "side": 1,
       "message": "nit: namespace comment",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_421108e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Stream11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_19822b7b",
       "range": {
         "startLine": 24,
         "startChar": 0,
@@ -303,6 +519,30 @@
     },
     {
       "key": {
+        "uuid": "b168d59f_02de305a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_99d47b6d",
+      "range": {
+        "startLine": 775,
+        "startChar": 4,
+        "endLine": 775,
+        "endChar": 43
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b168d59f_d9def38a",
         "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
         "patchSetId": 9
@@ -314,6 +554,30 @@
       "writtenOn": "2016-03-30T16:48:22Z",
       "side": 1,
       "message": "nit: UNREACHABLE()",
+      "range": {
+        "startLine": 330,
+        "startChar": 3,
+        "endLine": 330,
+        "endChar": 19
+      },
+      "revId": "e637812c8f341ff507af7612c4267e7c1b674bfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b168d59f_22e3341c",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-03-30T18:30:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_d9def38a",
       "range": {
         "startLine": 330,
         "startChar": 3,
