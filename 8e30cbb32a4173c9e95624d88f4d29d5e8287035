@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1e37549_44ef809f",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-30T02:02:48Z",
+      "side": 1,
+      "message": "make a new method IsLinux(), see IsOSX()",
+      "range": {
+        "startLine": 293,
+        "startChar": 12,
+        "endLine": 293,
+        "endChar": 32
+      },
+      "revId": "8e30cbb32a4173c9e95624d88f4d29d5e8287035",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
