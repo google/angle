@@ -543,9 +543,18 @@ bool IsD3DSM3()
     return IsD3D9() || IsD3D11_FL93();
 }
 
+bool IsLinux()
+{
+#if defined(ANGLE_PLATFORM_LINUX)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool IsOSX()
 {
-#if defined(__APPLE__)
+#if defined(ANGLE_PLATFORM_APPLE)
     return true;
 #else
     return false;

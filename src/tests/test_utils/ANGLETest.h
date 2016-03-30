@@ -185,6 +185,7 @@ bool IsD3D11_FL93();
 bool IsD3D9();
 // Is D3D9 or SM9_3 renderer.
 bool IsD3DSM3();
+bool IsLinux();
 bool IsOSX();
 
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_

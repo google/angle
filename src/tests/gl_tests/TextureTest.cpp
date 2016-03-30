@@ -1205,16 +1205,37 @@ TEST_P(Texture2DTest, CopySubImageFloat_RG_RG)
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_R)
 {
+    if (IsIntel() && IsLinux())
+    {
+        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
+        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(3, 1);
 }
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_RG)
 {
+    if (IsIntel() && IsLinux())
+    {
+        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
+        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
+        return;
+    }
+
     testFloatCopySubImage(3, 2);
 }
 
 TEST_P(Texture2DTest, CopySubImageFloat_RGB_RGB)
 {
+    if (IsIntel() && IsLinux())
+    {
+        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
+        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
+        return;
+    }
+
     // TODO (bug 1284): Investigate RGBA32f D3D SDK Layers messages on D3D11_FL9_3
     if (IsD3D11_FL93())
     {
@@ -1826,6 +1847,13 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1)
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTestES3, TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1)
 {
+    if (IsIntel() && IsLinux())
+    {
+        // TODO(cwallez): Fix on Linux Intel drivers (http://anglebug.com/1346)
+        std::cout << "Test disabled on Linux Intel OpenGL." << std::endl;
+        return;
+    }
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_SRGB8_ETC2, 1, 1, 0, 8, nullptr);
