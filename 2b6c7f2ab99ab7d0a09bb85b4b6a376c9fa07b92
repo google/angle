@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e59ec47_ef74d2d5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1516,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-31T19:04:47Z",
+      "side": 1,
+      "message": "I think that this check is actually not valid.  It shouldn\u0027t be possible to set the active texture unit higher than GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS according to the spec on glActiveTexture.\n\nYou can probably remove this check.",
+      "range": {
+        "startLine": 1512,
+        "startChar": 10,
+        "endLine": 1516,
+        "endChar": 11
+      },
+      "revId": "2b6c7f2ab99ab7d0a09bb85b4b6a376c9fa07b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e59ec47_8f6d5604",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1519,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-31T19:04:47Z",
+      "side": 1,
+      "message": "Can you be more descriptive here? You could use the full extension name.",
+      "range": {
+        "startLine": 1519,
+        "startChar": 59,
+        "endLine": 1519,
+        "endChar": 81
+      },
+      "revId": "2b6c7f2ab99ab7d0a09bb85b4b6a376c9fa07b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e59ec47_0f17266f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-31T19:04:47Z",
+      "side": 1,
+      "message": "This comparison doesn\u0027t make sense.  This was copied from code where texture is a GLuint.\n\nI would replace the Texture* parameter with a GLuint and grab the texture object in this function. It is not used in the gl::BindTexture function.",
+      "range": {
+        "startLine": 1887,
+        "startChar": 53,
+        "endLine": 1887,
+        "endChar": 65
+      },
+      "revId": "2b6c7f2ab99ab7d0a09bb85b4b6a376c9fa07b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e59ec47_0fc5e60a",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-03-31T19:04:47Z",
+      "side": 1,
+      "message": "EGL functions should set the global error after each call, even if it succeeds.  I just noticed the other stream related entry points need to do that too.",
+      "range": {
+        "startLine": 722,
+        "startChar": 4,
+        "endLine": 722,
+        "endChar": 21
+      },
+      "revId": "2b6c7f2ab99ab7d0a09bb85b4b6a376c9fa07b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
