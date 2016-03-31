@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4e25349f_362fd882",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1604,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T13:45:48Z",
+      "side": 1,
+      "message": "Whoops, that\u0027s right. Done.",
+      "parentUuid": "8e59ec47_51102637",
+      "range": {
+        "startLine": 1596,
+        "startChar": 0,
+        "endLine": 1604,
+        "endChar": 9
+      },
+      "revId": "1982f5bfcd533985163d0370f057e8e28dcd8c52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e59ec47_110aae03",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-03-31T13:16:25Z",
       "side": 1,
       "message": "maybe we want a helper method for this? Not sure if there are other places where we could use it currently, but it should apply to pretty much every GLboolean passed in.",
+      "range": {
+        "startLine": 1611,
+        "startChar": 12,
+        "endLine": 1616,
+        "endChar": 13
+      },
+      "revId": "1982f5bfcd533985163d0370f057e8e28dcd8c52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e25349f_f6284077",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T13:45:48Z",
+      "side": 1,
+      "message": "I think dEQP only requires this validation when the boolean is passed as a GLint parameter. It might be that the spec doesn\u0027t require this kind of an error when the boolean is actually passed as GLboolean. Left as-is.",
+      "parentUuid": "8e59ec47_110aae03",
       "range": {
         "startLine": 1611,
         "startChar": 12,
