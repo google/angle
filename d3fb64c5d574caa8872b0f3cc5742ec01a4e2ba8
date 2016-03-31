@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e59ec47_d1209677",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-31T13:24:38Z",
+      "side": 1,
+      "message": "git cl format should re-space this",
+      "range": {
+        "startLine": 65,
+        "startChar": 2,
+        "endLine": 65,
+        "endChar": 18
+      },
+      "revId": "d3fb64c5d574caa8872b0f3cc5742ec01a4e2ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e59ec47_315372ed",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-31T13:24:38Z",
+      "side": 1,
+      "message": "nit: UNREACHABLE() for now, though they are implementable with native EGL streams.",
+      "range": {
+        "startLine": 68,
+        "startChar": 11,
+        "endLine": 68,
+        "endChar": 18
+      },
+      "revId": "d3fb64c5d574caa8872b0f3cc5742ec01a4e2ba8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
