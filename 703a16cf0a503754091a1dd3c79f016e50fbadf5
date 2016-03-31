@@ -527,6 +527,30 @@
     },
     {
       "key": {
+        "uuid": "8e59ec47_5cdf1df8",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-03-31T15:52:16Z",
+      "side": 1,
+      "message": "Ah, missed that they were value types. Thanks.",
+      "parentUuid": "ce3684de_72845803",
+      "range": {
+        "startLine": 239,
+        "startChar": 5,
+        "endLine": 240,
+        "endChar": 56
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_70e1f2e4",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 5
