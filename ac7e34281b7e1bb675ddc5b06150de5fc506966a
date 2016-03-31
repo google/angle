@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4e25349f_b681a8ee",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3383,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b168d59f_d99c338d",
+      "range": {
+        "startLine": 3383,
+        "startChar": 4,
+        "endLine": 3383,
+        "endChar": 11
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1e37549_f51c80b3",
         "filename": "src/compiler/translator/StructureHLSL.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-03-30T15:24:23Z",
       "side": 1,
       "message": "is there a dEQP test for a structure with all samplers? if not, we should make sure this is covered.",
+      "range": {
+        "startLine": 320,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e25349f_f6160071",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "Yes, a lot of tests in dEQP-GLES3.functional.uniform_api hit this.",
+      "parentUuid": "b1e37549_f51c80b3",
       "range": {
         "startLine": 320,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8e0bac17_3867c923",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "Yep, that\u0027s better. Done.",
+      "parentUuid": "b1e37549_55328c39",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 1
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1e37549_352f08d0",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2016-03-30T15:24:23Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 1
+      },
+      "revId": "ac7e34281b7e1bb675ddc5b06150de5fc506966a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee00a8f1_db2fb3cc",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1e37549_352f08d0",
       "range": {
         "startLine": 139,
         "startChar": 0,
