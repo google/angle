@@ -69,6 +69,16 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY
 StreamConsumerGLTextureExternalAttribsNV(EGLDisplay dpy,
                                          EGLStreamKHR stream,
                                          const EGLAttrib *attrib_list);
-}
+
+// EGL_ANGLE_stream_producer_d3d_texture_nv12
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY
+CreateStreamProducerD3DTextureNV12ANGLE(EGLDisplay dpy,
+                                        EGLStreamKHR stream,
+                                        const EGLAttrib *attrib_list);
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
+                                                                  EGLStreamKHR stream,
+                                                                  void *texture,
+                                                                  const EGLAttrib *attrib_list);
+}  // namespace egl
 
 #endif // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

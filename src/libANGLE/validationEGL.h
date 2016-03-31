@@ -87,6 +87,13 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
                                                        gl::Context *context,
                                                        const Stream *stream,
                                                        const AttributeMap &attribs);
+Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
+                                                      const Stream *stream,
+                                                      const AttributeMap &attribs);
+Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
+                                            const Stream *stream,
+                                            const void *texture,
+                                            const AttributeMap &attribs);
 
 // Other validation
 Error ValidateCompatibleConfigs(const Display *display,

@@ -640,7 +640,8 @@ DisplayExtensions::DisplayExtensions()
       createContextNoError(false),
       stream(false),
       streamConsumerGLTexture(false),
-      streamConsumerGLTextureYUV(false)
+      streamConsumerGLTextureYUV(false),
+      streamProducerD3DTextureNV12(false)
 {
 }
 

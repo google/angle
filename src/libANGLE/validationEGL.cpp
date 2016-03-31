@@ -1453,4 +1453,83 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
 
     return Error(EGL_SUCCESS);
 }
+
+Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
+                                                      const Stream *stream,
+                                                      const AttributeMap &attribs)
+{
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.streamProducerD3DTextureNV12)
+    {
+        return Error(EGL_BAD_ACCESS, "Stream producer extension not active");
+    }
+
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    if (!attribs.isEmpty())
+    {
+        return Error(EGL_BAD_ATTRIBUTE, "Invalid attribute");
+    }
+
+    if (stream->getState() != EGL_STREAM_STATE_CONNECTING_KHR)
+    {
+        return Error(EGL_BAD_STATE_KHR, "Stream not in connecting state");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
+                                            const Stream *stream,
+                                            const void *texture,
+                                            const AttributeMap &attribs)
+{
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.streamProducerD3DTextureNV12)
+    {
+        return Error(EGL_BAD_ACCESS, "Stream producer extension not active");
+    }
+
+    Error error = ValidateStream(display, stream);
+    if (error.isError())
+    {
+        return error;
+    }
+
+    for (auto &attributeIter : attribs)
+    {
+        EGLAttrib attribute = attributeIter.first;
+        EGLAttrib value     = attributeIter.second;
+
+        switch (attribute)
+        {
+            case EGL_D3D_TEXTURE_SUBRESOURCE_ID_ANGLE:
+                if (value < 0)
+                {
+                    return Error(EGL_BAD_PARAMETER, "Invalid subresource index");
+                }
+                break;
+            default:
+                return Error(EGL_BAD_ATTRIBUTE, "Invalid attribute");
+        }
+    }
+
+    if (stream->getState() != EGL_STREAM_STATE_EMPTY_KHR &&
+        stream->getState() != EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR &&
+        stream->getState() != EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR)
+    {
+        return Error(EGL_BAD_STATE_KHR, "Stream not fully configured");
+    }
+
+    if (texture == nullptr)
+    {
+        return Error(EGL_BAD_PARAMETER, "Texture must not be null");
+    }
+
+    return Error(EGL_SUCCESS);
+}
 }
