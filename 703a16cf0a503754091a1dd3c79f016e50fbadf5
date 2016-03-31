@@ -503,6 +503,30 @@
     },
     {
       "key": {
+        "uuid": "ce3684de_72845803",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "The vectors inside the outer vector are initialized to empty vectors, no pointer entries are added when initializing.",
+      "parentUuid": "b1e37549_b5979866",
+      "range": {
+        "startLine": 239,
+        "startChar": 5,
+        "endLine": 240,
+        "endChar": 56
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1cc697f_70e1f2e4",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 5
@@ -804,6 +828,30 @@
       "side": 1,
       "message": "Hm, I didn\u0027t notice the mapping. I\u0027ve given this some thought - I don\u0027t think the ANGLE-side code should be aware of the specifics of the name mapping, this seems like a layering violation.\n\nI think we should rework the code a bit to get the uniforms map to store the same uniform name that the ShaderD3D would query. To do this, I think you could:\n\n 1) In TStructure::createSamplerSymbols, generate a TMap from the unmapped name (with . and []) to the new symbol.\n 2) This will require passing around a few more params for the unmapped name.\n 3) Take the unmapped name as a parameter to  UniformHLSL::assignSamplerInStructUniformRegister, use that to init the uniform map\n 4) In UniformHLSL::uniformsHeader, you will have the unampped name from createSamplerSymbols for the \"old\" style samplers\n 5) In \"4.1+\" style, store the unmapped name in the sampler group for later use\n 6) Then switch to the new map query here, pulling in the whole std::map.\n\nThis will add some code to the translator-side, but will clean up the ANGLE-side, and the remove need for the ANGLE-side mapping and struct traversal.",
       "parentUuid": "5177990e_c6d2027a",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 10
+      },
+      "revId": "703a16cf0a503754091a1dd3c79f016e50fbadf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae14f033_f9283777",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-03-31T15:46:20Z",
+      "side": 1,
+      "message": "I agree that the translator is better encapsulated if the API offers querying the registers with the names in .[] format. I was worried that filling in the uniform map would get ugly, but in fact it seems manageable.\n\nGenerating the names in .[] format in createSamplerSymbols can be optional, so the full cost for that isn\u0027t paid in places where the map is not needed.",
+      "parentUuid": "b168d59f_39a44fc8",
       "range": {
         "startLine": 142,
         "startChar": 0,
