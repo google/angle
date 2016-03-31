@@ -17,6 +17,7 @@ namespace rx
 
 Stream11::Stream11(Renderer11 *renderer) : mRenderer(renderer)
 {
+    UNUSED_VARIABLE(mRenderer);
 }
 
 Stream11::~Stream11()
