@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e59ec47_e32982c7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1885,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-01T14:32:04Z",
+      "side": 1,
+      "message": "you should add a check for the extension here, maybe we were missing one",
+      "range": {
+        "startLine": 1885,
+        "startChar": 5,
+        "endLine": 1885,
+        "endChar": 33
+      },
+      "revId": "95f791b5ca312b1b53e0a2d16639af4788290dc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
