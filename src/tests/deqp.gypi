@@ -1013,9 +1013,6 @@
                 [
                     '<(deqp_path)/framework/platform/x11',
                 ],
-            }],
-            ['OS=="linux"',
-            {
                 'deqp_defines':
                 [
                     # Ask the system headers to expose all the regular function otherwise
@@ -1376,7 +1373,7 @@
                         {
                             'sources': [ '<@(deqp_libtester_sources_win)', ],
                         }],
-                        ['OS=="linux" or OS=="mac"',
+                        ['(OS=="linux" and use_x11==1) or OS=="mac"',
                         {
                             'sources': [ '<@(deqp_libtester_sources_unix)', ],
                         }],
