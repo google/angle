@@ -10,7 +10,7 @@
 #define LIBANGLE_RENDERER_D3D_SURFACED3D_H_
 
 #include "libANGLE/renderer/SurfaceImpl.h"
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+#include "libANGLE/renderer/d3d/NativeWindowD3D.h"
 
 namespace egl
 {
@@ -29,13 +29,12 @@ class SurfaceD3D : public SurfaceImpl
                                         egl::Display *display,
                                         const egl::Config *config,
                                         EGLNativeWindowType window,
-                                        EGLint fixedSize,
-                                        EGLint directComposition,
-                                        EGLint width,
-                                        EGLint height,
-                                        EGLint orientation);
-    static SurfaceD3D *createOffscreen(RendererD3D *renderer, egl::Display *display, const egl::Config *config,
-                                       EGLClientBuffer shareHandle, EGLint width, EGLint height);
+                                        const egl::AttributeMap &attribs);
+    static SurfaceD3D *createOffscreen(RendererD3D *renderer,
+                                       egl::Display *display,
+                                       const egl::Config *config,
+                                       EGLClientBuffer shareHandle,
+                                       const egl::AttributeMap &attribs);
     ~SurfaceD3D() override;
     void releaseSwapChain();
 
@@ -70,13 +69,9 @@ class SurfaceD3D : public SurfaceImpl
     SurfaceD3D(RendererD3D *renderer,
                egl::Display *display,
                const egl::Config *config,
-               EGLint width,
-               EGLint height,
-               EGLint fixedSize,
-               EGLint orientation,
-               EGLint directComposition,
+               EGLNativeWindowType window,
                EGLClientBuffer shareHandle,
-               EGLNativeWindowType window);
+               const egl::AttributeMap &attribs);
 
     egl::Error swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
     egl::Error resetSwapChain(int backbufferWidth, int backbufferHeight);
@@ -94,7 +89,7 @@ class SurfaceD3D : public SurfaceImpl
     SwapChainD3D *mSwapChain;
     bool mSwapIntervalDirty;
 
-    NativeWindow mNativeWindow;   // Handler for the Window that the surface is created for.
+    NativeWindowD3D *mNativeWindow;  // Handler for the Window that the surface is created for.
     EGLint mWidth;
     EGLint mHeight;
 

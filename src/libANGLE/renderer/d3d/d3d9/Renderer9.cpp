@@ -28,6 +28,7 @@
 #include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
 #include "libANGLE/renderer/d3d/d3d9/Image9.h"
 #include "libANGLE/renderer/d3d/d3d9/IndexBuffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/NativeWindow9.h"
 #include "libANGLE/renderer/d3d/d3d9/Query9.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
@@ -657,14 +658,26 @@ gl::Error Renderer9::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChainD3D *Renderer9::createSwapChain(NativeWindow nativeWindow,
+bool Renderer9::isValidNativeWindow(EGLNativeWindowType window) const
+{
+    return NativeWindow9::IsValidNativeWindow(window);
+}
+
+NativeWindowD3D *Renderer9::createNativeWindow(EGLNativeWindowType window,
+                                               const egl::Config *,
+                                               const egl::AttributeMap &) const
+{
+    return new NativeWindow9(window);
+}
+
+SwapChainD3D *Renderer9::createSwapChain(NativeWindowD3D *nativeWindow,
                                          HANDLE shareHandle,
                                          GLenum backBufferFormat,
                                          GLenum depthBufferFormat,
                                          EGLint orientation)
 {
-    return new SwapChain9(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
-                          orientation);
+    return new SwapChain9(this, GetAs<NativeWindow9>(nativeWindow), shareHandle, backBufferFormat,
+                          depthBufferFormat, orientation);
 }
 
 CompilerImpl *Renderer9::createCompiler()

@@ -12,7 +12,7 @@
 
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
+#include "libANGLE/renderer/d3d/d3d11/NativeWindow11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
@@ -33,22 +33,22 @@ namespace rx
 
 namespace
 {
-bool NeedsOffscreenTexture(Renderer11 *renderer, NativeWindow nativeWindow, EGLint orientation)
+bool NeedsOffscreenTexture(Renderer11 *renderer, NativeWindow11 *nativeWindow, EGLint orientation)
 {
     // We don't need an offscreen texture if either orientation = INVERT_Y,
     // or present path fast is enabled and we're not rendering onto an offscreen surface.
     return orientation != EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE &&
-           !(renderer->presentPathFastEnabled() && nativeWindow.getNativeWindow());
+           !(renderer->presentPathFastEnabled() && nativeWindow->getNativeWindow());
 }
 }  // anonymous namespace
 
 SwapChain11::SwapChain11(Renderer11 *renderer,
-                         NativeWindow nativeWindow,
+                         NativeWindow11 *nativeWindow,
                          HANDLE shareHandle,
                          GLenum backBufferFormat,
                          GLenum depthBufferFormat,
                          EGLint orientation)
-    : SwapChainD3D(nativeWindow, shareHandle, backBufferFormat, depthBufferFormat),
+    : SwapChainD3D(shareHandle, backBufferFormat, depthBufferFormat),
       mRenderer(renderer),
       mWidth(-1),
       mHeight(-1),
@@ -56,6 +56,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mAppCreatedShareHandle(mShareHandle != nullptr),
       mSwapInterval(0),
       mPassThroughResourcesInit(false),
+      mNativeWindow(nativeWindow),
       mFirstSwap(true),
       mSwapChain(nullptr),
       mSwapChain1(nullptr),
@@ -218,7 +219,8 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     }
     else
     {
-        const bool useSharedResource = !mNativeWindow.getNativeWindow() && mRenderer->getShareHandleSupport();
+        const bool useSharedResource =
+            !mNativeWindow->getNativeWindow() && mRenderer->getShareHandleSupport();
 
         D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
         offscreenTextureDesc.Width = backbufferWidth;
@@ -525,11 +527,11 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         return EGL_SUCCESS;
     }
 
-    if (mNativeWindow.getNativeWindow())
+    if (mNativeWindow->getNativeWindow())
     {
-        HRESULT result = mNativeWindow.createSwapChain(device, mRenderer->getDxgiFactory(),
-                                               getSwapChainNativeFormat(),
-                                               backbufferWidth, backbufferHeight, &mSwapChain);
+        HRESULT result = mNativeWindow->createSwapChain(device, mRenderer->getDxgiFactory(),
+                                                        getSwapChainNativeFormat(), backbufferWidth,
+                                                        backbufferHeight, &mSwapChain);
 
         if (FAILED(result))
         {
@@ -834,7 +836,7 @@ EGLint SwapChain11::present(EGLint x, EGLint y, EGLint width, EGLint height)
         ERR("Present failed with error code 0x%08X", result);
     }
 
-    mNativeWindow.commitChange();
+    mNativeWindow->commitChange();
 
     return EGL_SUCCESS;
 }

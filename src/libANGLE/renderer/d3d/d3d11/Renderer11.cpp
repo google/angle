@@ -58,6 +58,12 @@
 #include "libANGLE/Surface.h"
 #include "third_party/trace_event/trace_event.h"
 
+#ifdef ANGLE_ENABLE_WINDOWS_STORE
+#include "libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
+#else
+#include "libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.h"
+#endif
+
 // Include the D3D9 debug annotator header for use by the desktop D3D11 renderer
 // because the D3D11 interface method ID3DUserDefinedAnnotation::GetStatus
 // doesn't work with the Graphics Diagnostics tools in Visual Studio 2013.
@@ -1097,14 +1103,37 @@ gl::Error Renderer11::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-SwapChainD3D *Renderer11::createSwapChain(NativeWindow nativeWindow,
+bool Renderer11::isValidNativeWindow(EGLNativeWindowType window) const
+{
+#ifdef ANGLE_ENABLE_WINDOWS_STORE
+    return NativeWindow11WinRT::IsValidNativeWindow(window);
+#else
+    return NativeWindow11Win32::IsValidNativeWindow(window);
+#endif
+}
+
+NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
+                                                const egl::Config *config,
+                                                const egl::AttributeMap &attribs) const
+{
+#ifdef ANGLE_ENABLE_WINDOWS_STORE
+    UNUSED_VARIABLE(attribs);
+    return new NativeWindow11WinRT(window, config->alphaSize > 0);
+#else
+    return new NativeWindow11Win32(
+        window, config->alphaSize > 0,
+        attribs.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE) == EGL_TRUE);
+#endif
+}
+
+SwapChainD3D *Renderer11::createSwapChain(NativeWindowD3D *nativeWindow,
                                           HANDLE shareHandle,
                                           GLenum backBufferFormat,
                                           GLenum depthBufferFormat,
                                           EGLint orientation)
 {
-    return new SwapChain11(this, nativeWindow, shareHandle, backBufferFormat, depthBufferFormat,
-                           orientation);
+    return new SwapChain11(this, GetAs<NativeWindow11>(nativeWindow), shareHandle, backBufferFormat,
+                           depthBufferFormat, orientation);
 }
 
 CompilerImpl *Renderer11::createCompiler()

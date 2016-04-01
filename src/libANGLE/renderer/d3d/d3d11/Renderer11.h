@@ -113,7 +113,12 @@ class Renderer11 : public RendererD3D
     gl::Error flush() override;
     gl::Error finish() override;
 
-    SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
+    bool isValidNativeWindow(EGLNativeWindowType window) const override;
+    NativeWindowD3D *createNativeWindow(EGLNativeWindowType window,
+                                        const egl::Config *config,
+                                        const egl::AttributeMap &attribs) const override;
+
+    SwapChainD3D *createSwapChain(NativeWindowD3D *nativeWindow,
                                   HANDLE shareHandle,
                                   GLenum backBufferFormat,
                                   GLenum depthBufferFormat,
@@ -247,7 +252,7 @@ class Renderer11 : public RendererD3D
     void *getD3DDevice() override;
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
     ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
-    DXGIFactory *getDxgiFactory() { return mDxgiFactory; };
+    IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
     RenderStateCache &getStateCache() { return mStateCache; }
 
@@ -482,7 +487,7 @@ class Renderer11 : public RendererD3D
     IDXGIAdapter *mDxgiAdapter;
     DXGI_ADAPTER_DESC mAdapterDescription;
     char mDescription[128];
-    DXGIFactory *mDxgiFactory;
+    IDXGIFactory *mDxgiFactory;
     ID3D11Debug *mDebug;
 
     std::vector<GLuint> mScratchIndexDataBuffer;

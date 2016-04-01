@@ -18,7 +18,6 @@
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/NativeWindow.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
 #include <array>
@@ -44,6 +43,7 @@ class DeviceD3D;
 class EGLImageD3D;
 class ImageD3D;
 class IndexBuffer;
+class NativeWindowD3D;
 class ProgramD3D;
 class RenderTargetD3D;
 class ShaderExecutableD3D;
@@ -147,7 +147,12 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     // Direct3D Specific methods
     virtual DeviceIdentifier getAdapterIdentifier() const = 0;
 
-    virtual SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
+    virtual bool isValidNativeWindow(EGLNativeWindowType window) const = 0;
+    virtual NativeWindowD3D *createNativeWindow(EGLNativeWindowType window,
+                                                const egl::Config *config,
+                                                const egl::AttributeMap &attribs) const = 0;
+
+    virtual SwapChainD3D *createSwapChain(NativeWindowD3D *nativeWindow,
                                           HANDLE shareHandle,
                                           GLenum backBufferFormat,
                                           GLenum depthBufferFormat,

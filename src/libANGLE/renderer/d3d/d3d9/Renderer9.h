@@ -79,7 +79,12 @@ class Renderer9 : public RendererD3D
     gl::Error flush() override;
     gl::Error finish() override;
 
-    SwapChainD3D *createSwapChain(NativeWindow nativeWindow,
+    bool isValidNativeWindow(EGLNativeWindowType window) const override;
+    NativeWindowD3D *createNativeWindow(EGLNativeWindowType window,
+                                        const egl::Config *config,
+                                        const egl::AttributeMap &attribs) const override;
+
+    SwapChainD3D *createSwapChain(NativeWindowD3D *nativeWindow,
                                   HANDLE shareHandle,
                                   GLenum backBufferFormat,
                                   GLenum depthBufferFormat,

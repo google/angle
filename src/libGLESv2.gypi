@@ -208,6 +208,8 @@
             'libANGLE/renderer/d3d/loadimageSSE2.cpp',
             'libANGLE/renderer/d3d/loadimage_etc.cpp',
             'libANGLE/renderer/d3d/loadimage_etc.h',
+            'libANGLE/renderer/d3d/NativeWindowD3D.cpp',
+            'libANGLE/renderer/d3d/NativeWindowD3D.h',
             'libANGLE/renderer/d3d/ProgramD3D.cpp',
             'libANGLE/renderer/d3d/ProgramD3D.h',
             'libANGLE/renderer/d3d/RenderbufferD3D.cpp',
@@ -255,6 +257,8 @@
             'libANGLE/renderer/d3d/d3d9/Image9.h',
             'libANGLE/renderer/d3d/d3d9/IndexBuffer9.cpp',
             'libANGLE/renderer/d3d/d3d9/IndexBuffer9.h',
+            'libANGLE/renderer/d3d/d3d9/NativeWindow9.cpp',
+            'libANGLE/renderer/d3d/d3d9/NativeWindow9.h',
             'libANGLE/renderer/d3d/d3d9/Query9.cpp',
             'libANGLE/renderer/d3d/d3d9/Query9.h',
             'libANGLE/renderer/d3d/d3d9/Renderer9.cpp',
@@ -312,7 +316,7 @@
             'libANGLE/renderer/d3d/d3d11/InputLayoutCache.h',
             'libANGLE/renderer/d3d/d3d11/load_functions_table.h',
             'libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp',
-            'libANGLE/renderer/d3d/d3d11/NativeWindow.h',
+            'libANGLE/renderer/d3d/d3d11/NativeWindow11.h',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.cpp',
             'libANGLE/renderer/d3d/d3d11/PixelTransfer11.h',
             'libANGLE/renderer/d3d/d3d11/Query11.cpp',
@@ -399,18 +403,21 @@
         ],
         'libangle_d3d11_win32_sources':
         [
-            'libANGLE/renderer/d3d/d3d11/win32/NativeWindow.cpp',
+            'libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.cpp',
+            'libANGLE/renderer/d3d/d3d11/win32/NativeWindow11Win32.h',
             'third_party/systeminfo/SystemInfo.cpp',
             'third_party/systeminfo/SystemInfo.h',
         ],
         'libangle_d3d11_winrt_sources':
         [
-            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp',
-            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h',
             'libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/CoreWindowNativeWindow.h',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp',
             'libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h',
+            'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.cpp',
+            'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
+            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.cpp',
+            'libANGLE/renderer/d3d/d3d11/winrt/SwapChainPanelNativeWindow.h',
         ],
         'libangle_gl_sources':
         [

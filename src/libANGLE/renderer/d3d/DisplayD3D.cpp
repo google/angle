@@ -168,33 +168,14 @@ SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-
-    EGLint width       = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
-    EGLint height      = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
-    EGLint fixedSize   = static_cast<EGLint>(attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE));
-    EGLint orientation = static_cast<EGLint>(attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
-    EGLint directComposition =
-        static_cast<EGLint>(attribs.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE));
-
-    if (!fixedSize)
-    {
-        width = -1;
-        height = -1;
-    }
-
-    return SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, fixedSize,
-                                        directComposition, width, height, orientation);
+    return SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-
-    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
-    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
-
-    return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, nullptr, width, height);
+    return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, nullptr, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configuration,
@@ -202,12 +183,7 @@ SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *config
                                                        const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-
-    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
-    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
-
-    return SurfaceD3D::createOffscreen(
-        mRenderer, mDisplay, configuration, shareHandle, width, height);
+    return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, shareHandle, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::Config *configuration,
@@ -320,7 +296,7 @@ egl::Error DisplayD3D::restoreLostDevice()
 
 bool DisplayD3D::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    return NativeWindow::isValidNativeWindow(window);
+    return mRenderer->isValidNativeWindow(window);
 }
 
 void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
