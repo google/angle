@@ -362,6 +362,22 @@ void GetTriFanIndices(const GLvoid *indices,
     }
 }
 
+int GetWrapBits(GLenum wrap)
+{
+    switch (wrap)
+    {
+        case GL_CLAMP_TO_EDGE:
+            return 0x1;
+        case GL_REPEAT:
+            return 0x2;
+        case GL_MIRRORED_REPEAT:
+            return 0x3;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // anonymous namespace
 
 Renderer11::Renderer11(egl::Display *display)
@@ -1213,8 +1229,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
     else UNREACHABLE();
 
     ASSERT(metadata != nullptr);
-    metadata->update(index, texture->getBaseLevel(),
-                     texture->getInternalFormat(texture->getTarget(), texture->getBaseLevel()));
+    metadata->update(index, *texture);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -2354,21 +2369,21 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
     mSamplerMetadata.resize(samplerCount);
 }
 
-void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex,
-                                              unsigned int baseLevel,
-                                              GLenum internalFormat)
+void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
 {
-    if (mSamplerMetadata[samplerIndex].parameters[0] != static_cast<int>(baseLevel))
+    unsigned int baseLevel = texture.getBaseLevel();
+    GLenum internalFormat = texture.getInternalFormat(texture.getTarget(), texture.getBaseLevel());
+    if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
     {
-        mSamplerMetadata[samplerIndex].parameters[0] = static_cast<int>(baseLevel);
-        mDirty                                       = true;
+        mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
+        mDirty                                   = true;
     }
 
-    // internalFormatBits == 0 means a 32-bit texture in the case of integer textures. In the case
-    // of non-integer textures, internalFormatBits is meaningless. We avoid updating the constant
-    // buffer unnecessarily by changing the data only in case the texture is an integer texture and
-    // the value has changed.
-    bool needInternalFormatBits = false;
+    // Some metadata is needed only for integer textures. We avoid updating the constant buffer
+    // unnecessarily by changing the data only in case the texture is an integer texture and
+    // the values have changed.
+    bool needIntegerTextureMetadata = false;
+    // internalFormatBits == 0 means a 32-bit texture in the case of integer textures.
     int internalFormatBits = 0;
     switch (internalFormat)
     {
@@ -2380,7 +2395,7 @@ void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex,
         case GL_RG32UI:
         case GL_R32I:
         case GL_R32UI:
-            needInternalFormatBits = true;
+            needIntegerTextureMetadata = true;
             break;
         case GL_RGBA16I:
         case GL_RGBA16UI:
@@ -2390,7 +2405,7 @@ void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex,
         case GL_RG16UI:
         case GL_R16I:
         case GL_R16UI:
-            needInternalFormatBits = true;
+            needIntegerTextureMetadata = true;
             internalFormatBits     = 16;
             break;
         case GL_RGBA8I:
@@ -2401,21 +2416,34 @@ void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex,
         case GL_RG8UI:
         case GL_R8I:
         case GL_R8UI:
-            needInternalFormatBits = true;
+            needIntegerTextureMetadata = true;
             internalFormatBits     = 8;
             break;
         case GL_RGB10_A2UI:
-            needInternalFormatBits = true;
+            needIntegerTextureMetadata = true;
             internalFormatBits     = 10;
             break;
         default:
             break;
     }
-    if (needInternalFormatBits &&
-        mSamplerMetadata[samplerIndex].parameters[1] != internalFormatBits)
+    if (needIntegerTextureMetadata)
     {
-        mSamplerMetadata[samplerIndex].parameters[1] = internalFormatBits;
-        mDirty                                       = true;
+        if (mSamplerMetadata[samplerIndex].internalFormatBits != internalFormatBits)
+        {
+            mSamplerMetadata[samplerIndex].internalFormatBits = internalFormatBits;
+            mDirty                                            = true;
+        }
+        // Pack the wrap values into one integer so we can fit all the metadata in one 4-integer
+        // vector.
+        GLenum wrapS  = texture.getWrapS();
+        GLenum wrapT  = texture.getWrapT();
+        GLenum wrapR  = texture.getWrapR();
+        int wrapModes = GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
+        if (mSamplerMetadata[samplerIndex].wrapModes != wrapModes)
+        {
+            mSamplerMetadata[samplerIndex].wrapModes = wrapModes;
+            mDirty                                   = true;
+        }
     }
 }
 

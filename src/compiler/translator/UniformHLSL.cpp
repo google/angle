@@ -337,8 +337,15 @@ void UniformHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
     // If mSamplerRegister is 0 the shader doesn't use any textures.
     if (mSamplerRegister > 0)
     {
-        out << "    int4 samplerMetadata[" << mSamplerRegister << "] : packoffset(" << reg
-            << ");\n";
+        out << "    struct SamplerMetadata\n"
+               "    {\n"
+               "        int baseLevel;\n"
+               "        int internalFormatBits;\n"
+               "        int wrapModes;\n"
+               "        int padding;\n"
+               "    };\n"
+               "    SamplerMetadata samplerMetadata["
+            << mSamplerRegister << "] : packoffset(" << reg << ");\n";
     }
 }
 

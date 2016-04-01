@@ -350,11 +350,16 @@ class Renderer11 : public RendererD3D
 
         struct dx_SamplerMetadata
         {
-            int parameters[4];
+            int baseLevel;
+            int internalFormatBits;
+            int wrapModes;
+            int padding;  // This just pads the struct to 16 bytes
         };
+        static_assert(sizeof(dx_SamplerMetadata) == 16u,
+                      "Sampler metadata struct must be one 4-vec / 16 bytes.");
 
         void initData(unsigned int samplerCount);
-        void update(unsigned int samplerIndex, unsigned int baseLevel, GLenum internalFormat);
+        void update(unsigned int samplerIndex, const gl::Texture &texture);
 
         const dx_SamplerMetadata *getData() const;
         size_t sizeBytes() const;

@@ -74,6 +74,42 @@ const TConstantUnion *WriteConstantUnionArray(TInfoSinkBase &out,
     return constUnionIterated;
 }
 
+void OutputIntTexCoordWrap(TInfoSinkBase &out,
+                           const char *wrapMode,
+                           const char *size,
+                           const TString &texCoord,
+                           const TString &texCoordOffset,
+                           const char *texCoordOutName)
+{
+    // GLES 3.0.4 table 3.22 specifies how the wrap modes work. We don't use the formulas verbatim
+    // but rather use equivalent formulas that map better to HLSL.
+    out << "int " << texCoordOutName << ";\n";
+    out << "float " << texCoordOutName << "Offset = " << texCoord << " + float(" << texCoordOffset
+        << ") / " << size << ";\n";
+
+    // CLAMP_TO_EDGE
+    out << "if (" << wrapMode << " == 1)\n";
+    out << "{\n";
+    out << "    " << texCoordOutName << " = clamp(int(floor(" << size << " * " << texCoordOutName
+        << "Offset)), 0, int(" << size << ") - 1);\n";
+    out << "}\n";
+
+    // MIRRORED_REPEAT
+    out << "else if (" << wrapMode << " == 3)\n";
+    out << "{\n";
+    out << "    float coordWrapped = 1.0 - abs(frac(abs(" << texCoordOutName
+        << "Offset) * 0.5) * 2.0 - 1.0);\n";
+    out << "    " << texCoordOutName << " = int(floor(" << size << " * coordWrapped));\n";
+    out << "}\n";
+
+    // REPEAT
+    out << "else\n";
+    out << "{\n";
+    out << "    " << texCoordOutName << " = int(floor(" << size << " * frac(" << texCoordOutName
+        << "Offset)));\n";
+    out << "}\n";
+}
+
 } // namespace
 
 namespace sh
@@ -864,7 +900,7 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
 
         if (textureFunction->method == TextureFunction::SIZE)
         {
-            out << "int baseLevel = samplerMetadata[samplerIndex].x;\n";
+            out << "int baseLevel = samplerMetadata[samplerIndex].baseLevel;\n";
             if (IsSampler2D(textureFunction->sampler) || IsSamplerCube(textureFunction->sampler))
             {
                 if (IsSamplerArray(textureFunction->sampler) ||
@@ -1169,8 +1205,26 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                 else UNREACHABLE();
 
                 // Convert from normalized floating-point to integer
-                texCoordX = "int(floor(width * frac(" + texCoordX + ")))";
-                texCoordY = "int(floor(height * frac(" + texCoordY + ")))";
+                out << "int wrapS = samplerMetadata[samplerIndex].wrapModes & 0x3;\n";
+                if (textureFunction->offset)
+                {
+                    OutputIntTexCoordWrap(out, "wrapS", "width", texCoordX, "offset.x", "tix");
+                }
+                else
+                {
+                    OutputIntTexCoordWrap(out, "wrapS", "width", texCoordX, "0", "tix");
+                }
+                texCoordX = "tix";
+                out << "int wrapT = (samplerMetadata[samplerIndex].wrapModes >> 2) & 0x3;\n";
+                if (textureFunction->offset)
+                {
+                    OutputIntTexCoordWrap(out, "wrapT", "height", texCoordY, "offset.y", "tiy");
+                }
+                else
+                {
+                    OutputIntTexCoordWrap(out, "wrapT", "height", texCoordY, "0", "tiy");
+                }
+                texCoordY = "tiy";
 
                 if (IsSamplerArray(textureFunction->sampler))
                 {
@@ -1179,7 +1233,16 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                 else if (!IsSamplerCube(textureFunction->sampler) &&
                          !IsSampler2D(textureFunction->sampler))
                 {
-                    texCoordZ = "int(floor(depth * frac(" + texCoordZ + ")))";
+                    out << "int wrapR = (samplerMetadata[samplerIndex].wrapModes >> 4) & 0x3;\n";
+                    if (textureFunction->offset)
+                    {
+                        OutputIntTexCoordWrap(out, "wrapR", "depth", texCoordZ, "offset.z", "tiz");
+                    }
+                    else
+                    {
+                        OutputIntTexCoordWrap(out, "wrapR", "depth", texCoordZ, "0", "tiz");
+                    }
+                    texCoordZ = "tiz";
                 }
             }
 
@@ -1421,7 +1484,8 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                     }
                 }
 
-                if (textureFunction->offset)
+                if (textureFunction->offset && (!IsIntegerSampler(textureFunction->sampler) ||
+                                                textureFunction->method == TextureFunction::FETCH))
                 {
                     out << ", offset";
                 }
