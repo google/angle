@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec1e019_fd101c74",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-04T18:12:44Z",
+      "side": 1,
+      "message": "nit:remove whitespace",
+      "revId": "0a75df7e0f3be7fc83041600c3a7bb62cee1b1de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
