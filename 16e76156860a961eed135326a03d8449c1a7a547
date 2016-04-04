@@ -68,6 +68,30 @@
       "revId": "16e76156860a961eed135326a03d8449c1a7a547",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_dddf60f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-04T17:55:52Z",
+      "side": 1,
+      "message": "I think we want to use C-style bitfields for this, but I don\u0027t see any equivalent in HLSL, so we would have to unpack manually.",
+      "parentUuid": "2ec1e019_5ecb7320",
+      "range": {
+        "startLine": 370,
+        "startChar": 20,
+        "endLine": 370,
+        "endChar": 38
+      },
+      "revId": "16e76156860a961eed135326a03d8449c1a7a547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
