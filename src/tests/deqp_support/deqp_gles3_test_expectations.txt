@@ -106,8 +106,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.usampler* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_fixed_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_float_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isamplercube_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usamplercube_* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_* = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2d_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.isampler2d_fragment = FAIL
@@ -136,21 +134,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.sampler2dshadow_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler2d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler2d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isamplercube_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler2darray_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler2darray_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2darray_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler2darray_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isampler3d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2dshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.sampler2darrayshadow_vertex = FAIL
@@ -171,18 +154,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegradoffset.sampler2dshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegradoffset.sampler2darrayshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturegradoffset.sampler2darrayshadow_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler2d_vec3_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler2d_vec3_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler2d_vec3_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler2d_vec3_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler2d_vec4_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler2d_vec4_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler2d_vec4_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler2d_vec4_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.isampler3d_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler3d_vertex = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.usampler3d_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgrad.sampler2dshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojgradoffset.isampler2d_vec3_vertex = FAIL
@@ -434,6 +405,14 @@
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed16_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.polygon_offset.fixed24_render_with_units = FAIL
 1101 WIN : dEQP-GLES3.functional.lifetime.attach.deleted_input.buffer_vertex_array = FAIL
+
+// Windows Intel-specific failures
+
+1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isamplercube_* = FAIL
+1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturelod.usamplercube_* = FAIL
+1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.isamplercube_vertex = FAIL
+1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_vertex = FAIL
+1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturegrad.usamplercube_fragment = FAIL
 
 // Linux only failures
 
