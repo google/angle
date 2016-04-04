@@ -34,6 +34,24 @@
       "revId": "82d6b39aa8b85f4daa27e023495f57eb21016da7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_ba9cda9c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-04T17:43:25Z",
+      "side": 1,
+      "message": "Good point, I hadn\u0027t thought about non-Chromium users.",
+      "parentUuid": "2ec1e019_bace1aa9",
+      "revId": "82d6b39aa8b85f4daa27e023495f57eb21016da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
