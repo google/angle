@@ -16,6 +16,24 @@
       "revId": "82d6b39aa8b85f4daa27e023495f57eb21016da7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_bace1aa9",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-04T17:42:40Z",
+      "side": 1,
+      "message": "If we want to, we should check if Safari can support this. Not that they couldn\u0027t make a local patch to override it, but since this isn\u0027t in a really fast path, it might be not strictly necessary. (Just to be aware that some users compile the translator but might not compile the libANGLE sources)",
+      "parentUuid": "2ec1e019_7a90b2ce",
+      "revId": "82d6b39aa8b85f4daa27e023495f57eb21016da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
