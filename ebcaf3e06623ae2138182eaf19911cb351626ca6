@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec1e019_8b2089e3",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "nit: // static\n\nprefix on the previous line",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 12
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_6b1d1dac",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 12
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_6b443d98",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "add a move constructor and assignment op, and make this inherit from angle::NonCopyable if possible.",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 16
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_ebf26dad",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "nit: Capitalize",
+      "range": {
+        "startLine": 32,
+        "startChar": 24,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_2b46359f",
+        "filename": "src/libANGLE/AttributeMap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "ditto here",
+      "range": {
+        "startLine": 33,
+        "startChar": 24,
+        "endLine": 33,
+        "endChar": 45
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_6b92fd47",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T17:59:08Z",
+      "side": 1,
+      "message": "I think it makes sense to have a getAsInt method for these, it\u0027s in a bunch of places, but it\u0027s not critical",
+      "range": {
+        "startLine": 172,
+        "startChar": 25,
+        "endLine": 172,
+        "endChar": 55
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
