@@ -147,7 +147,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
     if (attribMap.contains(EGL_X11_VISUAL_ID_ANGLE))
     {
-        mRequestedVisual = attribMap.get(EGL_X11_VISUAL_ID_ANGLE, -1);
+        mRequestedVisual = static_cast<EGLint>(attribMap.get(EGL_X11_VISUAL_ID_ANGLE, -1));
 
         // There is no direct way to get the GLXFBConfig matching an X11 visual ID
         // so we have to iterate over all the GLXFBConfigs to find the right one.
@@ -349,8 +349,8 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
     glx::FBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
     return new PbufferSurfaceGLX(this->getRenderer(), width, height, largest, mGLX, mContext,
@@ -385,8 +385,8 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
 {
     int profileMask = 0;
 
-    EGLint requestedDisplayType =
-        eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+    EGLint requestedDisplayType = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
     if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
     {
         if (!mHasEXTCreateContextES2Profile)
@@ -401,9 +401,10 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
     }
 
     // Create a context of the requested version, if any.
-    gl::Version requestedVersion(
-        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE),
-        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
+    gl::Version requestedVersion(static_cast<EGLint>(eglAttributes.get(
+                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE)),
+                                 static_cast<EGLint>(eglAttributes.get(
+                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE)));
     if (static_cast<EGLint>(requestedVersion.major) != EGL_DONT_CARE &&
         static_cast<EGLint>(requestedVersion.minor) != EGL_DONT_CARE)
     {

@@ -54,17 +54,17 @@ Surface::Surface(rx::SurfaceImpl *impl,
     mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);
     if (mFixedSize)
     {
-        mFixedWidth = attributes.get(EGL_WIDTH, 0);
-        mFixedHeight = attributes.get(EGL_HEIGHT, 0);
+        mFixedWidth  = static_cast<size_t>(attributes.get(EGL_WIDTH, 0));
+        mFixedHeight = static_cast<size_t>(attributes.get(EGL_HEIGHT, 0));
     }
 
     if (mType != EGL_WINDOW_BIT)
     {
-        mTextureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-        mTextureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+        mTextureFormat = static_cast<EGLenum>(attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE));
+        mTextureTarget = static_cast<EGLenum>(attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
     }
 
-    mOrientation = attributes.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
+    mOrientation = static_cast<EGLint>(attributes.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
 
     mDefaultFramebuffer = createDefaultFramebuffer();
     ASSERT(mDefaultFramebuffer != nullptr);

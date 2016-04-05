@@ -82,13 +82,13 @@ void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
 // Attribute map queries.
 EGLint GetClientVersion(const egl::AttributeMap &attribs)
 {
-    return attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1);
+    return static_cast<EGLint>(attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1));
 }
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 {
-    EGLenum attrib = attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT,
-                                 EGL_NO_RESET_NOTIFICATION_EXT);
+    EGLAttrib attrib = attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT,
+                                   EGL_NO_RESET_NOTIFICATION_EXT);
     switch (attrib)
     {
         case EGL_NO_RESET_NOTIFICATION:

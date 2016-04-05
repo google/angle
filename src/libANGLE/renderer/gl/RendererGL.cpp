@@ -110,7 +110,8 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     }
 #endif
 
-    EGLint deviceType = attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE);
+    EGLint deviceType =
+        static_cast<EGLint>(attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE));
     if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {
         mSkipDrawCalls = true;

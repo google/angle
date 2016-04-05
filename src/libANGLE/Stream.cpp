@@ -27,7 +27,7 @@ Stream::Stream(rx::StreamImpl *impl, const AttributeMap &attribs)
       mState(EGL_STREAM_STATE_CREATED_KHR),
       mProducerFrame(0),
       mConsumerFrame(0),
-      mConsumerLatency(attribs.get(EGL_CONSUMER_LATENCY_USEC_KHR, 0))
+      mConsumerLatency(static_cast<EGLint>(attribs.get(EGL_CONSUMER_LATENCY_USEC_KHR, 0)))
 {
 
 }

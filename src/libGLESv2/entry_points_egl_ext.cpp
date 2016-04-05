@@ -326,7 +326,8 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
         }
 
         SetGlobalError(Error(EGL_SUCCESS));
-        return Display::GetDisplayFromAttribs(native_display, AttributeMap(attrib_list));
+        return Display::GetDisplayFromAttribs(native_display,
+                                              AttributeMap::CreateFromIntArray(attrib_list));
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
@@ -468,7 +469,7 @@ ANGLE_EXPORT EGLImageKHR EGLAPIENTRY CreateImageKHR(EGLDisplay dpy,
 
     Display *display     = static_cast<Display *>(dpy);
     gl::Context *context = static_cast<gl::Context *>(ctx);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateImageKHR(display, context, target, buffer, attributes);
     if (error.isError())
@@ -559,7 +560,7 @@ EGLStreamKHR EGLAPIENTRY CreateStreamKHR(EGLDisplay dpy, const EGLint *attrib_li
     EVENT("(EGLDisplay dpy = 0x%0.8p, const EGLAttrib* attrib_list = 0x%0.8p)", dpy, attrib_list);
 
     Display *display = static_cast<Display *>(dpy);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateStreamKHR(display, attributes);
     if (error.isError())

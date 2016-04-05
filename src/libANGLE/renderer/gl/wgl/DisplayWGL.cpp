@@ -180,8 +180,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     DestroyWindow(dummyWindow);
 
     const egl::AttributeMap &displayAttributes = display->getAttributeMap();
-    EGLint requestedDisplayType =
-        displayAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+    EGLint requestedDisplayType = static_cast<EGLint>(displayAttributes.get(
+        EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
     if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
         !mFunctionsWGL->hasExtension("WGL_EXT_create_context_es2_profile") &&
         !mFunctionsWGL->hasExtension("WGL_EXT_create_context_es_profile"))
@@ -261,8 +261,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
         // Don't request a specific version unless the user wants one.  WGL will return the highest version
         // that the driver supports if no version is requested.
-        EGLint requestedMajorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
-        EGLint requestedMinorVersion = displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
+        EGLint requestedMajorVersion = static_cast<EGLint>(
+            displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
+        EGLint requestedMinorVersion = static_cast<EGLint>(
+            displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
         if (requestedMajorVersion != EGL_DONT_CARE && requestedMinorVersion != EGL_DONT_CARE)
         {
             contextCreationAttributes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
@@ -408,7 +410,7 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
-    EGLint orientation = attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
+    EGLint orientation = static_cast<EGLint>(attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
     if (mUseDXGISwapChains)
     {
         return new DXGISwapChainWindowSurfaceWGL(this->getRenderer(), window, mD3D11Device,
@@ -425,11 +427,11 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::Config *configuration,
 SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint width          = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height         = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
-    EGLenum textureFormat = attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    EGLenum textureFormat = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE));
+    EGLenum textureTarget = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
 
     return new PbufferSurfaceWGL(this->getRenderer(), width, height, textureFormat, textureTarget,
                                  largest, mPixelFormat, mDeviceContext, mWGLContext, mFunctionsWGL);

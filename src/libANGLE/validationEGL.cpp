@@ -209,15 +209,15 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     }
 
     // Get the requested client version (default is 1) and check it is 2 or 3.
-    EGLint clientMajorVersion = 1;
-    EGLint clientMinorVersion = 0;
-    EGLint contextFlags = 0;
+    EGLAttrib clientMajorVersion = 1;
+    EGLAttrib clientMinorVersion = 0;
+    EGLAttrib contextFlags       = 0;
     bool resetNotification = false;
     bool robustAccess = false;
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
-        EGLint attribute = attributeIter->first;
-        EGLint value = attributeIter->second;
+        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
@@ -356,8 +356,8 @@ Error ValidateCreateWindowSurface(Display *display, Config *config, EGLNativeWin
 
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
-        EGLint attribute = attributeIter->first;
-        EGLint value = attributeIter->second;
+        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
@@ -451,8 +451,8 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
 
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
-        EGLint attribute = attributeIter->first;
-        EGLint value = attributeIter->second;
+        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
@@ -521,8 +521,8 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
 
     const Caps &caps = display->getCaps();
 
-    EGLenum textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    EGLAttrib textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLAttrib textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
 
     if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
         (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
@@ -536,8 +536,8 @@ Error ValidateCreatePbufferSurface(Display *display, Config *config, const Attri
         return Error(EGL_BAD_ATTRIBUTE);
     }
 
-    EGLint width = attributes.get(EGL_WIDTH, 0);
-    EGLint height = attributes.get(EGL_HEIGHT, 0);
+    EGLint width  = static_cast<EGLint>(attributes.get(EGL_WIDTH, 0));
+    EGLint height = static_cast<EGLint>(attributes.get(EGL_HEIGHT, 0));
     if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
     {
         return Error(EGL_BAD_MATCH);
@@ -576,8 +576,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
 
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
-        EGLint attribute = attributeIter->first;
-        EGLint value = attributeIter->second;
+        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
@@ -639,8 +639,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
         return Error(EGL_BAD_MATCH);
     }
 
-    EGLenum textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
-    EGLenum textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
+    EGLAttrib textureFormat = attributes.get(EGL_TEXTURE_FORMAT, EGL_NO_TEXTURE);
+    EGLAttrib textureTarget = attributes.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE);
     if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
         (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
     {
@@ -655,8 +655,8 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
 
     if (buftype == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE)
     {
-        EGLint width = attributes.get(EGL_WIDTH, 0);
-        EGLint height = attributes.get(EGL_HEIGHT, 0);
+        EGLint width  = static_cast<EGLint>(attributes.get(EGL_WIDTH, 0));
+        EGLint height = static_cast<EGLint>(attributes.get(EGL_HEIGHT, 0));
 
         if (width == 0 || height == 0)
         {
@@ -745,8 +745,8 @@ Error ValidateCreateImageKHR(const Display *display,
     for (AttributeMap::const_iterator attributeIter = attributes.begin();
          attributeIter != attributes.end(); attributeIter++)
     {
-        EGLint attribute = attributeIter->first;
-        EGLint value     = attributeIter->second;
+        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib value     = attributeIter->second;
 
         switch (attribute)
         {
@@ -819,7 +819,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return Error(EGL_BAD_ACCESS, "texture has a surface bound to it.");
             }
 
-            EGLint level = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib level = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
             if (texture->getWidth(GL_TEXTURE_2D, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(GL_TEXTURE_2D, static_cast<size_t>(level)) == 0)
             {
@@ -873,7 +873,7 @@ Error ValidateCreateImageKHR(const Display *display,
                 return Error(EGL_BAD_ACCESS, "texture has a surface bound to it.");
             }
 
-            EGLint level       = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib level    = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
             GLenum cubeMapFace = egl_gl::EGLCubeMapTargetToGLCubeMapTarget(target);
             if (texture->getWidth(cubeMapFace, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(cubeMapFace, static_cast<size_t>(level)) == 0)
@@ -932,8 +932,8 @@ Error ValidateCreateImageKHR(const Display *display,
                 return Error(EGL_BAD_ACCESS, "texture has a surface bound to it.");
             }
 
-            EGLint level   = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-            EGLint zOffset = attributes.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0);
+            EGLAttrib level   = attributes.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
+            EGLAttrib zOffset = attributes.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0);
             if (texture->getWidth(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0 ||
                 texture->getHeight(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0 ||
                 texture->getDepth(GL_TEXTURE_3D, static_cast<size_t>(level)) == 0)
@@ -1094,8 +1094,8 @@ Error ValidateCreateStreamKHR(const Display *display, const AttributeMap &attrib
 
     for (const auto &attributeIter : attributes)
     {
-        EGLint attribute = attributeIter.first;
-        EGLint value     = attributeIter.second;
+        EGLAttrib attribute = attributeIter.first;
+        EGLAttrib value     = attributeIter.second;
 
         switch (attribute)
         {

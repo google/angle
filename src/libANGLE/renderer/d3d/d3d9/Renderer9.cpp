@@ -91,8 +91,8 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
     mAdapter = D3DADAPTER_DEFAULT;
 
     const egl::AttributeMap &attributes = display->getAttributeMap();
-    EGLint requestedDeviceType = attributes.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                                EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+    EGLint requestedDeviceType = static_cast<EGLint>(attributes.get(
+        EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE));
     switch (requestedDeviceType)
     {
       case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:

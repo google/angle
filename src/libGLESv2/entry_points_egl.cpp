@@ -198,7 +198,8 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
         return EGL_FALSE;
     }
 
-    std::vector<const Config*> filteredConfigs = display->getConfigs(AttributeMap(attrib_list));
+    std::vector<const Config *> filteredConfigs =
+        display->getConfigs(AttributeMap::CreateFromIntArray(attrib_list));
     if (configs)
     {
         filteredConfigs.resize(std::min<size_t>(filteredConfigs.size(), config_size));
@@ -245,7 +246,7 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateWindowSurface(display, configuration, win, attributes);
     if (error.isError())
@@ -272,7 +273,7 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreatePbufferSurface(display, configuration, attributes);
     if (error.isError())
@@ -474,7 +475,7 @@ EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContex
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
     gl::Context* sharedGLContext = static_cast<gl::Context*>(share_context);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes      = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateContext(display, configuration, sharedGLContext, attributes);
     if (error.isError())
@@ -1065,7 +1066,7 @@ EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buf
 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
-    AttributeMap attributes(attrib_list);
+    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreatePbufferFromClientBuffer(display, buftype, buffer, configuration, attributes);
     if (error.isError())

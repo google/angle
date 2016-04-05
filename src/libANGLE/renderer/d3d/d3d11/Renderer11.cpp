@@ -421,10 +421,10 @@ Renderer11::Renderer11(egl::Display *display)
     {
         const auto &attributes = mDisplay->getAttributeMap();
 
-        EGLint requestedMajorVersion =
-            attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
-        EGLint requestedMinorVersion =
-            attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
+        EGLint requestedMajorVersion = static_cast<EGLint>(
+            attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
+        EGLint requestedMinorVersion = static_cast<EGLint>(
+            attributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
 
         if (requestedMajorVersion == EGL_DONT_CARE || requestedMajorVersion >= 11)
         {
@@ -451,8 +451,8 @@ Renderer11::Renderer11(egl::Display *display)
             mAvailableFeatureLevels.push_back(D3D_FEATURE_LEVEL_9_3);
         }
 
-        EGLint requestedDeviceType = attributes.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                                    EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
+        EGLint requestedDeviceType = static_cast<EGLint>(attributes.get(
+            EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE));
         switch (requestedDeviceType)
         {
             case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
@@ -475,8 +475,8 @@ Renderer11::Renderer11(egl::Display *display)
                 UNREACHABLE();
         }
 
-        const EGLenum presentPath = attributes.get(EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE,
-                                                   EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE);
+        const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
+            EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
         mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
     }
     else if (display->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
@@ -790,7 +790,8 @@ void Renderer11::initializeDevice()
     // If automatic trim is enabled, DXGIDevice3::Trim( ) is called for the application
     // automatically when an application is suspended by the OS. This feature is currently
     // only supported for Windows Store applications.
-    EGLint enableAutoTrim = attributes.get(EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE, EGL_FALSE);
+    EGLint enableAutoTrim = static_cast<EGLint>(
+        attributes.get(EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE, EGL_FALSE));
 
     if (enableAutoTrim == EGL_TRUE)
     {

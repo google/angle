@@ -119,8 +119,8 @@ SurfaceImpl *DisplayCGL::createWindowSurface(const egl::Config *configuration,
 SurfaceImpl *DisplayCGL::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
-    EGLint width  = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     return new PbufferSurfaceCGL(this->getRenderer(), width, height, mFunctions);
 }
 

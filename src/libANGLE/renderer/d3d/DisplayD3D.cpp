@@ -60,8 +60,8 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         const auto &attribMap              = display->getAttributeMap();
         EGLNativeDisplayType nativeDisplay = display->getNativeDisplayId();
 
-        EGLint requestedDisplayType =
-            attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+        EGLint requestedDisplayType = static_cast<EGLint>(
+            attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
 
 #   if defined(ANGLE_ENABLE_D3D11)
         if (nativeDisplay == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
@@ -169,11 +169,12 @@ SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
 {
     ASSERT(mRenderer != nullptr);
 
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
-    EGLint fixedSize = attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE);
-    EGLint orientation = attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0);
-    EGLint directComposition = attribs.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE);
+    EGLint width       = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height      = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
+    EGLint fixedSize   = static_cast<EGLint>(attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE));
+    EGLint orientation = static_cast<EGLint>(attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
+    EGLint directComposition =
+        static_cast<EGLint>(attribs.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE));
 
     if (!fixedSize)
     {
@@ -190,8 +191,8 @@ SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::Config *configuration,
 {
     ASSERT(mRenderer != nullptr);
 
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
 
     return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, nullptr, width, height);
 }
@@ -202,8 +203,8 @@ SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *config
 {
     ASSERT(mRenderer != nullptr);
 
-    EGLint width = attribs.get(EGL_WIDTH, 0);
-    EGLint height = attribs.get(EGL_HEIGHT, 0);
+    EGLint width  = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
+    EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
 
     return SurfaceD3D::createOffscreen(
         mRenderer, mDisplay, configuration, shareHandle, width, height);
