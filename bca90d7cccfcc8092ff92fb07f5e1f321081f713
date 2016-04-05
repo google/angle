@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec1e019_f7849939",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T14:42:16Z",
+      "side": 1,
+      "message": "should this bracket the coord here? and then maybe leave out the brackets on frac()",
+      "range": {
+        "startLine": 925,
+        "startChar": 24,
+        "endLine": 925,
+        "endChar": 40
+      },
+      "revId": "bca90d7cccfcc8092ff92fb07f5e1f321081f713",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
