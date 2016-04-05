@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ceb5a4db_7de9d399",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-05T14:37:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ec1e019_1af5ee6d",
+      "range": {
+        "startLine": 376,
+        "startChar": 3,
+        "endLine": 377,
+        "endChar": 13
+      },
+      "revId": "16e76156860a961eed135326a03d8449c1a7a547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ec1e019_1e9c0b37",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-04T17:11:38Z",
       "side": 1,
       "message": "You can pass in the texture target and samplerstate here, and let the metadata handle unpacking the individual parameters. You could even just pass in the texture itself as well.",
+      "range": {
+        "startLine": 1230,
+        "startChar": 27,
+        "endLine": 1232,
+        "endChar": 82
+      },
+      "revId": "16e76156860a961eed135326a03d8449c1a7a547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb5a4db_9dedc7a8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1232,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-05T14:37:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ec1e019_1e9c0b37",
       "range": {
         "startLine": 1230,
         "startChar": 27,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "I think we want to use C-style bitfields for this, but I don\u0027t see any equivalent in HLSL, so we would have to unpack manually.",
       "parentUuid": "2ec1e019_5ecb7320",
+      "range": {
+        "startLine": 370,
+        "startChar": 20,
+        "endLine": 370,
+        "endChar": 38
+      },
+      "revId": "16e76156860a961eed135326a03d8449c1a7a547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ceb5a4db_3ddf5bf9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-05T14:37:37Z",
+      "side": 1,
+      "message": "Made this into a struct.",
+      "parentUuid": "2ec1e019_dddf60f6",
       "range": {
         "startLine": 370,
         "startChar": 20,
