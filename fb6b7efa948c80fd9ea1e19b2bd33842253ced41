@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec1e019_92cf637a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T14:46:51Z",
+      "side": 1,
+      "message": "impressive math. are there any GLSL or HLSL intrinsics that this function is emulating?",
+      "range": {
+        "startLine": 981,
+        "startChar": 23,
+        "endLine": 1003,
+        "endChar": 49
+      },
+      "revId": "fb6b7efa948c80fd9ea1e19b2bd33842253ced41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_f2a107bc",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-05T14:46:51Z",
+      "side": 1,
+      "message": "nit: Windows Intel-specific failures.\n\nAlso can you open a tracking bug for this specific set of Intel failures? In the world with sufficient (aka infinite) resources we\u0027d set aside some time to investigate a stand-alone repro case for this and send it to Intel.",
+      "range": {
+        "startLine": 409,
+        "startChar": 11,
+        "endLine": 409,
+        "endChar": 30
+      },
+      "revId": "fb6b7efa948c80fd9ea1e19b2bd33842253ced41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
