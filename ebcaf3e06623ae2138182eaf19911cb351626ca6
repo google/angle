@@ -141,6 +141,52 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_5457a2ff",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-05T19:35:14Z",
+      "side": 1,
+      "message": "Shouldn\u0027t need the cast, displayType can be an EGLAttrib.",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 93
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_347776a2",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-05T19:35:14Z",
+      "side": 1,
+      "message": "EGLenum",
+      "range": {
+        "startLine": 64,
+        "startChar": 37,
+        "endLine": 64,
+        "endChar": 43
+      },
+      "revId": "ebcaf3e06623ae2138182eaf19911cb351626ca6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ec1e019_6b92fd47",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 2
