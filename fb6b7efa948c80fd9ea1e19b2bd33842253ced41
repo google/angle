@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ceb5a4db_bd49ab36",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 985,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-06T14:30:38Z",
+      "side": 1,
+      "message": "I thought that the sign of the derivatives didn\u0027t matter, but maybe it actually does - since both the derivative of m and the derivative of u or v affect the derivatives of the face coordinates. I wonder if I could make a test where this shows up.",
+      "parentUuid": "8ea2ccbd_06b77e1e",
+      "revId": "fb6b7efa948c80fd9ea1e19b2bd33842253ced41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_e9710de1",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4e31b481_36bc1888",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1002,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-06T14:30:38Z",
+      "side": 1,
+      "message": "Done, great tip.",
+      "parentUuid": "8ea2ccbd_e9710de1",
+      "revId": "fb6b7efa948c80fd9ea1e19b2bd33842253ced41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ec1e019_92cf637a",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 2
@@ -47,6 +83,30 @@
       "writtenOn": "2016-04-05T14:46:51Z",
       "side": 1,
       "message": "impressive math. are there any GLSL or HLSL intrinsics that this function is emulating?",
+      "range": {
+        "startLine": 981,
+        "startChar": 23,
+        "endLine": 1003,
+        "endChar": 49
+      },
+      "revId": "fb6b7efa948c80fd9ea1e19b2bd33842253ced41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e31b481_b6b6e8b4",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-06T14:30:38Z",
+      "side": 1,
+      "message": "It\u0027s the power of Wolfram Alpha -fu in action. :) I don\u0027t think that there\u0027s much potential for optimizing this with intrinsics.",
+      "parentUuid": "2ec1e019_92cf637a",
       "range": {
         "startLine": 981,
         "startChar": 23,
