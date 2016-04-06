@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_5b30adcc",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T17:47:25Z",
+      "side": 1,
+      "message": "Er, yes I did mean spaces to tabs. Sorry.",
+      "parentUuid": "8ea2ccbd_7bc6d165",
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_b5c22801",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -196,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_bbc579b3",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T17:47:25Z",
+      "side": 1,
+      "message": "ok, that\u0027s fine.",
+      "parentUuid": "8ea2ccbd_18deab8a",
+      "range": {
+        "startLine": 89,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 13
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_55675cf3",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -231,6 +273,30 @@
       "side": 1,
       "message": "I copy pasted this from another stream producer extension in the registry and that is the language they used for this.",
       "parentUuid": "8ea2ccbd_55675cf3",
+      "range": {
+        "startLine": 99,
+        "startChar": 5,
+        "endLine": 99,
+        "endChar": 6
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_db24bd8c",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T17:47:25Z",
+      "side": 1,
+      "message": "Link to other extension? That\u0027s what I used the wording \u0027well-specced\u0027, cause some of the other ones we were looking at were not particularly well-specced.",
+      "parentUuid": "8ea2ccbd_98abdbe0",
       "range": {
         "startLine": 99,
         "startChar": 5,
