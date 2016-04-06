@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_f8e2e747",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_356cd8d3",
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_b5c22801",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2016-04-06T16:04:49Z",
       "side": 1,
       "message": "EGL_FALSE",
+      "range": {
+        "startLine": 81,
+        "startChar": 64,
+        "endLine": 81,
+        "endChar": 72
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_b8c57fb3",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_b5c22801",
       "range": {
         "startLine": 81,
         "startChar": 64,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_78cff7cf",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_75bca088",
+      "range": {
+        "startLine": 87,
+        "startChar": 57,
+        "endLine": 87,
+        "endChar": 66
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_557e3c89",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_18deab8a",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Pretty sure a colon is used in this case as it marks the beginning of a list?",
+      "parentUuid": "8ea2ccbd_557e3c89",
+      "range": {
+        "startLine": 89,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 13
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_55675cf3",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -99,6 +189,30 @@
       "writtenOn": "2016-04-06T16:04:49Z",
       "side": 1,
       "message": "preceding is interesting, i feel like usually extensions use following with an incremented number. Would lean towards that unless there\u0027s a very well-specced example extension.",
+      "range": {
+        "startLine": 99,
+        "startChar": 5,
+        "endLine": 99,
+        "endChar": 6
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_98abdbe0",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "I copy pasted this from another stream producer extension in the registry and that is the language they used for this.",
+      "parentUuid": "8ea2ccbd_55675cf3",
       "range": {
         "startLine": 99,
         "startChar": 5,
@@ -157,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_d8796305",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_554cfc70",
+      "range": {
+        "startLine": 132,
+        "startChar": 51,
+        "endLine": 132,
+        "endChar": 59
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_75470049",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -180,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_b8769f12",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_75470049",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 18
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_b526a8a8",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
@@ -191,6 +353,30 @@
       "writtenOn": "2016-04-06T16:04:49Z",
       "side": 1,
       "message": "what does invalid mean here? need to be a bit more explicit",
+      "range": {
+        "startLine": 142,
+        "startChar": 51,
+        "endLine": 142,
+        "endChar": 58
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_9873db23",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:17:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_b526a8a8",
       "range": {
         "startLine": 142,
         "startChar": 51,
