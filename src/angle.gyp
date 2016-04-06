@@ -62,6 +62,10 @@
                 '.',
                 '../include',
             ],
+            'dependencies':
+            [
+                'commit_id',
+            ],
             'direct_dependent_settings':
             {
                 'include_dirs':

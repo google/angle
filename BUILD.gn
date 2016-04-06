@@ -116,6 +116,8 @@ static_library("angle_common") {
     ":debug_annotations_config",
     "//build/config/compiler:no_chromium_code",
   ]
+
+  public_deps = [ ":commit_id" ]
 }
 
 static_library("translator_lib") {
