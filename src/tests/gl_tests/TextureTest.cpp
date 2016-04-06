@@ -55,15 +55,19 @@ class TexCoordDrawTest : public ANGLETest
 
     virtual std::string getFragmentShaderSource() = 0;
 
-    void SetUp() override
+    virtual void setUpProgram()
     {
-        ANGLETest::SetUp();
         const std::string vertexShaderSource   = getVertexShaderSource();
         const std::string fragmentShaderSource = getFragmentShaderSource();
 
         mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
         ASSERT_NE(0u, mProgram);
         ASSERT_GL_NO_ERROR();
+    }
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
 
         setUpFramebuffer();
     }
@@ -141,15 +145,19 @@ class Texture2DTest : public TexCoordDrawTest
 
     virtual const char *getTextureUniformName() { return "tex"; }
 
+    void setUpProgram() override
+    {
+        TexCoordDrawTest::setUpProgram();
+        mTexture2DUniformLocation = glGetUniformLocation(mProgram, getTextureUniformName());
+        ASSERT_NE(-1, mTexture2DUniformLocation);
+    }
+
     void SetUp() override
     {
         TexCoordDrawTest::SetUp();
         mTexture2D = create2DTexture();
 
         ASSERT_GL_NO_ERROR();
-
-        mTexture2DUniformLocation = glGetUniformLocation(mProgram, getTextureUniformName());
-        ASSERT_NE(-1, mTexture2DUniformLocation);
     }
 
     void TearDown() override
@@ -167,6 +175,8 @@ class Texture2DTest : public TexCoordDrawTest
             std::cout << "Test skipped on Intel D3D11." << std::endl;
             return;
         }
+
+        setUpProgram();
 
         if (getClientVersion() < 3)
         {
@@ -322,6 +332,12 @@ class Texture2DTestES3 : public Texture2DTest
             "    fragColor = texture(tex, texcoord);\n"
             "}\n");
     }
+
+    void SetUp() override
+    {
+        Texture2DTest::SetUp();
+        setUpProgram();
+    }
 };
 
 class Texture2DIntegerAlpha1TestES3 : public Texture2DTest
@@ -356,6 +372,12 @@ class Texture2DIntegerAlpha1TestES3 : public Texture2DTest
             "    vec4 black = vec4(0, 0, 0, 0);\n"
             "    fragColor = (texture(tex, texcoord).a == 1) ? green : black;\n"
             "}\n");
+    }
+
+    void SetUp() override
+    {
+        Texture2DTest::SetUp();
+        setUpProgram();
     }
 };
 
@@ -392,6 +414,12 @@ class Texture2DUnsignedIntegerAlpha1TestES3 : public Texture2DTest
             "    fragColor = (texture(tex, texcoord).a == 1u) ? green : black;\n"
             "}\n");
     }
+
+    void SetUp() override
+    {
+        Texture2DTest::SetUp();
+        setUpProgram();
+    }
 };
 
 class Texture2DTestWithDrawScale : public Texture2DTest
@@ -421,6 +449,9 @@ class Texture2DTestWithDrawScale : public Texture2DTest
     void SetUp() override
     {
         Texture2DTest::SetUp();
+
+        setUpProgram();
+
         mDrawScaleUniformLocation = glGetUniformLocation(mProgram, "drawScale");
         ASSERT_NE(-1, mDrawScaleUniformLocation);
 
@@ -457,6 +488,12 @@ class Sampler2DAsFunctionParameterTest : public Texture2DTest
             }
         )
         );
+    }
+
+    void SetUp() override
+    {
+        Texture2DTest::SetUp();
+        setUpProgram();
     }
 };
 
@@ -500,6 +537,8 @@ class TextureCubeTest : public TexCoordDrawTest
         EXPECT_GL_NO_ERROR();
 
         mTexture2D = create2DTexture();
+
+        setUpProgram();
 
         mTexture2DUniformLocation = glGetUniformLocation(mProgram, "tex2D");
         ASSERT_NE(-1, mTexture2DUniformLocation);
@@ -550,6 +589,8 @@ class SamplerArrayTest : public TexCoordDrawTest
     void SetUp() override
     {
         TexCoordDrawTest::SetUp();
+
+        setUpProgram();
 
         mTexture0UniformLocation = glGetUniformLocation(mProgram, "tex2DArray[0]");
         ASSERT_NE(-1, mTexture0UniformLocation);
@@ -665,6 +706,8 @@ class Texture2DArrayTestES3 : public TexCoordDrawTest
     {
         TexCoordDrawTest::SetUp();
 
+        setUpProgram();
+
         mTextureArrayLocation = glGetUniformLocation(mProgram, "tex2DArray");
         ASSERT_NE(-1, mTextureArrayLocation);
 
@@ -723,6 +766,8 @@ class TextureSizeTextureArrayTest : public TexCoordDrawTest
     void SetUp() override
     {
         TexCoordDrawTest::SetUp();
+
+        setUpProgram();
 
         mTexture0Location = glGetUniformLocation(mProgram, "tex2DArray[0]");
         ASSERT_NE(-1, mTexture0Location);
@@ -799,6 +844,8 @@ class ShadowSamplerPlusSampler3DTestES3 : public TexCoordDrawTest
         glGenTextures(1, &mTextureShadow);
         glBindTexture(GL_TEXTURE_2D, mTextureShadow);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+        setUpProgram();
 
         mTextureShadowUniformLocation = glGetUniformLocation(mProgram, "tex2DShadow");
         ASSERT_NE(-1, mTextureShadowUniformLocation);
@@ -889,6 +936,8 @@ class SamplerTypeMixTestES3 : public TexCoordDrawTest
         glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCubeShadow);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
+        setUpProgram();
+
         mTexture2DUniformLocation = glGetUniformLocation(mProgram, "tex2D");
         ASSERT_NE(-1, mTexture2DUniformLocation);
         mTextureCubeUniformLocation = glGetUniformLocation(mProgram, "texCube");
@@ -949,6 +998,8 @@ class SamplerInStructTest : public Texture2DTest
 
     void runSamplerInStructTest()
     {
+        setUpProgram();
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTexture2D);
         GLubyte texDataGreen[1u * 1u * 4u];
@@ -1074,6 +1125,8 @@ TEST_P(Texture2DTest, NegativeAPISubImage)
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
 
+    setUpProgram();
+
     const GLubyte *pixels[20] = { 0 };
     glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
@@ -1083,6 +1136,8 @@ TEST_P(Texture2DTest, ZeroSizedUploads)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    setUpProgram();
 
     // Use the texture first to make sure it's in video memory
     glUseProgram(mProgram);
@@ -1272,6 +1327,8 @@ TEST_P(Texture2DTest, TexStorage)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    setUpProgram();
+
     glUseProgram(mProgram);
     glUniform1i(mTexture2DUniformLocation, 0);
     drawQuad(mProgram, "position", 0.5f);
@@ -1323,6 +1380,8 @@ TEST_P(Texture2DTest, TexStorageWithPBO)
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RGB, GL_UNSIGNED_BYTE, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        setUpProgram();
 
         glUseProgram(mProgram);
         glUniform1i(mTexture2DUniformLocation, 0);
@@ -1441,6 +1500,8 @@ TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
         // This test isn't applicable if texture_npot is enabled
         return;
     }
+
+    setUpProgram();
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -2028,6 +2089,11 @@ TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParamete
 // parameter.
 TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFunctionParameter)
 {
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
     runSamplerInStructTest();
 }
 
@@ -2035,6 +2101,11 @@ TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFuncti
 // parameter.
 TEST_P(SamplerInNestedStructAsFunctionParameterTest, SamplerInNestedStructAsFunctionParameter)
 {
+    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
     runSamplerInStructTest();
 }
 
