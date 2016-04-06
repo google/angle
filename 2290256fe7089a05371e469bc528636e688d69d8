@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea2ccbd_9c2aa8ba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T20:57:50Z",
+      "side": 1,
+      "message": "please tag this with an existing bug id, opening one if necessary. either angle or chromium is fine.",
+      "revId": "2290256fe7089a05371e469bc528636e688d69d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
