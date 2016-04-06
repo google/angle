@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_bbdfb952",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:55:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_dbb15d56",
+      "range": {
+        "startLine": 112,
+        "startChar": 76,
+        "endLine": 112,
+        "endChar": 77
+      },
+      "revId": "fd5c07d7db31f654a348e281e869525a262d41a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_1b4d8513",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_66ad18aa",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:55:43Z",
+      "side": 1,
+      "message": "I was following the semantics of the other extension but yeah it means that all drawing calls before should be finished before binding the new texture. In fact I don\u0027t even think this is needed as the other extension had it in the context of the texture is updated when an eglSwapBuffers is called. I\u0027ll remove this part and revisit if it happens to become an issue in the implementation.",
+      "parentUuid": "8ea2ccbd_1b4d8513",
+      "range": {
+        "startLine": 112,
+        "startChar": 56,
+        "endLine": 113,
+        "endChar": 79
+      },
+      "revId": "fd5c07d7db31f654a348e281e869525a262d41a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_1bb7c54c",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2016-04-06T17:47:25Z",
       "side": 1,
       "message": "nit: trailing space",
+      "range": {
+        "startLine": 142,
+        "startChar": 73,
+        "endLine": 142,
+        "endChar": 74
+      },
+      "revId": "fd5c07d7db31f654a348e281e869525a262d41a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_e6b928ee",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-06T17:55:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_1bb7c54c",
       "range": {
         "startLine": 142,
         "startChar": 73,
