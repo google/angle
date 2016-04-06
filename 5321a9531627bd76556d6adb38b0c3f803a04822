@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_7bc6d165",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-06T17:19:35Z",
+      "side": 1,
+      "message": "Did you mean tabs to spaces? As far as I can tell, extensions in the registry don\u0027t use tabs.",
+      "parentUuid": "8ea2ccbd_f8e2e747",
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_b5c22801",
         "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
         "patchSetId": 4
