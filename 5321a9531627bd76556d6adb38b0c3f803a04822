@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea2ccbd_356cd8d3",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "nit: in this file, convert spaces to tabs and remove trailing whitespace",
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_b5c22801",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "EGL_FALSE",
+      "range": {
+        "startLine": 81,
+        "startChar": 64,
+        "endLine": 81,
+        "endChar": 72
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_75bca088",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "a connected",
+      "range": {
+        "startLine": 87,
+        "startChar": 57,
+        "endLine": 87,
+        "endChar": 66
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_557e3c89",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": ",",
+      "range": {
+        "startLine": 89,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 13
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_55675cf3",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "preceding is interesting, i feel like usually extensions use following with an incremented number. Would lean towards that unless there\u0027s a very well-specced example extension.",
+      "range": {
+        "startLine": 99,
+        "startChar": 5,
+        "endLine": 99,
+        "endChar": 6
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_b578e88f",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "think you should split this sentence into two. the ending is a bit oddly worded...\n\n \"the texture will be posted to the stream after all current commands are finished and can be bound as OpenGL texture objects\"\n\nIn this part, the \u0027commands\u0027 are the subject of \u0027can be bound as OpenGL texture objects\u0027. EG a clear command, flush, etc. Those can\u0027t be bound as texture objects.",
+      "range": {
+        "startLine": 109,
+        "startChar": 1,
+        "endLine": 113,
+        "endChar": 72
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_554cfc70",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "EGL_FALSE",
+      "range": {
+        "startLine": 132,
+        "startChar": 51,
+        "endLine": 132,
+        "endChar": 59
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_75470049",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "D3D11 NV12 Texture producer",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 18
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_b526a8a8",
+        "filename": "extensions/EGL_ANGLE_stream_producer_d3d_texture_nv12.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-06T16:04:49Z",
+      "side": 1,
+      "message": "what does invalid mean here? need to be a bit more explicit",
+      "range": {
+        "startLine": 142,
+        "startChar": 51,
+        "endLine": 142,
+        "endChar": 58
+      },
+      "revId": "5321a9531627bd76556d6adb38b0c3f803a04822",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
