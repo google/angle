@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_ee5325bc",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1150601
+      },
+      "writtenOn": "2016-04-07T21:41:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ea2ccbd_087ac0f8",
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_e8767c13",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 1
@@ -65,6 +83,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_2e490d0c",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1150601
+      },
+      "writtenOn": "2016-04-07T21:41:22Z",
+      "side": 1,
+      "message": "The goal is to replicate the workaround here:\nhttps://code.google.com/p/chromium/codesearch#chromium/src/gpu/command_buffer/service/gles2_cmd_decoder.cc\u0026l\u003d6999\n\nThere, it looks like they only apply the workaround if state_.current_program is equal to the program being linked. Is that the same as saying the program is bound? I don\u0027t know enough about this code to know if that relates to the program being bound or not (not exactly sure what \"bound\" means). \n\nIs there a way to get the current program back from the stateManager?",
+      "parentUuid": "8ea2ccbd_e8767c13",
+      "range": {
+        "startLine": 156,
+        "startChar": 23,
+        "endLine": 156,
+        "endChar": 45
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_2eb10d0b",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 1
@@ -76,6 +118,30 @@
       "writtenOn": "2016-04-07T20:59:34Z",
       "side": 1,
       "message": "can you detail the drivers?",
+      "range": {
+        "startLine": 61,
+        "startChar": 50,
+        "endLine": 61,
+        "endChar": 82
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_0e5f69ba",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1150601
+      },
+      "writtenOn": "2016-04-07T21:41:22Z",
+      "side": 1,
+      "message": "The original workaround does not have much documentation:\nhttps://code.google.com/p/chromium/codesearch#chromium/src/gpu/command_buffer/service/gles2_cmd_decoder.cc\u0026l\u003d6999\n\nI modified the wording to make it similar to the original workaround and added a bit more details.",
+      "parentUuid": "8ea2ccbd_2eb10d0b",
       "range": {
         "startLine": 61,
         "startChar": 50,
@@ -171,6 +237,30 @@
       "side": 1,
       "message": "I think the details and reasoning should be documented in the code here and/or in the workaround in the header.",
       "parentUuid": "8ea2ccbd_ce0e2189",
+      "range": {
+        "startLine": 670,
+        "startChar": 4,
+        "endLine": 671,
+        "endChar": 54
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_b1b57cf4",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1150601
+      },
+      "writtenOn": "2016-04-07T21:41:22Z",
+      "side": 1,
+      "message": "I added more details in the comment in the workaround header declaration.",
+      "parentUuid": "8ea2ccbd_ce3bc11e",
       "range": {
         "startLine": 670,
         "startChar": 4,
