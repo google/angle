@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8ea2ccbd_aeb51df4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-07T20:59:34Z",
+      "side": 1,
+      "message": "add a BUG\u003d tag, and some documentation in a second paragraph",
+      "range": {
+        "startLine": 7,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 65
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_e8767c13",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 1
@@ -25,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_2eb10d0b",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-07T20:59:34Z",
+      "side": 1,
+      "message": "can you detail the drivers?",
+      "range": {
+        "startLine": 61,
+        "startChar": 50,
+        "endLine": 61,
+        "endChar": 82
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_ee920579",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -36,6 +82,30 @@
       "writtenOn": "2016-04-07T20:57:57Z",
       "side": 1,
       "message": "We want this enabled for all OSs?",
+      "range": {
+        "startLine": 670,
+        "startChar": 4,
+        "endLine": 671,
+        "endChar": 54
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_eebb25e7",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-07T20:59:34Z",
+      "side": 1,
+      "message": "Yes, some detail on what types of configs this is needed on would go a long way.",
+      "parentUuid": "8ea2ccbd_ee920579",
       "range": {
         "startLine": 670,
         "startChar": 4,
