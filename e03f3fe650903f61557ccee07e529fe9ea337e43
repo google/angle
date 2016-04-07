@@ -156,6 +156,30 @@
       "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_ce3bc11e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-07T21:04:43Z",
+      "side": 1,
+      "message": "I think the details and reasoning should be documented in the code here and/or in the workaround in the header.",
+      "parentUuid": "8ea2ccbd_ce0e2189",
+      "range": {
+        "startLine": 670,
+        "startChar": 4,
+        "endLine": 671,
+        "endChar": 54
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
