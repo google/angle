@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_087ac0f8",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-07T21:02:09Z",
+      "side": 1,
+      "message": "nit: I think this include is unnecessary and could be removed.",
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_e8767c13",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 1
@@ -106,6 +123,30 @@
       "side": 1,
       "message": "Yes, some detail on what types of configs this is needed on would go a long way.",
       "parentUuid": "8ea2ccbd_ee920579",
+      "range": {
+        "startLine": 670,
+        "startChar": 4,
+        "endLine": 671,
+        "endChar": 54
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_ce0e2189",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-07T21:02:09Z",
+      "side": 1,
+      "message": "Details are in https://bugs.chromium.org/p/chromium/issues/detail?id\u003d349137\nChromium itself enables the workaround all the time except on OSX \u003e\u003d 10.9",
+      "parentUuid": "8ea2ccbd_eebb25e7",
       "range": {
         "startLine": 670,
         "startChar": 4,
