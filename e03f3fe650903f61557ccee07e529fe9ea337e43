@@ -107,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "8ea2ccbd_f4bbf2e6",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-07T21:58:55Z",
+      "side": 1,
+      "message": "I\u0027m not sure, I think the intent is to call glUseProgram again even if the program is already the used one. A force bool sgtm.",
+      "parentUuid": "8ea2ccbd_2e490d0c",
+      "range": {
+        "startLine": 156,
+        "startChar": 23,
+        "endLine": 156,
+        "endChar": 45
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_2eb10d0b",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 1
