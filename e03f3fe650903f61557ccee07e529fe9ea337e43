@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea2ccbd_e8767c13",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-07T20:57:57Z",
+      "side": 1,
+      "message": "This doesn\u0027t necessarily call glUseProgram if the program is already bound.  Maybe we need a force bool unless the workaround is OK with the program already being bound.",
+      "range": {
+        "startLine": 156,
+        "startChar": 23,
+        "endLine": 156,
+        "endChar": 45
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ea2ccbd_ee920579",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-07T20:57:57Z",
+      "side": 1,
+      "message": "We want this enabled for all OSs?",
+      "range": {
+        "startLine": 670,
+        "startChar": 4,
+        "endLine": 671,
+        "endChar": 54
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
