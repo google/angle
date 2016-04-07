@@ -271,7 +271,7 @@ ShaderImpl *RendererGL::createShader(const gl::Shader::Data &data)
 
 ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)
 {
-    return new ProgramGL(data, mFunctions, mStateManager);
+    return new ProgramGL(data, mFunctions, mWorkarounds, mStateManager);
 }
 
 FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)

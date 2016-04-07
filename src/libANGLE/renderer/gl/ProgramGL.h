@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_PROGRAMGL_H_
 #define LIBANGLE_RENDERER_GL_PROGRAMGL_H_
 
+#include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 
 namespace rx
@@ -28,6 +29,7 @@ class ProgramGL : public ProgramImpl
   public:
     ProgramGL(const gl::Program::Data &data,
               const FunctionsGL *functions,
+              const WorkaroundsGL &workarounds,
               StateManagerGL *stateManager);
     ~ProgramGL() override;
 
@@ -76,6 +78,7 @@ class ProgramGL : public ProgramImpl
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }
 
     const FunctionsGL *mFunctions;
+    const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
 
     std::vector<GLint> mUniformRealLocationMap;

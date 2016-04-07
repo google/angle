@@ -302,9 +302,14 @@ void StateManagerGL::useProgram(GLuint program)
 {
     if (mProgram != program)
     {
-        mProgram = program;
-        mFunctions->useProgram(mProgram);
+        forceUseProgram(program);
     }
+}
+
+void StateManagerGL::forceUseProgram(GLuint program)
+{
+    mProgram = program;
+    mFunctions->useProgram(mProgram);
 }
 
 void StateManagerGL::bindVertexArray(GLuint vao, GLuint elementArrayBuffer)

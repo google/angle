@@ -47,6 +47,7 @@ class StateManagerGL final : angle::NonCopyable
     void deleteQuery(GLuint query);
 
     void useProgram(GLuint program);
+    void forceUseProgram(GLuint program);
     void bindVertexArray(GLuint vao, GLuint elementArrayBuffer);
     void bindBuffer(GLenum type, GLuint buffer);
     void bindBufferBase(GLenum type, size_t index, GLuint buffer);

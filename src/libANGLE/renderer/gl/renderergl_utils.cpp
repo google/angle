@@ -666,6 +666,9 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     workarounds->finishDoesNotCauseQueriesToBeAvailable =
         functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_NVIDIA;
+
+    // TODO(cwallez): Disable this workaround for MacOSX versions 10.9 or later.
+    workarounds->alwaysCallUseProgramAfterLink = true;
 }
 
 }
