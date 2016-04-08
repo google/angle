@@ -22,6 +22,30 @@
       "revId": "acf26e68bbb05495a76590da9e37fa7f8357dbaf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_dc66cd24",
+        "filename": "build/standalone.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-04-08T18:10:06Z",
+      "side": 1,
+      "message": "It\u0027s set through the GYP_DEFINES variable by the chrome os build script - in both my new script for standalone, and in the existing script for chrome.\n\nI\u0027ll reformat the comment.",
+      "parentUuid": "6e62f8c1_da5261e7",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "acf26e68bbb05495a76590da9e37fa7f8357dbaf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
