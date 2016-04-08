@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "8e2d6c79_8e85ff90",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1150601
+      },
+      "writtenOn": "2016-04-08T18:28:53Z",
+      "side": 1,
+      "message": "I went for a new forceUseProgram function rather than modifying the signature of useProgram. If you prefer adding a force bool to useProgram, let me know, I don\u0027t mind changing it.",
+      "parentUuid": "6e62f8c1_fa380583",
+      "range": {
+        "startLine": 156,
+        "startChar": 23,
+        "endLine": 156,
+        "endChar": 45
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_2eb10d0b",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 1
