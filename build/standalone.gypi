@@ -5,16 +5,13 @@
 {
     'variables':
     {
-        # Assume for the time being that we're never compiling
-        # standalone ANGLE on Chrome OS.
+        # chromeos=1 is used in some build configurations to disable GL
+        # and GLX code because it typically wouldn't build for Chrome OS.
+        # It does not mean "enable Chrome OS code."
         'chromeos': 0,
 
-        # Chromium puts the pkg-config command in a variable because
-        # calling pkg-config directly doesn't work in a sysroot image.
-        # See Chromium bug 569947 for more information.
-        # For standalone builds we don't have this problem so we use
-        # the regular command.
-        'pkg-config': 'pkg-config',
+        # Chrome OS chroot builds need a special pkg-config, so make it possible to change.
+        'pkg-config%': 'pkg-config',
 
         # Use a nested variable trick to get use_x11 evaluated more
         # eagerly than other conditional variables.
