@@ -13,7 +13,6 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace gl
 {
@@ -64,9 +63,9 @@ class Buffer11 : public BufferD3D
     virtual ~Buffer11();
 
     gl::ErrorOrResult<ID3D11Buffer *> getBuffer(BufferUsage usage);
-    gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(SourceIndexData *indexInfo,
-                                                               const TranslatedAttribute &attribute,
-                                                               GLint startVertex);
+    gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(
+        SourceIndexData *indexInfo,
+        const TranslatedAttribute &attribute);
     gl::ErrorOrResult<ID3D11Buffer *> getConstantBufferRange(GLintptr offset, GLsizeiptr size);
     gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != nullptr; }
@@ -75,32 +74,18 @@ class Buffer11 : public BufferD3D
     size_t getTotalCPUBufferMemoryBytes() const;
 
     // BufferD3D implementation
-    size_t getSize() const override { return mSize; }
-    bool supportsDirectBinding() const override;
+    virtual size_t getSize() const { return mSize; }
+    virtual bool supportsDirectBinding() const;
     gl::Error getData(const uint8_t **outData) override;
-    void initializeStaticData() override;
-    void invalidateStaticData() override;
 
     // BufferImpl implementation
-    gl::Error setData(const void *data, size_t size, GLenum usage) override;
-    gl::Error setSubData(const void *data, size_t size, size_t offset) override;
-    gl::Error copySubData(BufferImpl *source,
-                          GLintptr sourceOffset,
-                          GLintptr destOffset,
-                          GLsizeiptr size) override;
-    gl::Error map(GLenum access, GLvoid **mapPtr) override;
-    gl::Error mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr) override;
-    gl::Error unmap(GLboolean *result) override;
-    gl::Error markTransformFeedbackUsage() override;
-
-    // We use two set of dirty callbacks for two events. Static buffers are marked dirty whenever
-    // the data is changed, because they must be re-translated. Direct buffers only need to be
-    // updated when the underlying ID3D11Buffer pointer changes - hopefully far less often.
-    void addStaticBufferDirtyCallback(const NotificationCallback *callback);
-    void removeStaticBufferDirtyCallback(const NotificationCallback *callback);
-
-    void addDirectBufferDirtyCallback(const NotificationCallback *callback);
-    void removeDirectBufferDirtyCallback(const NotificationCallback *callback);
+    virtual gl::Error setData(const void* data, size_t size, GLenum usage);
+    virtual gl::Error setSubData(const void* data, size_t size, size_t offset);
+    virtual gl::Error copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size);
+    virtual gl::Error map(GLenum access, GLvoid **mapPtr);
+    virtual gl::Error mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr);
+    virtual gl::Error unmap(GLboolean *result);
+    virtual gl::Error markTransformFeedbackUsage();
 
   private:
     class BufferStorage;
@@ -109,6 +94,13 @@ class Buffer11 : public BufferD3D
     class PackStorage;
     class SystemMemoryStorage;
 
+    Renderer11 *mRenderer;
+    size_t mSize;
+
+    BufferStorage *mMappedStorage;
+
+    std::vector<BufferStorage*> mBufferStorages;
+
     struct ConstantBufferCacheEntry
     {
         ConstantBufferCacheEntry() : storage(nullptr), lruCount(0) { }
@@ -116,27 +108,6 @@ class Buffer11 : public BufferD3D
         BufferStorage *storage;
         unsigned int lruCount;
     };
-
-    gl::Error markBufferUsage();
-    gl::ErrorOrResult<NativeStorage *> getStagingStorage();
-    gl::ErrorOrResult<PackStorage *> getPackStorage();
-    gl::ErrorOrResult<SystemMemoryStorage *> getSystemMemoryStorage();
-
-    gl::Error updateBufferStorage(BufferStorage *storage, size_t sourceOffset, size_t storageSize);
-    gl::ErrorOrResult<BufferStorage *> getBufferStorage(BufferUsage usage);
-    gl::ErrorOrResult<BufferStorage *> getLatestBufferStorage() const;
-
-    gl::ErrorOrResult<BufferStorage *> getConstantBufferRangeStorage(GLintptr offset,
-                                                                     GLsizeiptr size);
-
-    BufferStorage *allocateStorage(BufferUsage usage) const;
-
-    Renderer11 *mRenderer;
-    size_t mSize;
-
-    BufferStorage *mMappedStorage;
-
-    std::vector<BufferStorage *> mBufferStorages;
 
     // Cache of D3D11 constant buffer for specific ranges of buffer data.
     // This is used to emulate UBO ranges on 11.0 devices.
@@ -151,8 +122,17 @@ class Buffer11 : public BufferD3D
 
     unsigned int mReadUsageCount;
 
-    NotificationSet mStaticBufferDirtyCallbacks;
-    NotificationSet mDirectBufferDirtyCallbacks;
+    gl::Error markBufferUsage();
+    gl::ErrorOrResult<NativeStorage *> getStagingStorage();
+    gl::ErrorOrResult<PackStorage *> getPackStorage();
+    gl::ErrorOrResult<SystemMemoryStorage *> getSystemMemoryStorage();
+
+    gl::Error updateBufferStorage(BufferStorage *storage, size_t sourceOffset, size_t storageSize);
+    gl::ErrorOrResult<BufferStorage *> getBufferStorage(BufferUsage usage);
+    gl::ErrorOrResult<BufferStorage *> getLatestBufferStorage() const;
+
+    gl::ErrorOrResult<BufferStorage *> getConstantBufferRangeStorage(GLintptr offset,
+                                                                     GLsizeiptr size);
 };
 
 }  // namespace rx

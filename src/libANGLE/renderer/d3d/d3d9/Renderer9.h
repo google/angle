@@ -275,7 +275,6 @@ class Renderer9 : public RendererD3D
   private:
     gl::Error drawArraysImpl(const gl::Data &data,
                              GLenum mode,
-                             GLint startVertex,
                              GLsizei count,
                              GLsizei instances) override;
     gl::Error drawElementsImpl(const gl::Data &data,
@@ -397,7 +396,6 @@ class Renderer9 : public RendererD3D
     UINT mMaxNullColorbufferLRU;
 
     DeviceD3D *mEGLDevice;
-    std::vector<TranslatedAttribute> mTranslatedAttribCache;
 };
 
 }

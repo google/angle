@@ -42,13 +42,11 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-gl::Error VertexDeclarationCache::applyDeclaration(
-    IDirect3DDevice9 *device,
-    const std::vector<TranslatedAttribute> &attributes,
-    gl::Program *program,
-    GLint start,
-    GLsizei instances,
-    GLsizei *repeatDraw)
+gl::Error VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device,
+                                                   const std::vector<TranslatedAttribute> &attributes,
+                                                   gl::Program *program,
+                                                   GLsizei instances,
+                                                   GLsizei *repeatDraw)
 {
     ASSERT(gl::MAX_VERTEX_ATTRIBS >= attributes.size());
 
@@ -151,18 +149,14 @@ gl::Error VertexDeclarationCache::applyDeclaration(
 
             VertexBuffer9 *vertexBuffer = GetAs<VertexBuffer9>(attributes[i].vertexBuffer.get());
 
-            unsigned int offset = 0;
-            ANGLE_TRY_RESULT(attributes[i].computeOffset(start), offset);
-
             if (mAppliedVBs[stream].serial != attributes[i].serial ||
                 mAppliedVBs[stream].stride != attributes[i].stride ||
-                mAppliedVBs[stream].offset != offset)
+                mAppliedVBs[stream].offset != attributes[i].offset)
             {
-                device->SetStreamSource(stream, vertexBuffer->getBuffer(), offset,
-                                        attributes[i].stride);
+                device->SetStreamSource(stream, vertexBuffer->getBuffer(), attributes[i].offset, attributes[i].stride);
                 mAppliedVBs[stream].serial = attributes[i].serial;
                 mAppliedVBs[stream].stride = attributes[i].stride;
-                mAppliedVBs[stream].offset = offset;
+                mAppliedVBs[stream].offset = attributes[i].offset;
             }
 
             gl::VertexFormatType vertexformatType = gl::GetVertexFormatType(*attributes[i].attribute, GL_FLOAT);

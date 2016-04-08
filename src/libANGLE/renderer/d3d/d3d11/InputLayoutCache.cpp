@@ -94,8 +94,7 @@ Optional<size_t> FindFirstNonInstanced(
 }
 
 void SortAttributesByLayout(const gl::Program *program,
-                            const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-                            const std::vector<TranslatedAttribute> &currentValueAttribs,
+                            const std::vector<TranslatedAttribute> &unsortedAttributes,
                             AttribIndexArray *sortedD3DSemanticsOut,
                             std::vector<const TranslatedAttribute *> *sortedAttributesOut)
 {
@@ -113,17 +112,7 @@ void SortAttributesByLayout(const gl::Program *program,
         }
 
         (*sortedD3DSemanticsOut)[d3dSemantic] = d3dSemantic;
-
-        const auto *arrayAttrib = &vertexArrayAttribs[locationIndex];
-        if (arrayAttrib->attribute && arrayAttrib->attribute->enabled)
-        {
-            (*sortedAttributesOut)[d3dSemantic] = arrayAttrib;
-        }
-        else
-        {
-            ASSERT(currentValueAttribs[locationIndex].attribute);
-            (*sortedAttributesOut)[d3dSemantic] = &currentValueAttribs[locationIndex];
-        }
+        (*sortedAttributesOut)[d3dSemantic] = &unsortedAttributes[locationIndex];
     }
 }
 
@@ -220,10 +209,8 @@ void InputLayoutCache::markDirty()
 
 gl::Error InputLayoutCache::applyVertexBuffers(
     const gl::State &state,
-    const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-    const std::vector<TranslatedAttribute> &currentValueAttribs,
+    const std::vector<TranslatedAttribute> &unsortedAttributes,
     GLenum mode,
-    GLint start,
     TranslatedIndexData *indexInfo,
     GLsizei numIndicesPerInstance)
 {
@@ -236,7 +223,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
     bool instancedPointSpritesActive = programUsesInstancedPointSprites && (mode == GL_POINTS);
 
     AttribIndexArray sortedSemanticIndices;
-    SortAttributesByLayout(program, vertexArrayAttribs, currentValueAttribs, &sortedSemanticIndices,
+    SortAttributesByLayout(program, unsortedAttributes, &sortedSemanticIndices,
                            &mCurrentAttributes);
 
     // If we are using FL 9_3, make sure the first attribute is not instanced
@@ -298,9 +285,9 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                     indexInfo->srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                ANGLE_TRY_RESULT(bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData,
-                                                                         attrib, start),
-                                 buffer);
+                ANGLE_TRY_RESULT(
+                    bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData, attrib),
+                    buffer);
             }
             else
             {
@@ -309,7 +296,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
             }
 
             vertexStride = attrib.stride;
-            ANGLE_TRY_RESULT(attrib.computeOffset(start), vertexOffset);
+            vertexOffset = attrib.offset;
         }
 
         size_t bufferIndex = reservedBuffers + attribIndex;
@@ -427,8 +414,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
     return gl::NoError();
 }
 
-gl::Error InputLayoutCache::updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
-                                                                        GLsizei emulatedInstanceId)
+gl::Error InputLayoutCache::updateVertexOffsetsForPointSpritesEmulation(GLsizei emulatedInstanceId)
 {
     size_t reservedBuffers = GetReservedBufferCount(true);
     for (size_t attribIndex = 0; attribIndex < mCurrentAttributes.size(); ++attribIndex)
@@ -438,10 +424,8 @@ gl::Error InputLayoutCache::updateVertexOffsetsForPointSpritesEmulation(GLint st
 
         if (attrib.divisor > 0)
         {
-            unsigned int offset = 0;
-            ANGLE_TRY_RESULT(attrib.computeOffset(startVertex), offset);
             mCurrentVertexOffsets[bufferIndex] =
-                offset + (attrib.stride * (emulatedInstanceId / attrib.divisor));
+                attrib.offset + (attrib.stride * (emulatedInstanceId / attrib.divisor));
         }
     }
 

@@ -207,31 +207,6 @@ TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
     delete[] data;
 }
 
-// Internally in D3D, we promote dynamic data to static after many draw loops. This code tests
-// path.
-TEST_P(BufferDataTest, RepeatedDrawWithDynamic)
-{
-    std::vector<GLfloat> data;
-    for (int i = 0; i < 16; ++i)
-    {
-        data.push_back(static_cast<GLfloat>(i));
-    }
-
-    glUseProgram(mProgram);
-    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * data.size(), data.data(), GL_DYNAMIC_DRAW);
-    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(mAttribLocation);
-
-    for (int drawCount = 0; drawCount < 40; ++drawCount)
-    {
-        drawQuad(mProgram, "position", 0.5f);
-    }
-
-    EXPECT_GL_NO_ERROR();
-}
-
 class IndexedBufferCopyTest : public ANGLETest
 {
   protected:

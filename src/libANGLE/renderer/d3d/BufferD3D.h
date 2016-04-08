@@ -43,8 +43,8 @@ class BufferD3D : public BufferImpl
     StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute);
     StaticIndexBufferInterface *getStaticIndexBuffer();
 
-    virtual void initializeStaticData();
-    virtual void invalidateStaticData();
+    void initializeStaticData();
+    void invalidateStaticData();
 
     void promoteStaticUsage(int dataSize);
 

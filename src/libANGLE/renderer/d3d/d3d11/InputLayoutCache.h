@@ -46,15 +46,12 @@ class InputLayoutCache : angle::NonCopyable
     void markDirty();
 
     gl::Error applyVertexBuffers(const gl::State &state,
-                                 const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-                                 const std::vector<TranslatedAttribute> &currentValueAttribs,
+                                 const std::vector<TranslatedAttribute> &attributes,
                                  GLenum mode,
-                                 GLint start,
                                  TranslatedIndexData *indexInfo,
                                  GLsizei numIndicesPerInstance);
 
-    gl::Error updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
-                                                          GLsizei emulatedInstanceId);
+    gl::Error updateVertexOffsetsForPointSpritesEmulation(GLsizei emulatedInstanceId);
 
     // Useful for testing
     void setCacheSize(unsigned int cacheSize) { mCacheSize = cacheSize; }
