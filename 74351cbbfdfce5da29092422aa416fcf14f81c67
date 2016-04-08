@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2d6c79_8e6c1f07",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:25:37Z",
+      "side": 1,
+      "message": "I\u0027m fine with making this use an Impl method temporarily, but let\u0027s not make more state change Impl methods, let\u0027s prioritize cleaning up and refactoring the Texture class to use a shared \"Data\" struct and also use dirty bits. I\u0027ll see if I can make time for that this quarter.",
+      "range": {
+        "startLine": 234,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 5
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_ee659be8",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:25:37Z",
+      "side": 1,
+      "message": "this is a bit confusing to me. what use cases are we trying to support? if baseLevel \u003d\u003d gl::MAX then we can support up to MAX levels (because of the clamping), but if baseLevel  \u003d\u003d MAX-1 we can only support one level. Do I have that right? Seems like we maybe should error out more consistently if we can\u0027t support certain level configurations. I haven\u0027t dug into this enough to fully understand.",
+      "range": {
+        "startLine": 641,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 17
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_ceb1b7c0",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:25:37Z",
+      "side": 1,
+      "message": "this is a little oddity that could be fixed using a shared Data struct - the TextureD3D class should be aware of if it is a 3D texture, and handle the if statement inside getLevelZeroDepth, without using a virtual method.",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 11
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_4e23079a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1960,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:25:37Z",
+      "side": 1,
+      "message": "nice tests.",
+      "range": {
+        "startLine": 1960,
+        "startChar": 25,
+        "endLine": 1960,
+        "endChar": 63
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
