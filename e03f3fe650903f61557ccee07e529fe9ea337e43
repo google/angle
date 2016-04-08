@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "6e62f8c1_fa380583",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-08T13:52:35Z",
+      "side": 1,
+      "message": "A force bool would be sufficient then.  If we wanted to replicate the code in command buffer exactly, we could add a getter for the current program in StateManagerGL and call glUseProgram directly",
+      "parentUuid": "8ea2ccbd_f4bbf2e6",
+      "range": {
+        "startLine": 156,
+        "startChar": 23,
+        "endLine": 156,
+        "endChar": 45
+      },
+      "revId": "e03f3fe650903f61557ccee07e529fe9ea337e43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ea2ccbd_2eb10d0b",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 1
