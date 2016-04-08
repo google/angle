@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ae4dd05b_1133ec3e",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Done. I\u0027m also planning a larger refactoring of the texture function output - I think there\u0027s still a few problems there to fix and the currect code is quite unwieldy to work with.",
+      "parentUuid": "6e62f8c1_dadd018f",
+      "range": {
+        "startLine": 328,
+        "startChar": 17,
+        "endLine": 328,
+        "endChar": 38
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e62f8c1_3ac51db2",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-08T13:40:42Z",
       "side": 1,
       "message": "same as below.",
+      "range": {
+        "startLine": 340,
+        "startChar": 46,
+        "endLine": 340,
+        "endChar": 62
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aeda30a7_e9fc9557",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e62f8c1_3ac51db2",
       "range": {
         "startLine": 340,
         "startChar": 46,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "ce65a4c5_da87c5d3",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "6e62f8c1_5ac57177",
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e62f8c1_1ac859c9",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -76,6 +142,30 @@
       "writtenOn": "2016-04-08T13:40:42Z",
       "side": 1,
       "message": "nit: can you place the wrap mode comments on the previous line to break up the code a bit?",
+      "range": {
+        "startLine": 345,
+        "startChar": 49,
+        "endLine": 345,
+        "endChar": 69
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e5758ea_cfca9d1c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e62f8c1_1ac859c9",
       "range": {
         "startLine": 345,
         "startChar": 49,
@@ -128,6 +218,30 @@
     },
     {
       "key": {
+        "uuid": "8eb80c3f_d06dfc8f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e62f8c1_5ad2d17c",
+      "range": {
+        "startLine": 353,
+        "startChar": 21,
+        "endLine": 353,
+        "endChar": 36
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e62f8c1_bac12da4",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -151,6 +265,30 @@
     },
     {
       "key": {
+        "uuid": "2e8ba0a4_dd60abdb",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "If we end up in a situation where the internalFormat is not needed, we can also use more space for the wrap modes and remove this computation. I wouldn\u0027t worry about this specific detail too much for now, this is also just a small part of the overall wrapping code.",
+      "parentUuid": "6e62f8c1_bac12da4",
+      "range": {
+        "startLine": 1230,
+        "startChar": 70,
+        "endLine": 1230,
+        "endChar": 92
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e62f8c1_dab6e14e",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 7
@@ -162,6 +300,30 @@
       "writtenOn": "2016-04-08T13:40:42Z",
       "side": 1,
       "message": "this is a very good idea - keeps the HLSL packing from doing anything tricky",
+      "range": {
+        "startLine": 345,
+        "startChar": 28,
+        "endLine": 345,
+        "endChar": 35
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce65a4c5_5abf357e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-08T15:23:43Z",
+      "side": 1,
+      "message": "Yep, wanted to make sure that the memory layout is what it needs to be.",
+      "parentUuid": "6e62f8c1_dab6e14e",
       "range": {
         "startLine": 345,
         "startChar": 28,
