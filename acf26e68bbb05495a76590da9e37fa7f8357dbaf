@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e62f8c1_da5261e7",
+        "filename": "build/standalone.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:12:20Z",
+      "side": 1,
+      "message": "I take it the common.gypi or equivalent overrides this? (also, this comment can be on one line)",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "acf26e68bbb05495a76590da9e37fa7f8357dbaf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
