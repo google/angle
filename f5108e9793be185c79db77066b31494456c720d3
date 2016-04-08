@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e62f8c1_9a0aa905",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:00:36Z",
+      "side": 1,
+      "message": "this link isn\u0027t going to last due to the changing code. I recomment you link to http://crbug.com/110263 and http://crrev.com/39eb535b",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 113
+      },
+      "revId": "f5108e9793be185c79db77066b31494456c720d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_da0421fb",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:00:36Z",
+      "side": 1,
+      "message": "again link to the two crbug and crrev I mentioned earlier.",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 39
+      },
+      "revId": "f5108e9793be185c79db77066b31494456c720d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
