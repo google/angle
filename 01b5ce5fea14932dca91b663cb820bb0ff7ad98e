@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8e2d6c79_1c90657c",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-04-08T18:46:34Z",
+      "side": 1,
+      "message": "File a bug, if you think this is a bug.  You\u0027re not allowed to comment on lines I haven\u0027t touched.  (:\n\nAll I know is that in my first attempt at these changes\n(https://chromium-review.googlesource.com/323610) I broke some builder that was setting chromeos\u003d1, so this time I didn\u0027t touch anything to do with that variable.",
+      "parentUuid": "2e39e0b4_6ddb7536",
+      "range": {
+        "startLine": 33,
+        "startChar": 40,
+        "endLine": 33,
+        "endChar": 56
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce4a0442_1224cc89",
         "filename": "src/angle.gyp",
         "patchSetId": 2
@@ -83,6 +107,30 @@
       "writtenOn": "2016-04-08T15:28:47Z",
       "side": 1,
       "message": "Note that nyan boards use X11 and not Ozone.",
+      "range": {
+        "startLine": 41,
+        "startChar": 14,
+        "endLine": 41,
+        "endChar": 26
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_1c794504",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-04-08T18:46:34Z",
+      "side": 1,
+      "message": "Then they shouldn\u0027t set use_ozone\u003d1, and nothing should change for them.",
+      "parentUuid": "ce4a0442_1224cc89",
       "range": {
         "startLine": 41,
         "startChar": 14,
