@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e62f8c1_dadd018f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "nit: I think you could make this a local function to this file, without the header.",
+      "range": {
+        "startLine": 328,
+        "startChar": 17,
+        "endLine": 328,
+        "endChar": 38
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_3ac51db2",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "same as below.",
+      "range": {
+        "startLine": 340,
+        "startChar": 46,
+        "endLine": 340,
+        "endChar": 62
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_1ac859c9",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "nit: can you place the wrap mode comments on the previous line to break up the code a bit?",
+      "range": {
+        "startLine": 345,
+        "startChar": 49,
+        "endLine": 345,
+        "endChar": 69
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_5ad2d17c",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "also a comment for this wrap mode",
+      "range": {
+        "startLine": 353,
+        "startChar": 21,
+        "endLine": 353,
+        "endChar": 36
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_bac12da4",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "Hm, I\u0027m not sure if devices with low compute would have more trouble with the bitshift/mask or if trying to keep as much info packed into one register is a better approach. I have a feeling on older Intel and AMD devices compute would be more of a problem - we\u0027ve run into performance issues just from issuing a few extra simple math instructions, and this affects all 3D sampling. I\u0027m OK with this for now, but if we have to break in the metadata into two registers, I think at that point this would be better off as split wrap modes for R,S,T",
+      "range": {
+        "startLine": 1230,
+        "startChar": 70,
+        "endLine": 1230,
+        "endChar": 92
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_dab6e14e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "this is a very good idea - keeps the HLSL packing from doing anything tricky",
+      "range": {
+        "startLine": 345,
+        "startChar": 28,
+        "endLine": 345,
+        "endChar": 35
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_7aa875e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "all the getters you call are const, you should be able to pass a const reference",
+      "range": {
+        "startLine": 2372,
+        "startChar": 73,
+        "endLine": 2372,
+        "endChar": 93
+      },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_9a29c938",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:40:42Z",
+      "side": 1,
+      "message": "sweet!",
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
