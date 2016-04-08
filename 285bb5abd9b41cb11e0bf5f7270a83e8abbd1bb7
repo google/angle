@@ -1,0 +1,498 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2d6c79_d11876c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "bug id tag(s)",
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_6e444b1c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1705,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "I\u0027d suggest for this one to use a vector of bools to track which indexes are allocated, before you fill in the uniforms in the gaps. Making it a helper class with a reserve and getNext funcs also seems like it could make it clean.",
+      "range": {
+        "startLine": 1705,
+        "startChar": 14,
+        "endLine": 1705,
+        "endChar": 27
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_8e2fbf69",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: can make this final",
+      "range": {
+        "startLine": 332,
+        "startChar": 10,
+        "endLine": 332,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_aebba306",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2048,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "(aside: we at some point should make this a helper function...)",
+      "range": {
+        "startLine": 2048,
+        "startChar": 4,
+        "endLine": 2048,
+        "endChar": 37
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_2e8df360",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: file header should have a comment with the filename and short description",
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_6e97eb72",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: init to nullptr",
+      "range": {
+        "startLine": 41,
+        "startChar": 41,
+        "endLine": 41,
+        "endChar": 61
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_ae89e352",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_ee83db2e",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: switch expected, actual",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_0e790f04",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: make the program mProgram, part of the fixture, so it gets cleaned up on abnormal exit in the destructor (also missing a delete in any case)",
+      "range": {
+        "startLine": 85,
+        "startChar": 11,
+        "endLine": 85,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_f1b9faed",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "probably ASSERT_EQ",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_51c9e672",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "also EXPECT_GL_NO_ERROR()",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 21
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_6e70cb16",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_91919e77",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_11a68ed3",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 154,
+        "startChar": 11,
+        "endLine": 154,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_71ad0aaa",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "probably ASSERT_EQ",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_71c6ea65",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "also EXPECT_GL_NO_ERROR()",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_f1ee5ad2",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_d102365d",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_f1073a6a",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 239,
+        "startChar": 11,
+        "endLine": 239,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_31fab288",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 255,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_71f42a9a",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 283,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 19
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_b13a221a",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T17:49:27Z",
+      "side": 1,
+      "message": "same.. going to leave off the rest of the duplicate comments",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 286,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
