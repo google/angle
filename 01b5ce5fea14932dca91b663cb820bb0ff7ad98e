@@ -22,6 +22,76 @@
       "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e2d6c79_e807536a",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-08T15:28:47Z",
+      "side": 1,
+      "message": "gbm \u003d Generic Buffer Manager  \ndrm \u003d Direct Rendering Manager  \nkms \u003d Kernel Mode-Setting  \nsurfaceless \u003d EGL_KHR_surfaceless_context",
+      "parentUuid": "6e62f8c1_3a4a7d2a",
+      "range": {
+        "startLine": 17,
+        "startChar": 10,
+        "endLine": 17,
+        "endChar": 33
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e39e0b4_6ddb7536",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-08T15:28:47Z",
+      "side": 1,
+      "message": "Note that this will need to be removed in order to support chromeos\u003d1 on Linux, i.e. https://build.chromium.org/p/chromium.chromiumos/waterfall bots",
+      "range": {
+        "startLine": 33,
+        "startChar": 40,
+        "endLine": 33,
+        "endChar": 56
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce4a0442_1224cc89",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-08T15:28:47Z",
+      "side": 1,
+      "message": "Note that nyan boards use X11 and not Ozone.",
+      "range": {
+        "startLine": 41,
+        "startChar": 14,
+        "endLine": 41,
+        "endChar": 26
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
