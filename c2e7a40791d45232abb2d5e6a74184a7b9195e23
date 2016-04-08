@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "6e62f8c1_5ac57177",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-08T14:55:13Z",
+      "side": 1,
+      "message": "Just to be sure, this will only work for nearest sampling which is the only supported sampling mode for integer right?",
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e62f8c1_1ac859c9",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 7
@@ -65,6 +82,23 @@
         "endLine": 345,
         "endChar": 69
       },
+      "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e62f8c1_baa04dcb",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-08T14:55:13Z",
+      "side": 1,
+      "message": "Comment that this is REPEAT",
       "revId": "c2e7a40791d45232abb2d5e6a74184a7b9195e23",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
