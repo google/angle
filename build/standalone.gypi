@@ -17,9 +17,13 @@
         # eagerly than other conditional variables.
         'variables':
         {
+            'variables':
+            {
+                'use_ozone%': 0,
+            },
             'conditions':
             [
-                ['OS=="linux"',
+                ['OS=="linux" and use_ozone==0',
                 {
                     'use_x11': 1,
                 },
@@ -27,6 +31,9 @@
                     'use_x11': 0,
                 }],
             ],
+
+            # Copy conditionally-set variables out one scope.
+            'use_ozone%': '<(use_ozone)',
         },
 
         # Copy conditionally-set variables out one scope.
