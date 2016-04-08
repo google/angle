@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e62f8c1_3a4a7d2a",
+        "filename": "build/common_defines.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-08T13:13:02Z",
+      "side": 1,
+      "message": "nit: can you unpack this a bit? none of these terms are familiar to me",
+      "range": {
+        "startLine": 17,
+        "startChar": 10,
+        "endLine": 17,
+        "endChar": 33
+      },
+      "revId": "01b5ce5fea14932dca91b663cb820bb0ff7ad98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
