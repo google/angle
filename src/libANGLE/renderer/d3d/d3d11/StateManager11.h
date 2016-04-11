@@ -48,6 +48,7 @@ class StateManager11 final : angle::NonCopyable
     ~StateManager11();
 
     void initialize(const gl::Caps &caps);
+    void deinitialize();
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
     gl::Error setBlendState(const gl::Framebuffer *framebuffer,
@@ -90,6 +91,11 @@ class StateManager11 final : angle::NonCopyable
     void onBeginQuery(Query11 *query);
     void onDeleteQueryObject(Query11 *query);
     gl::Error onMakeCurrent(const gl::Data &data);
+
+    gl::Error updateCurrentValueAttribs(const gl::State &state,
+                                        VertexDataManager *vertexDataManager);
+
+    const std::vector<TranslatedAttribute> &getCurrentValueAttribs() const;
 
   private:
     void setViewportBounds(const int width, const int height);
@@ -186,6 +192,10 @@ class StateManager11 final : angle::NonCopyable
 
     // A block of NULL pointers, cached so we don't re-allocate every draw call
     std::vector<ID3D11ShaderResourceView *> mNullSRVs;
+
+    // Current translations of "Current-Value" data - owned by Context, not VertexArray.
+    gl::AttributesMask mDirtyCurrentValueAttribs;
+    std::vector<TranslatedAttribute> mCurrentValueAttribs;
 };
 
 }  // namespace rx

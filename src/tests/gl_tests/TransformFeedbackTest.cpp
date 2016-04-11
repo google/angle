@@ -707,7 +707,90 @@ TEST_P(TransformFeedbackTest, PackingBug)
     ASSERT_GL_NO_ERROR();
 }
 
+class TransformFeedbackLifetimeTest : public TransformFeedbackTest
+{
+  protected:
+    TransformFeedbackLifetimeTest() : mVertexArray(0) {}
+
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        glGenVertexArrays(1, &mVertexArray);
+        glBindVertexArray(mVertexArray);
+
+        std::vector<std::string> tfVaryings;
+        tfVaryings.push_back("gl_Position");
+        compileDefaultProgram(tfVaryings, GL_SEPARATE_ATTRIBS);
+
+        glGenBuffers(1, &mTransformFeedbackBuffer);
+        mTransformFeedbackBufferSize = 1 << 24;  // ~16MB
+        glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, NULL,
+                     GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, 0);
+
+        glGenTransformFeedbacks(1, &mTransformFeedback);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteVertexArrays(1, &mVertexArray);
+        TransformFeedbackTest::TearDown();
+    }
+
+    GLuint mVertexArray;
+};
+
+// Tests a bug with state syncing and deleted transform feedback buffers.
+TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
+{
+    // First stream vertex data to mTransformFeedbackBuffer.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glUseProgram(mProgram);
+
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f, 1.0f, true);
+    glEndTransformFeedback();
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+
+    // TODO(jmadill): Remove this when http://anglebug.com/1351 is fixed.
+    glBindVertexArray(0);
+    drawQuad(mProgram, "position", 0.5f);
+    glBindVertexArray(1);
+
+    // Next, draw vertices with mTransformFeedbackBuffer. This will link to mVertexArray.
+    glBindBuffer(GL_ARRAY_BUFFER, mTransformFeedbackBuffer);
+    GLint loc = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, loc);
+    glVertexAttribPointer(loc, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
+    glEnableVertexAttribArray(loc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Delete resources, making a stranded pointer to mVertexArray in mTransformFeedbackBuffer.
+    glDeleteBuffers(1, &mTransformFeedbackBuffer);
+    mTransformFeedbackBuffer = 0;
+    glDeleteVertexArrays(1, &mVertexArray);
+    mVertexArray = 0;
+
+    // Then draw again with transform feedback, dereferencing the stranded pointer.
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f, 1.0f, true);
+    glEndTransformFeedback();
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TransformFeedbackLifetimeTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 }  // anonymous namespace

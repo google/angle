@@ -50,7 +50,8 @@ GLfloat Normalize(T value)
 class VertexAttributeTest : public ANGLETest
 {
   protected:
-    VertexAttributeTest() : mProgram(0), mTestAttrib(-1), mExpectedAttrib(-1), mBuffer(0)
+    VertexAttributeTest()
+        : mProgram(0), mTestAttrib(-1), mExpectedAttrib(-1), mBuffer(0), mQuadBuffer(0)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -122,6 +123,23 @@ class VertexAttributeTest : public ANGLETest
         glEnableVertexAttribArray(mExpectedAttrib);
     }
 
+    void checkPixels()
+    {
+        GLint viewportSize[4];
+        glGetIntegerv(GL_VIEWPORT, viewportSize);
+
+        GLint midPixelX = (viewportSize[0] + viewportSize[2]) / 2;
+        GLint midPixelY = (viewportSize[1] + viewportSize[3]) / 2;
+
+        // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
+        // Avoid making assumptions of drawQuad with four checks to check the four possible tri
+        // regions
+        EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
+    }
+
     void runTest(const TestData &test)
     {
         // TODO(geofflang): Figure out why this is broken on AMD OpenGL
@@ -130,17 +148,6 @@ class VertexAttributeTest : public ANGLETest
             std::cout << "Test skipped on AMD OpenGL." << std::endl;
             return;
         }
-
-        if (mProgram == 0)
-        {
-            initBasicProgram();
-        }
-
-        GLint viewportSize[4];
-        glGetIntegerv(GL_VIEWPORT, viewportSize);
-
-        GLint midPixelX = (viewportSize[0] + viewportSize[2]) / 2;
-        GLint midPixelY = (viewportSize[1] + viewportSize[3]) / 2;
 
         for (GLint i = 0; i < 4; i++)
         {
@@ -152,12 +159,7 @@ class VertexAttributeTest : public ANGLETest
             glDisableVertexAttribArray(mTestAttrib);
             glDisableVertexAttribArray(mExpectedAttrib);
 
-            // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
-            // Avoid making assumptions of drawQuad with four checks to check the four possible tri regions
-            EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
+            checkPixels();
         }
     }
 
@@ -178,6 +180,7 @@ class VertexAttributeTest : public ANGLETest
     {
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mBuffer);
+        glDeleteBuffers(1, &mQuadBuffer);
 
         ANGLETest::TearDown();
     }
@@ -262,6 +265,7 @@ class VertexAttributeTest : public ANGLETest
     GLint mTestAttrib;
     GLint mExpectedAttrib;
     GLuint mBuffer;
+    GLuint mQuadBuffer;
 };
 
 TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
@@ -543,6 +547,69 @@ TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
     setupTest(data, 1);
     drawIndexedQuad(mProgram, "position", 0.5f);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Verify that using a different start vertex doesn't mess up the draw.
+TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
+{
+    // TODO(jmadill): Diagnose this failure.
+    if (IsD3D11_FL93())
+    {
+        std::cout << "Test disabled on D3D11 FL 9_3" << std::endl;
+        return;
+    }
+
+    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
+    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    {
+        std::cout << "Test skipped on AMD OpenGL." << std::endl;
+        return;
+    }
+
+    initBasicProgram();
+    glUseProgram(mProgram);
+
+    GLfloat inputData[mVertexCount];
+    GLfloat expectedData[mVertexCount];
+    for (size_t count = 0; count < mVertexCount; ++count)
+    {
+        inputData[count]    = static_cast<GLfloat>(count);
+        expectedData[count] = inputData[count];
+    }
+
+    auto quadVertices        = GetQuadVertices();
+    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
+
+    glGenBuffers(1, &mQuadBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+    ASSERT_NE(-1, positionLocation);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    GLsizei dataSize = mVertexCount * TypeStride(GL_FLOAT);
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, dataSize + TypeStride(GL_FLOAT), nullptr, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, dataSize, inputData);
+    glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(mTestAttrib);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData);
+    glEnableVertexAttribArray(mExpectedAttrib);
+
+    // Vertex draw with no start vertex offset (second argument is zero).
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    checkPixels();
+
+    // Draw offset by one vertex.
+    glDrawArrays(GL_TRIANGLES, 1, 6);
+    checkPixels();
+
+    EXPECT_GL_NO_ERROR();
 }
 
 class VertexAttributeCachingTest : public VertexAttributeTest
