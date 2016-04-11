@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "4b25269f_f629607d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-11T14:21:04Z",
+      "side": 1,
+      "message": "texImage*, texSubImage*, copyTexImage*, copyTexSubImage*, texStorage*, attaching them to a framebuffer (though the framebuffer should be incomplete in this case) and state queries.",
+      "parentUuid": "8e2d6c79_2e20812f",
+      "range": {
+        "startLine": 641,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 17
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_ceb1b7c0",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 7
