@@ -395,7 +395,7 @@ void DynamicHLSL::generateVaryingLinkHLSL(ShaderType shaderType,
         linkStream << "    float gl_PointSize : " << builtins.glPointSize.str() << ";\n";
     }
 
-    // Do this after glPointSize, to potentially combine gl_PointCoord and gl_PointSize into the
+    // Do this after gl_PointSize, to potentially combine gl_PointCoord and gl_PointSize into the
     // same register.
     generateVaryingHLSL(varyingPacking, linkStream);
 
