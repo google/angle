@@ -105,6 +105,24 @@
     },
     {
       "key": {
+        "uuid": "cb303615_ae04dc6a",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_2e8df360",
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_6e97eb72",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -116,6 +134,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "nit: init to nullptr",
+      "range": {
+        "startLine": 41,
+        "startChar": 41,
+        "endLine": 41,
+        "endChar": 61
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_2ef8cc8b",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_6e97eb72",
       "range": {
         "startLine": 41,
         "startChar": 41,
@@ -151,6 +193,30 @@
     },
     {
       "key": {
+        "uuid": "cb303615_cefa0086",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_ae89e352",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_ee83db2e",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -162,6 +228,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "nit: switch expected, actual",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_8e091884",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_ee83db2e",
       "range": {
         "startLine": 53,
         "startChar": 4,
@@ -197,6 +287,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_d873cd1e",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_0e790f04",
+      "range": {
+        "startLine": 85,
+        "startChar": 11,
+        "endLine": 85,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_f1b9faed",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -208,6 +322,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "probably ASSERT_EQ",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_9815d5d4",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_f1b9faed",
       "range": {
         "startLine": 98,
         "startChar": 4,
@@ -243,6 +381,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_d80f4dc2",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_51c9e672",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 21
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_6e70cb16",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -254,6 +416,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "nit: comment before test",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_18cd45b1",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_6e70cb16",
       "range": {
         "startLine": 115,
         "startChar": 0,
@@ -289,6 +475,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_38d2094e",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_91919e77",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_11a68ed3",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -300,6 +510,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "same nit",
+      "range": {
+        "startLine": 154,
+        "startChar": 11,
+        "endLine": 154,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_78dc8160",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_11a68ed3",
       "range": {
         "startLine": 154,
         "startChar": 11,
@@ -335,6 +569,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_98e07511",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_71ad0aaa",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_71c6ea65",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -346,6 +604,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "also EXPECT_GL_NO_ERROR()",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_58a97db5",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_71c6ea65",
       "range": {
         "startLine": 171,
         "startChar": 4,
@@ -381,6 +663,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_98923581",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_f1ee5ad2",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_d102365d",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -392,6 +698,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "same nit",
+      "range": {
+        "startLine": 183,
+        "startChar": 4,
+        "endLine": 183,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_b88ff95b",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_d102365d",
       "range": {
         "startLine": 183,
         "startChar": 4,
@@ -427,6 +757,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_f8709114",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_f1073a6a",
+      "range": {
+        "startLine": 239,
+        "startChar": 11,
+        "endLine": 239,
+        "endChar": 18
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_31fab288",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -438,6 +792,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 255,
+        "endChar": 13
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_f89971a4",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_31fab288",
       "range": {
         "startLine": 255,
         "startChar": 4,
@@ -473,6 +851,30 @@
     },
     {
       "key": {
+        "uuid": "8baf1e8f_18862545",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_71f42a9a",
+      "range": {
+        "startLine": 283,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 19
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_b13a221a",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 5
@@ -484,6 +886,30 @@
       "writtenOn": "2016-04-08T17:49:27Z",
       "side": 1,
       "message": "same.. going to leave off the rest of the duplicate comments",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 286,
+        "endChar": 6
+      },
+      "revId": "285bb5abd9b41cb11e0bf5f7270a83e8abbd1bb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_388be94d",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T17:14:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d6c79_b13a221a",
       "range": {
         "startLine": 286,
         "startChar": 0,
