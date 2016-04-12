@@ -38,10 +38,6 @@
             {
                 'angle_enable_gl%': 1,
             }],
-            ['use_ozone==1',
-            {
-                'angle_enable_gl%': 1,
-            }],
         ],
     },
     'includes':

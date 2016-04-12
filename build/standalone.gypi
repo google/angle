@@ -19,7 +19,7 @@
         {
             'conditions':
             [
-                ['OS=="linux" and use_ozone==0',
+                ['OS=="linux"',
                 {
                     'use_x11': 1,
                 },

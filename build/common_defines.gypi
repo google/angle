@@ -13,14 +13,6 @@
 
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
-
-        # This works like the Ozone GBM platform in Chrome:
-        # - Generic Buffer Manager (gbm) to allocate buffers
-        # - EGL_EXT_image_dma_buf_import to render into those buffers via EGLImage
-        # - Direct Rendering Manager + Kernel Mode Setting to scan out from those buffers
-        # - EGL_PLATFORM_SURFACELESS because there are no native windows
-        'use_ozone%': 0,
-
         'conditions':
         [
             ['OS=="linux" and use_x11==1 and chromeos==0', {
@@ -46,10 +38,6 @@
     ],
     'conditions':
     [
-        ['use_ozone==1',
-        {
-            'defines': [ 'USE_OZONE' ],
-        }],
         ['component=="shared_library"',
         {
             'defines': [ 'COMPONENT_BUILD' ],
