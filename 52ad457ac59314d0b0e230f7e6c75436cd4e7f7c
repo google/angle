@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4b48c6fd_4150f44e",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T23:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb303615_d3958bba",
+      "range": {
+        "startLine": 929,
+        "startChar": 21,
+        "endLine": 929,
+        "endChar": 24
+      },
+      "revId": "52ad457ac59314d0b0e230f7e6c75436cd4e7f7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb303615_b38f27af",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-12T14:36:21Z",
       "side": 1,
       "message": "Could these get a comment?",
+      "range": {
+        "startLine": 956,
+        "startChar": 12,
+        "endLine": 958,
+        "endChar": 21
+      },
+      "revId": "52ad457ac59314d0b0e230f7e6c75436cd4e7f7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b48c6fd_e11b40ba",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T23:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb303615_b38f27af",
       "range": {
         "startLine": 956,
         "startChar": 12,
