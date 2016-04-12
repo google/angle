@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "cb303615_b30287ec",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "ASSERT_NE(0u, mProgram)",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 9
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_7308ff10",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "backwards",
+      "range": {
+        "startLine": 62,
+        "startChar": 18,
+        "endLine": 62,
+        "endChar": 35
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_13fc1317",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "backwards",
+      "range": {
+        "startLine": 64,
+        "startChar": 18,
+        "endLine": 64,
+        "endChar": 37
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_33ff970f",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "I feel like this should be after the delete",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 30
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_d3f10b42",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "can\u0027t you use makeIndices for this? also I would usually call this a range.",
+      "range": {
+        "startLine": 102,
+        "startChar": 27,
+        "endLine": 102,
+        "endChar": 38
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_b33d67a3",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "use a GLColor pointer here for pixels, make two constants for green and black then use EXPECT_TRUE(color \u003d\u003d black || color \u003d\u003d green). Alternately use ReadColor and the EXPECT_TRUE",
+      "range": {
+        "startLine": 135,
+        "startChar": 16,
+        "endLine": 140,
+        "endChar": 41
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb303615_938ca3fb",
         "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
         "patchSetId": 1
@@ -13,6 +151,30 @@
       "writtenOn": "2016-04-12T13:42:11Z",
       "side": 1,
       "message": "Maybe if we use a smaller viewport we wont need to iterate over so many pixels?",
+      "range": {
+        "startLine": 125,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 9
+      },
+      "revId": "8abc3c6274f2d0510e9e4a6cba3138b9d2fd3baf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_73e11f77",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:28:05Z",
+      "side": 1,
+      "message": "+1, 64x64 should be fine",
+      "parentUuid": "cb303615_938ca3fb",
       "range": {
         "startLine": 125,
         "startChar": 8,
