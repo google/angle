@@ -55,7 +55,6 @@ class ShaderD3D : public ShaderImpl
     bool usesPointCoord() const { return mUsesPointCoord; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesFragDepth() const { return mUsesFragDepth; }
-    bool usesDeferredInit() const { return mUsesDeferredInit; }
 
     ShShaderOutput getCompilerOutputType() const;
 
@@ -71,7 +70,6 @@ class ShaderD3D : public ShaderImpl
     bool mUsesFragDepth;
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
-    bool mUsesDeferredInit;
     bool mRequiresIEEEStrictCompiling;
 
     ShShaderOutput mCompilerOutputType;

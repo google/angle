@@ -34,6 +34,8 @@
             'compiler/translator/Compiler.cpp',
             'compiler/translator/Compiler.h',
             'compiler/translator/ConstantUnion.h',
+            'compiler/translator/DeferGlobalInitializers.cpp',
+            'compiler/translator/DeferGlobalInitializers.h',
             'compiler/translator/Diagnostics.cpp',
             'compiler/translator/Diagnostics.h',
             'compiler/translator/DirectiveHandler.cpp',

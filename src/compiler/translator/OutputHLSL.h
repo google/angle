@@ -203,11 +203,6 @@ class OutputHLSL : public TIntermTraverser
     std::map<TIntermTyped*, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped*, TString> mFlaggedStructOriginalNames;
 
-    // Some initializers may have been unfolded into if statements, thus we can't evaluate all initializers
-    // at global static scope in HLSL. Instead, we can initialize these static globals inside a helper function.
-    // This also enables initialization of globals with uniforms.
-    TIntermSequence mDeferredGlobalInitializers;
-
     struct HelperFunction
     {
         TString functionName;

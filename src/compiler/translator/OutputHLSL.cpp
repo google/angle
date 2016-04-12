@@ -259,10 +259,6 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     mInfoSinkStack.pop();
 
     mInfoSinkStack.push(&mFooter);
-    if (!mDeferredGlobalInitializers.empty())
-    {
-        writeDeferredGlobalInitializers(mFooter);
-    }
     mInfoSinkStack.pop();
 
     mInfoSinkStack.push(&mHeader);
@@ -1784,20 +1780,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             ASSERT(symbolNode);
             TIntermTyped *expression = node->getRight();
 
-            // TODO (jmadill): do a 'deep' scan to know if an expression is statically const
-            if (symbolNode->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst)
-            {
-                // For variables which are not constant, defer their real initialization until
-                // after we initialize uniforms.
-                TIntermBinary *deferredInit = new TIntermBinary(EOpAssign);
-                deferredInit->setLeft(node->getLeft());
-                deferredInit->setRight(node->getRight());
-                deferredInit->setType(node->getType());
-                mDeferredGlobalInitializers.push_back(deferredInit);
-                const TString &initString = initializer(node->getType());
-                node->setRight(new TIntermRaw(node->getType(), initString));
-            }
-            else if (writeSameSymbolInitializer(out, symbolNode, expression))
+            // Global initializers must be constant at this point.
+            ASSERT(symbolNode->getQualifier() != EvqGlobal ||
+                   (expression->getQualifier() == EvqConst &&
+                    expression->getAsConstantUnion() != nullptr));
+            if (writeSameSymbolInitializer(out, symbolNode, expression))
             {
                 // Skip initializing the rest of the expression
                 return false;
@@ -2994,13 +2981,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
     TInfoSinkBase &out = getInfoSink();
 
     ASSERT(!node->usesTernaryOperator());
-
-    if (!mInsideFunction)
-    {
-        // This is part of unfolded global initialization.
-        mDeferredGlobalInitializers.push_back(node);
-        return false;
-    }
+    ASSERT(mInsideFunction);
 
     // D3D errors when there is a gradient operation in a loop in an unflattened if.
     if (mShaderType == GL_FRAGMENT_SHADER && mCurrentFunctionMetadata->hasGradientLoop(node))
@@ -3729,47 +3710,6 @@ bool OutputHLSL::writeConstantInitialization(TInfoSinkBase &out,
         return true;
     }
     return false;
-}
-
-void OutputHLSL::writeDeferredGlobalInitializers(TInfoSinkBase &out)
-{
-    out << "#define ANGLE_USES_DEFERRED_INIT\n"
-        << "\n"
-        << "void initializeDeferredGlobals()\n"
-        << "{\n";
-
-    for (const auto &deferredGlobal : mDeferredGlobalInitializers)
-    {
-        TIntermBinary *binary = deferredGlobal->getAsBinaryNode();
-        TIntermSelection *selection = deferredGlobal->getAsSelectionNode();
-        if (binary != nullptr)
-        {
-            TIntermSymbol *symbol = binary->getLeft()->getAsSymbolNode();
-            TIntermTyped *expression = binary->getRight();
-            ASSERT(symbol);
-            ASSERT(symbol->getQualifier() == EvqGlobal && expression->getQualifier() != EvqConst);
-
-            out << "    " << Decorate(symbol->getSymbol()) << " = ";
-
-            if (!writeSameSymbolInitializer(out, symbol, expression))
-            {
-                ASSERT(mInfoSinkStack.top() == &out);
-                expression->traverse(this);
-            }
-            out << ";\n";
-        }
-        else if (selection != nullptr)
-        {
-            writeSelection(out, selection);
-        }
-        else
-        {
-            UNREACHABLE();
-        }
-    }
-
-    out << "}\n"
-        << "\n";
 }
 
 TString OutputHLSL::addStructEqualityFunction(const TStructure &structure)

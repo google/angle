@@ -72,7 +72,6 @@ void ShaderD3D::uncompile()
     mUsesFragDepth = false;
     mUsesDiscardRewriting = false;
     mUsesNestedBreak = false;
-    mUsesDeferredInit = false;
     mRequiresIEEEStrictCompiling = false;
 
     mDebugInfo.clear();
@@ -171,7 +170,6 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
     mUsesDiscardRewriting =
         translatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
     mUsesNestedBreak  = translatedSource.find("ANGLE_USES_NESTED_BREAK") != std::string::npos;
-    mUsesDeferredInit = translatedSource.find("ANGLE_USES_DEFERRED_INIT") != std::string::npos;
     mRequiresIEEEStrictCompiling =
         translatedSource.find("ANGLE_REQUIRES_IEEE_STRICT_COMPILING") != std::string::npos;
 

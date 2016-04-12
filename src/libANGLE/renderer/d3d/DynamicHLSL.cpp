@@ -412,7 +412,6 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
     ASSERT(pixelHLSL->empty() && vertexHLSL->empty());
 
     const gl::Shader *vertexShaderGL   = programData.getAttachedVertexShader();
-    const ShaderD3D *vertexShader      = GetImplAs<ShaderD3D>(vertexShaderGL);
     const gl::Shader *fragmentShaderGL = programData.getAttachedFragmentShader();
     const ShaderD3D *fragmentShader    = GetImplAs<ShaderD3D>(fragmentShaderGL);
     const int shaderModel              = mRenderer->getMajorShaderModel();
@@ -450,12 +449,6 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                  << "VS_OUTPUT main(VS_INPUT input)\n"
                  << "{\n"
                  << "    initAttributes(input);\n";
-
-    if (vertexShader->usesDeferredInit())
-    {
-        vertexStream << "\n"
-                     << "    initializeDeferredGlobals();\n";
-    }
 
     vertexStream << "\n"
                  << "    gl_main();\n"
@@ -769,12 +762,6 @@ bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
                 UNREACHABLE();
         }
         pixelStream << ";\n";
-    }
-
-    if (fragmentShader->usesDeferredInit())
-    {
-        pixelStream << "\n"
-                    << "    initializeDeferredGlobals();\n";
     }
 
     pixelStream << "\n"
