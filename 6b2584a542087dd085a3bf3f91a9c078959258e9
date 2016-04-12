@@ -46,6 +46,30 @@
       "revId": "6b2584a542087dd085a3bf3f91a9c078959258e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_130d33ca",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T15:12:09Z",
+      "side": 1,
+      "message": "Looking at the calling code, I think you should just return the name as a string, relying on the move constructor. Unless you really need the whole function for subsequent code?",
+      "parentUuid": "2b163290_65596630",
+      "range": {
+        "startLine": 704,
+        "startChar": 12,
+        "endLine": 704,
+        "endChar": 56
+      },
+      "revId": "6b2584a542087dd085a3bf3f91a9c078959258e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
