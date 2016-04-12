@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "cb303615_b34a87fd",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:57:31Z",
+      "side": 1,
+      "message": "What would happen if mBaseLevel is zero in D3D layer, but in the GL layer the base level is 16, and the user starts manipulating the textures at level 0? (in here it looks as though they\u0027ll both map to D3D level 0)",
+      "parentUuid": "4b25269f_f629607d",
+      "range": {
+        "startLine": 641,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 17
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_ceb1b7c0",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 7
