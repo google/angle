@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb303615_7c38d97f",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1381,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2016-04-12T00:46:18Z",
+      "side": 1,
+      "message": "The /analyze builder (whose new warnings I look at weekly) says about this line:\n\nwarning C6289: Incorrect operator:  mutual exclusion over || is always a non-zero constant.  Did you intend to use \u0026\u0026 instead?\n\nIt is correct. There is no value of |value| that will satisfy this condition, and \u0027\u0026\u0026\u0027 is intended.",
+      "revId": "54f8746e277db28837c79596d7fb85178bda0cf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
