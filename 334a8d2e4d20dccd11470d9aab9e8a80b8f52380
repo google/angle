@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb303615_33d5d760",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-12T14:47:24Z",
+      "side": 1,
+      "message": "Add a check that compilation failed.",
+      "range": {
+        "startLine": 1067,
+        "startChar": 4,
+        "endLine": 1067,
+        "endChar": 28
+      },
+      "revId": "334a8d2e4d20dccd11470d9aab9e8a80b8f52380",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
