@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_875e7af2",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 858,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_65bf6426",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_25f8ccd5",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "Here we do the PCA only on unique colors in the block. If the distribution of these colors in the block isn\u0027t uniform then this PCA will not represent accurately the distribution of pixel colors in the block.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_62da5c0a",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Oh yes. I\u0027ll restore to use all pixels.",
+      "parentUuid": "7c21d2e1_25f8ccd5",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_e7997ef8",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 892,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_e53b547b",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_97d8cbf2",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "nit: could be moved next to the loop and should be in the following case: kPowerIterations.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_2769c683",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_97d8cbf2",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_e21e4c48",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "It suppose to be int(muv / numPixels + 0.5f), which is simplified to (muv + numPixel / 2) / numPixels; But I forgot to change this when using unique color. But anyway we need all pixels, it\u0027ll be clarified in next iteration.",
+      "parentUuid": "7c21d2e1_d79fe376",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_b786afd4",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -98,6 +188,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "The power iteration algorithm is supposed to normalize the vector at each step, and what we care about is only the eigenvalue and eigenvector. So I don\u0027t think we need to normalize the matrix when converting to float here.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_36b259c4",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_b786afd4",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_76d1c1d3",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_f7c66713",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_f78f87a5",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -132,6 +258,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "nit: comment // From the eigenvalue and eigenvector, choose the axis to project colors on. When projecting colors we want to do integer computations for speed, so we normalize the eigenvector to the [0, 512] range.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_073b6a7c",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_f78f87a5",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "cb303615_71dc8260",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_97344bdc",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_77bf1726",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -166,6 +328,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "Here we choose minColor and maxColor based on the axis but the vector from min to max might not be aligned with the axis. Maybe we should project them on the axis as a last step ?.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb303615_b75efa4c",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "In threshold yes. but I tried that, the error is not dropping. I don\u0027t quite sure why.",
+      "parentUuid": "7c21d2e1_77bf1726",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "2ec1e019_e7cade89",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_051ca8f8",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c21d2e1_e5aa34e2",
         "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
         "patchSetId": 1
@@ -200,6 +398,24 @@
       "writtenOn": "2016-03-23T23:31:15Z",
       "side": 1,
       "message": "The comment needs updating here.",
+      "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ec1e019_277f86ec",
+        "filename": "src/libANGLE/renderer/d3d/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-04-12T01:06:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c21d2e1_e5aa34e2",
       "revId": "3adabcf84d37bdfef080ab8f963eb1fc47570c26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
