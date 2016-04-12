@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8baf1e8f_388a09a1",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T16:40:12Z",
+      "side": 1,
+      "message": "nit: use GLColor here",
+      "range": {
+        "startLine": 118,
+        "startChar": 20,
+        "endLine": 118,
+        "endChar": 27
+      },
+      "revId": "4548419d61ed41a6ed73284f2ded9831a60235b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_588fbdaf",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T16:40:12Z",
+      "side": 1,
+      "message": "can remove the *4",
+      "range": {
+        "startLine": 118,
+        "startChar": 72,
+        "endLine": 118,
+        "endChar": 76
+      },
+      "revId": "4548419d61ed41a6ed73284f2ded9831a60235b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_789481bf",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T16:40:12Z",
+      "side": 1,
+      "message": "nit: .data",
+      "range": {
+        "startLine": 120,
+        "startChar": 28,
+        "endLine": 120,
+        "endChar": 31
+      },
+      "revId": "4548419d61ed41a6ed73284f2ded9831a60235b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_989875f4",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T16:40:12Z",
+      "side": 1,
+      "message": "can use range-for",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 50
+      },
+      "revId": "4548419d61ed41a6ed73284f2ded9831a60235b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_d8a2ed1d",
+        "filename": "src/tests/gl_tests/BuiltinVariableTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T16:40:12Z",
+      "side": 1,
+      "message": "these can go outside the loop",
+      "range": {
+        "startLine": 128,
+        "startChar": 12,
+        "endLine": 129,
+        "endChar": 46
+      },
+      "revId": "4548419d61ed41a6ed73284f2ded9831a60235b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
