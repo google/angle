@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2d6c79_6ba35d71",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-12T14:33:20Z",
+      "side": 1,
+      "message": "note: if a subsequent insertion happens on the set, it can invalidate the const \u0026 you\u0027re returning here. Otherwise you\u0027d have to store pointer or unique_ptr types.",
+      "range": {
+        "startLine": 704,
+        "startChar": 12,
+        "endLine": 704,
+        "endChar": 56
+      },
+      "revId": "6b2584a542087dd085a3bf3f91a9c078959258e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
