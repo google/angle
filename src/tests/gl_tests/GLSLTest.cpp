@@ -1058,6 +1058,19 @@ TEST_P(GLSLTest, NegativeShaderLength)
     EXPECT_NE(compileResult, 0);
 }
 
+// Check that having an invalid char after the "." doesn't cause an assert.
+TEST_P(GLSLTest, InvalidFieldFirstChar)
+{
+    GLuint shader      = glCreateShader(GL_VERTEX_SHADER);
+    const char *source = "void main() {vec4 x; x.}";
+    glShaderSource(shader, 1, &source, 0);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_EQ(0, compileResult);
+}
+
 // Verify that a length array with mixed positive and negative values compiles.
 TEST_P(GLSLTest, MixedShaderLengths)
 {
