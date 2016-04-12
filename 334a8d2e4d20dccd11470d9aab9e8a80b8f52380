@@ -46,6 +46,24 @@
       "revId": "334a8d2e4d20dccd11470d9aab9e8a80b8f52380",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baf1e8f_dbae67ab",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-12T16:54:08Z",
+      "side": 1,
+      "message": "- Added a check that the compilation failed.\n - gl_Position is not needed here because the error will be generated in the lexer. Also there is not valid shader that would cause the assert since they have to be misformed at the token level.\n - Added a declaration for x because the compiler could be smart enough to check for the presence of x when parsing the \".\".",
+      "parentUuid": "cb303615_532e9b41",
+      "revId": "334a8d2e4d20dccd11470d9aab9e8a80b8f52380",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
