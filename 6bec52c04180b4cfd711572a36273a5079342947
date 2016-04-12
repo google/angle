@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8baf1e8f_b229d07e",
+        "filename": "build/standalone.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-12T19:57:39Z",
+      "side": 1,
+      "message": "nit: you might not need this (never sure with GYP), and the comment is slight off since use_ozone is not conditionnally set.",
+      "revId": "6bec52c04180b4cfd711572a36273a5079342947",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
