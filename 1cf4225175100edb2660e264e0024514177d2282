@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bd1de8e_a809fb86",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:10:10Z",
+      "side": 1,
+      "message": "maybe use the max uniforms in this case, since you\u0027re using a number high enough to possibly break the max",
+      "range": {
+        "startLine": 97,
+        "startChar": 1,
+        "endLine": 106,
+        "endChar": 5
+      },
+      "revId": "1cf4225175100edb2660e264e0024514177d2282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
