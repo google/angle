@@ -255,6 +255,30 @@
     },
     {
       "key": {
+        "uuid": "8bd1de8e_4bc31956",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "I\u0027m going to add pbuffer support in my CL, which will be common for Ozone and Android. Neither Ozone nor Android are going to have pixmaps - there aren\u0027t any \"native pixmaps\" on those platforms.",
+      "parentUuid": "8bd1de8e_48c31f56",
+      "range": {
+        "startLine": 927,
+        "startChar": 25,
+        "endLine": 927,
+        "endChar": 39
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd1de8e_28a50bc8",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
         "patchSetId": 17
@@ -317,6 +341,121 @@
         "startChar": 11,
         "endLine": 59,
         "endChar": 17
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_ab34552e",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/PbufferSurfaceOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "Remove it instead. I\u0027ll add a pass-through PbufferSurfaceEGL in my CL.",
+      "range": {
+        "startLine": 16,
+        "startChar": 20,
+        "endLine": 16,
+        "endChar": 40
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_cb1a69b4",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/WindowSurfaceOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "I believe you should call native eglMakeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, yourContext) here. This will restore a proper state, in the case that a pbuffer surface was current before.",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 35
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_cb6c2908",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 17
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "Have libangle_gl_egl_sources, move FunctionsEGL there, and add functionsegl_typedefs.h",
+      "range": {
+        "startLine": 494,
+        "startChar": 9,
+        "endLine": 494,
+        "endChar": 34
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_0beac190",
+        "filename": "util/util.gyp",
+        "patchSetId": 17
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "You forgot to upload these",
+      "range": {
+        "startLine": 69,
+        "startChar": 9,
+        "endLine": 69,
+        "endChar": 27
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_0b112175",
+        "filename": "util/util.gyp",
+        "patchSetId": 17
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-13T17:16:41Z",
+      "side": 1,
+      "message": "I commented before that this can be removed. Do you disagree?",
+      "range": {
+        "startLine": 71,
+        "startChar": 13,
+        "endLine": 71,
+        "endChar": 34
       },
       "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
