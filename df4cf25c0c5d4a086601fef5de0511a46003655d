@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "8bd1de8e_d7f166b4",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-13T19:44:00Z",
+      "side": 1,
+      "message": "This is also needed for any input spec that is going to be output as HLSL as the logic has been removed from OutputHLSL.",
+      "parentUuid": "ab85c25a_4613303c",
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab85c25a_c6064001",
         "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
         "patchSetId": 3
@@ -42,6 +60,40 @@
         "endLine": 40,
         "endChar": 46
       },
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_77f7da74",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-13T19:44:00Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_37ed62a9",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-13T19:44:00Z",
+      "side": 1,
+      "message": "nit: move this comment at [1]",
       "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
