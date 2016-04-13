@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2b5ab2dd_e50ed68b",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-13T08:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb303615_5327bb4b",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 8
+      },
+      "revId": "18f4966ee7f1fa10a413ff6af1613872a8487a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb303615_b31c4702",
         "filename": "src/compiler/translator/TextureFunctionHLSL.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-12T15:12:09Z",
       "side": 1,
       "message": "same nit",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 8
+      },
+      "revId": "18f4966ee7f1fa10a413ff6af1613872a8487a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b5ab2dd_c5095a86",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-13T08:43:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb303615_b31c4702",
       "range": {
         "startLine": 6,
         "startChar": 3,
