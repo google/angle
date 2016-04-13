@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab85c25a_c6e5e051",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "spelling nit: ANGLE",
+      "range": {
+        "startLine": 107,
+        "startChar": 7,
+        "endLine": 107,
+        "endChar": 12
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_a6e0dc42",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "nit: this can wrap to 100 characters",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 74
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bac0e06_2ca513c8",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "you should put these in the dispatch table, it\u0027s possible at some point in the future we might want to reinitialize everything during runtime, and just increases consistency",
+      "range": {
+        "startLine": 130,
+        "startChar": 17,
+        "endLine": 130,
+        "endChar": 30
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_8895175f",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "same comment as below, this should compare with EGL_TRUE/EGL_FALSE",
+      "range": {
+        "startLine": 144,
+        "startChar": 9,
+        "endLine": 144,
+        "endChar": 22
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_e89ad38c",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "same comment as below, this should compare with EGL_TRUE/EGL_FALSE",
+      "range": {
+        "startLine": 148,
+        "startChar": 9,
+        "endLine": 148,
+        "endChar": 19
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_a890db6e",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "I think this returns EGLBoolean, in which case you should compare with EGL_FALSE or EGL_TRUE",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 10
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_c89f0f7b",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "do we want to store this in std::set?",
+      "range": {
+        "startLine": 201,
+        "startChar": 21,
+        "endLine": 201,
+        "endChar": 32
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_06dc4890",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "nit: EGLDispatchTable\n\nhttps://en.wikipedia.org/wiki/Dispatch_table",
+      "range": {
+        "startLine": 69,
+        "startChar": 11,
+        "endLine": 69,
+        "endChar": 27
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_88bcf7de",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "would really like to get rid of this here",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 21
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_e8b13305",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "would much rather you just use strings for these shaders",
+      "range": {
+        "startLine": 601,
+        "startChar": 54,
+        "endLine": 601,
+        "endChar": 67
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_48c31f56",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "this should keep pixmaps disabled as I\u0027m sure you\u0027re aware",
+      "range": {
+        "startLine": 927,
+        "startChar": 25,
+        "endLine": 927,
+        "endChar": 39
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_28a50bc8",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "nit: final/noncopyable?",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 22
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_08a2c7bf",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "nit: final?",
+      "range": {
+        "startLine": 44,
+        "startChar": 6,
+        "endLine": 44,
+        "endChar": 18
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_a8b73bf9",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T15:08:53Z",
+      "side": 1,
+      "message": "nit: can we make this have private data? we arne\u0027t super strict with this, but structs aren\u0027t supposed to have methods or use the \u0027m\u0027 prefix for variables",
+      "range": {
+        "startLine": 59,
+        "startChar": 11,
+        "endLine": 59,
+        "endChar": 17
+      },
+      "revId": "cf417c7ca9ce832d9156672c25705f1958103807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
