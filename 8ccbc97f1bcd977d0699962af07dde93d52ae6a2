@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab85c25a_a63c5ca5",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "nit: 16",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_c641601a",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "maybe crank this up?",
+      "range": {
+        "startLine": 34,
+        "startChar": 30,
+        "endLine": 34,
+        "endChar": 32
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_8624b88b",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "backwards",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 13
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_e659040c",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "redundant, this whole block is anonymous",
+      "range": {
+        "startLine": 115,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 6
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_065f68ef",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "backwards",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 163,
+        "endChar": 17
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_a653fce7",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "backwards",
+      "range": {
+        "startLine": 169,
+        "startChar": 8,
+        "endLine": 169,
+        "endChar": 17
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_46457017",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "unnecessary",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 184,
+        "endChar": 11
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_864b5830",
+        "filename": "src/tests/perf_tests/UniformsPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:49:45Z",
+      "side": 1,
+      "message": "nit: probably use the prefix increment like you do above (This is recommended by the style guide, but very minor nit)",
+      "range": {
+        "startLine": 190,
+        "startChar": 58,
+        "endLine": 190,
+        "endChar": 61
+      },
+      "revId": "8ccbc97f1bcd977d0699962af07dde93d52ae6a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
