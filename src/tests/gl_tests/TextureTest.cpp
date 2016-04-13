@@ -11,18 +11,6 @@ using namespace angle;
 namespace
 {
 
-template <typename T>
-void FillWithRGBA(size_t pixelCount, T red, T green, T blue, T alpha, T *outArray)
-{
-    for (size_t i = 0u; i < pixelCount; ++i)
-    {
-        outArray[i * 4u]      = red;
-        outArray[i * 4u + 1u] = green;
-        outArray[i * 4u + 2u] = blue;
-        outArray[i * 4u + 3u] = alpha;
-    }
-}
-
 class TexCoordDrawTest : public ANGLETest
 {
   protected:
