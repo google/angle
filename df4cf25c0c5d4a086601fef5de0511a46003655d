@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab85c25a_4613303c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:45:41Z",
+      "side": 1,
+      "message": "Currently you have this enabled for WebGL and ES specs - should this only apply to WebGL?",
+      "range": {
+        "startLine": 383,
+        "startChar": 12,
+        "endLine": 383,
+        "endChar": 35
+      },
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab85c25a_c6064001",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-13T14:45:41Z",
+      "side": 1,
+      "message": "as some point I feel like making a library of helper routines for these type of functions would go a long way. like a tree builder. Possibly we could do clever things with operator overloading.",
+      "range": {
+        "startLine": 40,
+        "startChar": 18,
+        "endLine": 40,
+        "endChar": 46
+      },
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
