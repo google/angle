@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "2b5ab2dd_45cc8a88",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-13T06:44:31Z",
+      "side": 1,
+      "message": "It shouldn\u0027t be an issue. The base level doesn\u0027t have an effect on texture uploads.\n\nInside this class, the base level affects what size and format of texture storage is created in case the texture images are inconsistent. Since a texture with an out-of-range base level is incomplete anyway (determined in the GL level), it doesn\u0027t matter in that case what level the storage is based on. I don\u0027t think we should pay any attention to optimizing this case either, since it\u0027s completely nonsensical use of the API.",
+      "parentUuid": "cb303615_b34a87fd",
+      "range": {
+        "startLine": 641,
+        "startChar": 8,
+        "endLine": 641,
+        "endChar": 17
+      },
+      "revId": "74351cbbfdfce5da29092422aa416fcf14f81c67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e2d6c79_ceb1b7c0",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 7
