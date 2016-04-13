@@ -94,6 +94,30 @@
       "revId": "6b2584a542087dd085a3bf3f91a9c078959258e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b5ab2dd_05e1b2e1",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-13T08:43:46Z",
+      "side": 1,
+      "message": "Returning a string by value seems reasonable enough.",
+      "parentUuid": "cb303615_139a5398",
+      "range": {
+        "startLine": 704,
+        "startChar": 12,
+        "endLine": 704,
+        "endChar": 56
+      },
+      "revId": "6b2584a542087dd085a3bf3f91a9c078959258e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
