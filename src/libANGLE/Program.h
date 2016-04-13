@@ -42,26 +42,12 @@ struct Data;
 class ResourceManager;
 class Shader;
 class InfoLog;
-class AttributeBindings;
 class Buffer;
 class Framebuffer;
 struct UniformBlock;
 struct LinkedUniform;
 
 extern const char * const g_fakepath;
-
-class AttributeBindings
-{
-  public:
-    AttributeBindings();
-    ~AttributeBindings();
-
-    void bindAttributeLocation(GLuint index, const char *name);
-    int getAttributeBinding(const std::string &name) const;
-
-  private:
-    std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
-};
 
 class InfoLog : angle::NonCopyable
 {
@@ -142,6 +128,13 @@ struct VariableLocation
     std::string name;
     unsigned int element;
     unsigned int index;
+
+    // If this is a valid uniform location
+    bool used;
+
+    // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
+    // no-op.
+    bool ignored;
 };
 
 class Program final : angle::NonCopyable, public LabeledObject
@@ -240,6 +233,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     int getAttachedShadersCount() const;
 
     void bindAttributeLocation(GLuint index, const char *name);
+    void bindUniformLocation(GLuint index, const char *name);
 
     Error link(const gl::Data &data);
     bool isLinked() const;
@@ -274,6 +268,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLint getActiveUniformMaxLength() const;
     GLint getActiveUniformi(GLuint index, GLenum pname) const;
     bool isValidUniformLocation(GLint location) const;
+    bool isIgnoredUniformLocation(GLint location) const;
     const LinkedUniform &getUniformByLocation(GLint location) const;
 
     GLint getUniformLocation(const std::string &name) const;
@@ -341,19 +336,33 @@ class Program final : angle::NonCopyable, public LabeledObject
     }
 
   private:
+    class Bindings final : angle::NonCopyable
+    {
+      public:
+        void bindLocation(GLuint index, const std::string &name);
+        int getBinding(const std::string &name) const;
+
+        typedef std::unordered_map<std::string, GLuint>::const_iterator const_iterator;
+        const_iterator begin() const;
+        const_iterator end() const;
+
+      private:
+        std::unordered_map<std::string, GLuint> mBindings;
+    };
+
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 
     bool linkAttributes(const gl::Data &data,
                         InfoLog &infoLog,
-                        const AttributeBindings &attributeBindings,
+                        const Bindings &attributeBindings,
                         const Shader *vertexShader);
     bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
     static bool linkVaryings(InfoLog &infoLog,
                              const Shader *vertexShader,
                              const Shader *fragmentShader);
-    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps);
-    void indexUniforms();
+    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
+    bool indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock);
 
@@ -420,7 +429,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool mValidated;
 
-    AttributeBindings mAttributeBindings;
+    Bindings mAttributeBindings;
+    Bindings mUniformBindings;
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use

@@ -157,9 +157,17 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
 
     // Query the uniform information
     ASSERT(mUniformRealLocationMap.empty());
+    const auto &uniformLocations = mData.getUniformLocations();
     const auto &uniforms = mData.getUniforms();
-    for (const gl::VariableLocation &entry : mData.getUniformLocations())
+    mUniformRealLocationMap.resize(uniformLocations.size(), GL_INVALID_INDEX);
+    for (size_t uniformLocation = 0; uniformLocation < uniformLocations.size(); uniformLocation++)
     {
+        const auto &entry = uniformLocations[uniformLocation];
+        if (!entry.used)
+        {
+            continue;
+        }
+
         // From the spec:
         // "Locations for sequential array indices are not required to be sequential."
         const gl::LinkedUniform &uniform = uniforms[entry.index];
@@ -172,7 +180,7 @@ LinkResult ProgramGL::link(const gl::Data &data, gl::InfoLog &infoLog)
         const std::string &fullName = fullNameStr.str();
 
         GLint realLocation = mFunctions->getUniformLocation(mProgramID, fullName.c_str());
-        mUniformRealLocationMap.push_back(realLocation);
+        mUniformRealLocationMap[uniformLocation] = realLocation;
     }
 
     mUniformIndexToSamplerIndex.resize(mData.getUniforms().size(), GL_INVALID_INDEX);

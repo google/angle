@@ -1460,6 +1460,9 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, GetObjectPtrLabelKHR);
         INSERT_PROC_ADDRESS(gl, GetPointervKHR);
 
+        // GL_CHROMIUM_bind_uniform_location
+        INSERT_PROC_ADDRESS(gl, BindUniformLocationCHROMIUM);
+
         // GLES3 core
         INSERT_PROC_ADDRESS(gl, ReadBuffer);
         INSERT_PROC_ADDRESS(gl, DrawRangeElements);

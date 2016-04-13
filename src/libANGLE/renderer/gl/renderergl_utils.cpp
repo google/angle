@@ -642,6 +642,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->vertexArrayObject = true;
 
     extensions->noError = true;
+
+    extensions->bindUniformLocation = true;
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

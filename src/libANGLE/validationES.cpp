@@ -1391,7 +1391,7 @@ static bool ValidateUniformCommonBase(gl::Context *context,
         return false;
     }
 
-    if (location == -1)
+    if (program->isIgnoredUniformLocation(location))
     {
         // Silently ignore the uniform command
         return false;

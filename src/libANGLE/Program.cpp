@@ -138,14 +138,6 @@ bool UniformInList(const std::vector<LinkedUniform> &list, const std::string &na
 
 const char *const g_fakepath = "C:\\fakepath";
 
-AttributeBindings::AttributeBindings()
-{
-}
-
-AttributeBindings::~AttributeBindings()
-{
-}
-
 InfoLog::InfoLog()
 {
 }
@@ -208,18 +200,36 @@ void InfoLog::reset()
 {
 }
 
-VariableLocation::VariableLocation()
-    : name(),
-      element(0),
-      index(0)
+VariableLocation::VariableLocation() : name(), element(0), index(0), used(false), ignored(false)
 {
 }
 
-VariableLocation::VariableLocation(const std::string &name, unsigned int element, unsigned int index)
-    : name(name),
-      element(element),
-      index(index)
+VariableLocation::VariableLocation(const std::string &name,
+                                   unsigned int element,
+                                   unsigned int index)
+    : name(name), element(element), index(index), used(true), ignored(false)
 {
+}
+
+void Program::Bindings::bindLocation(GLuint index, const std::string &name)
+{
+    mBindings[name] = index;
+}
+
+int Program::Bindings::getBinding(const std::string &name) const
+{
+    auto iter = mBindings.find(name);
+    return (iter != mBindings.end()) ? iter->second : -1;
+}
+
+Program::Bindings::const_iterator Program::Bindings::begin() const
+{
+    return mBindings.begin();
+}
+
+Program::Bindings::const_iterator Program::Bindings::end() const
+{
+    return mBindings.end();
 }
 
 Program::Data::Data()
@@ -270,14 +280,29 @@ GLint Program::Data::getUniformLocation(const std::string &name) const
     for (size_t location = 0; location < mUniformLocations.size(); ++location)
     {
         const VariableLocation &uniformLocation = mUniformLocations[location];
-        const LinkedUniform &uniform            = mUniforms[uniformLocation.index];
+        if (!uniformLocation.used)
+        {
+            continue;
+        }
+
+        const LinkedUniform &uniform = mUniforms[uniformLocation.index];
 
         if (uniform.name == baseName)
         {
-            if ((uniform.isArray() && uniformLocation.element == subscript) ||
-                (subscript == GL_INVALID_INDEX))
+            if (uniform.isArray())
             {
-                return static_cast<GLint>(location);
+                if (uniformLocation.element == subscript ||
+                    (uniformLocation.element == 0 && subscript == GL_INVALID_INDEX))
+                {
+                    return static_cast<GLint>(location);
+                }
+            }
+            else
+            {
+                if (subscript == GL_INVALID_INDEX)
+                {
+                    return static_cast<GLint>(location);
+                }
             }
         }
     }
@@ -403,22 +428,15 @@ int Program::getAttachedShadersCount() const
     return (mData.mAttachedVertexShader ? 1 : 0) + (mData.mAttachedFragmentShader ? 1 : 0);
 }
 
-void AttributeBindings::bindAttributeLocation(GLuint index, const char *name)
-{
-    if (index < MAX_VERTEX_ATTRIBS)
-    {
-        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-        {
-            mAttributeBinding[i].erase(name);
-        }
-
-        mAttributeBinding[index].insert(name);
-    }
-}
-
 void Program::bindAttributeLocation(GLuint index, const char *name)
 {
-    mAttributeBindings.bindAttributeLocation(index, name);
+    mAttributeBindings.bindLocation(index, name);
+}
+
+void Program::bindUniformLocation(GLuint index, const char *name)
+{
+    // Bind the base uniform name only since array indices other than 0 cannot be bound
+    mUniformBindings.bindLocation(index, ParseUniformName(name, nullptr));
 }
 
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
@@ -453,7 +471,7 @@ Error Program::link(const gl::Data &data)
         return Error(GL_NO_ERROR);
     }
 
-    if (!linkUniforms(mInfoLog, *data.caps))
+    if (!linkUniforms(mInfoLog, *data.caps, mUniformBindings))
     {
         return Error(GL_NO_ERROR);
     }
@@ -483,19 +501,6 @@ Error Program::link(const gl::Data &data)
 
     mLinked = true;
     return gl::Error(GL_NO_ERROR);
-}
-
-int AttributeBindings::getAttributeBinding(const std::string &name) const
-{
-    for (int location = 0; location < MAX_VERTEX_ATTRIBS; location++)
-    {
-        if (mAttributeBinding[location].find(name) != mAttributeBinding[location].end())
-        {
-            return location;
-        }
-    }
-
-    return -1;
 }
 
 // Returns the program object to an unlinked state, before re-linking, or at destruction
@@ -605,6 +610,8 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         stream.readString(&variable.name);
         stream.readInt(&variable.element);
         stream.readInt(&variable.index);
+        stream.readBool(&variable.used);
+        stream.readBool(&variable.ignored);
 
         mData.mUniformLocations.push_back(variable);
     }
@@ -714,6 +721,8 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeString(variable.name);
         stream.writeInt(variable.element);
         stream.writeInt(variable.index);
+        stream.writeInt(variable.used);
+        stream.writeInt(variable.ignored);
     }
 
     stream.writeInt(mData.mUniformBlocks.size());
@@ -1113,7 +1122,17 @@ GLint Program::getActiveUniformi(GLuint index, GLenum pname) const
 bool Program::isValidUniformLocation(GLint location) const
 {
     ASSERT(rx::IsIntegerCastSafe<GLint>(mData.mUniformLocations.size()));
-    return (location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size());
+    return (location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size() &&
+            mData.mUniformLocations[static_cast<size_t>(location)].used);
+}
+
+bool Program::isIgnoredUniformLocation(GLint location) const
+{
+    // Location is ignored if it is -1 or it was bound but non-existant in the shader or optimized
+    // out
+    return location == -1 ||
+           (location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size() &&
+            mData.mUniformLocations[static_cast<size_t>(location)].ignored);
 }
 
 const LinkedUniform &Program::getUniformByLocation(GLint location) const
@@ -1640,7 +1659,9 @@ bool Program::linkVaryings(InfoLog &infoLog,
     return true;
 }
 
-bool Program::linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
+bool Program::linkUniforms(gl::InfoLog &infoLog,
+                           const gl::Caps &caps,
+                           const Bindings &uniformBindings)
 {
     const std::vector<sh::Uniform> &vertexUniforms   = mData.mAttachedVertexShader->getUniforms();
     const std::vector<sh::Uniform> &fragmentUniforms = mData.mAttachedFragmentShader->getUniforms();
@@ -1674,27 +1695,105 @@ bool Program::linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps)
         return false;
     }
 
-    indexUniforms();
+    if (!indexUniforms(infoLog, caps, uniformBindings))
+    {
+        return false;
+    }
 
     return true;
 }
 
-void Program::indexUniforms()
+bool Program::indexUniforms(gl::InfoLog &infoLog,
+                            const gl::Caps &caps,
+                            const Bindings &uniformBindings)
 {
+    // Uniforms awaiting a location
+    std::vector<VariableLocation> unboundUniforms;
+    std::map<GLuint, VariableLocation> boundUniforms;
+    int maxUniformLocation = -1;
+
+    // Gather bound and unbound uniforms
     for (size_t uniformIndex = 0; uniformIndex < mData.mUniforms.size(); uniformIndex++)
     {
         const gl::LinkedUniform &uniform = mData.mUniforms[uniformIndex];
 
+        if (uniform.isBuiltIn())
+        {
+            continue;
+        }
+
+        int bindingLocation = uniformBindings.getBinding(uniform.name);
+
+        // Verify that this location isn't bound twice
+        if (bindingLocation != -1 && boundUniforms.find(bindingLocation) != boundUniforms.end())
+        {
+            infoLog << "Multiple uniforms bound to location " << bindingLocation << ".";
+            return false;
+        }
+
         for (unsigned int arrayIndex = 0; arrayIndex < uniform.elementCount(); arrayIndex++)
         {
-            if (!uniform.isBuiltIn())
+            VariableLocation location(uniform.name, arrayIndex,
+                                      static_cast<unsigned int>(uniformIndex));
+
+            if (arrayIndex == 0 && bindingLocation != -1)
             {
-                // Assign in-order uniform locations
-                mData.mUniformLocations.push_back(gl::VariableLocation(
-                    uniform.name, arrayIndex, static_cast<unsigned int>(uniformIndex)));
+                boundUniforms[bindingLocation] = location;
+                maxUniformLocation             = std::max(maxUniformLocation, bindingLocation);
+            }
+            else
+            {
+                unboundUniforms.push_back(location);
             }
         }
     }
+
+    // Gather the reserved bindings, ones that are bound but not referenced.  Other uniforms should
+    // not be assigned to those locations.
+    std::set<GLuint> reservedLocations;
+    for (const auto &binding : uniformBindings)
+    {
+        GLuint location = binding.second;
+        if (boundUniforms.find(location) == boundUniforms.end())
+        {
+            reservedLocations.insert(location);
+            maxUniformLocation = std::max(maxUniformLocation, static_cast<int>(location));
+        }
+    }
+
+    // Make enough space for all uniforms, bound and unbound
+    mData.mUniformLocations.resize(
+        std::max(unboundUniforms.size() + boundUniforms.size() + reservedLocations.size(),
+                 static_cast<size_t>(maxUniformLocation + 1)));
+
+    // Assign bound uniforms
+    for (const auto &boundUniform : boundUniforms)
+    {
+        mData.mUniformLocations[boundUniform.first] = boundUniform.second;
+    }
+
+    // Assign reserved uniforms
+    for (const auto &reservedLocation : reservedLocations)
+    {
+        mData.mUniformLocations[reservedLocation].ignored = true;
+    }
+
+    // Assign unbound uniforms
+    size_t nextUniformLocation = 0;
+    for (const auto &unboundUniform : unboundUniforms)
+    {
+        while (mData.mUniformLocations[nextUniformLocation].used ||
+               mData.mUniformLocations[nextUniformLocation].ignored)
+        {
+            nextUniformLocation++;
+        }
+
+        ASSERT(nextUniformLocation < mData.mUniformLocations.size());
+        mData.mUniformLocations[nextUniformLocation] = unboundUniform;
+        nextUniformLocation++;
+    }
+
+    return true;
 }
 
 bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform)
@@ -1717,7 +1816,7 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool Program::linkAttributes(const gl::Data &data,
                              InfoLog &infoLog,
-                             const AttributeBindings &attributeBindings,
+                             const Bindings &attributeBindings,
                              const Shader *vertexShader)
 {
     unsigned int usedLocations = 0;
@@ -1739,7 +1838,7 @@ bool Program::linkAttributes(const gl::Data &data,
         // TODO(jmadill): do staticUse filtering step here, or not at all
         ASSERT(attribute.staticUse);
 
-        int bindingLocation = attributeBindings.getAttributeBinding(attribute.name);
+        int bindingLocation = attributeBindings.getBinding(attribute.name);
         if (attribute.location == -1 && bindingLocation != -1)
         {
             attribute.location = bindingLocation;

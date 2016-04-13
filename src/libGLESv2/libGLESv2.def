@@ -202,6 +202,7 @@ EXPORTS
     glGetQueryObjectivEXT           @315
     glGetQueryObjecti64vEXT         @316
     glGetQueryObjectui64vEXT        @317
+    glBindUniformLocationCHROMIUM   @318
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

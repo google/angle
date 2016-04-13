@@ -1369,4 +1369,23 @@ void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
         context->getPointerv(pname, params);
     }
 }
+
+ANGLE_EXPORT void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program,
+                                                          GLint location,
+                                                          const GLchar *name)
+{
+    EVENT("(GLuint program = %u, GLint location = %d, const GLchar *name = 0x%0.8p)", program,
+          location, name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateBindUniformLocationCHROMIUM(context, program, location, name))
+        {
+            return;
+        }
+
+        context->bindUniformLocation(program, location, name);
+    }
+}
 }

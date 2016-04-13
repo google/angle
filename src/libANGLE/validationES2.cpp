@@ -15,6 +15,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Uniform.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -2006,6 +2007,50 @@ bool ValidateBindTexture(Context *context, GLenum target, GLuint texture)
         default:
             context->recordError(Error(GL_INVALID_ENUM, "Invalid target"));
             return false;
+    }
+
+    return true;
+}
+
+bool ValidateBindUniformLocationCHROMIUM(Context *context,
+                                         GLuint program,
+                                         GLint location,
+                                         const GLchar *name)
+{
+    if (!context->getExtensions().bindUniformLocation)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "GL_CHROMIUM_bind_uniform_location is not available."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (location < 0)
+    {
+        context->recordError(Error(GL_INVALID_VALUE, "Location cannot be less than 0."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (static_cast<size_t>(location) >=
+        (caps.maxVertexUniformVectors + caps.maxFragmentUniformVectors) * 4)
+    {
+        context->recordError(Error(GL_INVALID_VALUE,
+                                   "Location must be less than (MAX_VERTEX_UNIFORM_VECTORS + "
+                                   "MAX_FRAGMENT_UNIFORM_VECTORS) * 4"));
+        return false;
+    }
+
+    if (strncmp(name, "gl_", 3) == 0)
+    {
+        context->recordError(
+            Error(GL_INVALID_OPERATION, "Name cannot start with the reserved \"gl_\" prefix."));
+        return false;
     }
 
     return true;

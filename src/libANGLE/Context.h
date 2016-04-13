@@ -386,6 +386,8 @@ class Context final : public ValidationContext
     void pushGroupMarker(GLsizei length, const char *marker);
     void popGroupMarker();
 
+    void bindUniformLocation(GLuint program, GLint location, const GLchar *name);
+
     void recordError(const Error &error) override;
 
     GLenum getError();

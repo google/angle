@@ -1562,4 +1562,9 @@ void GL_APIENTRY glGetPointervKHR(GLenum pname, void **params)
 {
     return gl::GetPointervKHR(pname, params);
 }
+
+void GL_APIENTRY glBindUniformLocationCHROMIUM(GLuint program, GLint location, const GLchar *name)
+{
+    return gl::BindUniformLocationCHROMIUM(program, location, name);
+}
 }

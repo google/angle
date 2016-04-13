@@ -1634,6 +1634,14 @@ void Context::popGroupMarker()
     mRenderer->popGroupMarker();
 }
 
+void Context::bindUniformLocation(GLuint program, GLint location, const GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+
+    programObject->bindUniformLocation(location, name);
+}
+
 void Context::recordError(const Error &error)
 {
     if (error.isError())
