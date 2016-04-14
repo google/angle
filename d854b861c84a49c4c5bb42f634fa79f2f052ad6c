@@ -94,6 +94,30 @@
       "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_77dea557",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-14T17:30:50Z",
+      "side": 1,
+      "message": "But we don\u0027t actually need a different loadProcAddress() function for different EGLs - getProcAddress() should be good for all. We just need a different library handle, which Geoff passes in the constructor - thus we don\u0027t need any overloading.\nTheoretically, we also don\u0027t need to call dlsym() from anywhere other than initialize(), so there is even no reason to store the library handle it in a class member. Frank is just being extra cautious and falls back to dlsym() in cases where mGetProcAddressPtr() is supposed to succeed according to the spec.",
+      "parentUuid": "8bd1de8e_77afc5f0",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 28
+      },
+      "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
