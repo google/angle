@@ -22,6 +22,30 @@
       "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_c421a192",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-14T16:29:43Z",
+      "side": 1,
+      "message": "In my implementation I have the handle as member of DisplayEGL and pass it to FunctionsEGL::initialize() - this is the only place where it is used in FunctionsEGL.\nAn alternative would be to pass library name to to FunctionsEGL::initialize(), as it differs on CrOS and Android.",
+      "parentUuid": "8bd1de8e_a1fe1f79",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 28
+      },
+      "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
