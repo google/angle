@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "2b74727a_95e284eb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-14T06:27:28Z",
+      "side": 1,
+      "message": "ANGLE\u0027s validation of global initializers doesn\u0027t currently make a difference between WebGL and ES, so this is good to enable everywhere also because of that. And yes, it\u0027s needed on HLSL output no matter how the input is validated, because ANGLE still can\u0027t constant fold all constant expressions and some of them would end up generating multiple statements.",
+      "parentUuid": "8bd1de8e_d7f166b4",
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab85c25a_c6064001",
         "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
         "patchSetId": 3
@@ -54,6 +72,30 @@
       "writtenOn": "2016-04-13T14:45:41Z",
       "side": 1,
       "message": "as some point I feel like making a library of helper routines for these type of functions would go a long way. like a tree builder. Possibly we could do clever things with operator overloading.",
+      "range": {
+        "startLine": 40,
+        "startChar": 18,
+        "endLine": 40,
+        "endChar": 46
+      },
+      "revId": "df4cf25c0c5d4a086601fef5de0511a46003655d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_b5e780fa",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-14T06:27:28Z",
+      "side": 1,
+      "message": "I wholeheartedly agree. Basically we should refactor the whole Intermediate class and ideally also change the AST class hierarchy too a bit. But this is a fairly large amount of work.",
+      "parentUuid": "ab85c25a_c6064001",
       "range": {
         "startLine": 40,
         "startChar": 18,
