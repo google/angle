@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bd1de8e_b50db5cb",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think this need to be a pointer.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_f081fbc3",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "This if could be avoided by first checking for shadow sampler, then checking for GRAD",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_508727d6",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "You can merge similar cases.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_10648fee",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "This can be added once outside of all the ifs (with an early return on integer textures.)",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_90919f10",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_500287ef",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "this cannot happen with the UNREACHABLE above.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_b00b0346",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "\"the array\" is a bit vague here, is it the sampler array that you introduced?",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_f020dbe4",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "nit: Maybe it is that I don\u0027t know enough about texture fetching but it would be great to have more explanations of which is what.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_b02783f4",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-14T18:57:19Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
