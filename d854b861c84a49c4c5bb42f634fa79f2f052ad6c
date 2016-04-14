@@ -46,6 +46,30 @@
       "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_575441cf",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-14T17:15:47Z",
+      "side": 1,
+      "message": "The way I handled this in FunctionsGL was to have a private abstract function called loadProcAddress (https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/gl/FunctionsGL.h#758) and then specialize the FunctionsGL for each backend so that it can store pointers to modules and such (https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp#29).",
+      "parentUuid": "8bd1de8e_c421a192",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 28
+      },
+      "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
