@@ -70,6 +70,30 @@
       "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_77afc5f0",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-14T17:20:08Z",
+      "side": 1,
+      "message": "This seems like a good way, also good for consistency to use the same style.",
+      "parentUuid": "8bd1de8e_575441cf",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 28
+      },
+      "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
