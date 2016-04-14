@@ -118,6 +118,30 @@
       "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd1de8e_5a162891",
+        "filename": "src/libANGLE/renderer/gl/egl/FunctionsEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-04-14T17:34:04Z",
+      "side": 1,
+      "message": "Sorry, I replied without thinking this through. We would need a different loadProcAddress() function if we would want to support EGL on Windows, for example. We just don\u0027t need it if all the platforms where we support EGL would be posix.",
+      "parentUuid": "8bd1de8e_77dea557",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 28
+      },
+      "revId": "d854b861c84a49c4c5bb42f634fa79f2f052ad6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
