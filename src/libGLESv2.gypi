@@ -514,6 +514,13 @@
             'libANGLE/renderer/gl/egl/FunctionsEGLDL.cpp',
             'libANGLE/renderer/gl/egl/FunctionsEGLDL.h',
         ],
+        'libangle_gl_ozone_sources':
+        [
+            'libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp',
+            'libANGLE/renderer/gl/egl/ozone/DisplayOzone.h',
+            'libANGLE/renderer/gl/egl/ozone/SurfaceOzone.cpp',
+            'libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h',
+        ],
         'libangle_gl_cgl_sources':
         [
             'libANGLE/renderer/gl/cgl/DisplayCGL.mm',
@@ -775,6 +782,31 @@
                                 ],
                                 'libraries': [
                                     '<!@(<(pkg-config) --libs-only-l x11 xi xext) -ldl',
+                                ],
+                            },
+                        }],
+                        ['use_ozone==1',
+                        {
+                            'defines':
+                            [
+                                'ANGLE_USE_OZONE',
+                            ],
+                            'sources':
+                            [
+                                '<@(libangle_gl_egl_sources)',
+                                '<@(libangle_gl_egl_dl_sources)',
+                                '<@(libangle_gl_ozone_sources)',
+                            ],
+                            'cflags':
+                            [
+                                '<!@(<(pkg-config) --cflags libdrm gbm)',
+                            ],
+                            'link_settings': {
+                                'ldflags': [
+                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other libdrm gbm)',
+                                ],
+                                'libraries': [
+                                    '<!@(<(pkg-config) --libs-only-l libdrm gbm) -ldl',
                                 ],
                             },
                         }],

@@ -66,6 +66,12 @@
             'x11/X11Window.cpp',
             'x11/X11Window.h',
         ],
+        'util_ozone_sources':
+        [
+            'ozone/OzonePixmap.cpp',
+            'ozone/OzoneWindow.cpp',
+            'ozone/OzoneWindow.h',
+        ],
         'util_osx_sources':
         [
             'osx/OSX_system_utils.cpp',
@@ -161,6 +167,13 @@
                             '<!@(<(pkg-config) --libs-only-l x11 xi)',
                         ],
                     },
+                }],
+                ['use_ozone==1',
+                {
+                    'sources':
+                    [
+                        '<@(util_ozone_sources)',
+                    ],
                 }],
                 ['OS=="mac"',
                 {
