@@ -367,6 +367,8 @@ void Renderer9::initializeDevice()
     mIndexDataManager = new IndexDataManager(this, getRendererClass());
 
     mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
+
+    mStateManager.initialize();
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
