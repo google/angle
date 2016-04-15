@@ -22,6 +22,30 @@
       "revId": "6f6c5580553d1f3c584df692823c2f5640e23d88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_35c5307b",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T12:16:43Z",
+      "side": 1,
+      "message": "Do you prefer reverting this or pushing a quick fix? The patch shouldn\u0027t have any functional issues since the file is only included once.",
+      "parentUuid": "a8eb0862_9b092316",
+      "range": {
+        "startLine": 13,
+        "startChar": 41,
+        "endLine": 13,
+        "endChar": 44
+      },
+      "revId": "6f6c5580553d1f3c584df692823c2f5640e23d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
