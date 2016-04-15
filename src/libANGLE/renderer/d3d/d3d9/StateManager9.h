@@ -39,6 +39,8 @@ class StateManager9 final : angle::NonCopyable
     StateManager9(Renderer9 *renderer9);
     ~StateManager9();
 
+    void initialize();
+
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
     gl::Error setBlendDepthRasterStates(const gl::State &glState, unsigned int sampleMask);
@@ -155,6 +157,8 @@ class StateManager9 final : angle::NonCopyable
     };
 
     typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
+
+    bool mUsingZeroColorMaskWorkaround;
 
     // Currently applied blend state
     gl::BlendState mCurBlendState;

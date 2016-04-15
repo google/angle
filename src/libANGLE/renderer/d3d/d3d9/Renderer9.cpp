@@ -366,6 +366,8 @@ void Renderer9::initializeDevice()
 
     // TODO(jmadill): use context caps, and place in common D3D location
     mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
+
+    mStateManager.initialize();
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
