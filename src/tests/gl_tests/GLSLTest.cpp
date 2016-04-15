@@ -1577,6 +1577,39 @@ TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
     EXPECT_NE(0u, program);
 }
 
+// This test was written specifically to stress DeferGlobalInitializers AST transformation.
+// Test a shader where a global constant array is initialized with an expression containing array
+// indexing. This initializer is tricky to constant fold, so if it's not constant folded it needs to
+// be handled in a way that doesn't generate statements in the global scope in HLSL output.
+// Also includes multiple array initializers in one declaration, where only the second one has
+// array indexing. This makes sure that the qualifier for the declaration is set correctly if
+// transformations are applied to the declaration also in the case of ESSL output.
+TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
+{
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in vec4 a_vec;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_vec);\n"
+        "}";
+
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "const highp float f[2] = float[2](0.1, 0.2);\n"
+        "const highp float[2] g = float[2](0.3, 0.4), h = float[2](0.5, f[1]);\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(h[1]);\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

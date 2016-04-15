@@ -27,17 +27,20 @@ void SetInternalFunctionName(TIntermAggregate *functionNode, const char *name)
     functionNode->setNameObj(nameObj);
 }
 
-TIntermAggregate *CreateFunctionPrototypeNode(const char *name)
+TIntermAggregate *CreateFunctionPrototypeNode(const char *name, const int functionId)
 {
     TIntermAggregate *functionNode = new TIntermAggregate(EOpPrototype);
 
     SetInternalFunctionName(functionNode, name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
+    functionNode->setFunctionId(functionId);
     return functionNode;
 }
 
-TIntermAggregate *CreateFunctionDefinitionNode(const char *name, TIntermAggregate *functionBody)
+TIntermAggregate *CreateFunctionDefinitionNode(const char *name,
+                                               TIntermAggregate *functionBody,
+                                               const int functionId)
 {
     TIntermAggregate *functionNode = new TIntermAggregate(EOpFunction);
     TIntermAggregate *paramsNode = new TIntermAggregate(EOpParameters);
@@ -47,16 +50,19 @@ TIntermAggregate *CreateFunctionDefinitionNode(const char *name, TIntermAggregat
     SetInternalFunctionName(functionNode, name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
+    functionNode->setFunctionId(functionId);
     return functionNode;
 }
 
-TIntermAggregate *CreateFunctionCallNode(const char *name)
+TIntermAggregate *CreateFunctionCallNode(const char *name, const int functionId)
 {
     TIntermAggregate *functionNode = new TIntermAggregate(EOpFunctionCall);
 
+    functionNode->setUserDefined();
     SetInternalFunctionName(functionNode, name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
+    functionNode->setFunctionId(functionId);
     return functionNode;
 }
 
@@ -86,8 +92,9 @@ bool DeferGlobalInitializersTraverser::visitBinary(Visit visit, TIntermBinary *n
         ASSERT(symbolNode);
         TIntermTyped *expression = node->getRight();
 
-        if (symbolNode->getQualifier() == EvqGlobal &&
-            (expression->getQualifier() != EvqConst || expression->getAsConstantUnion() == nullptr))
+        if (mInGlobalScope && (expression->getQualifier() != EvqConst ||
+                               (expression->getAsConstantUnion() == nullptr &&
+                                !expression->isConstructorWithOnlyConstantUnionParameters())))
         {
             // For variables which are not constant, defer their real initialization until
             // after we initialize uniforms.
@@ -95,13 +102,35 @@ bool DeferGlobalInitializersTraverser::visitBinary(Visit visit, TIntermBinary *n
             // since otherwise there's a chance that HLSL output will generate extra statements
             // from the initializer expression.
             TIntermBinary *deferredInit = new TIntermBinary(EOpAssign);
-            deferredInit->setLeft(node->getLeft()->deepCopy());
+            deferredInit->setLeft(symbolNode->deepCopy());
             deferredInit->setRight(node->getRight());
             deferredInit->setType(node->getType());
             mDeferredInitializers.push_back(deferredInit);
 
+            // Change const global to a regular global if its initialization is deferred.
+            // This can happen if ANGLE has not been able to fold the constant expression used
+            // as an initializer.
+            ASSERT(symbolNode->getQualifier() == EvqConst ||
+                   symbolNode->getQualifier() == EvqGlobal);
+            if (symbolNode->getQualifier() == EvqConst)
+            {
+                // All of the siblings in the same declaration need to have consistent qualifiers.
+                auto *siblings = getParentNode()->getAsAggregate()->getSequence();
+                for (TIntermNode *siblingNode : *siblings)
+                {
+                    TIntermBinary *siblingBinary = siblingNode->getAsBinaryNode();
+                    if (siblingBinary)
+                    {
+                        ASSERT(siblingBinary->getOp() == EOpInitialize);
+                        siblingBinary->getLeft()->getTypePointer()->setQualifier(EvqGlobal);
+                    }
+                    siblingNode->getAsTyped()->getTypePointer()->setQualifier(EvqGlobal);
+                }
+                // This node is one of the siblings.
+                ASSERT(symbolNode->getQualifier() == EvqGlobal);
+            }
             // Remove the initializer from the global scope and just declare the global instead.
-            mReplacements.push_back(NodeUpdateEntry(getParentNode(), node, node->getLeft(), false));
+            mReplacements.push_back(NodeUpdateEntry(getParentNode(), node, symbolNode, false));
         }
     }
     return false;
@@ -113,13 +142,15 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermNode *root)
     {
         return;
     }
+    const int initFunctionId  = TSymbolTable::nextUniqueId();
     TIntermAggregate *rootAgg = root->getAsAggregate();
     ASSERT(rootAgg != nullptr && rootAgg->getOp() == EOpSequence);
 
     const char *functionName = "initializeDeferredGlobals";
 
     // Add function prototype to the beginning of the shader
-    TIntermAggregate *functionPrototypeNode = CreateFunctionPrototypeNode(functionName);
+    TIntermAggregate *functionPrototypeNode =
+        CreateFunctionPrototypeNode(functionName, initFunctionId);
     rootAgg->getSequence()->insert(rootAgg->getSequence()->begin(), functionPrototypeNode);
 
     // Add function definition to the end of the shader
@@ -130,7 +161,7 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermNode *root)
         functionBody->push_back(deferredInit);
     }
     TIntermAggregate *functionDefinition =
-        CreateFunctionDefinitionNode(functionName, functionBodyNode);
+        CreateFunctionDefinitionNode(functionName, functionBodyNode, initFunctionId);
     rootAgg->getSequence()->push_back(functionDefinition);
 
     // Insert call into main function
@@ -140,7 +171,8 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermNode *root)
         if (nodeAgg != nullptr && nodeAgg->getOp() == EOpFunction &&
             TFunction::unmangleName(nodeAgg->getName()) == "main")
         {
-            TIntermAggregate *functionCallNode = CreateFunctionCallNode(functionName);
+            TIntermAggregate *functionCallNode =
+                CreateFunctionCallNode(functionName, initFunctionId);
 
             TIntermNode *mainBody         = nodeAgg->getSequence()->back();
             TIntermAggregate *mainBodyAgg = mainBody->getAsAggregate();

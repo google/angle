@@ -882,19 +882,17 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpInitialize:
         if (visit == PreVisit)
         {
-            // GLSL allows to write things like "float x = x;" where a new variable x is defined
-            // and the value of an existing variable x is assigned. HLSL uses C semantics (the
-            // new variable is created before the assignment is evaluated), so we need to convert
-            // this to "float t = x, x = t;".
-
             TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
             ASSERT(symbolNode);
             TIntermTyped *expression = node->getRight();
 
             // Global initializers must be constant at this point.
-            ASSERT(symbolNode->getQualifier() != EvqGlobal ||
-                   (expression->getQualifier() == EvqConst &&
-                    expression->getAsConstantUnion() != nullptr));
+            ASSERT(symbolNode->getQualifier() != EvqGlobal || canWriteAsHLSLLiteral(expression));
+
+            // GLSL allows to write things like "float x = x;" where a new variable x is defined
+            // and the value of an existing variable x is assigned. HLSL uses C semantics (the
+            // new variable is created before the assignment is evaluated), so we need to convert
+            // this to "float t = x, x = t;".
             if (writeSameSymbolInitializer(out, symbolNode, expression))
             {
                 // Skip initializing the rest of the expression
@@ -2654,22 +2652,8 @@ bool OutputHLSL::canWriteAsHLSLLiteral(TIntermTyped *expression)
 {
     // We support writing constant unions and constructors that only take constant unions as
     // parameters as HLSL literals.
-    if (expression->getAsConstantUnion())
-    {
-        return true;
-    }
-    if (expression->getQualifier() != EvqConst || !expression->getAsAggregate() ||
-        !expression->getAsAggregate()->isConstructor())
-    {
-        return false;
-    }
-    TIntermAggregate *constructor = expression->getAsAggregate();
-    for (TIntermNode *&node : *constructor->getSequence())
-    {
-        if (!node->getAsConstantUnion())
-            return false;
-    }
-    return true;
+    return expression->getAsConstantUnion() ||
+           expression->isConstructorWithOnlyConstantUnionParameters();
 }
 
 bool OutputHLSL::writeConstantInitialization(TInfoSinkBase &out,
