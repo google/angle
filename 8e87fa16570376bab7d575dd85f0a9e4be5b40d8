@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "680e702a_b7ad28b0",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "It makes it possible to only have a forward declaration in this file similarly to StructureHLSL and UniformHLSL.",
+      "parentUuid": "8bd1de8e_b50db5cb",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd1de8e_f081fbc3",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2016-04-14T18:57:19Z",
       "side": 1,
       "message": "This if could be avoided by first checking for shadow sampler, then checking for GRAD",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_15b2f456",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bd1de8e_f081fbc3",
       "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2b74727a_35aff0f1",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bd1de8e_508727d6",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd1de8e_10648fee",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2016-04-14T18:57:19Z",
       "side": 1,
       "message": "This can be added once outside of all the ifs (with an early return on integer textures.)",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_f5bc982d",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bd1de8e_10648fee",
       "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "2b74727a_55ac6cfa",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bd1de8e_90919f10",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd1de8e_500287ef",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 5
@@ -98,6 +188,24 @@
       "writtenOn": "2016-04-14T18:57:19Z",
       "side": 1,
       "message": "this cannot happen with the UNREACHABLE above.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_b52dc045",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "True, removed the if.",
+      "parentUuid": "8bd1de8e_500287ef",
       "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -132,6 +240,24 @@
       "writtenOn": "2016-04-14T18:57:19Z",
       "side": 1,
       "message": "nit: Maybe it is that I don\u0027t know enough about texture fetching but it would be great to have more explanations of which is what.",
+      "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b74727a_75a968e9",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-15T08:49:47Z",
+      "side": 1,
+      "message": "I think the mapping to the spec is self-evident for most of these. I added a comment pointing to the spec section to look up for reference.",
+      "parentUuid": "8bd1de8e_f020dbe4",
       "revId": "8e87fa16570376bab7d575dd85f0a9e4be5b40d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
