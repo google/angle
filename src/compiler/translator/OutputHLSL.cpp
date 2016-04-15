@@ -21,7 +21,6 @@
 #include "compiler/translator/RemoveSwitchFallThrough.h"
 #include "compiler/translator/SearchSymbol.h"
 #include "compiler/translator/StructureHLSL.h"
-#include "compiler/translator/TextureFunctionHLSL.h"
 #include "compiler/translator/TranslatorHLSL.h"
 #include "compiler/translator/UniformHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
@@ -75,10 +74,100 @@ const TConstantUnion *WriteConstantUnionArray(TInfoSinkBase &out,
     return constUnionIterated;
 }
 
+void OutputIntTexCoordWrap(TInfoSinkBase &out,
+                           const char *wrapMode,
+                           const char *size,
+                           const TString &texCoord,
+                           const TString &texCoordOffset,
+                           const char *texCoordOutName)
+{
+    // GLES 3.0.4 table 3.22 specifies how the wrap modes work. We don't use the formulas verbatim
+    // but rather use equivalent formulas that map better to HLSL.
+    out << "int " << texCoordOutName << ";\n";
+    out << "float " << texCoordOutName << "Offset = " << texCoord << " + float(" << texCoordOffset
+        << ") / " << size << ";\n";
+
+    // CLAMP_TO_EDGE
+    out << "if (" << wrapMode << " == 1)\n";
+    out << "{\n";
+    out << "    " << texCoordOutName << " = clamp(int(floor(" << size << " * " << texCoordOutName
+        << "Offset)), 0, int(" << size << ") - 1);\n";
+    out << "}\n";
+
+    // MIRRORED_REPEAT
+    out << "else if (" << wrapMode << " == 3)\n";
+    out << "{\n";
+    out << "    float coordWrapped = 1.0 - abs(frac(abs(" << texCoordOutName
+        << "Offset) * 0.5) * 2.0 - 1.0);\n";
+    out << "    " << texCoordOutName << " = int(floor(" << size << " * coordWrapped));\n";
+    out << "}\n";
+
+    // REPEAT
+    out << "else\n";
+    out << "{\n";
+    out << "    " << texCoordOutName << " = int(floor(" << size << " * frac(" << texCoordOutName
+        << "Offset)));\n";
+    out << "}\n";
+}
+
 } // namespace
 
 namespace sh
 {
+
+TString OutputHLSL::TextureFunction::name() const
+{
+    TString name = "gl_texture";
+
+    // We need to include full the sampler type in the function name to make the signature unique
+    // on D3D11, where samplers are passed to texture functions as indices.
+    name += TextureTypeSuffix(this->sampler);
+
+    if (proj)
+    {
+        name += "Proj";
+    }
+
+    if (offset)
+    {
+        name += "Offset";
+    }
+
+    switch(method)
+    {
+      case IMPLICIT:                  break;
+      case BIAS:                      break;   // Extra parameter makes the signature unique
+      case LOD:      name += "Lod";   break;
+      case LOD0:     name += "Lod0";  break;
+      case LOD0BIAS: name += "Lod0";  break;   // Extra parameter makes the signature unique
+      case SIZE:     name += "Size";  break;
+      case FETCH:    name += "Fetch"; break;
+      case GRAD:     name += "Grad";  break;
+      default: UNREACHABLE();
+    }
+
+    return name + "(";
+}
+
+bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
+{
+    if (sampler < rhs.sampler) return true;
+    if (sampler > rhs.sampler) return false;
+
+    if (coords < rhs.coords)   return true;
+    if (coords > rhs.coords)   return false;
+
+    if (!proj && rhs.proj)     return true;
+    if (proj && !rhs.proj)     return false;
+
+    if (!offset && rhs.offset) return true;
+    if (offset && !rhs.offset) return false;
+
+    if (method < rhs.method)   return true;
+    if (method > rhs.method)   return false;
+
+    return false;
+}
 
 OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
     const TExtensionBehavior &extensionBehavior,
@@ -122,7 +211,6 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
 
     mStructureHLSL = new StructureHLSL;
     mUniformHLSL = new UniformHLSL(mStructureHLSL, outputType, uniforms);
-    mTextureFunctionHLSL = new TextureFunctionHLSL;
 
     if (mOutputType == SH_HLSL_3_0_OUTPUT)
     {
@@ -140,7 +228,6 @@ OutputHLSL::~OutputHLSL()
 {
     SafeDelete(mStructureHLSL);
     SafeDelete(mUniformHLSL);
-    SafeDelete(mTextureFunctionHLSL);
     for (auto &eqFunction : mStructEqualityFunctions)
     {
         SafeDelete(eqFunction);
@@ -605,7 +692,809 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
         }
     }
 
-    mTextureFunctionHLSL->textureFunctionHeader(out, mOutputType);
+    for (TextureFunctionSet::const_iterator textureFunction = mUsesTexture.begin(); textureFunction != mUsesTexture.end(); textureFunction++)
+    {
+        // Return type
+        if (textureFunction->method == TextureFunction::SIZE)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:            out << "int2 "; break;
+              case EbtSampler3D:            out << "int3 "; break;
+              case EbtSamplerCube:          out << "int2 "; break;
+              case EbtSampler2DArray:       out << "int3 "; break;
+              case EbtISampler2D:           out << "int2 "; break;
+              case EbtISampler3D:           out << "int3 "; break;
+              case EbtISamplerCube:         out << "int2 "; break;
+              case EbtISampler2DArray:      out << "int3 "; break;
+              case EbtUSampler2D:           out << "int2 "; break;
+              case EbtUSampler3D:           out << "int3 "; break;
+              case EbtUSamplerCube:         out << "int2 "; break;
+              case EbtUSampler2DArray:      out << "int3 "; break;
+              case EbtSampler2DShadow:      out << "int2 "; break;
+              case EbtSamplerCubeShadow:    out << "int2 "; break;
+              case EbtSampler2DArrayShadow: out << "int3 "; break;
+              default: UNREACHABLE();
+            }
+        }
+        else   // Sampling function
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:            out << "float4 "; break;
+              case EbtSampler3D:            out << "float4 "; break;
+              case EbtSamplerCube:          out << "float4 "; break;
+              case EbtSampler2DArray:       out << "float4 "; break;
+              case EbtISampler2D:           out << "int4 ";   break;
+              case EbtISampler3D:           out << "int4 ";   break;
+              case EbtISamplerCube:         out << "int4 ";   break;
+              case EbtISampler2DArray:      out << "int4 ";   break;
+              case EbtUSampler2D:           out << "uint4 ";  break;
+              case EbtUSampler3D:           out << "uint4 ";  break;
+              case EbtUSamplerCube:         out << "uint4 ";  break;
+              case EbtUSampler2DArray:      out << "uint4 ";  break;
+              case EbtSampler2DShadow:      out << "float ";  break;
+              case EbtSamplerCubeShadow:    out << "float ";  break;
+              case EbtSampler2DArrayShadow: out << "float ";  break;
+              default: UNREACHABLE();
+            }
+        }
+
+        // Function name
+        out << textureFunction->name();
+
+        // Argument list
+        int hlslCoords = 4;
+
+        if (mOutputType == SH_HLSL_3_0_OUTPUT)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:   out << "sampler2D s";   hlslCoords = 2; break;
+              case EbtSamplerCube: out << "samplerCUBE s"; hlslCoords = 3; break;
+              default: UNREACHABLE();
+            }
+
+            switch(textureFunction->method)
+            {
+              case TextureFunction::IMPLICIT:                 break;
+              case TextureFunction::BIAS:     hlslCoords = 4; break;
+              case TextureFunction::LOD:      hlslCoords = 4; break;
+              case TextureFunction::LOD0:     hlslCoords = 4; break;
+              case TextureFunction::LOD0BIAS: hlslCoords = 4; break;
+              default: UNREACHABLE();
+            }
+        }
+        else
+        {
+            hlslCoords = HLSLTextureCoordsCount(textureFunction->sampler);
+            if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
+            {
+                out << TextureString(textureFunction->sampler) << " x, "
+                    << SamplerString(textureFunction->sampler) << " s";
+            }
+            else
+            {
+                ASSERT(mOutputType == SH_HLSL_4_1_OUTPUT);
+                out << "const uint samplerIndex";
+            }
+        }
+
+        if (textureFunction->method == TextureFunction::FETCH)   // Integer coordinates
+        {
+            switch(textureFunction->coords)
+            {
+              case 2: out << ", int2 t"; break;
+              case 3: out << ", int3 t"; break;
+              default: UNREACHABLE();
+            }
+        }
+        else   // Floating-point coordinates (except textureSize)
+        {
+            switch(textureFunction->coords)
+            {
+              case 1: out << ", int lod";  break;   // textureSize()
+              case 2: out << ", float2 t"; break;
+              case 3: out << ", float3 t"; break;
+              case 4: out << ", float4 t"; break;
+              default: UNREACHABLE();
+            }
+        }
+
+        if (textureFunction->method == TextureFunction::GRAD)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:
+              case EbtISampler2D:
+              case EbtUSampler2D:
+              case EbtSampler2DArray:
+              case EbtISampler2DArray:
+              case EbtUSampler2DArray:
+              case EbtSampler2DShadow:
+              case EbtSampler2DArrayShadow:
+                out << ", float2 ddx, float2 ddy";
+                break;
+              case EbtSampler3D:
+              case EbtISampler3D:
+              case EbtUSampler3D:
+              case EbtSamplerCube:
+              case EbtISamplerCube:
+              case EbtUSamplerCube:
+              case EbtSamplerCubeShadow:
+                out << ", float3 ddx, float3 ddy";
+                break;
+              default: UNREACHABLE();
+            }
+        }
+
+        switch(textureFunction->method)
+        {
+          case TextureFunction::IMPLICIT:                        break;
+          case TextureFunction::BIAS:                            break;   // Comes after the offset parameter
+          case TextureFunction::LOD:      out << ", float lod";  break;
+          case TextureFunction::LOD0:                            break;
+          case TextureFunction::LOD0BIAS:                        break;   // Comes after the offset parameter
+          case TextureFunction::SIZE:                            break;
+          case TextureFunction::FETCH:    out << ", int mip";    break;
+          case TextureFunction::GRAD:                            break;
+          default: UNREACHABLE();
+        }
+
+        if (textureFunction->offset)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:            out << ", int2 offset"; break;
+              case EbtSampler3D:            out << ", int3 offset"; break;
+              case EbtSampler2DArray:       out << ", int2 offset"; break;
+              case EbtISampler2D:           out << ", int2 offset"; break;
+              case EbtISampler3D:           out << ", int3 offset"; break;
+              case EbtISampler2DArray:      out << ", int2 offset"; break;
+              case EbtUSampler2D:           out << ", int2 offset"; break;
+              case EbtUSampler3D:           out << ", int3 offset"; break;
+              case EbtUSampler2DArray:      out << ", int2 offset"; break;
+              case EbtSampler2DShadow:      out << ", int2 offset"; break;
+              case EbtSampler2DArrayShadow: out << ", int2 offset"; break;
+              default: UNREACHABLE();
+            }
+        }
+
+        if (textureFunction->method == TextureFunction::BIAS ||
+            textureFunction->method == TextureFunction::LOD0BIAS)
+        {
+            out << ", float bias";
+        }
+
+        out << ")\n"
+               "{\n";
+
+        // In some cases we use a variable to store the texture/sampler objects, but to work around
+        // a D3D11 compiler bug related to discard inside a loop that is conditional on texture
+        // sampling we need to call the function directly on a reference to the array. The bug was
+        // found using dEQP-GLES3.functional.shaders.discard*loop_texture* tests.
+        TString textureReference("x");
+        TString samplerReference("s");
+        if (mOutputType == SH_HLSL_4_1_OUTPUT)
+        {
+            TString suffix = TextureGroupSuffix(textureFunction->sampler);
+            if (TextureGroup(textureFunction->sampler) == HLSL_TEXTURE_2D)
+            {
+                textureReference = TString("textures") + suffix + "[samplerIndex]";
+                samplerReference = TString("samplers") + suffix + "[samplerIndex]";
+            }
+            else
+            {
+                out << "    const uint textureIndex = samplerIndex - textureIndexOffset" << suffix
+                    << ";\n";
+                textureReference = TString("textures") + suffix + "[textureIndex]";
+                out << "    const uint samplerArrayIndex = samplerIndex - samplerIndexOffset"
+                    << suffix << ";\n";
+                samplerReference = TString("samplers") + suffix + "[samplerArrayIndex]";
+            }
+        }
+
+        if (textureFunction->method == TextureFunction::SIZE)
+        {
+            out << "int baseLevel = samplerMetadata[samplerIndex].baseLevel;\n";
+            if (IsSampler2D(textureFunction->sampler) || IsSamplerCube(textureFunction->sampler))
+            {
+                if (IsSamplerArray(textureFunction->sampler) ||
+                    (IsIntegerSampler(textureFunction->sampler) &&
+                     IsSamplerCube(textureFunction->sampler)))
+                {
+                    out << "    uint width; uint height; uint layers; uint numberOfLevels;\n"
+                        << "    " << textureReference << ".GetDimensions(baseLevel + lod, width, "
+                                                         "height, layers, numberOfLevels);\n";
+                }
+                else
+                {
+                    out << "    uint width; uint height; uint numberOfLevels;\n"
+                        << "    " << textureReference
+                        << ".GetDimensions(baseLevel + lod, width, height, numberOfLevels);\n";
+                }
+            }
+            else if (IsSampler3D(textureFunction->sampler))
+            {
+                out << "    uint width; uint height; uint depth; uint numberOfLevels;\n"
+                    << "    " << textureReference
+                    << ".GetDimensions(baseLevel + lod, width, height, depth, numberOfLevels);\n";
+            }
+            else UNREACHABLE();
+
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:            out << "    return int2(width, height);";         break;
+              case EbtSampler3D:            out << "    return int3(width, height, depth);";  break;
+              case EbtSamplerCube:          out << "    return int2(width, height);";         break;
+              case EbtSampler2DArray:       out << "    return int3(width, height, layers);"; break;
+              case EbtISampler2D:           out << "    return int2(width, height);";         break;
+              case EbtISampler3D:           out << "    return int3(width, height, depth);";  break;
+              case EbtISamplerCube:         out << "    return int2(width, height);";         break;
+              case EbtISampler2DArray:      out << "    return int3(width, height, layers);"; break;
+              case EbtUSampler2D:           out << "    return int2(width, height);";         break;
+              case EbtUSampler3D:           out << "    return int3(width, height, depth);";  break;
+              case EbtUSamplerCube:         out << "    return int2(width, height);";         break;
+              case EbtUSampler2DArray:      out << "    return int3(width, height, layers);"; break;
+              case EbtSampler2DShadow:      out << "    return int2(width, height);";         break;
+              case EbtSamplerCubeShadow:    out << "    return int2(width, height);";         break;
+              case EbtSampler2DArrayShadow: out << "    return int3(width, height, layers);"; break;
+              default: UNREACHABLE();
+            }
+        }
+        else
+        {
+            TString texCoordX("t.x");
+            TString texCoordY("t.y");
+            TString texCoordZ("t.z");
+            TString proj = "";
+
+            if (textureFunction->proj)
+            {
+                switch (textureFunction->coords)
+                {
+                    case 3:
+                        proj = " / t.z";
+                        break;
+                    case 4:
+                        proj = " / t.w";
+                        break;
+                    default:
+                        UNREACHABLE();
+                }
+                if (proj != "")
+                {
+                    texCoordX = "(" + texCoordX + proj + ")";
+                    texCoordY = "(" + texCoordY + proj + ")";
+                    texCoordZ = "(" + texCoordZ + proj + ")";
+                }
+            }
+
+            if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
+            {
+                out << "    float width; float height; float layers; float levels;\n";
+
+                out << "    uint mip = 0;\n";
+
+                out << "    " << textureReference
+                    << ".GetDimensions(mip, width, height, layers, levels);\n";
+
+                out << "    bool xMajor = abs(t.x) > abs(t.y) && abs(t.x) > abs(t.z);\n";
+                out << "    bool yMajor = abs(t.y) > abs(t.z) && abs(t.y) > abs(t.x);\n";
+                out << "    bool zMajor = abs(t.z) > abs(t.x) && abs(t.z) > abs(t.y);\n";
+                out << "    bool negative = (xMajor && t.x < 0.0f) || (yMajor && t.y < 0.0f) || (zMajor && t.z < 0.0f);\n";
+
+                // FACE_POSITIVE_X = 000b
+                // FACE_NEGATIVE_X = 001b
+                // FACE_POSITIVE_Y = 010b
+                // FACE_NEGATIVE_Y = 011b
+                // FACE_POSITIVE_Z = 100b
+                // FACE_NEGATIVE_Z = 101b
+                out << "    int face = (int)negative + (int)yMajor * 2 + (int)zMajor * 4;\n";
+
+                out << "    float u = xMajor ? -t.z : (yMajor && t.y < 0.0f ? -t.x : t.x);\n";
+                out << "    float v = yMajor ? t.z : (negative ? t.y : -t.y);\n";
+                out << "    float m = xMajor ? t.x : (yMajor ? t.y : t.z);\n";
+
+                out << "    t.x = (u * 0.5f / m) + 0.5f;\n";
+                out << "    t.y = (v * 0.5f / m) + 0.5f;\n";
+
+                // Mip level computation.
+                if (textureFunction->method == TextureFunction::IMPLICIT ||
+                    textureFunction->method == TextureFunction::LOD ||
+                    textureFunction->method == TextureFunction::GRAD)
+                {
+                    if (textureFunction->method == TextureFunction::IMPLICIT)
+                    {
+                        out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                               "    float2 dx = ddx(tSized);\n"
+                               "    float2 dy = ddy(tSized);\n"
+                               "    float lod = 0.5f * log2(max(dot(dx, dx), dot(dy, dy)));\n";
+                    }
+                    else if (textureFunction->method == TextureFunction::GRAD)
+                    {
+                        // ESSL 3.00.6 spec section 8.8: "For the cube version, the partial
+                        // derivatives of P are assumed to be in the coordinate system used before
+                        // texture coordinates are projected onto the appropriate cube face."
+                        // ddx[0] and ddy[0] are the derivatives of t.x passed into the function
+                        // ddx[1] and ddy[1] are the derivatives of t.y passed into the function
+                        // ddx[2] and ddy[2] are the derivatives of t.z passed into the function
+                        // Determine the derivatives of u, v and m
+                        out << "    float dudx = xMajor ? ddx[2] : (yMajor && t.y < 0.0f ? -ddx[0] "
+                               ": ddx[0]);\n"
+                               "    float dudy = xMajor ? ddy[2] : (yMajor && t.y < 0.0f ? -ddy[0] "
+                               ": ddy[0]);\n"
+                               "    float dvdx = yMajor ? ddx[2] : (negative ? ddx[1] : -ddx[1]);\n"
+                               "    float dvdy = yMajor ? ddy[2] : (negative ? ddy[1] : -ddy[1]);\n"
+                               "    float dmdx = xMajor ? ddx[0] : (yMajor ? ddx[1] : ddx[2]);\n"
+                               "    float dmdy = xMajor ? ddy[0] : (yMajor ? ddy[1] : ddy[2]);\n";
+                        // Now determine the derivatives of the face coordinates, using the
+                        // derivatives calculated above.
+                        // d / dx (u(x) * 0.5 / m(x) + 0.5)
+                        // = 0.5 * (m(x) * u'(x) - u(x) * m'(x)) / m(x)^2
+                        out << "    float dfacexdx = 0.5f * (m * dudx - u * dmdx) / (m * m);\n"
+                               "    float dfaceydx = 0.5f * (m * dvdx - v * dmdx) / (m * m);\n"
+                               "    float dfacexdy = 0.5f * (m * dudy - u * dmdy) / (m * m);\n"
+                               "    float dfaceydy = 0.5f * (m * dvdy - v * dmdy) / (m * m);\n"
+                               "    float2 sizeVec = float2(width, height);\n"
+                               "    float2 faceddx = float2(dfacexdx, dfaceydx) * sizeVec;\n"
+                               "    float2 faceddy = float2(dfacexdy, dfaceydy) * sizeVec;\n";
+                        // Optimization: instead of: log2(max(length(faceddx), length(faceddy)))
+                        // we compute: log2(max(length(faceddx)^2, length(faceddy)^2)) / 2
+                        out << "    float lengthfaceddx2 = dot(faceddx, faceddx);\n"
+                               "    float lengthfaceddy2 = dot(faceddy, faceddy);\n"
+                               "    float lod = log2(max(lengthfaceddx2, lengthfaceddy2)) * "
+                               "0.5f;\n";
+                    }
+                    out << "    mip = uint(min(max(round(lod), 0), levels - 1));\n"
+                        << "    " << textureReference
+                        << ".GetDimensions(mip, width, height, layers, levels);\n";
+                }
+
+                // Convert from normalized floating-point to integer
+                texCoordX = "int(floor(width * frac(" + texCoordX + ")))";
+                texCoordY = "int(floor(height * frac(" + texCoordY + ")))";
+                texCoordZ = "face";
+            }
+            else if (IsIntegerSampler(textureFunction->sampler) &&
+                     textureFunction->method != TextureFunction::FETCH)
+            {
+                if (IsSampler2D(textureFunction->sampler))
+                {
+                    if (IsSamplerArray(textureFunction->sampler))
+                    {
+                        out << "    float width; float height; float layers; float levels;\n";
+
+                        if (textureFunction->method == TextureFunction::LOD0)
+                        {
+                            out << "    uint mip = 0;\n";
+                        }
+                        else if (textureFunction->method == TextureFunction::LOD0BIAS)
+                        {
+                            out << "    uint mip = bias;\n";
+                        }
+                        else
+                        {
+
+                            out << "    " << textureReference
+                                << ".GetDimensions(0, width, height, layers, levels);\n";
+                            if (textureFunction->method == TextureFunction::IMPLICIT ||
+                                textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                       "    float dx = length(ddx(tSized));\n"
+                                       "    float dy = length(ddy(tSized));\n"
+                                       "    float lod = log2(max(dx, dy));\n";
+
+                                if (textureFunction->method == TextureFunction::BIAS)
+                                {
+                                    out << "    lod += bias;\n";
+                                }
+                            }
+                            else if (textureFunction->method == TextureFunction::GRAD)
+                            {
+                                out << "    float2 sizeVec = float2(width, height);\n"
+                                       "    float2 sizeDdx = ddx * sizeVec;\n"
+                                       "    float2 sizeDdy = ddy * sizeVec;\n"
+                                       "    float lod = log2(max(dot(sizeDdx, sizeDdx), "
+                                       "dot(sizeDdy, sizeDdy))) * 0.5f;\n";
+                            }
+
+                            out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                        }
+
+                        out << "    " << textureReference
+                            << ".GetDimensions(mip, width, height, layers, levels);\n";
+                    }
+                    else
+                    {
+                        out << "    float width; float height; float levels;\n";
+
+                        if (textureFunction->method == TextureFunction::LOD0)
+                        {
+                            out << "    uint mip = 0;\n";
+                        }
+                        else if (textureFunction->method == TextureFunction::LOD0BIAS)
+                        {
+                            out << "    uint mip = bias;\n";
+                        }
+                        else
+                        {
+                            out << "    " << textureReference
+                                << ".GetDimensions(0, width, height, levels);\n";
+
+                            if (textureFunction->method == TextureFunction::IMPLICIT ||
+                                textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                       "    float dx = length(ddx(tSized));\n"
+                                       "    float dy = length(ddy(tSized));\n"
+                                       "    float lod = log2(max(dx, dy));\n";
+
+                                if (textureFunction->method == TextureFunction::BIAS)
+                                {
+                                    out << "    lod += bias;\n";
+                                }
+                            }
+                            else if (textureFunction->method == TextureFunction::GRAD)
+                            {
+                                out << "    float2 sizeVec = float2(width, height);\n"
+                                       "    float2 sizeDdx = ddx * sizeVec;\n"
+                                       "    float2 sizeDdy = ddy * sizeVec;\n"
+                                       "    float lod = log2(max(dot(sizeDdx, sizeDdx), "
+                                       "dot(sizeDdy, sizeDdy))) * 0.5f;\n";
+                            }
+
+                            out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                        }
+
+                        out << "    " << textureReference
+                            << ".GetDimensions(mip, width, height, levels);\n";
+                    }
+                }
+                else if (IsSampler3D(textureFunction->sampler))
+                {
+                    out << "    float width; float height; float depth; float levels;\n";
+
+                    if (textureFunction->method == TextureFunction::LOD0)
+                    {
+                        out << "    uint mip = 0;\n";
+                    }
+                    else if (textureFunction->method == TextureFunction::LOD0BIAS)
+                    {
+                        out << "    uint mip = bias;\n";
+                    }
+                    else
+                    {
+                        out << "    " << textureReference
+                            << ".GetDimensions(0, width, height, depth, levels);\n";
+
+                        if (textureFunction->method == TextureFunction::IMPLICIT ||
+                            textureFunction->method == TextureFunction::BIAS)
+                        {
+                            out << "    float3 tSized = float3(t.x * width, t.y * height, t.z * "
+                                   "depth);\n"
+                                   "    float dx = length(ddx(tSized));\n"
+                                   "    float dy = length(ddy(tSized));\n"
+                                   "    float lod = log2(max(dx, dy));\n";
+
+                            if (textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    lod += bias;\n";
+                            }
+                        }
+                        else if (textureFunction->method == TextureFunction::GRAD)
+                        {
+                            out << "    float3 sizeVec = float3(width, height, depth);\n"
+                                   "    float3 sizeDdx = ddx * sizeVec;\n"
+                                   "    float3 sizeDdy = ddy * sizeVec;\n"
+                                   "    float lod = log2(max(dot(sizeDdx, sizeDdx), dot(sizeDdy, "
+                                   "sizeDdy))) * 0.5f;\n";
+                        }
+
+                        out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                    }
+
+                    out << "    " << textureReference
+                        << ".GetDimensions(mip, width, height, depth, levels);\n";
+                }
+                else UNREACHABLE();
+
+                // Convert from normalized floating-point to integer
+                out << "int wrapS = samplerMetadata[samplerIndex].wrapModes & 0x3;\n";
+                if (textureFunction->offset)
+                {
+                    OutputIntTexCoordWrap(out, "wrapS", "width", texCoordX, "offset.x", "tix");
+                }
+                else
+                {
+                    OutputIntTexCoordWrap(out, "wrapS", "width", texCoordX, "0", "tix");
+                }
+                texCoordX = "tix";
+                out << "int wrapT = (samplerMetadata[samplerIndex].wrapModes >> 2) & 0x3;\n";
+                if (textureFunction->offset)
+                {
+                    OutputIntTexCoordWrap(out, "wrapT", "height", texCoordY, "offset.y", "tiy");
+                }
+                else
+                {
+                    OutputIntTexCoordWrap(out, "wrapT", "height", texCoordY, "0", "tiy");
+                }
+                texCoordY = "tiy";
+
+                if (IsSamplerArray(textureFunction->sampler))
+                {
+                    texCoordZ = "int(max(0, min(layers - 1, floor(0.5 + t.z))))";
+                }
+                else if (!IsSamplerCube(textureFunction->sampler) &&
+                         !IsSampler2D(textureFunction->sampler))
+                {
+                    out << "int wrapR = (samplerMetadata[samplerIndex].wrapModes >> 4) & 0x3;\n";
+                    if (textureFunction->offset)
+                    {
+                        OutputIntTexCoordWrap(out, "wrapR", "depth", texCoordZ, "offset.z", "tiz");
+                    }
+                    else
+                    {
+                        OutputIntTexCoordWrap(out, "wrapR", "depth", texCoordZ, "0", "tiz");
+                    }
+                    texCoordZ = "tiz";
+                }
+            }
+
+            out << "    return ";
+
+            // HLSL intrinsic
+            if (mOutputType == SH_HLSL_3_0_OUTPUT)
+            {
+                switch(textureFunction->sampler)
+                {
+                  case EbtSampler2D:   out << "tex2D";   break;
+                  case EbtSamplerCube: out << "texCUBE"; break;
+                  default: UNREACHABLE();
+                }
+
+                switch(textureFunction->method)
+                {
+                    case TextureFunction::IMPLICIT:
+                        out << "(" << samplerReference << ", ";
+                        break;
+                    case TextureFunction::BIAS:
+                        out << "bias(" << samplerReference << ", ";
+                        break;
+                    case TextureFunction::LOD:
+                        out << "lod(" << samplerReference << ", ";
+                        break;
+                    case TextureFunction::LOD0:
+                        out << "lod(" << samplerReference << ", ";
+                        break;
+                    case TextureFunction::LOD0BIAS:
+                        out << "lod(" << samplerReference << ", ";
+                        break;
+                  default: UNREACHABLE();
+                }
+            }
+            else if (mOutputType == SH_HLSL_4_1_OUTPUT || mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
+            {
+                if (textureFunction->method == TextureFunction::GRAD)
+                {
+                    if (IsIntegerSampler(textureFunction->sampler))
+                    {
+                        out << "" << textureReference << ".Load(";
+                    }
+                    else if (IsShadowSampler(textureFunction->sampler))
+                    {
+                        out << "" << textureReference << ".SampleCmpLevelZero(" << samplerReference
+                            << ", ";
+                    }
+                    else
+                    {
+                        out << "" << textureReference << ".SampleGrad(" << samplerReference << ", ";
+                    }
+                }
+                else if (IsIntegerSampler(textureFunction->sampler) ||
+                         textureFunction->method == TextureFunction::FETCH)
+                {
+                    out << "" << textureReference << ".Load(";
+                }
+                else if (IsShadowSampler(textureFunction->sampler))
+                {
+                    switch(textureFunction->method)
+                    {
+                        case TextureFunction::IMPLICIT:
+                            out << "" << textureReference << ".SampleCmp(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::BIAS:
+                            out << "" << textureReference << ".SampleCmp(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::LOD:
+                            out << "" << textureReference << ".SampleCmp(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::LOD0:
+                            out << "" << textureReference << ".SampleCmpLevelZero("
+                                << samplerReference << ", ";
+                            break;
+                        case TextureFunction::LOD0BIAS:
+                            out << "" << textureReference << ".SampleCmpLevelZero("
+                                << samplerReference << ", ";
+                            break;
+                      default: UNREACHABLE();
+                    }
+                }
+                else
+                {
+                    switch(textureFunction->method)
+                    {
+                        case TextureFunction::IMPLICIT:
+                            out << "" << textureReference << ".Sample(" << samplerReference << ", ";
+                            break;
+                        case TextureFunction::BIAS:
+                            out << "" << textureReference << ".SampleBias(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::LOD:
+                            out << "" << textureReference << ".SampleLevel(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::LOD0:
+                            out << "" << textureReference << ".SampleLevel(" << samplerReference
+                                << ", ";
+                            break;
+                        case TextureFunction::LOD0BIAS:
+                            out << "" << textureReference << ".SampleLevel(" << samplerReference
+                                << ", ";
+                            break;
+                      default: UNREACHABLE();
+                    }
+                }
+            }
+            else UNREACHABLE();
+
+            if (IsIntegerSampler(textureFunction->sampler) ||
+                textureFunction->method == TextureFunction::FETCH)
+            {
+                switch(hlslCoords)
+                {
+                  case 2: out << "int3("; break;
+                  case 3: out << "int4("; break;
+                  default: UNREACHABLE();
+                }
+            }
+            else
+            {
+                switch(hlslCoords)
+                {
+                  case 2: out << "float2("; break;
+                  case 3: out << "float3("; break;
+                  case 4: out << "float4("; break;
+                  default: UNREACHABLE();
+                }
+            }
+
+            out << texCoordX << ", " << texCoordY;
+
+            if (mOutputType == SH_HLSL_3_0_OUTPUT)
+            {
+                if (hlslCoords >= 3)
+                {
+                    if (textureFunction->coords < 3)
+                    {
+                        out << ", 0";
+                    }
+                    else
+                    {
+                        out << ", t.z" << proj;
+                    }
+                }
+
+                if (hlslCoords == 4)
+                {
+                    switch(textureFunction->method)
+                    {
+                      case TextureFunction::BIAS:     out << ", bias"; break;
+                      case TextureFunction::LOD:      out << ", lod";  break;
+                      case TextureFunction::LOD0:     out << ", 0";    break;
+                      case TextureFunction::LOD0BIAS: out << ", bias"; break;
+                      default: UNREACHABLE();
+                    }
+                }
+
+                out << "));\n";
+            }
+            else if (mOutputType == SH_HLSL_4_1_OUTPUT || mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
+            {
+                if (hlslCoords >= 3)
+                {
+                    ASSERT(!IsIntegerSampler(textureFunction->sampler) ||
+                           !IsSamplerCube(textureFunction->sampler) || texCoordZ == "face");
+                    out << ", " << texCoordZ;
+                }
+
+                if (textureFunction->method == TextureFunction::GRAD)
+                {
+                    if (IsIntegerSampler(textureFunction->sampler))
+                    {
+                        out << ", mip)";
+                    }
+                    else if (IsShadowSampler(textureFunction->sampler))
+                    {
+                        // Compare value
+                        if (textureFunction->proj)
+                        {
+                            // According to ESSL 3.00.4 sec 8.8 p95 on textureProj:
+                            // The resulting third component of P' in the shadow forms is used as Dref
+                            out << "), t.z" << proj;
+                        }
+                        else
+                        {
+                            switch(textureFunction->coords)
+                            {
+                              case 3: out << "), t.z"; break;
+                              case 4: out << "), t.w"; break;
+                              default: UNREACHABLE();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        out << "), ddx, ddy";
+                    }
+                }
+                else if (IsIntegerSampler(textureFunction->sampler) ||
+                         textureFunction->method == TextureFunction::FETCH)
+                {
+                    out << ", mip)";
+                }
+                else if (IsShadowSampler(textureFunction->sampler))
+                {
+                    // Compare value
+                    if (textureFunction->proj)
+                    {
+                        // According to ESSL 3.00.4 sec 8.8 p95 on textureProj:
+                        // The resulting third component of P' in the shadow forms is used as Dref
+                        out << "), t.z" << proj;
+                    }
+                    else
+                    {
+                        switch(textureFunction->coords)
+                        {
+                          case 3: out << "), t.z"; break;
+                          case 4: out << "), t.w"; break;
+                          default: UNREACHABLE();
+                        }
+                    }
+                }
+                else
+                {
+                    switch(textureFunction->method)
+                    {
+                      case TextureFunction::IMPLICIT: out << ")";       break;
+                      case TextureFunction::BIAS:     out << "), bias"; break;
+                      case TextureFunction::LOD:      out << "), lod";  break;
+                      case TextureFunction::LOD0:     out << "), 0";    break;
+                      case TextureFunction::LOD0BIAS: out << "), bias"; break;
+                      default: UNREACHABLE();
+                    }
+                }
+
+                if (textureFunction->offset && (!IsIntegerSampler(textureFunction->sampler) ||
+                                                textureFunction->method == TextureFunction::FETCH))
+                {
+                    out << ", offset";
+                }
+
+                out << ");";
+            }
+            else UNREACHABLE();
+        }
+
+        out << "\n"
+               "}\n"
+               "\n";
+    }
 
     if (mUsesFragCoord)
     {
@@ -1683,10 +2572,121 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 TString name           = TFunction::unmangleName(node->getNameObj().getString());
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
-                int coords                  = (*arguments)[1]->getAsTyped()->getNominalSize();
-                TString textureFunctionName = mTextureFunctionHLSL->useTextureFunction(
-                    name, samplerType, coords, arguments->size(), lod0, mShaderType);
-                out << textureFunctionName << "(";
+
+                TextureFunction textureFunction;
+                textureFunction.sampler = samplerType;
+                textureFunction.coords = (*arguments)[1]->getAsTyped()->getNominalSize();
+                textureFunction.method = TextureFunction::IMPLICIT;
+                textureFunction.proj = false;
+                textureFunction.offset = false;
+
+                if (name == "texture2D" || name == "textureCube" || name == "texture")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                }
+                else if (name == "texture2DProj" || name == "textureProj")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                    textureFunction.proj = true;
+                }
+                else if (name == "texture2DLod" || name == "textureCubeLod" || name == "textureLod" ||
+                         name == "texture2DLodEXT" || name == "textureCubeLodEXT")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                }
+                else if (name == "texture2DProjLod" || name == "textureProjLod" || name == "texture2DProjLodEXT")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.proj = true;
+                }
+                else if (name == "textureSize")
+                {
+                    textureFunction.method = TextureFunction::SIZE;
+                }
+                else if (name == "textureOffset")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                    textureFunction.offset = true;
+                }
+                else if (name == "textureProjOffset")
+                {
+                    textureFunction.method = TextureFunction::IMPLICIT;
+                    textureFunction.offset = true;
+                    textureFunction.proj = true;
+                }
+                else if (name == "textureLodOffset")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.offset = true;
+                }
+                else if (name == "textureProjLodOffset")
+                {
+                    textureFunction.method = TextureFunction::LOD;
+                    textureFunction.proj = true;
+                    textureFunction.offset = true;
+                }
+                else if (name == "texelFetch")
+                {
+                    textureFunction.method = TextureFunction::FETCH;
+                }
+                else if (name == "texelFetchOffset")
+                {
+                    textureFunction.method = TextureFunction::FETCH;
+                    textureFunction.offset = true;
+                }
+                else if (name == "textureGrad" || name == "texture2DGradEXT")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
+                }
+                else if (name == "textureGradOffset")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
+                    textureFunction.offset = true;
+                }
+                else if (name == "textureProjGrad" || name == "texture2DProjGradEXT" || name == "textureCubeGradEXT")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
+                    textureFunction.proj = true;
+                }
+                else if (name == "textureProjGradOffset")
+                {
+                    textureFunction.method = TextureFunction::GRAD;
+                    textureFunction.proj = true;
+                    textureFunction.offset = true;
+                }
+                else UNREACHABLE();
+
+                if (textureFunction.method == TextureFunction::IMPLICIT)   // Could require lod 0 or have a bias argument
+                {
+                    unsigned int mandatoryArgumentCount = 2;   // All functions have sampler and coordinate arguments
+
+                    if (textureFunction.offset)
+                    {
+                        mandatoryArgumentCount++;
+                    }
+
+                    bool bias = (arguments->size() > mandatoryArgumentCount);   // Bias argument is optional
+
+                    if (lod0 || mShaderType == GL_VERTEX_SHADER)
+                    {
+                        if (bias)
+                        {
+                            textureFunction.method = TextureFunction::LOD0BIAS;
+                        }
+                        else
+                        {
+                            textureFunction.method = TextureFunction::LOD0;
+                        }
+                    }
+                    else if (bias)
+                    {
+                        textureFunction.method = TextureFunction::BIAS;
+                    }
+                }
+
+                mUsesTexture.insert(textureFunction);
+
+                out << textureFunction.name();
             }
 
             for (TIntermSequence::iterator arg = arguments->begin(); arg != arguments->end(); arg++)

@@ -184,8 +184,6 @@
             'compiler/translator/SeparateExpressionsReturningArrays.h',
             'compiler/translator/StructureHLSL.cpp',
             'compiler/translator/StructureHLSL.h',
-            'compiler/translator/TextureFunctionHLSL.cpp',
-            'compiler/translator/TextureFunctionHLSL.h',
             'compiler/translator/TranslatorHLSL.cpp',
             'compiler/translator/TranslatorHLSL.h',
             'compiler/translator/UnfoldShortCircuitToIf.cpp',
