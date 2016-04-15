@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a814e833_9fa47b7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "nit: you comment on the others, so might as well comment here as well I think",
+      "range": {
+        "startLine": 170,
+        "startChar": 24,
+        "endLine": 170,
+        "endChar": 53
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_1fd2abd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "nit: comment wrapping to 100 chars",
+      "range": {
+        "startLine": 844,
+        "startChar": 4,
+        "endLine": 847,
+        "endChar": 23
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_dfc31307",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "nit: http://anglebug.com/169",
+      "range": {
+        "startLine": 848,
+        "startChar": 4,
+        "endLine": 848,
+        "endChar": 65
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_9ff23b83",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "nit: \u0027initialize\u0027",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 18
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_ff149768",
+        "filename": "src/tests/gl_tests/ColorMaskTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "ASSERT_NE",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 9
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_9f0b5b45",
+        "filename": "src/tests/gl_tests/ColorMaskTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "init this to -1 in the constructor",
+      "range": {
+        "startLine": 67,
+        "startChar": 10,
+        "endLine": 67,
+        "endChar": 23
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a814e833_bf729fab",
+        "filename": "src/tests/gl_tests/ColorMaskTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T19:27:05Z",
+      "side": 1,
+      "message": "nice test",
+      "range": {
+        "startLine": 72,
+        "startChar": 7,
+        "endLine": 72,
+        "endChar": 20
+      },
+      "revId": "685673cbb68d71d1c21ed2b528cda6b5cc0834f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
