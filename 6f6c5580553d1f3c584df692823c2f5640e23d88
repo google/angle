@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8eb0862_9b092316",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-15T12:12:17Z",
+      "side": 1,
+      "message": "typo here",
+      "range": {
+        "startLine": 13,
+        "startChar": 41,
+        "endLine": 13,
+        "endChar": 44
+      },
+      "revId": "6f6c5580553d1f3c584df692823c2f5640e23d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
