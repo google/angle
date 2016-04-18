@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4881acc7_3fdb0b69",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-18T16:34:53Z",
+      "side": 1,
+      "message": "Maybe mention where these numbers came from? Even if it\u0027s just \"when optimizing oort online demo, these worked the best.\"  \n\nI also wondering if squaring is going to be too much, is doubling not reasonable?",
+      "range": {
+        "startLine": 497,
+        "startChar": 4,
+        "endLine": 498,
+        "endChar": 73
+      },
+      "revId": "93e622ae154a3ec0df0638f323fdcff5e3b93cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4881acc7_ff38337e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 1
@@ -13,6 +36,24 @@
       "writtenOn": "2016-04-18T16:29:36Z",
       "side": 1,
       "message": "nit: this could be put in the constructor instead (or on the member definition)",
+      "revId": "93e622ae154a3ec0df0638f323fdcff5e3b93cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4881acc7_7f28a31a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-18T16:34:53Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "4881acc7_ff38337e",
       "revId": "93e622ae154a3ec0df0638f323fdcff5e3b93cf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
