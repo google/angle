@@ -20,11 +20,13 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/Stream.h"
 #include "libANGLE/angletypes.h"
 
 namespace egl
 {
 class Surface;
+class Stream;
 }
 
 namespace rx
@@ -171,6 +173,7 @@ class Texture final : public egl::ImageSibling,
     Error generateMipmaps();
 
     egl::Surface *getBoundSurface() const;
+    egl::Stream *getBoundStream() const;
 
     rx::TextureImpl *getImplementation() { return mTexture; }
     const rx::TextureImpl *getImplementation() const { return mTexture; }
@@ -191,6 +194,13 @@ class Texture final : public egl::ImageSibling,
     friend class egl::Surface;
     void bindTexImageFromSurface(egl::Surface *surface);
     void releaseTexImageFromSurface();
+
+    // ANGLE-only methods, used internally
+    friend class egl::Stream;
+    void bindStream(egl::Stream *stream);
+    void releaseStream();
+    void acquireImageFromStream(const egl::Stream::GLTextureDescription &desc);
+    void releaseImageFromStream();
 
     rx::TextureImpl *mTexture;
 
@@ -244,6 +254,7 @@ class Texture final : public egl::ImageSibling,
     mutable SamplerCompletenessCache mCompletenessCache;
 
     egl::Surface *mBoundSurface;
+    egl::Stream *mBoundStream;
 };
 
 }

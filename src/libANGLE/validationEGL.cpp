@@ -16,6 +16,7 @@
 #include "libANGLE/Image.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/Texture.h"
 
 #include <EGL/eglext.h>
 
@@ -1245,6 +1246,11 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
         return Error(EGL_BAD_ACCESS, "Stream consumer extension not active");
     }
 
+    if (!context->getExtensions().eglStreamConsumerExternal)
+    {
+        return Error(EGL_BAD_ACCESS, "EGL stream consumer external GL extension not enabled");
+    }
+
     if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
     {
         return Error(EGL_BAD_STREAM_KHR, "Invalid stream");
@@ -1255,6 +1261,13 @@ Error ValidateStreamConsumerGLTextureExternalKHR(const Display *display,
         return Error(EGL_BAD_STATE_KHR, "Invalid stream state");
     }
 
+    // Lookup the texture and ensure it is correct
+    gl::Texture *texture = context->getState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+    if (texture == nullptr || texture->getId() == 0)
+    {
+        return Error(EGL_BAD_ACCESS, "No external texture bound");
+    }
+
     return Error(EGL_SUCCESS);
 }
 
@@ -1263,12 +1276,6 @@ Error ValidateStreamConsumerAcquireKHR(const Display *display,
                                        const Stream *stream)
 {
     Error error = ValidateDisplay(display);
-    if (error.isError())
-    {
-        return error;
-    }
-
-    error = ValidateContext(display, context);
     if (error.isError())
     {
         return error;
@@ -1285,6 +1292,26 @@ Error ValidateStreamConsumerAcquireKHR(const Display *display,
         return Error(EGL_BAD_STREAM_KHR, "Invalid stream");
     }
 
+    error = ValidateContext(display, context);
+    if (error.isError())
+    {
+        return Error(EGL_BAD_ACCESS, "Invalid GL context");
+    }
+
+    if (!stream->isConsumerBoundToContext(context))
+    {
+        return Error(EGL_BAD_ACCESS, "Current GL context not associated with stream consumer");
+    }
+
+    if (stream->getConsumerType() != Stream::ConsumerType::GLTextureRGB &&
+        stream->getConsumerType() != Stream::ConsumerType::GLTextureYUV)
+    {
+        return Error(EGL_BAD_ACCESS, "Invalid stream consumer type");
+    }
+
+    // Note: technically EGL_STREAM_STATE_EMPTY_KHR is a valid state when the timeout is non-zero.
+    // However, the timeout is effectively ignored since it has no useful functionality with the
+    // current producers that are implemented, so we don't allow that state
     if (stream->getState() != EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR &&
         stream->getState() != EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR)
     {
@@ -1304,12 +1331,6 @@ Error ValidateStreamConsumerReleaseKHR(const Display *display,
         return error;
     }
 
-    error = ValidateContext(display, context);
-    if (error.isError())
-    {
-        return error;
-    }
-
     const DisplayExtensions &displayExtensions = display->getExtensions();
     if (!displayExtensions.streamConsumerGLTexture)
     {
@@ -1319,6 +1340,23 @@ Error ValidateStreamConsumerReleaseKHR(const Display *display,
     if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
     {
         return Error(EGL_BAD_STREAM_KHR, "Invalid stream");
+    }
+
+    error = ValidateContext(display, context);
+    if (error.isError())
+    {
+        return Error(EGL_BAD_ACCESS, "Invalid GL context");
+    }
+
+    if (!stream->isConsumerBoundToContext(context))
+    {
+        return Error(EGL_BAD_ACCESS, "Current GL context not associated with stream consumer");
+    }
+
+    if (stream->getConsumerType() != Stream::ConsumerType::GLTextureRGB &&
+        stream->getConsumerType() != Stream::ConsumerType::GLTextureYUV)
+    {
+        return Error(EGL_BAD_ACCESS, "Invalid stream consumer type");
     }
 
     if (stream->getState() != EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR &&
@@ -1353,6 +1391,14 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
         return Error(EGL_BAD_ACCESS, "Stream consumer extension not active");
     }
 
+    // Although technically not a requirement in spec, the context needs to be checked for support
+    // for external textures or future logic will cause assertations. This extension is also
+    // effectively useless without external textures.
+    if (!context->getExtensions().eglStreamConsumerExternal)
+    {
+        return Error(EGL_BAD_ACCESS, "EGL stream consumer external GL extension not enabled");
+    }
+
     if (stream == EGL_NO_STREAM_KHR || !display->isValidStream(stream))
     {
         return Error(EGL_BAD_STREAM_KHR, "Invalid stream");
@@ -1362,6 +1408,8 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
     {
         return Error(EGL_BAD_STATE_KHR, "Invalid stream state");
     }
+
+    const gl::Caps &glCaps = context->getCaps();
 
     EGLAttrib colorBufferType = EGL_RGB_BUFFER;
     EGLAttrib planeCount      = -1;
@@ -1378,7 +1426,7 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
         switch (attribute)
         {
             case EGL_COLOR_BUFFER_TYPE:
-                if (value != EGL_RGB_BUFFER || value != EGL_YUV_BUFFER_EXT)
+                if (value != EGL_RGB_BUFFER && value != EGL_YUV_BUFFER_EXT)
                 {
                     return Error(EGL_BAD_PARAMETER, "Invalid color buffer type");
                 }
@@ -1398,7 +1446,9 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
                 if (attribute >= EGL_YUV_PLANE0_TEXTURE_UNIT_NV &&
                     attribute <= EGL_YUV_PLANE2_TEXTURE_UNIT_NV)
                 {
-                    if (value < 0)
+                    if ((value < 0 ||
+                         value >= static_cast<EGLAttrib>(glCaps.maxCombinedTextureImageUnits)) &&
+                        value != EGL_NONE)
                     {
                         return Error(EGL_BAD_ACCESS, "Invalid texture unit");
                     }
@@ -1424,6 +1474,13 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
                 return Error(EGL_BAD_MATCH, "Planes cannot be specified");
             }
         }
+
+        // Lookup the texture and ensure it is correct
+        gl::Texture *texture = context->getState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+        if (texture == nullptr || texture->getId() == 0)
+        {
+            return Error(EGL_BAD_ACCESS, "No external texture bound");
+        }
     }
     else
     {
@@ -1435,18 +1492,37 @@ Error ValidateStreamConsumerGLTextureExternalAttribsNV(const Display *display,
         {
             return Error(EGL_BAD_MATCH, "Invalid YUV plane count");
         }
+        for (EGLAttrib i = planeCount; i < 3; i++)
+        {
+            if (plane[i] != -1)
+            {
+                return Error(EGL_BAD_MATCH, "Invalid plane specified");
+            }
+        }
+
+        // Set to ensure no texture is referenced more than once
+        std::set<gl::Texture *> textureSet;
         for (EGLAttrib i = 0; i < planeCount; i++)
         {
             if (plane[i] == -1)
             {
                 return Error(EGL_BAD_MATCH, "Not all planes specified");
             }
-        }
-        for (EGLAttrib i = planeCount; i < 3; i++)
-        {
-            if (plane[i] != -1)
+            if (plane[i] != EGL_NONE)
             {
-                return Error(EGL_BAD_MATCH, "Invalid plane specified");
+                gl::Texture *texture = context->getState().getSamplerTexture(
+                    static_cast<unsigned int>(plane[i]), GL_TEXTURE_EXTERNAL_OES);
+                if (texture == nullptr || texture->getId() == 0)
+                {
+                    return Error(
+                        EGL_BAD_ACCESS,
+                        "No external texture bound at one or more specified texture units");
+                }
+                if (textureSet.find(texture) != textureSet.end())
+                {
+                    return Error(EGL_BAD_ACCESS, "Multiple planes bound to same texture object");
+                }
+                textureSet.insert(texture);
             }
         }
     }
@@ -1480,12 +1556,18 @@ Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
         return Error(EGL_BAD_STATE_KHR, "Stream not in connecting state");
     }
 
+    if (stream->getConsumerType() != Stream::ConsumerType::GLTextureYUV ||
+        stream->getPlaneCount() != 2)
+    {
+        return Error(EGL_BAD_MATCH, "Incompatible stream consumer type");
+    }
+
     return Error(EGL_SUCCESS);
 }
 
 Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
                                             const Stream *stream,
-                                            const void *texture,
+                                            void *texture,
                                             const AttributeMap &attribs)
 {
     const DisplayExtensions &displayExtensions = display->getExtensions();
@@ -1525,11 +1607,16 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
         return Error(EGL_BAD_STATE_KHR, "Stream not fully configured");
     }
 
-    if (texture == nullptr)
+    if (stream->getProducerType() != Stream::ProducerType::D3D11TextureNV12)
     {
-        return Error(EGL_BAD_PARAMETER, "Texture must not be null");
+        return Error(EGL_BAD_MATCH, "Incompatible stream producer");
     }
 
-    return Error(EGL_SUCCESS);
+    if (texture == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "Texture is null");
+    }
+
+    return stream->validateD3D11NV12Texture(texture);
 }
 }

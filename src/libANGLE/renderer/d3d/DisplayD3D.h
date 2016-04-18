@@ -45,7 +45,9 @@ class DisplayD3D : public DisplayImpl
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
 
-    StreamImpl *createStream(const egl::AttributeMap &attribs) override;
+    StreamProducerImpl *createStreamProducerD3DTextureNV12(
+        egl::Stream::ConsumerType consumerType,
+        const egl::AttributeMap &attribs) override;
 
     egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) override;
 

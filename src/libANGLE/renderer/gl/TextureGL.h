@@ -77,6 +77,10 @@ class TextureGL : public TextureImpl
 
     gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
+    gl::Error setImageExternal(GLenum target,
+                               egl::Stream *stream,
+                               const egl::Stream::GLTextureDescription &desc) override;
+
     gl::Error generateMipmaps(const gl::TextureState &textureState) override;
 
     void bindTexImage(egl::Surface *surface) override;

@@ -52,6 +52,7 @@ Compiler::Compiler(rx::ImplFactory *implFactory, const ContextState &data)
     mResources.EXT_shader_texture_lod       = extensions.shaderTextureLOD;
     // TODO: disabled until the extension is actually supported.
     mResources.OES_EGL_image_external = 0;
+    mResources.NV_EGL_stream_consumer_external = extensions.eglStreamConsumerExternal;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;

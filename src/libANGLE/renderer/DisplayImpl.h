@@ -14,6 +14,7 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/Stream.h"
 
 #include <set>
 #include <vector>
@@ -38,7 +39,7 @@ class SurfaceImpl;
 class ImageImpl;
 struct ConfigDesc;
 class DeviceImpl;
-class StreamImpl;
+class StreamProducerImpl;
 
 class DisplayImpl : angle::NonCopyable
 {
@@ -69,7 +70,9 @@ class DisplayImpl : angle::NonCopyable
                                        const gl::Context *shareContext,
                                        const egl::AttributeMap &attribs) = 0;
 
-    virtual StreamImpl *createStream(const egl::AttributeMap &attribs) = 0;
+    virtual StreamProducerImpl *createStreamProducerD3DTextureNV12(
+        egl::Stream::ConsumerType consumerType,
+        const egl::AttributeMap &attribs) = 0;
 
     virtual egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) = 0;
 

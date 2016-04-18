@@ -57,7 +57,8 @@ Texture::Texture(rx::ImplFactory *factory, GLuint id, GLenum target)
       mTarget(target),
       mImageDescs(IMPLEMENTATION_MAX_TEXTURE_LEVELS * (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
       mCompletenessCache(),
-      mBoundSurface(NULL)
+      mBoundSurface(nullptr),
+      mBoundStream(nullptr)
 {
 }
 
@@ -66,7 +67,12 @@ Texture::~Texture()
     if (mBoundSurface)
     {
         mBoundSurface->releaseTexImage(EGL_BACK_BUFFER);
-        mBoundSurface = NULL;
+        mBoundSurface = nullptr;
+    }
+    if (mBoundStream)
+    {
+        mBoundStream->releaseTextures();
+        mBoundStream = nullptr;
     }
     SafeDelete(mTexture);
 }
@@ -371,6 +377,11 @@ egl::Surface *Texture::getBoundSurface() const
     return mBoundSurface;
 }
 
+egl::Stream *Texture::getBoundStream() const
+{
+    return mBoundStream;
+}
+
 Error Texture::setImage(const PixelUnpackState &unpackState,
                         GLenum target,
                         size_t level,
@@ -617,6 +628,42 @@ void Texture::releaseTexImageFromSurface()
 
     // Erase the image info for level 0
     ASSERT(mTarget == GL_TEXTURE_2D);
+    clearImageDesc(mTarget, 0);
+}
+
+void Texture::bindStream(egl::Stream *stream)
+{
+    ASSERT(stream);
+
+    // It should not be possible to bind a texture already bound to another stream
+    ASSERT(mBoundStream == nullptr);
+
+    mBoundStream = stream;
+
+    ASSERT(mTarget == GL_TEXTURE_EXTERNAL_OES);
+}
+
+void Texture::releaseStream()
+{
+    ASSERT(mBoundStream);
+    mBoundStream = nullptr;
+}
+
+void Texture::acquireImageFromStream(const egl::Stream::GLTextureDescription &desc)
+{
+    ASSERT(mBoundStream != nullptr);
+    mTexture->setImageExternal(mTarget, mBoundStream, desc);
+
+    Extents size(desc.width, desc.height, 1);
+    setImageDesc(mTarget, 0, ImageDesc(size, desc.internalFormat));
+}
+
+void Texture::releaseImageFromStream()
+{
+    ASSERT(mBoundStream != nullptr);
+    mTexture->setImageExternal(mTarget, nullptr, egl::Stream::GLTextureDescription());
+
+    // Set to incomplete
     clearImageDesc(mTarget, 0);
 }
 

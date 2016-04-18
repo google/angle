@@ -28,6 +28,8 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD5(copyImage, gl::Error(GLenum, size_t, const gl::Rectangle &, GLenum, const gl::Framebuffer *));
     MOCK_METHOD5(copySubImage, gl::Error(GLenum, size_t, const gl::Offset &, const gl::Rectangle &, const gl::Framebuffer *));
     MOCK_METHOD4(setStorage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &));
+    MOCK_METHOD3(setImageExternal,
+                 gl::Error(GLenum, egl::Stream *, const egl::Stream::GLTextureDescription &));
     MOCK_METHOD2(setEGLImageTarget, gl::Error(GLenum, egl::Image *));
     MOCK_METHOD1(generateMipmaps, gl::Error(const gl::TextureState &));
     MOCK_METHOD1(bindTexImage, void(egl::Surface *));

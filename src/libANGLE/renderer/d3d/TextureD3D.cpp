@@ -373,6 +373,15 @@ ImageD3D *TextureD3D::getBaseLevelImage() const
     return getImage(getImageIndex(0, 0));
 }
 
+gl::Error TextureD3D::setImageExternal(GLenum target,
+                                       egl::Stream *stream,
+                                       const egl::Stream::GLTextureDescription &desc)
+{
+    // Only external images can accept external textures
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 gl::Error TextureD3D::generateMipmaps(const gl::TextureState &textureState)
 {
     GLint mipCount = mipLevels();
@@ -3083,4 +3092,250 @@ bool TextureD3D_2DArray::isValidIndex(const gl::ImageIndex &index) const
     return (!index.hasLayer() || (index.layerIndex >= 0 && index.layerIndex < mLayerCounts[index.mipIndex]));
 }
 
+TextureD3D_External::TextureD3D_External(RendererD3D *renderer) : TextureD3D(renderer)
+{
+    mImage = renderer->createImage();
+}
+
+TextureD3D_External::~TextureD3D_External()
+{
+    SafeDelete(mImage);
+    SafeDelete(mTexStorage);
+}
+
+ImageD3D *TextureD3D_External::getImage(const gl::ImageIndex &index) const
+{
+    // External images only have one mipmap level
+    ASSERT(index.type == GL_TEXTURE_EXTERNAL_OES);
+    ASSERT(index.mipIndex == 0);
+    return mImage;
+}
+
+GLsizei TextureD3D_External::getLayerCount(int level) const
+{
+    return 1;
+}
+
+GLsizei TextureD3D_External::getWidth(GLint level) const
+{
+    ASSERT(level == 0);
+    return mImage->getWidth();
+}
+
+GLsizei TextureD3D_External::getHeight(GLint level) const
+{
+    ASSERT(level == 0);
+    return mImage->getHeight();
+}
+
+GLenum TextureD3D_External::getInternalFormat(GLint level) const
+{
+    ASSERT(level == 0);
+    return mImage->getInternalFormat();
+}
+
+bool TextureD3D_External::isDepth(GLint level) const
+{
+    return false;
+}
+
+gl::Error TextureD3D_External::setImage(GLenum target,
+                                        size_t imageLevel,
+                                        GLenum internalFormat,
+                                        const gl::Extents &size,
+                                        GLenum format,
+                                        GLenum type,
+                                        const gl::PixelUnpackState &unpack,
+                                        const uint8_t *pixels)
+{
+    // Image setting is not supported for external images
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::setSubImage(GLenum target,
+                                           size_t imageLevel,
+                                           const gl::Box &area,
+                                           GLenum format,
+                                           GLenum type,
+                                           const gl::PixelUnpackState &unpack,
+                                           const uint8_t *pixels)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::setCompressedImage(GLenum target,
+                                                  size_t imageLevel,
+                                                  GLenum internalFormat,
+                                                  const gl::Extents &size,
+                                                  const gl::PixelUnpackState &unpack,
+                                                  size_t imageSize,
+                                                  const uint8_t *pixels)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::setCompressedSubImage(GLenum target,
+                                                     size_t level,
+                                                     const gl::Box &area,
+                                                     GLenum format,
+                                                     const gl::PixelUnpackState &unpack,
+                                                     size_t imageSize,
+                                                     const uint8_t *pixels)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::copyImage(GLenum target,
+                                         size_t imageLevel,
+                                         const gl::Rectangle &sourceArea,
+                                         GLenum internalFormat,
+                                         const gl::Framebuffer *source)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::copySubImage(GLenum target,
+                                            size_t imageLevel,
+                                            const gl::Offset &destOffset,
+                                            const gl::Rectangle &sourceArea,
+                                            const gl::Framebuffer *source)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::setStorage(GLenum target,
+                                          size_t levels,
+                                          GLenum internalFormat,
+                                          const gl::Extents &size)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+gl::Error TextureD3D_External::setImageExternal(GLenum target,
+                                                egl::Stream *stream,
+                                                const egl::Stream::GLTextureDescription &desc)
+{
+    ASSERT(target == GL_TEXTURE_EXTERNAL_OES);
+
+    // If the strean is null, the external image is unbound and we release the storage
+    if (stream == nullptr)
+    {
+        SafeDelete(mTexStorage);
+        mTexStorage = nullptr;
+    }
+    else
+    {
+        SafeDelete(mTexStorage);
+        mTexStorage = mRenderer->createTextureStorageExternal(stream, desc);
+    }
+
+    return gl::Error(GL_NO_ERROR);
+}
+
+void TextureD3D_External::bindTexImage(egl::Surface *surface)
+{
+    UNREACHABLE();
+}
+
+void TextureD3D_External::releaseTexImage()
+{
+    UNREACHABLE();
+}
+
+gl::Error TextureD3D_External::setEGLImageTarget(GLenum target, egl::Image *image)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+void TextureD3D_External::initMipmapsImages()
+{
+    UNREACHABLE();
+}
+
+gl::Error TextureD3D_External::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
+{
+    UNREACHABLE();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
+bool TextureD3D_External::isValidLevel(int level) const
+{
+    return (level == 0);
+}
+
+bool TextureD3D_External::isLevelComplete(int level) const
+{
+    return (level == 0) ? (mTexStorage != nullptr) : false;
+}
+
+bool TextureD3D_External::isImageComplete(const gl::ImageIndex &index) const
+{
+    return isLevelComplete(index.mipIndex);
+}
+
+gl::Error TextureD3D_External::initializeStorage(bool renderTarget)
+{
+    // Texture storage is created when an external image is bound
+    ASSERT(mTexStorage);
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureD3D_External::createCompleteStorage(bool renderTarget,
+                                                     TextureStorage **outTexStorage) const
+{
+    UNREACHABLE();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureD3D_External::setCompleteTexStorage(TextureStorage *newCompleteTexStorage)
+{
+    UNREACHABLE();
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureD3D_External::updateStorage()
+{
+    // Texture storage does not need to be updated since it is already loaded with the latest
+    // external image
+    ASSERT(mTexStorage);
+    return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error TextureD3D_External::updateStorageLevel(int level)
+{
+    UNREACHABLE();
+    return gl::Error(GL_NO_ERROR);
+}
+
+void TextureD3D_External::redefineImage(size_t level,
+                                        GLenum internalformat,
+                                        const gl::Extents &size,
+                                        bool forceRelease)
+{
+    UNREACHABLE();
+}
+
+gl::ImageIndexIterator TextureD3D_External::imageIterator() const
+{
+    return gl::ImageIndexIterator::Make2D(0, mTexStorage->getLevelCount());
+}
+
+gl::ImageIndex TextureD3D_External::getImageIndex(GLint mip, GLint /*layer*/) const
+{
+    // "layer" does not apply to 2D Textures.
+    return gl::ImageIndex::Make2D(mip);
+}
+
+bool TextureD3D_External::isValidIndex(const gl::ImageIndex &index) const
+{
+    return (mTexStorage && index.type == GL_TEXTURE_EXTERNAL_OES && index.mipIndex == 0);
+}
 }

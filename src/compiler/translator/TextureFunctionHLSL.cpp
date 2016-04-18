@@ -235,6 +235,8 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
                 return 3;
             case EbtSampler2DArray:
                 return 3;
+            case EbtSamplerExternalOES:
+                return 2;
             case EbtISampler2D:
                 return 2;
             case EbtISampler3D:
@@ -344,6 +346,7 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             case EbtUSampler2DArray:
             case EbtSampler2DShadow:
             case EbtSampler2DArrayShadow:
+            case EbtSamplerExternalOES:
                 out << ", float2 ddx, float2 ddy";
                 break;
             case EbtSampler3D:
@@ -421,6 +424,8 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             case EbtSampler2DArrayShadow:
                 out << ", int2 offset";
                 break;
+            case EbtSamplerExternalOES:
+                out << ", int2 offset";
             default:
                 UNREACHABLE();
         }
@@ -1040,6 +1045,7 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtISamplerCube:
             case EbtUSamplerCube:
             case EbtSamplerCubeShadow:
+            case EbtSamplerExternalOES:
                 return "int2";
             case EbtSampler3D:
             case EbtISampler3D:
@@ -1061,6 +1067,7 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtSampler3D:
             case EbtSamplerCube:
             case EbtSampler2DArray:
+            case EbtSamplerExternalOES:
                 return "float4";
             case EbtISampler2D:
             case EbtISampler3D:

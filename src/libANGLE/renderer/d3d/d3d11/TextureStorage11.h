@@ -203,6 +203,42 @@ class TextureStorage11_2D : public TextureStorage11
     Image11 *mAssociatedImages[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
+class TextureStorage11_External : public TextureStorage11
+{
+  public:
+    TextureStorage11_External(Renderer11 *renderer,
+                              egl::Stream *stream,
+                              const egl::Stream::GLTextureDescription &glDesc);
+    ~TextureStorage11_External() override;
+
+    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
+
+    gl::Error copyToStorage(TextureStorage *destStorage) override;
+
+    void associateImage(Image11 *image, const gl::ImageIndex &index) override;
+    void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    bool isAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
+
+  protected:
+    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) override;
+
+  private:
+    gl::Error createSRV(int baseLevel,
+                        int mipLevels,
+                        DXGI_FORMAT format,
+                        ID3D11Resource *texture,
+                        ID3D11ShaderResourceView **outSRV) const override;
+
+    ID3D11Texture2D *mTexture;
+    int mSubresourceIndex;
+
+    Image11 *mAssociatedImage;
+};
+
 class TextureStorage11_EGLImage final : public TextureStorage11
 {
   public:

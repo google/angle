@@ -711,10 +711,7 @@ Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
 {
     ASSERT(isInitialized());
 
-    rx::StreamImpl *streamImpl = mImplementation->createStream(attribs);
-    ASSERT(streamImpl != nullptr);
-
-    Stream *stream = new Stream(streamImpl, attribs);
+    Stream *stream = new Stream(this, attribs);
 
     ASSERT(stream != nullptr);
     mStreamSet.insert(stream);

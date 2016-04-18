@@ -676,6 +676,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_stream_consumer_gltexture",             streamConsumerGLTexture,        &extensionStrings);
     InsertExtensionString("EGL_NV_stream_consumer_gltexture_yuv",          streamConsumerGLTextureYUV,     &extensionStrings);
     InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",      flexibleSurfaceCompatibility,   &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_stream_producer_d3d_texture_nv12",    streamProducerD3DTextureNV12,   &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                   createContextNoError,           &extensionStrings);
     // clang-format on
