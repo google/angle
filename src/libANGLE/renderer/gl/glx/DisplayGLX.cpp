@@ -10,6 +10,8 @@
 
 #include <EGL/eglext.h>
 #include <algorithm>
+#include <cstring>
+#include <fstream>
 
 #include "common/debug.h"
 #include "libANGLE/Config.h"
@@ -20,6 +22,54 @@
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "third_party/libXNVCtrl/NVCtrl.h"
 #include "third_party/libXNVCtrl/NVCtrlLib.h"
+
+namespace
+{
+
+// Scan /etc/ati/amdpcsdb.default for "ReleaseVersion".
+// Return empty string on failing.
+egl::Error GetAMDDriverVersion(std::string *version)
+{
+    *version = "";
+
+    const char kAMDDriverInfoFileName[] = "/etc/ati/amdpcsdb.default";
+    std::ifstream file(kAMDDriverInfoFileName);
+
+    if (!file)
+    {
+        return egl::Error(EGL_SUCCESS);
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        static const char kReleaseVersion[] = "ReleaseVersion=";
+        if (line.compare(0, std::strlen(kReleaseVersion), kReleaseVersion) != 0)
+        {
+            continue;
+        }
+
+        const size_t begin = line.find_first_of("0123456789");
+        if (begin == std::string::npos)
+        {
+            continue;
+        }
+
+        const size_t end = line.find_first_not_of("0123456789.", begin);
+        if (end == std::string::npos)
+        {
+            *version = line.substr(begin);
+        }
+        else
+        {
+            *version = line.substr(begin, end - begin);
+        }
+        return egl::Error(EGL_SUCCESS);
+    }
+    return egl::Error(EGL_SUCCESS);
+}
+
+}  // anonymous namespace
 
 namespace rx
 {
@@ -727,6 +777,8 @@ egl::Error DisplayGLX::getDriverVersion(std::string *version) const
     {
         case VENDOR_ID_NVIDIA:
             return getNVIDIADriverVersion(version);
+        case VENDOR_ID_AMD:
+            return GetAMDDriverVersion(version);
         default:
             *version = "";
             return egl::Error(EGL_SUCCESS);
