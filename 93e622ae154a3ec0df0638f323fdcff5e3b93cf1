@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4881acc7_ff38337e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-18T16:29:36Z",
+      "side": 1,
+      "message": "nit: this could be put in the constructor instead (or on the member definition)",
+      "revId": "93e622ae154a3ec0df0638f323fdcff5e3b93cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
