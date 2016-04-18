@@ -233,7 +233,7 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "texture2DProj", sampler2D, float4);
     symbolTable.insertBuiltIn(ESSL1_BUILTINS, float4, "textureCube", samplerCube, float3);
 
-    if (resources.OES_EGL_image_external)
+    if (resources.OES_EGL_image_external || resources.NV_EGL_stream_consumer_external)
     {
         const TType *samplerExternalOES = TCache::getType(EbtSamplerExternalOES);
 
@@ -594,6 +594,8 @@ void InitExtensionBehavior(const ShBuiltInResources& resources,
         extBehavior["GL_OES_standard_derivatives"] = EBhUndefined;
     if (resources.OES_EGL_image_external)
         extBehavior["GL_OES_EGL_image_external"] = EBhUndefined;
+    if (resources.NV_EGL_stream_consumer_external)
+        extBehavior["GL_NV_EGL_stream_consumer_external"] = EBhUndefined;
     if (resources.ARB_texture_rectangle)
         extBehavior["GL_ARB_texture_rectangle"] = EBhUndefined;
     if (resources.EXT_blend_func_extended)

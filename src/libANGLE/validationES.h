@@ -31,6 +31,7 @@ bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture3DTarget(const ValidationContext *context, GLenum target);
+bool ValidTextureExternalTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidFramebufferTarget(GLenum target);
@@ -83,7 +84,7 @@ bool ValidateBlitFramebufferParameters(Context *context,
 
 bool ValidateGetVertexAttribParameters(Context *context, GLenum pname);
 
-bool ValidateTexParamParameters(Context *context, GLenum pname, GLint param);
+bool ValidateTexParamParameters(Context *context, GLenum target, GLenum pname, GLint param);
 
 bool ValidateSamplerObjectParameter(Context *context, GLenum pname);
 

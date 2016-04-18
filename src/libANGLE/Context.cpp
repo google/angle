@@ -188,6 +188,12 @@ Context::Context(const egl::Config *config,
         mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
     }
 
+    if (mExtensions.eglImageExternal || mExtensions.eglStreamConsumerExternal)
+    {
+        Texture *zeroTextureExternal = new Texture(mRenderer, 0, GL_TEXTURE_EXTERNAL_OES);
+        mZeroTextures[GL_TEXTURE_EXTERNAL_OES].set(zeroTextureExternal);
+    }
+
     mState.initializeZeroTextures(mZeroTextures);
 
     bindVertexArray(0);
@@ -954,7 +960,7 @@ Query *Context::getQuery(GLuint handle) const
 
 Texture *Context::getTargetTexture(GLenum target) const
 {
-    ASSERT(ValidTextureTarget(this, target));
+    ASSERT(ValidTextureTarget(this, target) || ValidTextureExternalTarget(this, target));
     return mState.getTargetTexture(target);
 }
 

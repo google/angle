@@ -23,6 +23,7 @@ class AttributeMap final
     void insert(EGLAttrib key, EGLAttrib value);
     bool contains(EGLAttrib key) const;
     EGLAttrib get(EGLAttrib key, EGLAttrib defaultValue) const;
+    EGLint getAsInt(EGLAttrib key, EGLint defaultValue) const;
     bool isEmpty() const;
 
     typedef std::map<EGLAttrib, EGLAttrib>::const_iterator const_iterator;

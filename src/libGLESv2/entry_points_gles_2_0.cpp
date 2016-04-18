@@ -3425,13 +3425,13 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target))
+        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
         {
             context->recordError(Error(GL_INVALID_ENUM, "Invalid texture target"));
             return;
         }
 
-        if (!ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
+        if (!ValidateTexParamParameters(context, target, pname, static_cast<GLint>(param)))
         {
             return;
         }
@@ -3482,13 +3482,13 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target))
+        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
         {
             context->recordError(Error(GL_INVALID_ENUM, "Invalid Texture target"));
             return;
         }
 
-        if (!ValidateTexParamParameters(context, pname, param))
+        if (!ValidateTexParamParameters(context, target, pname, param))
         {
             return;
         }

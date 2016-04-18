@@ -255,6 +255,7 @@ typedef struct
     // Set to 1 to enable the extension, else 0.
     int OES_standard_derivatives;
     int OES_EGL_image_external;
+    int NV_EGL_stream_consumer_external;
     int ARB_texture_rectangle;
     int EXT_blend_func_extended;
     int EXT_draw_buffers;

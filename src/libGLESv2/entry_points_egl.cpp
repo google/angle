@@ -1661,6 +1661,10 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         // EGL_NV_stream_consumer_gltexture_yuv
         INSERT_PROC_ADDRESS(egl, StreamConsumerGLTextureExternalAttribsNV);
 
+        // EGL_ANGLE_stream_producer_d3d_texture_nv12
+        INSERT_PROC_ADDRESS(egl, CreateStreamProducerD3DTextureNV12ANGLE);
+        INSERT_PROC_ADDRESS(egl, StreamPostD3DTextureNV12ANGLE);
+
 #undef INSERT_PROC_ADDRESS
         return map;
     };

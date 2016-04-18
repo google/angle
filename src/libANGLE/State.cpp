@@ -148,6 +148,10 @@ void State::initialize(const Caps &caps,
         mSamplerTextures[GL_TEXTURE_2D_ARRAY].resize(caps.maxCombinedTextureImageUnits);
         mSamplerTextures[GL_TEXTURE_3D].resize(caps.maxCombinedTextureImageUnits);
     }
+    if (extensions.eglImageExternal || extensions.eglStreamConsumerExternal)
+    {
+        mSamplerTextures[GL_TEXTURE_EXTERNAL_OES].resize(caps.maxCombinedTextureImageUnits);
+    }
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
 

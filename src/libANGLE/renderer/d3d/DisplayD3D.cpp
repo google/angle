@@ -214,10 +214,12 @@ gl::Context *DisplayD3D::createContext(const egl::Config *config,
     return new gl::Context(config, shareContext, mRenderer, attribs);
 }
 
-StreamImpl *DisplayD3D::createStream(const egl::AttributeMap &attribs)
+StreamProducerImpl *DisplayD3D::createStreamProducerD3DTextureNV12(
+    egl::Stream::ConsumerType consumerType,
+    const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return mRenderer->createStream(attribs);
+    return mRenderer->createStreamProducerD3DTextureNV12(consumerType, attribs);
 }
 
 egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)

@@ -1246,7 +1246,8 @@ type_specifier_nonarray
         $$.setBasic(EbtSampler2DArrayShadow, qual, @1);
     }
     | SAMPLER_EXTERNAL_OES {
-        if (!context->supportsExtension("GL_OES_EGL_image_external")) {
+        if (!context->supportsExtension("GL_OES_EGL_image_external") &&
+            !context->supportsExtension("GL_NV_EGL_stream_consumer_external")) {
             context->error(@1, "unsupported type", "samplerExternalOES");
             context->recover();
         }

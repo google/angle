@@ -495,6 +495,14 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error TextureGL::setImageExternal(GLenum target,
+                                      egl::Stream *stream,
+                                      const egl::Stream::GLTextureDescription &desc)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 gl::Error TextureGL::generateMipmaps(const gl::TextureState &textureState)
 {
     mStateManager->bindTexture(mTextureType, mTextureID);

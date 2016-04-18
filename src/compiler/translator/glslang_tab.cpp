@@ -4199,7 +4199,9 @@ yyreduce:
   case 201:
 
     {
-        if (!context->supportsExtension("GL_OES_EGL_image_external")) {
+        if (!context->supportsExtension("GL_OES_EGL_image_external") &&
+            !context->supportsExtension("GL_NV_EGL_stream_consumer_external"))
+        {
             context->error((yylsp[0]), "unsupported type", "samplerExternalOES");
             context->recover();
         }

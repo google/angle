@@ -16,6 +16,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/ImageIndex.h"
+#include "libANGLE/Stream.h"
 
 namespace egl
 {
@@ -63,6 +64,10 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
     virtual gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) = 0;
 
     virtual gl::Error setEGLImageTarget(GLenum target, egl::Image *image) = 0;
+
+    virtual gl::Error setImageExternal(GLenum target,
+                                       egl::Stream *stream,
+                                       const egl::Stream::GLTextureDescription &desc) = 0;
 
     virtual gl::Error generateMipmaps(const gl::TextureState &textureState) = 0;
 

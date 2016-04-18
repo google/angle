@@ -12,6 +12,7 @@
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Stream.h"
 
 namespace gl
 {
@@ -58,6 +59,9 @@ class TextureD3D : public TextureImpl
     virtual gl::ImageIndex getImageIndex(GLint mip, GLint layer) const = 0;
     virtual bool isValidIndex(const gl::ImageIndex &index) const = 0;
 
+    virtual gl::Error setImageExternal(GLenum target,
+                                       egl::Stream *stream,
+                                       const egl::Stream::GLTextureDescription &desc) override;
     gl::Error generateMipmaps(const gl::TextureState &textureState) override;
     TextureStorage *getStorage();
     ImageD3D *getBaseLevelImage() const;
@@ -374,6 +378,104 @@ class TextureD3D_2DArray : public TextureD3D
     ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
+class TextureD3D_External : public TextureD3D
+{
+  public:
+    TextureD3D_External(RendererD3D *renderer);
+    ~TextureD3D_External() override;
+
+    ImageD3D *getImage(const gl::ImageIndex &index) const override;
+    GLsizei getLayerCount(int level) const override;
+
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLenum getInternalFormat(GLint level) const;
+    bool isDepth(GLint level) const;
+
+    gl::Error setImage(GLenum target,
+                       size_t level,
+                       GLenum internalFormat,
+                       const gl::Extents &size,
+                       GLenum format,
+                       GLenum type,
+                       const gl::PixelUnpackState &unpack,
+                       const uint8_t *pixels) override;
+    gl::Error setSubImage(GLenum target,
+                          size_t level,
+                          const gl::Box &area,
+                          GLenum format,
+                          GLenum type,
+                          const gl::PixelUnpackState &unpack,
+                          const uint8_t *pixels) override;
+
+    gl::Error setCompressedImage(GLenum target,
+                                 size_t level,
+                                 GLenum internalFormat,
+                                 const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack,
+                                 size_t imageSize,
+                                 const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(GLenum target,
+                                    size_t level,
+                                    const gl::Box &area,
+                                    GLenum format,
+                                    const gl::PixelUnpackState &unpack,
+                                    size_t imageSize,
+                                    const uint8_t *pixels) override;
+
+    gl::Error copyImage(GLenum target,
+                        size_t level,
+                        const gl::Rectangle &sourceArea,
+                        GLenum internalFormat,
+                        const gl::Framebuffer *source) override;
+    gl::Error copySubImage(GLenum target,
+                           size_t level,
+                           const gl::Offset &destOffset,
+                           const gl::Rectangle &sourceArea,
+                           const gl::Framebuffer *source) override;
+
+    gl::Error setStorage(GLenum target,
+                         size_t levels,
+                         GLenum internalFormat,
+                         const gl::Extents &size) override;
+
+    gl::Error setImageExternal(GLenum target,
+                               egl::Stream *stream,
+                               const egl::Stream::GLTextureDescription &desc) override;
+
+    void bindTexImage(egl::Surface *surface) override;
+    void releaseTexImage() override;
+
+    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
+
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
+
+    gl::ImageIndexIterator imageIterator() const override;
+    gl::ImageIndex getImageIndex(GLint mip, GLint layer) const override;
+    bool isValidIndex(const gl::ImageIndex &index) const override;
+
+  private:
+    gl::Error initializeStorage(bool renderTarget) override;
+    gl::Error createCompleteStorage(bool renderTarget,
+                                    TextureStorage **outTexStorage) const override;
+    gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage) override;
+
+    gl::Error updateStorage() override;
+    void initMipmapsImages() override;
+
+    bool isValidLevel(int level) const;
+    bool isLevelComplete(int level) const;
+    bool isImageComplete(const gl::ImageIndex &index) const override;
+
+    gl::Error updateStorageLevel(int level);
+
+    void redefineImage(size_t level,
+                       GLenum internalformat,
+                       const gl::Extents &size,
+                       bool forceRelease);
+
+    ImageD3D *mImage;
+};
 }
 
 #endif // LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
