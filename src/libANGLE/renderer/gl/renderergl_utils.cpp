@@ -582,10 +582,10 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     // updated.
     caps->maxVertexUniformVectors = std::min(1024u, caps->maxVertexUniformVectors);
     caps->maxVertexUniformComponents =
-        std::min(caps->maxVertexUniformVectors / 4, caps->maxVertexUniformComponents);
+        std::min(caps->maxVertexUniformVectors * 4, caps->maxVertexUniformComponents);
     caps->maxFragmentUniformVectors = std::min(1024u, caps->maxFragmentUniformVectors);
     caps->maxFragmentUniformComponents =
-        std::min(caps->maxFragmentUniformVectors / 4, caps->maxFragmentUniformComponents);
+        std::min(caps->maxFragmentUniformVectors * 4, caps->maxFragmentUniformComponents);
 
     // If it is not possible to support reading buffer data back, a shadow copy of the buffers must
     // be held. This disallows writing to buffers indirectly through transform feedback, thus
