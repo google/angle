@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68a590c6_68a177bb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-19T19:05:00Z",
+      "side": 1,
+      "message": "this actually has a bug open - http://anglebug.com/1269",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 3
+      },
+      "revId": "83d1b3e3dcd755230b915a9bed6887ade3a1ffbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68a590c6_0890ab6d",
+        "filename": "src/compiler/preprocessor/MacroExpander.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-19T19:05:00Z",
+      "side": 1,
+      "message": "don\u0027t get mad at me, but I\u0027d like to keep inline initialization out of headers files - fine in local or private classes but it\u0027s something that should be in the implementation to minimize the amount of code in headers IMHO. Please place in constructor init.",
+      "range": {
+        "startLine": 87,
+        "startChar": 28,
+        "endLine": 87,
+        "endChar": 33
+      },
+      "revId": "83d1b3e3dcd755230b915a9bed6887ade3a1ffbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68a590c6_a89e5f7d",
+        "filename": "src/compiler/preprocessor/MacroExpander.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-19T19:05:00Z",
+      "side": 1,
+      "message": "can\u0027t you use unique_ptr?",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 9
+      },
+      "revId": "83d1b3e3dcd755230b915a9bed6887ade3a1ffbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
