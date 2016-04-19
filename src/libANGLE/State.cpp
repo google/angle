@@ -685,10 +685,10 @@ void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
     // If a texture object is deleted, it is as if all texture units which are bound to that texture object are
     // rebound to texture object zero
 
-    for (TextureBindingMap::iterator bindingVec = mSamplerTextures.begin(); bindingVec != mSamplerTextures.end(); bindingVec++)
+    for (auto &bindingVec : mSamplerTextures)
     {
-        GLenum textureType = bindingVec->first;
-        TextureBindingVector &textureVector = bindingVec->second;
+        GLenum textureType = bindingVec.first;
+        TextureBindingVector &textureVector = bindingVec.second;
         for (size_t textureIdx = 0; textureIdx < textureVector.size(); textureIdx++)
         {
             BindingPointer<Texture> &binding = textureVector[textureIdx];
@@ -971,12 +971,15 @@ bool State::isTransformFeedbackActiveUnpaused() const
     return curTransformFeedback && curTransformFeedback->isActive() && !curTransformFeedback->isPaused();
 }
 
-void State::detachTransformFeedback(GLuint transformFeedback)
+bool State::removeTransformFeedbackBinding(GLuint transformFeedback)
 {
     if (mTransformFeedback.id() == transformFeedback)
     {
-        mTransformFeedback.set(NULL);
+        mTransformFeedback.set(nullptr);
+        return true;
     }
+
+    return false;
 }
 
 bool State::isQueryActive(GLenum type) const

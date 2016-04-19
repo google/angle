@@ -1862,7 +1862,17 @@ void Context::detachVertexArray(GLuint vertexArray)
 
 void Context::detachTransformFeedback(GLuint transformFeedback)
 {
-    mState.detachTransformFeedback(transformFeedback);
+    // Transform feedback detachment is handled by Context, because 0 is a valid
+    // transform feedback, and a pointer to it must be passed from Context to State at
+    // binding time.
+
+    // The OpenGL specification doesn't mention what should happen when the currently bound
+    // transform feedback object is deleted. Since it is a container object, we treat it like
+    // VAOs and FBOs and set the current bound transform feedback back to 0.
+    if (mState.removeTransformFeedbackBinding(transformFeedback))
+    {
+        bindTransformFeedback(0);
+    }
 }
 
 void Context::detachSampler(GLuint sampler)
