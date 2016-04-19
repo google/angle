@@ -194,7 +194,7 @@ class State : angle::NonCopyable
     void detachTransformFeedback(GLuint transformFeedback);
 
     // Query binding manipulation
-    bool isQueryActive() const;
+    bool isQueryActive(GLenum type) const;
     bool isQueryActive(Query *query) const;
     void setActiveQuery(GLenum target, Query *query);
     GLuint getActiveQueryId(GLenum target) const;

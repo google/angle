@@ -1168,9 +1168,7 @@ bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
     //       of GL_ANY_SAMPLES_PASSED_EXT and GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT,
     //       no query may be active for either if glBeginQuery targets either.
 
-    // TODO(ewell): I think this needs to be changed for timer and occlusion queries to work at the
-    // same time
-    if (context->getState().isQueryActive())
+    if (context->getState().isQueryActive(target))
     {
         context->recordError(Error(GL_INVALID_OPERATION, "Other query is active"));
         return false;
