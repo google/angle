@@ -903,6 +903,21 @@ Error Texture::copySubTexture(const Offset &destOffset,
                                     unpackUnmultiplyAlpha, source);
 }
 
+Error Texture::copyCompressedTexture(const Texture *source)
+{
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+    orphanImages();
+
+    ANGLE_TRY(mTexture->copyCompressedTexture(source));
+
+    ASSERT(source->getTarget() != GL_TEXTURE_CUBE_MAP && getTarget() != GL_TEXTURE_CUBE_MAP);
+    const auto &sourceDesc = source->mState.getImageDesc(source->getTarget(), 0);
+    mState.setImageDesc(getTarget(), 0, sourceDesc);
+
+    return NoError();
+}
+
 Error Texture::setStorage(GLenum target, GLsizei levels, GLenum internalFormat, const Extents &size)
 {
     ASSERT(target == mState.mTarget);

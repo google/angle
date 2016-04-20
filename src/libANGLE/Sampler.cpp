@@ -140,13 +140,9 @@ const SamplerState &Sampler::getSamplerState() const
     return mSamplerState;
 }
 
-const rx::SamplerImpl *Sampler::getImplementation() const
+rx::SamplerImpl *Sampler::getImplementation() const
 {
     return mImpl;
 }
 
-rx::SamplerImpl *Sampler::getImplementation()
-{
-    return mImpl;
-}
 }

@@ -64,8 +64,7 @@ class Sampler final : public RefCountObject, public LabeledObject
 
     const SamplerState &getSamplerState() const;
 
-    const rx::SamplerImpl *getImplementation() const;
-    rx::SamplerImpl *getImplementation();
+    rx::SamplerImpl *getImplementation() const;
 
   private:
     rx::SamplerImpl *mImpl;

@@ -211,6 +211,10 @@ class Renderer9 : public RendererD3D
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,
                           bool unpackUnmultiplyAlpha) override;
+    gl::Error copyCompressedTexture(const gl::Texture *source,
+                                    GLint sourceLevel,
+                                    TextureStorage *storage,
+                                    GLint destLevel) override;
 
     // RenderTarget creation
     gl::Error createRenderTarget(int width,

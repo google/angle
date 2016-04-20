@@ -293,6 +293,9 @@ struct Extensions
     // GL_CHROMIUM_copy_texture
     bool copyTexture;
 
+    // GL_CHROMIUM_copy_compressed_texture
+    bool copyCompressedTexture;
+
     // GL_ANGLE_webgl_compatibility
     bool webglCompatibility;
 

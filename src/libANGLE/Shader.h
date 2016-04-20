@@ -96,7 +96,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     GLenum getType() const { return mType; }
     GLuint getHandle() const;
 
-    const rx::ShaderImpl *getImplementation() const { return mImplementation; }
+    rx::ShaderImpl *getImplementation() const { return mImplementation; }
 
     void deleteSource();
     void setSource(GLsizei count, const char *const *string, const GLint *length);

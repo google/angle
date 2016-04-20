@@ -482,6 +482,7 @@ class Context final : public ValidationContext
                                 GLboolean unpackFlipY,
                                 GLboolean unpackPremultiplyAlpha,
                                 GLboolean unpackUnmultiplyAlpha);
+    void compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId);
 
     void generateMipmap(GLenum target);
 

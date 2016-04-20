@@ -1950,6 +1950,23 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
     }
 }
 
+ANGLE_EXPORT void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
+{
+    EVENT("(GLuint sourceId = %u, GLuint destId = %u)", sourceId, destId);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCompressedCopyTextureCHROMIUM(context, sourceId, destId))
+        {
+            return;
+        }
+
+        context->compressedCopyTextureCHROMIUM(sourceId, destId);
+    }
+}
+
 GL_APICALL GLboolean GL_APIENTRY EnableExtensionANGLE(const GLchar *name)
 {
     EVENT("(const GLchar *name = %p)", name);

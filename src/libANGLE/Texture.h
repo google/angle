@@ -295,6 +295,7 @@ class Texture final : public egl::ImageSibling,
                          bool unpackPremultiplyAlpha,
                          bool unpackUnmultiplyAlpha,
                          const Texture *source);
+    Error copyCompressedTexture(const Texture *source);
 
     Error setStorage(GLenum target, GLsizei levels, GLenum internalFormat, const Extents &size);
 
@@ -305,8 +306,7 @@ class Texture final : public egl::ImageSibling,
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
 
-    rx::TextureImpl *getImplementation() { return mTexture; }
-    const rx::TextureImpl *getImplementation() const { return mTexture; }
+    rx::TextureImpl *getImplementation() const { return mTexture; }
 
     // FramebufferAttachmentObject implementation
     Extents getAttachmentSize(const FramebufferAttachment::Target &target) const override;

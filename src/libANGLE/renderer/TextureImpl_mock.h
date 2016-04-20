@@ -35,6 +35,7 @@ class MockTextureImpl : public TextureImpl
                            bool,
                            bool,
                            const gl::Texture *));
+    MOCK_METHOD1(copyCompressedTexture, gl::Error(const gl::Texture *source));
     MOCK_METHOD4(setStorage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &));
     MOCK_METHOD3(setImageExternal,
                  gl::Error(GLenum, egl::Stream *, const egl::Stream::GLTextureDescription &));

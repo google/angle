@@ -3109,6 +3109,41 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
     return gl::NoError();
 }
 
+gl::Error Renderer11::copyCompressedTexture(const gl::Texture *source,
+                                            GLint sourceLevel,
+                                            TextureStorage *storage,
+                                            GLint destLevel)
+{
+    TextureStorage11_2D *destStorage11 = GetAs<TextureStorage11_2D>(storage);
+    ASSERT(destStorage11);
+
+    ID3D11Resource *destResource = nullptr;
+    ANGLE_TRY(destStorage11->getResource(&destResource));
+
+    gl::ImageIndex destIndex = gl::ImageIndex::Make2D(destLevel);
+    UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
+
+    TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
+    ASSERT(sourceD3D);
+
+    TextureStorage *sourceStorage = nullptr;
+    ANGLE_TRY(sourceD3D->getNativeTexture(&sourceStorage));
+
+    TextureStorage11_2D *sourceStorage11 = GetAs<TextureStorage11_2D>(sourceStorage);
+    ASSERT(sourceStorage11);
+
+    ID3D11Resource *sourceResource = nullptr;
+    ANGLE_TRY(sourceStorage11->getResource(&sourceResource));
+
+    gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
+    UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
+
+    mDeviceContext->CopySubresourceRegion(destResource, destSubresource, 0, 0, 0, sourceResource,
+                                          sourceSubresource, nullptr);
+
+    return gl::NoError();
+}
+
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d11::Format &formatInfo = d3d11::Format::Get(format, mRenderer11DeviceCaps);

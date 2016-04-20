@@ -2340,6 +2340,15 @@ gl::Error Renderer9::copyTexture(const gl::Texture *source,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
+gl::Error Renderer9::copyCompressedTexture(const gl::Texture *source,
+                                           GLint sourceLevel,
+                                           TextureStorage *storage,
+                                           GLint destLevel)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);

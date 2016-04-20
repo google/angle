@@ -297,12 +297,6 @@ inline DestT *GetImplAs(SrcT *src)
     return GetAs<DestT>(src->getImplementation());
 }
 
-template <typename DestT, typename SrcT>
-inline const DestT *GetImplAs(const SrcT *src)
-{
-    return GetAs<const DestT>(src->getImplementation());
-}
-
 }
 
 #include "angletypes.inl"

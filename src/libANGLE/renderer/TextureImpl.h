@@ -72,6 +72,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                      bool unpackUnmultiplyAlpha,
                                      const gl::Texture *source);
 
+    virtual gl::Error copyCompressedTexture(const gl::Texture *source);
+
     virtual gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) = 0;
 
     virtual gl::Error setEGLImageTarget(GLenum target, egl::Image *image) = 0;

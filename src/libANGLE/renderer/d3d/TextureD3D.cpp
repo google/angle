@@ -968,6 +968,26 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Offset &destOffset,
     return gl::NoError();
 }
 
+gl::Error TextureD3D_2D::copyCompressedTexture(const gl::Texture *source)
+{
+    GLenum sourceTarget = source->getTarget();
+    GLint sourceLevel   = 0;
+
+    GLint destLevel = 0;
+
+    GLenum sizedInternalFormat = source->getFormat(sourceTarget, sourceLevel).asSized();
+    gl::Extents size(static_cast<int>(source->getWidth(sourceTarget, sourceLevel)),
+                     static_cast<int>(source->getHeight(sourceTarget, sourceLevel)), 1);
+    redefineImage(destLevel, sizedInternalFormat, size, false);
+
+    ANGLE_TRY(initializeStorage(false));
+    ASSERT(mTexStorage);
+
+    ANGLE_TRY(mRenderer->copyCompressedTexture(source, sourceLevel, mTexStorage, destLevel));
+
+    return gl::NoError();
+}
+
 gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
 {
     ASSERT(GL_TEXTURE_2D && size.depth == 1);

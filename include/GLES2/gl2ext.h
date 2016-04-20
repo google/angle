@@ -1316,6 +1316,14 @@ GL_APICALL void GL_APIENTRY glCopySubTextureCHROMIUM(GLuint sourceId,
 #endif
 #endif /* GL_CHROMIUM_copy_texture */
 
+#ifndef GL_CHROMIUM_compressed_copy_texture
+#define GL_CHROMIUM_compressed_copy_texture 1
+typedef void(GL_APIENTRYP PFNGLCOMPRESSEDCOPYTEXTURECHROMIUMPROC)(GLuint sourceId, GLuint destId);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glCompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId);
+#endif
+#endif /* GL_CHROMIUM_compressed_copy_texture */
+
 #ifndef GL_CHROMIUM_sync_query
 #define GL_CHROMIUM_sync_query 1
 #define GL_COMMANDS_COMPLETED_CHROMIUM    0x84F7
