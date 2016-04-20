@@ -2460,8 +2460,15 @@ gl::Error Renderer9::copyTexture(const gl::Texture *source,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    RECT rect;
+    rect.left   = sourceRect.x;
+    rect.top    = sourceRect.y;
+    rect.right  = sourceRect.x + sourceRect.width;
+    rect.bottom = sourceRect.y + sourceRect.height;
+
+    return mBlit->copyTexture2D(source, sourceLevel, rect, destFormat, destOffset, storage,
+                                destLevel, unpackFlipY, unpackPremultiplyAlpha,
+                                unpackUnmultiplyAlpha);
 }
 
 gl::Error Renderer9::copyCompressedTexture(const gl::Texture *source,
