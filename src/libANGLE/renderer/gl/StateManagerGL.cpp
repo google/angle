@@ -796,11 +796,11 @@ void StateManagerGL::setAttributeCurrentData(size_t index,
                                             mVertexAttribCurrentValues[index].FloatValues);
                 break;
             case GL_INT:
-                mFunctions->vertexAttrib4iv(static_cast<GLuint>(index),
+                mFunctions->vertexAttribI4iv(static_cast<GLuint>(index),
                                             mVertexAttribCurrentValues[index].IntValues);
                 break;
             case GL_UNSIGNED_INT:
-                mFunctions->vertexAttrib4uiv(static_cast<GLuint>(index),
+                mFunctions->vertexAttribI4uiv(static_cast<GLuint>(index),
                                              mVertexAttribCurrentValues[index].UnsignedIntValues);
                 break;
           default: UNREACHABLE();
