@@ -1069,11 +1069,13 @@ void State::setCopyWriteBufferBinding(Buffer *buffer)
 void State::setPixelPackBufferBinding(Buffer *buffer)
 {
     mPack.pixelBuffer.set(buffer);
+    mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
 }
 
 void State::setPixelUnpackBufferBinding(Buffer *buffer)
 {
     mUnpack.pixelBuffer.set(buffer);
+    mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
 }
 
 Buffer *State::getTargetBuffer(GLenum target) const

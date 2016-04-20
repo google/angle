@@ -232,6 +232,7 @@ Context::Context(const egl::Config *config,
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_IMAGES);
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_ROWS);
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_SKIP_PIXELS);
+    mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_BUFFER_BINDING);
     // No dirty objects.
 
     // Readpixels uses the pack state and read FBO
@@ -240,6 +241,7 @@ Context::Context(const egl::Config *config,
     mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_ROW_LENGTH);
     mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_ROWS);
     mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_SKIP_PIXELS);
+    mReadPixelsDirtyBits.set(State::DIRTY_BIT_PACK_BUFFER_BINDING);
     mReadPixelsDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
 
     mClearDirtyBits.set(State::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);

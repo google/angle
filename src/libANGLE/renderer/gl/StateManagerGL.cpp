@@ -1460,6 +1460,10 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
                 // TODO(jmadill): split this
                 setPixelUnpackState(state.getUnpackState());
                 break;
+            case gl::State::DIRTY_BIT_UNPACK_BUFFER_BINDING:
+                // TODO(jmadill): split this
+                setPixelUnpackState(state.getUnpackState());
+                break;
             case gl::State::DIRTY_BIT_PACK_ALIGNMENT:
                 // TODO(jmadill): split this
                 setPixelPackState(state.getPackState());
@@ -1477,6 +1481,10 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
                 setPixelPackState(state.getPackState());
                 break;
             case gl::State::DIRTY_BIT_PACK_SKIP_PIXELS:
+                // TODO(jmadill): split this
+                setPixelPackState(state.getPackState());
+                break;
+            case gl::State::DIRTY_BIT_PACK_BUFFER_BINDING:
                 // TODO(jmadill): split this
                 setPixelPackState(state.getPackState());
                 break;
