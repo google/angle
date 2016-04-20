@@ -403,7 +403,7 @@ Texture *ResourceManager::checkTextureAllocation(GLuint handle, GLenum type)
         return textureMapIt->second;
     }
 
-    Texture *texture = new Texture(mFactory->createTexture(type), handle, type);
+    Texture *texture = new Texture(mFactory, handle, type);
     texture->addRef();
 
     if (handleAllocated)

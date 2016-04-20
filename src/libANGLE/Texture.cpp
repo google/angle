@@ -16,6 +16,8 @@
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/TextureImpl.h"
 
 namespace gl
 {
@@ -47,9 +49,9 @@ static size_t GetImageDescIndex(GLenum target, size_t level)
     return IsCubeMapTextureTarget(target) ? ((level * 6) + CubeMapTextureTargetToLayerIndex(target)) : level;
 }
 
-Texture::Texture(rx::TextureImpl *impl, GLuint id, GLenum target)
+Texture::Texture(rx::ImplFactory *factory, GLuint id, GLenum target)
     : egl::ImageSibling(id),
-      mTexture(impl),
+      mTexture(factory->createTexture(target)),
       mLabel(),
       mTextureState(),
       mTarget(target),
@@ -862,5 +864,10 @@ void Texture::onDetach()
 GLuint Texture::getId() const
 {
     return id();
+}
+
+rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
+{
+    return mTexture;
 }
 }

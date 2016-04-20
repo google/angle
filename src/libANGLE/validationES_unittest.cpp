@@ -26,14 +26,6 @@ using testing::Return;
 namespace
 {
 
-class MockFactory : public NullFactory
-{
-  public:
-    MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::Framebuffer::Data &));
-    MOCK_METHOD1(createProgram, ProgramImpl *(const gl::Program::Data &));
-    MOCK_METHOD1(createVertexArray, VertexArrayImpl *(const gl::VertexArray::Data &));
-};
-
 class MockValidationContext : public ValidationContext
 {
   public:
@@ -95,10 +87,11 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.initialize(caps, extensions, 3, false);
 
     NiceMock<MockTextureImpl> *textureImpl = new NiceMock<MockTextureImpl>();
+    EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));
     EXPECT_CALL(*textureImpl, setStorage(_, _, _, _)).WillOnce(Return(Error(GL_NO_ERROR)));
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
 
-    Texture *texture = new Texture(textureImpl, 0, GL_TEXTURE_2D);
+    Texture *texture = new Texture(&mockFactory, 0, GL_TEXTURE_2D);
     texture->addRef();
     texture->setStorage(GL_TEXTURE_2D, 1, GL_RGBA8, Extents(1, 1, 0));
 

@@ -172,19 +172,19 @@ Context::Context(const egl::Config *config,
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    Texture *zeroTexture2D = new Texture(mRenderer->createTexture(GL_TEXTURE_2D), 0, GL_TEXTURE_2D);
+    Texture *zeroTexture2D = new Texture(mRenderer, 0, GL_TEXTURE_2D);
     mZeroTextures[GL_TEXTURE_2D].set(zeroTexture2D);
 
-    Texture *zeroTextureCube = new Texture(mRenderer->createTexture(GL_TEXTURE_CUBE_MAP), 0, GL_TEXTURE_CUBE_MAP);
+    Texture *zeroTextureCube = new Texture(mRenderer, 0, GL_TEXTURE_CUBE_MAP);
     mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
 
     if (mClientVersion >= 3)
     {
         // TODO: These could also be enabled via extension
-        Texture *zeroTexture3D = new Texture(mRenderer->createTexture(GL_TEXTURE_3D), 0, GL_TEXTURE_3D);
+        Texture *zeroTexture3D = new Texture(mRenderer, 0, GL_TEXTURE_3D);
         mZeroTextures[GL_TEXTURE_3D].set(zeroTexture3D);
 
-        Texture *zeroTexture2DArray = new Texture(mRenderer->createTexture(GL_TEXTURE_2D_ARRAY), 0, GL_TEXTURE_2D_ARRAY);
+        Texture *zeroTexture2DArray = new Texture(mRenderer, 0, GL_TEXTURE_2D_ARRAY);
         mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
     }
 

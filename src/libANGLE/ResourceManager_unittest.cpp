@@ -9,22 +9,14 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "tests/angle_unittests_utils.h"
 #include "libANGLE/ResourceManager.h"
+#include "tests/angle_unittests_utils.h"
 
 using namespace rx;
 using namespace gl;
 
 namespace
 {
-
-class MockFactory : public NullFactory
-{
-  public:
-    MOCK_METHOD0(createBuffer, BufferImpl*());
-    MOCK_METHOD1(createTexture, TextureImpl*(GLenum));
-    MOCK_METHOD0(createRenderbuffer, RenderbufferImpl*());
-};
 
 class ResourceManagerTest : public testing::Test
 {

@@ -21,11 +21,16 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/renderer/TextureImpl.h"
 
 namespace egl
 {
 class Surface;
+}
+
+namespace rx
+{
+class ImplFactory;
+class TextureImpl;
 }
 
 namespace gl
@@ -40,7 +45,7 @@ class Texture final : public egl::ImageSibling,
                       public LabeledObject
 {
   public:
-    Texture(rx::TextureImpl *impl, GLuint id, GLenum target);
+    Texture(rx::ImplFactory *factory, GLuint id, GLenum target);
     ~Texture() override;
 
     void setLabel(const std::string &label) override;
@@ -180,7 +185,7 @@ class Texture final : public egl::ImageSibling,
     GLuint getId() const override;
 
   private:
-    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mTexture; }
+    rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override;
 
     // ANGLE-only method, used internally
     friend class egl::Surface;

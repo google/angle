@@ -20,12 +20,6 @@ using ::testing::SetArgumentPointee;
 namespace
 {
 
-class MockFactory : public rx::NullFactory
-{
-  public:
-    MOCK_METHOD0(createTransformFeedback, rx::TransformFeedbackImpl *());
-};
-
 class TransformFeedbackTest : public testing::Test
 {
   protected:
@@ -59,7 +53,7 @@ class TransformFeedbackTest : public testing::Test
         testing::Mock::VerifyAndClear(mImpl);
     }
 
-    MockFactory mMockFactory;
+    rx::MockFactory mMockFactory;
     rx::MockTransformFeedbackImpl* mImpl;
     gl::TransformFeedback* mFeedback;
     gl::Caps mCaps;
