@@ -2951,7 +2951,7 @@ gl::Error Renderer11::copyImageInternal(const gl::Framebuffer *framebuffer,
     // Convert to the unsized format before calling copyTexture.
     const gl::InternalFormat &internalFormat = gl::GetInternalFormatInfo(destFormat);
     ANGLE_TRY(mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, nullptr,
-                                 internalFormat.format, GL_NEAREST, false));
+                                 internalFormat.format, GL_NEAREST, false, false, false));
 
     return gl::NoError();
 }
@@ -3026,10 +3026,99 @@ gl::Error Renderer11::copyImage2DArray(const gl::Framebuffer *framebuffer, const
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(framebuffer, sourceRect, destFormat, destOffset, destRenderTarget));
-
     storage11->invalidateSwizzleCacheLevel(level);
 
     return gl::NoError();
+}
+
+gl::Error Renderer11::copyTexture(const gl::Texture *source,
+                                  GLint sourceLevel,
+                                  const gl::Rectangle &sourceRect,
+                                  GLenum destFormat,
+                                  const gl::Offset &destOffset,
+                                  TextureStorage *storage,
+                                  GLint destLevel,
+                                  bool unpackFlipY,
+                                  bool unpackPremultiplyAlpha,
+                                  bool unpackUnmultiplyAlpha)
+{
+    const TextureD3D *sourceD3D = GetImplAs<TextureD3D>(source);
+
+    TextureStorage *sourceStorage = nullptr;
+    ANGLE_TRY(const_cast<TextureD3D *>(sourceD3D)->getNativeTexture(&sourceStorage));
+
+    TextureStorage11_2D *sourceStorage11 = GetAs<TextureStorage11_2D>(sourceStorage);
+    ASSERT(sourceStorage11);
+
+    TextureStorage11_2D *destStorage11 = GetAs<TextureStorage11_2D>(storage);
+    ASSERT(destStorage11);
+
+    // Check for fast path where a CopySubresourceRegion can be used.
+    if (unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !unpackFlipY &&
+        sourceStorage11->getFormatSet().texFormat == destStorage11->getFormatSet().texFormat)
+    {
+        ID3D11Resource *sourceResource = nullptr;
+        ANGLE_TRY(sourceStorage11->getResource(&sourceResource));
+
+        gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
+        UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
+
+        ID3D11Resource *destResource = nullptr;
+        ANGLE_TRY(destStorage11->getResource(&destResource));
+
+        gl::ImageIndex destIndex = gl::ImageIndex::Make2D(destLevel);
+        UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
+
+        D3D11_BOX sourceBox{
+            static_cast<UINT>(sourceRect.x),
+            static_cast<UINT>(sourceRect.y),
+            0u,
+            static_cast<UINT>(sourceRect.x + sourceRect.width),
+            static_cast<UINT>(sourceRect.y + sourceRect.height),
+            1u,
+        };
+
+        mDeviceContext->CopySubresourceRegion(destResource, destSubresource, destOffset.x,
+                                              destOffset.y, destOffset.z, sourceResource,
+                                              sourceSubresource, &sourceBox);
+    }
+    else
+    {
+        ID3D11ShaderResourceView *sourceSRV = nullptr;
+        ANGLE_TRY(sourceStorage11->getSRVLevels(sourceLevel, sourceLevel, &sourceSRV));
+
+        gl::ImageIndex destIndex             = gl::ImageIndex::Make2D(destLevel);
+        RenderTargetD3D *destRenderTargetD3D = nullptr;
+        ANGLE_TRY(destStorage11->getRenderTarget(destIndex, &destRenderTargetD3D));
+
+        RenderTarget11 *destRenderTarget11 = GetAs<RenderTarget11>(destRenderTargetD3D);
+
+        ID3D11RenderTargetView *destRTV = destRenderTarget11->getRenderTargetView();
+        ASSERT(destRTV);
+
+        gl::Box sourceArea(sourceRect.x, sourceRect.y, 0, sourceRect.width, sourceRect.height, 1);
+        gl::Extents sourceSize(
+            static_cast<int>(source->getWidth(source->getTarget(), sourceLevel)),
+            static_cast<int>(source->getHeight(source->getTarget(), sourceLevel)), 1);
+        if (unpackFlipY)
+        {
+            sourceArea.y      = sourceSize.height - sourceRect.y;
+            sourceArea.height = -sourceArea.height;
+        }
+
+        gl::Box destArea(destOffset.x, destOffset.y, 0, sourceRect.width, sourceRect.height, 1);
+        gl::Extents destSize(destRenderTarget11->getWidth(), destRenderTarget11->getHeight(), 1);
+
+        // Use nearest filtering because source and destination are the same size for the direct
+        // copy
+        ANGLE_TRY(mBlit->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize,
+                                     nullptr, destFormat, GL_NEAREST, false, unpackPremultiplyAlpha,
+                                     unpackUnmultiplyAlpha));
+    }
+
+    destStorage11->invalidateSwizzleCacheLevel(destLevel);
+
+    return gl::Error(GL_NO_ERROR);
 }
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
@@ -3974,7 +4063,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
             bool maskOffAlpha = colorMaskingNeeded && colorMask.alpha;
             ASSERT(readSRV);
             ANGLE_TRY(mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize,
-                                         scissor, destFormatInfo.format, filter, maskOffAlpha));
+                                         scissor, destFormatInfo.format, filter, maskOffAlpha,
+                                         false, false));
         }
     }
 

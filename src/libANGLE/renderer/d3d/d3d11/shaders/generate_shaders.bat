@@ -29,6 +29,11 @@ call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0_level_9_3 
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLum2D      ps_4_0_level_9_3  compiled\passthroughlum2d11ps.h      %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLumAlpha2D ps_4_0_level_9_3  compiled\passthroughlumalpha2d11ps.h %debug%
 
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAPremultiply2D ps_4_0_level_9_3 compiled\passthroughrgbapremultiply2d11ps.h %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAUnmultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbaunmultiply2d11ps.h  %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBPremultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbpremultiply2d11ps.h  %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBUnmultiply2D   ps_4_0_level_9_3 compiled\passthroughrgbunmultiply2d11ps.h   %debug%
+
 call:BuildShader Clear11.hlsl         VS_ClearFloat            vs_4_0_level_9_3  compiled\clearfloat11vs.h            %debug%
 call:BuildShader Clear11.hlsl         PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
 call:BuildShader Clear11.hlsl         PS_ClearFloat            ps_4_0            compiled\clearfloat11ps.h            %debug%

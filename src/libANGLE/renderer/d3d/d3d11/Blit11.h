@@ -40,7 +40,9 @@ class Blit11 : angle::NonCopyable
                           const gl::Rectangle *scissor,
                           GLenum destFormat,
                           GLenum filter,
-                          bool maskOffAlpha);
+                          bool maskOffAlpha,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha);
 
     gl::Error copyStencil(const TextureHelper11 &source,
                           unsigned int sourceSubresource,
@@ -93,8 +95,14 @@ class Blit11 : angle::NonCopyable
     {
         BLITSHADER_INVALID,
         BLITSHADER_2D_RGBAF,
+        BLITSHADER_2D_RGBAF_PREMULTIPLY,
+        BLITSHADER_2D_RGBAF_UNMULTIPLY,
         BLITSHADER_2D_BGRAF,
+        BLITSHADER_2D_BGRAF_PREMULTIPLY,
+        BLITSHADER_2D_BGRAF_UNMULTIPLY,
         BLITSHADER_2D_RGBF,
+        BLITSHADER_2D_RGBF_PREMULTIPLY,
+        BLITSHADER_2D_RGBF_UNMULTIPLY,
         BLITSHADER_2D_RGF,
         BLITSHADER_2D_RF,
         BLITSHADER_2D_ALPHA,
@@ -179,6 +187,8 @@ class Blit11 : angle::NonCopyable
 
     static BlitShaderType GetBlitShaderType(GLenum destinationFormat,
                                             bool isSigned,
+                                            bool unpackPremultiplyAlpha,
+                                            bool unpackUnmultiplyAlpha,
                                             ShaderDimension dimension);
     static SwizzleShaderType GetSwizzleShaderType(GLenum type, D3D11_SRV_DIMENSION dimensionality);
 
@@ -230,6 +240,8 @@ class Blit11 : angle::NonCopyable
 
     gl::Error getBlitShader(GLenum destFormat,
                             bool isSigned,
+                            bool unpackPremultiplyAlpha,
+                            bool unpackUnmultiplyAlpha,
                             ShaderDimension dimension,
                             const Shader **shaderOut);
     gl::Error getSwizzleShader(GLenum type,

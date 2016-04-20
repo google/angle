@@ -160,6 +160,7 @@ Extensions::Extensions()
       lossyETCDecode(false),
       bindUniformLocation(false),
       syncQuery(false),
+      copyTexture(false),
       colorBufferFloat(false),
       multisampleCompatibility(false),
       framebufferMixedSamples(false),
@@ -238,6 +239,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_ANGLE_lossy_etc_decode",             lossyETCDecode,            &extensionStrings);
     InsertExtensionString("GL_CHROMIUM_bind_uniform_location",     bindUniformLocation,       &extensionStrings);
     InsertExtensionString("GL_CHROMIUM_sync_query",                syncQuery,                 &extensionStrings);
+    InsertExtensionString("GL_CHROMIUM_copy_texture",              copyTexture,               &extensionStrings);
     InsertExtensionString("GL_EXT_multisample_compatibility",      multisampleCompatibility,  &extensionStrings);
     InsertExtensionString("GL_CHROMIUM_framebuffer_mixed_samples", framebufferMixedSamples,   &extensionStrings);
     InsertExtensionString("GL_EXT_texture_norm16",                 textureNorm16,             &extensionStrings);

@@ -911,6 +911,63 @@ gl::Error TextureD3D_2D::copySubImage(GLenum target,
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error TextureD3D_2D::copyTexture(GLenum internalFormat,
+                                     GLenum type,
+                                     bool unpackFlipY,
+                                     bool unpackPremultiplyAlpha,
+                                     bool unpackUnmultiplyAlpha,
+                                     const gl::Texture *source)
+{
+    GLenum sourceTarget = source->getTarget();
+    GLint sourceLevel   = 0;
+
+    GLint destLevel = 0;
+
+    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(internalFormat, type);
+    gl::Extents size(static_cast<int>(source->getWidth(sourceTarget, sourceLevel)),
+                     static_cast<int>(source->getHeight(sourceTarget, sourceLevel)), 1);
+    redefineImage(destLevel, sizedInternalFormat, size, false);
+
+    ASSERT(canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)));
+
+    ANGLE_TRY(ensureRenderTarget());
+    ASSERT(isValidLevel(destLevel));
+    ANGLE_TRY(updateStorageLevel(destLevel));
+
+    gl::Rectangle sourceRect(0, 0, size.width, size.height);
+    gl::Offset destOffset(0, 0, 0);
+    ANGLE_TRY(mRenderer->copyTexture(source, sourceLevel, sourceRect,
+                                     gl::GetInternalFormatInfo(sizedInternalFormat).format,
+                                     destOffset, mTexStorage, destLevel, unpackFlipY,
+                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+    return gl::NoError();
+}
+
+gl::Error TextureD3D_2D::copySubTexture(const gl::Offset &destOffset,
+                                        const gl::Rectangle &sourceArea,
+                                        bool unpackFlipY,
+                                        bool unpackPremultiplyAlpha,
+                                        bool unpackUnmultiplyAlpha,
+                                        const gl::Texture *source)
+{
+    GLint sourceLevel = 0;
+    GLint destLevel   = 0;
+
+    ASSERT(canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)));
+
+    ANGLE_TRY(ensureRenderTarget());
+    ASSERT(isValidLevel(destLevel));
+    ANGLE_TRY(updateStorageLevel(destLevel));
+
+    ANGLE_TRY(mRenderer->copyTexture(source, sourceLevel, sourceArea,
+                                     gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
+                                     destOffset, mTexStorage, destLevel, unpackFlipY,
+                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
+
+    return gl::NoError();
+}
+
 gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
 {
     ASSERT(GL_TEXTURE_2D && size.depth == 1);

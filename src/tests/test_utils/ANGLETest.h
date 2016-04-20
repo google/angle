@@ -78,6 +78,7 @@ struct GLColor
     static const GLColor cyan;
     static const GLColor green;
     static const GLColor red;
+    static const GLColor transparentBlack;
     static const GLColor white;
     static const GLColor yellow;
 };

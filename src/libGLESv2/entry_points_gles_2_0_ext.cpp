@@ -1869,4 +1869,70 @@ ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program
     }
 }
 
+ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
+                                                  GLuint destId,
+                                                  GLint internalFormat,
+                                                  GLenum destType,
+                                                  GLboolean unpackFlipY,
+                                                  GLboolean unpackPremultiplyAlpha,
+                                                  GLboolean unpackUnmultiplyAlpha)
+{
+    EVENT(
+        "(GLuint sourceId = %u, GLuint destId = %u, GLint internalFormat = 0x%X, GLenum destType = "
+        "0x%X, GLboolean unpackFlipY = %u, GLboolean unpackPremultiplyAlpha = %u, GLboolean "
+        "unpackUnmultiplyAlpha = %u)",
+        sourceId, destId, internalFormat, destType, unpackFlipY, unpackPremultiplyAlpha,
+        unpackUnmultiplyAlpha);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCopyTextureCHROMIUM(context, sourceId, destId, internalFormat, destType,
+                                         unpackFlipY, unpackPremultiplyAlpha,
+                                         unpackUnmultiplyAlpha))
+        {
+            return;
+        }
+
+        context->copyTextureCHROMIUM(sourceId, destId, internalFormat, destType, unpackFlipY,
+                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
+                                                     GLuint destId,
+                                                     GLint xoffset,
+                                                     GLint yoffset,
+                                                     GLint x,
+                                                     GLint y,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLboolean unpackFlipY,
+                                                     GLboolean unpackPremultiplyAlpha,
+                                                     GLboolean unpackUnmultiplyAlpha)
+{
+    EVENT(
+        "(GLuint sourceId = %u, GLuint destId = %u, , GLboolean unpackFlipY = %u, GLint xoffset = "
+        "%d, GLint yoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = "
+        "%d, GLboolean unpackPremultiplyAlpha = %u, GLboolean unpackUnmultiplyAlpha = %u)",
+        sourceId, destId, xoffset, yoffset, x, y, width, height, unpackFlipY,
+        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCopySubTextureCHROMIUM(context, sourceId, destId, xoffset, yoffset, x, y,
+                                            width, height, unpackFlipY, unpackPremultiplyAlpha,
+                                            unpackUnmultiplyAlpha))
+        {
+            return;
+        }
+
+        context->copySubTextureCHROMIUM(sourceId, destId, xoffset, yoffset, x, y, width, height,
+                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+}
+
 }  // gl

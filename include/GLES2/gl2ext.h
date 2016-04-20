@@ -1261,6 +1261,48 @@ GL_APICALL void GL_APIENTRY glGetSyncivAPPLE (GLsync sync, GLenum pname, GLsizei
 #define GL_ARM_shader_framebuffer_fetch_depth_stencil 1
 #endif /* GL_ARM_shader_framebuffer_fetch_depth_stencil */
 
+#ifndef GL_CHROMIUM_copy_texture
+#define GL_CHROMIUM_copy_texture 1
+typedef void(GL_APIENTRYP PFNGLCOPYTEXTURECHROMIUMPROC)(GLuint sourceId,
+                                                        GLuint destId,
+                                                        GLint internalFormat,
+                                                        GLenum destType,
+                                                        GLboolean unpackFlipY,
+                                                        GLboolean unpackPremultiplyAlpha,
+                                                        GLboolean unpackUnmultiplyAlpha);
+typedef void(GL_APIENTRYP PFNGLCOPYSUBTEXTURECHROMIUMPROC)(GLuint sourceId,
+                                                           GLuint destId,
+                                                           GLint xoffset,
+                                                           GLint yoffset,
+                                                           GLint x,
+                                                           GLint y,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLboolean unpackFlipY,
+                                                           GLboolean unpackPremultiplyAlpha,
+                                                           GLboolean unpackUnmultiplyAlpha);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glCopyTextureCHROMIUM(GLuint sourceId,
+                                                  GLuint destId,
+                                                  GLint internalFormat,
+                                                  GLenum destType,
+                                                  GLboolean unpackFlipY,
+                                                  GLboolean unpackPremultiplyAlpha,
+                                                  GLboolean unpackUnmultiplyAlpha);
+GL_APICALL void GL_APIENTRY glCopySubTextureCHROMIUM(GLuint sourceId,
+                                                     GLuint destId,
+                                                     GLint xoffset,
+                                                     GLint yoffset,
+                                                     GLint x,
+                                                     GLint y,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLboolean unpackFlipY,
+                                                     GLboolean unpackPremultiplyAlpha,
+                                                     GLboolean unpackUnmultiplyAlpha);
+#endif
+#endif /* GL_CHROMIUM_copy_texture */
+
 #ifndef GL_CHROMIUM_sync_query
 #define GL_CHROMIUM_sync_query 1
 #define GL_COMMANDS_COMPLETED_CHROMIUM    0x84F7

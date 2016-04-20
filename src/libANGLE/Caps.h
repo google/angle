@@ -288,6 +288,9 @@ struct Extensions
     // GL_CHROMIUM_sync_query
     bool syncQuery;
 
+    // GL_CHROMIUM_copy_texture
+    bool copyTexture;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

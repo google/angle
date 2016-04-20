@@ -2339,6 +2339,21 @@ gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer, const 
     return gl::Error(GL_INVALID_OPERATION);
 }
 
+gl::Error Renderer9::copyTexture(const gl::Texture *source,
+                                 GLint sourceLevel,
+                                 const gl::Rectangle &sourceRect,
+                                 GLenum destFormat,
+                                 const gl::Offset &destOffset,
+                                 TextureStorage *storage,
+                                 GLint destLevel,
+                                 bool unpackFlipY,
+                                 bool unpackPremultiplyAlpha,
+                                 bool unpackUnmultiplyAlpha)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);

@@ -202,6 +202,17 @@ class Renderer11 : public RendererD3D
                                TextureStorage *storage,
                                GLint level) override;
 
+    gl::Error copyTexture(const gl::Texture *source,
+                          GLint sourceLevel,
+                          const gl::Rectangle &sourceRect,
+                          GLenum destFormat,
+                          const gl::Offset &destOffset,
+                          TextureStorage *storage,
+                          GLint destLevel,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha) override;
+
     // RenderTarget creation
     gl::Error createRenderTarget(int width,
                                  int height,
