@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_97d286d6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1606,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-04-21T22:09:21Z",
+      "side": 1,
+      "message": "This comment is out of date.",
+      "revId": "c6faf4ff1276be44b475ba5505e5551be5c2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
