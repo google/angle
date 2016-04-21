@@ -22,12 +22,13 @@ debug.txt
 *.orig
 *.rej
 .gclient_entries
-/third_party
 /src/tests/third_party/googlemock
 /src/tests/third_party/googletest
+/third_party/cherry
+/third_party/deqp/src
+/third_party/gyp
 /third_party/libpng
 /third_party/zlib
-/third_party/deqp/src
 /src/tests/third_party/gles_conformance_tests
 out
 lib/*
