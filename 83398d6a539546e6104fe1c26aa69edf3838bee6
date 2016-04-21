@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_fea70ee1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "There\u0027s some argument that using a local class helper  might have encapsulated the data and operations here a bit better, but the code seems fine to me.",
+      "range": {
+        "startLine": 1711,
+        "startChar": 0,
+        "endLine": 1713,
+        "endChar": 32
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3e3c2671",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "I think I might just call this boundUnused or boundUnreferencedUniforms for clarity. For some reason I thought reserved might be for gl_ uniforms or something.",
+      "range": {
+        "startLine": 1753,
+        "startChar": 21,
+        "endLine": 1753,
+        "endChar": 29
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_1e5a0afc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1757,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "a comment could clear up the check here, a lot of moving parts",
+      "range": {
+        "startLine": 1757,
+        "startChar": 7,
+        "endLine": 1757,
+        "endChar": 64
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_51fc7380",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "I might have just flagged the bound state as it seems pretty close to what the API specifies, with the ignored being determined from that, but seems fine.",
+      "range": {
+        "startLine": 137,
+        "startChar": 9,
+        "endLine": 137,
+        "endChar": 16
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_d1388323",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "unnecessary",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 30
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3148d7ab",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "unnecessary",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 195,
+        "endChar": 30
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_b1330747",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "unnecessary?",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 30
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_71524f5b",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 423,
+        "startChar": 4,
+        "endLine": 423,
+        "endChar": 30
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_b11ce7b2",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T17:23:14Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 482,
+        "startChar": 4,
+        "endLine": 482,
+        "endChar": 30
+      },
+      "revId": "83398d6a539546e6104fe1c26aa69edf3838bee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
