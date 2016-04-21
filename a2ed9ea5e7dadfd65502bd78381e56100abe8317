@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_894fc9b0",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T13:38:29Z",
+      "side": 1,
+      "message": "I think the rebase kinda mangled up this code, please see the above segment and update this chunk.",
+      "range": {
+        "startLine": 398,
+        "startChar": 0,
+        "endLine": 407,
+        "endChar": 31
+      },
+      "revId": "a2ed9ea5e7dadfd65502bd78381e56100abe8317",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
