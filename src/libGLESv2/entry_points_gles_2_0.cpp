@@ -1257,7 +1257,7 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
         }
 
         GLenum baseTarget = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
-        GLenum internalFormat = texture->getInternalFormat(baseTarget, 0);
+        GLenum internalFormat = texture->getInternalFormat(baseTarget, texture->getBaseLevel());
         const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
 
