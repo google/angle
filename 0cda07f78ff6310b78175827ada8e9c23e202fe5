@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_2e923b84",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-21T13:27:35Z",
+      "side": 0,
+      "message": "nice that we can remove this",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 42
+      },
+      "revId": "0cda07f78ff6310b78175827ada8e9c23e202fe5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
