@@ -129,7 +129,8 @@ class Buffer11 : public BufferD3D
     gl::ErrorOrResult<BufferStorage *> getConstantBufferRangeStorage(GLintptr offset,
                                                                      GLsizeiptr size);
 
-    BufferStorage *allocateStorage(BufferUsage usage) const;
+    BufferStorage *allocateStorage(BufferUsage usage);
+    void updateSystemMemoryDeallocThreshold();
 
     Renderer11 *mRenderer;
     size_t mSize;
@@ -150,6 +151,7 @@ class Buffer11 : public BufferD3D
     std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
 
     unsigned int mReadUsageCount;
+    unsigned int mSystemMemoryDeallocThreshold;
 
     NotificationSet mStaticBufferDirtyCallbacks;
     NotificationSet mDirectBufferDirtyCallbacks;
