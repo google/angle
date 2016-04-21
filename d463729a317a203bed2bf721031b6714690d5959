@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e89420c3_bb8be74a",
+        "filename": "src/libANGLE/ResourceManager_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-21T14:25:36Z",
+      "side": 1,
+      "message": "Yes, otherwise compilation will fail. Frankly I\u0027m not quite sure why, the compilation error is generated from gtest templated code so it\u0027s not very useful.",
+      "parentUuid": "08733496_4e8f775b",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 26
+      },
+      "revId": "d463729a317a203bed2bf721031b6714690d5959",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_ae9d6b97",
         "filename": "src/libANGLE/TransformFeedback.cpp",
         "patchSetId": 1
