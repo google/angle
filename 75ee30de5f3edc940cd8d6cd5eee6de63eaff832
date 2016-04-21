@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_e9303de3",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-21T14:00:38Z",
+      "side": 1,
+      "message": "WTF kind of file format is this?",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 72
+      },
+      "revId": "75ee30de5f3edc940cd8d6cd5eee6de63eaff832",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
