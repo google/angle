@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_8758742d",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "It feels like a big duplication of somewhat complex lookup logic, though I guess this function can be simplified with the assumption that all lookups will succeed and are unique.",
+      "parentUuid": "08733496_21f7909d",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_212eb069",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 9
@@ -88,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_270de058",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "Yeah this isn\u0027t needed. I added it in for completion but I forgot GL texture consumers don\u0027t have mipmapping at all.",
+      "parentUuid": "08733496_2115d01f",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 31
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_c115fc63",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 9
@@ -99,6 +147,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "This should be called getImplementation, our GetImpAs functions assume that a getImplementation method exists.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 48
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_c79eec2d",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "I guess I can do that. I had it like this because it is a stream producer implementation rather than the entire stream and wanted to have that logical separation.",
+      "parentUuid": "08733496_c115fc63",
       "range": {
         "startLine": 79,
         "startChar": 4,
@@ -157,6 +229,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_07ff040d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "Probably don\u0027t even need to pass in a stream parameter, especially if we have a separate release function that eliminates the stream parameter from essentially being a glorified bind/unbind flag. I mainly had it for assertion purposes.",
+      "parentUuid": "08733496_8155c4ce",
+      "range": {
+        "startLine": 655,
+        "startChar": 40,
+        "endLine": 655,
+        "endChar": 46
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_a1ef2060",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -203,6 +299,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_2779604f",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "My idea was everything that needed to be passed could be passed in the attribute map, as it can hold pointers. Though that is another case of using external API constructs to pass potentially internal data. Adding a unique method for each producer does have the potential to pollute a large amount of classes with creation methods (display\u0027s impls, the renderer and its impls). I could leave it for another refactor if we actually do add more producers.",
+      "parentUuid": "08733496_8117848c",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 52
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_813ea40a",
         "filename": "src/libANGLE/renderer/DisplayImpl.h",
         "patchSetId": 9
@@ -214,6 +334,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "Is the consumer type known or required?",
+      "range": {
+        "startLine": 74,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 91
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_275de0be",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "Consumer type is known. Since we only have the YUV gl texture consumer implemented right now, it technically does not need to be known, but it will be if we support say rgb texture consumers where conversion may be necessary.",
+      "parentUuid": "08733496_813ea40a",
       "range": {
         "startLine": 74,
         "startChar": 53,
@@ -364,6 +508,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_270fa0c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "I had it as if other potential consumers (RGB) are added we would need to know.",
+      "parentUuid": "08733496_4c90436f",
+      "range": {
+        "startLine": 18,
+        "startChar": 60,
+        "endLine": 18,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_cc48d3ae",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 9
@@ -392,6 +560,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "Do we have to require this?  I couldn\u0027t find it in the EGL_ANGLE_stream_producer_d3d_texture_nv12 spec.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_520b787c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "Since there is a downsampled version of the texture, an NV12 texture whose dimensions are not divisible by 2 is not valid.",
+      "parentUuid": "08733496_0caf2ba7",
       "range": {
         "startLine": 50,
         "startChar": 4,
@@ -473,6 +665,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_f2456494",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "That comment is old. Miplevel will always be 0 (in the case John has at least and we designed the spec around that). The subresource ID is now the array slice being used.",
+      "parentUuid": "08733496_ac6477ee",
+      "range": {
+        "startLine": 1588,
+        "startChar": 4,
+        "endLine": 1588,
+        "endChar": 66
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_4c01232c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
         "patchSetId": 9
@@ -513,6 +729,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_527c588d",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1287,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "Yeah I can do that. I would need to make stream hold a pointer to the context though.",
+      "parentUuid": "08733496_cc3c5374",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_2cab07e3",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 9
@@ -524,6 +758,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "This feels like a hack, we should fix the validation code to take GL_TEXTURE_EXTERNAL_OES into account.",
+      "range": {
+        "startLine": 1998,
+        "startChar": 45,
+        "endLine": 1998,
+        "endChar": 58
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_925fd01b",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-22T21:26:46Z",
+      "side": 1,
+      "message": "The problem is that function is also used in other validation methods where GL_TEXTURE_EXTERNAL_OES is illegal, which would mean creating many \"withExtenral\" and \"withoutExternal\" methods.",
+      "parentUuid": "08733496_2cab07e3",
       "range": {
         "startLine": 1998,
         "startChar": 45,
