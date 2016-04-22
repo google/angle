@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_6160a8ac",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T19:40:26Z",
+      "side": 1,
+      "message": "OK, I finally had time to sit down and figure out the code. I understand we need to still have functional, but incomplete textures, when the base level is out of range. Using zero here isn\u0027t obviously clear what it\u0027s trying to do.\nMy solution is to instead, if baseLevel is out of range, immediately release the storage and mark the images dirty, update the cached baseLevel to 1000 or whatever is passed in, and return. Then, handle the size check as you have it below the out of range check.",
+      "range": {
+        "startLine": 641,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 5
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_618988aa",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T19:40:26Z",
+      "side": 1,
+      "message": "realized we can clean this up. Make this\n\n GLColor green(0, 255, 0);\n std::vector\u003cGLColor\u003e texDataGreen(2 * 2, green);\n ...\n EXPECT_PIXEL_COLOR_EQ(0, 0, green);\n\nYou could also make the green/red/blue const statics exposed in the header.",
+      "range": {
+        "startLine": 1691,
+        "startChar": 4,
+        "endLine": 1691,
+        "endChar": 39
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_818ea4b0",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T19:40:26Z",
+      "side": 1,
+      "message": "same for these guys",
+      "range": {
+        "startLine": 1720,
+        "startChar": 4,
+        "endLine": 1720,
+        "endChar": 16
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
