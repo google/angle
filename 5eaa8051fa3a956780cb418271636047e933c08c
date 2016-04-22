@@ -1,0 +1,389 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_9a30dbc6",
+        "filename": "include/EGL/eglext.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "where did this come from?",
+      "range": {
+        "startLine": 564,
+        "startChar": 7,
+        "endLine": 564,
+        "endChar": 28
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3ae7c7cb",
+        "filename": "scripts/bmp_to_nv12.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "tabs to spaces",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_0c9d6b8f",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 8
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "might as well make this wrap like the other file",
+      "range": {
+        "startLine": 1249,
+        "startChar": 73,
+        "endLine": 1249,
+        "endChar": 80
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3ad267d5",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "return static_cast\u003cEGLint\u003e(get(static_cast\u003cEGLAttrib\u003e(key), static_cast\u003cEGLAttrib\u003e(defaultValue)));",
+      "range": {
+        "startLine": 34,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 92
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_5a42c33e",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "range-fors",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 31
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_7a3f7fb5",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "range-for",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 31
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_9a9a9b27",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "this type doesn\u0027t seem to be used anywhere in this header.. maybe declare it in StreamImpl.h",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 31
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_1a584b2b",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "std::array",
+      "range": {
+        "startLine": 115,
+        "startChar": 11,
+        "endLine": 115,
+        "endChar": 29
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_fa52af0d",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "std::array",
+      "range": {
+        "startLine": 118,
+        "startChar": 17,
+        "endLine": 118,
+        "endChar": 26
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3a36e7dc",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "nit: sort order",
+      "range": {
+        "startLine": 33,
+        "startChar": 6,
+        "endLine": 33,
+        "endChar": 24
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_1a03ebf4",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "why not just do\n\n GLenum createType \u003d (type \u003d\u003d EXTERNAL ? 2D : type);\n // same code as before using createType instead of type",
+      "range": {
+        "startLine": 444,
+        "startChar": 8,
+        "endLine": 444,
+        "endChar": 44
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ba14b724",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "then use createType as needed",
+      "range": {
+        "startLine": 457,
+        "startChar": 12,
+        "endLine": 457,
+        "endChar": 16
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_0c12cbe9",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 66
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ccee1314",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "ASSERT_EGL_FALSE",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 13
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ecebcf01",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "ASSERT_EGL_TRUE",
+      "range": {
+        "startLine": 158,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 13
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_2cf6a7e8",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "ASSERT_EGL_FALSE, and so on",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 13
+      },
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3a00a725",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T20:37:11Z",
+      "side": 1,
+      "message": "This file should still have a copyright disclaimer, and a notice that it\u0027s auto-generated and should not be modified directly, with a pointer to the script.",
+      "revId": "5eaa8051fa3a956780cb418271636047e933c08c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
