@@ -1,0 +1,538 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_be31fd34",
+        "filename": "scripts/bmp_to_nv12.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "nit: tabs to spaces",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_21f7909d",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "We should try to move all of the validation to the EGL layer.",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_212eb069",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "I still think it looks cleaner to grab these in separate getters rather than use a new struct.  The Texture would then query the steam for the information it needs using an identifier to represent the buffer or plane of the stream.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 36
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_2115d01f",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Can external images be mipmapped? Doesn\u0027t look like this is used.",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 31
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_c115fc63",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "This should be called getImplementation, our GetImpAs functions assume that a getImplementation method exists.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 48
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_21a6b082",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Encapsulate these into a struct (texture unit and texture pointers) and put them into a vector.",
+      "range": {
+        "startLine": 114,
+        "startChar": 3,
+        "endLine": 118,
+        "endChar": 30
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_8155c4ce",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Should be fine to just pass mBoundStream.",
+      "range": {
+        "startLine": 655,
+        "startChar": 40,
+        "endLine": 655,
+        "endChar": 46
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_a1ef2060",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "How about calling this aquireFromStream to match the entry point eglStreamConsumerAcquire.\n\nI think we should also add a releaseFromStream to match eglStreamConsumerReleaseKHR instead of having a version that accepts a nullptr for the stream.\n\nThe release case is supposed to make the texture incomplete so I don\u0027t think the sizing information is useful.",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 24
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_8117848c",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "We may need createStream methods for each type of stream producer.  For example, the EGL_KHR_stream_producer_eglsurface extension adds a eglCreateStreamProducerSurfaceKHR with a very different prototype that wouldn\u0027t fit this method.\n\nIt probably makes sense to just name this createStreamProducerD3DTextureNV12",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 52
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_813ea40a",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Is the consumer type known or required?",
+      "range": {
+        "startLine": 74,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 91
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_014a942a",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "If this class isn\u0027t referenced in this file, no need to have the forward declaration here.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 25
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_a109e0ca",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "This can be simplified to just:\n\nGLenum bindingPoint \u003d (type !\u003d GL_TEXTURE_EXTERNAL_OES) ? type : GL_TEXTURE_2D;\ngl::Texture *t \u003d new gl::Texture(this, std::numeric_limits\u003cGLuint\u003e::max(), bindingPoint);\n        t-\u003esetStorage(bindingPoint, 1, GL_RGBA8, colorSize);\n\nThe else-if below won\u0027t be needed either.",
+      "range": {
+        "startLine": 444,
+        "startChar": 8,
+        "endLine": 456,
+        "endChar": 9
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_81af84c1",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "SafeDelete",
+      "range": {
+        "startLine": 3102,
+        "startChar": 4,
+        "endLine": 3102,
+        "endChar": 18
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_419e4c93",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3108,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Also assert that index.mipIndex \u003d\u003d 0?",
+      "range": {
+        "startLine": 3108,
+        "startChar": 4,
+        "endLine": 3108,
+        "endChar": 49
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_011294e9",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3120,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "assert that level \u003d\u003d 0 instead of checking?",
+      "range": {
+        "startLine": 3120,
+        "startChar": 4,
+        "endLine": 3120,
+        "endChar": 49
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_4c90436f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "No need for the consumer type if it\u0027s unused.",
+      "range": {
+        "startLine": 18,
+        "startChar": 60,
+        "endLine": 18,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_cc48d3ae",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "ASSERT that textureD3D isn\u0027t null.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_0caf2ba7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "Do we have to require this?  I couldn\u0027t find it in the EGL_ANGLE_stream_producer_d3d_texture_nv12 spec.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_cc2b7373",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "These need to take into account the subresource.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 33
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_8cfb3b5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "This will likely fail compile on release due to un-referenced local variable.",
+      "range": {
+        "startLine": 1532,
+        "startChar": 4,
+        "endLine": 1534,
+        "endChar": 23
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ac6477ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "This will not be the case for 2D array textures. See https://msdn.microsoft.com/en-us/library/windows/desktop/ff476901.aspx for a description of how to calculate it.\n\nI think we need to amend the spec so that the user passes the mip level instead because specifying a subresource index for a 2D array texture could indicate that you want two different mip levels.",
+      "range": {
+        "startLine": 1588,
+        "startChar": 4,
+        "endLine": 1588,
+        "endChar": 66
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_4c01232c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "nit: override instead of virtual in this class.",
+      "range": {
+        "startLine": 212,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 41
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_cc3c5374",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "I noticed there is one section of EGL_KHR_stream_consumer_gltexture that we don\u0027t validate here: \"The GLES context containing the texture must be bound to the current thread.\"",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_2cab07e3",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T20:24:16Z",
+      "side": 1,
+      "message": "This feels like a hack, we should fix the validation code to take GL_TEXTURE_EXTERNAL_OES into account.",
+      "range": {
+        "startLine": 1998,
+        "startChar": 45,
+        "endLine": 1998,
+        "endChar": 58
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
