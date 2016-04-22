@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_784bfd02",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-22T17:41:49Z",
+      "side": 1,
+      "message": "possibly debugging code, should be deleted i think",
+      "range": {
+        "startLine": 1255,
+        "startChar": 12,
+        "endLine": 1255,
+        "endChar": 66
+      },
+      "revId": "10fdb28a7f8edd12ab7e5bd5b822e1972f555aed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
