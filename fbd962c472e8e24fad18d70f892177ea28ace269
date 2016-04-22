@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08733496_fbeaa7ed",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-22T18:27:14Z",
+      "side": 1,
+      "message": "The mActiveQueries member is a map from type to query, should be as easy as checking mActiveQueries[type] !\u003d nullptr",
+      "range": {
+        "startLine": 980,
+        "startChar": 4,
+        "endLine": 989,
+        "endChar": 17
+      },
+      "revId": "fbd962c472e8e24fad18d70f892177ea28ace269",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
