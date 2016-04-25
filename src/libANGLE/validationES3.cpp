@@ -728,6 +728,11 @@ static CopyConversionSet BuildValidES3CopyTexImageCombinations()
     return set;
 }
 
+static bool EqualOrFirstZero(GLuint first, GLuint second)
+{
+    return first == 0 || first == second;
+}
+
 static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle)
 {
     const InternalFormat &textureInternalFormatInfo = GetInternalFormatInfo(textureInternalFormat);
@@ -832,12 +837,17 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
 
         if (textureInternalFormatInfo.pixelBytes > 0)
         {
-            // Section 3.8.5 of the GLES 3.0.3 spec, pg 139, requires that, if the destination format is sized,
-            // component sizes of the source and destination formats must exactly match
-            if (textureInternalFormatInfo.redBits   != sourceEffectiveFormat->redBits   ||
-                textureInternalFormatInfo.greenBits != sourceEffectiveFormat->greenBits ||
-                textureInternalFormatInfo.blueBits  != sourceEffectiveFormat->blueBits  ||
-                textureInternalFormatInfo.alphaBits != sourceEffectiveFormat->alphaBits)
+            // Section 3.8.5 of the GLES 3.0.3 spec, pg 139, requires that, if the destination
+            // format is sized, component sizes of the source and destination formats must exactly
+            // match if the destination format exists.
+            if (!EqualOrFirstZero(textureInternalFormatInfo.redBits,
+                                  sourceEffectiveFormat->redBits) ||
+                !EqualOrFirstZero(textureInternalFormatInfo.greenBits,
+                                  sourceEffectiveFormat->greenBits) ||
+                !EqualOrFirstZero(textureInternalFormatInfo.blueBits,
+                                  sourceEffectiveFormat->blueBits) ||
+                !EqualOrFirstZero(textureInternalFormatInfo.alphaBits,
+                                  sourceEffectiveFormat->alphaBits))
             {
                 return false;
             }
