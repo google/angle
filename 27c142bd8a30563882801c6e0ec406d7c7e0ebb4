@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_c7b977a4",
+        "filename": "scripts/bmp_to_nv12.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_be31fd34",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88864495_e616ba90",
         "filename": "scripts/bmp_to_nv12.py",
         "patchSetId": 9
@@ -47,6 +65,24 @@
       "writtenOn": "2016-04-25T12:34:32Z",
       "side": 1,
       "message": "The number 3 here, and the hardcoded two textures in consumerAcquire are consumer / producer specific constants. Having the number of planes queried from the producer to size a vector would be better. Likewise in consumerAcquire we could use that number of plane.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ca0a5e75",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "3 is a consumer specific constant due to the 3 planes being the max in Y-U-V. It could be upped in the future if there really is some bizarre texture format in the future but currently all the validation and texture logic is tied to it being 3.",
+      "parentUuid": "2874787a_3877e5d7",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -164,6 +200,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_a7b9db3d",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "I just don\u0027t like the idea of exposing producer and consumer specific concepts such as the plane to the general high level texture code as well as exposing many plane and index specific methods in the generic producer code. It feels like there isn\u0027t that clean a way to do this and I feel passing in an easily modified struct with texture-specific members is the cleanest and most easily refactored way to do this so method prototypes won\u0027t have to be changed in the future or a million methods have to be added to producers and their bases that may be changed in the future.",
+      "parentUuid": "08733496_212eb069",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 36
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_2115d01f",
         "filename": "src/libANGLE/Stream.h",
         "patchSetId": 9
@@ -245,6 +305,30 @@
       "writtenOn": "2016-04-22T21:26:46Z",
       "side": 1,
       "message": "I guess I can do that. I had it like this because it is a stream producer implementation rather than the entire stream and wanted to have that logical separation.",
+      "parentUuid": "08733496_c115fc63",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 48
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_47c1e76c",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "08733496_c115fc63",
       "range": {
         "startLine": 79,
@@ -346,6 +430,48 @@
     },
     {
       "key": {
+        "uuid": "08733496_2aff520d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_8155c4ce",
+      "range": {
+        "startLine": 655,
+        "startChar": 40,
+        "endLine": 655,
+        "endChar": 46
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_0af29646",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Yeah",
+      "parentUuid": "289d58d4_21399681",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e89420c3_41caf66c",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -363,6 +489,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_ca433e91",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "I was following what they did for Surface, which is also done with the friend way.",
+      "parentUuid": "e89420c3_41caf66c",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_a1ef2060",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -374,6 +518,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "How about calling this aquireFromStream to match the entry point eglStreamConsumerAcquire.\n\nI think we should also add a releaseFromStream to match eglStreamConsumerReleaseKHR instead of having a version that accepts a nullptr for the stream.\n\nThe release case is supposed to make the texture incomplete so I don\u0027t think the sizing information is useful.",
+      "range": {
+        "startLine": 202,
+        "startChar": 9,
+        "endLine": 202,
+        "endChar": 24
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_caefbe5f",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_a1ef2060",
       "range": {
         "startLine": 202,
         "startChar": 9,
@@ -528,6 +696,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_2a183257",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "The consumer is always created before the producer? The state machine enforces that and it is in the spec for streams. The consumer is also fixed once created.",
+      "parentUuid": "08733496_3ffa3585",
+      "range": {
+        "startLine": 74,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 91
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_014a942a",
         "filename": "src/libANGLE/renderer/ImplFactory.h",
         "patchSetId": 9
@@ -539,6 +731,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "If this class isn\u0027t referenced in this file, no need to have the forward declaration here.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 25
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_4a156e1e",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_014a942a",
       "range": {
         "startLine": 33,
         "startChar": 0,
@@ -591,6 +807,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_8a3786c1",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_a109e0ca",
+      "range": {
+        "startLine": 444,
+        "startChar": 8,
+        "endLine": 456,
+        "endChar": 9
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_81af84c1",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 9
@@ -602,6 +842,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "SafeDelete",
+      "range": {
+        "startLine": 3102,
+        "startChar": 4,
+        "endLine": 3102,
+        "endChar": 18
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_6a230a42",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3102,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_81af84c1",
       "range": {
         "startLine": 3102,
         "startChar": 4,
@@ -637,6 +901,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_aa1d22fd",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3108,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_419e4c93",
+      "range": {
+        "startLine": 3108,
+        "startChar": 4,
+        "endLine": 3108,
+        "endChar": 49
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_011294e9",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 9
@@ -648,6 +936,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "assert that level \u003d\u003d 0 instead of checking?",
+      "range": {
+        "startLine": 3120,
+        "startChar": 4,
+        "endLine": 3120,
+        "endChar": 49
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_0ade1655",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3120,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_011294e9",
       "range": {
         "startLine": 3120,
         "startChar": 4,
@@ -731,6 +1043,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_a50393f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_9f7429cf",
+      "range": {
+        "startLine": 18,
+        "startChar": 60,
+        "endLine": 18,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_cc48d3ae",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 9
@@ -742,6 +1078,24 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "ASSERT that textureD3D isn\u0027t null.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_65097b13",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_cc48d3ae",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -819,6 +1173,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_aaafe2c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "It isn\u0027t. This is just a sanity check.",
+      "parentUuid": "08733496_ff151d63",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_cc2b7373",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 9
@@ -842,6 +1220,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_45fc7f16",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "How so? Don\u0027t all subresources in a Texture2D have the same base texture dimension? We aren\u0027t using mipmapping at all. The input is a texture 2D array that all have the same size and no mipmaps.",
+      "parentUuid": "08733496_cc2b7373",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 33
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_8cfb3b5c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 9
@@ -853,6 +1255,30 @@
       "writtenOn": "2016-04-22T20:24:16Z",
       "side": 1,
       "message": "This will likely fail compile on release due to un-referenced local variable.",
+      "range": {
+        "startLine": 1532,
+        "startChar": 4,
+        "endLine": 1534,
+        "endChar": 23
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_059607c6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_8cfb3b5c",
       "range": {
         "startLine": 1532,
         "startChar": 4,
@@ -959,6 +1385,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_65841b95",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_4c01232c",
+      "range": {
+        "startLine": 212,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 41
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8a6e026_b1083811",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 9
@@ -970,6 +1420,24 @@
       "writtenOn": "2016-04-25T12:34:32Z",
       "side": 1,
       "message": "This line appears twice. Did you want to enable a extension? If yes we need to look for a validation bug that allowed the tests to pass.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_057fe735",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "No, I just accidentally enabled that twice.",
+      "parentUuid": "e8a6e026_b1083811",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -993,6 +1461,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_4579df4d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2719,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e89420c3_81ddde28",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e89420c3_41a116bb",
         "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
         "patchSetId": 9
@@ -1010,6 +1496,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_e5caebc3",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e89420c3_41a116bb",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8a6e026_d13504d1",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 9
@@ -1021,6 +1525,24 @@
       "writtenOn": "2016-04-25T12:34:32Z",
       "side": 1,
       "message": "nit:UNIMPLEMENTED()",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_e5b3cb59",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8a6e026_d13504d1",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -1156,6 +1678,30 @@
       "side": 1,
       "message": "It should be fine to still call it with the correct target in those places since they should validate if the texture target is valid beforehand.",
       "parentUuid": "08733496_925fd01b",
+      "range": {
+        "startLine": 1998,
+        "startChar": 45,
+        "endLine": 1998,
+        "endChar": 58
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_e0cd7984",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-25T21:17:39Z",
+      "side": 1,
+      "message": "The problem is that this method validation does not have a target. The target was added to ValidateTexParamParameters as a parameter because with GL_TEXTURE_EXTERNAL_OES, it needs to take target into account when it didn\u0027t need to before. ValidateSamplerParameteri doesn\u0027t have a target, so I use GL_TEXTURE_2D. So it isn\u0027t a hack but more using GL_TEXTURE_2D as a default so all pnames are allowed through.",
+      "parentUuid": "08733496_9f8189c6",
       "range": {
         "startLine": 1998,
         "startChar": 45,
