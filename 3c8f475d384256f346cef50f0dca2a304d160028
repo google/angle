@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e89420c3_81287ec6",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-25T13:31:39Z",
+      "side": 1,
+      "message": "This will require expanding this patch quite a bit to make sure that all the other functions that rely on base level being in range work correctly. But if you think that this is the best way to go, I can do it.",
+      "parentUuid": "08733496_6160a8ac",
+      "range": {
+        "startLine": 641,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 5
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_618988aa",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2016-04-22T19:40:26Z",
       "side": 1,
       "message": "realized we can clean this up. Make this\n\n GLColor green(0, 255, 0);\n std::vector\u003cGLColor\u003e texDataGreen(2 * 2, green);\n ...\n EXPECT_PIXEL_COLOR_EQ(0, 0, green);\n\nYou could also make the green/red/blue const statics exposed in the header.",
+      "range": {
+        "startLine": 1691,
+        "startChar": 4,
+        "endLine": 1691,
+        "endChar": 39
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e89420c3_81c4fe5e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-04-25T13:31:39Z",
+      "side": 1,
+      "message": "This does have the downside that GLColor is less flexible, it doesn\u0027t currently allow other formats than 8-bit per channel RGBA, so if we need other formats in the tests some kind of changes are needed. It does make the code considerably cleaner, though.",
+      "parentUuid": "08733496_618988aa",
       "range": {
         "startLine": 1691,
         "startChar": 4,
