@@ -730,6 +730,7 @@ void StateManager9::setStencilTestEnabled(bool stencilTestEnabled)
     if (stencilTestEnabled && mCurStencilSize > 0)
     {
         mRenderer9->getDevice()->SetRenderState(D3DRS_STENCILENABLE, TRUE);
+        mRenderer9->getDevice()->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
     }
     else
     {
