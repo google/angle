@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "88864495_e616ba90",
+        "filename": "scripts/bmp_to_nv12.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "from itertools import product\n\nfor (x, y) in product(range(0, width, 2), range(0, height, 2)):\n    # stuff with x and y\n\nThis will make the indexing below easier to read.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2874787a_3877e5d7",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "The number 3 here, and the hardcoded two textures in consumerAcquire are consumer / producer specific constants. Having the number of planes queried from the producer to size a vector would be better. Likewise in consumerAcquire we could use that number of plane.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_21f7909d",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 9
@@ -60,6 +94,23 @@
         "endLine": 112,
         "endChar": 99
       },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a87f884b_aad55368",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "nit: doesn\u0027t describe the mTextures[i]-\u003egetId() condition correctly.",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -253,6 +304,41 @@
     },
     {
       "key": {
+        "uuid": "289d58d4_21399681",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "Does this mean we\u0027ll get rid of it?",
+      "parentUuid": "08733496_07ff040d",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e89420c3_41caf66c",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "You can make these methods public and remove the friend declaration. The only interface libANGLE exposes is OpenGL (and EGL).",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_a1ef2060",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -387,6 +473,23 @@
         "endLine": 33,
         "endChar": 25
       },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4879ac72_fc4f210b",
+        "filename": "src/libANGLE/renderer/StreamProducerImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "We probably need a way to query the numbers of plane here.",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -712,6 +815,74 @@
     },
     {
       "key": {
+        "uuid": "e8a6e026_b1083811",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "This line appears twice. Did you want to enable a extension? If yes we need to look for a validation bug that allowed the tests to pass.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e89420c3_81ddde28",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2719,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "nit: UNIMPLEMENTED()",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e89420c3_41a116bb",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "nit:UNIMPLEMENTED()",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8a6e026_d13504d1",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "nit:UNIMPLEMENTED()",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_cc3c5374",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 9
@@ -741,6 +912,23 @@
       "side": 1,
       "message": "Yeah I can do that. I would need to make stream hold a pointer to the context though.",
       "parentUuid": "08733496_cc3c5374",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "288b98a4_43459a92",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1555,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "nit: \"Incompatible stream producer type\" for consistency with the consumer error.",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -788,6 +976,23 @@
         "endLine": 1998,
         "endChar": 58
       },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88864495_66f62a7b",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-04-25T12:34:32Z",
+      "side": 1,
+      "message": "Can you put the D3D specific tests in another file so that the Stream API is tested on non-Windows platforms as well?",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
