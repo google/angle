@@ -100,6 +100,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_04ca908c",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "Feel free to add helper functions in utilities.h for looking up buffer types and plane information.  Once the validation has succeeded, you can make assumptions that the input is valid and simplify the code.",
+      "parentUuid": "08733496_8758742d",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a87f884b_aad55368",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 9
@@ -409,6 +433,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_c481782c",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "Yep, we may end up with a bunch of unimplemented methods but I think it\u0027s cleaner then adding custom attributes into the map and requiring the implementations to know about them.",
+      "parentUuid": "08733496_2779604f",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 52
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_813ea40a",
         "filename": "src/libANGLE/renderer/DisplayImpl.h",
         "patchSetId": 9
@@ -444,6 +492,30 @@
       "side": 1,
       "message": "Consumer type is known. Since we only have the YUV gl texture consumer implemented right now, it technically does not need to be known, but it will be if we support say rgb texture consumers where conversion may be necessary.",
       "parentUuid": "08733496_813ea40a",
+      "range": {
+        "startLine": 74,
+        "startChar": 53,
+        "endLine": 74,
+        "endChar": 91
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_3ffa3585",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "I don\u0027t see the requirement that a producer is created before a consumer, also is it possible to change the consumer?",
+      "parentUuid": "08733496_275de0be",
       "range": {
         "startLine": 74,
         "startChar": 53,
@@ -635,6 +707,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_9f7429cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "We can update the constructor at that point, would rather not have an unreferenced parameter, some compilers may complain about it too.",
+      "parentUuid": "08733496_270fa0c2",
+      "range": {
+        "startLine": 18,
+        "startChar": 60,
+        "endLine": 18,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_cc48d3ae",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
         "patchSetId": 9
@@ -687,6 +783,30 @@
       "side": 1,
       "message": "Since there is a downsampled version of the texture, an NV12 texture whose dimensions are not divisible by 2 is not valid.",
       "parentUuid": "08733496_0caf2ba7",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_ff151d63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "My guess is that it\u0027s not valid to create an NV12 texture that doesn\u0027t divisible-by-two dimensions to begin with.  If it is, we should update the spec to add this error case.",
+      "parentUuid": "08733496_520b787c",
       "range": {
         "startLine": 50,
         "startChar": 4,
@@ -780,6 +900,30 @@
       "side": 1,
       "message": "That comment is old. Miplevel will always be 0 (in the case John has at least and we designed the spec around that). The subresource ID is now the array slice being used.",
       "parentUuid": "08733496_ac6477ee",
+      "range": {
+        "startLine": 1588,
+        "startChar": 4,
+        "endLine": 1588,
+        "endChar": 66
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_7fd3cddb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "Could you clarify how these textures are stored?  Is it possible to have multiple mip levels?  If it is, then the subresource index isn\u0027t going to be indexing the array slices correctly.",
+      "parentUuid": "08733496_f2456494",
       "range": {
         "startLine": 1588,
         "startChar": 4,
@@ -918,6 +1062,24 @@
     },
     {
       "key": {
+        "uuid": "08733496_9fbee9d3",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "You may be able to simplify it to just grabbing the current context and seeing if the stream\u0027s textures are owned by it.",
+      "parentUuid": "08733496_527c588d",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "288b98a4_43459a92",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 9
@@ -970,6 +1132,30 @@
       "side": 1,
       "message": "The problem is that function is also used in other validation methods where GL_TEXTURE_EXTERNAL_OES is illegal, which would mean creating many \"withExtenral\" and \"withoutExternal\" methods.",
       "parentUuid": "08733496_2cab07e3",
+      "range": {
+        "startLine": 1998,
+        "startChar": 45,
+        "endLine": 1998,
+        "endChar": 58
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_9f8189c6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-25T17:02:19Z",
+      "side": 1,
+      "message": "It should be fine to still call it with the correct target in those places since they should validate if the texture target is valid beforehand.",
+      "parentUuid": "08733496_925fd01b",
       "range": {
         "startLine": 1998,
         "startChar": 45,
