@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "08733496_797ccd8d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-25T14:04:46Z",
+      "side": 1,
+      "message": "Interesting. I actually cherry-picked this patch locally, made the change I suggested, and tried running some tests. I didn\u0027t run into any failures. I guess that means either I missed some tests or we\u0027re missing coverage. I don\u0027t think it\u0027s critical, but do you know off the top which places those would be?",
+      "parentUuid": "e89420c3_81287ec6",
+      "range": {
+        "startLine": 641,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 5
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_618988aa",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 10
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "This does have the downside that GLColor is less flexible, it doesn\u0027t currently allow other formats than 8-bit per channel RGBA, so if we need other formats in the tests some kind of changes are needed. It does make the code considerably cleaner, though.",
       "parentUuid": "08733496_618988aa",
+      "range": {
+        "startLine": 1691,
+        "startChar": 4,
+        "endLine": 1691,
+        "endChar": 39
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08733496_9981a9c6",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1691,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-25T14:04:46Z",
+      "side": 1,
+      "message": "If we do need those other formats, we could generalize ANGLEColor to be something like the color structs ANGLE uses internally.",
+      "parentUuid": "e89420c3_81c4fe5e",
       "range": {
         "startLine": 1691,
         "startChar": 4,
