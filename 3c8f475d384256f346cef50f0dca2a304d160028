@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_a7f14ea7",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T17:24:54Z",
+      "side": 1,
+      "message": "OK thanks for clarifying the issues. I think there\u0027s a potential problem when setting the base level to zero, because getBaseLevelImage() will alias the image at level zero. Still using the above suggestion to return immediately after releasing the storage and setting mBaseLevel, you should also detect an out-of-range base level in TextureD3D::getBaseLevelImage and return nullptr. This should prevent the ASSERTs - this function is allowed to return nullptr, and this will preserve information and not alias.\n\nLet me know if this works in your mind - I can upload a CL with my proposed changes if you like.",
+      "parentUuid": "e89420c3_0150eeaa",
+      "range": {
+        "startLine": 641,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 5
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_618988aa",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 10
