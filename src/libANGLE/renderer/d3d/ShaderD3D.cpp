@@ -40,7 +40,7 @@ const char *GetShaderTypeString(GLenum type)
 namespace rx
 {
 
-ShaderD3D::ShaderD3D(const gl::Shader::Data &data) : ShaderImpl(data)
+ShaderD3D::ShaderD3D(const gl::ShaderState &data) : ShaderImpl(data)
 {
     uncompile();
 }

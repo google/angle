@@ -193,7 +193,7 @@ class Renderer11 : public RendererD3D
     FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) override;
 
     // Shader creation
-    ShaderImpl *createShader(const gl::Shader::Data &data) override;
+    ShaderImpl *createShader(const gl::ShaderState &data) override;
     ProgramImpl *createProgram(const gl::ProgramState &data) override;
 
     // Shader operations

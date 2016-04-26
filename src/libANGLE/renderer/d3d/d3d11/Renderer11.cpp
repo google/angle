@@ -3364,7 +3364,7 @@ FramebufferImpl *Renderer11::createFramebuffer(const gl::FramebufferState &data)
     return new Framebuffer11(data, this);
 }
 
-ShaderImpl *Renderer11::createShader(const gl::Shader::Data &data)
+ShaderImpl *Renderer11::createShader(const gl::ShaderState &data)
 {
     return new ShaderD3D(data);
 }

@@ -2479,7 +2479,7 @@ FramebufferImpl *Renderer9::createFramebuffer(const gl::FramebufferState &data)
     return new Framebuffer9(data, this);
 }
 
-ShaderImpl *Renderer9::createShader(const gl::Shader::Data &data)
+ShaderImpl *Renderer9::createShader(const gl::ShaderState &data)
 {
     return new ShaderD3D(data);
 }

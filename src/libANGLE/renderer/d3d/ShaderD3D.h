@@ -23,7 +23,7 @@ struct D3DUniform;
 class ShaderD3D : public ShaderImpl
 {
   public:
-    ShaderD3D(const gl::Shader::Data &data);
+    ShaderD3D(const gl::ShaderState &data);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation

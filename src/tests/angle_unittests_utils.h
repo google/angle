@@ -22,7 +22,7 @@ class NullFactory : public ImplFactory
 
     // Shader creation
     CompilerImpl *createCompiler() override { return nullptr; }
-    ShaderImpl *createShader(const gl::Shader::Data &data) override { return nullptr; }
+    ShaderImpl *createShader(const gl::ShaderState &data) override { return nullptr; }
     ProgramImpl *createProgram(const gl::ProgramState &data) override { return nullptr; }
 
     // Framebuffer creation
@@ -60,7 +60,7 @@ class MockFactory : public ImplFactory
 {
   public:
     MOCK_METHOD0(createCompiler, CompilerImpl *());
-    MOCK_METHOD1(createShader, ShaderImpl *(const gl::Shader::Data &));
+    MOCK_METHOD1(createShader, ShaderImpl *(const gl::ShaderState &));
     MOCK_METHOD1(createProgram, ProgramImpl *(const gl::ProgramState &));
     MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::FramebufferState &));
     MOCK_METHOD1(createTexture, TextureImpl *(GLenum target));

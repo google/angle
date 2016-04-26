@@ -19,7 +19,7 @@
 namespace rx
 {
 
-ShaderGL::ShaderGL(const gl::Shader::Data &data,
+ShaderGL::ShaderGL(const gl::ShaderState &data,
                    const FunctionsGL *functions,
                    const WorkaroundsGL &workarounds)
     : ShaderImpl(data), mFunctions(functions), mWorkarounds(workarounds), mShaderID(0)
