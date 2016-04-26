@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_ca1c925d",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_1b3c131f",
+      "range": {
+        "startLine": 131,
+        "startChar": 13,
+        "endLine": 131,
+        "endChar": 16
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_3b355736",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 12
@@ -283,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_ca4a5245",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_3b5a3774",
+      "range": {
+        "startLine": 387,
+        "startChar": 4,
+        "endLine": 387,
+        "endChar": 11
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_bb7647f5",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 12
@@ -306,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_ea47163a",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_bb7647f5",
+      "range": {
+        "startLine": 446,
+        "startChar": 4,
+        "endLine": 446,
+        "endChar": 11
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_9b658337",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 12
@@ -317,6 +389,30 @@
       "writtenOn": "2016-04-26T20:07:56Z",
       "side": 1,
       "message": "init this in the constructor",
+      "range": {
+        "startLine": 477,
+        "startChar": 14,
+        "endLine": 477,
+        "endChar": 20
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_aa790e85",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "It is?",
+      "parentUuid": "888725d1_9b658337",
       "range": {
         "startLine": 477,
         "startChar": 14,
@@ -448,6 +544,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_4a6e42bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_1b93b3b4",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_9bcca347",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 12
@@ -566,6 +686,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_eae39641",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_5bd61bd7",
+      "range": {
+        "startLine": 1506,
+        "startChar": 15,
+        "endLine": 1506,
+        "endChar": 34
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_3bd1d7dd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 12
@@ -577,6 +721,30 @@
       "writtenOn": "2016-04-26T20:07:56Z",
       "side": 1,
       "message": "ANGLE_TRY",
+      "range": {
+        "startLine": 1541,
+        "startChar": 12,
+        "endLine": 1545,
+        "endChar": 13
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_cae6d254",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_3bd1d7dd",
       "range": {
         "startLine": 1541,
         "startChar": 12,
@@ -612,6 +780,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_2adade88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1606,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_fbda8ff8",
+      "range": {
+        "startLine": 1606,
+        "startChar": 15,
+        "endLine": 1606,
+        "endChar": 34
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_dbf8eb5b",
         "filename": "src/tests/egl_tests/media/yuvtest.inl",
         "patchSetId": 12
@@ -629,6 +821,24 @@
     },
     {
       "key": {
+        "uuid": "888725d1_0a727a6c",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_dbf8eb5b",
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_9b9a6323",
         "filename": "src/tests/egl_tests/media/yuvtest.inl",
         "patchSetId": 12
@@ -640,6 +850,30 @@
       "writtenOn": "2016-04-26T20:07:56Z",
       "side": 1,
       "message": "nit: trailing space (probably in generator)",
+      "range": {
+        "startLine": 11,
+        "startChar": 43,
+        "endLine": 11,
+        "endChar": 44
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_6a5d46d9",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T21:48:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_9b9a6323",
       "range": {
         "startLine": 11,
         "startChar": 43,
