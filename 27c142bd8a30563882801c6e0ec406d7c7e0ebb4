@@ -160,6 +160,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_4a172742",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T18:38:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_04ca908c",
+      "range": {
+        "startLine": 112,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 99
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a87f884b_aad55368",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 9
@@ -171,6 +195,24 @@
       "writtenOn": "2016-04-25T12:34:32Z",
       "side": 1,
       "message": "nit: doesn\u0027t describe the mTextures[i]-\u003egetId() condition correctly.",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_2a09831c",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T18:38:26Z",
+      "side": 1,
+      "message": "That was an error but this logic was refactored anyways",
+      "parentUuid": "a87f884b_aad55368",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -613,6 +655,30 @@
       "side": 1,
       "message": "Yep, we may end up with a bunch of unimplemented methods but I think it\u0027s cleaner then adding custom attributes into the map and requiring the implementations to know about them.",
       "parentUuid": "08733496_2779604f",
+      "range": {
+        "startLine": 73,
+        "startChar": 32,
+        "endLine": 73,
+        "endChar": 52
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_b54ad843",
+        "filename": "src/libANGLE/renderer/DisplayImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T18:38:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08733496_c481782c",
       "range": {
         "startLine": 73,
         "startChar": 32,
@@ -1362,6 +1428,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_95a0f405",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T18:38:26Z",
+      "side": 1,
+      "message": "There is only one mip level for each subresource.",
+      "parentUuid": "08733496_7fd3cddb",
+      "range": {
+        "startLine": 1588,
+        "startChar": 4,
+        "endLine": 1588,
+        "endChar": 66
+      },
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_4c01232c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
         "patchSetId": 9
@@ -1596,6 +1686,24 @@
       "side": 1,
       "message": "You may be able to simplify it to just grabbing the current context and seeing if the stream\u0027s textures are owned by it.",
       "parentUuid": "08733496_527c588d",
+      "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_15ace4fc",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1287,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T18:38:26Z",
+      "side": 1,
+      "message": "Added a validate context method to stream to do this",
+      "parentUuid": "08733496_9fbee9d3",
       "revId": "27c142bd8a30563882801c6e0ec406d7c7e0ebb4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
