@@ -1,0 +1,366 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "888725d1_1b3c131f",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 131,
+        "startChar": 13,
+        "endLine": 131,
+        "endChar": 16
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_3b355736",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "is mplacecount guaranteed to be \u003c\u003d 3? anyway you should use EGLint here to keep the types matching",
+      "range": {
+        "startLine": 144,
+        "startChar": 28,
+        "endLine": 144,
+        "endChar": 39
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_1b23b3f6",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "we don\u0027t really handle malloc failures for simple class allocations. you can ASSERT here if you want but the error check seems superfluous",
+      "range": {
+        "startLine": 169,
+        "startChar": 5,
+        "endLine": 172,
+        "endChar": 5
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_3bfeb77c",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "make these enum classes",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 43,
+        "endChar": 8
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_5b037b63",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "make these enum classes",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 8
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_dbeeabc4",
+        "filename": "src/libANGLE/Stream.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "not initialized",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 22
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_3b5a3774",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "overrides all through",
+      "range": {
+        "startLine": 387,
+        "startChar": 4,
+        "endLine": 387,
+        "endChar": 11
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_bb7647f5",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "these should all be override not virtual, repeated below",
+      "range": {
+        "startLine": 446,
+        "startChar": 4,
+        "endLine": 446,
+        "endChar": 11
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_9b658337",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "init this in the constructor",
+      "range": {
+        "startLine": 477,
+        "startChar": 14,
+        "endLine": 477,
+        "endChar": 20
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_bb4de7b6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "yeah this is not the right place for the error checking, this should be in the validation layer",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_9bcca347",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1476,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "init every variable you can in the initializer list",
+      "range": {
+        "startLine": 1476,
+        "startChar": 6,
+        "endLine": 1476,
+        "endChar": 22
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_5bd61bd7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "gl::NoError()",
+      "range": {
+        "startLine": 1506,
+        "startChar": 15,
+        "endLine": 1506,
+        "endChar": 34
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_3bd1d7dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "ANGLE_TRY",
+      "range": {
+        "startLine": 1541,
+        "startChar": 12,
+        "endLine": 1545,
+        "endChar": 13
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_fbda8ff8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "NoError()",
+      "range": {
+        "startLine": 1606,
+        "startChar": 15,
+        "endLine": 1606,
+        "endChar": 34
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_dbf8eb5b",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "call this yuvtest_autogen.inl, and see the exact header to copy in texure_format_table_autogen.cpp",
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_9b9a6323",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:07:56Z",
+      "side": 1,
+      "message": "nit: trailing space (probably in generator)",
+      "range": {
+        "startLine": 11,
+        "startChar": 43,
+        "endLine": 11,
+        "endChar": 44
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
