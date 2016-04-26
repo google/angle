@@ -32,10 +32,10 @@ bool AttributeNeedsStreaming(const VertexAttribute &attribute)
 
 }  // anonymous namespace
 
-VertexArrayGL::VertexArrayGL(const VertexArray::Data &data,
+VertexArrayGL::VertexArrayGL(const VertexArrayState &state,
                              const FunctionsGL *functions,
                              StateManagerGL *stateManager)
-    : VertexArrayImpl(data),
+    : VertexArrayImpl(state),
       mFunctions(functions),
       mStateManager(stateManager),
       mVertexArrayID(0),

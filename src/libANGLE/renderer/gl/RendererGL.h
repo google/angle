@@ -78,7 +78,7 @@ class RendererGL : public Renderer
     BufferImpl *createBuffer() override;
 
     // Vertex Array creation
-    VertexArrayImpl *createVertexArray(const gl::VertexArray::Data &data) override;
+    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
 
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override;

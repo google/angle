@@ -41,7 +41,10 @@ class NullFactory : public ImplFactory
     BufferImpl *createBuffer() override { return nullptr; }
 
     // Vertex Array creation
-    VertexArrayImpl *createVertexArray(const gl::VertexArray::Data &data) override { return nullptr; }
+    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override
+    {
+        return nullptr;
+    }
 
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override { return nullptr; }
@@ -66,7 +69,7 @@ class MockFactory : public ImplFactory
     MOCK_METHOD1(createTexture, TextureImpl *(GLenum target));
     MOCK_METHOD0(createRenderbuffer, RenderbufferImpl *());
     MOCK_METHOD0(createBuffer, BufferImpl *());
-    MOCK_METHOD1(createVertexArray, VertexArrayImpl *(const gl::VertexArray::Data &));
+    MOCK_METHOD1(createVertexArray, VertexArrayImpl *(const gl::VertexArrayState &));
     MOCK_METHOD1(createQuery, QueryImpl *(GLenum type));
     MOCK_METHOD0(createFenceNV, FenceNVImpl *());
     MOCK_METHOD0(createFenceSync, FenceSyncImpl *());

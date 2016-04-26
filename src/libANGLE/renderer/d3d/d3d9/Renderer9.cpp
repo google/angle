@@ -759,7 +759,7 @@ BufferImpl *Renderer9::createBuffer()
     return new Buffer9(this);
 }
 
-VertexArrayImpl *Renderer9::createVertexArray(const gl::VertexArray::Data &data)
+VertexArrayImpl *Renderer9::createVertexArray(const gl::VertexArrayState &data)
 {
     return new VertexArray9(data);
 }

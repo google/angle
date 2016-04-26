@@ -3577,7 +3577,7 @@ BufferImpl *Renderer11::createBuffer()
     return buffer;
 }
 
-VertexArrayImpl *Renderer11::createVertexArray(const gl::VertexArray::Data &data)
+VertexArrayImpl *Renderer11::createVertexArray(const gl::VertexArrayState &data)
 {
     return new VertexArray11(data);
 }

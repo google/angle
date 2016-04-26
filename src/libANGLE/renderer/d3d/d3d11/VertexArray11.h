@@ -19,7 +19,7 @@ class Renderer11;
 class VertexArray11 : public VertexArrayImpl
 {
   public:
-    VertexArray11(const gl::VertexArray::Data &data);
+    VertexArray11(const gl::VertexArrayState &data);
     ~VertexArray11() override;
 
     void syncState(const gl::VertexArray::DirtyBits &dirtyBits) override;

@@ -297,7 +297,7 @@ BufferImpl *RendererGL::createBuffer()
     return new BufferGL(mFunctions, mStateManager);
 }
 
-VertexArrayImpl *RendererGL::createVertexArray(const gl::VertexArray::Data &data)
+VertexArrayImpl *RendererGL::createVertexArray(const gl::VertexArrayState &data)
 {
     return new VertexArrayGL(data, mFunctions, mStateManager);
 }

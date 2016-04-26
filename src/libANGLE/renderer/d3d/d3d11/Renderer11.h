@@ -239,7 +239,7 @@ class Renderer11 : public RendererD3D
     virtual IndexBuffer *createIndexBuffer();
 
     // Vertex Array creation
-    VertexArrayImpl *createVertexArray(const gl::VertexArray::Data &data) override;
+    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type);
