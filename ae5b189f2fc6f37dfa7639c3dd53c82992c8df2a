@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_9ba02306",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T20:36:27Z",
+      "side": 1,
+      "message": "Plane count is guaranteed to be \u003c\u003d 3 by the spec and validation code. I guess I can add an assert.",
+      "parentUuid": "888725d1_3b355736",
+      "range": {
+        "startLine": 144,
+        "startChar": 28,
+        "endLine": 144,
+        "endChar": 39
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_1b23b3f6",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 12
@@ -59,6 +83,30 @@
       "writtenOn": "2016-04-26T20:07:56Z",
       "side": 1,
       "message": "we don\u0027t really handle malloc failures for simple class allocations. you can ASSERT here if you want but the error check seems superfluous",
+      "range": {
+        "startLine": 169,
+        "startChar": 5,
+        "endLine": 172,
+        "endChar": 5
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_3ba55714",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T20:36:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888725d1_1b23b3f6",
       "range": {
         "startLine": 169,
         "startChar": 5,
@@ -459,6 +507,30 @@
       "side": 1,
       "message": "That\u0027s fine if you reinit them, give them default values for security",
       "parentUuid": "888725d1_1badf341",
+      "range": {
+        "startLine": 1476,
+        "startChar": 6,
+        "endLine": 1476,
+        "endChar": 22
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_9bbfc3e0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1476,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-26T20:36:27Z",
+      "side": 1,
+      "message": "They will always be initialized in the current code path though? We assume everything is valid and don\u0027t skip initialization steps if something is wrong, and if something does turn up wrong having them preinitialized won\u0027t make it more secure.",
+      "parentUuid": "888725d1_5b0e1b26",
       "range": {
         "startLine": 1476,
         "startChar": 6,
