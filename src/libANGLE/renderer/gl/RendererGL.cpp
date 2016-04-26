@@ -263,9 +263,9 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-ContextImpl *RendererGL::createContext()
+ContextImpl *RendererGL::createContext(const gl::ContextState &state)
 {
-    return new ContextGL;
+    return new ContextGL(state);
 }
 
 CompilerImpl *RendererGL::createCompiler()

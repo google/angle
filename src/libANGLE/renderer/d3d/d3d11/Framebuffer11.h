@@ -48,7 +48,7 @@ class Framebuffer11 : public FramebufferD3D
     void syncInternalState() const;
 
   private:
-    gl::Error clear(const gl::ContextState &data, const ClearParameters &clearParams) override;
+    gl::Error clearImpl(ContextImpl *context, const ClearParameters &clearParams) override;
 
     gl::Error readPixelsImpl(const gl::Rectangle &area,
                              GLenum format,
@@ -57,9 +57,14 @@ class Framebuffer11 : public FramebufferD3D
                              const gl::PixelPackState &pack,
                              uint8_t *pixels) const override;
 
-    gl::Error blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
-                   bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
-                   const gl::Framebuffer *sourceFramebuffer) override;
+    gl::Error blitImpl(const gl::Rectangle &sourceArea,
+                       const gl::Rectangle &destArea,
+                       const gl::Rectangle *scissor,
+                       bool blitRenderTarget,
+                       bool blitDepth,
+                       bool blitStencil,
+                       GLenum filter,
+                       const gl::Framebuffer *sourceFramebuffer) override;
 
     gl::Error invalidateBase(size_t count, const GLenum *attachments, bool useEXTBehavior) const;
 

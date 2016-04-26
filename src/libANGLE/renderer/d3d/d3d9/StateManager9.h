@@ -45,8 +45,7 @@ class StateManager9 final : angle::NonCopyable
 
     gl::Error setBlendDepthRasterStates(const gl::State &glState, unsigned int sampleMask);
     void setScissorState(const gl::Rectangle &scissor, bool enabled);
-    void setViewportState(const gl::Caps *caps,
-                          const gl::Rectangle &viewport,
+    void setViewportState(const gl::Rectangle &viewport,
                           float zNear,
                           float zFar,
                           GLenum drawMode,

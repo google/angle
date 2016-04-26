@@ -60,7 +60,7 @@ class RendererGL : public Renderer
                                 const GLvoid *indices,
                                 const gl::IndexRange &indexRange) override;
 
-    ContextImpl *createContext() override;
+    ContextImpl *createContext(const gl::ContextState &state) override;
 
     // Shader creation
     CompilerImpl *createCompiler() override;

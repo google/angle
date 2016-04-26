@@ -473,8 +473,7 @@ gl::Error StateManager9::setBlendDepthRasterStates(const gl::State &glState,
     return gl::Error(GL_NO_ERROR);
 }
 
-void StateManager9::setViewportState(const gl::Caps *caps,
-                                     const gl::Rectangle &viewport,
+void StateManager9::setViewportState(const gl::Rectangle &viewport,
                                      float zNear,
                                      float zFar,
                                      GLenum drawMode,

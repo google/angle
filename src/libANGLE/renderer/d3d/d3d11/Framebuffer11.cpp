@@ -144,7 +144,7 @@ gl::Error Framebuffer11::invalidateSwizzles() const
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Framebuffer11::clear(const gl::ContextState &data, const ClearParameters &clearParams)
+gl::Error Framebuffer11::clearImpl(ContextImpl *context, const ClearParameters &clearParams)
 {
     Clear11 *clearer = mRenderer->getClearer();
     gl::Error error(GL_NO_ERROR);
@@ -368,9 +368,14 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
                                          static_cast<GLuint>(outputPitch), pack, pixels);
 }
 
-gl::Error Framebuffer11::blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
-                              bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
-                              const gl::Framebuffer *sourceFramebuffer)
+gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
+                                  const gl::Rectangle &destArea,
+                                  const gl::Rectangle *scissor,
+                                  bool blitRenderTarget,
+                                  bool blitDepth,
+                                  bool blitStencil,
+                                  GLenum filter,
+                                  const gl::Framebuffer *sourceFramebuffer)
 {
     if (blitRenderTarget)
     {

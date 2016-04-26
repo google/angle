@@ -7,16 +7,18 @@
 // Framebuffer9.cpp: Implements the Framebuffer9 class.
 
 #include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
-#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
-#include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
-#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
-#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/formatutils.h"
+
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
+#include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
+#include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
+#include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 
 namespace rx
 {
@@ -52,7 +54,7 @@ gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangl
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Framebuffer9::clear(const gl::ContextState &data, const ClearParameters &clearParams)
+gl::Error Framebuffer9::clearImpl(ContextImpl *context, const ClearParameters &clearParams)
 {
     const gl::FramebufferAttachment *colorAttachment        = mState.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthOrStencilAttachment();
@@ -63,12 +65,13 @@ gl::Error Framebuffer9::clear(const gl::ContextState &data, const ClearParameter
         return error;
     }
 
-    float nearZ = data.state->getNearPlane();
-    float farZ = data.state->getFarPlane();
-    mRenderer->setViewport(data.caps, data.state->getViewport(), nearZ, farZ, GL_TRIANGLES,
-                           data.state->getRasterizerState().frontFace, true);
+    const gl::State &glState = context->getState();
+    float nearZ              = glState.getNearPlane();
+    float farZ = glState.getFarPlane();
+    mRenderer->setViewport(glState.getViewport(), nearZ, farZ, GL_TRIANGLES,
+                           glState.getRasterizerState().frontFace, true);
 
-    mRenderer->setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
+    mRenderer->setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     return mRenderer->clear(clearParams, colorAttachment, depthStencilAttachment);
 }
@@ -256,9 +259,14 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangle &destArea, const gl::Rectangle *scissor,
-                             bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter,
-                             const gl::Framebuffer *sourceFramebuffer)
+gl::Error Framebuffer9::blitImpl(const gl::Rectangle &sourceArea,
+                                 const gl::Rectangle &destArea,
+                                 const gl::Rectangle *scissor,
+                                 bool blitRenderTarget,
+                                 bool blitDepth,
+                                 bool blitStencil,
+                                 GLenum filter,
+                                 const gl::Framebuffer *sourceFramebuffer)
 {
     ASSERT(filter == GL_NEAREST);
 

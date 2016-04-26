@@ -15,6 +15,11 @@
 #include "libANGLE/Shader.h"
 #include "libANGLE/VertexArray.h"
 
+namespace gl
+{
+struct ContextState;
+}
+
 namespace rx
 {
 class BufferImpl;
@@ -39,7 +44,7 @@ class ImplFactory : angle::NonCopyable
     virtual ~ImplFactory() {}
 
     // Context creation
-    virtual ContextImpl *createContext() = 0;
+    virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
 
     // Shader creation
     virtual CompilerImpl *createCompiler() = 0;

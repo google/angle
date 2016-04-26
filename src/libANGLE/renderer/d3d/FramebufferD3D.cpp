@@ -13,6 +13,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
@@ -94,20 +95,19 @@ FramebufferD3D::~FramebufferD3D()
 {
 }
 
-gl::Error FramebufferD3D::clear(const gl::ContextState &data, GLbitfield mask)
+gl::Error FramebufferD3D::clear(ContextImpl *context, GLbitfield mask)
 {
-    const gl::State &state = *data.state;
-    ClearParameters clearParams = GetClearParameters(state, mask);
-    return clear(data, clearParams);
+    ClearParameters clearParams = GetClearParameters(context->getState(), mask);
+    return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfv(const gl::ContextState &data,
+gl::Error FramebufferD3D::clearBufferfv(ContextImpl *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLfloat *values)
 {
     // glClearBufferfv can be called to clear the color buffer or depth buffer
-    ClearParameters clearParams = GetClearParameters(*data.state, 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -125,16 +125,16 @@ gl::Error FramebufferD3D::clearBufferfv(const gl::ContextState &data,
         clearParams.depthClearValue = values[0];
     }
 
-    return clear(data, clearParams);
+    return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferuiv(const gl::ContextState &data,
+gl::Error FramebufferD3D::clearBufferuiv(ContextImpl *context,
                                          GLenum buffer,
                                          GLint drawbuffer,
                                          const GLuint *values)
 {
     // glClearBufferuiv can only be called to clear a color buffer
-    ClearParameters clearParams = GetClearParameters(*data.state, 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
@@ -142,16 +142,16 @@ gl::Error FramebufferD3D::clearBufferuiv(const gl::ContextState &data,
     clearParams.colorUIClearValue = gl::ColorUI(values[0], values[1], values[2], values[3]);
     clearParams.colorClearType = GL_UNSIGNED_INT;
 
-    return clear(data, clearParams);
+    return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferiv(const gl::ContextState &data,
+gl::Error FramebufferD3D::clearBufferiv(ContextImpl *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLint *values)
 {
     // glClearBufferiv can be called to clear the color buffer or stencil buffer
-    ClearParameters clearParams = GetClearParameters(*data.state, 0);
+    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -169,23 +169,23 @@ gl::Error FramebufferD3D::clearBufferiv(const gl::ContextState &data,
         clearParams.stencilClearValue = values[1];
     }
 
-    return clear(data, clearParams);
+    return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfi(const gl::ContextState &data,
+gl::Error FramebufferD3D::clearBufferfi(ContextImpl *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         GLfloat depth,
                                         GLint stencil)
 {
     // glClearBufferfi can only be called to clear a depth stencil buffer
-    ClearParameters clearParams   = GetClearParameters(*data.state, 0);
+    ClearParameters clearParams   = GetClearParameters(context->getState(), 0);
     clearParams.clearDepth = true;
     clearParams.depthClearValue = depth;
     clearParams.clearStencil = true;
     clearParams.stencilClearValue = stencil;
 
-    return clear(data, clearParams);
+    return clearImpl(context, clearParams);
 }
 
 GLenum FramebufferD3D::getImplementationColorReadFormat() const
@@ -232,9 +232,13 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     return implementationFormatInfo.type;
 }
 
-gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle &area, GLenum format, GLenum type, GLvoid *pixels) const
+gl::Error FramebufferD3D::readPixels(ContextImpl *context,
+                                     const gl::Rectangle &area,
+                                     GLenum format,
+                                     GLenum type,
+                                     GLvoid *pixels) const
 {
-    const gl::PixelPackState &packState = state.getPackState();
+    const gl::PixelPackState &packState = context->getState().getPackState();
 
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
@@ -247,9 +251,14 @@ gl::Error FramebufferD3D::readPixels(const gl::State &state, const gl::Rectangle
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 
-gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sourceArea, const gl::Rectangle &destArea,
-                               GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer)
+gl::Error FramebufferD3D::blit(ContextImpl *context,
+                               const gl::Rectangle &sourceArea,
+                               const gl::Rectangle &destArea,
+                               GLbitfield mask,
+                               GLenum filter)
 {
+    const auto &glState                      = context->getState();
+    const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
     bool blitRenderTarget = false;
     if ((mask & GL_COLOR_BUFFER_BIT) && sourceFramebuffer->getReadColorbuffer() != nullptr &&
         mState.getFirstColorAttachment() != nullptr)
@@ -273,9 +282,10 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
 
     if (blitRenderTarget || blitDepth || blitStencil)
     {
-        const gl::Rectangle *scissor = state.isScissorTestEnabled() ? &state.getScissor() : NULL;
-        gl::Error error = blit(sourceArea, destArea, scissor, blitRenderTarget, blitDepth, blitStencil,
-                               filter, sourceFramebuffer);
+        const gl::Rectangle *scissor =
+            glState.isScissorTestEnabled() ? &glState.getScissor() : nullptr;
+        gl::Error error = blitImpl(sourceArea, destArea, scissor, blitRenderTarget, blitDepth,
+                                   blitStencil, filter, sourceFramebuffer);
         if (error.isError())
         {
             return error;

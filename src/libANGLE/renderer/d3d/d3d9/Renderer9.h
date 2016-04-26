@@ -90,7 +90,7 @@ class Renderer9 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
-    ContextImpl *createContext() override;
+    ContextImpl *createContext(const gl::ContextState &state) override;
 
     CompilerImpl *createCompiler() override;
 
@@ -113,8 +113,7 @@ class Renderer9 : public RendererD3D
     gl::Error updateState(const gl::ContextState &data, GLenum drawMode) override;
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
-    void setViewport(const gl::Caps *caps,
-                     const gl::Rectangle &viewport,
+    void setViewport(const gl::Rectangle &viewport,
                      float zNear,
                      float zFar,
                      GLenum drawMode,

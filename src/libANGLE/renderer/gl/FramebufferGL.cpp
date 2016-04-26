@@ -15,6 +15,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
@@ -149,7 +150,7 @@ Error FramebufferGL::invalidateSub(size_t count,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clear(const ContextState &data, GLbitfield mask)
+Error FramebufferGL::clear(ContextImpl *context, GLbitfield mask)
 {
     syncClearState(mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -158,7 +159,7 @@ Error FramebufferGL::clear(const ContextState &data, GLbitfield mask)
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferfv(const ContextState &data,
+Error FramebufferGL::clearBufferfv(ContextImpl *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLfloat *values)
@@ -170,7 +171,7 @@ Error FramebufferGL::clearBufferfv(const ContextState &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferuiv(const ContextState &data,
+Error FramebufferGL::clearBufferuiv(ContextImpl *context,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     const GLuint *values)
@@ -182,7 +183,7 @@ Error FramebufferGL::clearBufferuiv(const ContextState &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferiv(const ContextState &data,
+Error FramebufferGL::clearBufferiv(ContextImpl *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLint *values)
@@ -194,7 +195,7 @@ Error FramebufferGL::clearBufferiv(const ContextState &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferfi(const ContextState &data,
+Error FramebufferGL::clearBufferfi(ContextImpl *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    GLfloat depth,
@@ -223,7 +224,7 @@ GLenum FramebufferGL::getImplementationColorReadType() const
     return internalFormatInfo.type;
 }
 
-Error FramebufferGL::readPixels(const State &state,
+Error FramebufferGL::readPixels(ContextImpl *context,
                                 const gl::Rectangle &area,
                                 GLenum format,
                                 GLenum type,
@@ -231,7 +232,7 @@ Error FramebufferGL::readPixels(const State &state,
 {
     // TODO: don't sync the pixel pack state here once the dirty bits contain the pixel pack buffer
     // binding
-    const PixelPackState &packState = state.getPackState();
+    const PixelPackState &packState = context->getState().getPackState();
     mStateManager->setPixelPackState(packState);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
@@ -240,13 +241,13 @@ Error FramebufferGL::readPixels(const State &state,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::blit(const State &state,
+Error FramebufferGL::blit(ContextImpl *context,
                           const gl::Rectangle &sourceArea,
                           const gl::Rectangle &destArea,
                           GLbitfield mask,
-                          GLenum filter,
-                          const Framebuffer *sourceFramebuffer)
+                          GLenum filter)
 {
+    const Framebuffer *sourceFramebuffer     = context->getState().getReadFramebuffer();
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());

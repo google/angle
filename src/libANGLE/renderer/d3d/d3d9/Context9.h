@@ -18,7 +18,7 @@ namespace rx
 class Context9 : public ContextImpl
 {
   public:
-    Context9() {}
+    Context9(const gl::ContextState &state) : ContextImpl(state) {}
     ~Context9() override {}
 
     gl::Error initialize(Renderer *renderer) override { return gl::NoError(); }

@@ -124,7 +124,7 @@ class Renderer11 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
-    ContextImpl *createContext() override;
+    ContextImpl *createContext(const gl::ContextState &state) override;
 
     CompilerImpl *createCompiler() override;
 

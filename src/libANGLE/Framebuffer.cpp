@@ -18,6 +18,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
@@ -613,67 +614,67 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
-Error Framebuffer::clear(const ContextState &data, GLbitfield mask)
+Error Framebuffer::clear(rx::ContextImpl *context, GLbitfield mask)
 {
-    if (data.state->isRasterizerDiscardEnabled())
+    if (context->getState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
 
-    return mImpl->clear(data, mask);
+    return mImpl->clear(context, mask);
 }
 
-Error Framebuffer::clearBufferfv(const ContextState &data,
+Error Framebuffer::clearBufferfv(rx::ContextImpl *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLfloat *values)
 {
-    if (data.state->isRasterizerDiscardEnabled())
+    if (context->getState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
 
-    return mImpl->clearBufferfv(data, buffer, drawbuffer, values);
+    return mImpl->clearBufferfv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferuiv(const ContextState &data,
+Error Framebuffer::clearBufferuiv(rx::ContextImpl *context,
                                   GLenum buffer,
                                   GLint drawbuffer,
                                   const GLuint *values)
 {
-    if (data.state->isRasterizerDiscardEnabled())
+    if (context->getState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
 
-    return mImpl->clearBufferuiv(data, buffer, drawbuffer, values);
+    return mImpl->clearBufferuiv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferiv(const ContextState &data,
+Error Framebuffer::clearBufferiv(rx::ContextImpl *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLint *values)
 {
-    if (data.state->isRasterizerDiscardEnabled())
+    if (context->getState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
 
-    return mImpl->clearBufferiv(data, buffer, drawbuffer, values);
+    return mImpl->clearBufferiv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferfi(const ContextState &data,
+Error Framebuffer::clearBufferfi(rx::ContextImpl *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  GLfloat depth,
                                  GLint stencil)
 {
-    if (data.state->isRasterizerDiscardEnabled())
+    if (context->getState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
 
-    return mImpl->clearBufferfi(data, buffer, drawbuffer, depth, stencil);
+    return mImpl->clearBufferfi(context, buffer, drawbuffer, depth, stencil);
 }
 
 GLenum Framebuffer::getImplementationColorReadFormat() const
@@ -686,19 +687,19 @@ GLenum Framebuffer::getImplementationColorReadType() const
     return mImpl->getImplementationColorReadType();
 }
 
-Error Framebuffer::readPixels(const State &state,
+Error Framebuffer::readPixels(rx::ContextImpl *context,
                               const Rectangle &area,
                               GLenum format,
                               GLenum type,
                               GLvoid *pixels) const
 {
-    Error error = mImpl->readPixels(state, area, format, type, pixels);
+    Error error = mImpl->readPixels(context, area, format, type, pixels);
     if (error.isError())
     {
         return error;
     }
 
-    Buffer *unpackBuffer = state.getUnpackState().pixelBuffer.get();
+    Buffer *unpackBuffer = context->getState().getUnpackState().pixelBuffer.get();
     if (unpackBuffer)
     {
         unpackBuffer->onPixelUnpack();
@@ -707,14 +708,13 @@ Error Framebuffer::readPixels(const State &state,
     return Error(GL_NO_ERROR);
 }
 
-Error Framebuffer::blit(const State &state,
+Error Framebuffer::blit(rx::ContextImpl *context,
                         const Rectangle &sourceArea,
                         const Rectangle &destArea,
                         GLbitfield mask,
-                        GLenum filter,
-                        const Framebuffer *sourceFramebuffer)
+                        GLenum filter)
 {
-    return mImpl->blit(state, sourceArea, destArea, mask, filter, sourceFramebuffer);
+    return mImpl->blit(context, sourceArea, destArea, mask, filter);
 }
 
 int Framebuffer::getSamples(const ContextState &data) const

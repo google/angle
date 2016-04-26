@@ -11,7 +11,7 @@
 #define LIBANGLE_RENDERER_CONTEXTIMPL_H_
 
 #include "common/angleutils.h"
-#include "libANGLE/Error.h"
+#include "libANGLE/ContextState.h"
 
 namespace rx
 {
@@ -20,10 +20,20 @@ class Renderer;
 class ContextImpl : angle::NonCopyable
 {
   public:
-    ContextImpl() {}
+    ContextImpl(const gl::ContextState &state) : mState(state) {}
     virtual ~ContextImpl() {}
 
     virtual gl::Error initialize(Renderer *renderer) = 0;
+
+    int getClientVersion() const { return mState.clientVersion; }
+    const gl::State &getState() const { return *mState.state; }
+    const gl::Caps &getCaps() const { return *mState.caps; }
+    const gl::TextureCapsMap &getTextureCaps() const { return *mState.textureCaps; }
+    const gl::Extensions &getExtensions() const { return *mState.extensions; }
+    const gl::Limitations &getLimitations() const { return *mState.limitations; }
+
+  private:
+    const gl::ContextState &mState;
 };
 
 }  // namespace rx
