@@ -6,7 +6,6 @@
     'variables':
     {
         'angle_code': 1,
-        'angle_post_build_script%': 0,
         'angle_gen_path': '<(SHARED_INTERMEDIATE_DIR)/angle',
         'angle_id_script_base': 'commit_id.py',
         'angle_id_script': '<(angle_gen_path)/<(angle_id_script_base)',
@@ -245,29 +244,6 @@
                             'type' : 'shared_library',
                         }],
                     ]
-                },
-            ], # targets
-        }],
-        ['angle_post_build_script!=0 and OS=="win"',
-        {
-            'targets':
-            [
-                {
-                    'target_name': 'post_build',
-                    'type': 'none',
-                    'includes': [ '../build/common_defines.gypi', ],
-                    'dependencies': [ 'libGLESv2', 'libEGL' ],
-                    'actions':
-                    [
-                        {
-                            'action_name': 'ANGLE Post-Build Script',
-                            'message': 'Running <(angle_post_build_script)...',
-                            'msvs_cygwin_shell': 0,
-                            'inputs': [ '<(angle_post_build_script)', '<!@(["python", "<(angle_post_build_script)", "inputs", "<(angle_path)", "<(CONFIGURATION_NAME)", "$(PlatformName)", "<(PRODUCT_DIR)"])' ],
-                            'outputs': [ '<!@(python <(angle_post_build_script) outputs "<(angle_path)" "<(CONFIGURATION_NAME)" "$(PlatformName)" "<(PRODUCT_DIR)")' ],
-                            'action': ['python', '<(angle_post_build_script)', 'run', '<(angle_path)', '<(CONFIGURATION_NAME)', '$(PlatformName)', '<(PRODUCT_DIR)'],
-                        },
-                    ], #actions
                 },
             ], # targets
         }],
