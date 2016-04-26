@@ -256,6 +256,30 @@
     },
     {
       "key": {
+        "uuid": "888725d1_9b04a306",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:20:00Z",
+      "side": 1,
+      "message": "Seems like it should be part of the extension draft. Definitely not here.",
+      "parentUuid": "888725d1_bba96736",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_9bcca347",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 12
@@ -291,6 +315,30 @@
       "side": 1,
       "message": "All the members not in the list have to be extracted from the stream producer\u0027s texture and desc, and thus it is impossible to set them in the initializer list",
       "parentUuid": "888725d1_9bcca347",
+      "range": {
+        "startLine": 1476,
+        "startChar": 6,
+        "endLine": 1476,
+        "endChar": 22
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "888725d1_5b0e1b26",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1476,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-26T20:20:00Z",
+      "side": 1,
+      "message": "That\u0027s fine if you reinit them, give them default values for security",
+      "parentUuid": "888725d1_1badf341",
       "range": {
         "startLine": 1476,
         "startChar": 6,
