@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_a526c556",
+        "filename": "src/libANGLE/renderer/StreamProducerImpl.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:21:33Z",
+      "side": 1,
+      "message": "I just don\u0027t like the idea of having to implement methods with those specific names for all producers. Even if we add other producers for even other YUV formats, having functions called postD3D11NV12Texture, postD3DP0P1Texture, etc. when they all take the same arguments seems a bit too polluted.",
+      "parentUuid": "48560d47_a57c0564",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 97
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48560d47_65314dfb",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 16
