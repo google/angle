@@ -289,7 +289,7 @@ EGLint DXGISwapChainWindowSurfaceWGL::getSwapBehavior() const
 }
 
 FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
-    const gl::Framebuffer::Data &data)
+    const gl::FramebufferState &data)
 {
     return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds, mStateManager);
 }

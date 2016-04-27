@@ -109,7 +109,7 @@ class ProgramD3DMetadata : angle::NonCopyable
 
     int getRendererMajorShaderModel() const;
     bool usesBroadcast(const gl::ContextState &data) const;
-    bool usesFragDepth(const gl::Program::Data &programData) const;
+    bool usesFragDepth() const;
     bool usesPointCoord() const;
     bool usesFragCoord() const;
     bool usesPointSize() const;
@@ -134,7 +134,7 @@ class ProgramD3DMetadata : angle::NonCopyable
 class ProgramD3D : public ProgramImpl
 {
   public:
-    ProgramD3D(const gl::Program::Data &data, RendererD3D *renderer);
+    ProgramD3D(const gl::ProgramState &data, RendererD3D *renderer);
     virtual ~ProgramD3D();
 
     const std::vector<PixelShaderOutputVariable> &getPixelShaderKey() { return mPixelShaderKey; }

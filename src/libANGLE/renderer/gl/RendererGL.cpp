@@ -272,12 +272,12 @@ ShaderImpl *RendererGL::createShader(const gl::Shader::Data &data)
     return new ShaderGL(data, mFunctions, mWorkarounds);
 }
 
-ProgramImpl *RendererGL::createProgram(const gl::Program::Data &data)
+ProgramImpl *RendererGL::createProgram(const gl::ProgramState &data)
 {
     return new ProgramGL(data, mFunctions, mWorkarounds, mStateManager);
 }
 
-FramebufferImpl *RendererGL::createFramebuffer(const gl::Framebuffer::Data &data)
+FramebufferImpl *RendererGL::createFramebuffer(const gl::FramebufferState &data)
 {
     return new FramebufferGL(data, mFunctions, mStateManager, mWorkarounds, false);
 }

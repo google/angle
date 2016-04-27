@@ -21,7 +21,7 @@
 namespace rx
 {
 
-Framebuffer9::Framebuffer9(const gl::Framebuffer::Data &data, Renderer9 *renderer)
+Framebuffer9::Framebuffer9(const gl::FramebufferState &data, Renderer9 *renderer)
     : FramebufferD3D(data, renderer), mRenderer(renderer)
 {
     ASSERT(mRenderer != nullptr);
@@ -54,8 +54,8 @@ gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangl
 
 gl::Error Framebuffer9::clear(const gl::ContextState &data, const ClearParameters &clearParams)
 {
-    const gl::FramebufferAttachment *colorAttachment = mData.getColorAttachment(0);
-    const gl::FramebufferAttachment *depthStencilAttachment = mData.getDepthOrStencilAttachment();
+    const gl::FramebufferAttachment *colorAttachment        = mState.getColorAttachment(0);
+    const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthOrStencilAttachment();
 
     gl::Error error = mRenderer->applyRenderTarget(colorAttachment, depthStencilAttachment);
     if (error.isError())
@@ -82,7 +82,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
 {
     ASSERT(pack.pixelBuffer.get() == nullptr);
 
-    const gl::FramebufferAttachment *colorbuffer = mData.getColorAttachment(0);
+    const gl::FramebufferAttachment *colorbuffer = mState.getColorAttachment(0);
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget = nullptr;
@@ -280,7 +280,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         }
         ASSERT(readRenderTarget);
 
-        const gl::FramebufferAttachment *drawBuffer = mData.getColorAttachment(0);
+        const gl::FramebufferAttachment *drawBuffer = mState.getColorAttachment(0);
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawRenderTarget = nullptr;
@@ -406,7 +406,7 @@ gl::Error Framebuffer9::blit(const gl::Rectangle &sourceArea, const gl::Rectangl
         }
         ASSERT(readDepthStencil);
 
-        const gl::FramebufferAttachment *drawBuffer = mData.getDepthOrStencilAttachment();
+        const gl::FramebufferAttachment *drawBuffer = mState.getDepthOrStencilAttachment();
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawDepthStencil = nullptr;

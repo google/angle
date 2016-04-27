@@ -53,7 +53,7 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    FramebufferImpl *createDefaultFramebuffer(const gl::Framebuffer::Data &data) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &data) override;
 
   private:
     egl::Error setObjectsLocked(bool locked);

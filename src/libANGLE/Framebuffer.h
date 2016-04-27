@@ -35,6 +35,7 @@ class Surface;
 namespace gl
 {
 class Context;
+class Framebuffer;
 class Renderbuffer;
 class State;
 class Texture;
@@ -45,46 +46,48 @@ struct Extensions;
 struct ImageIndex;
 struct Rectangle;
 
+class FramebufferState final : angle::NonCopyable
+{
+  public:
+    FramebufferState();
+    explicit FramebufferState(const Caps &caps);
+    ~FramebufferState();
+
+    const std::string &getLabel();
+
+    const FramebufferAttachment *getReadAttachment() const;
+    const FramebufferAttachment *getFirstColorAttachment() const;
+    const FramebufferAttachment *getDepthOrStencilAttachment() const;
+    const FramebufferAttachment *getColorAttachment(size_t colorAttachment) const;
+    const FramebufferAttachment *getDepthAttachment() const;
+    const FramebufferAttachment *getStencilAttachment() const;
+    const FramebufferAttachment *getDepthStencilAttachment() const;
+
+    const std::vector<GLenum> &getDrawBufferStates() const { return mDrawBufferStates; }
+    GLenum getReadBufferState() const { return mReadBufferState; }
+    const std::vector<FramebufferAttachment> &getColorAttachments() const
+    {
+        return mColorAttachments;
+    }
+
+    bool attachmentsHaveSameDimensions() const;
+
+  private:
+    friend class Framebuffer;
+
+    std::string mLabel;
+
+    std::vector<FramebufferAttachment> mColorAttachments;
+    FramebufferAttachment mDepthAttachment;
+    FramebufferAttachment mStencilAttachment;
+
+    std::vector<GLenum> mDrawBufferStates;
+    GLenum mReadBufferState;
+};
+
 class Framebuffer final : public LabeledObject
 {
   public:
-
-    class Data final : angle::NonCopyable
-    {
-      public:
-        explicit Data();
-        explicit Data(const Caps &caps);
-        ~Data();
-
-        const std::string &getLabel();
-
-        const FramebufferAttachment *getReadAttachment() const;
-        const FramebufferAttachment *getFirstColorAttachment() const;
-        const FramebufferAttachment *getDepthOrStencilAttachment() const;
-        const FramebufferAttachment *getColorAttachment(size_t colorAttachment) const;
-        const FramebufferAttachment *getDepthAttachment() const;
-        const FramebufferAttachment *getStencilAttachment() const;
-        const FramebufferAttachment *getDepthStencilAttachment() const;
-
-        const std::vector<GLenum> &getDrawBufferStates() const { return mDrawBufferStates; }
-        GLenum getReadBufferState() const { return mReadBufferState; }
-        const std::vector<FramebufferAttachment> &getColorAttachments() const { return mColorAttachments; }
-
-        bool attachmentsHaveSameDimensions() const;
-
-      private:
-        friend class Framebuffer;
-
-        std::string mLabel;
-
-        std::vector<FramebufferAttachment> mColorAttachments;
-        FramebufferAttachment mDepthAttachment;
-        FramebufferAttachment mStencilAttachment;
-
-        std::vector<GLenum> mDrawBufferStates;
-        GLenum mReadBufferState;
-    };
-
     Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
     Framebuffer(rx::SurfaceImpl *surface);
     virtual ~Framebuffer();
@@ -195,7 +198,7 @@ class Framebuffer final : public LabeledObject
   protected:
     void detachResourceById(GLenum resourceType, GLuint resourceId);
 
-    Data mData;
+    FramebufferState mState;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
 

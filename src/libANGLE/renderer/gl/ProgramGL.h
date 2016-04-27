@@ -27,7 +27,7 @@ struct SamplerBindingGL
 class ProgramGL : public ProgramImpl
 {
   public:
-    ProgramGL(const gl::Program::Data &data,
+    ProgramGL(const gl::ProgramState &data,
               const FunctionsGL *functions,
               const WorkaroundsGL &workarounds,
               StateManagerGL *stateManager);

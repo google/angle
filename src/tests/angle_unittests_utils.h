@@ -23,10 +23,13 @@ class NullFactory : public ImplFactory
     // Shader creation
     CompilerImpl *createCompiler() override { return nullptr; }
     ShaderImpl *createShader(const gl::Shader::Data &data) override { return nullptr; }
-    ProgramImpl *createProgram(const gl::Program::Data &data) override { return nullptr; }
+    ProgramImpl *createProgram(const gl::ProgramState &data) override { return nullptr; }
 
     // Framebuffer creation
-    FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) override { return nullptr; }
+    FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) override
+    {
+        return nullptr;
+    }
 
     // Texture creation
     TextureImpl *createTexture(GLenum target) override { return nullptr; }
@@ -58,8 +61,8 @@ class MockFactory : public ImplFactory
   public:
     MOCK_METHOD0(createCompiler, CompilerImpl *());
     MOCK_METHOD1(createShader, ShaderImpl *(const gl::Shader::Data &));
-    MOCK_METHOD1(createProgram, ProgramImpl *(const gl::Program::Data &));
-    MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::Framebuffer::Data &));
+    MOCK_METHOD1(createProgram, ProgramImpl *(const gl::ProgramState &));
+    MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::FramebufferState &));
     MOCK_METHOD1(createTexture, TextureImpl *(GLenum target));
     MOCK_METHOD0(createRenderbuffer, RenderbufferImpl *());
     MOCK_METHOD0(createBuffer, BufferImpl *());

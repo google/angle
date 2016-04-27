@@ -99,7 +99,7 @@ egl::Error SurfaceD3D::initialize()
     return egl::Error(EGL_SUCCESS);
 }
 
-FramebufferImpl *SurfaceD3D::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
+FramebufferImpl *SurfaceD3D::createDefaultFramebuffer(const gl::FramebufferState &data)
 {
     return mRenderer->createFramebuffer(data);
 }

@@ -232,7 +232,7 @@ Program::Bindings::const_iterator Program::Bindings::end() const
     return mBindings.end();
 }
 
-Program::Data::Data()
+ProgramState::ProgramState()
     : mLabel(),
       mAttachedFragmentShader(nullptr),
       mAttachedVertexShader(nullptr),
@@ -241,7 +241,7 @@ Program::Data::Data()
 {
 }
 
-Program::Data::~Data()
+ProgramState::~ProgramState()
 {
     if (mAttachedVertexShader != nullptr)
     {
@@ -254,12 +254,12 @@ Program::Data::~Data()
     }
 }
 
-const std::string &Program::Data::getLabel()
+const std::string &ProgramState::getLabel()
 {
     return mLabel;
 }
 
-const LinkedUniform *Program::Data::getUniformByName(const std::string &name) const
+const LinkedUniform *ProgramState::getUniformByName(const std::string &name) const
 {
     for (const LinkedUniform &linkedUniform : mUniforms)
     {
@@ -272,7 +272,7 @@ const LinkedUniform *Program::Data::getUniformByName(const std::string &name) co
     return nullptr;
 }
 
-GLint Program::Data::getUniformLocation(const std::string &name) const
+GLint ProgramState::getUniformLocation(const std::string &name) const
 {
     size_t subscript     = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
@@ -310,7 +310,7 @@ GLint Program::Data::getUniformLocation(const std::string &name) const
     return -1;
 }
 
-GLuint Program::Data::getUniformIndex(const std::string &name) const
+GLuint ProgramState::getUniformIndex(const std::string &name) const
 {
     size_t subscript     = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
@@ -337,7 +337,7 @@ GLuint Program::Data::getUniformIndex(const std::string &name) const
 }
 
 Program::Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle)
-    : mProgram(factory->createProgram(mData)),
+    : mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),
       mDeleteStatus(false),
@@ -361,35 +361,35 @@ Program::~Program()
 
 void Program::setLabel(const std::string &label)
 {
-    mData.mLabel = label;
+    mState.mLabel = label;
 }
 
 const std::string &Program::getLabel() const
 {
-    return mData.mLabel;
+    return mState.mLabel;
 }
 
 bool Program::attachShader(Shader *shader)
 {
     if (shader->getType() == GL_VERTEX_SHADER)
     {
-        if (mData.mAttachedVertexShader)
+        if (mState.mAttachedVertexShader)
         {
             return false;
         }
 
-        mData.mAttachedVertexShader = shader;
-        mData.mAttachedVertexShader->addRef();
+        mState.mAttachedVertexShader = shader;
+        mState.mAttachedVertexShader->addRef();
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
-        if (mData.mAttachedFragmentShader)
+        if (mState.mAttachedFragmentShader)
         {
             return false;
         }
 
-        mData.mAttachedFragmentShader = shader;
-        mData.mAttachedFragmentShader->addRef();
+        mState.mAttachedFragmentShader = shader;
+        mState.mAttachedFragmentShader->addRef();
     }
     else UNREACHABLE();
 
@@ -400,23 +400,23 @@ bool Program::detachShader(Shader *shader)
 {
     if (shader->getType() == GL_VERTEX_SHADER)
     {
-        if (mData.mAttachedVertexShader != shader)
+        if (mState.mAttachedVertexShader != shader)
         {
             return false;
         }
 
         shader->release();
-        mData.mAttachedVertexShader = nullptr;
+        mState.mAttachedVertexShader = nullptr;
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
-        if (mData.mAttachedFragmentShader != shader)
+        if (mState.mAttachedFragmentShader != shader)
         {
             return false;
         }
 
         shader->release();
-        mData.mAttachedFragmentShader = nullptr;
+        mState.mAttachedFragmentShader = nullptr;
     }
     else UNREACHABLE();
 
@@ -425,7 +425,7 @@ bool Program::detachShader(Shader *shader)
 
 int Program::getAttachedShadersCount() const
 {
-    return (mData.mAttachedVertexShader ? 1 : 0) + (mData.mAttachedFragmentShader ? 1 : 0);
+    return (mState.mAttachedVertexShader ? 1 : 0) + (mState.mAttachedFragmentShader ? 1 : 0);
 }
 
 void Program::bindAttributeLocation(GLuint index, const char *name)
@@ -449,24 +449,24 @@ Error Program::link(const ContextState &data)
     mInfoLog.reset();
     resetUniformBlockBindings();
 
-    if (!mData.mAttachedFragmentShader || !mData.mAttachedFragmentShader->isCompiled())
+    if (!mState.mAttachedFragmentShader || !mState.mAttachedFragmentShader->isCompiled())
     {
         return Error(GL_NO_ERROR);
     }
-    ASSERT(mData.mAttachedFragmentShader->getType() == GL_FRAGMENT_SHADER);
+    ASSERT(mState.mAttachedFragmentShader->getType() == GL_FRAGMENT_SHADER);
 
-    if (!mData.mAttachedVertexShader || !mData.mAttachedVertexShader->isCompiled())
+    if (!mState.mAttachedVertexShader || !mState.mAttachedVertexShader->isCompiled())
     {
         return Error(GL_NO_ERROR);
     }
-    ASSERT(mData.mAttachedVertexShader->getType() == GL_VERTEX_SHADER);
+    ASSERT(mState.mAttachedVertexShader->getType() == GL_VERTEX_SHADER);
 
-    if (!linkAttributes(data, mInfoLog, mAttributeBindings, mData.mAttachedVertexShader))
+    if (!linkAttributes(data, mInfoLog, mAttributeBindings, mState.mAttachedVertexShader))
     {
         return Error(GL_NO_ERROR);
     }
 
-    if (!linkVaryings(mInfoLog, mData.mAttachedVertexShader, mData.mAttachedFragmentShader))
+    if (!linkVaryings(mInfoLog, mState.mAttachedVertexShader, mState.mAttachedFragmentShader))
     {
         return Error(GL_NO_ERROR);
     }
@@ -508,26 +508,26 @@ void Program::unlink(bool destroy)
 {
     if (destroy)   // Object being destructed
     {
-        if (mData.mAttachedFragmentShader)
+        if (mState.mAttachedFragmentShader)
         {
-            mData.mAttachedFragmentShader->release();
-            mData.mAttachedFragmentShader = nullptr;
+            mState.mAttachedFragmentShader->release();
+            mState.mAttachedFragmentShader = nullptr;
         }
 
-        if (mData.mAttachedVertexShader)
+        if (mState.mAttachedVertexShader)
         {
-            mData.mAttachedVertexShader->release();
-            mData.mAttachedVertexShader = nullptr;
+            mState.mAttachedVertexShader->release();
+            mState.mAttachedVertexShader = nullptr;
         }
     }
 
-    mData.mAttributes.clear();
-    mData.mActiveAttribLocationsMask.reset();
-    mData.mTransformFeedbackVaryingVars.clear();
-    mData.mUniforms.clear();
-    mData.mUniformLocations.clear();
-    mData.mUniformBlocks.clear();
-    mData.mOutputVariables.clear();
+    mState.mAttributes.clear();
+    mState.mActiveAttribLocationsMask.reset();
+    mState.mTransformFeedbackVaryingVars.clear();
+    mState.mUniforms.clear();
+    mState.mUniformLocations.clear();
+    mState.mUniformBlocks.clear();
+    mState.mOutputVariables.clear();
 
     mValidated = false;
 
@@ -573,20 +573,20 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
 
     static_assert(MAX_VERTEX_ATTRIBS <= sizeof(unsigned long) * 8,
                   "Too many vertex attribs for mask");
-    mData.mActiveAttribLocationsMask = stream.readInt<unsigned long>();
+    mState.mActiveAttribLocationsMask = stream.readInt<unsigned long>();
 
     unsigned int attribCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mAttributes.empty());
+    ASSERT(mState.mAttributes.empty());
     for (unsigned int attribIndex = 0; attribIndex < attribCount; ++attribIndex)
     {
         sh::Attribute attrib;
         LoadShaderVar(&stream, &attrib);
         attrib.location = stream.readInt<int>();
-        mData.mAttributes.push_back(attrib);
+        mState.mAttributes.push_back(attrib);
     }
 
     unsigned int uniformCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mUniforms.empty());
+    ASSERT(mState.mUniforms.empty());
     for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
     {
         LinkedUniform uniform;
@@ -598,11 +598,11 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         uniform.blockInfo.matrixStride     = stream.readInt<int>();
         uniform.blockInfo.isRowMajorMatrix = stream.readBool();
 
-        mData.mUniforms.push_back(uniform);
+        mState.mUniforms.push_back(uniform);
     }
 
     const unsigned int uniformIndexCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mUniformLocations.empty());
+    ASSERT(mState.mUniformLocations.empty());
     for (unsigned int uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount;
          uniformIndexIndex++)
     {
@@ -613,11 +613,11 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         stream.readBool(&variable.used);
         stream.readBool(&variable.ignored);
 
-        mData.mUniformLocations.push_back(variable);
+        mState.mUniformLocations.push_back(variable);
     }
 
     unsigned int uniformBlockCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mUniformBlocks.empty());
+    ASSERT(mState.mUniformBlocks.empty());
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < uniformBlockCount;
          ++uniformBlockIndex)
     {
@@ -635,11 +635,11 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
             uniformBlock.memberUniformIndexes.push_back(stream.readInt<unsigned int>());
         }
 
-        mData.mUniformBlocks.push_back(uniformBlock);
+        mState.mUniformBlocks.push_back(uniformBlock);
     }
 
     unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
-    ASSERT(mData.mTransformFeedbackVaryingVars.empty());
+    ASSERT(mState.mTransformFeedbackVaryingVars.empty());
     for (unsigned int transformFeedbackVaryingIndex = 0;
         transformFeedbackVaryingIndex < transformFeedbackVaryingCount;
         ++transformFeedbackVaryingIndex)
@@ -649,10 +649,10 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         stream.readInt(&varying.type);
         stream.readString(&varying.name);
 
-        mData.mTransformFeedbackVaryingVars.push_back(varying);
+        mState.mTransformFeedbackVaryingVars.push_back(varying);
     }
 
-    stream.readInt(&mData.mTransformFeedbackBufferMode);
+    stream.readInt(&mState.mTransformFeedbackBufferMode);
 
     unsigned int outputVarCount = stream.readInt<unsigned int>();
     for (unsigned int outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
@@ -662,7 +662,7 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
         stream.readInt(&locationData.element);
         stream.readInt(&locationData.index);
         stream.readString(&locationData.name);
-        mData.mOutputVariables[locationIndex] = locationData;
+        mState.mOutputVariables[locationIndex] = locationData;
     }
 
     stream.readInt(&mSamplerUniformRange.start);
@@ -692,17 +692,17 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     stream.writeInt(ANGLE_MINOR_VERSION);
     stream.writeBytes(reinterpret_cast<const unsigned char*>(ANGLE_COMMIT_HASH), ANGLE_COMMIT_HASH_SIZE);
 
-    stream.writeInt(mData.mActiveAttribLocationsMask.to_ulong());
+    stream.writeInt(mState.mActiveAttribLocationsMask.to_ulong());
 
-    stream.writeInt(mData.mAttributes.size());
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    stream.writeInt(mState.mAttributes.size());
+    for (const sh::Attribute &attrib : mState.mAttributes)
     {
         WriteShaderVar(&stream, attrib);
         stream.writeInt(attrib.location);
     }
 
-    stream.writeInt(mData.mUniforms.size());
-    for (const gl::LinkedUniform &uniform : mData.mUniforms)
+    stream.writeInt(mState.mUniforms.size());
+    for (const gl::LinkedUniform &uniform : mState.mUniforms)
     {
         WriteShaderVar(&stream, uniform);
 
@@ -715,8 +715,8 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeInt(uniform.blockInfo.isRowMajorMatrix);
     }
 
-    stream.writeInt(mData.mUniformLocations.size());
-    for (const auto &variable : mData.mUniformLocations)
+    stream.writeInt(mState.mUniformLocations.size());
+    for (const auto &variable : mState.mUniformLocations)
     {
         stream.writeString(variable.name);
         stream.writeInt(variable.element);
@@ -725,8 +725,8 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         stream.writeInt(variable.ignored);
     }
 
-    stream.writeInt(mData.mUniformBlocks.size());
-    for (const UniformBlock &uniformBlock : mData.mUniformBlocks)
+    stream.writeInt(mState.mUniformBlocks.size());
+    for (const UniformBlock &uniformBlock : mState.mUniformBlocks)
     {
         stream.writeString(uniformBlock.name);
         stream.writeInt(uniformBlock.isArray);
@@ -743,18 +743,18 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
         }
     }
 
-    stream.writeInt(mData.mTransformFeedbackVaryingVars.size());
-    for (const sh::Varying &varying : mData.mTransformFeedbackVaryingVars)
+    stream.writeInt(mState.mTransformFeedbackVaryingVars.size());
+    for (const sh::Varying &varying : mState.mTransformFeedbackVaryingVars)
     {
         stream.writeInt(varying.arraySize);
         stream.writeInt(varying.type);
         stream.writeString(varying.name);
     }
 
-    stream.writeInt(mData.mTransformFeedbackBufferMode);
+    stream.writeInt(mState.mTransformFeedbackBufferMode);
 
-    stream.writeInt(mData.mOutputVariables.size());
-    for (const auto &outputPair : mData.mOutputVariables)
+    stream.writeInt(mState.mOutputVariables.size());
+    for (const auto &outputPair : mState.mOutputVariables)
     {
         stream.writeInt(outputPair.first);
         stream.writeInt(outputPair.second.element);
@@ -772,7 +772,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     }
 
     GLsizei streamLength   = static_cast<GLsizei>(stream.length());
-    const void *streamData = stream.data();
+    const void *streamState = stream.data();
 
     if (streamLength > bufSize)
     {
@@ -791,7 +791,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     {
         char *ptr = reinterpret_cast<char*>(binary);
 
-        memcpy(ptr, streamData, streamLength);
+        memcpy(ptr, streamState, streamLength);
         ptr += streamLength;
 
         ASSERT(ptr - streamLength == binary);
@@ -821,12 +821,12 @@ void Program::setBinaryRetrievableHint(bool retrievable)
 {
     // TODO(jmadill) : replace with dirty bits
     mProgram->setBinaryRetrievableHint(retrievable);
-    mData.mBinaryRetrieveableHint = retrievable;
+    mState.mBinaryRetrieveableHint = retrievable;
 }
 
 bool Program::getBinaryRetrievableHint() const
 {
-    return mData.mBinaryRetrieveableHint;
+    return mState.mBinaryRetrieveableHint;
 }
 
 void Program::release()
@@ -863,20 +863,20 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 {
     int total = 0;
 
-    if (mData.mAttachedVertexShader)
+    if (mState.mAttachedVertexShader)
     {
         if (total < maxCount)
         {
-            shaders[total] = mData.mAttachedVertexShader->getHandle();
+            shaders[total] = mState.mAttachedVertexShader->getHandle();
             total++;
         }
     }
 
-    if (mData.mAttachedFragmentShader)
+    if (mState.mAttachedFragmentShader)
     {
         if (total < maxCount)
         {
-            shaders[total] = mData.mAttachedFragmentShader->getHandle();
+            shaders[total] = mState.mAttachedFragmentShader->getHandle();
             total++;
         }
     }
@@ -889,7 +889,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 GLuint Program::getAttributeLocation(const std::string &name) const
 {
-    for (const sh::Attribute &attribute : mData.mAttributes)
+    for (const sh::Attribute &attribute : mState.mAttributes)
     {
         if (attribute.name == name && attribute.staticUse)
         {
@@ -902,8 +902,8 @@ GLuint Program::getAttributeLocation(const std::string &name) const
 
 bool Program::isAttribLocationActive(size_t attribLocation) const
 {
-    ASSERT(attribLocation < mData.mActiveAttribLocationsMask.size());
-    return mData.mActiveAttribLocationsMask[attribLocation];
+    ASSERT(attribLocation < mState.mActiveAttribLocationsMask.size());
+    return mState.mActiveAttribLocationsMask[attribLocation];
 }
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
@@ -927,7 +927,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
     size_t attributeIndex = 0;
 
-    for (const sh::Attribute &attribute : mData.mAttributes)
+    for (const sh::Attribute &attribute : mState.mAttributes)
     {
         // Skip over inactive attributes
         if (attribute.staticUse)
@@ -940,8 +940,8 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
         }
     }
 
-    ASSERT(index == attributeIndex && attributeIndex < mData.mAttributes.size());
-    const sh::Attribute &attrib = mData.mAttributes[attributeIndex];
+    ASSERT(index == attributeIndex && attributeIndex < mState.mAttributes.size());
+    const sh::Attribute &attrib = mState.mAttributes[attributeIndex];
 
     if (bufsize > 0)
     {
@@ -970,7 +970,7 @@ GLint Program::getActiveAttributeCount() const
 
     GLint count = 0;
 
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    for (const sh::Attribute &attrib : mState.mAttributes)
     {
         count += (attrib.staticUse ? 1 : 0);
     }
@@ -987,7 +987,7 @@ GLint Program::getActiveAttributeMaxLength() const
 
     size_t maxLength = 0;
 
-    for (const sh::Attribute &attrib : mData.mAttributes)
+    for (const sh::Attribute &attrib : mState.mAttributes)
     {
         if (attrib.staticUse)
         {
@@ -1002,7 +1002,7 @@ GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);
     unsigned int arrayIndex = ParseAndStripArrayIndex(&baseName);
-    for (auto outputPair : mData.mOutputVariables)
+    for (auto outputPair : mState.mOutputVariables)
     {
         const VariableLocation &outputVariable = outputPair.second;
         if (outputVariable.name == baseName && (arrayIndex == GL_INVALID_INDEX || arrayIndex == outputVariable.element))
@@ -1023,8 +1023,8 @@ void Program::getActiveUniform(GLuint index,
     if (mLinked)
     {
         // index must be smaller than getActiveUniformCount()
-        ASSERT(index < mData.mUniforms.size());
-        const LinkedUniform &uniform = mData.mUniforms[index];
+        ASSERT(index < mState.mUniforms.size());
+        const LinkedUniform &uniform = mState.mUniforms[index];
 
         if (bufsize > 0)
         {
@@ -1067,7 +1067,7 @@ GLint Program::getActiveUniformCount() const
 {
     if (mLinked)
     {
-        return static_cast<GLint>(mData.mUniforms.size());
+        return static_cast<GLint>(mState.mUniforms.size());
     }
     else
     {
@@ -1081,7 +1081,7 @@ GLint Program::getActiveUniformMaxLength() const
 
     if (mLinked)
     {
-        for (const LinkedUniform &uniform : mData.mUniforms)
+        for (const LinkedUniform &uniform : mState.mUniforms)
         {
             if (!uniform.name.empty())
             {
@@ -1100,8 +1100,8 @@ GLint Program::getActiveUniformMaxLength() const
 
 GLint Program::getActiveUniformi(GLuint index, GLenum pname) const
 {
-    ASSERT(static_cast<size_t>(index) < mData.mUniforms.size());
-    const gl::LinkedUniform &uniform = mData.mUniforms[index];
+    ASSERT(static_cast<size_t>(index) < mState.mUniforms.size());
+    const gl::LinkedUniform &uniform = mState.mUniforms[index];
     switch (pname)
     {
       case GL_UNIFORM_TYPE:         return static_cast<GLint>(uniform.type);
@@ -1121,9 +1121,9 @@ GLint Program::getActiveUniformi(GLuint index, GLenum pname) const
 
 bool Program::isValidUniformLocation(GLint location) const
 {
-    ASSERT(rx::IsIntegerCastSafe<GLint>(mData.mUniformLocations.size()));
-    return (location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size() &&
-            mData.mUniformLocations[static_cast<size_t>(location)].used);
+    ASSERT(rx::IsIntegerCastSafe<GLint>(mState.mUniformLocations.size()));
+    return (location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size() &&
+            mState.mUniformLocations[static_cast<size_t>(location)].used);
 }
 
 bool Program::isIgnoredUniformLocation(GLint location) const
@@ -1131,24 +1131,24 @@ bool Program::isIgnoredUniformLocation(GLint location) const
     // Location is ignored if it is -1 or it was bound but non-existant in the shader or optimized
     // out
     return location == -1 ||
-           (location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size() &&
-            mData.mUniformLocations[static_cast<size_t>(location)].ignored);
+           (location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size() &&
+            mState.mUniformLocations[static_cast<size_t>(location)].ignored);
 }
 
 const LinkedUniform &Program::getUniformByLocation(GLint location) const
 {
-    ASSERT(location >= 0 && static_cast<size_t>(location) < mData.mUniformLocations.size());
-    return mData.mUniforms[mData.mUniformLocations[location].index];
+    ASSERT(location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size());
+    return mState.mUniforms[mState.mUniformLocations[location].index];
 }
 
 GLint Program::getUniformLocation(const std::string &name) const
 {
-    return mData.getUniformLocation(name);
+    return mState.getUniformLocation(name);
 }
 
 GLuint Program::getUniformIndex(const std::string &name) const
 {
-    return mData.getUniformIndex(name);
+    return mState.getUniformIndex(name);
 }
 
 void Program::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
@@ -1340,7 +1340,7 @@ bool Program::validateSamplers(InfoLog *infoLog, const Caps &caps)
     for (unsigned int samplerIndex = mSamplerUniformRange.start;
          samplerIndex < mSamplerUniformRange.end; ++samplerIndex)
     {
-        const LinkedUniform &uniform = mData.mUniforms[samplerIndex];
+        const LinkedUniform &uniform = mState.mUniforms[samplerIndex];
         ASSERT(uniform.isSampler());
 
         if (!uniform.staticUse)
@@ -1399,15 +1399,16 @@ bool Program::isValidated() const
 
 GLuint Program::getActiveUniformBlockCount() const
 {
-    return static_cast<GLuint>(mData.mUniformBlocks.size());
+    return static_cast<GLuint>(mState.mUniformBlocks.size());
 }
 
 void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const
 {
-    ASSERT(uniformBlockIndex <
-           mData.mUniformBlocks.size());  // index must be smaller than getActiveUniformBlockCount()
+    ASSERT(
+        uniformBlockIndex <
+        mState.mUniformBlocks.size());  // index must be smaller than getActiveUniformBlockCount()
 
-    const UniformBlock &uniformBlock = mData.mUniformBlocks[uniformBlockIndex];
+    const UniformBlock &uniformBlock = mState.mUniformBlocks[uniformBlockIndex];
 
     if (bufSize > 0)
     {
@@ -1430,10 +1431,11 @@ void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSiz
 
 void Program::getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const
 {
-    ASSERT(uniformBlockIndex <
-           mData.mUniformBlocks.size());  // index must be smaller than getActiveUniformBlockCount()
+    ASSERT(
+        uniformBlockIndex <
+        mState.mUniformBlocks.size());  // index must be smaller than getActiveUniformBlockCount()
 
-    const UniformBlock &uniformBlock = mData.mUniformBlocks[uniformBlockIndex];
+    const UniformBlock &uniformBlock = mState.mUniformBlocks[uniformBlockIndex];
 
     switch (pname)
     {
@@ -1471,10 +1473,10 @@ GLint Program::getActiveUniformBlockMaxLength() const
 
     if (mLinked)
     {
-        unsigned int numUniformBlocks = static_cast<unsigned int>(mData.mUniformBlocks.size());
+        unsigned int numUniformBlocks = static_cast<unsigned int>(mState.mUniformBlocks.size());
         for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < numUniformBlocks; uniformBlockIndex++)
         {
-            const UniformBlock &uniformBlock = mData.mUniformBlocks[uniformBlockIndex];
+            const UniformBlock &uniformBlock = mState.mUniformBlocks[uniformBlockIndex];
             if (!uniformBlock.name.empty())
             {
                 const int length = static_cast<int>(uniformBlock.name.length()) + 1;
@@ -1495,10 +1497,10 @@ GLuint Program::getUniformBlockIndex(const std::string &name) const
     size_t subscript     = GL_INVALID_INDEX;
     std::string baseName = gl::ParseUniformName(name, &subscript);
 
-    unsigned int numUniformBlocks = static_cast<unsigned int>(mData.mUniformBlocks.size());
+    unsigned int numUniformBlocks = static_cast<unsigned int>(mState.mUniformBlocks.size());
     for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
     {
-        const gl::UniformBlock &uniformBlock = mData.mUniformBlocks[blockIndex];
+        const gl::UniformBlock &uniformBlock = mState.mUniformBlocks[blockIndex];
         if (uniformBlock.name == baseName)
         {
             const bool arrayElementZero =
@@ -1516,47 +1518,47 @@ GLuint Program::getUniformBlockIndex(const std::string &name) const
 
 const UniformBlock &Program::getUniformBlockByIndex(GLuint index) const
 {
-    ASSERT(index < static_cast<GLuint>(mData.mUniformBlocks.size()));
-    return mData.mUniformBlocks[index];
+    ASSERT(index < static_cast<GLuint>(mState.mUniformBlocks.size()));
+    return mState.mUniformBlocks[index];
 }
 
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
-    mData.mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
+    mState.mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
     mProgram->setUniformBlockBinding(uniformBlockIndex, uniformBlockBinding);
 }
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
 {
-    return mData.getUniformBlockBinding(uniformBlockIndex);
+    return mState.getUniformBlockBinding(uniformBlockIndex);
 }
 
 void Program::resetUniformBlockBindings()
 {
     for (unsigned int blockId = 0; blockId < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; blockId++)
     {
-        mData.mUniformBlockBindings[blockId] = 0;
+        mState.mUniformBlockBindings[blockId] = 0;
     }
-    mData.mActiveUniformBlockBindings.reset();
+    mState.mActiveUniformBlockBindings.reset();
 }
 
 void Program::setTransformFeedbackVaryings(GLsizei count, const GLchar *const *varyings, GLenum bufferMode)
 {
-    mData.mTransformFeedbackVaryingNames.resize(count);
+    mState.mTransformFeedbackVaryingNames.resize(count);
     for (GLsizei i = 0; i < count; i++)
     {
-        mData.mTransformFeedbackVaryingNames[i] = varyings[i];
+        mState.mTransformFeedbackVaryingNames[i] = varyings[i];
     }
 
-    mData.mTransformFeedbackBufferMode = bufferMode;
+    mState.mTransformFeedbackBufferMode = bufferMode;
 }
 
 void Program::getTransformFeedbackVarying(GLuint index, GLsizei bufSize, GLsizei *length, GLsizei *size, GLenum *type, GLchar *name) const
 {
     if (mLinked)
     {
-        ASSERT(index < mData.mTransformFeedbackVaryingVars.size());
-        const sh::Varying &varying = mData.mTransformFeedbackVaryingVars[index];
+        ASSERT(index < mState.mTransformFeedbackVaryingVars.size());
+        const sh::Varying &varying = mState.mTransformFeedbackVaryingVars[index];
         GLsizei lastNameIdx = std::min(bufSize - 1, static_cast<GLsizei>(varying.name.length()));
         if (length)
         {
@@ -1582,7 +1584,7 @@ GLsizei Program::getTransformFeedbackVaryingCount() const
 {
     if (mLinked)
     {
-        return static_cast<GLsizei>(mData.mTransformFeedbackVaryingVars.size());
+        return static_cast<GLsizei>(mState.mTransformFeedbackVaryingVars.size());
     }
     else
     {
@@ -1595,7 +1597,7 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
     if (mLinked)
     {
         GLsizei maxSize = 0;
-        for (const sh::Varying &varying : mData.mTransformFeedbackVaryingVars)
+        for (const sh::Varying &varying : mState.mTransformFeedbackVaryingVars)
         {
             maxSize = std::max(maxSize, static_cast<GLsizei>(varying.name.length() + 1));
         }
@@ -1610,7 +1612,7 @@ GLsizei Program::getTransformFeedbackVaryingMaxLength() const
 
 GLenum Program::getTransformFeedbackBufferMode() const
 {
-    return mData.mTransformFeedbackBufferMode;
+    return mState.mTransformFeedbackBufferMode;
 }
 
 // static
@@ -1663,8 +1665,9 @@ bool Program::linkUniforms(gl::InfoLog &infoLog,
                            const gl::Caps &caps,
                            const Bindings &uniformBindings)
 {
-    const std::vector<sh::Uniform> &vertexUniforms   = mData.mAttachedVertexShader->getUniforms();
-    const std::vector<sh::Uniform> &fragmentUniforms = mData.mAttachedFragmentShader->getUniforms();
+    const std::vector<sh::Uniform> &vertexUniforms = mState.mAttachedVertexShader->getUniforms();
+    const std::vector<sh::Uniform> &fragmentUniforms =
+        mState.mAttachedFragmentShader->getUniforms();
 
     // Check that uniforms defined in the vertex and fragment shaders are identical
     std::map<std::string, LinkedUniform> linkedUniforms;
@@ -1713,9 +1716,9 @@ bool Program::indexUniforms(gl::InfoLog &infoLog,
     int maxUniformLocation = -1;
 
     // Gather bound and unbound uniforms
-    for (size_t uniformIndex = 0; uniformIndex < mData.mUniforms.size(); uniformIndex++)
+    for (size_t uniformIndex = 0; uniformIndex < mState.mUniforms.size(); uniformIndex++)
     {
-        const gl::LinkedUniform &uniform = mData.mUniforms[uniformIndex];
+        const gl::LinkedUniform &uniform = mState.mUniforms[uniformIndex];
 
         if (uniform.isBuiltIn())
         {
@@ -1762,34 +1765,34 @@ bool Program::indexUniforms(gl::InfoLog &infoLog,
     }
 
     // Make enough space for all uniforms, bound and unbound
-    mData.mUniformLocations.resize(
+    mState.mUniformLocations.resize(
         std::max(unboundUniforms.size() + boundUniforms.size() + reservedLocations.size(),
                  static_cast<size_t>(maxUniformLocation + 1)));
 
     // Assign bound uniforms
     for (const auto &boundUniform : boundUniforms)
     {
-        mData.mUniformLocations[boundUniform.first] = boundUniform.second;
+        mState.mUniformLocations[boundUniform.first] = boundUniform.second;
     }
 
     // Assign reserved uniforms
     for (const auto &reservedLocation : reservedLocations)
     {
-        mData.mUniformLocations[reservedLocation].ignored = true;
+        mState.mUniformLocations[reservedLocation].ignored = true;
     }
 
     // Assign unbound uniforms
     size_t nextUniformLocation = 0;
     for (const auto &unboundUniform : unboundUniforms)
     {
-        while (mData.mUniformLocations[nextUniformLocation].used ||
-               mData.mUniformLocations[nextUniformLocation].ignored)
+        while (mState.mUniformLocations[nextUniformLocation].used ||
+               mState.mUniformLocations[nextUniformLocation].ignored)
         {
             nextUniformLocation++;
         }
 
-        ASSERT(nextUniformLocation < mData.mUniformLocations.size());
-        mData.mUniformLocations[nextUniformLocation] = unboundUniform;
+        ASSERT(nextUniformLocation < mState.mUniformLocations.size());
+        mState.mUniformLocations[nextUniformLocation] = unboundUniform;
         nextUniformLocation++;
     }
 
@@ -1820,11 +1823,11 @@ bool Program::linkAttributes(const ContextState &data,
                              const Shader *vertexShader)
 {
     unsigned int usedLocations = 0;
-    mData.mAttributes          = vertexShader->getActiveAttributes();
+    mState.mAttributes         = vertexShader->getActiveAttributes();
     GLuint maxAttribs = data.caps->maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
-    if (mData.mAttributes.size() > maxAttribs)
+    if (mState.mAttributes.size() > maxAttribs)
     {
         infoLog << "Too many vertex attributes.";
         return false;
@@ -1833,7 +1836,7 @@ bool Program::linkAttributes(const ContextState &data,
     std::vector<sh::Attribute *> usedAttribMap(data.caps->maxVertexAttributes, nullptr);
 
     // Link attributes that have a binding location
-    for (sh::Attribute &attribute : mData.mAttributes)
+    for (sh::Attribute &attribute : mState.mAttributes)
     {
         // TODO(jmadill): do staticUse filtering step here, or not at all
         ASSERT(attribute.staticUse);
@@ -1885,7 +1888,7 @@ bool Program::linkAttributes(const ContextState &data,
     }
 
     // Link attributes that don't have a binding location
-    for (sh::Attribute &attribute : mData.mAttributes)
+    for (sh::Attribute &attribute : mState.mAttributes)
     {
         ASSERT(attribute.staticUse);
 
@@ -1905,7 +1908,7 @@ bool Program::linkAttributes(const ContextState &data,
         }
     }
 
-    for (const sh::Attribute &attribute : mData.mAttributes)
+    for (const sh::Attribute &attribute : mState.mAttributes)
     {
         ASSERT(attribute.staticUse);
         ASSERT(attribute.location != -1);
@@ -1913,7 +1916,7 @@ bool Program::linkAttributes(const ContextState &data,
 
         for (int r = 0; r < regs; r++)
         {
-            mData.mActiveAttribLocationsMask.set(attribute.location + r);
+            mState.mActiveAttribLocationsMask.set(attribute.location + r);
         }
     }
 
@@ -1922,8 +1925,8 @@ bool Program::linkAttributes(const ContextState &data,
 
 bool Program::linkUniformBlocks(InfoLog &infoLog, const Caps &caps)
 {
-    const Shader &vertexShader   = *mData.mAttachedVertexShader;
-    const Shader &fragmentShader = *mData.mAttachedFragmentShader;
+    const Shader &vertexShader   = *mState.mAttachedVertexShader;
+    const Shader &fragmentShader = *mState.mAttachedFragmentShader;
 
     const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks = vertexShader.getInterfaceBlocks();
     const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks();
@@ -2116,7 +2119,7 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
 
     std::set<std::string> uniqueNames;
 
-    for (const std::string &tfVaryingName : mData.mTransformFeedbackVaryingNames)
+    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
         bool found = false;
         for (const sh::Varying *varying : varyings)
@@ -2139,7 +2142,7 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
 
                 // TODO(jmadill): Investigate implementation limits on D3D11
                 size_t componentCount = gl::VariableComponentCount(varying->type);
-                if (mData.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
+                if (mState.mTransformFeedbackBufferMode == GL_SEPARATE_ATTRIBS &&
                     componentCount > caps.maxTransformFeedbackSeparateComponents)
                 {
                     infoLog << "Transform feedback varying's " << varying->name << " components ("
@@ -2165,7 +2168,7 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
         UNUSED_ASSERTION_VARIABLE(found);
     }
 
-    if (mData.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
+    if (mState.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&
         totalComponents > caps.maxTransformFeedbackInterleavedComponents)
     {
         infoLog << "Transform feedback varying total components (" << totalComponents
@@ -2180,14 +2183,14 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
 void Program::gatherTransformFeedbackVaryings(const std::vector<const sh::Varying *> &varyings)
 {
     // Gather the linked varyings that are used for transform feedback, they should all exist.
-    mData.mTransformFeedbackVaryingVars.clear();
-    for (const std::string &tfVaryingName : mData.mTransformFeedbackVaryingNames)
+    mState.mTransformFeedbackVaryingVars.clear();
+    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
         for (const sh::Varying *varying : varyings)
         {
             if (tfVaryingName == varying->name)
             {
-                mData.mTransformFeedbackVaryingVars.push_back(*varying);
+                mState.mTransformFeedbackVaryingVars.push_back(*varying);
                 break;
             }
         }
@@ -2199,7 +2202,7 @@ std::vector<const sh::Varying *> Program::getMergedVaryings() const
     std::set<std::string> uniqueNames;
     std::vector<const sh::Varying *> varyings;
 
-    for (const sh::Varying &varying : mData.mAttachedVertexShader->getVaryings())
+    for (const sh::Varying &varying : mState.mAttachedVertexShader->getVaryings())
     {
         if (uniqueNames.count(varying.name) == 0)
         {
@@ -2208,7 +2211,7 @@ std::vector<const sh::Varying *> Program::getMergedVaryings() const
         }
     }
 
-    for (const sh::Varying &varying : mData.mAttachedFragmentShader->getVaryings())
+    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getVaryings())
     {
         if (uniqueNames.count(varying.name) == 0)
         {
@@ -2222,7 +2225,7 @@ std::vector<const sh::Varying *> Program::getMergedVaryings() const
 
 void Program::linkOutputVariables()
 {
-    const Shader *fragmentShader = mData.mAttachedFragmentShader;
+    const Shader *fragmentShader = mState.mAttachedFragmentShader;
     ASSERT(fragmentShader != nullptr);
 
     // Skip this step for GLES2 shaders.
@@ -2251,9 +2254,9 @@ void Program::linkOutputVariables()
              elementIndex++)
         {
             const int location = baseLocation + elementIndex;
-            ASSERT(mData.mOutputVariables.count(location) == 0);
+            ASSERT(mState.mOutputVariables.count(location) == 0);
             unsigned int element = outputVariable.isArray() ? elementIndex : GL_INVALID_INDEX;
-            mData.mOutputVariables[location] =
+            mState.mOutputVariables[location] =
                 VariableLocation(outputVariable.name, element, outputVariableIndex);
         }
     }
@@ -2261,7 +2264,7 @@ void Program::linkOutputVariables()
 
 bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
 {
-    const gl::Shader *vertexShader = mData.getAttachedVertexShader();
+    const gl::Shader *vertexShader = mState.getAttachedVertexShader();
     VectorAndSamplerCount vsCounts;
 
     std::vector<LinkedUniform> samplerUniforms;
@@ -2288,7 +2291,7 @@ bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
         return false;
     }
 
-    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
+    const gl::Shader *fragmentShader = mState.getAttachedFragmentShader();
     VectorAndSamplerCount fsCounts;
 
     for (const sh::Uniform &uniform : fragmentShader->getUniforms())
@@ -2313,11 +2316,11 @@ bool Program::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
         return false;
     }
 
-    mSamplerUniformRange.start = static_cast<unsigned int>(mData.mUniforms.size());
+    mSamplerUniformRange.start = static_cast<unsigned int>(mState.mUniforms.size());
     mSamplerUniformRange.end =
         mSamplerUniformRange.start + static_cast<unsigned int>(samplerUniforms.size());
 
-    mData.mUniforms.insert(mData.mUniforms.end(), samplerUniforms.begin(), samplerUniforms.end());
+    mState.mUniforms.insert(mState.mUniforms.end(), samplerUniforms.begin(), samplerUniforms.end());
 
     return true;
 }
@@ -2348,7 +2351,8 @@ Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable 
 
     // Not a struct
     bool isSampler = IsSamplerType(uniform.type);
-    if (!UniformInList(mData.getUniforms(), fullName) && !UniformInList(*samplerUniforms, fullName))
+    if (!UniformInList(mState.getUniforms(), fullName) &&
+        !UniformInList(*samplerUniforms, fullName))
     {
         gl::LinkedUniform linkedUniform(uniform.type, uniform.precision, fullName,
                                         uniform.arraySize, -1,
@@ -2362,7 +2366,7 @@ Program::VectorAndSamplerCount Program::flattenUniform(const sh::ShaderVariable 
         }
         else
         {
-            mData.mUniforms.push_back(linkedUniform);
+            mState.mUniforms.push_back(linkedUniform);
         }
     }
 
@@ -2381,9 +2385,9 @@ void Program::gatherInterfaceBlockInfo()
 {
     std::set<std::string> visitedList;
 
-    const gl::Shader *vertexShader = mData.getAttachedVertexShader();
+    const gl::Shader *vertexShader = mState.getAttachedVertexShader();
 
-    ASSERT(mData.mUniformBlocks.empty());
+    ASSERT(mState.mUniformBlocks.empty());
     for (const sh::InterfaceBlock &vertexBlock : vertexShader->getInterfaceBlocks())
     {
         // Only 'packed' blocks are allowed to be considered inacive.
@@ -2397,7 +2401,7 @@ void Program::gatherInterfaceBlockInfo()
         visitedList.insert(vertexBlock.name);
     }
 
-    const gl::Shader *fragmentShader = mData.getAttachedFragmentShader();
+    const gl::Shader *fragmentShader = mState.getAttachedFragmentShader();
 
     for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getInterfaceBlocks())
     {
@@ -2407,7 +2411,7 @@ void Program::gatherInterfaceBlockInfo()
 
         if (visitedList.count(fragmentBlock.name) > 0)
         {
-            for (gl::UniformBlock &block : mData.mUniformBlocks)
+            for (gl::UniformBlock &block : mState.mUniformBlocks)
             {
                 if (block.name == fragmentBlock.name)
                 {
@@ -2455,14 +2459,14 @@ void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
 
             // Since block uniforms have no location, we don't need to store them in the uniform
             // locations list.
-            mData.mUniforms.push_back(newUniform);
+            mState.mUniforms.push_back(newUniform);
         }
     }
 }
 
 void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType)
 {
-    int blockIndex   = static_cast<int>(mData.mUniformBlocks.size());
+    int blockIndex   = static_cast<int>(mState.mUniformBlocks.size());
     size_t blockSize = 0;
 
     // Don't define this block at all if it's not active in the implementation.
@@ -2473,9 +2477,9 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
 
     // Track the first and last uniform index to determine the range of active uniforms in the
     // block.
-    size_t firstBlockUniformIndex = mData.mUniforms.size();
+    size_t firstBlockUniformIndex = mState.mUniforms.size();
     defineUniformBlockMembers(interfaceBlock.fields, interfaceBlock.fieldPrefix(), blockIndex);
-    size_t lastBlockUniformIndex = mData.mUniforms.size();
+    size_t lastBlockUniformIndex = mState.mUniforms.size();
 
     std::vector<unsigned int> blockUniformIndexes;
     for (size_t blockUniformIndex = firstBlockUniformIndex;
@@ -2510,7 +2514,7 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
 
             ASSERT(blockElementSize == blockSize);
             block.dataSize = static_cast<unsigned int>(blockElementSize);
-            mData.mUniformBlocks.push_back(block);
+            mState.mUniformBlocks.push_back(block);
         }
     }
     else
@@ -2529,15 +2533,15 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
         }
 
         block.dataSize = static_cast<unsigned int>(blockSize);
-        mData.mUniformBlocks.push_back(block);
+        mState.mUniformBlocks.push_back(block);
     }
 }
 
 template <typename T>
 void Program::setUniformInternal(GLint location, GLsizei count, const T *v)
 {
-    const VariableLocation &locationInfo = mData.mUniformLocations[location];
-    LinkedUniform *linkedUniform         = &mData.mUniforms[locationInfo.index];
+    const VariableLocation &locationInfo = mState.mUniformLocations[location];
+    LinkedUniform *linkedUniform         = &mState.mUniforms[locationInfo.index];
     uint8_t *destPointer                 = linkedUniform->getDataPtrToElement(locationInfo.element);
 
     if (VariableComponentType(linkedUniform->type) == GL_BOOL)
@@ -2575,8 +2579,8 @@ void Program::setMatrixUniformInternal(GLint location,
     }
 
     // Perform a transposing copy.
-    const VariableLocation &locationInfo = mData.mUniformLocations[location];
-    LinkedUniform *linkedUniform         = &mData.mUniforms[locationInfo.index];
+    const VariableLocation &locationInfo = mState.mUniformLocations[location];
+    LinkedUniform *linkedUniform         = &mState.mUniforms[locationInfo.index];
     T *destPtr = reinterpret_cast<T *>(linkedUniform->getDataPtrToElement(locationInfo.element));
     for (GLsizei element = 0; element < count; ++element)
     {
@@ -2595,8 +2599,8 @@ void Program::setMatrixUniformInternal(GLint location,
 template <typename DestT>
 void Program::getUniformInternal(GLint location, DestT *dataOut) const
 {
-    const VariableLocation &locationInfo = mData.mUniformLocations[location];
-    const LinkedUniform &uniform         = mData.mUniforms[locationInfo.index];
+    const VariableLocation &locationInfo = mState.mUniformLocations[location];
+    const LinkedUniform &uniform         = mState.mUniforms[locationInfo.index];
 
     const uint8_t *srcPointer = uniform.getDataPtrToElement(locationInfo.element);
 

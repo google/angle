@@ -20,7 +20,7 @@ namespace rx
 class MockProgramImpl : public rx::ProgramImpl
 {
   public:
-    MockProgramImpl() : ProgramImpl(gl::Program::Data()) {}
+    MockProgramImpl() : ProgramImpl(gl::ProgramState()) {}
     virtual ~MockProgramImpl() { destroy(); }
 
     MOCK_METHOD2(load, LinkResult(gl::InfoLog &, gl::BinaryInputStream *));

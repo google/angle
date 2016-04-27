@@ -85,7 +85,7 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
 }
 
-FramebufferD3D::FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer)
+FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
     : FramebufferImpl(data), mRenderer(renderer)
 {
 }
@@ -190,7 +190,7 @@ gl::Error FramebufferD3D::clearBufferfi(const gl::ContextState &data,
 
 GLenum FramebufferD3D::getImplementationColorReadFormat() const
 {
-    const gl::FramebufferAttachment *readAttachment = mData.getReadAttachment();
+    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
 
     if (readAttachment == nullptr)
     {
@@ -212,7 +212,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
 
 GLenum FramebufferD3D::getImplementationColorReadType() const
 {
-    const gl::FramebufferAttachment *readAttachment = mData.getReadAttachment();
+    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
 
     if (readAttachment == nullptr)
     {
@@ -251,25 +251,22 @@ gl::Error FramebufferD3D::blit(const gl::State &state, const gl::Rectangle &sour
                                GLbitfield mask, GLenum filter, const gl::Framebuffer *sourceFramebuffer)
 {
     bool blitRenderTarget = false;
-    if ((mask & GL_COLOR_BUFFER_BIT) &&
-        sourceFramebuffer->getReadColorbuffer() != nullptr &&
-        mData.getFirstColorAttachment() != nullptr)
+    if ((mask & GL_COLOR_BUFFER_BIT) && sourceFramebuffer->getReadColorbuffer() != nullptr &&
+        mState.getFirstColorAttachment() != nullptr)
     {
         blitRenderTarget = true;
     }
 
     bool blitStencil = false;
-    if ((mask & GL_STENCIL_BUFFER_BIT) &&
-        sourceFramebuffer->getStencilbuffer() != nullptr &&
-        mData.getStencilAttachment() != nullptr)
+    if ((mask & GL_STENCIL_BUFFER_BIT) && sourceFramebuffer->getStencilbuffer() != nullptr &&
+        mState.getStencilAttachment() != nullptr)
     {
         blitStencil = true;
     }
 
     bool blitDepth = false;
-    if ((mask & GL_DEPTH_BUFFER_BIT) &&
-        sourceFramebuffer->getDepthbuffer() != nullptr &&
-        mData.getDepthAttachment() != nullptr)
+    if ((mask & GL_DEPTH_BUFFER_BIT) && sourceFramebuffer->getDepthbuffer() != nullptr &&
+        mState.getDepthAttachment() != nullptr)
     {
         blitDepth = true;
     }
@@ -292,14 +289,14 @@ bool FramebufferD3D::checkStatus() const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
     // since we only support packed_depth_stencil and not separate depth and stencil
-    if (mData.getDepthAttachment() != nullptr && mData.getStencilAttachment() != nullptr &&
-        mData.getDepthStencilAttachment() == nullptr)
+    if (mState.getDepthAttachment() != nullptr && mState.getStencilAttachment() != nullptr &&
+        mState.getDepthStencilAttachment() == nullptr)
     {
         return false;
     }
 
     // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
-    const auto &colorAttachments = mData.getColorAttachments();
+    const auto &colorAttachments = mState.getColorAttachments();
     for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
     {
         const gl::FramebufferAttachment &attachment = colorAttachments[colorAttachment];
@@ -319,7 +316,7 @@ bool FramebufferD3D::checkStatus() const
     }
 
     // D3D requires all render targets to have the same dimensions.
-    if (!mData.attachmentsHaveSameDimensions())
+    if (!mState.attachmentsHaveSameDimensions())
     {
         return false;
     }
@@ -354,8 +351,8 @@ void FramebufferD3D::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
     // Does not actually free memory
     gl::AttachmentList colorAttachmentsForRender;
 
-    const auto &colorAttachments = mData.getColorAttachments();
-    const auto &drawBufferStates = mData.getDrawBufferStates();
+    const auto &colorAttachments = mState.getColorAttachments();
+    const auto &drawBufferStates = mState.getDrawBufferStates();
     const auto &workarounds      = mRenderer->getWorkarounds();
 
     for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)

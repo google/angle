@@ -196,7 +196,8 @@ Clear11::~Clear11()
     SafeRelease(mRasterizerState);
 }
 
-gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams, const gl::Framebuffer::Data &fboData)
+gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
+                                    const gl::FramebufferState &fboData)
 {
     const auto &colorAttachments = fboData.getColorAttachments();
     const auto &drawBufferStates = fboData.getDrawBufferStates();

@@ -27,12 +27,12 @@ using namespace gl;
 namespace rx
 {
 
-FramebufferGL::FramebufferGL(const Framebuffer::Data &data,
+FramebufferGL::FramebufferGL(const FramebufferState &state,
                              const FunctionsGL *functions,
                              StateManagerGL *stateManager,
                              const WorkaroundsGL &workarounds,
                              bool isDefault)
-    : FramebufferImpl(data),
+    : FramebufferImpl(state),
       mFunctions(functions),
       mStateManager(stateManager),
       mWorkarounds(workarounds),
@@ -46,11 +46,11 @@ FramebufferGL::FramebufferGL(const Framebuffer::Data &data,
 }
 
 FramebufferGL::FramebufferGL(GLuint id,
-                             const Framebuffer::Data &data,
+                             const FramebufferState &state,
                              const FunctionsGL *functions,
                              const WorkaroundsGL &workarounds,
                              StateManagerGL *stateManager)
-    : FramebufferImpl(data),
+    : FramebufferImpl(state),
       mFunctions(functions),
       mStateManager(stateManager),
       mWorkarounds(workarounds),
@@ -209,7 +209,7 @@ Error FramebufferGL::clearBufferfi(const ContextState &data,
 
 GLenum FramebufferGL::getImplementationColorReadFormat() const
 {
-    const FramebufferAttachment *readAttachment = getData().getReadAttachment();
+    const FramebufferAttachment *readAttachment = mState.getReadAttachment();
     GLenum internalFormat = readAttachment->getInternalFormat();
     const InternalFormat &internalFormatInfo    = GetInternalFormatInfo(internalFormat);
     return internalFormatInfo.format;
@@ -217,7 +217,7 @@ GLenum FramebufferGL::getImplementationColorReadFormat() const
 
 GLenum FramebufferGL::getImplementationColorReadType() const
 {
-    const FramebufferAttachment *readAttachment = getData().getReadAttachment();
+    const FramebufferAttachment *readAttachment = mState.getReadAttachment();
     GLenum internalFormat = readAttachment->getInternalFormat();
     const InternalFormat &internalFormatInfo    = GetInternalFormatInfo(internalFormat);
     return internalFormatInfo.type;
@@ -285,21 +285,21 @@ void FramebufferGL::syncState(const Framebuffer::DirtyBits &dirtyBits)
         {
             case Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
                 BindFramebufferAttachment(mFunctions, GL_DEPTH_ATTACHMENT,
-                                          mData.getDepthAttachment());
+                                          mState.getDepthAttachment());
                 break;
             case Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
                 BindFramebufferAttachment(mFunctions, GL_STENCIL_ATTACHMENT,
-                                          mData.getStencilAttachment());
+                                          mState.getStencilAttachment());
                 break;
             case Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
             {
-                const auto &drawBuffers = mData.getDrawBufferStates();
+                const auto &drawBuffers = mState.getDrawBufferStates();
                 mFunctions->drawBuffers(static_cast<GLsizei>(drawBuffers.size()),
                                         drawBuffers.data());
                 break;
             }
             case Framebuffer::DIRTY_BIT_READ_BUFFER:
-                mFunctions->readBuffer(mData.getReadBufferState());
+                mFunctions->readBuffer(mState.getReadBufferState());
                 break;
             default:
             {
@@ -309,7 +309,7 @@ void FramebufferGL::syncState(const Framebuffer::DirtyBits &dirtyBits)
                     static_cast<size_t>(dirtyBit - Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
                 BindFramebufferAttachment(mFunctions,
                                           static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index),
-                                          mData.getColorAttachment(index));
+                                          mState.getColorAttachment(index));
                 break;
             }
         }
@@ -342,7 +342,7 @@ void FramebufferGL::syncClearState(GLbitfield mask)
             (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
         {
             bool hasSRBAttachment = false;
-            for (const auto &attachment : mData.getColorAttachments())
+            for (const auto &attachment : mState.getColorAttachments())
             {
                 if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
                 {
@@ -369,8 +369,8 @@ void FramebufferGL::syncClearBufferState(GLenum buffer, GLint drawBuffer)
         {
             // If doing a clear on a color buffer, set SRGB blend enabled only if the color buffer
             // is an SRGB format.
-            const auto &drawbufferState  = mData.getDrawBufferStates();
-            const auto &colorAttachments = mData.getColorAttachments();
+            const auto &drawbufferState  = mState.getDrawBufferStates();
+            const auto &colorAttachments = mState.getColorAttachments();
 
             const FramebufferAttachment *attachment = nullptr;
             if (drawbufferState[drawBuffer] >= GL_COLOR_ATTACHMENT0 &&

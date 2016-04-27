@@ -19,7 +19,7 @@
 namespace rx
 {
 
-ProgramGL::ProgramGL(const gl::Program::Data &data,
+ProgramGL::ProgramGL(const gl::ProgramState &data,
                      const FunctionsGL *functions,
                      const WorkaroundsGL &workarounds,
                      StateManagerGL *stateManager)
@@ -98,7 +98,7 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 
     // Set the transform feedback state
     std::vector<const GLchar *> transformFeedbackVaryings;
-    for (const auto &tfVarying : mData.getTransformFeedbackVaryingNames())
+    for (const auto &tfVarying : mState.getTransformFeedbackVaryingNames())
     {
         transformFeedbackVaryings.push_back(tfVarying.c_str());
     }
@@ -108,7 +108,7 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         if (mFunctions->transformFeedbackVaryings)
         {
             mFunctions->transformFeedbackVaryings(mProgramID, 0, nullptr,
-                                                  mData.getTransformFeedbackBufferMode());
+                                                  mState.getTransformFeedbackBufferMode());
         }
     }
     else
@@ -116,18 +116,18 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         ASSERT(mFunctions->transformFeedbackVaryings);
         mFunctions->transformFeedbackVaryings(
             mProgramID, static_cast<GLsizei>(transformFeedbackVaryings.size()),
-            &transformFeedbackVaryings[0], mData.getTransformFeedbackBufferMode());
+            &transformFeedbackVaryings[0], mState.getTransformFeedbackBufferMode());
     }
 
-    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mData.getAttachedVertexShader());
-    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mData.getAttachedFragmentShader());
+    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mState.getAttachedVertexShader());
+    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mState.getAttachedFragmentShader());
 
     // Attach the shaders
     mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
     mFunctions->attachShader(mProgramID, fragmentShaderGL->getShaderID());
 
     // Bind attribute locations to match the GL layer.
-    for (const sh::Attribute &attribute : mData.getAttributes())
+    for (const sh::Attribute &attribute : mState.getAttributes())
     {
         if (!attribute.staticUse)
         {
@@ -195,7 +195,7 @@ void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     mStateManager->useProgram(mProgramID);
     mFunctions->uniform1iv(uniLoc(location), count, v);
 
-    const gl::VariableLocation &locationEntry = mData.getUniformLocations()[location];
+    const gl::VariableLocation &locationEntry = mState.getUniformLocations()[location];
 
     size_t samplerIndex = mUniformIndexToSamplerIndex[locationEntry.index];
     if (samplerIndex != GL_INVALID_INDEX)
@@ -309,8 +309,8 @@ void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformB
     // Lazy init
     if (mUniformBlockRealLocationMap.empty())
     {
-        mUniformBlockRealLocationMap.reserve(mData.getUniformBlocks().size());
-        for (const gl::UniformBlock &uniformBlock : mData.getUniformBlocks())
+        mUniformBlockRealLocationMap.reserve(mState.getUniformBlocks().size());
+        for (const gl::UniformBlock &uniformBlock : mState.getUniformBlocks())
         {
             const std::string &nameWithIndex = uniformBlock.nameWithArrayIndex();
             GLuint blockIndex = mFunctions->getUniformBlockIndex(mProgramID, nameWithIndex.c_str());
@@ -434,8 +434,8 @@ void ProgramGL::postLink()
 {
     // Query the uniform information
     ASSERT(mUniformRealLocationMap.empty());
-    const auto &uniformLocations = mData.getUniformLocations();
-    const auto &uniforms = mData.getUniforms();
+    const auto &uniformLocations = mState.getUniformLocations();
+    const auto &uniforms = mState.getUniforms();
     mUniformRealLocationMap.resize(uniformLocations.size(), GL_INVALID_INDEX);
     for (size_t uniformLocation = 0; uniformLocation < uniformLocations.size(); uniformLocation++)
     {
@@ -460,7 +460,7 @@ void ProgramGL::postLink()
         mUniformRealLocationMap[uniformLocation] = realLocation;
     }
 
-    mUniformIndexToSamplerIndex.resize(mData.getUniforms().size(), GL_INVALID_INDEX);
+    mUniformIndexToSamplerIndex.resize(mState.getUniforms().size(), GL_INVALID_INDEX);
 
     for (size_t uniformId = 0; uniformId < uniforms.size(); ++uniformId)
     {

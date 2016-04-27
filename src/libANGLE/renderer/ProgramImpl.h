@@ -32,7 +32,7 @@ struct LinkResult
 class ProgramImpl : angle::NonCopyable
 {
   public:
-    ProgramImpl(const gl::Program::Data &data) : mData(data) {}
+    ProgramImpl(const gl::ProgramState &state) : mState(state) {}
     virtual ~ProgramImpl() {}
 
     virtual LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) = 0;
@@ -77,7 +77,7 @@ class ProgramImpl : angle::NonCopyable
                                            sh::BlockMemberInfo *memberInfoOut) const = 0;
 
   protected:
-    const gl::Program::Data &mData;
+    const gl::ProgramState &mState;
 };
 
 }

@@ -137,86 +137,80 @@ struct VariableLocation
     bool ignored;
 };
 
+class ProgramState final : angle::NonCopyable
+{
+  public:
+    ProgramState();
+    ~ProgramState();
+
+    const std::string &getLabel();
+
+    const Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
+    const Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
+    const std::vector<std::string> &getTransformFeedbackVaryingNames() const
+    {
+        return mTransformFeedbackVaryingNames;
+    }
+    GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
+    GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
+    {
+        ASSERT(uniformBlockIndex < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
+        return mUniformBlockBindings[uniformBlockIndex];
+    }
+    const UniformBlockBindingMask &getActiveUniformBlockBindingsMask() const
+    {
+        return mActiveUniformBlockBindings;
+    }
+    const std::vector<sh::Attribute> &getAttributes() const { return mAttributes; }
+    const AttributesMask &getActiveAttribLocationsMask() const
+    {
+        return mActiveAttribLocationsMask;
+    }
+    const std::map<int, VariableLocation> &getOutputVariables() const { return mOutputVariables; }
+    const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
+    const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
+    const std::vector<UniformBlock> &getUniformBlocks() const { return mUniformBlocks; }
+
+    const LinkedUniform *getUniformByName(const std::string &name) const;
+    GLint getUniformLocation(const std::string &name) const;
+    GLuint getUniformIndex(const std::string &name) const;
+
+  private:
+    friend class Program;
+
+    std::string mLabel;
+
+    Shader *mAttachedFragmentShader;
+    Shader *mAttachedVertexShader;
+
+    std::vector<std::string> mTransformFeedbackVaryingNames;
+    std::vector<sh::Varying> mTransformFeedbackVaryingVars;
+    GLenum mTransformFeedbackBufferMode;
+
+    GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
+    UniformBlockBindingMask mActiveUniformBlockBindings;
+
+    std::vector<sh::Attribute> mAttributes;
+    std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
+
+    // Uniforms are sorted in order:
+    //  1. Non-sampler uniforms
+    //  2. Sampler uniforms
+    //  3. Uniform block uniforms
+    // This makes sampler validation easier, since we don't need a separate list.
+    std::vector<LinkedUniform> mUniforms;
+    std::vector<VariableLocation> mUniformLocations;
+    std::vector<UniformBlock> mUniformBlocks;
+
+    // TODO(jmadill): use unordered/hash map when available
+    std::map<int, VariableLocation> mOutputVariables;
+
+    bool mBinaryRetrieveableHint;
+};
+
 class Program final : angle::NonCopyable, public LabeledObject
 {
   public:
-    class Data final : angle::NonCopyable
-    {
-      public:
-        Data();
-        ~Data();
-
-        const std::string &getLabel();
-
-        const Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
-        const Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
-        const std::vector<std::string> &getTransformFeedbackVaryingNames() const
-        {
-            return mTransformFeedbackVaryingNames;
-        }
-        GLint getTransformFeedbackBufferMode() const { return mTransformFeedbackBufferMode; }
-        GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const
-        {
-            ASSERT(uniformBlockIndex < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS);
-            return mUniformBlockBindings[uniformBlockIndex];
-        }
-        const UniformBlockBindingMask &getActiveUniformBlockBindingsMask() const
-        {
-            return mActiveUniformBlockBindings;
-        }
-        const std::vector<sh::Attribute> &getAttributes() const { return mAttributes; }
-        const AttributesMask &getActiveAttribLocationsMask() const
-        {
-            return mActiveAttribLocationsMask;
-        }
-        const std::map<int, VariableLocation> &getOutputVariables() const
-        {
-            return mOutputVariables;
-        }
-        const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
-        const std::vector<VariableLocation> &getUniformLocations() const
-        {
-            return mUniformLocations;
-        }
-        const std::vector<UniformBlock> &getUniformBlocks() const { return mUniformBlocks; }
-
-        const LinkedUniform *getUniformByName(const std::string &name) const;
-        GLint getUniformLocation(const std::string &name) const;
-        GLuint getUniformIndex(const std::string &name) const;
-
-      private:
-        friend class Program;
-
-        std::string mLabel;
-
-        Shader *mAttachedFragmentShader;
-        Shader *mAttachedVertexShader;
-
-        std::vector<std::string> mTransformFeedbackVaryingNames;
-        std::vector<sh::Varying> mTransformFeedbackVaryingVars;
-        GLenum mTransformFeedbackBufferMode;
-
-        GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
-        UniformBlockBindingMask mActiveUniformBlockBindings;
-
-        std::vector<sh::Attribute> mAttributes;
-        std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
-
-        // Uniforms are sorted in order:
-        //  1. Non-sampler uniforms
-        //  2. Sampler uniforms
-        //  3. Uniform block uniforms
-        // This makes sampler validation easier, since we don't need a separate list.
-        std::vector<LinkedUniform> mUniforms;
-        std::vector<VariableLocation> mUniformLocations;
-        std::vector<UniformBlock> mUniformBlocks;
-
-        // TODO(jmadill): use unordered/hash map when available
-        std::map<int, VariableLocation> mOutputVariables;
-
-        bool mBinaryRetrieveableHint;
-    };
-
     Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle);
     ~Program();
 
@@ -254,7 +248,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
     GLint getActiveAttributeCount() const;
     GLint getActiveAttributeMaxLength() const;
-    const std::vector<sh::Attribute> &getAttributes() const { return mData.mAttributes; }
+    const std::vector<sh::Attribute> &getAttributes() const { return mState.mAttributes; }
 
     GLint getFragDataLocation(const std::string &name) const;
 
@@ -332,7 +326,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {
-        return mData.mActiveAttribLocationsMask;
+        return mState.mActiveAttribLocationsMask;
     }
 
   private:
@@ -424,7 +418,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
 
-    Data mData;
+    ProgramState mState;
     rx::ProgramImpl *mProgram;
 
     bool mValidated;

@@ -57,7 +57,7 @@ struct ClearParameters
 class FramebufferD3D : public FramebufferImpl
 {
   public:
-    FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer);
+    FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer);
     virtual ~FramebufferD3D();
 
     gl::Error clear(const gl::ContextState &data, GLbitfield mask) override;

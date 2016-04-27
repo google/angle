@@ -132,10 +132,10 @@ EGLint PbufferSurfaceCGL::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
-FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Framebuffer::Data &data)
+FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::FramebufferState &state)
 {
     // TODO(cwallez) assert it happens only once?
-    return new FramebufferGL(mFramebuffer, data, mFunctions, mWorkarounds, mStateManager);
+    return new FramebufferGL(mFramebuffer, state, mFunctions, mWorkarounds, mStateManager);
 }
 
 }

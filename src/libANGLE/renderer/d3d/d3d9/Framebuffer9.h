@@ -18,7 +18,7 @@ class Renderer9;
 class Framebuffer9 : public FramebufferD3D
 {
   public:
-    Framebuffer9(const gl::Framebuffer::Data &data, Renderer9 *renderer);
+    Framebuffer9(const gl::FramebufferState &data, Renderer9 *renderer);
     virtual ~Framebuffer9();
 
     gl::Error discard(size_t count, const GLenum *attachments) override;

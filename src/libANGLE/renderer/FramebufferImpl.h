@@ -28,7 +28,7 @@ namespace rx
 class FramebufferImpl : angle::NonCopyable
 {
   public:
-    explicit FramebufferImpl(const gl::Framebuffer::Data &data) : mData(data) { }
+    explicit FramebufferImpl(const gl::FramebufferState &state) : mState(state) {}
     virtual ~FramebufferImpl() { }
 
     virtual gl::Error discard(size_t count, const GLenum *attachments) = 0;
@@ -65,10 +65,10 @@ class FramebufferImpl : angle::NonCopyable
 
     virtual void syncState(const gl::Framebuffer::DirtyBits &dirtyBits) = 0;
 
-    const gl::Framebuffer::Data &getData() const { return mData; }
+    const gl::FramebufferState &getState() const { return mState; }
 
   protected:
-    const gl::Framebuffer::Data &mData;
+    const gl::FramebufferState &mState;
 };
 
 }

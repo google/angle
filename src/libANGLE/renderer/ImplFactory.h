@@ -41,10 +41,10 @@ class ImplFactory : angle::NonCopyable
     // Shader creation
     virtual CompilerImpl *createCompiler() = 0;
     virtual ShaderImpl *createShader(const gl::Shader::Data &data) = 0;
-    virtual ProgramImpl *createProgram(const gl::Program::Data &data) = 0;
+    virtual ProgramImpl *createProgram(const gl::ProgramState &data) = 0;
 
     // Framebuffer creation
-    virtual FramebufferImpl *createFramebuffer(const gl::Framebuffer::Data &data) = 0;
+    virtual FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) = 0;
 
     // Texture creation
     virtual TextureImpl *createTexture(GLenum target) = 0;

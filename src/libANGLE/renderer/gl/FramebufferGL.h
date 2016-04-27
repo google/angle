@@ -21,7 +21,7 @@ struct WorkaroundsGL;
 class FramebufferGL : public FramebufferImpl
 {
   public:
-    FramebufferGL(const gl::Framebuffer::Data &data,
+    FramebufferGL(const gl::FramebufferState &data,
                   const FunctionsGL *functions,
                   StateManagerGL *stateManager,
                   const WorkaroundsGL &workarounds,
@@ -30,7 +30,7 @@ class FramebufferGL : public FramebufferImpl
     // existing framebuffer name, for example for the default framebuffer
     // on the Mac EGL CGL backend.
     FramebufferGL(GLuint id,
-                  const gl::Framebuffer::Data &data,
+                  const gl::FramebufferState &data,
                   const FunctionsGL *functions,
                   const WorkaroundsGL &workarounds,
                   StateManagerGL *stateManager);
