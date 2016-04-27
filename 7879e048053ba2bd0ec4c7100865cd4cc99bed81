@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_e9ac1748",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48560d47_c585b9be",
+      "range": {
+        "startLine": 190,
+        "startChar": 4,
+        "endLine": 199,
+        "endChar": 5
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48560d47_65bcad7d",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 16
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_49aa632a",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48560d47_65bcad7d",
+      "range": {
+        "startLine": 213,
+        "startChar": 4,
+        "endLine": 220,
+        "endChar": 5
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48560d47_c5ac9948",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 16
@@ -59,6 +107,30 @@
       "writtenOn": "2016-04-27T18:14:35Z",
       "side": 1,
       "message": "this is unreferenced.",
+      "range": {
+        "startLine": 667,
+        "startChar": 4,
+        "endLine": 667,
+        "endChar": 26
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48560d47_8918fb75",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48560d47_c5ac9948",
       "range": {
         "startLine": 667,
         "startChar": 4,
@@ -141,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_e90ff71c",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:44:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48560d47_65314dfb",
+      "range": {
+        "startLine": 444,
+        "startChar": 8,
+        "endLine": 444,
+        "endChar": 23
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48560d47_452b6972",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 16
@@ -152,6 +248,30 @@
       "writtenOn": "2016-04-27T18:14:35Z",
       "side": 1,
       "message": "You can also check for D3D11_FORMAT_SUPPORT_SHADER_SAMPLE",
+      "range": {
+        "startLine": 2895,
+        "startChar": 28,
+        "endLine": 2895,
+        "endChar": 58
+      },
+      "revId": "7879e048053ba2bd0ec4c7100865cd4cc99bed81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48560d47_295f2f00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2895,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T18:44:52Z",
+      "side": 1,
+      "message": "NV12 textures don\u0027t have direct shader sampling support though. You have to create a view with R or RB.",
+      "parentUuid": "48560d47_452b6972",
       "range": {
         "startLine": 2895,
         "startChar": 28,
