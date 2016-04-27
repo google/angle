@@ -9,7 +9,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 
 #include "common/BitSetIterator.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
@@ -592,7 +592,7 @@ void StateManagerGL::onDeleteQueryObject(QueryGL *query)
     mCurrentQueries.erase(query);
 }
 
-gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
+gl::Error StateManagerGL::setDrawArraysState(const gl::ContextState &data,
                                              GLint first,
                                              GLsizei count,
                                              GLsizei instanceCount)
@@ -616,7 +616,7 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::Data &data,
     return setGenericDrawState(data);
 }
 
-gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
+gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
                                                GLsizei count,
                                                GLenum type,
                                                const GLvoid *indices,
@@ -643,7 +643,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::Data &data,
     return setGenericDrawState(data);
 }
 
-gl::Error StateManagerGL::onMakeCurrent(const gl::Data &data)
+gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
 {
     const gl::State &state = *data.state;
 
@@ -680,7 +680,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Data &data)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error StateManagerGL::setGenericDrawState(const gl::Data &data)
+gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
 {
     const gl::State &state = *data.state;
 

@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// Data.h: Container class for all GL relevant state, caps and objects
+// ContextState: Container class for all GL context state, caps and objects.
 
-#ifndef LIBANGLE_DATA_H_
-#define LIBANGLE_DATA_H_
+#ifndef LIBANGLE_CONTEXTSTATE_H_
+#define LIBANGLE_CONTEXTSTATE_H_
 
 #include "common/angleutils.h"
 #include "libANGLE/State.h"
@@ -15,18 +15,18 @@
 namespace gl
 {
 
-struct Data final : public angle::NonCopyable
+struct ContextState final : public angle::NonCopyable
 {
   public:
-    Data(uintptr_t context,
-         GLint clientVersion,
-         const State &state,
-         const Caps &caps,
-         const TextureCapsMap &textureCaps,
-         const Extensions &extensions,
-         const ResourceManager *resourceManager,
-         const Limitations &limitations);
-    ~Data();
+    ContextState(uintptr_t context,
+                 GLint clientVersion,
+                 const State &state,
+                 const Caps &caps,
+                 const TextureCapsMap &textureCaps,
+                 const Extensions &extensions,
+                 const ResourceManager *resourceManager,
+                 const Limitations &limitations);
+    ~ContextState();
 
     uintptr_t context;
     GLint clientVersion;
@@ -53,7 +53,7 @@ class ValidationContext : angle::NonCopyable
 
     virtual void recordError(const Error &error) = 0;
 
-    const Data &getData() const { return mData; }
+    const ContextState &getData() const { return mData; }
     int getClientVersion() const { return mData.clientVersion; }
     const State &getState() const { return *mData.state; }
     const Caps &getCaps() const { return *mData.caps; }
@@ -63,10 +63,9 @@ class ValidationContext : angle::NonCopyable
     bool skipValidation() const { return mSkipValidation; }
 
   protected:
-    Data mData;
+    ContextState mData;
     bool mSkipValidation;
 };
-
 }
 
-#endif // LIBANGLE_DATA_H_
+#endif  // LIBANGLE_CONTEXTSTATE_H_

@@ -60,20 +60,20 @@ class FramebufferD3D : public FramebufferImpl
     FramebufferD3D(const gl::Framebuffer::Data &data, RendererD3D *renderer);
     virtual ~FramebufferD3D();
 
-    gl::Error clear(const gl::Data &data, GLbitfield mask) override;
-    gl::Error clearBufferfv(const gl::Data &data,
+    gl::Error clear(const gl::ContextState &data, GLbitfield mask) override;
+    gl::Error clearBufferfv(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLfloat *values) override;
-    gl::Error clearBufferuiv(const gl::Data &data,
+    gl::Error clearBufferuiv(const gl::ContextState &data,
                              GLenum buffer,
                              GLint drawbuffer,
                              const GLuint *values) override;
-    gl::Error clearBufferiv(const gl::Data &data,
+    gl::Error clearBufferiv(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLint *values) override;
-    gl::Error clearBufferfi(const gl::Data &data,
+    gl::Error clearBufferfi(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             GLfloat depth,
@@ -93,7 +93,7 @@ class FramebufferD3D : public FramebufferImpl
     const gl::AttachmentList &getColorAttachmentsForRender() const;
 
   private:
-    virtual gl::Error clear(const gl::Data &data, const ClearParameters &clearParams) = 0;
+    virtual gl::Error clear(const gl::ContextState &data, const ClearParameters &clearParams) = 0;
 
     virtual gl::Error readPixelsImpl(const gl::Rectangle &area,
                                      GLenum format,

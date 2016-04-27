@@ -18,7 +18,7 @@
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/VertexAttribute.h"

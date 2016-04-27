@@ -10,7 +10,7 @@
 
 #include "common/BitSetIterator.h"
 #include "common/debug.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/State.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/angletypes.h"
@@ -149,7 +149,7 @@ Error FramebufferGL::invalidateSub(size_t count,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clear(const Data &data, GLbitfield mask)
+Error FramebufferGL::clear(const ContextState &data, GLbitfield mask)
 {
     syncClearState(mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -158,7 +158,7 @@ Error FramebufferGL::clear(const Data &data, GLbitfield mask)
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferfv(const Data &data,
+Error FramebufferGL::clearBufferfv(const ContextState &data,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLfloat *values)
@@ -170,7 +170,7 @@ Error FramebufferGL::clearBufferfv(const Data &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferuiv(const Data &data,
+Error FramebufferGL::clearBufferuiv(const ContextState &data,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     const GLuint *values)
@@ -182,7 +182,7 @@ Error FramebufferGL::clearBufferuiv(const Data &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferiv(const Data &data,
+Error FramebufferGL::clearBufferiv(const ContextState &data,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLint *values)
@@ -194,7 +194,7 @@ Error FramebufferGL::clearBufferiv(const Data &data,
     return Error(GL_NO_ERROR);
 }
 
-Error FramebufferGL::clearBufferfi(const Data &data,
+Error FramebufferGL::clearBufferfi(const ContextState &data,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    GLfloat depth,

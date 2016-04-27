@@ -386,7 +386,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-GLenum Framebuffer::checkStatus(const gl::Data &data) const
+GLenum Framebuffer::checkStatus(const ContextState &data) const
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
@@ -612,7 +612,7 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
-Error Framebuffer::clear(const gl::Data &data, GLbitfield mask)
+Error Framebuffer::clear(const ContextState &data, GLbitfield mask)
 {
     if (data.state->isRasterizerDiscardEnabled())
     {
@@ -622,7 +622,7 @@ Error Framebuffer::clear(const gl::Data &data, GLbitfield mask)
     return mImpl->clear(data, mask);
 }
 
-Error Framebuffer::clearBufferfv(const gl::Data &data,
+Error Framebuffer::clearBufferfv(const ContextState &data,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLfloat *values)
@@ -635,7 +635,7 @@ Error Framebuffer::clearBufferfv(const gl::Data &data,
     return mImpl->clearBufferfv(data, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferuiv(const gl::Data &data,
+Error Framebuffer::clearBufferuiv(const ContextState &data,
                                   GLenum buffer,
                                   GLint drawbuffer,
                                   const GLuint *values)
@@ -648,7 +648,7 @@ Error Framebuffer::clearBufferuiv(const gl::Data &data,
     return mImpl->clearBufferuiv(data, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferiv(const gl::Data &data,
+Error Framebuffer::clearBufferiv(const ContextState &data,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLint *values)
@@ -661,7 +661,7 @@ Error Framebuffer::clearBufferiv(const gl::Data &data,
     return mImpl->clearBufferiv(data, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferfi(const gl::Data &data,
+Error Framebuffer::clearBufferfi(const ContextState &data,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  GLfloat depth,
@@ -716,7 +716,7 @@ Error Framebuffer::blit(const State &state,
     return mImpl->blit(state, sourceArea, destArea, mask, filter, sourceFramebuffer);
 }
 
-int Framebuffer::getSamples(const gl::Data &data) const
+int Framebuffer::getSamples(const ContextState &data) const
 {
     if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)
     {

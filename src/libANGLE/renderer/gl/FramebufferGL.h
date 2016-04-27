@@ -40,20 +40,20 @@ class FramebufferGL : public FramebufferImpl
     gl::Error invalidate(size_t count, const GLenum *attachments) override;
     gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
 
-    gl::Error clear(const gl::Data &data, GLbitfield mask) override;
-    gl::Error clearBufferfv(const gl::Data &data,
+    gl::Error clear(const gl::ContextState &data, GLbitfield mask) override;
+    gl::Error clearBufferfv(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLfloat *values) override;
-    gl::Error clearBufferuiv(const gl::Data &data,
+    gl::Error clearBufferuiv(const gl::ContextState &data,
                              GLenum buffer,
                              GLint drawbuffer,
                              const GLuint *values) override;
-    gl::Error clearBufferiv(const gl::Data &data,
+    gl::Error clearBufferiv(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLint *values) override;
-    gl::Error clearBufferfi(const gl::Data &data,
+    gl::Error clearBufferfi(const gl::ContextState &data,
                             GLenum buffer,
                             GLint drawbuffer,
                             GLfloat depth,

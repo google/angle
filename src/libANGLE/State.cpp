@@ -1394,7 +1394,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-void State::getIntegerv(const gl::Data &data, GLenum pname, GLint *params)
+void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {

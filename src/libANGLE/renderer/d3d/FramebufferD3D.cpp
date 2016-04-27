@@ -94,14 +94,14 @@ FramebufferD3D::~FramebufferD3D()
 {
 }
 
-gl::Error FramebufferD3D::clear(const gl::Data &data, GLbitfield mask)
+gl::Error FramebufferD3D::clear(const gl::ContextState &data, GLbitfield mask)
 {
     const gl::State &state = *data.state;
     ClearParameters clearParams = GetClearParameters(state, mask);
     return clear(data, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfv(const gl::Data &data,
+gl::Error FramebufferD3D::clearBufferfv(const gl::ContextState &data,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLfloat *values)
@@ -128,7 +128,7 @@ gl::Error FramebufferD3D::clearBufferfv(const gl::Data &data,
     return clear(data, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferuiv(const gl::Data &data,
+gl::Error FramebufferD3D::clearBufferuiv(const gl::ContextState &data,
                                          GLenum buffer,
                                          GLint drawbuffer,
                                          const GLuint *values)
@@ -145,7 +145,7 @@ gl::Error FramebufferD3D::clearBufferuiv(const gl::Data &data,
     return clear(data, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferiv(const gl::Data &data,
+gl::Error FramebufferD3D::clearBufferiv(const gl::ContextState &data,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLint *values)
@@ -172,7 +172,7 @@ gl::Error FramebufferD3D::clearBufferiv(const gl::Data &data,
     return clear(data, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfi(const gl::Data &data,
+gl::Error FramebufferD3D::clearBufferfi(const gl::ContextState &data,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         GLfloat depth,

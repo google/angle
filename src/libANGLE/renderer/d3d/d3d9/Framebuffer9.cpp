@@ -52,7 +52,7 @@ gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangl
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Framebuffer9::clear(const gl::Data &data, const ClearParameters &clearParams)
+gl::Error Framebuffer9::clear(const gl::ContextState &data, const ClearParameters &clearParams)
 {
     const gl::FramebufferAttachment *colorAttachment = mData.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mData.getDepthOrStencilAttachment();

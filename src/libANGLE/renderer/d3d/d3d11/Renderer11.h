@@ -130,11 +130,11 @@ class Renderer11 : public RendererD3D
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
-    gl::Error setUniformBuffers(const gl::Data &data,
+    gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    gl::Error updateState(const gl::Data &data, GLenum drawMode) override;
+    gl::Error updateState(const gl::ContextState &data, GLenum drawMode) override;
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
@@ -147,7 +147,7 @@ class Renderer11 : public RendererD3D
                                         GLsizei count,
                                         GLsizei instances,
                                         TranslatedIndexData *indexInfo);
-    gl::Error applyIndexBuffer(const gl::Data &data,
+    gl::Error applyIndexBuffer(const gl::ContextState &data,
                                const GLvoid *indices,
                                GLsizei count,
                                GLenum mode,
@@ -304,24 +304,24 @@ class Renderer11 : public RendererD3D
 
     void onSwap();
     void onBufferDelete(const Buffer11 *deleted);
-    void onMakeCurrent(const gl::Data &data) override;
+    void onMakeCurrent(const gl::ContextState &data) override;
 
     egl::Error getEGLDevice(DeviceImpl **device) override;
 
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
-    gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
+    gl::Error applyShadersImpl(const gl::ContextState &data, GLenum drawMode) override;
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &bitmask) override;
 
   private:
-    gl::Error drawArraysImpl(const gl::Data &data,
+    gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
                              GLsizei instances) override;
-    gl::Error drawElementsImpl(const gl::Data &data,
+    gl::Error drawElementsImpl(const gl::ContextState &data,
                                const TranslatedIndexData &indexInfo,
                                GLenum mode,
                                GLsizei count,
@@ -335,13 +335,13 @@ class Renderer11 : public RendererD3D
 
     WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error drawLineLoop(const gl::Data &data,
+    gl::Error drawLineLoop(const gl::ContextState &data,
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
                            const TranslatedIndexData *indexInfo,
                            int instances);
-    gl::Error drawTriangleFan(const gl::Data &data,
+    gl::Error drawTriangleFan(const gl::ContextState &data,
                               GLsizei count,
                               GLenum type,
                               const GLvoid *indices,

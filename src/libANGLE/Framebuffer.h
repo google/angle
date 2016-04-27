@@ -40,7 +40,7 @@ class State;
 class Texture;
 class TextureCapsMap;
 struct Caps;
-struct Data;
+struct ContextState;
 struct Extensions;
 struct ImageIndex;
 struct Rectangle;
@@ -130,27 +130,30 @@ class Framebuffer final : public LabeledObject
     size_t getNumColorBuffers() const;
     bool hasDepth() const;
     bool hasStencil() const;
-    int getSamples(const gl::Data &data) const;
+    int getSamples(const ContextState &data) const;
     bool usingExtendedDrawBuffers() const;
 
-    GLenum checkStatus(const gl::Data &data) const;
+    GLenum checkStatus(const ContextState &data) const;
     bool hasValidDepthStencil() const;
 
     Error discard(size_t count, const GLenum *attachments);
     Error invalidate(size_t count, const GLenum *attachments);
     Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
 
-    Error clear(const gl::Data &data, GLbitfield mask);
-    Error clearBufferfv(const gl::Data &data,
+    Error clear(const ContextState &data, GLbitfield mask);
+    Error clearBufferfv(const ContextState &data,
                         GLenum buffer,
                         GLint drawbuffer,
                         const GLfloat *values);
-    Error clearBufferuiv(const gl::Data &data,
+    Error clearBufferuiv(const ContextState &data,
                          GLenum buffer,
                          GLint drawbuffer,
                          const GLuint *values);
-    Error clearBufferiv(const gl::Data &data, GLenum buffer, GLint drawbuffer, const GLint *values);
-    Error clearBufferfi(const gl::Data &data,
+    Error clearBufferiv(const ContextState &data,
+                        GLenum buffer,
+                        GLint drawbuffer,
+                        const GLint *values);
+    Error clearBufferfi(const ContextState &data,
                         GLenum buffer,
                         GLint drawbuffer,
                         GLfloat depth,

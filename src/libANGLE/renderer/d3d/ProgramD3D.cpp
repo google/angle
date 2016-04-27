@@ -396,7 +396,7 @@ int ProgramD3DMetadata::getRendererMajorShaderModel() const
     return mRendererMajorShaderModel;
 }
 
-bool ProgramD3DMetadata::usesBroadcast(const gl::Data &data) const
+bool ProgramD3DMetadata::usesBroadcast(const gl::ContextState &data) const
 {
     return (mFragmentShader->usesFragColor() && data.clientVersion < 3);
 }
@@ -1233,7 +1233,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data,
+gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextState &data,
                                                             GLenum drawMode,
                                                             ShaderExecutableD3D **outExecutable,
                                                             gl::InfoLog *infoLog)
@@ -1286,7 +1286,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Data &data
     return error;
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoLog &infoLog)
+LinkResult ProgramD3D::compileProgramExecutables(const gl::ContextState &data, gl::InfoLog &infoLog)
 {
     const gl::InputLayout &defaultInputLayout =
         GetDefaultInputLayoutFromShader(mData.getAttachedVertexShader());
@@ -1343,7 +1343,7 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Data &data, gl::InfoL
     return LinkResult(linkSuccess, gl::Error(GL_NO_ERROR));
 }
 
-LinkResult ProgramD3D::link(const gl::Data &data, gl::InfoLog &infoLog)
+LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 {
     reset();
 
@@ -1561,7 +1561,7 @@ gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error ProgramD3D::applyUniformBuffers(const gl::Data &data)
+gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
 {
     if (mData.getUniformBlocks().empty())
     {

@@ -48,7 +48,7 @@ class Framebuffer11 : public FramebufferD3D
     void syncInternalState() const;
 
   private:
-    gl::Error clear(const gl::Data &data, const ClearParameters &clearParams) override;
+    gl::Error clear(const gl::ContextState &data, const ClearParameters &clearParams) override;
 
     gl::Error readPixelsImpl(const gl::Rectangle &area,
                              GLenum format,

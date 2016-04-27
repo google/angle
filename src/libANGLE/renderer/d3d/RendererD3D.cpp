@@ -75,12 +75,15 @@ SamplerImpl *RendererD3D::createSampler()
     return new SamplerD3D();
 }
 
-gl::Error RendererD3D::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
+gl::Error RendererD3D::drawArrays(const gl::ContextState &data,
+                                  GLenum mode,
+                                  GLint first,
+                                  GLsizei count)
 {
     return genericDrawArrays(data, mode, first, count, 0);
 }
 
-gl::Error RendererD3D::drawArraysInstanced(const gl::Data &data,
+gl::Error RendererD3D::drawArraysInstanced(const gl::ContextState &data,
                                            GLenum mode,
                                            GLint first,
                                            GLsizei count,
@@ -89,7 +92,7 @@ gl::Error RendererD3D::drawArraysInstanced(const gl::Data &data,
     return genericDrawArrays(data, mode, first, count, instanceCount);
 }
 
-gl::Error RendererD3D::drawElements(const gl::Data &data,
+gl::Error RendererD3D::drawElements(const gl::ContextState &data,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
@@ -99,7 +102,7 @@ gl::Error RendererD3D::drawElements(const gl::Data &data,
     return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
 }
 
-gl::Error RendererD3D::drawElementsInstanced(const gl::Data &data,
+gl::Error RendererD3D::drawElementsInstanced(const gl::ContextState &data,
                                              GLenum mode,
                                              GLsizei count,
                                              GLenum type,
@@ -110,7 +113,7 @@ gl::Error RendererD3D::drawElementsInstanced(const gl::Data &data,
     return genericDrawElements(data, mode, count, type, indices, instances, indexRange);
 }
 
-gl::Error RendererD3D::drawRangeElements(const gl::Data &data,
+gl::Error RendererD3D::drawRangeElements(const gl::ContextState &data,
                                          GLenum mode,
                                          GLuint start,
                                          GLuint end,
@@ -122,7 +125,7 @@ gl::Error RendererD3D::drawRangeElements(const gl::Data &data,
     return genericDrawElements(data, mode, count, type, indices, 0, indexRange);
 }
 
-gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
+gl::Error RendererD3D::genericDrawElements(const gl::ContextState &data,
                                            GLenum mode,
                                            GLsizei count,
                                            GLenum type,
@@ -171,7 +174,7 @@ gl::Error RendererD3D::genericDrawElements(const gl::Data &data,
     return gl::NoError();
 }
 
-gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
+gl::Error RendererD3D::genericDrawArrays(const gl::ContextState &data,
                                          GLenum mode,
                                          GLint first,
                                          GLsizei count,
@@ -210,7 +213,7 @@ gl::Error RendererD3D::genericDrawArrays(const gl::Data &data,
     return gl::NoError();
 }
 
-gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType type)
+gl::Error RendererD3D::generateSwizzles(const gl::ContextState &data, gl::SamplerType type)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
@@ -234,14 +237,14 @@ gl::Error RendererD3D::generateSwizzles(const gl::Data &data, gl::SamplerType ty
     return gl::NoError();
 }
 
-gl::Error RendererD3D::generateSwizzles(const gl::Data &data)
+gl::Error RendererD3D::generateSwizzles(const gl::ContextState &data)
 {
     ANGLE_TRY(generateSwizzles(data, gl::SAMPLER_VERTEX));
     ANGLE_TRY(generateSwizzles(data, gl::SAMPLER_PIXEL));
     return gl::NoError();
 }
 
-unsigned int RendererD3D::GetBlendSampleMask(const gl::Data &data, int samples)
+unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int samples)
 {
     unsigned int mask = 0;
     if (data.state->isSampleCoverageEnabled())
@@ -278,7 +281,7 @@ unsigned int RendererD3D::GetBlendSampleMask(const gl::Data &data, int samples)
 }
 
 // Applies the shaders and shader constants to the Direct3D device
-gl::Error RendererD3D::applyShaders(const gl::Data &data, GLenum drawMode)
+gl::Error RendererD3D::applyShaders(const gl::ContextState &data, GLenum drawMode)
 {
     gl::Program *program = data.state->getProgram();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -293,8 +296,10 @@ gl::Error RendererD3D::applyShaders(const gl::Data &data, GLenum drawMode)
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
 // Sampler mapping needs to be up-to-date on the program object before this is called.
-gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shaderType,
-                                     const FramebufferTextureArray &framebufferTextures, size_t framebufferTextureCount)
+gl::Error RendererD3D::applyTextures(const gl::ContextState &data,
+                                     gl::SamplerType shaderType,
+                                     const FramebufferTextureArray &framebufferTextures,
+                                     size_t framebufferTextureCount)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
 
@@ -348,7 +353,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data, gl::SamplerType shade
     return gl::NoError();
 }
 
-gl::Error RendererD3D::applyTextures(const gl::Data &data)
+gl::Error RendererD3D::applyTextures(const gl::ContextState &data)
 {
     FramebufferTextureArray framebufferTextures;
     size_t framebufferSerialCount = getBoundFramebufferTextures(data, &framebufferTextures);
@@ -358,7 +363,7 @@ gl::Error RendererD3D::applyTextures(const gl::Data &data)
     return gl::NoError();
 }
 
-bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
+bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
 {
     const gl::State &state = *data.state;
 
@@ -390,7 +395,7 @@ bool RendererD3D::skipDraw(const gl::Data &data, GLenum drawMode)
     return false;
 }
 
-gl::Error RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
+gl::Error RendererD3D::markTransformFeedbackUsage(const gl::ContextState &data)
 {
     const gl::TransformFeedback *transformFeedback = data.state->getCurrentTransformFeedback();
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
@@ -406,7 +411,8 @@ gl::Error RendererD3D::markTransformFeedbackUsage(const gl::Data &data)
     return gl::NoError();
 }
 
-size_t RendererD3D::getBoundFramebufferTextures(const gl::Data &data, FramebufferTextureArray *outTextureArray)
+size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
+                                                FramebufferTextureArray *outTextureArray)
 {
     size_t textureCount = 0;
 
@@ -568,7 +574,7 @@ GLint64 RendererD3D::getTimestamp()
     return 0;
 }
 
-void RendererD3D::onMakeCurrent(const gl::Data &data)
+void RendererD3D::onMakeCurrent(const gl::ContextState &data)
 {
 }
 

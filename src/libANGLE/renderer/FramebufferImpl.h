@@ -35,20 +35,20 @@ class FramebufferImpl : angle::NonCopyable
     virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;
     virtual gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) = 0;
 
-    virtual gl::Error clear(const gl::Data &data, GLbitfield mask) = 0;
-    virtual gl::Error clearBufferfv(const gl::Data &data,
+    virtual gl::Error clear(const gl::ContextState &data, GLbitfield mask) = 0;
+    virtual gl::Error clearBufferfv(const gl::ContextState &data,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     const GLfloat *values) = 0;
-    virtual gl::Error clearBufferuiv(const gl::Data &data,
+    virtual gl::Error clearBufferuiv(const gl::ContextState &data,
                                      GLenum buffer,
                                      GLint drawbuffer,
                                      const GLuint *values) = 0;
-    virtual gl::Error clearBufferiv(const gl::Data &data,
+    virtual gl::Error clearBufferiv(const gl::ContextState &data,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     const GLint *values) = 0;
-    virtual gl::Error clearBufferfi(const gl::Data &data,
+    virtual gl::Error clearBufferfi(const gl::ContextState &data,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     GLfloat depth,

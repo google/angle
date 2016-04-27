@@ -23,7 +23,6 @@ class ImplFactory;
 namespace gl
 {
 class Buffer;
-struct Data;
 class FenceSync;
 struct Limitations;
 class Program;

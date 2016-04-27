@@ -916,9 +916,9 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::setUniformBuffers(const gl::Data &/*data*/,
-                                       const std::vector<GLint> &/*vertexUniformBuffers*/,
-                                       const std::vector<GLint> &/*fragmentUniformBuffers*/)
+gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
+                                       const std::vector<GLint> & /*vertexUniformBuffers*/,
+                                       const std::vector<GLint> & /*fragmentUniformBuffers*/)
 {
     // No effect in ES2/D3D9
     return gl::Error(GL_NO_ERROR);
@@ -929,7 +929,7 @@ void Renderer9::syncState(const gl::State &state, const gl::State::DirtyBits &bi
     mStateManager.syncState(state, bitmask);
 }
 
-gl::Error Renderer9::updateState(const gl::Data &data, GLenum drawMode)
+gl::Error Renderer9::updateState(const gl::ContextState &data, GLenum drawMode)
 {
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
@@ -974,7 +974,7 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mStateManager.setScissorState(scissor, enabled);
 }
 
-gl::Error Renderer9::setBlendDepthRasterStates(const gl::Data &glData, GLenum drawMode)
+gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode)
 {
     int samples                    = glData.state->getDrawFramebuffer()->getSamples(glData);
     gl::RasterizerState rasterizer = glData.state->getRasterizerState();
@@ -1214,7 +1214,7 @@ gl::Error Renderer9::applyVertexBuffer(const gl::State &state,
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-gl::Error Renderer9::applyIndexBuffer(const gl::Data &data,
+gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
                                       const GLvoid *indices,
                                       GLsizei count,
                                       GLenum mode,
@@ -1250,7 +1250,7 @@ gl::Error Renderer9::applyTransformFeedbackBuffers(const gl::State &state)
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::drawArraysImpl(const gl::Data &data,
+gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
                                     GLenum mode,
                                     GLint startVertex,
                                     GLsizei count,
@@ -1295,7 +1295,7 @@ gl::Error Renderer9::drawArraysImpl(const gl::Data &data,
     }
 }
 
-gl::Error Renderer9::drawElementsImpl(const gl::Data &data,
+gl::Error Renderer9::drawElementsImpl(const gl::ContextState &data,
                                       const TranslatedIndexData &indexInfo,
                                       GLenum mode,
                                       GLsizei count,
@@ -1632,7 +1632,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyShadersImpl(const gl::Data &data, GLenum /*drawMode*/)
+gl::Error Renderer9::applyShadersImpl(const gl::ContextState &data, GLenum /*drawMode*/)
 {
     ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
     const auto &inputLayout = programD3D->getCachedInputLayout();

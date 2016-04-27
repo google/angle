@@ -402,7 +402,7 @@ void DynamicHLSL::generateVaryingLinkHLSL(ShaderType shaderType,
     linkStream << "};\n";
 }
 
-bool DynamicHLSL::generateShaderLinkHLSL(const gl::Data &data,
+bool DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
                                          const gl::Program::Data &programData,
                                          const ProgramD3DMetadata &programMetadata,
                                          const VaryingPacking &varyingPacking,
@@ -825,7 +825,7 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 }
 
 std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
-                                                    const gl::Data &data,
+                                                    const gl::ContextState &data,
                                                     const gl::Program::Data &programData,
                                                     const bool useViewScale,
                                                     const std::string &preambleString) const
@@ -1029,7 +1029,7 @@ std::string DynamicHLSL::generateAttributeConversionHLSL(
     return attribString;
 }
 
-void DynamicHLSL::getPixelShaderOutputKey(const gl::Data &data,
+void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
                                           const gl::Program::Data &programData,
                                           const ProgramD3DMetadata &metadata,
                                           std::vector<PixelShaderOutputVariable> *outPixelShaderKey)

@@ -104,11 +104,11 @@ class Renderer9 : public RendererD3D
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
-    gl::Error setUniformBuffers(const gl::Data &data,
+    gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    gl::Error updateState(const gl::Data &data, GLenum drawMode) override;
+    gl::Error updateState(const gl::ContextState &data, GLenum drawMode) override;
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     void setViewport(const gl::Caps *caps,
@@ -132,7 +132,7 @@ class Renderer9 : public RendererD3D
                                         GLsizei count,
                                         GLsizei instances,
                                         TranslatedIndexData *indexInfo);
-    gl::Error applyIndexBuffer(const gl::Data &data,
+    gl::Error applyIndexBuffer(const gl::ContextState &data,
                                const GLvoid *indices,
                                GLsizei count,
                                GLenum mode,
@@ -280,15 +280,15 @@ class Renderer9 : public RendererD3D
   protected:
     void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
-    gl::Error applyShadersImpl(const gl::Data &data, GLenum drawMode) override;
+    gl::Error applyShadersImpl(const gl::ContextState &data, GLenum drawMode) override;
 
   private:
-    gl::Error drawArraysImpl(const gl::Data &data,
+    gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
                              GLsizei instances) override;
-    gl::Error drawElementsImpl(const gl::Data &data,
+    gl::Error drawElementsImpl(const gl::ContextState &data,
                                const TranslatedIndexData &indexInfo,
                                GLenum mode,
                                GLsizei count,
@@ -302,7 +302,7 @@ class Renderer9 : public RendererD3D
 
     WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error setBlendDepthRasterStates(const gl::Data &glData, GLenum drawMode);
+    gl::Error setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode);
 
     void release();
 

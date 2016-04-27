@@ -12,7 +12,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/AttributeMap.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
@@ -151,7 +151,10 @@ gl::Error RendererGL::finish()
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count)
+gl::Error RendererGL::drawArrays(const gl::ContextState &data,
+                                 GLenum mode,
+                                 GLint first,
+                                 GLsizei count)
 {
     gl::Error error = mStateManager->setDrawArraysState(data, first, count, 0);
     if (error.isError())
@@ -167,7 +170,7 @@ gl::Error RendererGL::drawArrays(const gl::Data &data, GLenum mode, GLint first,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawArraysInstanced(const gl::Data &data,
+gl::Error RendererGL::drawArraysInstanced(const gl::ContextState &data,
                                           GLenum mode,
                                           GLint first,
                                           GLsizei count,
@@ -187,7 +190,7 @@ gl::Error RendererGL::drawArraysInstanced(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawElements(const gl::Data &data,
+gl::Error RendererGL::drawElements(const gl::ContextState &data,
                                    GLenum mode,
                                    GLsizei count,
                                    GLenum type,
@@ -210,7 +213,7 @@ gl::Error RendererGL::drawElements(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawElementsInstanced(const gl::Data &data,
+gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
                                             GLenum mode,
                                             GLsizei count,
                                             GLenum type,
@@ -234,7 +237,7 @@ gl::Error RendererGL::drawElementsInstanced(const gl::Data &data,
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error RendererGL::drawRangeElements(const gl::Data &data,
+gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
                                         GLenum mode,
                                         GLuint start,
                                         GLuint end,
@@ -431,7 +434,7 @@ GLint64 RendererGL::getTimestamp()
     return result;
 }
 
-void RendererGL::onMakeCurrent(const gl::Data &data)
+void RendererGL::onMakeCurrent(const gl::ContextState &data)
 {
     // Queries need to be paused/resumed on context switches
     mStateManager->onMakeCurrent(data);

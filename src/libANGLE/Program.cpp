@@ -17,7 +17,7 @@
 #include "common/utilities.h"
 #include "common/version.h"
 #include "compiler/translator/blocklayout.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/Renderer.h"
@@ -442,7 +442,7 @@ void Program::bindUniformLocation(GLuint index, const char *name)
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
 // compiling them into binaries, determining the attribute mappings, and collecting
 // a list of uniforms
-Error Program::link(const gl::Data &data)
+Error Program::link(const ContextState &data)
 {
     unlink(false);
 
@@ -1814,7 +1814,7 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::stri
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool Program::linkAttributes(const gl::Data &data,
+bool Program::linkAttributes(const ContextState &data,
                              InfoLog &infoLog,
                              const Bindings &attributeBindings,
                              const Shader *vertexShader)

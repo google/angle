@@ -33,9 +33,9 @@ class ShaderSh;
 namespace gl
 {
 class Compiler;
+struct ContextState;
 struct Limitations;
 class ResourceManager;
-struct Data;
 
 class Shader final : angle::NonCopyable, public LabeledObject
 {

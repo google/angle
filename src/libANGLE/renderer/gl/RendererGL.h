@@ -28,27 +28,30 @@ class RendererGL : public Renderer
     gl::Error flush() override;
     gl::Error finish() override;
 
-    gl::Error drawArrays(const gl::Data &data, GLenum mode, GLint first, GLsizei count) override;
-    gl::Error drawArraysInstanced(const gl::Data &data,
+    gl::Error drawArrays(const gl::ContextState &data,
+                         GLenum mode,
+                         GLint first,
+                         GLsizei count) override;
+    gl::Error drawArraysInstanced(const gl::ContextState &data,
                                   GLenum mode,
                                   GLint first,
                                   GLsizei count,
                                   GLsizei instanceCount) override;
 
-    gl::Error drawElements(const gl::Data &data,
+    gl::Error drawElements(const gl::ContextState &data,
                            GLenum mode,
                            GLsizei count,
                            GLenum type,
                            const GLvoid *indices,
                            const gl::IndexRange &indexRange) override;
-    gl::Error drawElementsInstanced(const gl::Data &data,
+    gl::Error drawElementsInstanced(const gl::ContextState &data,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
                                     const GLvoid *indices,
                                     GLsizei instances,
                                     const gl::IndexRange &indexRange) override;
-    gl::Error drawRangeElements(const gl::Data &data,
+    gl::Error drawRangeElements(const gl::ContextState &data,
                                 GLenum mode,
                                 GLuint start,
                                 GLuint end,
@@ -107,7 +110,7 @@ class RendererGL : public Renderer
     GLint getGPUDisjoint() override;
     GLint64 getTimestamp() override;
 
-    void onMakeCurrent(const gl::Data &data) override;
+    void onMakeCurrent(const gl::ContextState &data) override;
 
     const gl::Version &getMaxSupportedESVersion() const;
     const FunctionsGL *getFunctions() const { return mFunctions; }

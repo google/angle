@@ -12,7 +12,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/formatutils.h"
@@ -307,7 +307,7 @@ GLenum Texture::getInternalFormat(GLenum target, size_t level) const
     return getImageDesc(target, level).internalFormat;
 }
 
-bool Texture::isSamplerComplete(const SamplerState &samplerState, const Data &data) const
+bool Texture::isSamplerComplete(const SamplerState &samplerState, const ContextState &data) const
 {
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mTextureState.baseLevel);
     const TextureCaps &textureCaps = data.textureCaps->get(baseImageDesc.internalFormat);
@@ -712,7 +712,8 @@ GLenum Texture::getBaseImageTarget() const
     return mTarget == GL_TEXTURE_CUBE_MAP ? FirstCubeMapTextureTarget : mTarget;
 }
 
-bool Texture::computeSamplerCompleteness(const SamplerState &samplerState, const Data &data) const
+bool Texture::computeSamplerCompleteness(const SamplerState &samplerState,
+                                         const ContextState &data) const
 {
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), mTextureState.baseLevel);
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 || baseImageDesc.size.depth == 0)

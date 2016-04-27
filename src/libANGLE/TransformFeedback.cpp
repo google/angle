@@ -8,7 +8,7 @@
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/ImplFactory.h"
 #include "libANGLE/renderer/TransformFeedbackImpl.h"

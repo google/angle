@@ -21,12 +21,12 @@ class ImplFactory;
 
 namespace gl
 {
-struct Data;
+struct ContextState;
 
 class Compiler final : angle::NonCopyable
 {
   public:
-    Compiler(rx::ImplFactory *implFactory, const Data &data);
+    Compiler(rx::ImplFactory *implFactory, const ContextState &data);
     ~Compiler();
 
     Error release();

@@ -9,7 +9,7 @@
 #include "libANGLE/Compiler.h"
 
 #include "common/debug.h"
-#include "libANGLE/Data.h"
+#include "libANGLE/ContextState.h"
 #include "libANGLE/renderer/CompilerImpl.h"
 #include "libANGLE/renderer/ImplFactory.h"
 
@@ -25,7 +25,7 @@ size_t activeCompilerHandles = 0;
 
 }  // anonymous namespace
 
-Compiler::Compiler(rx::ImplFactory *implFactory, const gl::Data &data)
+Compiler::Compiler(rx::ImplFactory *implFactory, const ContextState &data)
     : mImplementation(implFactory->createCompiler()),
       mSpec(data.clientVersion > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
       mOutputType(mImplementation->getTranslatorOutputType()),
