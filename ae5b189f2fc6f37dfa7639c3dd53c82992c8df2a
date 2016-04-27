@@ -663,6 +663,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_595eb6da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1476,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-27T15:31:15Z",
+      "side": 1,
+      "message": "It makes it easier to check visibly in code review. I could be persuaded it\u0027s unnecessary but I\u0027d prefer if they were there right now. Same for the other variable which is uninit in the initializer list that I asked for in a subsequent review.",
+      "parentUuid": "888725d1_9bbfc3e0",
+      "range": {
+        "startLine": 1476,
+        "startChar": 6,
+        "endLine": 1476,
+        "endChar": 22
+      },
+      "revId": "ae5b189f2fc6f37dfa7639c3dd53c82992c8df2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "888725d1_5bd61bd7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 12
