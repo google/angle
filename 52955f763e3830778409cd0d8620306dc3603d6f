@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48560d47_8a2bce1f",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1620,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-27T17:44:44Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "revId": "52955f763e3830778409cd0d8620306dc3603d6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
