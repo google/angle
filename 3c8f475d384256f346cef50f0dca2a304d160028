@@ -193,6 +193,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_b9cd5270",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-27T13:59:07Z",
+      "side": 1,
+      "message": "Great! Thanks.",
+      "parentUuid": "08c41560_35093086",
+      "range": {
+        "startLine": 641,
+        "startChar": 3,
+        "endLine": 644,
+        "endChar": 5
+      },
+      "revId": "3c8f475d384256f346cef50f0dca2a304d160028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08733496_618988aa",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 10
