@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48560d47_f4f7d19a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerNV12.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T15:46:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48560d47_f9ba2a19",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 5
+      },
+      "revId": "2ac1604d9daaf2379587a28661593ba8a0f99760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48560d47_79cf3ac1",
         "filename": "src/tests/egl_tests/media/yuvtest.inl",
         "patchSetId": 14
@@ -36,6 +60,24 @@
       "writtenOn": "2016-04-27T15:31:15Z",
       "side": 1,
       "message": "should be called yuvtest_autogen.inl",
+      "revId": "2ac1604d9daaf2379587a28661593ba8a0f99760",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48560d47_9403f562",
+        "filename": "src/tests/egl_tests/media/yuvtest.inl",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-27T15:46:02Z",
+      "side": 1,
+      "message": "It\u0027s more of a media asset than a source file? The other media for tests don\u0027t have autogen after them.",
+      "parentUuid": "48560d47_79cf3ac1",
       "revId": "2ac1604d9daaf2379587a28661593ba8a0f99760",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
