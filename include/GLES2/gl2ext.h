@@ -1009,6 +1009,11 @@ GL_APICALL void GL_APIENTRY glGetSyncivAPPLE (GLsync sync, GLenum pname, GLsizei
 #define GL_ARM_shader_framebuffer_fetch_depth_stencil 1
 #endif /* GL_ARM_shader_framebuffer_fetch_depth_stencil */
 
+#ifndef GL_CHROMIUM_sync_query
+#define GL_CHROMIUM_sync_query 1
+#define GL_COMMANDS_COMPLETED_CHROMIUM    0x84F7
+#endif  /* GL_CHROMIUM_sync_query */
+
 #ifndef GL_DMP_program_binary
 #define GL_DMP_program_binary 1
 #define GL_SMAPHS30_PROGRAM_BINARY_DMP    0x9251

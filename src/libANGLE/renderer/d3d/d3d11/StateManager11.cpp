@@ -130,7 +130,8 @@ void StateManager11::SRVCache::clear()
 }
 
 static const GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED, GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
-                                    GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, GL_TIME_ELAPSED_EXT};
+                                    GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, GL_TIME_ELAPSED_EXT,
+                                    GL_COMMANDS_COMPLETED_CHROMIUM};
 
 StateManager11::StateManager11(Renderer11 *renderer)
     : mRenderer(renderer),

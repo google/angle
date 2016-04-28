@@ -33,6 +33,9 @@ GLuint64 MergeQueryResults(GLenum type, GLuint64 currentResult, GLuint64 newResu
         case GL_TIMESTAMP_EXT:
             return newResult;
 
+        case GL_COMMANDS_COMPLETED_CHROMIUM:
+            return newResult;
+
         default:
             UNREACHABLE();
             return 0;
@@ -142,9 +145,10 @@ gl::Error Query11::pause()
     if (mActiveQuery->query != nullptr)
     {
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+        GLenum queryType             = getType();
 
         // If we are doing time elapsed query the end timestamp
-        if (getType() == GL_TIME_ELAPSED_EXT)
+        if (queryType == GL_TIME_ELAPSED_EXT)
         {
             context->End(mActiveQuery->endTimestamp);
         }
@@ -168,8 +172,11 @@ gl::Error Query11::resume()
             return error;
         }
 
+        GLenum queryType         = getType();
+        D3D11_QUERY d3dQueryType = gl_d3d11::ConvertQueryType(queryType);
+
         D3D11_QUERY_DESC queryDesc;
-        queryDesc.Query     = gl_d3d11::ConvertQueryType(getType());
+        queryDesc.Query     = d3dQueryType;
         queryDesc.MiscFlags = 0;
 
         ID3D11Device *device = mRenderer->getDevice();
@@ -182,7 +189,7 @@ gl::Error Query11::resume()
         }
 
         // If we are doing time elapsed we also need a query to actually query the timestamp
-        if (getType() == GL_TIME_ELAPSED_EXT)
+        if (queryType == GL_TIME_ELAPSED_EXT)
         {
             D3D11_QUERY_DESC desc;
             desc.Query     = D3D11_QUERY_TIMESTAMP;
@@ -203,10 +210,13 @@ gl::Error Query11::resume()
 
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
-        context->Begin(mActiveQuery->query);
+        if (d3dQueryType != D3D11_QUERY_EVENT)
+        {
+            context->Begin(mActiveQuery->query);
+        }
 
         // If we are doing time elapsed, query the begin timestamp
-        if (getType() == GL_TIME_ELAPSED_EXT)
+        if (queryType == GL_TIME_ELAPSED_EXT)
         {
             context->End(mActiveQuery->beginTimestamp);
         }
@@ -355,6 +365,28 @@ gl::Error Query11::testQuery(QueryState *queryState)
                 ASSERT(queryState->query == nullptr);
                 mResult = 0;
                 queryState->finished = true;
+            }
+            break;
+
+            case GL_COMMANDS_COMPLETED_CHROMIUM:
+            {
+                ASSERT(queryState->query);
+                BOOL completed = 0;
+                HRESULT result =
+                    context->GetData(queryState->query, &completed, sizeof(completed), 0);
+                if (FAILED(result))
+                {
+                    return gl::Error(GL_OUT_OF_MEMORY,
+                                     "Failed to get the data of an internal query, result: 0x%X.",
+                                     result);
+                }
+
+                if (result == S_OK)
+                {
+                    queryState->finished = true;
+                    ASSERT(completed == TRUE);
+                    mResult = (completed == TRUE) ? GL_TRUE : GL_FALSE;
+                }
             }
             break;
 

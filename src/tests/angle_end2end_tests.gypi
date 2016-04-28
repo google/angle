@@ -60,6 +60,7 @@
             '<(angle_path)/src/tests/gl_tests/SRGBTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/StateChangeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/SwizzleTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/SyncQueriesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/TextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/TimerQueriesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/TransformFeedbackTest.cpp',

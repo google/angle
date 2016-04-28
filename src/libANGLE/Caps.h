@@ -284,6 +284,9 @@ struct Extensions
     // GL_CHROMIUM_bind_uniform_location
     bool bindUniformLocation;
 
+    // GL_CHROMIUM_sync_query
+    bool syncQuery;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

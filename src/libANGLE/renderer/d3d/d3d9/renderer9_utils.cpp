@@ -264,6 +264,21 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
     }
 }
 
+D3DQUERYTYPE ConvertQueryType(GLenum queryType)
+{
+    switch (queryType)
+    {
+        case GL_ANY_SAMPLES_PASSED_EXT:
+        case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
+            return D3DQUERYTYPE_OCCLUSION;
+        case GL_COMMANDS_COMPLETED_CHROMIUM:
+            return D3DQUERYTYPE_EVENT;
+        default:
+            UNREACHABLE();
+            return static_cast<D3DQUERYTYPE>(0);
+    }
+}
+
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLuint samples)
 {
     return (samples > 1) ? static_cast<D3DMULTISAMPLE_TYPE>(samples) : D3DMULTISAMPLE_NONE;
@@ -580,6 +595,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->vertexArrayObject      = true;
     extensions->noError                = true;
     extensions->bindUniformLocation    = true;
+    extensions->syncQuery              = extensions->fence;
 
     // D3D9 has no concept of separate masks and refs for front and back faces in the depth stencil
     // state.

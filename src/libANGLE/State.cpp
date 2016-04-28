@@ -159,6 +159,7 @@ void State::initialize(const Caps &caps,
     mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(nullptr);
     mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(nullptr);
     mActiveQueries[GL_TIME_ELAPSED_EXT].set(nullptr);
+    mActiveQueries[GL_COMMANDS_COMPLETED_CHROMIUM].set(nullptr);
 
     mProgram = nullptr;
 
