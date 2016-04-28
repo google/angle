@@ -3619,6 +3619,13 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
         return false;
     }
 
+    // Buffer SRV creation in this format was not working on Windows 10, repro at least on Intel
+    // and NVIDIA.
+    if (internalFormat == GL_RGB5_A1)
+    {
+        return false;
+    }
+
     return true;
 }
 
