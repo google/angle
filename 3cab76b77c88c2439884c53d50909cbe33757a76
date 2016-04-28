@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "480b6d61_7bbbca82",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3622,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-28T15:27:56Z",
+      "side": 1,
+      "message": "is a \u0027saw buffer\u0027 a thing, or is this past tense of \u0027see\u0027? maybe clarify this comment.",
+      "range": {
+        "startLine": 3622,
+        "startChar": 7,
+        "endLine": 3622,
+        "endChar": 17
+      },
+      "revId": "3cab76b77c88c2439884c53d50909cbe33757a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
