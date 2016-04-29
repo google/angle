@@ -63,11 +63,9 @@ gl::Context *DisplayGL::createContext(const egl::Config *config,
     return new gl::Context(config, shareContext, mRenderer, attribs);
 }
 
-StreamProducerImpl *DisplayGL::createStreamProducerD3DTextureNV12(
-    egl::Stream::ConsumerType consumerType,
-    const egl::AttributeMap &attribs)
+StreamImpl *DisplayGL::createStream(const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
+    UNREACHABLE();
     return nullptr;
 }
 

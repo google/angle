@@ -169,8 +169,6 @@ class Renderer11 : public RendererD3D
 
     bool getShareHandleSupport() const;
 
-    bool getNV12TextureSupport() const;
-
     virtual int getMajorShaderModel() const;
     int getMinorShaderModel() const override;
     std::string getShaderModelSuffix() const override;
@@ -219,9 +217,6 @@ class Renderer11 : public RendererD3D
                                       const gl::TextureState &textureState) override;
     virtual TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain);
     TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage) override;
-    TextureStorage *createTextureStorageExternal(
-        egl::Stream *stream,
-        const egl::Stream::GLTextureDescription &desc) override;
     virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly);
     virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
     virtual TextureStorage *createTextureStorage3D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
@@ -250,9 +245,7 @@ class Renderer11 : public RendererD3D
     virtual TransformFeedbackImpl* createTransformFeedback();
 
     // Stream Creation
-    StreamProducerImpl *createStreamProducerD3DTextureNV12(
-        egl::Stream::ConsumerType consumerType,
-        const egl::AttributeMap &attribs) override;
+    StreamImpl *createStream(const egl::AttributeMap &attribs) override;
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

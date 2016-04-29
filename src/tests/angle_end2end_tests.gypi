@@ -91,7 +91,6 @@
             '<(angle_path)/src/tests/egl_tests/EGLStreamTest.cpp',
             # TODO(cwallez) for Linux, requires a portable implementation of threads
             '<(angle_path)/src/tests/egl_tests/EGLThreadTest.cpp',
-            '<(angle_path)/src/tests/egl_tests/media/yuvtest.inl',
         ],
         'angle_end2end_tests_x11_sources':
         [

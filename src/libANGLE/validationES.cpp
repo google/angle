@@ -169,15 +169,6 @@ bool ValidTexture3DTarget(const ValidationContext *context, GLenum target)
     }
 }
 
-// Most texture GL calls are not compatible with external textures, so we have a separate validation
-// function for use in the GL calls that do
-bool ValidTextureExternalTarget(const ValidationContext *context, GLenum target)
-{
-    return (target == GL_TEXTURE_EXTERNAL_OES) &&
-           (context->getExtensions().eglImageExternal ||
-            context->getExtensions().eglStreamConsumerExternal);
-}
-
 // This function differs from ValidTextureTarget in that the target must be
 // usable as the destination of a 2D operation-- so a cube face is valid, but
 // GL_TEXTURE_CUBE_MAP is not.
@@ -834,7 +825,7 @@ bool ValidateGetVertexAttribParameters(Context *context, GLenum pname)
     }
 }
 
-bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pname, GLint param)
+bool ValidateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
 {
     switch (pname)
     {
@@ -849,9 +840,7 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
       case GL_TEXTURE_COMPARE_FUNC:
       case GL_TEXTURE_MIN_LOD:
       case GL_TEXTURE_MAX_LOD:
-          // ES3 texture paramters are not supported on external textures as the extension is
-          // written against ES2.
-          if (context->getClientVersion() < 3 || target == GL_TEXTURE_EXTERNAL_OES)
+        if (context->getClientVersion() < 3)
         {
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
@@ -868,11 +857,10 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
       case GL_TEXTURE_WRAP_R:
         switch (param)
         {
-          case GL_CLAMP_TO_EDGE:
-              return true;
           case GL_REPEAT:
+          case GL_CLAMP_TO_EDGE:
           case GL_MIRRORED_REPEAT:
-              return (target != GL_TEXTURE_EXTERNAL_OES);
+            return true;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
@@ -883,12 +871,11 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
         {
           case GL_NEAREST:
           case GL_LINEAR:
-              return true;
           case GL_NEAREST_MIPMAP_NEAREST:
           case GL_LINEAR_MIPMAP_NEAREST:
           case GL_NEAREST_MIPMAP_LINEAR:
           case GL_LINEAR_MIPMAP_LINEAR:
-              return (target != GL_TEXTURE_EXTERNAL_OES);
+            return true;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return false;

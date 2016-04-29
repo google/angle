@@ -1995,7 +1995,7 @@ bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, G
         return false;
     }
 
-    if (!ValidateTexParamParameters(context, GL_TEXTURE_2D, pname, param))
+    if (!ValidateTexParamParameters(context, pname, param))
     {
         return false;
     }

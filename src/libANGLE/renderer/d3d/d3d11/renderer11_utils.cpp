@@ -1229,7 +1229,6 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     extensions->fboRenderMipmap = false;
     extensions->debugMarker = true;
     extensions->eglImage                 = true;
-    extensions->eglStreamConsumerExternal = true;
     extensions->unpackSubimage           = true;
     extensions->packSubimage             = true;
     extensions->vertexArrayObject        = true;

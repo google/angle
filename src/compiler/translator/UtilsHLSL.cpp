@@ -181,6 +181,11 @@ TString TextureTypeSuffix(const TBasicType type)
 
 TString DecorateUniform(const TName &name, const TType &type)
 {
+    if (type.getBasicType() == EbtSamplerExternalOES)
+    {
+        return "ex_" + name.getString();
+    }
+
     return DecorateIfNeeded(name);
 }
 
