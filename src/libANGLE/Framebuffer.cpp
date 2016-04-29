@@ -575,6 +575,13 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
         {
             return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
         }
+
+        // Starting from ES 3.0 stencil and depth, if present, should be the same image
+        if (data.clientVersion >= 3 && depthAttachment.isAttached() &&
+            stencilAttachment != depthAttachment)
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;
+        }
     }
 
     // we need to have at least one attachment to be complete

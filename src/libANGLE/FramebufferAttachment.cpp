@@ -205,4 +205,24 @@ const egl::Surface *FramebufferAttachment::getSurface() const
     return rx::GetAs<egl::Surface>(mResource);
 }
 
+bool FramebufferAttachment::operator==(const FramebufferAttachment &other) const
+{
+    if (mResource != other.mResource || mType != other.mType)
+    {
+        return false;
+    }
+
+    if (mType == GL_TEXTURE && getTextureImageIndex() != other.getTextureImageIndex())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool FramebufferAttachment::operator!=(const FramebufferAttachment &other) const
+{
+    return !(*this == other);
+}
+
 }

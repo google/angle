@@ -78,6 +78,16 @@ bool ImageIndex::operator<(const ImageIndex &other) const
     }
 }
 
+bool ImageIndex::operator==(const ImageIndex &other) const
+{
+    return (type == other.type) && (mipIndex == other.mipIndex) && (layerIndex == other.layerIndex);
+}
+
+bool ImageIndex::operator!=(const ImageIndex &other) const
+{
+    return !(*this == other);
+}
+
 ImageIndex::ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
     : type(typeIn),
       mipIndex(mipIndexIn),

@@ -136,6 +136,9 @@ class FramebufferAttachment final
         return error;
     }
 
+    bool operator==(const FramebufferAttachment &other) const;
+    bool operator!=(const FramebufferAttachment &other) const;
+
   private:
     gl::Error getRenderTarget(rx::FramebufferAttachmentRenderTarget **rtOut) const;
 

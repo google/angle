@@ -40,6 +40,8 @@ struct ImageIndex
     static const GLint ENTIRE_LEVEL = static_cast<GLint>(-1);
 
     bool operator<(const ImageIndex &other) const;
+    bool operator==(const ImageIndex &other) const;
+    bool operator!=(const ImageIndex &other) const;
 
   private:
     friend class ImageIndexIterator;
