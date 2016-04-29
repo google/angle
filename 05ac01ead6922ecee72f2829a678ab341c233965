@@ -99,6 +99,30 @@
     },
     {
       "key": {
+        "uuid": "a834e966_88093b24",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-04-29T20:08:16Z",
+      "side": 1,
+      "message": "I think our other checks should make sure it\u0027s not usable unless the extensions are present.",
+      "parentUuid": "a834e966_e594b0f9",
+      "range": {
+        "startLine": 129,
+        "startChar": 38,
+        "endLine": 129,
+        "endChar": 39
+      },
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a834e966_658980da",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 1
