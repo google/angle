@@ -872,7 +872,14 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
               return true;
           case GL_REPEAT:
           case GL_MIRRORED_REPEAT:
-              return (target != GL_TEXTURE_EXTERNAL_OES);
+              if (target == GL_TEXTURE_EXTERNAL_OES)
+              {
+                  // OES_EGL_image_external specifies this error.
+                  context->recordError(Error(
+                      GL_INVALID_ENUM, "external textures only support CLAMP_TO_EDGE wrap mode"));
+                  return false;
+              }
+              return true;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
@@ -888,7 +895,15 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
           case GL_LINEAR_MIPMAP_NEAREST:
           case GL_NEAREST_MIPMAP_LINEAR:
           case GL_LINEAR_MIPMAP_LINEAR:
-              return (target != GL_TEXTURE_EXTERNAL_OES);
+              if (target == GL_TEXTURE_EXTERNAL_OES)
+              {
+                  // OES_EGL_image_external specifies this error.
+                  context->recordError(
+                      Error(GL_INVALID_ENUM,
+                            "external textures only support NEAREST and LINEAR filtering"));
+                  return false;
+              }
+              return true;
           default:
             context->recordError(Error(GL_INVALID_ENUM));
             return false;
