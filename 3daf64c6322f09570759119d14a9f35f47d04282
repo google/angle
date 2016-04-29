@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88e9e5fc_934bb71b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-29T02:56:29Z",
+      "side": 1,
+      "message": "The D3D11 docs say that that true will always be returned. Maybe add an assert somewhere?",
+      "range": {
+        "startLine": 387,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 84
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88e9e5fc_d357ffb8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-29T02:56:29Z",
+      "side": 1,
+      "message": "Nit: Maybe update the style of the other case statements if we are no longer doing one-liners?",
+      "range": {
+        "startLine": 228,
+        "startChar": 10,
+        "endLine": 228,
+        "endChar": 35
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88e9e5fc_53030fa9",
+        "filename": "src/tests/gl_tests/SyncQueriesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1144499
+      },
+      "writtenOn": "2016-04-29T02:56:29Z",
+      "side": 1,
+      "message": "Is it possible to add a test with a ridiculously long draw call (i.e. the one in timer queries) and ensure that commands are not completed? Not sure if there is a way to do it ensuring that the implementation will not block or implicitly flush and cause flakiness.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 30
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
