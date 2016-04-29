@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a834e966_c5d5ecc9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "nit: wrong indent.",
+      "range": {
+        "startLine": 990,
+        "startChar": 17,
+        "endLine": 990,
+        "endChar": 18
+      },
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_85d84401",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1002,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "nit: wrong indent.",
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_e5ed909f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "nit: wrong indent.",
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_a5e788bb",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "nit: wrong indent.",
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_e594b0f9",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "I am not sure HALF_FLOAT_OES should be allowed in ES3.",
+      "range": {
+        "startLine": 129,
+        "startChar": 38,
+        "endLine": 129,
+        "endChar": 39
+      },
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_658980da",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T18:31:21Z",
+      "side": 1,
+      "message": "Same here, not sure about allowing HALF_FLOAT_OES.",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 133,
+        "endChar": 24
+      },
+      "revId": "05ac01ead6922ecee72f2829a678ab341c233965",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
