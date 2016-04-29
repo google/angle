@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88e9e5fc_e90e90d4",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-29T13:53:04Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be if both depth and stencil are attached? It seems to be valid to have a depth image attached only, or stencil.",
+      "range": {
+        "startLine": 578,
+        "startChar": 39,
+        "endLine": 578,
+        "endChar": 67
+      },
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88e9e5fc_49691c7b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-29T13:53:04Z",
+      "side": 1,
+      "message": "git cl format?",
+      "range": {
+        "startLine": 578,
+        "startChar": 58,
+        "endLine": 582,
+        "endChar": 9
+      },
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88e9e5fc_6903c0a9",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-04-29T13:53:04Z",
+      "side": 1,
+      "message": "nit: brackets",
+      "range": {
+        "startLine": 83,
+        "startChar": 10,
+        "endLine": 83,
+        "endChar": 93
+      },
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
