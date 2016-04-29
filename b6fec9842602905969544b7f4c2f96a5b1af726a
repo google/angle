@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a834e966_eb87a120",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T20:27:04Z",
+      "side": 1,
+      "message": "Same question again: should we expose HALF_FLOAT_OES in ES3?",
+      "range": {
+        "startLine": 129,
+        "startChar": 31,
+        "endLine": 129,
+        "endChar": 38
+      },
+      "revId": "b6fec9842602905969544b7f4c2f96a5b1af726a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_0b8d2541",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-04-29T20:27:04Z",
+      "side": 1,
+      "message": "and here?",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 133,
+        "endChar": 24
+      },
+      "revId": "b6fec9842602905969544b7f4c2f96a5b1af726a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
