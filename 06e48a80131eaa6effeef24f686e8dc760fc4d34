@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a834e966_4ebed010",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-02T13:44:46Z",
+      "side": 1,
+      "message": "hm, this will actually ASSERT if the resource is a Renderbuffer. Maybe instead of adding getResource you can add operator\u003d\u003d or something like that.",
+      "range": {
+        "startLine": 582,
+        "startChar": 16,
+        "endLine": 582,
+        "endChar": 98
+      },
+      "revId": "06e48a80131eaa6effeef24f686e8dc760fc4d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
