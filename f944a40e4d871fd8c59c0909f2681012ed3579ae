@@ -22,6 +22,30 @@
       "revId": "f944a40e4d871fd8c59c0909f2681012ed3579ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_0e3768a1",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-02T13:45:13Z",
+      "side": 1,
+      "message": "I think this is just allowing the copies from formats like RGBA to RGB. It makes sure to only compare the component sizes when they are non-zero.\n\nThat said, CopyTexImage only allows for copies from larger component sizes to smaller, ie RGBA-\u003eRGB but not RGB-\u003eRGBA so this should be updated to only check for zero bits in the destionation format.",
+      "parentUuid": "88e9e5fc_a4a30fae",
+      "range": {
+        "startLine": 842,
+        "startChar": 21,
+        "endLine": 842,
+        "endChar": 33
+      },
+      "revId": "f944a40e4d871fd8c59c0909f2681012ed3579ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
