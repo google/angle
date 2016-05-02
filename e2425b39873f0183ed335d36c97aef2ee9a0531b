@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "48060dd1_f70be06b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-02T12:36:57Z",
+      "side": 1,
+      "message": "Indeed, Gerrit doesn\u0027t show it but this is inside the if (stencilAttachment.isAttached())",
+      "parentUuid": "88e9e5fc_e90e90d4",
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88e9e5fc_49691c7b",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 1
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "48060dd1_d7105c9b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-02T12:36:57Z",
+      "side": 1,
+      "message": "Whoops!",
+      "parentUuid": "88e9e5fc_49691c7b",
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88e9e5fc_6903c0a9",
         "filename": "src/libANGLE/ImageIndex.cpp",
         "patchSetId": 1
@@ -65,6 +101,24 @@
         "endLine": 83,
         "endChar": 93
       },
+      "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48060dd1_3726f806",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-02T12:36:57Z",
+      "side": 1,
+      "message": "Added them around each \u003d\u003d pair, not sure if it was what you meant.",
+      "parentUuid": "88e9e5fc_6903c0a9",
       "revId": "e2425b39873f0183ed335d36c97aef2ee9a0531b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
