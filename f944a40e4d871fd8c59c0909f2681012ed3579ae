@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88e9e5fc_a4a30fae",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-02T13:41:27Z",
+      "side": 1,
+      "message": "bleh.. where is the spec language for this? I searched and searched and couldn\u0027t find anything. is this a problem with emulated formats? including the list of tests this fixes could help me figure out things.",
+      "range": {
+        "startLine": 842,
+        "startChar": 21,
+        "endLine": 842,
+        "endChar": 33
+      },
+      "revId": "f944a40e4d871fd8c59c0909f2681012ed3579ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
