@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8aea9f7_a1862873",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-02T20:04:40Z",
+      "side": 1,
+      "message": "Talked a bit in person about this but a good goal would be to eventually just pass the gl::Context here and then it\u0027s possible to grab state as needed and get specific contexts with the GetImplAs helper.",
+      "range": {
+        "startLine": 147,
+        "startChar": 16,
+        "endLine": 147,
+        "endChar": 40
+      },
+      "revId": "15b2dc5d22648de8baf1c46ebfaef19fffeaf745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
