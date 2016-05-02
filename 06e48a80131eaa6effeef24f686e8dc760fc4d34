@@ -22,6 +22,30 @@
       "revId": "06e48a80131eaa6effeef24f686e8dc760fc4d34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a834e966_ce40a0fa",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-02T13:47:52Z",
+      "side": 1,
+      "message": "+1 on an \u003d\u003d for FramebufferAttachment",
+      "parentUuid": "a834e966_4ebed010",
+      "range": {
+        "startLine": 582,
+        "startChar": 16,
+        "endLine": 582,
+        "endChar": 98
+      },
+      "revId": "06e48a80131eaa6effeef24f686e8dc760fc4d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
