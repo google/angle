@@ -51,7 +51,7 @@ class ValidationContext : angle::NonCopyable
                       bool skipValidation);
     virtual ~ValidationContext() {}
 
-    virtual void recordError(const Error &error) = 0;
+    virtual void handleError(const Error &error) = 0;
 
     const ContextState &getData() const { return mData; }
     int getClientVersion() const { return mData.clientVersion; }

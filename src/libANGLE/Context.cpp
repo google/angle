@@ -31,6 +31,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/Renderer.h"
 
 namespace
@@ -133,6 +134,7 @@ Context::Context(const egl::Config *config,
                         nullptr,
                         mLimitations,
                         GetNoError(attribs)),
+      mImplementation(renderer->createContext()),
       mCompiler(nullptr),
       mRenderer(renderer),
       mClientVersion(GetClientVersion(attribs)),
@@ -261,6 +263,8 @@ Context::Context(const egl::Config *config,
     mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR);
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+
+    handleError(mImplementation->initialize(renderer));
 }
 
 Context::~Context()
@@ -1650,7 +1654,7 @@ void Context::bindUniformLocation(GLuint program, GLint location, const GLchar *
     programObject->bindUniformLocation(location, name);
 }
 
-void Context::recordError(const Error &error)
+void Context::handleError(const Error &error)
 {
     if (error.isError())
     {
@@ -2165,56 +2169,31 @@ void Context::blitFramebuffer(GLint srcX0,
 
     syncStateForBlit();
 
-    Error error = drawFramebuffer->blit(mState, srcArea, dstArea, mask, filter, readFramebuffer);
-    if (error.isError())
-    {
-        recordError(error);
-        return;
-    }
+    handleError(drawFramebuffer->blit(mState, srcArea, dstArea, mask, filter, readFramebuffer));
 }
 
 void Context::clear(GLbitfield mask)
 {
     syncStateForClear();
-
-    Error error = mState.getDrawFramebuffer()->clear(mData, mask);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(mState.getDrawFramebuffer()->clear(mData, mask));
 }
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
     syncStateForClear();
-
-    Error error = mState.getDrawFramebuffer()->clearBufferfv(mData, buffer, drawbuffer, values);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(mState.getDrawFramebuffer()->clearBufferfv(mData, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
     syncStateForClear();
-
-    Error error = mState.getDrawFramebuffer()->clearBufferuiv(mData, buffer, drawbuffer, values);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(mState.getDrawFramebuffer()->clearBufferuiv(mData, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
     syncStateForClear();
-
-    Error error = mState.getDrawFramebuffer()->clearBufferiv(mData, buffer, drawbuffer, values);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(mState.getDrawFramebuffer()->clearBufferiv(mData, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
@@ -2230,12 +2209,7 @@ void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLin
     }
 
     syncStateForClear();
-
-    Error error = framebufferObject->clearBufferfi(mData, buffer, drawbuffer, depth, stencil);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(framebufferObject->clearBufferfi(mData, buffer, drawbuffer, depth, stencil));
 }
 
 void Context::readPixels(GLint x,
@@ -2252,11 +2226,7 @@ void Context::readPixels(GLint x,
     ASSERT(framebufferObject);
 
     Rectangle area(x, y, width, height);
-    Error error = framebufferObject->readPixels(mState, area, format, type, pixels);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(framebufferObject->readPixels(mState, area, format, type, pixels));
 }
 
 void Context::copyTexImage2D(GLenum target,
@@ -2276,11 +2246,7 @@ void Context::copyTexImage2D(GLenum target,
     const Framebuffer *framebuffer = mState.getReadFramebuffer();
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error = texture->copyImage(target, level, sourceArea, internalformat, framebuffer);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->copyImage(target, level, sourceArea, internalformat, framebuffer));
 }
 
 void Context::copyTexSubImage2D(GLenum target,
@@ -2301,11 +2267,7 @@ void Context::copyTexSubImage2D(GLenum target,
     const Framebuffer *framebuffer = mState.getReadFramebuffer();
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->copySubImage(target, level, destOffset, sourceArea, framebuffer));
 }
 
 void Context::copyTexSubImage3D(GLenum target,
@@ -2326,11 +2288,7 @@ void Context::copyTexSubImage3D(GLenum target,
 
     const Framebuffer *framebuffer = mState.getReadFramebuffer();
     Texture *texture               = getTargetTexture(target);
-    Error error = texture->copySubImage(target, level, destOffset, sourceArea, framebuffer);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->copySubImage(target, level, destOffset, sourceArea, framebuffer));
 }
 
 void Context::framebufferTexture2D(GLenum target,
@@ -2450,11 +2408,7 @@ void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GL
 
     // The specification isn't clear what should be done when the framebuffer isn't complete.
     // We leave it up to the framebuffer implementation to decide what to do.
-    Error error = framebuffer->discard(numAttachments, attachments);
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(framebuffer->discard(numAttachments, attachments));
 }
 
 void Context::invalidateFramebuffer(GLenum target,
@@ -2467,15 +2421,12 @@ void Context::invalidateFramebuffer(GLenum target,
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (framebuffer->checkStatus(mData) == GL_FRAMEBUFFER_COMPLETE)
+    if (framebuffer->checkStatus(mData) != GL_FRAMEBUFFER_COMPLETE)
     {
-        Error error = framebuffer->invalidate(numAttachments, attachments);
-        if (error.isError())
-        {
-            recordError(error);
-            return;
-        }
+        return;
     }
+
+    handleError(framebuffer->invalidate(numAttachments, attachments));
 }
 
 void Context::invalidateSubFramebuffer(GLenum target,
@@ -2492,16 +2443,13 @@ void Context::invalidateSubFramebuffer(GLenum target,
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (framebuffer->checkStatus(mData) == GL_FRAMEBUFFER_COMPLETE)
+    if (framebuffer->checkStatus(mData) != GL_FRAMEBUFFER_COMPLETE)
     {
-        Rectangle area(x, y, width, height);
-        Error error = framebuffer->invalidateSub(numAttachments, attachments, area);
-        if (error.isError())
-        {
-            recordError(error);
-            return;
-        }
+        return;
     }
+
+    Rectangle area(x, y, width, height);
+    handleError(framebuffer->invalidateSub(numAttachments, attachments, area));
 }
 
 void Context::texImage2D(GLenum target,
@@ -2519,12 +2467,8 @@ void Context::texImage2D(GLenum target,
     Extents size(width, height, 1);
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error = texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
-                                    format, type, reinterpret_cast<const uint8_t *>(pixels));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
+                                  format, type, reinterpret_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texImage3D(GLenum target,
@@ -2542,12 +2486,8 @@ void Context::texImage3D(GLenum target,
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    Error error = texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
-                                    format, type, reinterpret_cast<const uint8_t *>(pixels));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setImage(mState.getUnpackState(), target, level, internalformat, size,
+                                  format, type, reinterpret_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage2D(GLenum target,
@@ -2571,12 +2511,8 @@ void Context::texSubImage2D(GLenum target,
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error = texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
-                                       reinterpret_cast<const uint8_t *>(pixels));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
+                                     reinterpret_cast<const uint8_t *>(pixels)));
 }
 
 void Context::texSubImage3D(GLenum target,
@@ -2601,12 +2537,8 @@ void Context::texSubImage3D(GLenum target,
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTargetTexture(target);
-    Error error = texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
-                                       reinterpret_cast<const uint8_t *>(pixels));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setSubImage(mState.getUnpackState(), target, level, area, format, type,
+                                     reinterpret_cast<const uint8_t *>(pixels)));
 }
 
 void Context::compressedTexImage2D(GLenum target,
@@ -2623,13 +2555,9 @@ void Context::compressedTexImage2D(GLenum target,
     Extents size(width, height, 1);
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error =
-        texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat, size,
-                                    imageSize, reinterpret_cast<const uint8_t *>(data));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat,
+                                            size, imageSize,
+                                            reinterpret_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexImage3D(GLenum target,
@@ -2646,13 +2574,9 @@ void Context::compressedTexImage3D(GLenum target,
 
     Extents size(width, height, depth);
     Texture *texture = getTargetTexture(target);
-    Error error =
-        texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat, size,
-                                    imageSize, reinterpret_cast<const uint8_t *>(data));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setCompressedImage(mState.getUnpackState(), target, level, internalformat,
+                                            size, imageSize,
+                                            reinterpret_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexSubImage2D(GLenum target,
@@ -2670,13 +2594,8 @@ void Context::compressedTexSubImage2D(GLenum target,
     Box area(xoffset, yoffset, 0, width, height, 1);
     Texture *texture =
         getTargetTexture(IsCubeMapTextureTarget(target) ? GL_TEXTURE_CUBE_MAP : target);
-    Error error =
-        texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
-                                       imageSize, reinterpret_cast<const uint8_t *>(data));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
+                                               imageSize, reinterpret_cast<const uint8_t *>(data)));
 }
 
 void Context::compressedTexSubImage3D(GLenum target,
@@ -2701,13 +2620,8 @@ void Context::compressedTexSubImage3D(GLenum target,
 
     Box area(xoffset, yoffset, zoffset, width, height, depth);
     Texture *texture = getTargetTexture(target);
-    Error error =
-        texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
-                                       imageSize, reinterpret_cast<const uint8_t *>(data));
-    if (error.isError())
-    {
-        recordError(error);
-    }
+    handleError(texture->setCompressedSubImage(mState.getUnpackState(), target, level, area, format,
+                                               imageSize, reinterpret_cast<const uint8_t *>(data)));
 }
 
 void Context::getBufferPointerv(GLenum target, GLenum /*pname*/, void **params)
@@ -2733,7 +2647,7 @@ GLvoid *Context::mapBuffer(GLenum target, GLenum access)
     Error error = buffer->map(access);
     if (error.isError())
     {
-        recordError(error);
+        handleError(error);
         return nullptr;
     }
 
@@ -2749,7 +2663,7 @@ GLboolean Context::unmapBuffer(GLenum target)
     Error error = buffer->unmap(&result);
     if (error.isError())
     {
-        recordError(error);
+        handleError(error);
         return GL_FALSE;
     }
 
@@ -2767,7 +2681,7 @@ GLvoid *Context::mapBufferRange(GLenum target,
     Error error = buffer->mapRange(offset, length, access);
     if (error.isError())
     {
-        recordError(error);
+        handleError(error);
         return nullptr;
     }
 

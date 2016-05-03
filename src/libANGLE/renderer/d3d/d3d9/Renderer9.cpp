@@ -23,6 +23,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/renderer/d3d/d3d9/Blit9.h"
 #include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
+#include "libANGLE/renderer/d3d/d3d9/Context9.h"
 #include "libANGLE/renderer/d3d/d3d9/Fence9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
@@ -678,6 +679,11 @@ SwapChainD3D *Renderer9::createSwapChain(NativeWindowD3D *nativeWindow,
 {
     return new SwapChain9(this, GetAs<NativeWindow9>(nativeWindow), shareHandle, backBufferFormat,
                           depthBufferFormat, orientation);
+}
+
+ContextImpl *Renderer9::createContext()
+{
+    return new Context9;
 }
 
 CompilerImpl *Renderer9::createCompiler()

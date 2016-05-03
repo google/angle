@@ -124,6 +124,8 @@ class Renderer11 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
+    ContextImpl *createContext() override;
+
     CompilerImpl *createCompiler() override;
 
     virtual gl::Error generateSwizzle(gl::Texture *texture);

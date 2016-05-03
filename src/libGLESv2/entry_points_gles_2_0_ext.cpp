@@ -93,7 +93,7 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
         Error error = context->beginQuery(target, id);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -114,7 +114,7 @@ void GL_APIENTRY EndQueryEXT(GLenum target)
         Error error = context->endQuery(target);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -135,7 +135,7 @@ void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
         Error error = context->queryCounter(id, target);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -173,7 +173,7 @@ void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
         Error error = context->getQueryObjectiv(id, pname, params);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -194,7 +194,7 @@ void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
         Error error = context->getQueryObjectuiv(id, pname, params);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -215,7 +215,7 @@ void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
         Error error = context->getQueryObjecti64v(id, pname, params);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -236,7 +236,7 @@ void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *param
         Error error = context->getQueryObjectui64v(id, pname, params);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -251,7 +251,7 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
     {
         if (n < 0)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
+            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -281,7 +281,7 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
         Error error = context->drawArraysInstanced(mode, first, count, primcount);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -312,7 +312,7 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
             context->drawElementsInstanced(mode, count, type, indices, primcount, indexRange);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -329,13 +329,13 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
 
         if (fenceObject == NULL)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -352,7 +352,7 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
     {
         if (n < 0)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
+            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -374,13 +374,13 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
         if (fenceObject == NULL)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -397,7 +397,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
                     Error error = fenceObject->test(&status);
                     if (error.isError())
                     {
-                        context->recordError(error);
+                        context->handleError(error);
                         return;
                     }
                 }
@@ -413,7 +413,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
           default:
             {
-                context->recordError(Error(GL_INVALID_ENUM));
+                context->handleError(Error(GL_INVALID_ENUM));
                 return;
             }
         }
@@ -444,7 +444,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, 
     {
         if (bufsize < 0)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
+            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -452,7 +452,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, 
 
         if (!shaderObject)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -561,7 +561,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
         Error error = renderbuffer->setStorageMultisample(samples, internalformat, width, height);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -576,7 +576,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
     {
         if (condition != GL_ALL_COMPLETED_NV)
         {
-            context->recordError(Error(GL_INVALID_ENUM));
+            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
@@ -584,14 +584,14 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
 
         if (fenceObject == NULL)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
         Error error = fenceObject->set(condition);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -608,13 +608,13 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
 
         if (fenceObject == NULL)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return GL_TRUE;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return GL_TRUE;
         }
 
@@ -622,7 +622,7 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
         Error error = fenceObject->test(&result);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return GL_TRUE;
         }
 
@@ -642,7 +642,7 @@ void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
     {
         if (!context->getExtensions().textureStorage)
         {
-            context->recordError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
@@ -664,7 +664,7 @@ void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
         Error error = texture->setStorage(target, levels, internalformat, size);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -679,7 +679,7 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     {
         if (index >= MAX_VERTEX_ATTRIBS)
         {
-            context->recordError(Error(GL_INVALID_VALUE));
+            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
@@ -689,7 +689,7 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
             {
                 const char *errorMessage = "The current context doesn't support setting a non-zero divisor on the attribute with index zero. "
                                            "Please reorder the attributes in your vertex shader so that attribute zero can have a zero divisor.";
-                context->recordError(Error(GL_INVALID_OPERATION, errorMessage));
+                context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
 
                 // We also output an error message to the debugger window if tracing is active, so that developers can see the error message.
                 ERR("%s", errorMessage);
@@ -772,7 +772,7 @@ void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
         Error error = programObject->saveBinary(binaryFormat, binary, bufSize, length);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -797,7 +797,7 @@ void GL_APIENTRY ProgramBinaryOES(GLuint program, GLenum binaryFormat, const voi
         Error error = programObject->loadBinary(binaryFormat, binary, length);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -921,7 +921,7 @@ void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *marker)
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
             return;
         }
 
@@ -946,7 +946,7 @@ void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker)
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
             return;
         }
 
@@ -980,7 +980,7 @@ void GL_APIENTRY PopGroupMarkerEXT()
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->recordError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
             return;
         }
 
@@ -1006,7 +1006,7 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglIma
         Error error = texture->setEGLImageTarget(target, imageObject);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }
@@ -1031,7 +1031,7 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
         Error error = renderbuffer->setStorageEGLImageTarget(imageObject);
         if (error.isError())
         {
-            context->recordError(error);
+            context->handleError(error);
             return;
         }
     }

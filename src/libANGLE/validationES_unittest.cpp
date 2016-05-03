@@ -38,7 +38,7 @@ class MockValidationContext : public ValidationContext
                           const Limitations &limitations,
                           bool skipValidation);
 
-    MOCK_METHOD1(recordError, void(const Error &));
+    MOCK_METHOD1(handleError, void(const Error &));
 };
 
 MockValidationContext::MockValidationContext(GLint clientVersion,
@@ -110,7 +110,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);
-    EXPECT_CALL(testContext, recordError(expectedError)).Times(1);
+    EXPECT_CALL(testContext, handleError(expectedError)).Times(1);
 
     // Call once with maximum index, and once with an excessive index.
     GLuint indexData[] = {0, 1, static_cast<GLuint>(caps.maxElementIndex - 1),

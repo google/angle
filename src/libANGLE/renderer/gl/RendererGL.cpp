@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FenceSyncGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
@@ -260,6 +261,11 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+ContextImpl *RendererGL::createContext()
+{
+    return new ContextGL;
 }
 
 CompilerImpl *RendererGL::createCompiler()

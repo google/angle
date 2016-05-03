@@ -62,6 +62,7 @@ class NullFactory : public ImplFactory
 class MockFactory : public ImplFactory
 {
   public:
+    MOCK_METHOD0(createContext, ContextImpl *());
     MOCK_METHOD0(createCompiler, CompilerImpl *());
     MOCK_METHOD1(createShader, ShaderImpl *(const gl::ShaderState &));
     MOCK_METHOD1(createProgram, ProgramImpl *(const gl::ProgramState &));

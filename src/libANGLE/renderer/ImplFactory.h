@@ -19,6 +19,7 @@ namespace rx
 {
 class BufferImpl;
 class CompilerImpl;
+class ContextImpl;
 class FenceNVImpl;
 class FenceSyncImpl;
 class FramebufferImpl;
@@ -36,6 +37,9 @@ class ImplFactory : angle::NonCopyable
   public:
     ImplFactory() {}
     virtual ~ImplFactory() {}
+
+    // Context creation
+    virtual ContextImpl *createContext() = 0;
 
     // Shader creation
     virtual CompilerImpl *createCompiler() = 0;

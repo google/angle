@@ -26,6 +26,7 @@
 
 namespace rx
 {
+class ContextImpl;
 class Renderer;
 }
 
@@ -388,7 +389,7 @@ class Context final : public ValidationContext
 
     void bindUniformLocation(GLuint program, GLint location, const GLchar *name);
 
-    void recordError(const Error &error) override;
+    void handleError(const Error &error) override;
 
     GLenum getError();
     GLenum getResetStatus();
@@ -431,6 +432,8 @@ class Context final : public ValidationContext
     void initExtensionStrings();
 
     void initCaps(GLuint clientVersion);
+
+    std::unique_ptr<rx::ContextImpl> mImplementation;
 
     // Caps to use for validation
     Caps mCaps;

@@ -90,6 +90,8 @@ class Renderer9 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
+    ContextImpl *createContext() override;
+
     CompilerImpl *createCompiler() override;
 
     gl::Error allocateEventQuery(IDirect3DQuery9 **outQuery);
