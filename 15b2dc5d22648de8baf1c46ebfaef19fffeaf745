@@ -22,6 +22,30 @@
       "revId": "15b2dc5d22648de8baf1c46ebfaef19fffeaf745",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edcfd345_ac1da3ae",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-03T19:27:14Z",
+      "side": 1,
+      "message": "Agreed, will work on this in upcoming CLs.",
+      "parentUuid": "a8aea9f7_a1862873",
+      "range": {
+        "startLine": 147,
+        "startChar": 16,
+        "endLine": 147,
+        "endChar": 40
+      },
+      "revId": "15b2dc5d22648de8baf1c46ebfaef19fffeaf745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
