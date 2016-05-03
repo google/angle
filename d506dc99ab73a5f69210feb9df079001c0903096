@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d3fc7e9_7de9f78e",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 22
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-05-03T19:52:08Z",
+      "side": 1,
+      "message": "That\u0027s done in common_defines.gypi",
+      "parentUuid": "0d3fc7e9_ddd64b02",
+      "range": {
+        "startLine": 787,
+        "startChar": 33,
+        "endLine": 787,
+        "endChar": 48
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0df7c748_51a4a418",
         "filename": "util/ozone/OzoneWindow.h",
         "patchSetId": 22
@@ -36,6 +60,30 @@
       "writtenOn": "2016-05-03T19:43:51Z",
       "side": 1,
       "message": "Can we put this class in include/ozone, or somewhere, so that both OzoneWindow and DisplayOzone will include it?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d3fc7e9_bd87ffc6",
+        "filename": "util/ozone/OzoneWindow.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-05-03T19:52:08Z",
+      "side": 1,
+      "message": "It looked to me like nothing was shared by src/ and util/ directories.  Jamie/Geoff: can I do this?",
+      "parentUuid": "0df7c748_51a4a418",
       "range": {
         "startLine": 38,
         "startChar": 0,
