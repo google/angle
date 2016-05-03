@@ -14,11 +14,12 @@
 
 namespace rx
 {
+class RendererVk;
 
 class ContextVk : public ContextImpl
 {
   public:
-    ContextVk(const gl::ContextState &state);
+    ContextVk(const gl::ContextState &state, RendererVk *renderer);
     ~ContextVk() override;
 
     gl::Error initialize() override;
@@ -86,11 +87,11 @@ class ContextVk : public ContextImpl
 
     // Shader creation
     CompilerImpl *createCompiler() override;
-    ShaderImpl *createShader(const gl::ShaderState &data) override;
-    ProgramImpl *createProgram(const gl::ProgramState &data) override;
+    ShaderImpl *createShader(const gl::ShaderState &state) override;
+    ProgramImpl *createProgram(const gl::ProgramState &state) override;
 
     // Framebuffer creation
-    FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) override;
+    FramebufferImpl *createFramebuffer(const gl::FramebufferState &state) override;
 
     // Texture creation
     TextureImpl *createTexture(const gl::TextureState &state) override;
@@ -102,7 +103,7 @@ class ContextVk : public ContextImpl
     BufferImpl *createBuffer() override;
 
     // Vertex Array creation
-    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
+    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &state) override;
 
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override;
@@ -114,6 +115,9 @@ class ContextVk : public ContextImpl
 
     // Sampler object creation
     SamplerImpl *createSampler() override;
+
+  private:
+    RendererVk *mRenderer;
 };
 
 }  // namespace rx

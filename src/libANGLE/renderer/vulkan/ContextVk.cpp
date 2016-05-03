@@ -10,11 +10,29 @@
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/vulkan/BufferVk.h"
+#include "libANGLE/renderer/vulkan/CompilerVk.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/DeviceVk.h"
+#include "libANGLE/renderer/vulkan/FenceNVVk.h"
+#include "libANGLE/renderer/vulkan/FenceSyncVk.h"
+#include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/ImageVk.h"
+#include "libANGLE/renderer/vulkan/ProgramVk.h"
+#include "libANGLE/renderer/vulkan/QueryVk.h"
+#include "libANGLE/renderer/vulkan/RenderbufferVk.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/SamplerVk.h"
+#include "libANGLE/renderer/vulkan/ShaderVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
+#include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
+#include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
 namespace rx
 {
 
-ContextVk::ContextVk(const gl::ContextState &state) : ContextImpl(state)
+ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
+    : ContextImpl(state), mRenderer(renderer)
 {
 }
 
@@ -162,108 +180,87 @@ void ContextVk::onMakeCurrent(const gl::ContextState &data)
 
 const gl::Caps &ContextVk::getNativeCaps() const
 {
-    UNIMPLEMENTED();
-    static gl::Caps local;
-    return local;
+    return mRenderer->getNativeCaps();
 }
 
 const gl::TextureCapsMap &ContextVk::getNativeTextureCaps() const
 {
-    UNIMPLEMENTED();
-    static gl::TextureCapsMap local;
-    return local;
+    return mRenderer->getNativeTextureCaps();
 }
 
 const gl::Extensions &ContextVk::getNativeExtensions() const
 {
-    UNIMPLEMENTED();
-    static gl::Extensions local;
-    return local;
+    return mRenderer->getNativeExtensions();
 }
 
 const gl::Limitations &ContextVk::getNativeLimitations() const
 {
-    UNIMPLEMENTED();
-    static gl::Limitations local;
-    return local;
+    return mRenderer->getNativeLimitations();
 }
 
 CompilerImpl *ContextVk::createCompiler()
 {
-    UNIMPLEMENTED();
-    return static_cast<CompilerImpl *>(0);
+    return new CompilerVk();
 }
 
-ShaderImpl *ContextVk::createShader(const gl::ShaderState &data)
+ShaderImpl *ContextVk::createShader(const gl::ShaderState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<ShaderImpl *>(0);
+    return new ShaderVk(state);
 }
 
-ProgramImpl *ContextVk::createProgram(const gl::ProgramState &data)
+ProgramImpl *ContextVk::createProgram(const gl::ProgramState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<ProgramImpl *>(0);
+    return new ProgramVk(state);
 }
 
-FramebufferImpl *ContextVk::createFramebuffer(const gl::FramebufferState &data)
+FramebufferImpl *ContextVk::createFramebuffer(const gl::FramebufferState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<FramebufferImpl *>(0);
+    return new FramebufferVk(state);
 }
 
 TextureImpl *ContextVk::createTexture(const gl::TextureState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<TextureImpl *>(0);
+    return new TextureVk(state);
 }
 
 RenderbufferImpl *ContextVk::createRenderbuffer()
 {
-    UNIMPLEMENTED();
-    return static_cast<RenderbufferImpl *>(0);
+    return new RenderbufferVk();
 }
 
 BufferImpl *ContextVk::createBuffer()
 {
-    UNIMPLEMENTED();
-    return static_cast<BufferImpl *>(0);
+    return new BufferVk();
 }
 
-VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &data)
+VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<VertexArrayImpl *>(0);
+    return new VertexArrayVk(state);
 }
 
 QueryImpl *ContextVk::createQuery(GLenum type)
 {
-    UNIMPLEMENTED();
-    return static_cast<QueryImpl *>(0);
+    return new QueryVk(type);
 }
 
 FenceNVImpl *ContextVk::createFenceNV()
 {
-    UNIMPLEMENTED();
-    return static_cast<FenceNVImpl *>(0);
+    return new FenceNVVk();
 }
 
 FenceSyncImpl *ContextVk::createFenceSync()
 {
-    UNIMPLEMENTED();
-    return static_cast<FenceSyncImpl *>(0);
+    return new FenceSyncVk();
 }
 
 TransformFeedbackImpl *ContextVk::createTransformFeedback()
 {
-    UNIMPLEMENTED();
-    return static_cast<TransformFeedbackImpl *>(0);
+    return new TransformFeedbackVk();
 }
 
 SamplerImpl *ContextVk::createSampler()
 {
-    UNIMPLEMENTED();
-    return static_cast<SamplerImpl *>(0);
+    return new SamplerVk();
 }
 
 }  // namespace rx

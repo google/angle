@@ -10,11 +10,12 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
 
 namespace rx
 {
 
-DisplayVk::DisplayVk() : DisplayImpl()
+DisplayVk::DisplayVk() : DisplayImpl(), mRenderer(nullptr)
 {
 }
 
@@ -142,8 +143,7 @@ ImageImpl *DisplayVk::createImage(EGLenum target,
 
 ContextImpl *DisplayVk::createContext(const gl::ContextState &state)
 {
-    UNIMPLEMENTED();
-    return static_cast<ContextImpl *>(0);
+    return new ContextVk(state, mRenderer);
 }
 
 StreamProducerImpl *DisplayVk::createStreamProducerD3DTextureNV12(

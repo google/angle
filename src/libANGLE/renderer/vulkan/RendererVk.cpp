@@ -14,12 +14,53 @@
 namespace rx
 {
 
-RendererVk::RendererVk()
+RendererVk::RendererVk() : mCapsInitialized(false)
 {
 }
 
 RendererVk::~RendererVk()
 {
+}
+
+void RendererVk::ensureCapsInitialized() const
+{
+    if (!mCapsInitialized)
+    {
+        generateCaps(&mNativeCaps, &mNativeTextureCaps, &mNativeExtensions, &mNativeLimitations);
+        mCapsInitialized = true;
+    }
+}
+
+void RendererVk::generateCaps(gl::Caps * /*outCaps*/,
+                              gl::TextureCapsMap * /*outTextureCaps*/,
+                              gl::Extensions * /*outExtensions*/,
+                              gl::Limitations * /* outLimitations */) const
+{
+    // TODO(jmadill): Caps
+}
+
+const gl::Caps &RendererVk::getNativeCaps() const
+{
+    ensureCapsInitialized();
+    return mNativeCaps;
+}
+
+const gl::TextureCapsMap &RendererVk::getNativeTextureCaps() const
+{
+    ensureCapsInitialized();
+    return mNativeTextureCaps;
+}
+
+const gl::Extensions &RendererVk::getNativeExtensions() const
+{
+    ensureCapsInitialized();
+    return mNativeExtensions;
+}
+
+const gl::Limitations &RendererVk::getNativeLimitations() const
+{
+    ensureCapsInitialized();
+    return mNativeLimitations;
 }
 
 }  // namespace rx
