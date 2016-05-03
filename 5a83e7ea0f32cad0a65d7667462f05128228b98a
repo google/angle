@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "edcfd345_ec23abf4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-03T19:27:07Z",
+      "side": 1,
+      "message": "Agreed - I actually went and renamed recordError to handleError to indicate that we might call with NoError, and removed tryImpl.",
+      "parentUuid": "a8aea9f7_c1940cfa",
+      "revId": "5a83e7ea0f32cad0a65d7667462f05128228b98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8aea9f7_e1a3105e",
         "filename": "src/libANGLE/renderer/ImplFactory.h",
         "patchSetId": 6
@@ -48,6 +66,30 @@
       "writtenOn": "2016-05-02T19:46:54Z",
       "side": 1,
       "message": "I think this should be created by the DisplayImpl.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 45
+      },
+      "revId": "5a83e7ea0f32cad0a65d7667462f05128228b98a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d7c27a3_7893dd60",
+        "filename": "src/libANGLE/renderer/ImplFactory.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-03T19:27:07Z",
+      "side": 1,
+      "message": "Agree, I will fix this with the ContextImpl/Renderer refactor.",
+      "parentUuid": "a8aea9f7_e1a3105e",
       "range": {
         "startLine": 42,
         "startChar": 0,
