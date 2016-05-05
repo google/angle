@@ -191,7 +191,7 @@ Error Stream::consumerAcquire()
     {
         if (mPlanes[i].texture != nullptr)
         {
-            mPlanes[0].texture->acquireImageFromStream(
+            mPlanes[i].texture->acquireImageFromStream(
                 mProducerImplementation->getGLFrameDescription(i));
         }
     }
