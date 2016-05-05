@@ -224,9 +224,9 @@ config("libANGLE_config") {
   }
   if (angle_enable_gl) {
     defines += [ "ANGLE_ENABLE_OPENGL" ]
-  }
-  if (use_x11) {
-    defines += [ "ANGLE_USE_X11" ]
+    if (use_x11) {
+      defines += [ "ANGLE_USE_X11" ]
+    }
   }
   defines += [
     "GL_GLEXT_PROTOTYPES",
