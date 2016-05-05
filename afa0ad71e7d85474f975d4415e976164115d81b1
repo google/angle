@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed5193a9_a55544ec",
+        "filename": "build/angle_common.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-05-05T19:20:20Z",
+      "side": 1,
+      "message": "I am not sure if this has the same meaning in GN as in GYP. Is it possible to have both is_linux and is_chromeos?\nI thought in GYP chromeos\u003d1 was just a flag, but in GN is_chromeos means that we are really doing a build for ChromeOS, which is mutually exclusive with is_linux.",
+      "range": {
+        "startLine": 19,
+        "startChar": 28,
+        "endLine": 19,
+        "endChar": 39
+      },
+      "revId": "afa0ad71e7d85474f975d4415e976164115d81b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
