@@ -22,6 +22,30 @@
       "revId": "afa0ad71e7d85474f975d4415e976164115d81b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed5193a9_059f58c4",
+        "filename": "build/angle_common.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000191
+      },
+      "writtenOn": "2016-05-05T19:26:18Z",
+      "side": 1,
+      "message": "Yes it is. is_linux is true for chromeos, which is the problem.",
+      "parentUuid": "ed5193a9_a55544ec",
+      "range": {
+        "startLine": 19,
+        "startChar": 28,
+        "endLine": 19,
+        "endChar": 39
+      },
+      "revId": "afa0ad71e7d85474f975d4415e976164115d81b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
