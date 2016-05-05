@@ -1039,6 +1039,13 @@
                     '_XOPEN_SOURCE=600',
                 ],
             }],
+            ['use_ozone==1',
+            {
+                'deqp_defines':
+                [
+                    'ANGLE_USE_OZONE',
+                ],
+            }],
         ],
     },
     'conditions':
