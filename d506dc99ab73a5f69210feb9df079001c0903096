@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "ad7cfb57_62b8d63a",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T21:02:16Z",
+      "side": 1,
+      "message": "I suggest you use ANGLEPlatformCurrernt::logInfo for this and ensure that implementation logs to your liking in debug builds. I would prefer if we don\u0027t have #if 0 type stuff committed.",
+      "range": {
+        "startLine": 588,
+        "startChar": 0,
+        "endLine": 595,
+        "endChar": 6
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0df7c748_630a367b",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T21:02:16Z",
+      "side": 1,
+      "message": "micro-nit: this should be LIBANGLE_RENDERER_GL_EGL_OZONE_DISPLAYOZONE_H_ with the \"egl\" making the full path",
+      "range": {
+        "startLine": 9,
+        "startChar": 8,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7cfb57_c29e02c7",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T21:02:16Z",
+      "side": 1,
+      "message": "nit: final/noncopyable",
+      "range": {
+        "startLine": 58,
+        "startChar": 10,
+        "endLine": 58,
+        "endChar": 16
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7cfb57_e2a30610",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T21:02:16Z",
+      "side": 1,
+      "message": "nit: CAPS the values for enums",
+      "range": {
+        "startLine": 174,
+        "startChar": 15,
+        "endLine": 174,
+        "endChar": 26
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d3fc7e9_ddd64b02",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 22
@@ -84,6 +176,30 @@
       "side": 1,
       "message": "It looked to me like nothing was shared by src/ and util/ directories.  Jamie/Geoff: can I do this?",
       "parentUuid": "0df7c748_51a4a418",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "d506dc99ab73a5f69210feb9df079001c0903096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7cfb57_82607ac1",
+        "filename": "util/ozone/OzoneWindow.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T21:02:16Z",
+      "side": 1,
+      "message": "We don\u0027t currently have a great place for it. We have /common, but we don\u0027t really have platform-specific stuff there. I\u0027m fine with a bit of code duplication here for now.",
+      "parentUuid": "0d3fc7e9_bd87ffc6",
       "range": {
         "startLine": 38,
         "startChar": 0,
