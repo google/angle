@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d8cc387_30e3c846",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T01:26:22Z",
+      "side": 1,
+      "message": "this angle-gl display should correspond to OpenGL -- we should make an angle-gles for the ES back-end, and possibly also we can also add a \u0027default\u0027 for the default display. If this becomes a problem with initializing, we should probably detect which platforms are available before advertising, or somehow print an error message gracefully.",
+      "range": {
+        "startLine": 79,
+        "startChar": 24,
+        "endLine": 79,
+        "endChar": 61
+      },
+      "revId": "7be7cd3fe51430b95d1d92504adaabff8f37a94e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
