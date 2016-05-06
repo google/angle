@@ -71,7 +71,7 @@ class RendererGL : public Renderer
     FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) override;
 
     // Texture creation
-    TextureImpl *createTexture(GLenum target) override;
+    TextureImpl *createTexture(const gl::TextureState &state) override;
 
     // Renderbuffer creation
     RenderbufferImpl *createRenderbuffer() override;

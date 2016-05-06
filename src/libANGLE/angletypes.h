@@ -215,33 +215,6 @@ struct SamplerState
 bool operator==(const SamplerState &a, const SamplerState &b);
 bool operator!=(const SamplerState &a, const SamplerState &b);
 
-// State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
-struct TextureState
-{
-    TextureState();
-
-    GLenum swizzleRed;
-    GLenum swizzleGreen;
-    GLenum swizzleBlue;
-    GLenum swizzleAlpha;
-
-    SamplerState samplerState;
-
-    GLuint baseLevel;
-    GLuint maxLevel;
-
-    bool immutableFormat;
-    GLuint immutableLevels;
-
-    // From GL_ANGLE_texture_usage
-    GLenum usage;
-
-    bool swizzleRequired() const;
-};
-
-bool operator==(const TextureState &a, const TextureState &b);
-bool operator!=(const TextureState &a, const TextureState &b);
-
 struct PixelUnpackState
 {
     BindingPointer<Buffer> pixelBuffer;

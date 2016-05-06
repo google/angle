@@ -15,6 +15,8 @@
 using namespace rx;
 using namespace gl;
 
+using ::testing::_;
+
 namespace
 {
 
@@ -37,7 +39,7 @@ class ResourceManagerTest : public testing::Test
 
 TEST_F(ResourceManagerTest, ReallocateBoundTexture)
 {
-    EXPECT_CALL(mMockFactory, createTexture(GL_TEXTURE_2D)).Times(1).RetiresOnSaturation();
+    EXPECT_CALL(mMockFactory, createTexture(_)).Times(1).RetiresOnSaturation();
 
     mResourceManager->checkTextureAllocation(1, GL_TEXTURE_2D);
     GLuint newTexture = mResourceManager->createTexture();

@@ -42,6 +42,38 @@ class Framebuffer;
 
 bool IsMipmapFiltered(const SamplerState &samplerState);
 
+// State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
+struct TextureState final : public angle::NonCopyable
+{
+    TextureState(GLenum target);
+
+    bool swizzleRequired() const;
+    GLuint getEffectiveBaseLevel() const;
+
+    // TODO(jmadill): Make the data members here private.
+
+    const GLenum target;
+
+    GLenum swizzleRed;
+    GLenum swizzleGreen;
+    GLenum swizzleBlue;
+    GLenum swizzleAlpha;
+
+    SamplerState samplerState;
+
+    GLuint baseLevel;
+    GLuint maxLevel;
+
+    bool immutableFormat;
+    GLuint immutableLevels;
+
+    // From GL_ANGLE_texture_usage
+    GLenum usage;
+};
+
+bool operator==(const TextureState &a, const TextureState &b);
+bool operator!=(const TextureState &a, const TextureState &b);
+
 class Texture final : public egl::ImageSibling,
                       public FramebufferAttachmentObject,
                       public LabeledObject
@@ -101,8 +133,6 @@ class Texture final : public egl::ImageSibling,
 
     void setBaseLevel(GLuint baseLevel);
     GLuint getBaseLevel() const;
-    // Returns base level after clamping required for immutable textures.
-    GLuint getEffectiveBaseLevel() const;
 
     void setMaxLevel(GLuint maxLevel);
     GLuint getMaxLevel() const;
@@ -204,14 +234,10 @@ class Texture final : public egl::ImageSibling,
     void acquireImageFromStream(const egl::Stream::GLTextureDescription &desc);
     void releaseImageFromStream();
 
+    TextureState mState;
     rx::TextureImpl *mTexture;
 
     std::string mLabel;
-
-    TextureState mTextureState;
-    GLuint mEffectiveBaseLevel;
-
-    GLenum mTarget;
 
     struct ImageDesc
     {
@@ -235,8 +261,6 @@ class Texture final : public egl::ImageSibling,
     void clearImageDesc(GLenum target, size_t level);
     void clearImageDescs();
     void releaseTexImageInternal();
-
-    void updateEffectiveBaseLevel();
 
     std::vector<ImageDesc> mImageDescs;
 
@@ -262,6 +286,19 @@ class Texture final : public egl::ImageSibling,
     egl::Stream *mBoundStream;
 };
 
+inline bool operator==(const TextureState &a, const TextureState &b)
+{
+    return a.swizzleRed == b.swizzleRed && a.swizzleGreen == b.swizzleGreen &&
+           a.swizzleBlue == b.swizzleBlue && a.swizzleAlpha == b.swizzleAlpha &&
+           a.samplerState == b.samplerState && a.baseLevel == b.baseLevel &&
+           a.maxLevel == b.maxLevel && a.immutableFormat == b.immutableFormat &&
+           a.immutableLevels == b.immutableLevels && a.usage == b.usage;
+}
+
+inline bool operator!=(const TextureState &a, const TextureState &b)
+{
+    return !(a == b);
+}
 }
 
 #endif   // LIBANGLE_TEXTURE_H_

@@ -1296,15 +1296,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 
         TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
 
-        // Make sure to add the level offset for our tiny compressed texture workaround
-        gl::TextureState textureState = texture->getTextureState();
-        textureState.baseLevel        = texture->getEffectiveBaseLevel() + storage11->getTopLevel();
-
-        error = storage11->getSRV(textureState, &textureSRV);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(storage11->getSRV(texture->getTextureState(), &textureSRV));
 
         // If we get NULL back from getSRV here, something went wrong in the texture class and we're unexpectedly
         // missing the shader resource view
@@ -2413,7 +2405,7 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
 
 void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
 {
-    unsigned int baseLevel = texture.getEffectiveBaseLevel();
+    unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
     GLenum internalFormat = texture.getInternalFormat(texture.getTarget(), baseLevel);
     if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
     {
@@ -3733,18 +3725,22 @@ TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat, b
     return new TextureStorage11_2DArray(this, internalformat, renderTarget, width, height, depth, levels);
 }
 
-TextureImpl *Renderer11::createTexture(GLenum target)
+TextureImpl *Renderer11::createTexture(const gl::TextureState &state)
 {
-    switch(target)
+    switch (state.target)
     {
-      case GL_TEXTURE_2D: return new TextureD3D_2D(this);
-      case GL_TEXTURE_CUBE_MAP: return new TextureD3D_Cube(this);
-      case GL_TEXTURE_3D: return new TextureD3D_3D(this);
-      case GL_TEXTURE_2D_ARRAY: return new TextureD3D_2DArray(this);
-      case GL_TEXTURE_EXTERNAL_OES:
-          return new TextureD3D_External(this);
-      default:
-        UNREACHABLE();
+        case GL_TEXTURE_2D:
+            return new TextureD3D_2D(state, this);
+        case GL_TEXTURE_CUBE_MAP:
+            return new TextureD3D_Cube(state, this);
+        case GL_TEXTURE_3D:
+            return new TextureD3D_3D(state, this);
+        case GL_TEXTURE_2D_ARRAY:
+            return new TextureD3D_2DArray(state, this);
+        case GL_TEXTURE_EXTERNAL_OES:
+            return new TextureD3D_External(state, this);
+        default:
+            UNREACHABLE();
     }
 
     return NULL;

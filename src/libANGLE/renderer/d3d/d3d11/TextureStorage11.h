@@ -94,6 +94,7 @@ class TextureStorage11 : public TextureStorage
     virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) = 0;
     gl::Error getSRVLevel(int mipLevel, bool blitSRV, ID3D11ShaderResourceView **outSRV);
 
+    // The baseLevel parameter should *not* have mTopLevel applied.
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const = 0;
 
@@ -138,11 +139,13 @@ class TextureStorage11 : public TextureStorage
 
         bool operator<(const SRVKey &rhs) const;
 
-        int baseLevel;
+        int baseLevel;  // Without mTopLevel applied.
         int mipLevels;
         bool swizzle;
     };
     typedef std::map<SRVKey, ID3D11ShaderResourceView *> SRVCache;
+
+    gl::Error getCachedOrCreateSRV(const SRVKey &key, ID3D11ShaderResourceView **outSRV);
 
     SRVCache mSrvCache;
     std::array<ID3D11ShaderResourceView *, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mLevelSRVs;

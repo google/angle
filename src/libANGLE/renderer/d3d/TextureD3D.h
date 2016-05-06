@@ -30,7 +30,7 @@ class TextureStorage;
 class TextureD3D : public TextureImpl
 {
   public:
-    TextureD3D(RendererD3D *renderer);
+    TextureD3D(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D();
 
     gl::Error getNativeTexture(TextureStorage **outStorage);
@@ -61,7 +61,7 @@ class TextureD3D : public TextureImpl
     virtual gl::Error setImageExternal(GLenum target,
                                        egl::Stream *stream,
                                        const egl::Stream::GLTextureDescription &desc) override;
-    gl::Error generateMipmaps(const gl::TextureState &textureState) override;
+    gl::Error generateMipmaps() override;
     TextureStorage *getStorage();
     ImageD3D *getBaseLevelImage() const;
 
@@ -135,7 +135,7 @@ class TextureD3D : public TextureImpl
 class TextureD3D_2D : public TextureD3D
 {
   public:
-    TextureD3D_2D(RendererD3D *renderer);
+    TextureD3D_2D(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_2D();
 
     virtual ImageD3D *getImage(int level, int layer) const;
@@ -204,7 +204,7 @@ class TextureD3D_2D : public TextureD3D
 class TextureD3D_Cube : public TextureD3D
 {
   public:
-    TextureD3D_Cube(RendererD3D *renderer);
+    TextureD3D_Cube(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_Cube();
 
     virtual ImageD3D *getImage(int level, int layer) const;
@@ -271,7 +271,7 @@ class TextureD3D_Cube : public TextureD3D
 class TextureD3D_3D : public TextureD3D
 {
   public:
-    TextureD3D_3D(RendererD3D *renderer);
+    TextureD3D_3D(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_3D();
 
     virtual ImageD3D *getImage(int level, int layer) const;
@@ -337,7 +337,7 @@ class TextureD3D_3D : public TextureD3D
 class TextureD3D_2DArray : public TextureD3D
 {
   public:
-    TextureD3D_2DArray(RendererD3D *renderer);
+    TextureD3D_2DArray(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_2DArray();
 
     virtual ImageD3D *getImage(int level, int layer) const;
@@ -407,7 +407,7 @@ class TextureD3D_2DArray : public TextureD3D
 class TextureD3D_External : public TextureD3D
 {
   public:
-    TextureD3D_External(RendererD3D *renderer);
+    TextureD3D_External(const gl::TextureState &data, RendererD3D *renderer);
     ~TextureD3D_External() override;
 
     ImageD3D *getImage(const gl::ImageIndex &index) const override;

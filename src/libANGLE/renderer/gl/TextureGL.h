@@ -11,6 +11,7 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/TextureImpl.h"
+#include "libANGLE/Texture.h"
 
 namespace rx
 {
@@ -51,7 +52,7 @@ struct LevelInfoGL
 class TextureGL : public TextureImpl
 {
   public:
-    TextureGL(GLenum type,
+    TextureGL(const gl::TextureState &state,
               const FunctionsGL *functions,
               const WorkaroundsGL &workarounds,
               StateManagerGL *stateManager,
@@ -81,16 +82,14 @@ class TextureGL : public TextureImpl
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
-    gl::Error generateMipmaps(const gl::TextureState &textureState) override;
+    gl::Error generateMipmaps() override;
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
 
     gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
-    void syncState(size_t textureUnit,
-                   const gl::TextureState &textureState,
-                   const GLuint effectiveBaseLevel) const;
+    void syncState(size_t textureUnit) const;
     GLuint getTextureID() const;
 
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
@@ -102,8 +101,6 @@ class TextureGL : public TextureImpl
     void setBaseLevel(GLuint) override {}
 
   private:
-    GLenum mTextureType;
-
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;

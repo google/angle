@@ -75,8 +75,9 @@ bool IsRenderTargetUsage(GLenum usage)
 
 }
 
-TextureD3D::TextureD3D(RendererD3D *renderer)
-    : mRenderer(renderer),
+TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureImpl(state),
+      mRenderer(renderer),
       mUsage(GL_NONE),
       mDirtyImages(true),
       mImmutable(false),
@@ -404,7 +405,7 @@ gl::Error TextureD3D::setImageExternal(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D::generateMipmaps(const gl::TextureState &textureState)
+gl::Error TextureD3D::generateMipmaps()
 {
     GLint mipCount = mipLevels();
 
@@ -442,7 +443,7 @@ gl::Error TextureD3D::generateMipmaps(const gl::TextureState &textureState)
         }
 
         // Generate the mipmap chain using the ad-hoc DirectX function.
-        error = mRenderer->generateMipmapsUsingD3D(mTexStorage, textureState);
+        error = mRenderer->generateMipmapsUsingD3D(mTexStorage, mState);
         if (error.isError())
         {
             return error;
@@ -663,8 +664,8 @@ void TextureD3D::setBaseLevel(GLuint baseLevel)
     }
 }
 
-TextureD3D_2D::TextureD3D_2D(RendererD3D *renderer)
-    : TextureD3D(renderer)
+TextureD3D_2D::TextureD3D_2D(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer)
 {
     mEGLImageTarget = false;
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
@@ -1344,8 +1345,8 @@ void TextureD3D_2D::markAllImagesDirty()
     mDirtyImages = true;
 }
 
-TextureD3D_Cube::TextureD3D_Cube(RendererD3D *renderer)
-    : TextureD3D(renderer)
+TextureD3D_Cube::TextureD3D_Cube(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer)
 {
     for (int i = 0; i < 6; i++)
     {
@@ -1936,8 +1937,8 @@ void TextureD3D_Cube::markAllImagesDirty()
     mDirtyImages = true;
 }
 
-TextureD3D_3D::TextureD3D_3D(RendererD3D *renderer)
-    : TextureD3D(renderer)
+TextureD3D_3D::TextureD3D_3D(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer)
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
@@ -2522,8 +2523,8 @@ GLint TextureD3D_3D::getLevelZeroDepth() const
     return getBaseLevelDepth() << getBaseLevel();
 }
 
-TextureD3D_2DArray::TextureD3D_2DArray(RendererD3D *renderer)
-    : TextureD3D(renderer)
+TextureD3D_2DArray::TextureD3D_2DArray(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer)
 {
     for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
     {
@@ -3170,7 +3171,8 @@ void TextureD3D_2DArray::markAllImagesDirty()
     mDirtyImages = true;
 }
 
-TextureD3D_External::TextureD3D_External(RendererD3D *renderer) : TextureD3D(renderer)
+TextureD3D_External::TextureD3D_External(const gl::TextureState &state, RendererD3D *renderer)
+    : TextureD3D(state, renderer)
 {
     mImage = renderer->createImage();
 }

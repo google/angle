@@ -19,6 +19,7 @@ namespace rx
 class MockTextureImpl : public TextureImpl
 {
   public:
+    MockTextureImpl() : TextureImpl(gl::TextureState(GL_TEXTURE_2D)) {}
     virtual ~MockTextureImpl() { destructor(); }
     MOCK_METHOD1(setUsage, void(GLenum));
     MOCK_METHOD8(setImage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
@@ -31,7 +32,7 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD3(setImageExternal,
                  gl::Error(GLenum, egl::Stream *, const egl::Stream::GLTextureDescription &));
     MOCK_METHOD2(setEGLImageTarget, gl::Error(GLenum, egl::Image *));
-    MOCK_METHOD1(generateMipmaps, gl::Error(const gl::TextureState &));
+    MOCK_METHOD0(generateMipmaps, gl::Error());
     MOCK_METHOD1(bindTexImage, void(egl::Surface *));
     MOCK_METHOD0(releaseTexImage, void(void));
 
