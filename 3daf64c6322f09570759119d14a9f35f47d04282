@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ad7cfb57_a2749e8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Query11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T20:55:05Z",
+      "side": 1,
+      "message": "I think this is a valid point, we might want to make this an ASSERT rather than a check",
+      "parentUuid": "88e9e5fc_934bb71b",
+      "range": {
+        "startLine": 387,
+        "startChar": 0,
+        "endLine": 387,
+        "endChar": 84
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88e9e5fc_d357ffb8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 3
@@ -48,6 +72,29 @@
     },
     {
       "key": {
+        "uuid": "ad7cfb57_02746a88",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T20:55:05Z",
+      "side": 1,
+      "message": "this will pass this on to the native GL? I don\u0027t quite understand. Don\u0027t we have to emulate this as a Fence?",
+      "range": {
+        "startLine": 32,
+        "startChar": 36,
+        "endLine": 32,
+        "endChar": 66
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88e9e5fc_53030fa9",
         "filename": "src/tests/gl_tests/SyncQueriesTest.cpp",
         "patchSetId": 3
@@ -64,6 +111,29 @@
         "startChar": 0,
         "endLine": 30,
         "endChar": 30
+      },
+      "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad7cfb57_c279a284",
+        "filename": "src/tests/gl_tests/SyncQueriesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-06T20:55:05Z",
+      "side": 1,
+      "message": "make query a part of the fixture, so it\u0027ll get auto-freed in the teardown if nonzero",
+      "range": {
+        "startLine": 54,
+        "startChar": 27,
+        "endLine": 54,
+        "endChar": 32
       },
       "revId": "3daf64c6322f09570759119d14a9f35f47d04282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
