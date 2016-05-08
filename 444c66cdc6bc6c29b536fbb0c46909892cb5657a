@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32c6ac31_ee9ddf66",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-08T08:43:24Z",
+      "side": 1,
+      "message": "nit ependencies -\u003e dependencies",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2a3907e_438de63b",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-08T08:43:24Z",
+      "side": 1,
+      "message": "nit: (nothing) wnat -\u003e not want",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2cfb445_acbe03bb",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-08T08:43:24Z",
+      "side": 1,
+      "message": "nit: This would be better as an or, if such a thing is supported by the DEPS files.",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
