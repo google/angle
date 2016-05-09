@@ -657,6 +657,12 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
             QueryQueryValue(functions, GL_TIMESTAMP, GL_QUERY_COUNTER_BITS);
     }
 
+    // the EXT_multisample_compatibility is written against ES3.1 but can apply
+    // to earlier versions so therefore we're only checking for the extension string
+    // and not the specific GLES version.
+    extensions->multisampleCompatibility = functions->isAtLeastGL(gl::Version(1, 3)) ||
+        functions->hasGLESExtension("GL_EXT_multisample_compatibility");
+
     // ANGLE emulates vertex array objects in its GL layer
     extensions->vertexArrayObject = true;
 

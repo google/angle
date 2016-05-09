@@ -102,6 +102,11 @@ bool ValidCap(const Context *context, GLenum cap)
 {
     switch (cap)
     {
+      // EXT_multisample_compatibility
+      case GL_MULTISAMPLE_EXT:
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+          return context->getExtensions().multisampleCompatibility;
+
       case GL_CULL_FACE:
       case GL_POLYGON_OFFSET_FILL:
       case GL_SAMPLE_ALPHA_TO_COVERAGE:

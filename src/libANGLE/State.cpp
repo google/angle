@@ -42,7 +42,9 @@ State::State()
       mProgram(nullptr),
       mVertexArray(nullptr),
       mActiveSampler(0),
-      mPrimitiveRestart(false)
+      mPrimitiveRestart(false),
+      mMultiSampling(false),
+      mSampleAlphaToOne(false)
 {
 }
 
@@ -170,6 +172,12 @@ void State::initialize(const Caps &caps,
 
     mDebug.setOutputEnabled(debug);
     mDebug.setMaxLoggedMessages(extensions.maxDebugLoggedMessages);
+
+    if (extensions.framebufferMultisample)
+    {
+        mMultiSampling = true;
+        mSampleAlphaToOne = false;
+    }
 }
 
 void State::reset()
@@ -504,6 +512,28 @@ bool State::getSampleCoverageInvert() const
     return mSampleCoverageInvert;
 }
 
+void State::setSampleAlphaToOne(bool enabled)
+{
+    mSampleAlphaToOne = enabled;
+    mDirtyBits.set(DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+}
+
+bool State::isSampleAlphaToOneEnabled() const
+{
+    return mSampleAlphaToOne;
+}
+
+void State::setMultisampling(bool enabled)
+{
+    mMultiSampling = enabled;
+    mDirtyBits.set(DIRTY_BIT_MULTISAMPLING);
+}
+
+bool State::isMultisamplingEnabled() const
+{
+    return mMultiSampling;
+}
+
 bool State::isScissorTestEnabled() const
 {
     return mScissorTest;
@@ -555,6 +585,8 @@ void State::setEnableFeature(GLenum feature, bool enabled)
 {
     switch (feature)
     {
+      case GL_MULTISAMPLE_EXT:               setMultisampling(enabled);         break;
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:       setSampleAlphaToOne(enabled);      break;
       case GL_CULL_FACE:                     setCullFace(enabled);              break;
       case GL_POLYGON_OFFSET_FILL:           setPolygonOffsetFill(enabled);     break;
       case GL_SAMPLE_ALPHA_TO_COVERAGE:      setSampleAlphaToCoverage(enabled); break;
@@ -580,6 +612,8 @@ bool State::getEnableFeature(GLenum feature)
 {
     switch (feature)
     {
+      case GL_MULTISAMPLE_EXT:               return isMultisamplingEnabled();
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:       return isSampleAlphaToOneEnabled();
       case GL_CULL_FACE:                     return isCullFaceEnabled();
       case GL_POLYGON_OFFSET_FILL:           return isPolygonOffsetFillEnabled();
       case GL_SAMPLE_ALPHA_TO_COVERAGE:      return isSampleAlphaToCoverageEnabled();
@@ -1360,6 +1394,12 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_DEBUG_OUTPUT:
           *params = mDebug.isOutputEnabled() ? GL_TRUE : GL_FALSE;
           break;
+      case GL_MULTISAMPLE_EXT:
+          *params = mMultiSampling;
+          break;
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+          *params = mSampleAlphaToOne;
+          break;
       default:
         UNREACHABLE();
         break;
@@ -1394,6 +1434,12 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         params[1] = mBlendColor.green;
         params[2] = mBlendColor.blue;
         params[3] = mBlendColor.alpha;
+        break;
+      case GL_MULTISAMPLE_EXT:
+        *params = static_cast<GLfloat>(mMultiSampling);
+        break;
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+        *params = static_cast<GLfloat>(mSampleAlphaToOne);
         break;
       default:
         UNREACHABLE();
@@ -1632,6 +1678,12 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
           break;
       case GL_DEBUG_GROUP_STACK_DEPTH:
           *params = static_cast<GLint>(mDebug.getGroupStackDepth());
+          break;
+      case GL_MULTISAMPLE_EXT:
+          *params = static_cast<GLint>(mMultiSampling);
+          break;
+      case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+          *params = static_cast<GLint>(mSampleAlphaToOne);
           break;
       default:
         UNREACHABLE();

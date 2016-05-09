@@ -1405,6 +1405,18 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         }
     }
 
+    if (mExtensions.multisampleCompatibility)
+    {
+        switch (pname)
+        {
+            case GL_MULTISAMPLE_EXT:
+            case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+                *type = GL_BOOL;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

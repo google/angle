@@ -124,6 +124,9 @@ class StateManagerGL final : angle::NonCopyable
 
     void setFramebufferSRGBEnabled(bool enabled);
 
+    void setMultisamplingStateEnabled(bool enabled);
+    void setSampleAlphaToOneStateEnabled(bool enabled);
+
     void onDeleteQueryObject(QueryGL *query);
 
     gl::Error setDrawArraysState(const gl::ContextState &data,
@@ -253,6 +256,9 @@ class StateManagerGL final : angle::NonCopyable
 
     bool mFramebufferSRGBEnabled;
     bool mTextureCubemapSeamlessEnabled;
+
+    bool mMultisamplingEnabled;
+    bool mSampleAlphaToOneEnabled;
 
     gl::State::DirtyBits mLocalDirtyBits;
 };

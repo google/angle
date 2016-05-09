@@ -291,6 +291,10 @@ struct Extensions
 
     // GL_EXT_color_buffer_float
     bool colorBufferFloat;
+
+    // GL_EXT_multisample_compatibility.
+    // written against ES 3.1 but can apply to earlier versions.
+    bool multisampleCompatibility;
 };
 
 struct Limitations

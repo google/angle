@@ -118,6 +118,12 @@ class State : angle::NonCopyable
     GLclampf getSampleCoverageValue() const;
     bool getSampleCoverageInvert() const;
 
+    // Multisampling/alpha to one manipulation.
+    void setSampleAlphaToOne(bool enabled);
+    bool isSampleAlphaToOneEnabled() const;
+    void setMultisampling(bool enabled);
+    bool isMultisamplingEnabled() const;
+
     // Scissor test state toggle & query
     bool isScissorTestEnabled() const;
     void setScissorTest(bool enabled);
@@ -334,6 +340,8 @@ class State : angle::NonCopyable
         DIRTY_BIT_RENDERBUFFER_BINDING,
         DIRTY_BIT_VERTEX_ARRAY_BINDING,
         DIRTY_BIT_PROGRAM_BINDING,
+        DIRTY_BIT_MULTISAMPLING,
+        DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
         DIRTY_BIT_CURRENT_VALUE_0,
         DIRTY_BIT_CURRENT_VALUE_MAX = DIRTY_BIT_CURRENT_VALUE_0 + MAX_VERTEX_ATTRIBS,
         DIRTY_BIT_INVALID           = DIRTY_BIT_CURRENT_VALUE_MAX,
@@ -435,6 +443,9 @@ class State : angle::NonCopyable
     bool mPrimitiveRestart;
 
     Debug mDebug;
+
+    bool mMultiSampling;
+    bool mSampleAlphaToOne;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

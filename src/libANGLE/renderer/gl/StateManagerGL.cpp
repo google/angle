@@ -113,6 +113,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mClearStencil(0),
       mFramebufferSRGBEnabled(false),
       mTextureCubemapSeamlessEnabled(false),
+      mMultisamplingEnabled(true),
+      mSampleAlphaToOneEnabled(false),
       mLocalDirtyBits()
 {
     ASSERT(mFunctions);
@@ -1513,6 +1515,12 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
                 // TODO(jmadill): implement this
                 break;
+            case gl::State::DIRTY_BIT_MULTISAMPLING:
+                setMultisamplingStateEnabled(state.isMultisamplingEnabled());
+                break;
+            case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
+                setSampleAlphaToOneStateEnabled(state.isSampleAlphaToOneEnabled());
+                break;
             default:
             {
                 ASSERT(dirtyBit >= gl::State::DIRTY_BIT_CURRENT_VALUE_0 &&
@@ -1542,6 +1550,40 @@ void StateManagerGL::setFramebufferSRGBEnabled(bool enabled)
         {
             mFunctions->disable(GL_FRAMEBUFFER_SRGB);
         }
+    }
+}
+
+void StateManagerGL::setMultisamplingStateEnabled(bool enabled)
+{
+    if (mMultisamplingEnabled != enabled)
+    {
+        mMultisamplingEnabled = enabled;
+        if (mMultisamplingEnabled)
+        {
+            mFunctions->enable(GL_MULTISAMPLE_EXT);
+        }
+        else
+        {
+            mFunctions->disable(GL_MULTISAMPLE_EXT);
+        }
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_MULTISAMPLING);
+    }
+}
+
+void StateManagerGL::setSampleAlphaToOneStateEnabled(bool enabled)
+{
+    if (mSampleAlphaToOneEnabled != enabled)
+    {
+        mSampleAlphaToOneEnabled = enabled;
+        if (mSampleAlphaToOneEnabled)
+        {
+            mFunctions->enable(GL_SAMPLE_ALPHA_TO_ONE);
+        }
+        else
+        {
+            mFunctions->disable(GL_SAMPLE_ALPHA_TO_ONE);
+        }
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
     }
 }
 
