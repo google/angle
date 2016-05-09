@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b259bc75_8eae4b92",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-09T12:49:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32c6ac31_ee9ddf66",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2a3907e_438de63b",
         "filename": "DEPS.chromium",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b259bc75_6eb3f7f7",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-09T12:49:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2a3907e_438de63b",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2cfb445_acbe03bb",
         "filename": "DEPS.chromium",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2016-05-08T08:43:24Z",
       "side": 1,
       "message": "nit: This would be better as an or, if such a thing is supported by the DEPS files.",
+      "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b259bc75_cec7a357",
+        "filename": "DEPS.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-09T12:49:49Z",
+      "side": 1,
+      "message": "Unfortunately not that I know of.",
+      "parentUuid": "f2cfb445_acbe03bb",
       "revId": "444c66cdc6bc6c29b536fbb0c46909892cb5657a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
