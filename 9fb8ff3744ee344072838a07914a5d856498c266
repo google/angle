@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b259bc75_ee43879f",
+        "filename": "util/posix/Posix_system_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-09T13:42:24Z",
+      "side": 1,
+      "message": "Both dlopen and LoadLibrary do reference counting on the loaded modules.  We should probably only open and close it once in the TestPlatform constructor/destructor.",
+      "range": {
+        "startLine": 52,
+        "startChar": 19,
+        "endLine": 52,
+        "endChar": 25
+      },
+      "revId": "9fb8ff3744ee344072838a07914a5d856498c266",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
