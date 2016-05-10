@@ -20,9 +20,7 @@
 
 namespace gl
 {
-ResourceManager::ResourceManager(rx::ImplFactory *factory)
-    : mFactory(factory),
-      mRefCount(1)
+ResourceManager::ResourceManager(rx::GLImplFactory *factory) : mFactory(factory), mRefCount(1)
 {
 }
 

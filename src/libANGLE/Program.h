@@ -30,7 +30,7 @@
 
 namespace rx
 {
-class ImplFactory;
+class GLImplFactory;
 class ProgramImpl;
 struct TranslatedAttribute;
 }
@@ -211,7 +211,7 @@ class ProgramState final : angle::NonCopyable
 class Program final : angle::NonCopyable, public LabeledObject
 {
   public:
-    Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle);
+    Program(rx::GLImplFactory *factory, ResourceManager *manager, GLuint handle);
     ~Program();
 
     GLuint id() const { return mHandle; }

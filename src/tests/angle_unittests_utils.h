@@ -10,13 +10,14 @@
 #define TESTS_ANGLE_UNITTESTS_UTILS_H_
 
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/EGLImplFactory.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 
 namespace rx
 {
 
-// Useful when mocking a part of the ImplFactory class
-class NullFactory : public ImplFactory
+// Useful when mocking a part of the GLImplFactory class
+class NullFactory : public GLImplFactory
 {
   public:
     NullFactory() {}
@@ -60,7 +61,7 @@ class NullFactory : public ImplFactory
 };
 
 // A class with all the factory methods mocked.
-class MockFactory : public ImplFactory
+class MockGLFactory : public GLImplFactory
 {
   public:
     MOCK_METHOD1(createContext, ContextImpl *(const gl::ContextState &));
@@ -78,6 +79,29 @@ class MockFactory : public ImplFactory
     MOCK_METHOD0(createTransformFeedback, TransformFeedbackImpl *());
     MOCK_METHOD0(createSampler, SamplerImpl *());
 };
-}
+
+class MockEGLFactory : public EGLImplFactory
+{
+  public:
+    MOCK_METHOD3(createWindowSurface,
+                 SurfaceImpl *(const egl::Config *,
+                               EGLNativeWindowType,
+                               const egl::AttributeMap &));
+    MOCK_METHOD2(createPbufferSurface,
+                 SurfaceImpl *(const egl::Config *, const egl::AttributeMap &));
+    MOCK_METHOD3(createPbufferFromClientBuffer,
+                 SurfaceImpl *(const egl::Config *, EGLClientBuffer, const egl::AttributeMap &));
+    MOCK_METHOD3(createPixmapSurface,
+                 SurfaceImpl *(const egl::Config *, NativePixmapType, const egl::AttributeMap &));
+    MOCK_METHOD3(createImage, ImageImpl *(EGLenum, egl::ImageSibling *, const egl::AttributeMap &));
+    MOCK_METHOD3(createContext,
+                 gl::Context *(const egl::Config *,
+                               const gl::Context *,
+                               const egl::AttributeMap &));
+    MOCK_METHOD2(createStreamProducerD3DTextureNV12,
+                 StreamProducerImpl *(egl::Stream::ConsumerType, const egl::AttributeMap &));
+};
+
+}  // namespace rx
 
 #endif // TESTS_ANGLE_UNITTESTS_UTILS_H_

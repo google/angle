@@ -23,7 +23,7 @@
 
 namespace rx
 {
-class ImplFactory;
+class GLImplFactory;
 class VertexArrayImpl;
 }
 
@@ -59,7 +59,7 @@ class VertexArrayState final : public angle::NonCopyable
 class VertexArray final : public LabeledObject
 {
   public:
-    VertexArray(rx::ImplFactory *factory, GLuint id, size_t maxAttribs);
+    VertexArray(rx::GLImplFactory *factory, GLuint id, size_t maxAttribs);
     ~VertexArray();
 
     GLuint id() const;

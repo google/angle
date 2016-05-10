@@ -10,13 +10,13 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Program.h"
-#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
 
 namespace gl
 {
 
-TransformFeedback::TransformFeedback(rx::ImplFactory *implFactory, GLuint id, const Caps &caps)
+TransformFeedback::TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, const Caps &caps)
     : RefCountObject(id),
       mImplementation(implFactory->createTransformFeedback()),
       mLabel(),

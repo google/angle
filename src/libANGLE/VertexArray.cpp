@@ -8,7 +8,7 @@
 
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/Buffer.h"
-#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/VertexArrayImpl.h"
 
 namespace gl
@@ -28,7 +28,7 @@ VertexArrayState::~VertexArrayState()
     mElementArrayBuffer.set(nullptr);
 }
 
-VertexArray::VertexArray(rx::ImplFactory *factory, GLuint id, size_t maxAttribs)
+VertexArray::VertexArray(rx::GLImplFactory *factory, GLuint id, size_t maxAttribs)
     : mId(id), mState(maxAttribs), mVertexArray(factory->createVertexArray(mState))
 {
 }

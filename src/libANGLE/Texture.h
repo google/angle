@@ -31,7 +31,7 @@ class Stream;
 
 namespace rx
 {
-class ImplFactory;
+class GLImplFactory;
 class TextureImpl;
 }
 
@@ -47,7 +47,7 @@ class Texture final : public egl::ImageSibling,
                       public LabeledObject
 {
   public:
-    Texture(rx::ImplFactory *factory, GLuint id, GLenum target);
+    Texture(rx::GLImplFactory *factory, GLuint id, GLenum target);
     ~Texture() override;
 
     void setLabel(const std::string &label) override;

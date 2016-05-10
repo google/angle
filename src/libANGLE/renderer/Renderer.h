@@ -16,7 +16,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/angletypes.h"
-#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 #include "common/mathutil.h"
 
 #include <stdint.h>
@@ -37,7 +37,7 @@ struct SourceIndexData;
 struct WorkaroundsD3D;
 class DisplayImpl;
 
-class Renderer : public ImplFactory
+class Renderer : public GLImplFactory
 {
   public:
     Renderer();

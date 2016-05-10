@@ -20,7 +20,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
-#include "libANGLE/renderer/ImplFactory.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
 
@@ -170,7 +170,7 @@ bool FramebufferState::attachmentsHaveSameDimensions() const
     return !hasMismatchedSize(mStencilAttachment);
 }
 
-Framebuffer::Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id)
+Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
     : mState(caps), mImpl(factory->createFramebuffer(mState)), mId(id)
 {
     ASSERT(mId != 0);

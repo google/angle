@@ -31,7 +31,7 @@ class ResourceManagerTest : public testing::Test
         SafeDelete(mResourceManager);
     }
 
-    MockFactory mMockFactory;
+    MockGLFactory mMockFactory;
     ResourceManager *mResourceManager;
 };
 

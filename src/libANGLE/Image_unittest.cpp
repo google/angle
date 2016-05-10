@@ -25,7 +25,7 @@ namespace angle
 // Verify ref counts are maintained between images and their siblings when objects are deleted
 TEST(ImageTest, RefCounting)
 {
-    NiceMock<rx::MockFactory> mockFactory;
+    NiceMock<rx::MockGLFactory> mockFactory;
     // Create a texture and an EGL image that uses the texture as its source
     rx::MockTextureImpl *textureImpl = new rx::MockTextureImpl();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));
@@ -86,7 +86,7 @@ TEST(ImageTest, RefCounting)
 // Verify that respecifiying textures releases references to the Image.
 TEST(ImageTest, RespecificationReleasesReferences)
 {
-    NiceMock<rx::MockFactory> mockFactory;
+    NiceMock<rx::MockGLFactory> mockFactory;
     // Create a texture and an EGL image that uses the texture as its source
     rx::MockTextureImpl *textureImpl = new rx::MockTextureImpl();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));

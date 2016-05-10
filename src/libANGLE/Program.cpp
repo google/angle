@@ -336,7 +336,7 @@ GLuint ProgramState::getUniformIndex(const std::string &name) const
     return GL_INVALID_INDEX;
 }
 
-Program::Program(rx::ImplFactory *factory, ResourceManager *manager, GLuint handle)
+Program::Program(rx::GLImplFactory *factory, ResourceManager *manager, GLuint handle)
     : mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),

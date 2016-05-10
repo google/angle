@@ -69,7 +69,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     auto programImpl     = MakeProgramMock();
 
     // TODO(jmadill): Generalize some of this code so we can re-use it for other tests.
-    NiceMock<MockFactory> mockFactory;
+    NiceMock<MockGLFactory> mockFactory;
     EXPECT_CALL(mockFactory, createFramebuffer(_)).WillOnce(Return(framebufferImpl));
     EXPECT_CALL(mockFactory, createProgram(_)).WillOnce(Return(programImpl));
     EXPECT_CALL(mockFactory, createVertexArray(_)).WillOnce(Return(nullptr));

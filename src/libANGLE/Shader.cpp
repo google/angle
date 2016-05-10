@@ -81,7 +81,7 @@ ShaderState::~ShaderState()
 }
 
 Shader::Shader(ResourceManager *manager,
-               rx::ImplFactory *implFactory,
+               rx::GLImplFactory *implFactory,
                const gl::Limitations &rendererLimitations,
                GLenum type,
                GLuint handle)

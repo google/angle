@@ -16,7 +16,7 @@
 namespace rx
 {
 class CompilerImpl;
-class ImplFactory;
+class GLImplFactory;
 }
 
 namespace gl
@@ -26,7 +26,7 @@ struct ContextState;
 class Compiler final : angle::NonCopyable
 {
   public:
-    Compiler(rx::ImplFactory *implFactory, const ContextState &data);
+    Compiler(rx::GLImplFactory *implFactory, const ContextState &data);
     ~Compiler();
 
     Error release();

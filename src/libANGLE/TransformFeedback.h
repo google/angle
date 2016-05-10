@@ -16,7 +16,7 @@
 
 namespace rx
 {
-class ImplFactory;
+class GLImplFactory;
 class TransformFeedbackImpl;
 }
 
@@ -29,7 +29,7 @@ class Program;
 class TransformFeedback final : public RefCountObject, public LabeledObject
 {
   public:
-    TransformFeedback(rx::ImplFactory *implFactory, GLuint id, const Caps &caps);
+    TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, const Caps &caps);
     virtual ~TransformFeedback();
 
     void setLabel(const std::string &label) override;

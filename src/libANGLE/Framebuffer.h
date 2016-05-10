@@ -22,7 +22,7 @@
 namespace rx
 {
 class ContextImpl;
-class ImplFactory;
+class GLImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
 class SurfaceImpl;
@@ -89,7 +89,7 @@ class FramebufferState final : angle::NonCopyable
 class Framebuffer final : public LabeledObject
 {
   public:
-    Framebuffer(const Caps &caps, rx::ImplFactory *factory, GLuint id);
+    Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id);
     Framebuffer(rx::SurfaceImpl *surface);
     virtual ~Framebuffer();
 

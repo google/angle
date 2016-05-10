@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ImplFactory.h:
-//   Factory interface for Impl objects.
+// GLImplFactory.h:
+//   Factory interface for OpenGL ES Impl objects.
 //
 
-#ifndef LIBANGLE_RENDERER_IMPLFACTORY_H_
-#define LIBANGLE_RENDERER_IMPLFACTORY_H_
+#ifndef LIBANGLE_RENDERER_GLIMPLFACTORY_H_
+#define LIBANGLE_RENDERER_GLIMPLFACTORY_H_
 
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
@@ -37,11 +37,11 @@ class TextureImpl;
 class TransformFeedbackImpl;
 class VertexArrayImpl;
 
-class ImplFactory : angle::NonCopyable
+class GLImplFactory : angle::NonCopyable
 {
   public:
-    ImplFactory() {}
-    virtual ~ImplFactory() {}
+    GLImplFactory() {}
+    virtual ~GLImplFactory() {}
 
     // Context creation
     virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
@@ -78,6 +78,6 @@ class ImplFactory : angle::NonCopyable
     virtual SamplerImpl *createSampler() = 0;
 };
 
-}
+}  // namespace rx
 
-#endif // LIBANGLE_RENDERER_IMPLFACTORY_H_
+#endif  // LIBANGLE_RENDERER_GLIMPLFACTORY_H_

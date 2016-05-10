@@ -17,7 +17,7 @@
 
 namespace rx
 {
-class ImplFactory;
+class GLImplFactory;
 }
 
 namespace gl
@@ -34,7 +34,7 @@ class Texture;
 class ResourceManager : angle::NonCopyable
 {
   public:
-    explicit ResourceManager(rx::ImplFactory *factory);
+    explicit ResourceManager(rx::GLImplFactory *factory);
     ~ResourceManager();
 
     void addRef();
@@ -76,7 +76,7 @@ class ResourceManager : angle::NonCopyable
   private:
     void createTextureInternal(GLuint handle);
 
-    rx::ImplFactory *mFactory;
+    rx::GLImplFactory *mFactory;
     std::size_t mRefCount;
 
     ResourceMap<Buffer> mBufferMap;

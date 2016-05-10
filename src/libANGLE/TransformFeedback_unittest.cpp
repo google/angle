@@ -53,7 +53,7 @@ class TransformFeedbackTest : public testing::Test
         testing::Mock::VerifyAndClear(mImpl);
     }
 
-    rx::MockFactory mMockFactory;
+    rx::MockGLFactory mMockFactory;
     rx::MockTransformFeedbackImpl* mImpl;
     gl::TransformFeedback* mFeedback;
     gl::Caps mCaps;
