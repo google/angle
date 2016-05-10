@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12728820_e7fc4850",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "I think you might be missing a GL_ prefix here.",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_a7bdf075",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "Tests look good!",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_27f74069",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "In ANGLE method names are camelCase and members mCamelCase",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_87a1d45b",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "You can use CompileProgram from shader_utils.h",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_a7a6d06f",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "No need for a VBO, you can use ANGLETest::drawQuad",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_c78aecd0",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "sample_rb should be tracked and destroyed. Even if we reinitialize ANGLE between each test, we usually destroy all GL objects at the end of the test. The same goes for resolve_tex",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_47befc74",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "Why are we skipping the test on AMD, is there a driver bug?\n\nAlso we usually print a message when a test is skipped so that we can see it in the logs.",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_07fa4451",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "nit: TestStateTracking?",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_67c3f8ff",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1120614
+      },
+      "writtenOn": "2016-05-10T13:23:37Z",
+      "side": 1,
+      "message": "The comment should be just before the TEST_P",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
