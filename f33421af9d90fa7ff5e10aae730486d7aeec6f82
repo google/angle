@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12728820_4707dcbc",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-10T14:55:17Z",
+      "side": 1,
+      "message": "nit: should compare with GL_TRUE or GL_FALSE instead of using !",
+      "range": {
+        "startLine": 594,
+        "startChar": 9,
+        "endLine": 594,
+        "endChar": 17
+      },
+      "revId": "f33421af9d90fa7ff5e10aae730486d7aeec6f82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12728820_076a4473",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-10T14:55:17Z",
+      "side": 1,
+      "message": "this should be angle::NonCopyable, no? If you intend to implement copy operations, define copy/assignment ops or move-copy/assignment ops. You can use \u003d default syntax if you just need the auto-generated copy/assignment.",
+      "range": {
+        "startLine": 58,
+        "startChar": 10,
+        "endLine": 58,
+        "endChar": 16
+      },
+      "revId": "f33421af9d90fa7ff5e10aae730486d7aeec6f82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
