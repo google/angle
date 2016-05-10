@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "125a88dd_2edda61c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-10T20:53:30Z",
+      "side": 1,
+      "message": "nit: for to use -\u003e ?",
+      "revId": "bc0289ae865ac66581640adaea824049906396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_0e0b0a82",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-10T20:53:30Z",
+      "side": 1,
+      "message": "nit: als -\u003e also",
+      "revId": "bc0289ae865ac66581640adaea824049906396c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
