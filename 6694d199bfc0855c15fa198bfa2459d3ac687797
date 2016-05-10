@@ -121,6 +121,52 @@
     },
     {
       "key": {
+        "uuid": "b259bc75_ae3fcfa1",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-10T14:27:05Z",
+      "side": 1,
+      "message": "What was the issue here?  Should we not expose the extension on AMD?",
+      "range": {
+        "startLine": 131,
+        "startChar": 13,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b259bc75_ae66afdd",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-10T14:27:05Z",
+      "side": 1,
+      "message": "In ANGLE, we would name these mSampleFBO, mResolveFBO, etc.\n\nAlso, add a TearDown override to delete these.",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 22
+      },
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12728820_07fa4451",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 1
