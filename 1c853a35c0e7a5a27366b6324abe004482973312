@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "125a88dd_3ff157a3",
+        "filename": "src/tests/gl_tests/SyncQueriesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-10T19:26:22Z",
+      "side": 1,
+      "message": "nit: this should be before ANGLETest::TearDown.. that method will delete the GL context, by which point mQuery should already be deleted.\n\n(probably we should just rename these methods and make a pure abstract method that ANGLETest calls.. :/)",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 9
+      },
+      "revId": "1c853a35c0e7a5a27366b6324abe004482973312",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
