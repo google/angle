@@ -2132,10 +2132,17 @@ TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
         std::cout << "Test skipped on OSX." << std::endl;
         return;
     }
-    if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
+    if (IsAMD() && isOpenGL())
     {
         // Observed incorrect rendering on AMD OpenGL.
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
+        return;
+    }
+
+    if (IsLinux() && IsIntel() && isOpenGL())
+    {
+        // The Mesa Intel driver doesn't clamp the base level
+        std::cout << "Test skipped on Intel Linux OpenGL." << std::endl;
         return;
     }
 
