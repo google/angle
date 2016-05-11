@@ -22,6 +22,30 @@
       "revId": "1c853a35c0e7a5a27366b6324abe004482973312",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_b211eb43",
+        "filename": "src/tests/gl_tests/SyncQueriesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-11T17:44:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_3ff157a3",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 9
+      },
+      "revId": "1c853a35c0e7a5a27366b6324abe004482973312",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
