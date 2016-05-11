@@ -345,7 +345,9 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         DWORD currentProcessId = GetCurrentProcessId();
         DWORD windowProcessId;
         GetWindowThreadProcessId(nativeWindow, &windowProcessId);
-        mUseDXGISwapChains = (currentProcessId != windowProcessId);
+
+        // AMD drivers advertise the WGL_NV_DX_interop and WGL_NV_DX_interop2 extensions but fail
+        mUseDXGISwapChains = vendor != VENDOR_ID_AMD && (currentProcessId != windowProcessId);
     }
     else
     {
