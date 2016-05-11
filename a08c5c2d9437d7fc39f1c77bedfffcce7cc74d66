@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "125a88dd_82cca29d",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "we should also update this to 2015 Update 2.. might as well do it now.",
+      "range": {
+        "startLine": 16,
+        "startChar": 3,
+        "endLine": 16,
+        "endChar": 33
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_a2c99e8d",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "do you know what packages this might be on Ubuntu? Maybe we should make a dependencies puller script at some point, but mentioning them by name here might be good enough for now.",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 50
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_42c6aa7b",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "as we currently only support generating the translator grammar on Windows.",
+      "range": {
+        "startLine": 25,
+        "startChar": 44,
+        "endLine": 25,
+        "endChar": 112
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_22a84e9f",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "Clang",
+      "range": {
+        "startLine": 28,
+        "startChar": 64,
+        "endLine": 28,
+        "endChar": 69
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_02a3d2c5",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "for",
+      "range": {
+        "startLine": 28,
+        "startChar": 47,
+        "endLine": 28,
+        "endChar": 63
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_8297c255",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "same wording suggestion",
+      "range": {
+        "startLine": 29,
+        "startChar": 40,
+        "endLine": 29,
+        "endChar": 112
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_028af22d",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "5",
+      "range": {
+        "startLine": 54,
+        "startChar": 43,
+        "endLine": 54,
+        "endChar": 44
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_c2837a15",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T13:50:21Z",
+      "side": 1,
+      "message": "can you format this like the above?\n\nOn Linux and OSX, either:\n\n 1. Link ....\n 2. Use dlopen ...",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 19
+      },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
