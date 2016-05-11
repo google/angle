@@ -615,6 +615,11 @@ bool ANGLETest::isOpenGL() const
     return getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE;
 }
 
+bool ANGLETest::isGLES() const
+{
+    return getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE;
+}
+
 EGLint ANGLETest::getPlatformRenderer() const
 {
     assert(mEGLWindow);

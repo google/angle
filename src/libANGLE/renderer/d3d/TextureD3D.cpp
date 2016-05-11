@@ -649,6 +649,7 @@ void TextureD3D::setBaseLevel(GLuint baseLevel)
     const int oldStorageWidth  = std::max(1, getLevelZeroWidth());
     const int oldStorageHeight = std::max(1, getLevelZeroHeight());
     const int oldStorageDepth  = std::max(1, getLevelZeroDepth());
+    const int oldStorageFormat = getBaseLevelInternalFormat();
     mBaseLevel                 = baseLevel;
 
     // When the base level changes, the texture storage might not be valid anymore, since it could
@@ -656,8 +657,10 @@ void TextureD3D::setBaseLevel(GLuint baseLevel)
     const int newStorageWidth  = std::max(1, getLevelZeroWidth());
     const int newStorageHeight = std::max(1, getLevelZeroHeight());
     const int newStorageDepth = std::max(1, getLevelZeroDepth());
-    if (mTexStorage && (newStorageWidth != oldStorageWidth ||
-                        newStorageHeight != oldStorageHeight || newStorageDepth != oldStorageDepth))
+    const int newStorageFormat = getBaseLevelInternalFormat();
+    if (mTexStorage &&
+        (newStorageWidth != oldStorageWidth || newStorageHeight != oldStorageHeight ||
+         newStorageDepth != oldStorageDepth || newStorageFormat != oldStorageFormat))
     {
         markAllImagesDirty();
         SafeDelete(mTexStorage);

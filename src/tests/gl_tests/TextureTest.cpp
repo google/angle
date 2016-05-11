@@ -2171,6 +2171,65 @@ TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that changing base level works when it affects the format of the texture.
+TEST_P(Texture2DTestES3, TextureFormatChangesWithBaseLevel)
+{
+    if (IsNVIDIA() && (isOpenGL() || isGLES()))
+    {
+        // Observed rendering corruption on NVIDIA OpenGL.
+        std::cout << "Test skipped on NVIDIA OpenGL." << std::endl;
+        return;
+    }
+    if (IsIntel() && isOpenGL())
+    {
+        // Observed incorrect rendering on Intel OpenGL.
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+    if (IsAMD() && isOpenGL())
+    {
+        // Observed incorrect rendering on AMD OpenGL.
+        std::cout << "Test skipped on AMD OpenGL." << std::endl;
+        return;
+    }
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    std::vector<GLColor> texDataCyan(4u * 4u, GLColor::cyan);
+    std::vector<GLColor> texDataGreen(4u * 4u, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+    // RGBA8 level that's initially unused.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataCyan.data());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // RG8 level that's initially used, with consistent dimensions with level 0 but a different
+    // format. It reads green channel data from the green and alpha channels of texDataGreen
+    // (this is a bit hacky but works).
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RG8, 2, 2, 0, GL_RG, GL_UNSIGNED_BYTE, texDataGreen.data());
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Switch the texture to use the cyan level 0 with the RGBA format.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
 // Test that setting a texture image works when base level is out of range.
 TEST_P(Texture2DTestES3, SetImageWhenBaseLevelOutOfRange)
 {

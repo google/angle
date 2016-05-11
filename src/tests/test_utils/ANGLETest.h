@@ -171,6 +171,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     bool isMultisampleEnabled() const;
 
     bool isOpenGL() const;
+    bool isGLES() const;
     EGLint getPlatformRenderer() const;
 
     void ignoreD3D11SDKLayersWarnings();
