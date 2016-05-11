@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "125a88dd_8da133aa",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T14:13:17Z",
+      "side": 1,
+      "message": "micro-nit: data should be first, since it\u0027s a parameter to the TextureImpl, similar to FramebufferD3D. Same for the other constructors.",
+      "range": {
+        "startLine": 33,
+        "startChar": 37,
+        "endLine": 33,
+        "endChar": 66
+      },
+      "revId": "6295951abf6d475d56c9228cad82a4c1aba9577e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_0db463e0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T14:13:17Z",
+      "side": 1,
+      "message": "Looking at this, I feel like the TextureStorage should know everything about the SRV, from the effective base level to the top level.\n\nI think all Texture Storages are created by TextureD3D.. can you pass the TextureState to the constructors of TextureStorage to clean this up? We would only need to call getSRV() here, which would also avoid the copy and mutation of gl::TextureState.",
+      "range": {
+        "startLine": 1303,
+        "startChar": 16,
+        "endLine": 1303,
+        "endChar": 25
+      },
+      "revId": "6295951abf6d475d56c9228cad82a4c1aba9577e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_0dec63a3",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T14:13:17Z",
+      "side": 1,
+      "message": "these should all be \"state\" and \"mState\", I had a mass refactoring earlier which fixed this (though I didn\u0027t fix all parameter names)",
+      "range": {
+        "startLine": 59,
+        "startChar": 38,
+        "endLine": 59,
+        "endChar": 42
+      },
+      "revId": "6295951abf6d475d56c9228cad82a4c1aba9577e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "125a88dd_4de33bb7",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T14:13:17Z",
+      "side": 1,
+      "message": "this should be available as mState",
+      "range": {
+        "startLine": 92,
+        "startChar": 49,
+        "endLine": 92,
+        "endChar": 61
+      },
+      "revId": "6295951abf6d475d56c9228cad82a4c1aba9577e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
