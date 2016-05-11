@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "125a88dd_2867cd40",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-11T15:50:13Z",
+      "side": 1,
+      "message": "additionally, now that we have access to the TextureState in the Impl, we can move gl::Texture::mTarget into the TextureState, and have the Impl query this. We no longer will need to pass the GLenum target to createTexture, which will be a nice cleanup.",
+      "range": {
+        "startLine": 74,
+        "startChar": 31,
+        "endLine": 74,
+        "endChar": 75
+      },
+      "revId": "c5e4c5f5a30440767cbf0354b48a68a2c4cfbc3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
