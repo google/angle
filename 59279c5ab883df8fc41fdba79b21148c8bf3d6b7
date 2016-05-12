@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_44b76203",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "you can remove static here, it\u0027s redundant with namespace {}",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_24841e1d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "didn\u0027t this have \u003d\u003d and !\u003d operators? Probably define these here.",
+      "range": {
+        "startLine": 58,
+        "startChar": 14,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_07b9dcd9",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "still keep this in the constructor, but move mState to be initialized before mTexture by changing the order in the header",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 53
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_e4a216c0",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "nit: all member functions should appear before the member variables. Also please put a TODO in here assigned to me to make this a private data class when we can implement Texture dirty bits.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 41
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_2797c049",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "rename this mState",
+      "range": {
+        "startLine": 240,
+        "startChar": 17,
+        "endLine": 240,
+        "endChar": 30
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_a4780e1a",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "probably just put these in the cpp",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 301,
+        "endChar": 1
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_a7c2d044",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "use ANGLE_TRY here.. new macro, I think you\u0027ll like it.",
+      "range": {
+        "startLine": 1299,
+        "startChar": 8,
+        "endLine": 1299,
+        "endChar": 75
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_47ee84d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "use ANGLE_TRY",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 56
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_67d38813",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "use gl::NoError",
+      "range": {
+        "startLine": 254,
+        "startChar": 15,
+        "endLine": 254,
+        "endChar": 20
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_c7da7424",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T17:57:04Z",
+      "side": 1,
+      "message": "ANGLE_TRY",
+      "range": {
+        "startLine": 367,
+        "startChar": 4,
+        "endLine": 367,
+        "endChar": 56
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
