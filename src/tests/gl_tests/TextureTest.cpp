@@ -2126,26 +2126,6 @@ TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMaxLevel)
 // GLES 3.0.4 section 3.8.10 subsection Mipmapping
 TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
 {
-    if (IsOSX())
-    {
-        // Observed incorrect rendering on OSX.
-        std::cout << "Test skipped on OSX." << std::endl;
-        return;
-    }
-    if (IsAMD() && isOpenGL())
-    {
-        // Observed incorrect rendering on AMD OpenGL.
-        std::cout << "Test skipped on AMD OpenGL." << std::endl;
-        return;
-    }
-
-    if (IsLinux() && IsIntel() && isOpenGL())
-    {
-        // The Mesa Intel driver doesn't clamp the base level
-        std::cout << "Test skipped on Intel Linux OpenGL." << std::endl;
-        return;
-    }
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 

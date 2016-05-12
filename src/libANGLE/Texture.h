@@ -49,6 +49,7 @@ struct TextureState final : public angle::NonCopyable
 
     bool swizzleRequired() const;
     GLuint getEffectiveBaseLevel() const;
+    GLuint getEffectiveMaxLevel() const;
 
     // TODO(jmadill): Make the data members here private.
 

@@ -80,6 +80,7 @@ GLuint TextureState::getEffectiveBaseLevel() const
 {
     if (immutableFormat)
     {
+        // GLES 3.0.4 section 3.8.10
         return std::min(baseLevel, immutableLevels - 1);
     }
     // Some classes use the effective base level to index arrays with level data. By clamping the
@@ -87,6 +88,18 @@ GLuint TextureState::getEffectiveBaseLevel() const
     // that should be returned for all out-of-range base level values, instead of needing special
     // handling for out-of-range base levels.
     return std::min(baseLevel, static_cast<GLuint>(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS));
+}
+
+GLuint TextureState::getEffectiveMaxLevel() const
+{
+    if (immutableFormat)
+    {
+        // GLES 3.0.4 section 3.8.10
+        GLuint clampedMaxLevel = std::max(maxLevel, getEffectiveBaseLevel());
+        clampedMaxLevel        = std::min(clampedMaxLevel, immutableLevels - 1);
+        return clampedMaxLevel;
+    }
+    return maxLevel;
 }
 
 Texture::Texture(rx::GLImplFactory *factory, GLuint id, GLenum target)

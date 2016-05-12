@@ -726,12 +726,25 @@ void TextureGL::syncState(size_t textureUnit) const
         }
     };
 
-    // clang-format off
-
     // Sync texture state
-    SyncTextureStateMember(mFunctions, applyTextureFunc, mState, mAppliedTextureState, mState.target, GL_TEXTURE_BASE_LEVEL, &gl::TextureState::baseLevel);
-    SyncTextureStateMember(mFunctions, applyTextureFunc, mState, mAppliedTextureState, mState.target, GL_TEXTURE_MAX_LEVEL, &gl::TextureState::maxLevel);
+    // Apply the effective base level and max level instead of the base level and max level set from
+    // the API. This can help with buggy drivers.
+    if (mAppliedTextureState.getEffectiveBaseLevel() != mState.getEffectiveBaseLevel())
+    {
+        applyTextureFunc();
+        mFunctions->texParameteri(mState.target, GL_TEXTURE_BASE_LEVEL,
+                                  mState.getEffectiveBaseLevel());
+    }
+    mAppliedTextureState.baseLevel = mState.baseLevel;
+    if (mAppliedTextureState.getEffectiveMaxLevel() != mState.getEffectiveMaxLevel())
+    {
+        applyTextureFunc();
+        mFunctions->texParameteri(mState.target, GL_TEXTURE_MAX_LEVEL,
+                                  mState.getEffectiveMaxLevel());
+    }
+    mAppliedTextureState.maxLevel = mState.maxLevel;
 
+    // clang-format off
     const LevelInfoGL &levelInfo = mLevelInfo[mState.getEffectiveBaseLevel()];
     SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState, mAppliedTextureState, mState.target, GL_TEXTURE_SWIZZLE_R, &gl::TextureState::swizzleRed);
     SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState, mAppliedTextureState, mState.target, GL_TEXTURE_SWIZZLE_G, &gl::TextureState::swizzleGreen);
