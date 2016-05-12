@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_1823049b",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T01:47:32Z",
+      "side": 1,
+      "message": "you can define DE_OS\u003dDE_OS_OZONE.. dEQP is set up to allow definitions from outside.",
+      "range": {
+        "startLine": 1042,
+        "startChar": 0,
+        "endLine": 1048,
+        "endChar": 15
+      },
+      "revId": "47d4e797bfddaff68ec71d62220578221aa13345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_982ff479",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T01:47:32Z",
+      "side": 1,
+      "message": "can replace this with #if (DE_OS \u003d\u003d DE_OS_OZONE)",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 23
+      },
+      "revId": "47d4e797bfddaff68ec71d62220578221aa13345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_781b3062",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-12T01:47:32Z",
+      "side": 1,
+      "message": "nit: close if comment",
+      "range": {
+        "startLine": 95,
+        "startChar": 1,
+        "endLine": 95,
+        "endChar": 6
+      },
+      "revId": "47d4e797bfddaff68ec71d62220578221aa13345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
