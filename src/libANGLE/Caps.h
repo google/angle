@@ -295,6 +295,9 @@ struct Extensions
     // GL_EXT_multisample_compatibility.
     // written against ES 3.1 but can apply to earlier versions.
     bool multisampleCompatibility;
+
+    // GL_CHROMIUM_framebuffer_mixed_samples
+    bool framebufferMixedSamples;
 };
 
 struct Limitations

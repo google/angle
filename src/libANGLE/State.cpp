@@ -178,6 +178,8 @@ void State::initialize(const Caps &caps,
         mMultiSampling = true;
         mSampleAlphaToOne = false;
     }
+
+    mCoverageModulation = GL_NONE;
 }
 
 void State::reset()
@@ -1359,6 +1361,17 @@ Debug &State::getDebug()
     return mDebug;
 }
 
+void State::setCoverageModulation(GLenum components)
+{
+    mCoverageModulation = components;
+    mDirtyBits.set(DIRTY_BIT_COVERAGE_MODULATION);
+}
+
+GLenum State::getCoverageModulation() const
+{
+    return mCoverageModulation;
+}
+
 void State::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
@@ -1440,6 +1453,8 @@ void State::getFloatv(GLenum pname, GLfloat *params)
         break;
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
         *params = static_cast<GLfloat>(mSampleAlphaToOne);
+      case GL_COVERAGE_MODULATION_CHROMIUM:
+        params[0] = mCoverageModulation;
         break;
       default:
         UNREACHABLE();
@@ -1684,6 +1699,8 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
           break;
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
           *params = static_cast<GLint>(mSampleAlphaToOne);
+      case GL_COVERAGE_MODULATION_CHROMIUM:
+          *params = static_cast<GLint>(mCoverageModulation);
           break;
       default:
         UNREACHABLE();

@@ -2056,4 +2056,28 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
     return true;
 }
 
+bool ValidateCoverageModulationCHROMIUM(Context* context, GLenum components)
+{
+    if (!context->getExtensions().framebufferMixedSamples)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GL_CHROMIUM_framebuffer_mixed_samples is not available."));
+        return false;
+    }
+    switch (components)
+    {
+        case GL_RGB:
+        case GL_RGBA:
+        case GL_ALPHA:
+        case GL_NONE:
+            break;
+        default:
+            context->handleError(
+                Error(GL_INVALID_ENUM, "GLenum components is not one of GL_RGB, GL_RGBA, GL_ALPHA or GL_NONE."));
+            return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

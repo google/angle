@@ -127,6 +127,8 @@ class StateManagerGL final : angle::NonCopyable
     void setMultisamplingStateEnabled(bool enabled);
     void setSampleAlphaToOneStateEnabled(bool enabled);
 
+    void setCoverageModulation(GLenum components);
+
     void onDeleteQueryObject(QueryGL *query);
 
     gl::Error setDrawArraysState(const gl::ContextState &data,
@@ -259,6 +261,8 @@ class StateManagerGL final : angle::NonCopyable
 
     bool mMultisamplingEnabled;
     bool mSampleAlphaToOneEnabled;
+
+    GLenum mCoverageModulation;
 
     gl::State::DirtyBits mLocalDirtyBits;
 };

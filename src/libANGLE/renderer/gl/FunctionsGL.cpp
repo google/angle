@@ -640,6 +640,7 @@ FunctionsGL::FunctionsGL()
       vertexAttribIFormat(nullptr),
       vertexAttribLFormat(nullptr),
       vertexBindingDivisor(nullptr),
+      coverageModulationNV(nullptr),
 
       bindBuffersBase(nullptr),
       bindBuffersRange(nullptr),
@@ -822,6 +823,9 @@ void FunctionsGL::initializeProcsDesktopGL()
     // Load extensions
     // Even though extensions are written against specific versions of GL, many drivers expose the extensions
     // in even older versions.  Always try loading the extensions regardless of GL version.
+
+    // GL_NV_framebuffer_mixed_samples
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_framebuffer_mixed_samples", loadProcAddress("glCoverageModulationNV"), &coverageModulationNV);
 
     // GL_NV_fence
     AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glDeleteFencesNV"), &deleteFencesNV);
@@ -1723,6 +1727,9 @@ void FunctionsGL::initializeProcsGLES()
     AssignGLExtensionEntryPoint(extensions, "GL_OES_texture_3D", loadProcAddress("glTexImage3DOES"), &texImage3D);
     AssignGLExtensionEntryPoint(extensions, "GL_OES_texture_3D", loadProcAddress("glTexSubImage3DOES"), &texSubImage3D);
     AssignGLExtensionEntryPoint(extensions, "GL_OES_texture_3D", loadProcAddress("glCopyTexSubImage3DOES"), &copyTexSubImage3D);
+
+    // GL_NV_framebuffer_mixed_samples
+    AssignGLExtensionEntryPoint(extensions, "GL_NV_framebuffer_mixed_samples", loadProcAddress("glCoverageModulationNV"), &coverageModulationNV);
 
     // GL_NV_fence
     AssignGLExtensionEntryPoint(extensions, "GL_NV_fence", loadProcAddress("glDeleteFencesNV"), &deleteFencesNV);

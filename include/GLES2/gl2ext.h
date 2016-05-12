@@ -821,6 +821,15 @@ GL_APICALL void GL_APIENTRY glBlitFramebufferANGLE (GLint srcX0, GLint srcY0, GL
 #endif
 #endif /* GL_ANGLE_framebuffer_blit */
 
+#ifndef GL_CHROMIUM_framebuffer_mixed_samples
+#define GL_CHROMIUM_frambuffer_mixed_samples 1
+#define GL_COVERAGE_MODULATION_CHROMIUM 0x9332
+typedef void (GL_APIENTRYP PFNGLCOVERAGEMODULATIONCHROMIUMPROC) (GLenum components);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glCoverageModulationCHROMIUM(GLenum components);
+#endif
+#endif /* GL_CHROMIUM_framebuffer_mixed_samples */
+
 #ifndef GL_ANGLE_framebuffer_multisample
 #define GL_ANGLE_framebuffer_multisample 1
 #define GL_RENDERBUFFER_SAMPLES_ANGLE     0x8CAB

@@ -274,6 +274,10 @@ class State : angle::NonCopyable
     const Debug &getDebug() const;
     Debug &getDebug();
 
+    // CHROMIUM_framebuffer_mixed_samples coverage modulation
+    void setCoverageModulation(GLenum components);
+    GLenum getCoverageModulation() const;
+
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
@@ -342,6 +346,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_PROGRAM_BINDING,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
+        DIRTY_BIT_COVERAGE_MODULATION, // CHROMIUM_framebuffer_mixed_samples
         DIRTY_BIT_CURRENT_VALUE_0,
         DIRTY_BIT_CURRENT_VALUE_MAX = DIRTY_BIT_CURRENT_VALUE_0 + MAX_VERTEX_ATTRIBS,
         DIRTY_BIT_INVALID           = DIRTY_BIT_CURRENT_VALUE_MAX,
@@ -446,6 +451,8 @@ class State : angle::NonCopyable
 
     bool mMultiSampling;
     bool mSampleAlphaToOne;
+
+    GLenum mCoverageModulation;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

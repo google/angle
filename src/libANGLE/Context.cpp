@@ -1380,6 +1380,14 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
           *type      = GL_INT;
           *numParams = 1;
           return true;
+      case GL_COVERAGE_MODULATION_CHROMIUM:
+          if (!mExtensions.framebufferMixedSamples)
+          {
+              return false;
+          }
+          *type      = GL_INT;
+          *numParams = 1;
+          return true;
     }
 
     if (mExtensions.debug)
@@ -1654,6 +1662,12 @@ void Context::bindUniformLocation(GLuint program, GLint location, const GLchar *
 
     programObject->bindUniformLocation(location, name);
 }
+
+void Context::setCoverageModulation(GLenum components)
+{
+    mState.setCoverageModulation(components);
+}
+
 
 void Context::handleError(const Error &error)
 {

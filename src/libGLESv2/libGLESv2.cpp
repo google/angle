@@ -1567,4 +1567,10 @@ void GL_APIENTRY glBindUniformLocationCHROMIUM(GLuint program, GLint location, c
 {
     return gl::BindUniformLocationCHROMIUM(program, location, name);
 }
+
+void GL_APIENTRY glCoverageModulationCHROMIUM(GLenum components)
+{
+    return gl::CoverageModulationCHROMIUM(components);
+}
+
 }

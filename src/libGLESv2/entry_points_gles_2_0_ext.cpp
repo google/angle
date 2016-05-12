@@ -1388,4 +1388,20 @@ ANGLE_EXPORT void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program,
         context->bindUniformLocation(program, location, name);
     }
 }
+
+ANGLE_EXPORT void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
+{
+    EVENT("(GLenum components = %u)", components);
+
+    Context* context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!ValidateCoverageModulationCHROMIUM(context, components))
+        {
+            return;
+        }
+        context->setCoverageModulation(components);
+    }
+}
+
 }

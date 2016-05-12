@@ -115,6 +115,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mTextureCubemapSeamlessEnabled(false),
       mMultisamplingEnabled(true),
       mSampleAlphaToOneEnabled(false),
+      mCoverageModulation(GL_NONE),
       mLocalDirtyBits()
 {
     ASSERT(mFunctions);
@@ -1520,6 +1521,8 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
                 setSampleAlphaToOneStateEnabled(state.isSampleAlphaToOneEnabled());
+            case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
+                setCoverageModulation(state.getCoverageModulation());
                 break;
             default:
             {
@@ -1584,6 +1587,17 @@ void StateManagerGL::setSampleAlphaToOneStateEnabled(bool enabled)
             mFunctions->disable(GL_SAMPLE_ALPHA_TO_ONE);
         }
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+    }
+}
+
+void StateManagerGL::setCoverageModulation(GLenum components)
+{
+    if (mCoverageModulation != components)
+    {
+        mCoverageModulation = components;
+        mFunctions->coverageModulationNV(components);
+
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_COVERAGE_MODULATION);
     }
 }
 

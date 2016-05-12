@@ -188,6 +188,8 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
                                          GLint location,
                                          const GLchar *name);
 
+bool ValidateCoverageModulationCHROMIUM(Context* context, GLenum components);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_
