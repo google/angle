@@ -315,7 +315,7 @@ static_library("libANGLE") {
   ]
 
   if (is_win) {
-    deps += [ ":copy_compiler_dll" ]
+    data_deps = [ ":copy_compiler_dll" ]
   }
 }
 
