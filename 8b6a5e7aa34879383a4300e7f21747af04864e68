@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_a7b49543",
+        "filename": "util/posix/Posix_system_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-12T13:40:36Z",
+      "side": 1,
+      "message": "This should be .dylib on OSX",
+      "revId": "8b6a5e7aa34879383a4300e7f21747af04864e68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_4794c999",
+        "filename": "util/posix/Posix_system_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-12T13:40:36Z",
+      "side": 1,
+      "message": "dlopen has a second \"mode\" argument. Here I think you\u0027d want to use RTLD_NOW.",
+      "revId": "8b6a5e7aa34879383a4300e7f21747af04864e68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_878eb189",
+        "filename": "util/system_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-12T13:40:36Z",
+      "side": 1,
+      "message": "ultra-nit: getSymbol, as the symbol table is loaded at loadLibrary",
+      "revId": "8b6a5e7aa34879383a4300e7f21747af04864e68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
