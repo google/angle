@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "9714aa34_391fcf4a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-12T14:55:43Z",
+      "side": 1,
+      "message": "There were some bugs related to applying the top level here as well. I fixed them as a part of this patch.",
+      "parentUuid": "125a88dd_e889b5fe",
+      "range": {
+        "startLine": 1303,
+        "startChar": 16,
+        "endLine": 1303,
+        "endChar": 25
+      },
+      "revId": "6295951abf6d475d56c9228cad82a4c1aba9577e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_0dec63a3",
         "filename": "src/libANGLE/renderer/gl/TextureGL.h",
         "patchSetId": 2
