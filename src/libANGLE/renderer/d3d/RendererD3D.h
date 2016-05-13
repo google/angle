@@ -187,8 +187,8 @@ class RendererD3D : public BufferFactoryD3D
     // Image operations
     virtual ImageD3D *createImage() = 0;
     virtual gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) = 0;
-    virtual gl::Error generateMipmapsUsingD3D(TextureStorage *storage,
-                                              const gl::TextureState &textureState) = 0;
+    virtual gl::Error generateMipmapUsingD3D(TextureStorage *storage,
+                                             const gl::TextureState &textureState) = 0;
     virtual TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain) = 0;
     virtual TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage) = 0;
     virtual TextureStorage *createTextureStorageExternal(

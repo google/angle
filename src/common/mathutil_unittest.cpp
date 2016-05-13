@@ -168,5 +168,14 @@ TEST(MathUtilTest, isInf)
     EXPECT_FALSE(isInf(bitCast<float>(1u << 31 | 0xfeu << 23 | 0x7fffffu)));
 }
 
+TEST(MathUtilTest, CountLeadingZeros)
+{
+    for (unsigned int i = 0; i < 32u; ++i)
+    {
+        uint32_t iLeadingZeros = 1u << (31u - i);
+        EXPECT_EQ(i, CountLeadingZeros(iLeadingZeros));
+    }
+    EXPECT_EQ(32u, CountLeadingZeros(0));
+}
 }
 

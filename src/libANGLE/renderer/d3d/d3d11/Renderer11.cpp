@@ -3598,8 +3598,8 @@ gl::Error Renderer11::generateMipmap(ImageD3D *dest, ImageD3D *src)
     return Image11::generateMipmap(dest11, src11, mRenderer11DeviceCaps);
 }
 
-gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage,
-                                              const gl::TextureState &textureState)
+gl::Error Renderer11::generateMipmapUsingD3D(TextureStorage *storage,
+                                             const gl::TextureState &textureState)
 {
     TextureStorage11 *storage11 = GetAs<TextureStorage11>(storage);
 
@@ -3607,8 +3607,8 @@ gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage,
     ASSERT(storage11->supportsNativeMipmapFunction());
 
     ID3D11ShaderResourceView *srv;
-    gl::Error error =
-        storage11->getSRVLevels(textureState.mBaseLevel, textureState.mMaxLevel, &srv);
+    gl::Error error = storage11->getSRVLevels(textureState.getEffectiveBaseLevel(),
+                                              textureState.getEffectiveMaxLevel(), &srv);
     if (error.isError())
     {
         return error;

@@ -60,7 +60,7 @@ class TextureD3D : public TextureImpl
     virtual gl::Error setImageExternal(GLenum target,
                                        egl::Stream *stream,
                                        const egl::Stream::GLTextureDescription &desc) override;
-    gl::Error generateMipmaps() override;
+    gl::Error generateMipmap() override;
     TextureStorage *getStorage();
     ImageD3D *getBaseLevelImage() const;
 
@@ -92,8 +92,7 @@ class TextureD3D : public TextureImpl
     virtual GLint getLevelZeroDepth() const;
 
     GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
-    int mipLevels() const;
-    virtual void initMipmapsImages() = 0;
+    virtual void initMipmapImages() = 0;
     bool isBaseImageZeroSize() const;
     virtual bool isImageComplete(const gl::ImageIndex &index) const = 0;
 
@@ -124,7 +123,7 @@ class TextureD3D : public TextureImpl
 
     bool shouldUseSetData(const ImageD3D *image) const;
 
-    gl::Error generateMipmapsUsingImages();
+    gl::Error generateMipmapUsingImages(const GLuint maxLevel);
 
     GLuint mBaseLevel;
 };
@@ -181,7 +180,7 @@ class TextureD3D_2D : public TextureD3D
     virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual gl::Error updateStorage();
-    virtual void initMipmapsImages();
+    virtual void initMipmapImages();
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
@@ -251,7 +250,7 @@ class TextureD3D_Cube : public TextureD3D
     virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual gl::Error updateStorage();
-    virtual void initMipmapsImages();
+    void initMipmapImages() override;
 
     bool isValidFaceLevel(int faceIndex, int level) const;
     bool isFaceLevelComplete(int faceIndex, int level) const;
@@ -318,7 +317,7 @@ class TextureD3D_3D : public TextureD3D
     virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual gl::Error updateStorage();
-    virtual void initMipmapsImages();
+    void initMipmapImages() override;
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
@@ -382,7 +381,7 @@ class TextureD3D_2DArray : public TextureD3D
     virtual gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage);
 
     virtual gl::Error updateStorage();
-    virtual void initMipmapsImages();
+    void initMipmapImages() override;
 
     bool isValidLevel(int level) const;
     bool isLevelComplete(int level) const;
@@ -481,7 +480,7 @@ class TextureD3D_External : public TextureD3D
     gl::Error setCompleteTexStorage(TextureStorage *newCompleteTexStorage) override;
 
     gl::Error updateStorage() override;
-    void initMipmapsImages() override;
+    void initMipmapImages() override;
 
     bool isImageComplete(const gl::ImageIndex &index) const override;
 };

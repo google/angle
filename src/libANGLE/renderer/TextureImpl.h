@@ -67,7 +67,7 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                        egl::Stream *stream,
                                        const egl::Stream::GLTextureDescription &desc) = 0;
 
-    virtual gl::Error generateMipmaps() = 0;
+    virtual gl::Error generateMipmap() = 0;
 
     virtual void setBaseLevel(GLuint baseLevel) = 0;
 

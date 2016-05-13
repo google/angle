@@ -2638,8 +2638,8 @@ gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
     return Image9::generateMipmap(dst9, src9);
 }
 
-gl::Error Renderer9::generateMipmapsUsingD3D(TextureStorage *storage,
-                                             const gl::TextureState &textureState)
+gl::Error Renderer9::generateMipmapUsingD3D(TextureStorage *storage,
+                                            const gl::TextureState &textureState)
 {
     UNREACHABLE();
     return gl::Error(GL_NO_ERROR);

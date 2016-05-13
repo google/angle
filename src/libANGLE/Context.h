@@ -370,6 +370,8 @@ class Context final : public ValidationContext
                                  GLsizei imageSize,
                                  const GLvoid *data);
 
+    void generateMipmap(GLenum target);
+
     Error flush();
     Error finish();
 

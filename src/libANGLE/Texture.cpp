@@ -131,22 +131,23 @@ GLuint TextureState::getEffectiveMaxLevel() const
     return mMaxLevel;
 }
 
-size_t TextureState::getMipmapMaxLevel() const
+GLuint TextureState::getMipmapMaxLevel() const
 {
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
-    size_t expectedMipLevels = 0;
+    GLuint expectedMipLevels = 0;
     if (mTarget == GL_TEXTURE_3D)
     {
         const int maxDim = std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
                                     baseImageDesc.size.depth);
-        expectedMipLevels = log2(maxDim);
+        expectedMipLevels = static_cast<GLuint>(log2(maxDim));
     }
     else
     {
-        expectedMipLevels = log2(std::max(baseImageDesc.size.width, baseImageDesc.size.height));
+        expectedMipLevels = static_cast<GLuint>(
+            log2(std::max(baseImageDesc.size.width, baseImageDesc.size.height)));
     }
 
-    return std::min<size_t>(getEffectiveBaseLevel() + expectedMipLevels, getEffectiveMaxLevel());
+    return std::min<GLuint>(getEffectiveBaseLevel() + expectedMipLevels, getEffectiveMaxLevel());
 }
 
 bool TextureState::setBaseLevel(GLuint baseLevel)
@@ -320,9 +321,9 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
 
 bool TextureState::computeMipmapCompleteness() const
 {
-    const size_t maxLevel = getMipmapMaxLevel();
+    const GLuint maxLevel = getMipmapMaxLevel();
 
-    for (size_t level = getEffectiveBaseLevel(); level <= maxLevel; level++)
+    for (GLuint level = getEffectiveBaseLevel(); level <= maxLevel; level++)
     {
         if (mTarget == GL_TEXTURE_CUBE_MAP)
         {
@@ -433,14 +434,19 @@ void TextureState::setImageDesc(GLenum target, size_t level, const ImageDesc &de
     mCompletenessCache.cacheValid = false;
 }
 
-void TextureState::setImageDescChain(size_t levels, Extents baseSize, GLenum sizedInternalFormat)
+void TextureState::setImageDescChain(GLuint baseLevel,
+                                     GLuint maxLevel,
+                                     Extents baseSize,
+                                     GLenum sizedInternalFormat)
 {
-    for (int level = 0; level < static_cast<int>(levels); level++)
+    for (GLuint level = baseLevel; level <= maxLevel; level++)
     {
-        Extents levelSize(
-            std::max<int>(baseSize.width >> level, 1), std::max<int>(baseSize.height >> level, 1),
-            (mTarget == GL_TEXTURE_2D_ARRAY) ? baseSize.depth
-                                             : std::max<int>(baseSize.depth >> level, 1));
+        int relativeLevel = (level - baseLevel);
+        Extents levelSize(std::max<int>(baseSize.width >> relativeLevel, 1),
+                          std::max<int>(baseSize.height >> relativeLevel, 1),
+                          (mTarget == GL_TEXTURE_2D_ARRAY)
+                              ? baseSize.depth
+                              : std::max<int>(baseSize.depth >> relativeLevel, 1));
         ImageDesc levelInfo(levelSize, sizedInternalFormat);
 
         if (mTarget == GL_TEXTURE_CUBE_MAP)
@@ -874,7 +880,7 @@ Error Texture::copySubImage(GLenum target, size_t level, const Offset &destOffse
     return mTexture->copySubImage(target, level, destOffset, sourceArea, source);
 }
 
-Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, const Extents &size)
+Error Texture::setStorage(GLenum target, GLsizei levels, GLenum internalFormat, const Extents &size)
 {
     ASSERT(target == mState.mTarget);
 
@@ -891,12 +897,11 @@ Error Texture::setStorage(GLenum target, size_t levels, GLenum internalFormat, c
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
-    mState.setImageDescChain(levels, size, internalFormat);
-
+    mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, internalFormat);
     return Error(GL_NO_ERROR);
 }
 
-Error Texture::generateMipmaps()
+Error Texture::generateMipmap()
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     releaseTexImageInternal();
@@ -908,17 +913,20 @@ Error Texture::generateMipmaps()
         orphanImages();
     }
 
-    Error error = mTexture->generateMipmaps();
-    if (error.isError())
+    const GLuint baseLevel = mState.getEffectiveBaseLevel();
+    const GLuint maxLevel  = mState.getMipmapMaxLevel();
+
+    if (maxLevel > baseLevel)
     {
-        return error;
+        ANGLE_TRY(mTexture->generateMipmap());
+
+        const ImageDesc &baseImageInfo =
+            mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);
+        mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size,
+                                 baseImageInfo.internalFormat);
     }
 
-    const ImageDesc &baseImageInfo = mState.getImageDesc(mState.getBaseImageTarget(), 0);
-    size_t mipLevels = log2(std::max(std::max(baseImageInfo.size.width, baseImageInfo.size.height), baseImageInfo.size.depth)) + 1;
-    mState.setImageDescChain(mipLevels, baseImageInfo.size, baseImageInfo.internalFormat);
-
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 void Texture::bindTexImageFromSurface(egl::Surface *surface)

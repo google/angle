@@ -248,6 +248,8 @@ bool ValidateFlushMappedBufferRangeBase(Context *context,
                                         GLintptr offset,
                                         GLsizeiptr length);
 
+bool ValidateGenerateMipmap(Context *context, GLenum target);
+
 bool ValidateGenBuffers(Context *context, GLint n, GLuint *buffers);
 bool ValidateDeleteBuffers(Context *context, GLint n, const GLuint *buffers);
 bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *framebuffers);

@@ -1242,74 +1242,12 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target))
+        if (!context->skipValidation() && !ValidateGenerateMipmap(context, target))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-
-        if (texture == NULL)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        GLenum baseTarget = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
-        GLenum internalFormat = texture->getInternalFormat(baseTarget, texture->getBaseLevel());
-        const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
-        const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
-
-        // GenerateMipmap should not generate an INVALID_OPERATION for textures created with
-        // unsized formats or that are color renderable and filterable.  Since we do not track if
-        // the texture was created with sized or unsized format (only sized formats are stored),
-        // it is not possible to make sure the the LUMA formats can generate mipmaps (they should
-        // be able to) because they aren't color renderable.  Simply do a special case for LUMA
-        // textures since they're the only texture format that can be created with unsized formats
-        // that is not color renderable.  New unsized formats are unlikely to be added, since ES2
-        // was the last version to use add them.
-        bool isLUMA = internalFormat == GL_LUMINANCE8_EXT ||
-                      internalFormat == GL_LUMINANCE8_ALPHA8_EXT ||
-                      internalFormat == GL_ALPHA8_EXT;
-
-        if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0 || !formatCaps.filterable ||
-            (!formatCaps.renderable && !isLUMA) || formatInfo.compressed)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // GL_EXT_sRGB does not support mipmap generation on sRGB textures
-        if (context->getClientVersion() == 2 && formatInfo.colorEncoding == GL_SRGB)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // Non-power of 2 ES2 check
-        if (!context->getExtensions().textureNPOT &&
-            (!isPow2(static_cast<int>(texture->getWidth(baseTarget, 0))) ||
-             !isPow2(static_cast<int>(texture->getHeight(baseTarget, 0)))))
-        {
-            ASSERT(context->getClientVersion() <= 2 && (target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP));
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // Cube completeness check
-        if (target == GL_TEXTURE_CUBE_MAP && !texture->getTextureState().isCubeComplete())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        Error error = texture->generateMipmaps();
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->generateMipmap(target);
     }
 }
 

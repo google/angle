@@ -135,7 +135,7 @@ egl::Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
     const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
     if (level > 0 &&
         (!texture->isMipmapComplete() || static_cast<GLuint>(level) < effectiveBaseLevel ||
-         static_cast<size_t>(level) > texture->getTextureState().getMipmapMaxLevel()))
+         static_cast<GLuint>(level) > texture->getTextureState().getMipmapMaxLevel()))
     {
         return egl::Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
     }
