@@ -20,6 +20,7 @@ const GLColor GLColor::green = GLColor(0u, 255u, 0u, 255u);
 const GLColor GLColor::blue  = GLColor(0u, 0u, 255u, 255u);
 const GLColor GLColor::cyan  = GLColor(0u, 255u, 255u, 255u);
 const GLColor GLColor::black = GLColor(0u, 0u, 0u, 255u);
+const GLColor GLColor::white = GLColor(255u, 255u, 255u, 255u);
 
 namespace
 {

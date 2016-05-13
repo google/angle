@@ -58,6 +58,7 @@ struct GLColor
     static const GLColor blue;
     static const GLColor cyan;
     static const GLColor black;
+    static const GLColor white;
 };
 
 // Useful to cast any type to GLubyte.
@@ -71,18 +72,6 @@ GLColor MakeGLColor(TR r, TG g, TB b, TA a)
 bool operator==(const GLColor &a, const GLColor &b);
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color);
 GLColor ReadColor(GLint x, GLint y);
-
-template <typename T>
-void FillWithRGBA(size_t pixelCount, T red, T green, T blue, T alpha, T *outArray)
-{
-    for (size_t i = 0u; i < pixelCount; ++i)
-    {
-        outArray[i * 4u]      = red;
-        outArray[i * 4u + 1u] = green;
-        outArray[i * 4u + 2u] = blue;
-        outArray[i * 4u + 3u] = alpha;
-    }
-}
 
 }  // namespace angle
 
