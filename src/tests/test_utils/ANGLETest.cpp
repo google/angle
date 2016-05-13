@@ -22,6 +22,8 @@ const GLColor GLColor::cyan  = GLColor(0u, 255u, 255u, 255u);
 const GLColor GLColor::black = GLColor(0u, 0u, 0u, 255u);
 const GLColor GLColor::white = GLColor(255u, 255u, 255u, 255u);
 
+const GLColor16 GLColor16::white = GLColor16(65535u, 65535u, 65535u, 65535u);
+
 namespace
 {
 float ColorNorm(GLubyte channelValue)
@@ -115,6 +117,35 @@ bool operator==(const GLColor &a, const GLColor &b)
 }
 
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
+{
+    ostream << "(" << static_cast<unsigned int>(color.R) << ", "
+            << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
+            << ", " << static_cast<unsigned int>(color.A) << ")";
+    return ostream;
+}
+
+GLColor16::GLColor16() : R(0), G(0), B(0), A(0)
+{
+}
+
+GLColor16::GLColor16(GLushort r, GLushort g, GLushort b, GLushort a) : R(r), G(g), B(b), A(a)
+{
+}
+
+GLColor16 ReadColor16(GLint x, GLint y)
+{
+    GLColor16 actual;
+    glReadPixels((x), (y), 1, 1, GL_RGBA, GL_UNSIGNED_SHORT, &actual.R);
+    EXPECT_GL_NO_ERROR();
+    return actual;
+}
+
+bool operator==(const GLColor16 &a, const GLColor16 &b)
+{
+    return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+}
+
+std::ostream &operator<<(std::ostream &ostream, const GLColor16 &color)
 {
     ostream << "(" << static_cast<unsigned int>(color.R) << ", "
             << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
@@ -543,6 +574,11 @@ void ANGLETest::setNoErrorEnabled(bool enabled)
 int ANGLETest::getClientVersion() const
 {
     return mEGLWindow->getClientMajorVersion();
+}
+
+int ANGLETest::getClientMinorVersion() const
+{
+    return mEGLWindow->getClientMinorVersion();
 }
 
 EGLWindow *ANGLETest::getEGLWindow() const

@@ -1143,6 +1143,42 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                     break;
             }
         }
+        case GL_R16_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,1>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_R16_SNORM_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16_SNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,1>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
         case GL_R32F:
         {
             switch (dxgiFormat)
@@ -1316,6 +1352,42 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
                         std::map<GLenum, LoadImageFunctionInfo> loadMap;
                         loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,2>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RG16_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,2>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RG16_SNORM_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16_SNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,2>, false);
                         return loadMap;
                     }();
 
@@ -1562,6 +1634,42 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
                         std::map<GLenum, LoadImageFunctionInfo> loadMap;
                         loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative3To4<GLushort,0x0001>, true);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RGB16_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16B16A16_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative3To4<GLushort,0xFFFF>, true);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RGB16_SNORM_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16B16A16_SNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_SHORT] = LoadImageFunctionInfo(LoadToNative3To4<GLushort,0x7FFF>, true);
                         return loadMap;
                     }();
 
@@ -1854,6 +1962,42 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
                         std::map<GLenum, LoadImageFunctionInfo> loadMap;
                         loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,4>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RGBA16_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16B16A16_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_UNSIGNED_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,4>, false);
+                        return loadMap;
+                    }();
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
+        case GL_RGBA16_SNORM_EXT:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_R16G16B16A16_SNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = []() {
+                        std::map<GLenum, LoadImageFunctionInfo> loadMap;
+                        loadMap[GL_SHORT] = LoadImageFunctionInfo(LoadToNative<GLushort,4>, false);
                         return loadMap;
                     }();
 

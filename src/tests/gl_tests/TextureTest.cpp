@@ -11,6 +11,27 @@ using namespace angle;
 namespace
 {
 
+// Take a pixel, and reset the components not covered by the format to default
+// values. In particular, the default value for the alpha component is 65535
+// (1.0 as unsigned normalized fixed point value).
+GLColor16 SliceFormatColor16(GLenum format, GLColor16 full)
+{
+    switch (format)
+    {
+        case GL_RED:
+            return GLColor16(full.R, 0, 0, 65535u);
+        case GL_RG:
+            return GLColor16(full.R, full.G, 0, 65535u);
+        case GL_RGB:
+            return GLColor16(full.R, full.G, full.B, 65535u);
+        case GL_RGBA:
+            return full;
+        default:
+            UNREACHABLE();
+    }
+    return GLColor16::white;
+}
+
 class TexCoordDrawTest : public ANGLETest
 {
   protected:
@@ -3156,6 +3177,147 @@ TEST_P(TextureLimitsTest, DrawWithTexturePastMaximum)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+class Texture2DNorm16TestES3 : public Texture2DTestES3
+{
+  protected:
+    Texture2DNorm16TestES3() : Texture2DTestES3(), mTextures{0, 0, 0}, mFBO(0), mRenderbuffer(0) {}
+
+    void SetUp() override
+    {
+        Texture2DTestES3::SetUp();
+
+        glActiveTexture(GL_TEXTURE0);
+        glGenTextures(3, mTextures);
+        glGenFramebuffers(1, &mFBO);
+        glGenRenderbuffers(1, &mRenderbuffer);
+
+        for (size_t textureIndex = 0; textureIndex < 3; textureIndex++)
+        {
+            glBindTexture(GL_TEXTURE_2D, mTextures[textureIndex]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void TearDown() override
+    {
+        glDeleteTextures(3, mTextures);
+        glDeleteFramebuffers(1, &mFBO);
+        glDeleteRenderbuffers(1, &mRenderbuffer);
+
+        Texture2DTestES3::TearDown();
+    }
+
+    void testNorm16Texture(GLint internalformat, GLenum format, GLenum type)
+    {
+        GLushort pixelValue = type == GL_SHORT ? 0x7FFF : 0x6A35;
+        GLColor16 imageData(pixelValue, pixelValue, pixelValue, pixelValue);
+
+        setUpProgram();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0],
+                               0);
+
+        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16_EXT, 1, 1, 0, GL_RGBA, GL_UNSIGNED_SHORT, nullptr);
+
+        glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, &imageData.R);
+
+        EXPECT_GL_NO_ERROR();
+
+        drawQuad(mProgram, "position", 0.5f);
+
+        GLColor16 expectedValue = imageData;
+        if (type == GL_SHORT)
+        {
+            // sampled as signed value; then stored as unsigned value
+            expectedValue = GLColor16::white;
+        }
+
+        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, expectedValue));
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    void testNorm16Render(GLint internalformat, GLenum format, GLenum type)
+    {
+        GLushort pixelValue = 0x6A35;
+        GLColor16 imageData(pixelValue, pixelValue, pixelValue, pixelValue);
+
+        setUpProgram();
+
+        glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, nullptr);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[1],
+                               0);
+
+        glBindTexture(GL_TEXTURE_2D, mTextures[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, &imageData.R);
+
+        EXPECT_GL_NO_ERROR();
+
+        drawQuad(mProgram, "position", 0.5f);
+
+        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, imageData));
+
+        glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, internalformat, 1, 1);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  mRenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+
+        GLColor16 expectedValue = GLColor16::white;
+        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, expectedValue));
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        ASSERT_GL_NO_ERROR();
+    }
+
+    GLuint mTextures[3];
+    GLuint mFBO;
+    GLuint mRenderbuffer;
+};
+
+// Test texture formats enabled by the GL_EXT_texture_norm16 extension.
+TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
+{
+    if (!extensionEnabled("GL_EXT_texture_norm16"))
+    {
+        std::cout << "Test skipped due to missing GL_EXT_texture_norm16." << std::endl;
+        return;
+    }
+
+    testNorm16Texture(GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
+    testNorm16Texture(GL_RG16_EXT, GL_RG, GL_UNSIGNED_SHORT);
+    testNorm16Texture(GL_RGB16_EXT, GL_RGB, GL_UNSIGNED_SHORT);
+    testNorm16Texture(GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
+    testNorm16Texture(GL_R16_SNORM_EXT, GL_RED, GL_SHORT);
+    testNorm16Texture(GL_RG16_SNORM_EXT, GL_RG, GL_SHORT);
+    testNorm16Texture(GL_RGB16_SNORM_EXT, GL_RGB, GL_SHORT);
+    testNorm16Texture(GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT);
+
+    testNorm16Render(GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
+    testNorm16Render(GL_RG16_EXT, GL_RG, GL_UNSIGNED_SHORT);
+    testNorm16Render(GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
@@ -3239,5 +3401,6 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 } // namespace

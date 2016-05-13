@@ -568,6 +568,17 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     // From GL_ANGLE_lossy_etc_decode
     map.insert(InternalFormatInfoPair(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, CompressedFormat(4, 4, 64, 3, GL_ETC1_RGB8_OES, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
 
+    // From GL_EXT_texture_norm16
+    //                               | Internal format     |          | R | G | B | A |S | Format         | Type                           | Component type        | SRGB | Texture supported                        | Renderable                               | Filterable    |
+    map.insert(InternalFormatInfoPair(GL_R16_EXT,           RGBAFormat(16,  0,  0,  0, 0, GL_RED,          GL_UNSIGNED_SHORT,               GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureNorm16>,    RequireExt<&Extensions::textureNorm16>,    AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_R16_SNORM_EXT,     RGBAFormat(16,  0,  0,  0, 0, GL_RED,          GL_SHORT,                        GL_SIGNED_NORMALIZED,   false, RequireExt<&Extensions::textureNorm16>,    NeverSupported,                            AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RG16_EXT,          RGBAFormat(16, 16,  0,  0, 0, GL_RG,           GL_UNSIGNED_SHORT,               GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureNorm16>,    RequireExt<&Extensions::textureNorm16>,    AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RG16_SNORM_EXT,    RGBAFormat(16, 16,  0,  0, 0, GL_RG,           GL_SHORT,                        GL_SIGNED_NORMALIZED,   false, RequireExt<&Extensions::textureNorm16>,    NeverSupported,                            AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGB16_EXT,         RGBAFormat(16, 16, 16,  0, 0, GL_RGB,          GL_UNSIGNED_SHORT,               GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureNorm16>,    NeverSupported,                            AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGB16_SNORM_EXT,   RGBAFormat(16, 16, 16,  0, 0, GL_RGB,          GL_SHORT,                        GL_SIGNED_NORMALIZED,   false, RequireExt<&Extensions::textureNorm16>,    NeverSupported,                            AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGBA16_EXT,        RGBAFormat(16, 16, 16, 16, 0, GL_RGBA,         GL_UNSIGNED_SHORT,               GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureNorm16>,    RequireExt<&Extensions::textureNorm16>,    AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGBA16_SNORM_EXT,  RGBAFormat(16, 16, 16, 16, 0, GL_RGBA,         GL_SHORT,                        GL_SIGNED_NORMALIZED,   false, RequireExt<&Extensions::textureNorm16>,    NeverSupported,                            AlwaysSupported)));
+
     // clang-format on
 
     return map;

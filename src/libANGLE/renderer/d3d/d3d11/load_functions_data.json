@@ -1112,5 +1112,77 @@
         "requiresConversion": "true"
       }
     ]
+  },
+  "GL_R16_EXT": {
+    "GL_UNSIGNED_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,1>",
+        "dxgiFormat": "DXGI_FORMAT_R16_UNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
+  "GL_RG16_EXT": {
+    "GL_UNSIGNED_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,2>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16_UNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
+  "GL_RGB16_EXT": {
+    "GL_UNSIGNED_SHORT": [
+      {
+        "loadFunction": "LoadToNative3To4<GLushort,0xFFFF>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
+        "requiresConversion": "true"
+      }
+    ]
+  },
+  "GL_RGBA16_EXT": {
+    "GL_UNSIGNED_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,4>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
+  "GL_R16_SNORM_EXT": {
+    "GL_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,1>",
+        "dxgiFormat": "DXGI_FORMAT_R16_SNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
+  "GL_RG16_SNORM_EXT": {
+    "GL_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,2>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16_SNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
+  "GL_RGB16_SNORM_EXT": {
+    "GL_SHORT": [
+      {
+        "loadFunction": "LoadToNative3To4<GLushort,0x7FFF>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
+        "requiresConversion": "true"
+      }
+    ]
+  },
+  "GL_RGBA16_SNORM_EXT": {
+    "GL_SHORT": [
+      {
+        "loadFunction": "LoadToNative<GLushort,4>",
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
+        "requiresConversion": "false"
+      }
+    ]
   }
 }

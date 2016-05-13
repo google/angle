@@ -439,6 +439,20 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ReadColor<R16G16B16A16S, GLint>);
             return formatInfo;
         }
+        case ANGLE_FORMAT_R16G16B16A16_SNORM:
+        {
+            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16G16B16A16_SNORM,
+                                                   GL_RGBA16_SNORM_EXT,
+                                                   DXGI_FORMAT_R16G16B16A16_SNORM,
+                                                   DXGI_FORMAT_R16G16B16A16_SNORM,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_R16G16B16A16_SNORM,
+                                                   ANGLE_FORMAT_R16G16B16A16_SNORM,
+                                                   GenerateMip<R16G16B16A16S>,
+                                                   ReadColor<R16G16B16A16S, GLfloat>);
+            return formatInfo;
+        }
         case ANGLE_FORMAT_R16G16B16A16_UINT:
         {
             static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16G16B16A16_UINT,
@@ -495,6 +509,20 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ReadColor<R16G16S, GLint>);
             return formatInfo;
         }
+        case ANGLE_FORMAT_R16G16_SNORM:
+        {
+            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16G16_SNORM,
+                                                   GL_RG16_SNORM_EXT,
+                                                   DXGI_FORMAT_R16G16_SNORM,
+                                                   DXGI_FORMAT_R16G16_SNORM,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_R16G16_SNORM,
+                                                   ANGLE_FORMAT_R16G16B16A16_SNORM,
+                                                   GenerateMip<R16G16S>,
+                                                   ReadColor<R16G16S, GLfloat>);
+            return formatInfo;
+        }
         case ANGLE_FORMAT_R16G16_UINT:
         {
             static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16G16_UINT,
@@ -507,6 +535,20 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ANGLE_FORMAT_R16G16B16A16_UINT,
                                                    GenerateMip<R16G16>,
                                                    ReadColor<R16G16, GLuint>);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16G16_UNORM:
+        {
+            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16G16_UNORM,
+                                                   GL_NONE,
+                                                   DXGI_FORMAT_R16G16_UNORM,
+                                                   DXGI_FORMAT_R16G16_UNORM,
+                                                   DXGI_FORMAT_R16G16_UNORM,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_R16G16_UNORM,
+                                                   ANGLE_FORMAT_R16G16B16A16_UNORM,
+                                                   GenerateMip<R16G16>,
+                                                   ReadColor<R16G16, GLfloat>);
             return formatInfo;
         }
         case ANGLE_FORMAT_R16_FLOAT:
@@ -537,6 +579,20 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ReadColor<R16S, GLint>);
             return formatInfo;
         }
+        case ANGLE_FORMAT_R16_SNORM:
+        {
+            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16_SNORM,
+                                                   GL_R16_SNORM_EXT,
+                                                   DXGI_FORMAT_R16_SNORM,
+                                                   DXGI_FORMAT_R16_SNORM,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_R16_SNORM,
+                                                   ANGLE_FORMAT_R16G16B16A16_SNORM,
+                                                   GenerateMip<R16S>,
+                                                   ReadColor<R16S, GLfloat>);
+            return formatInfo;
+        }
         case ANGLE_FORMAT_R16_UINT:
         {
             static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16_UINT,
@@ -549,6 +605,20 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ANGLE_FORMAT_R16G16B16A16_UINT,
                                                    GenerateMip<R16>,
                                                    ReadColor<R16, GLuint>);
+            return formatInfo;
+        }
+        case ANGLE_FORMAT_R16_UNORM:
+        {
+            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_R16_UNORM,
+                                                   GL_NONE,
+                                                   DXGI_FORMAT_R16_UNORM,
+                                                   DXGI_FORMAT_R16_UNORM,
+                                                   DXGI_FORMAT_R16_UNORM,
+                                                   DXGI_FORMAT_UNKNOWN,
+                                                   DXGI_FORMAT_R16_UNORM,
+                                                   ANGLE_FORMAT_R16G16B16A16_UNORM,
+                                                   GenerateMip<R16>,
+                                                   ReadColor<R16, GLfloat>);
             return formatInfo;
         }
         case ANGLE_FORMAT_R32G32B32A32_FLOAT:
@@ -1464,6 +1534,20 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
                                                      nullptr);
             return textureFormat;
         }
+        case GL_R16_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16_UNORM,
+                                                     nullptr);
+            return textureFormat;
+        }
+        case GL_R16_SNORM_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16_SNORM,
+                                                     nullptr);
+            return textureFormat;
+        }
         case GL_R32F:
         {
             static const TextureFormat textureFormat(internalFormat,
@@ -1531,6 +1615,20 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         {
             static const TextureFormat textureFormat(internalFormat,
                                                      ANGLE_FORMAT_R16G16_UINT,
+                                                     nullptr);
+            return textureFormat;
+        }
+        case GL_RG16_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16_UNORM,
+                                                     nullptr);
+            return textureFormat;
+        }
+        case GL_RG16_SNORM_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16_SNORM,
                                                      nullptr);
             return textureFormat;
         }
@@ -1623,6 +1721,20 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             static const TextureFormat textureFormat(internalFormat,
                                                      ANGLE_FORMAT_R16G16B16A16_UINT,
                                                      Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x0001>);
+            return textureFormat;
+        }
+        case GL_RGB16_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16B16A16_UNORM,
+                                                     Initialize4ComponentData<GLubyte, 0x0000, 0x0000, 0x0000, 0xFFFF>);
+            return textureFormat;
+        }
+        case GL_RGB16_SNORM_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16B16A16_SNORM,
+                                                     Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x7FFF>);
             return textureFormat;
         }
         case GL_RGB32F:
@@ -1748,6 +1860,20 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         {
             static const TextureFormat textureFormat(internalFormat,
                                                      ANGLE_FORMAT_R16G16B16A16_UINT,
+                                                     nullptr);
+            return textureFormat;
+        }
+        case GL_RGBA16_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16B16A16_UNORM,
+                                                     nullptr);
+            return textureFormat;
+        }
+        case GL_RGBA16_SNORM_EXT:
+        {
+            static const TextureFormat textureFormat(internalFormat,
+                                                     ANGLE_FORMAT_R16G16B16A16_SNORM,
                                                      nullptr);
             return textureFormat;
         }

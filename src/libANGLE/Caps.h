@@ -87,6 +87,7 @@ struct Extensions
     // GL_EXT_sRGB
     // GL_ANGLE_depth_texture, GL_OES_depth32
     // GL_EXT_color_buffer_float
+    // GL_EXT_texture_norm16
     void setTextureExtensionSupport(const TextureCapsMap &textureCaps);
 
     // ES2 Extension support
@@ -298,6 +299,10 @@ struct Extensions
 
     // GL_CHROMIUM_framebuffer_mixed_samples
     bool framebufferMixedSamples;
+
+    // GL_EXT_texture_norm16
+    // written against ES 3.1 but can apply to ES 3.0 as well.
+    bool textureNorm16;
 };
 
 struct Limitations

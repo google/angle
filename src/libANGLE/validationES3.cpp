@@ -197,6 +197,16 @@ ES3FormatCombinationSet BuildES3FormatSet()
     // From GL_ANGLE_depth_texture
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT32_OES,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8_OES         );
 
+    // From GL_EXT_texture_norm16
+    InsertES3FormatCombo(&set, GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
+    InsertES3FormatCombo(&set, GL_RG16_EXT, GL_RG, GL_UNSIGNED_SHORT);
+    InsertES3FormatCombo(&set, GL_RGB16_EXT, GL_RGB, GL_UNSIGNED_SHORT);
+    InsertES3FormatCombo(&set, GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
+    InsertES3FormatCombo(&set, GL_R16_SNORM_EXT, GL_RED, GL_SHORT);
+    InsertES3FormatCombo(&set, GL_RG16_SNORM_EXT, GL_RG, GL_SHORT);
+    InsertES3FormatCombo(&set, GL_RGB16_SNORM_EXT, GL_RGB, GL_SHORT);
+    InsertES3FormatCombo(&set, GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT);
+
     return set;
 }
 
@@ -1257,6 +1267,13 @@ bool ValidES3ReadFormatType(Context *context, GLenum internalFormat, GLenum form
         {
           case GL_UNSIGNED_BYTE:
             break;
+          case GL_UNSIGNED_SHORT:
+              if (internalFormatInfo.componentType != GL_UNSIGNED_NORMALIZED &&
+                  internalFormatInfo.type != GL_UNSIGNED_SHORT)
+              {
+                  return false;
+              }
+              break;
           case GL_UNSIGNED_INT_2_10_10_10_REV:
             if (internalFormat != GL_RGB10_A2)
             {
@@ -1312,6 +1329,13 @@ bool ValidES3ReadFormatType(Context *context, GLenum internalFormat, GLenum form
         switch (type)
         {
         case GL_UNSIGNED_BYTE:
+            break;
+        case GL_UNSIGNED_SHORT:
+            if (internalFormatInfo.componentType != GL_UNSIGNED_NORMALIZED &&
+                internalFormatInfo.type != GL_UNSIGNED_SHORT)
+            {
+                return false;
+            }
             break;
         default:
             return false;

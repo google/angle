@@ -2090,6 +2090,7 @@ void Context::initCaps()
         // Disable ES3+ extensions
         mExtensions.colorBufferFloat = false;
         mExtensions.eglImageExternalEssl3 = false;
+        mExtensions.textureNorm16         = false;
     }
 
     if (mClientVersion > 2)

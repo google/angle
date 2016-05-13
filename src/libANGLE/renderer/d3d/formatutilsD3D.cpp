@@ -41,6 +41,9 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
     InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_FLOAT,                          WriteColor<R32G32B32A32F, GLfloat>);
     InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_HALF_FLOAT,                     WriteColor<R16G16B16A16F, GLfloat>);
     InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_HALF_FLOAT_OES,                 WriteColor<R16G16B16A16F, GLfloat>);
+    InsertFormatWriteFunctionMapping(&map, GL_RGBA, GL_UNSIGNED_SHORT,
+                                     WriteColor<R16G16B16A16, GLfloat>);
+    InsertFormatWriteFunctionMapping(&map, GL_RGBA, GL_SHORT, WriteColor<R16G16B16A16S, GLfloat>);
 
     InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLuint>      );
     InsertFormatWriteFunctionMapping(&map, GL_RGBA_INTEGER,       GL_BYTE,                           WriteColor<R8G8B8A8S, GLint>      );
@@ -58,6 +61,9 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
     InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_FLOAT,                          WriteColor<R32G32B32F, GLfloat>   );
     InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_HALF_FLOAT,                     WriteColor<R16G16B16F, GLfloat>   );
     InsertFormatWriteFunctionMapping(&map, GL_RGB,                GL_HALF_FLOAT_OES,                 WriteColor<R16G16B16F, GLfloat>   );
+    InsertFormatWriteFunctionMapping(&map, GL_RGB, GL_UNSIGNED_SHORT,
+                                     WriteColor<R16G16B16, GLfloat>);
+    InsertFormatWriteFunctionMapping(&map, GL_RGB, GL_SHORT, WriteColor<R16G16B16S, GLfloat>);
 
     InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8, GLuint>        );
     InsertFormatWriteFunctionMapping(&map, GL_RGB_INTEGER,        GL_BYTE,                           WriteColor<R8G8B8S, GLint>        );
@@ -71,6 +77,8 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
     InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_FLOAT,                          WriteColor<R32G32F, GLfloat>      );
     InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_HALF_FLOAT,                     WriteColor<R16G16F, GLfloat>      );
     InsertFormatWriteFunctionMapping(&map, GL_RG,                 GL_HALF_FLOAT_OES,                 WriteColor<R16G16F, GLfloat>      );
+    InsertFormatWriteFunctionMapping(&map, GL_RG, GL_UNSIGNED_SHORT, WriteColor<R16G16, GLfloat>);
+    InsertFormatWriteFunctionMapping(&map, GL_RG, GL_SHORT, WriteColor<R16G16S, GLfloat>);
 
     InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_UNSIGNED_BYTE,                  WriteColor<R8G8, GLuint>          );
     InsertFormatWriteFunctionMapping(&map, GL_RG_INTEGER,         GL_BYTE,                           WriteColor<R8G8S, GLint>          );
@@ -84,6 +92,8 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
     InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_FLOAT,                          WriteColor<R32F, GLfloat>         );
     InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_HALF_FLOAT,                     WriteColor<R16F, GLfloat>         );
     InsertFormatWriteFunctionMapping(&map, GL_RED,                GL_HALF_FLOAT_OES,                 WriteColor<R16F, GLfloat>         );
+    InsertFormatWriteFunctionMapping(&map, GL_RED, GL_UNSIGNED_SHORT, WriteColor<R16, GLfloat>);
+    InsertFormatWriteFunctionMapping(&map, GL_RED, GL_SHORT, WriteColor<R16S, GLfloat>);
 
     InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_UNSIGNED_BYTE,                  WriteColor<R8, GLuint>            );
     InsertFormatWriteFunctionMapping(&map, GL_RED_INTEGER,        GL_BYTE,                           WriteColor<R8S, GLint>            );

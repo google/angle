@@ -162,7 +162,8 @@ Extensions::Extensions()
       syncQuery(false),
       colorBufferFloat(false),
       multisampleCompatibility(false),
-      framebufferMixedSamples(false)
+      framebufferMixedSamples(false),
+      textureNorm16(false)
 {
 }
 
@@ -238,6 +239,7 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_CHROMIUM_sync_query",                syncQuery,                 &extensionStrings);
     InsertExtensionString("GL_EXT_multisample_compatibility",      multisampleCompatibility,  &extensionStrings);
     InsertExtensionString("GL_CHROMIUM_framebuffer_mixed_samples", framebufferMixedSamples,   &extensionStrings);
+    InsertExtensionString("GL_EXT_texture_norm16",                 textureNorm16,             &extensionStrings);
     // clang-format on
 
     return extensionStrings;
@@ -503,6 +505,28 @@ static bool DetermineColorBufferFloatSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
 }
 
+// Check for GL_EXT_texture_norm16
+static bool DetermineTextureNorm16Support(const TextureCapsMap &textureCaps)
+{
+    std::vector<GLenum> requiredFilterFormats;
+    requiredFilterFormats.push_back(GL_R16_EXT);
+    requiredFilterFormats.push_back(GL_RG16_EXT);
+    requiredFilterFormats.push_back(GL_RGB16_EXT);
+    requiredFilterFormats.push_back(GL_RGBA16_EXT);
+    requiredFilterFormats.push_back(GL_R16_SNORM_EXT);
+    requiredFilterFormats.push_back(GL_RG16_SNORM_EXT);
+    requiredFilterFormats.push_back(GL_RGB16_SNORM_EXT);
+    requiredFilterFormats.push_back(GL_RGBA16_SNORM_EXT);
+
+    std::vector<GLenum> requiredRenderFormats;
+    requiredFilterFormats.push_back(GL_R16_EXT);
+    requiredFilterFormats.push_back(GL_RG16_EXT);
+    requiredFilterFormats.push_back(GL_RGBA16_EXT);
+
+    return GetFormatSupport(textureCaps, requiredFilterFormats, true, true, false) &&
+           GetFormatSupport(textureCaps, requiredRenderFormats, true, false, true);
+}
+
 void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
 {
     packedDepthStencil = DeterminePackedDepthStencilSupport(textureCaps);
@@ -524,6 +548,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     depthTextures = DetermineDepthTextureSupport(textureCaps);
     depth32                   = DetermineDepth32Support(textureCaps);
     colorBufferFloat = DetermineColorBufferFloatSupport(textureCaps);
+    textureNorm16             = DetermineTextureNorm16Support(textureCaps);
 }
 
 TypePrecision::TypePrecision()

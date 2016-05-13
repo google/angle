@@ -279,10 +279,14 @@ def get_internal_format_initializer(internal_format, angle_format):
             internal_format_initializer = 'Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0x01>'
         elif angle_format['componentType'] == 'unorm' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>'
+        elif angle_format['componentType'] == 'unorm' and angle_format['bits']['red'] == 16:
+            internal_format_initializer = 'Initialize4ComponentData<GLubyte, 0x0000, 0x0000, 0x0000, 0xFFFF>'
         elif angle_format['componentType'] == 'int' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x01>'
         elif angle_format['componentType'] == 'snorm' and angle_format['bits']['red'] == 8:
             internal_format_initializer = 'Initialize4ComponentData<GLbyte, 0x00, 0x00, 0x00, 0x7F>'
+        elif angle_format['componentType'] == 'snorm' and angle_format['bits']['red'] == 16:
+            internal_format_initializer = 'Initialize4ComponentData<GLushort, 0x0000, 0x0000, 0x0000, 0x7FFF>'
         elif angle_format['componentType'] == 'float' and angle_format['bits']['red'] == 16:
             internal_format_initializer = 'Initialize4ComponentData<GLhalf, 0x0000, 0x0000, 0x0000, gl::Float16One>'
         elif angle_format['componentType'] == 'uint' and angle_format['bits']['red'] == 16:
