@@ -299,6 +299,15 @@ static_library("libANGLE") {
         "Xext",
       ]
     }
+    if (is_mac) {
+      sources += rebase_path(gles_gypi.libangle_gl_cgl_sources, ".", "src")
+      libs += [
+        "Cocoa.framework",
+        "IOSurface.framework",
+        "OpenGL.framework",
+        "QuartzCore.framework",
+      ]
+    }
   }
 
   if (is_debug) {

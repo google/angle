@@ -834,9 +834,9 @@
                             {
                                 'libraries':
                                 [
-                                    '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
-                                    '$(SDKROOT)/System/Library/Frameworks/IOSurface.framework',
                                     '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/IOSurface.framework',
+                                    '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
                                     '$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework',
                                 ],
                             },
