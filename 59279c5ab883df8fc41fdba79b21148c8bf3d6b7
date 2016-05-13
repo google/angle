@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9714aa34_dc21e1f0",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_44b76203",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_24841e1d",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-05-12T17:57:04Z",
       "side": 1,
       "message": "didn\u0027t this have \u003d\u003d and !\u003d operators? Probably define these here.",
+      "range": {
+        "startLine": 58,
+        "startChar": 14,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_bc1e2da7",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "See the header.",
+      "parentUuid": "5257a0e9_24841e1d",
       "range": {
         "startLine": 58,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d700e2f1_3ba21710",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "I assume you mean the initializer list. Done.",
+      "parentUuid": "5257a0e9_07b9dcd9",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 53
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_e4a216c0",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2016-05-12T17:57:04Z",
       "side": 1,
       "message": "nit: all member functions should appear before the member variables. Also please put a TODO in here assigned to me to make this a private data class when we can implement Texture dirty bits.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 41
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_7c7ad5df",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_e4a216c0",
       "range": {
         "startLine": 67,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "b711ae44_7a2f7931",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_2797c049",
+      "range": {
+        "startLine": 240,
+        "startChar": 17,
+        "endLine": 240,
+        "endChar": 30
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_a4780e1a",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 5
@@ -128,6 +248,30 @@
       "writtenOn": "2016-05-12T17:57:04Z",
       "side": 1,
       "message": "probably just put these in the cpp",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 301,
+        "endChar": 1
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_5c7f11ce",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "I don\u0027t think we have a perf test which we can use to ensure that changing this won\u0027t regress things. These are frequently called functions, so having them inline makes sense to me.",
+      "parentUuid": "5257a0e9_a4780e1a",
       "range": {
         "startLine": 289,
         "startChar": 0,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "9714aa34_3c845de6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1299,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_a7c2d044",
+      "range": {
+        "startLine": 1299,
+        "startChar": 8,
+        "endLine": 1299,
+        "endChar": 75
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_47ee84d3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 5
@@ -174,6 +342,30 @@
       "writtenOn": "2016-05-12T17:57:04Z",
       "side": 1,
       "message": "use ANGLE_TRY",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 56
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_dc6a010b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_47ee84d3",
       "range": {
         "startLine": 248,
         "startChar": 4,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "9714aa34_bc774df1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_67d38813",
+      "range": {
+        "startLine": 254,
+        "startChar": 15,
+        "endLine": 254,
+        "endChar": 20
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_c7da7424",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 5
@@ -220,6 +436,30 @@
       "writtenOn": "2016-05-12T17:57:04Z",
       "side": 1,
       "message": "ANGLE_TRY",
+      "range": {
+        "startLine": 367,
+        "startChar": 4,
+        "endLine": 367,
+        "endChar": 56
+      },
+      "revId": "59279c5ab883df8fc41fdba79b21148c8bf3d6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_fc6dc524",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-13T08:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_c7da7424",
       "range": {
         "startLine": 367,
         "startChar": 4,
