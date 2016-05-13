@@ -34,6 +34,29 @@
       "revId": "92a529fd54ccae0c617108b96344af7fb52f89dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_cd1efca8",
+        "filename": "build/angle_common.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-05-13T21:50:19Z",
+      "side": 1,
+      "message": "Frank, do you know if this is safe? I\u0027m worried because of crbug.com/609250.",
+      "range": {
+        "startLine": 21,
+        "startChar": 2,
+        "endLine": 21,
+        "endChar": 21
+      },
+      "revId": "92a529fd54ccae0c617108b96344af7fb52f89dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
