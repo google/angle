@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f2ab34ee_ec5b0b74",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Oops, you\u0027re right.",
+      "parentUuid": "12728820_e7fc4850",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12728820_a7bdf075",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 1
@@ -70,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "b75fee26_aac00f8f",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12728820_87a1d45b",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12728820_a7a6d06f",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 1
@@ -98,6 +134,24 @@
       "writtenOn": "2016-05-10T13:23:37Z",
       "side": 1,
       "message": "sample_rb should be tracked and destroyed. Even if we reinitialize ANGLE between each test, we usually destroy all GL objects at the end of the test. The same goes for resolve_tex",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9714aa34_5c16f197",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12728820_c78aecd0",
       "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -144,6 +198,30 @@
     },
     {
       "key": {
+        "uuid": "f2ab34ee_2c56b34a",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "I ported this test case from Chromium tests almost as-is. It turns out that originally the test was more stringent and expecting a more well defined result (i.e.a  certain kind of blend between the color values) but on amd platform the results didn\u0027t meet this. Later the case was modified to just check that \"something changed\" in the rendering output. I guess this now means that the IsAMD() case can be removed.",
+      "parentUuid": "b259bc75_ae3fcfa1",
+      "range": {
+        "startLine": 131,
+        "startChar": 13,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b259bc75_ae66afdd",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 1
@@ -155,6 +233,30 @@
       "writtenOn": "2016-05-10T14:27:05Z",
       "side": 1,
       "message": "In ANGLE, we would name these mSampleFBO, mResolveFBO, etc.\n\nAlso, add a TearDown override to delete these.",
+      "range": {
+        "startLine": 133,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 22
+      },
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17f7da48_fdcca79d",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b259bc75_ae66afdd",
       "range": {
         "startLine": 133,
         "startChar": 4,
@@ -184,6 +286,24 @@
     },
     {
       "key": {
+        "uuid": "d700e2f1_7b989fd9",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12728820_07fa4451",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12728820_67c3f8ff",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 1
@@ -195,6 +315,24 @@
       "writtenOn": "2016-05-10T13:23:37Z",
       "side": 1,
       "message": "The comment should be just before the TEST_P",
+      "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "770bb618_b81cf900",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-13T08:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12728820_67c3f8ff",
       "revId": "6694d199bfc0855c15fa198bfa2459d3ac687797",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
