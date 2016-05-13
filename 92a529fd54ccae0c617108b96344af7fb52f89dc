@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7e8ce66_85a2e4bf",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1144624
+      },
+      "writtenOn": "2016-05-13T21:44:39Z",
+      "side": 1,
+      "message": "I\u0027ve avoided Cocoa and been using AppKit + Foundation, but I don\u0027t really feel strongly.",
+      "revId": "92a529fd54ccae0c617108b96344af7fb52f89dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
