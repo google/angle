@@ -123,6 +123,34 @@ egl::Error ValidateStreamAttribute(const EGLAttrib attribute,
     }
     return egl::Error(EGL_SUCCESS);
 }
+
+egl::Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
+                                                const gl::Texture *texture,
+                                                EGLAttrib level)
+{
+    // Note that the spec EGL_KHR_create_image spec does not explicitly specify an error
+    // when the level is outside the base/max level range, but it does mention that the
+    // level "must be a part of the complete texture object <buffer>". It can be argued
+    // that out-of-range levels are not a part of the complete texture.
+    const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
+    if (level > 0 &&
+        (!texture->isMipmapComplete() || static_cast<GLuint>(level) < effectiveBaseLevel ||
+         static_cast<size_t>(level) > texture->getTextureState().getMipmapMaxLevel()))
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
+    }
+
+    if (level == 0 && !texture->isMipmapComplete() &&
+        TextureHasNonZeroMipLevelsSpecified(context, texture))
+    {
+        return egl::Error(EGL_BAD_PARAMETER,
+                          "if level is zero and the texture is incomplete, it must have no mip "
+                          "levels specified except zero.");
+    }
+
+    return egl::Error(EGL_SUCCESS);
+}
+
 }  // namespace
 
 namespace egl
@@ -862,18 +890,10 @@ Error ValidateCreateImageKHR(const Display *display,
                              "target 2D texture does not have a valid size at specified level.");
             }
 
-            if (level > 0 && (!texture->isMipmapComplete() ||
-                              static_cast<size_t>(level) >= texture->getMipCompleteLevels()))
+            Error error = ValidateCreateImageKHRMipLevelCommon(context, texture, level);
+            if (error.isError())
             {
-                return Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
-            }
-
-            if (level == 0 && !texture->isMipmapComplete() &&
-                TextureHasNonZeroMipLevelsSpecified(context, texture))
-            {
-                return Error(EGL_BAD_PARAMETER,
-                             "if level is zero and the texture is incomplete, it must have no mip "
-                             "levels specified except zero.");
+                return error;
             }
         }
         break;
@@ -918,18 +938,10 @@ Error ValidateCreateImageKHR(const Display *display,
                              "and face.");
             }
 
-            if (level > 0 && (!texture->isMipmapComplete() ||
-                              static_cast<size_t>(level) >= texture->getMipCompleteLevels()))
+            Error error = ValidateCreateImageKHRMipLevelCommon(context, texture, level);
+            if (error.isError())
             {
-                return Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
-            }
-
-            if (level == 0 && !texture->isMipmapComplete() &&
-                TextureHasNonZeroMipLevelsSpecified(context, texture))
-            {
-                return Error(EGL_BAD_PARAMETER,
-                             "if level is zero and the texture is incomplete, it must have no mip "
-                             "levels specified except zero.");
+                return error;
             }
 
             if (level == 0 && !texture->isMipmapComplete() &&
@@ -985,18 +997,10 @@ Error ValidateCreateImageKHR(const Display *display,
                              "offset at the specified level.");
             }
 
-            if (level > 0 && (!texture->isMipmapComplete() ||
-                              static_cast<size_t>(level) >= texture->getMipCompleteLevels()))
+            Error error = ValidateCreateImageKHRMipLevelCommon(context, texture, level);
+            if (error.isError())
             {
-                return Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
-            }
-
-            if (level == 0 && !texture->isMipmapComplete() &&
-                TextureHasNonZeroMipLevelsSpecified(context, texture))
-            {
-                return Error(EGL_BAD_PARAMETER,
-                             "if level is zero and the texture is incomplete, it must have no mip "
-                             "levels specified except zero.");
+                return error;
             }
         }
         break;

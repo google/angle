@@ -59,8 +59,6 @@ class TextureGL : public TextureImpl
               BlitGL *blitter);
     ~TextureGL() override;
 
-    void setUsage(GLenum usage) override;
-
     gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
                        const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
     gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,

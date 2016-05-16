@@ -35,7 +35,6 @@ class TextureD3D : public TextureImpl
 
     gl::Error getNativeTexture(TextureStorage **outStorage);
 
-    virtual void setUsage(GLenum usage) { mUsage = usage; }
     bool hasDirtyImages() const { return mDirtyImages; }
     void resetDirty() { mDirtyImages = false; }
 
@@ -112,8 +111,6 @@ class TextureD3D : public TextureImpl
     GLint getBaseLevelDepth() const;
 
     RendererD3D *mRenderer;
-
-    GLenum mUsage;
 
     bool mDirtyImages;
 
@@ -213,7 +210,6 @@ class TextureD3D_Cube : public TextureD3D
 
     virtual bool hasDirtyImages() const { return mDirtyImages; }
     virtual void resetDirty() { mDirtyImages = false; }
-    virtual void setUsage(GLenum usage) { mUsage = usage; }
 
     GLenum getInternalFormat(GLint level, GLint layer) const;
     bool isDepth(GLint level, GLint layer) const;

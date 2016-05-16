@@ -31,33 +31,6 @@
 namespace rx
 {
 
-TextureStorage11::SwizzleCacheValue::SwizzleCacheValue()
-    : swizzleRed(GL_INVALID_INDEX),
-      swizzleGreen(GL_INVALID_INDEX),
-      swizzleBlue(GL_INVALID_INDEX),
-      swizzleAlpha(GL_INVALID_INDEX)
-{
-}
-
-TextureStorage11::SwizzleCacheValue::SwizzleCacheValue(GLenum red,
-                                                       GLenum green,
-                                                       GLenum blue,
-                                                       GLenum alpha)
-    : swizzleRed(red), swizzleGreen(green), swizzleBlue(blue), swizzleAlpha(alpha)
-{
-}
-
-bool TextureStorage11::SwizzleCacheValue::operator==(const SwizzleCacheValue &other) const
-{
-    return swizzleRed == other.swizzleRed && swizzleGreen == other.swizzleGreen &&
-           swizzleBlue == other.swizzleBlue && swizzleAlpha == other.swizzleAlpha;
-}
-
-bool TextureStorage11::SwizzleCacheValue::operator!=(const SwizzleCacheValue &other) const
-{
-    return !(*this == other);
-}
-
 TextureStorage11::SRVKey::SRVKey(int baseLevel, int mipLevels, bool swizzle)
     : baseLevel(baseLevel), mipLevels(mipLevels), swizzle(swizzle)
 {
@@ -215,8 +188,9 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
     bool swizzleRequired   = textureState.swizzleRequired();
-    bool mipmapping        = gl::IsMipmapFiltered(textureState.samplerState);
-    unsigned int mipLevels          = mipmapping ? (textureState.maxLevel - effectiveBaseLevel + 1) : 1;
+    bool mipmapping = gl::IsMipmapFiltered(textureState.getSamplerState());
+    unsigned int mipLevels =
+        mipmapping ? (textureState.getEffectiveMaxLevel() - effectiveBaseLevel + 1) : 1;
 
     // Make sure there's 'mipLevels' mipmap levels below the base level (offset by the top level,
     // which corresponds to GL level 0)
@@ -240,8 +214,7 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
 
     if (swizzleRequired)
     {
-        verifySwizzleExists(textureState.swizzleRed, textureState.swizzleGreen,
-                            textureState.swizzleBlue, textureState.swizzleAlpha);
+        verifySwizzleExists(textureState.getSwizzleState());
     }
 
     SRVKey key(effectiveBaseLevel, mipLevels, swizzleRequired);
@@ -359,12 +332,8 @@ d3d11::ANGLEFormat TextureStorage11::getANGLEFormat() const
     return mTextureFormatSet->format;
 }
 
-gl::Error TextureStorage11::generateSwizzles(GLenum swizzleRed,
-                                             GLenum swizzleGreen,
-                                             GLenum swizzleBlue,
-                                             GLenum swizzleAlpha)
+gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarget)
 {
-    SwizzleCacheValue swizzleTarget(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
     for (int level = 0; level < getLevelCount(); level++)
     {
         // Check if the swizzle for this level is out of date
@@ -390,8 +359,7 @@ gl::Error TextureStorage11::generateSwizzles(GLenum swizzleRed,
 
             Blit11 *blitter = mRenderer->getBlitter();
 
-            error = blitter->swizzleTexture(sourceSRV, destRTV, size, swizzleRed, swizzleGreen,
-                                            swizzleBlue, swizzleAlpha);
+            error = blitter->swizzleTexture(sourceSRV, destRTV, size, swizzleTarget);
             if (error.isError())
             {
                 return error;
@@ -408,9 +376,9 @@ void TextureStorage11::invalidateSwizzleCacheLevel(int mipLevel)
 {
     if (mipLevel >= 0 && static_cast<unsigned int>(mipLevel) < ArraySize(mSwizzleCache))
     {
-        // The default constructor of SwizzleCacheValue has GL_NONE for all channels which is not a
-        // valid swizzle combination
-        mSwizzleCache[mipLevel] = SwizzleCacheValue();
+        // The default constructor of SwizzleState has GL_INVALID_INDEX for all channels which is
+        // not a valid swizzle combination
+        mSwizzleCache[mipLevel] = gl::SwizzleState();
     }
 }
 
@@ -587,15 +555,11 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
         gl::GetInternalFormatInfo(source->getInternalFormat()).format, GL_LINEAR, false);
 }
 
-void TextureStorage11::verifySwizzleExists(GLenum swizzleRed,
-                                           GLenum swizzleGreen,
-                                           GLenum swizzleBlue,
-                                           GLenum swizzleAlpha)
+void TextureStorage11::verifySwizzleExists(const gl::SwizzleState &swizzleState)
 {
-    SwizzleCacheValue swizzleTarget(swizzleRed, swizzleGreen, swizzleBlue, swizzleAlpha);
     for (unsigned int level = 0; level < mMipLevels; level++)
     {
-        ASSERT(mSwizzleCache[level] == swizzleTarget);
+        ASSERT(mSwizzleCache[level] == swizzleState);
     }
 }
 

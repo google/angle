@@ -437,7 +437,8 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
                 // TODO(jmadill): Check if OpenGL ES2 drivers enforce cube completeness.
                 const Texture *texture = colorAttachment.getTexture();
                 ASSERT(texture);
-                if (texture->getTarget() == GL_TEXTURE_CUBE_MAP && !texture->isCubeComplete())
+                if (texture->getTarget() == GL_TEXTURE_CUBE_MAP &&
+                    !texture->getTextureState().isCubeComplete())
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }

@@ -110,6 +110,9 @@ struct Extents
     Extents() : width(0), height(0), depth(0) { }
     Extents(int width_, int height_, int depth_) : width(width_), height(height_), depth(depth_) { }
 
+    Extents(const Extents &other) = default;
+    Extents &operator=(const Extents &other) = default;
+
     bool empty() const { return (width * height * depth) == 0; }
 };
 

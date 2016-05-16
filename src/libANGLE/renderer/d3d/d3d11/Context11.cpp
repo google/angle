@@ -69,7 +69,7 @@ FramebufferImpl *Context11::createFramebuffer(const gl::FramebufferState &data)
 
 TextureImpl *Context11::createTexture(const gl::TextureState &state)
 {
-    switch (state.target)
+    switch (state.getTarget())
     {
         case GL_TEXTURE_2D:
             return new TextureD3D_2D(state, mRenderer);

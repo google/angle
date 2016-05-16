@@ -1167,9 +1167,7 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
         {
             TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
             const gl::TextureState &textureState = texture->getTextureState();
-            error =
-                storage11->generateSwizzles(textureState.swizzleRed, textureState.swizzleGreen,
-                                            textureState.swizzleBlue, textureState.swizzleAlpha);
+            error = storage11->generateSwizzles(textureState.getSwizzleState());
             if (error.isError())
             {
                 return error;
@@ -3609,7 +3607,8 @@ gl::Error Renderer11::generateMipmapsUsingD3D(TextureStorage *storage,
     ASSERT(storage11->supportsNativeMipmapFunction());
 
     ID3D11ShaderResourceView *srv;
-    gl::Error error = storage11->getSRVLevels(textureState.baseLevel, textureState.maxLevel, &srv);
+    gl::Error error =
+        storage11->getSRVLevels(textureState.mBaseLevel, textureState.mMaxLevel, &srv);
     if (error.isError())
     {
         return error;

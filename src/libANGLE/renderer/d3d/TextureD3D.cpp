@@ -78,7 +78,6 @@ bool IsRenderTargetUsage(GLenum usage)
 TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
     : TextureImpl(state),
       mRenderer(renderer),
-      mUsage(GL_NONE),
       mDirtyImages(true),
       mImmutable(false),
       mTexStorage(nullptr),
@@ -985,7 +984,7 @@ gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum interna
     }
 
     // TODO(geofflang): Verify storage creation had no errors
-    bool renderTarget = IsRenderTargetUsage(mUsage);
+    bool renderTarget       = IsRenderTargetUsage(mState.getUsage());
     TextureStorage *storage = mRenderer->createTextureStorage2D(
         internalFormat, renderTarget, size.width, size.height, static_cast<int>(levels), false);
 
@@ -1166,7 +1165,7 @@ gl::Error TextureD3D_2D::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
@@ -1598,7 +1597,7 @@ gl::Error TextureD3D_Cube::setStorage(GLenum target, size_t levels, GLenum inter
     }
 
     // TODO(geofflang): Verify storage creation had no errors
-    bool renderTarget = IsRenderTargetUsage(mUsage);
+    bool renderTarget = IsRenderTargetUsage(mState.getUsage());
 
     TextureStorage *storage = mRenderer->createTextureStorageCube(
         internalFormat, renderTarget, size.width, static_cast<int>(levels), false);
@@ -1709,7 +1708,7 @@ gl::Error TextureD3D_Cube::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
@@ -2224,7 +2223,7 @@ gl::Error TextureD3D_3D::setStorage(GLenum target, size_t levels, GLenum interna
     }
 
     // TODO(geofflang): Verify storage creation had no errors
-    bool renderTarget = IsRenderTargetUsage(mUsage);
+    bool renderTarget = IsRenderTargetUsage(mState.getUsage());
     TextureStorage *storage =
         mRenderer->createTextureStorage3D(internalFormat, renderTarget, size.width, size.height,
                                           size.depth, static_cast<int>(levels));
@@ -2315,7 +2314,7 @@ gl::Error TextureD3D_3D::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);
@@ -2814,7 +2813,7 @@ gl::Error TextureD3D_2DArray::setStorage(GLenum target, size_t levels, GLenum in
     }
 
     // TODO(geofflang): Verify storage creation had no errors
-    bool renderTarget = IsRenderTargetUsage(mUsage);
+    bool renderTarget = IsRenderTargetUsage(mState.getUsage());
     TextureStorage *storage =
         mRenderer->createTextureStorage2DArray(internalFormat, renderTarget, size.width,
                                                size.height, size.depth, static_cast<int>(levels));
@@ -2899,7 +2898,7 @@ gl::Error TextureD3D_2DArray::initializeStorage(bool renderTarget)
         return gl::Error(GL_NO_ERROR);
     }
 
-    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mUsage));
+    bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
     TextureStorage *storage = NULL;
     gl::Error error = createCompleteStorage(createRenderTarget, &storage);

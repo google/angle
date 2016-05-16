@@ -608,10 +608,7 @@ Blit11::ShaderSupport Blit11::getShaderSupport(const Shader &shader)
 gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
                                  ID3D11RenderTargetView *dest,
                                  const gl::Extents &size,
-                                 GLenum swizzleRed,
-                                 GLenum swizzleGreen,
-                                 GLenum swizzleBlue,
-                                 GLenum swizzleAlpha)
+                                 const gl::SwizzleState &swizzleTarget)
 {
     gl::Error error = initResources();
     if (error.isError())
@@ -698,10 +695,10 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
     }
 
     unsigned int *swizzleIndices = reinterpret_cast<unsigned int*>(mappedResource.pData);
-    swizzleIndices[0] = GetSwizzleIndex(swizzleRed);
-    swizzleIndices[1] = GetSwizzleIndex(swizzleGreen);
-    swizzleIndices[2] = GetSwizzleIndex(swizzleBlue);
-    swizzleIndices[3] = GetSwizzleIndex(swizzleAlpha);
+    swizzleIndices[0]            = GetSwizzleIndex(swizzleTarget.swizzleRed);
+    swizzleIndices[1]            = GetSwizzleIndex(swizzleTarget.swizzleGreen);
+    swizzleIndices[2]            = GetSwizzleIndex(swizzleTarget.swizzleBlue);
+    swizzleIndices[3]            = GetSwizzleIndex(swizzleTarget.swizzleAlpha);
 
     deviceContext->Unmap(mSwizzleCB, 0);
 

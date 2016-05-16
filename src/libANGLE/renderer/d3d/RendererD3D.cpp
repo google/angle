@@ -180,7 +180,7 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
                 samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
 
             // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->isSamplerComplete(samplerState, data) &&
+            if (texture->getTextureState().isSamplerComplete(samplerState, data) &&
                 !std::binary_search(framebufferTextures.begin(),
                                     framebufferTextures.begin() + framebufferTextureCount, texture))
             {

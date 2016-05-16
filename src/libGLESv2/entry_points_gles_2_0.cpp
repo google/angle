@@ -1298,7 +1298,7 @@ void GL_APIENTRY GenerateMipmap(GLenum target)
         }
 
         // Cube completeness check
-        if (target == GL_TEXTURE_CUBE_MAP && !texture->isCubeComplete())
+        if (target == GL_TEXTURE_CUBE_MAP && !texture->getTextureState().isCubeComplete())
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;

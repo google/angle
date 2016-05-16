@@ -21,7 +21,6 @@ class MockTextureImpl : public TextureImpl
   public:
     MockTextureImpl() : TextureImpl(gl::TextureState(GL_TEXTURE_2D)) {}
     virtual ~MockTextureImpl() { destructor(); }
-    MOCK_METHOD1(setUsage, void(GLenum));
     MOCK_METHOD8(setImage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
     MOCK_METHOD7(setSubImage, gl::Error(GLenum, size_t, const gl::Box &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
     MOCK_METHOD7(setCompressedImage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &, const gl::PixelUnpackState &, size_t, const uint8_t *));

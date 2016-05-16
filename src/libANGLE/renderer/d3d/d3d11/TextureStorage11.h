@@ -58,7 +58,7 @@ class TextureStorage11 : public TextureStorage
     virtual int getLevelCount() const;
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
 
-    gl::Error generateSwizzles(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    gl::Error generateSwizzles(const gl::SwizzleState &swizzleTarget);
     void invalidateSwizzleCacheLevel(int mipLevel);
     void invalidateSwizzleCache();
 
@@ -98,7 +98,7 @@ class TextureStorage11 : public TextureStorage
     virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
                                 ID3D11ShaderResourceView **outSRV) const = 0;
 
-    void verifySwizzleExists(GLenum swizzleRed, GLenum swizzleGreen, GLenum swizzleBlue, GLenum swizzleAlpha);
+    void verifySwizzleExists(const gl::SwizzleState &swizzleState);
 
     // Clear all cached non-swizzle SRVs and invalidate the swizzle cache.
     void clearSRVCache();
@@ -114,20 +114,7 @@ class TextureStorage11 : public TextureStorage
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;
 
-    struct SwizzleCacheValue
-    {
-        GLenum swizzleRed;
-        GLenum swizzleGreen;
-        GLenum swizzleBlue;
-        GLenum swizzleAlpha;
-
-        SwizzleCacheValue();
-        SwizzleCacheValue(GLenum red, GLenum green, GLenum blue, GLenum alpha);
-
-        bool operator ==(const SwizzleCacheValue &other) const;
-        bool operator !=(const SwizzleCacheValue &other) const;
-    };
-    SwizzleCacheValue mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    gl::SwizzleState mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
   private:
     const UINT mBindFlags;
