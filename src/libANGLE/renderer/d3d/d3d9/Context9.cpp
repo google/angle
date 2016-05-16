@@ -69,6 +69,8 @@ TextureImpl *Context9::createTexture(const gl::TextureState &state)
             return new TextureD3D_2D(state, mRenderer);
         case GL_TEXTURE_CUBE_MAP:
             return new TextureD3D_Cube(state, mRenderer);
+        case GL_TEXTURE_EXTERNAL_OES:
+            return new TextureD3D_External(state, mRenderer);
         default:
             UNREACHABLE();
     }

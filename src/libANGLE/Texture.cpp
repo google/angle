@@ -61,7 +61,7 @@ TextureState::TextureState(GLenum target)
       swizzleGreen(GL_GREEN),
       swizzleBlue(GL_BLUE),
       swizzleAlpha(GL_ALPHA),
-      samplerState(),
+      samplerState(SamplerState::CreateDefaultForTarget(target)),
       baseLevel(0),
       maxLevel(1000),
       immutableFormat(false),
@@ -755,7 +755,7 @@ void Texture::releaseTexImageInternal()
 Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
 {
     ASSERT(target == mState.target);
-    ASSERT(target == GL_TEXTURE_2D);
+    ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_EXTERNAL_OES);
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     releaseTexImageInternal();
@@ -842,6 +842,27 @@ bool Texture::computeSamplerCompleteness(const SamplerState &samplerState,
     else
     {
         if (mState.target == GL_TEXTURE_CUBE_MAP && !isCubeComplete())
+        {
+            return false;
+        }
+    }
+
+    // From GL_OES_EGL_image_external_essl3: If state is present in a sampler object bound to a
+    // texture unit that would have been rejected by a call to TexParameter* for the texture bound
+    // to that unit, the behavior of the implementation is as if the texture were incomplete. For
+    // example, if TEXTURE_WRAP_S or TEXTURE_WRAP_T is set to anything but CLAMP_TO_EDGE on the
+    // sampler object bound to a texture unit and the texture bound to that unit is an external
+    // texture, the texture will be considered incomplete.
+    // Sampler object state which does not affect sampling for the type of texture bound to a
+    // texture unit, such as TEXTURE_WRAP_R for an external texture, does not affect completeness.
+    if (mState.target == GL_TEXTURE_EXTERNAL_OES)
+    {
+        if (samplerState.wrapS != GL_CLAMP_TO_EDGE || samplerState.wrapT != GL_CLAMP_TO_EDGE)
+        {
+            return false;
+        }
+
+        if (samplerState.minFilter != GL_LINEAR && samplerState.minFilter != GL_NEAREST)
         {
             return false;
         }

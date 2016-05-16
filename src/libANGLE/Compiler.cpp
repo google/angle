@@ -50,8 +50,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &data)
     mResources.OES_standard_derivatives     = extensions.standardDerivatives;
     mResources.EXT_draw_buffers             = extensions.drawBuffers;
     mResources.EXT_shader_texture_lod       = extensions.shaderTextureLOD;
-    // TODO: disabled until the extension is actually supported.
-    mResources.OES_EGL_image_external = 0;
+    mResources.OES_EGL_image_external          = extensions.eglImageExternal;
+    mResources.OES_EGL_image_external_essl3    = extensions.eglImageExternalEssl3;
     mResources.NV_EGL_stream_consumer_external = extensions.eglStreamConsumerExternal;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;

@@ -1997,7 +1997,8 @@ bool ValidateBindTexture(Context *context, GLenum target, GLuint texture)
             }
             break;
         case GL_TEXTURE_EXTERNAL_OES:
-            if (!context->getExtensions().eglStreamConsumerExternal)
+            if (!context->getExtensions().eglImageExternal &&
+                !context->getExtensions().eglStreamConsumerExternal)
             {
                 context->handleError(
                     Error(GL_INVALID_ENUM, "External texture extension not enabled"));

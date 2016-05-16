@@ -2279,7 +2279,7 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target))
+        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
         {
             context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
             return;
@@ -2434,7 +2434,7 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target))
+        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
         {
             context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
             return;

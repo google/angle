@@ -358,37 +358,79 @@ TEST_P(EGLStreamTest, StreamProducerTextureNV12End2End)
 {
     EGLWindow *window            = getEGLWindow();
     EGLDisplay display           = window->getDisplay();
-    const char *extensionsString = eglQueryString(display, EGL_EXTENSIONS);
-    if (strstr(extensionsString, "EGL_ANGLE_stream_producer_d3d_texture_nv12") == nullptr)
+    if (!eglDisplayExtensionEnabled(display, "EGL_ANGLE_stream_producer_d3d_texture_nv12"))
     {
         std::cout << "Stream producer d3d nv12 texture not supported" << std::endl;
         return;
     }
 
-    // Shader setup
-    const std::string yuvVS =
-        "attribute highp vec4 position; varying vec2 texcoord; void main(void)\n"
-        "{\n"
-        "    gl_Position = position;\n"
-        "    texcoord = (position.xy * 0.5) + 0.5;\n"
-        "    texcoord.y = 1.0 - texcoord.y;\n"
-        "}\n";
+    bool useESSL3Shaders =
+        getClientVersion() >= 3 && extensionEnabled("GL_OES_EGL_image_external_essl3");
 
     // yuv to rgb conversion shader using Microsoft's given conversion formulas
-    const std::string yuvPS =
-        "#extension GL_NV_EGL_stream_consumer_external : require\n"
-        "precision highp float; varying vec2 texcoord;\n"
-        "uniform samplerExternalOES y; uniform samplerExternalOES uv\n;"
-        "void main(void)\n"
-        "{\n"
-        "    float c = texture2D(y, texcoord).r - (16.0 / 256.0);\n"
-        "    float d = texture2D(uv, texcoord).r - 0.5;\n"
-        "    float e = texture2D(uv, texcoord).g - 0.5;\n"
-        "    float r = 1.164383 * c + 1.596027 * e;\n"
-        "    float g = 1.164383 * c - 0.391762 * d - 0.812968 * e;\n"
-        "    float b = 1.164383 * c + 2.017232 * d;\n"
-        "    gl_FragColor = vec4(r, g, b, 1.0);\n"
-        "}\n";
+    std::string yuvVS, yuvPS;
+    if (useESSL3Shaders)
+    {
+        yuvVS =
+            "#version 300 es\n"
+            "in highp vec4 position;\n"
+            "out vec2 texcoord;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_Position = position;\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "    texcoord.y = 1.0 - texcoord.y;\n"
+            "}\n";
+        yuvPS =
+            "#version 300 es\n"
+            "#extension GL_OES_EGL_image_external_essl3 : require\n"
+            "#extension GL_NV_EGL_stream_consumer_external : require\n"
+            "precision highp float;\n"
+            "in vec2 texcoord;\n"
+            "out vec4 color;\n"
+            "uniform samplerExternalOES y;\n"
+            "uniform samplerExternalOES uv\n;"
+            "void main(void)\n"
+            "{\n"
+            "    float c = texture(y, texcoord).r - (16.0 / 256.0);\n"
+            "    float d = texture(uv, texcoord).r - 0.5;\n"
+            "    float e = texture(uv, texcoord).g - 0.5;\n"
+            "    float r = 1.164383 * c + 1.596027 * e;\n"
+            "    float g = 1.164383 * c - 0.391762 * d - 0.812968 * e;\n"
+            "    float b = 1.164383 * c + 2.017232 * d;\n"
+            "    color = vec4(r, g, b, 1.0);\n"
+            "}\n";
+    }
+    else
+    {
+        yuvVS =
+            "attribute highp vec4 position;\n"
+            "varying vec2 texcoord;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_Position = position;\n"
+            "    texcoord = (position.xy * 0.5) + 0.5;\n"
+            "    texcoord.y = 1.0 - texcoord.y;\n"
+            "}\n";
+
+        yuvPS =
+            "#extension GL_NV_EGL_stream_consumer_external : require\n"
+            "precision highp float;\n"
+            "varying vec2 texcoord;\n"
+            "uniform samplerExternalOES y;\n"
+            "uniform samplerExternalOES uv\n;"
+            "void main(void)\n"
+            "{\n"
+            "    float c = texture2D(y, texcoord).r - (16.0 / 256.0);\n"
+            "    float d = texture2D(uv, texcoord).r - 0.5;\n"
+            "    float e = texture2D(uv, texcoord).g - 0.5;\n"
+            "    float r = 1.164383 * c + 1.596027 * e;\n"
+            "    float g = 1.164383 * c - 0.391762 * d - 0.812968 * e;\n"
+            "    float b = 1.164383 * c + 2.017232 * d;\n"
+            "    gl_FragColor = vec4(r, g, b, 1.0);\n"
+            "}\n";
+    }
+
     GLuint program = CompileProgram(yuvVS, yuvPS);
     ASSERT_NE(0u, program);
     GLuint yUniform  = glGetUniformLocation(program, "y");

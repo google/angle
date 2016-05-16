@@ -194,6 +194,7 @@ struct DepthStencilState
 struct SamplerState
 {
     SamplerState();
+    static SamplerState CreateDefaultForTarget(GLenum target);
 
     GLenum minFilter;
     GLenum magFilter;

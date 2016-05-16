@@ -201,6 +201,7 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
         switch (textureFunction.sampler)
         {
             case EbtSampler2D:
+            case EbtSamplerExternalOES:
                 hlslCoords = 2;
                 break;
             case EbtSamplerCube:
@@ -275,6 +276,7 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
         switch (textureFunction.sampler)
         {
             case EbtSampler2D:
+            case EbtSamplerExternalOES:
                 out << "sampler2D s";
                 break;
             case EbtSamplerCube:
@@ -790,6 +792,7 @@ void OutputTextureSampleFunctionReturnStatement(
         switch (textureFunction.sampler)
         {
             case EbtSampler2D:
+            case EbtSamplerExternalOES:
                 out << "tex2D";
                 break;
             case EbtSamplerCube:

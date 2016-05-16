@@ -413,11 +413,6 @@ class TextureD3D_External : public TextureD3D
     ImageD3D *getImage(const gl::ImageIndex &index) const override;
     GLsizei getLayerCount(int level) const override;
 
-    GLsizei getWidth(GLint level) const;
-    GLsizei getHeight(GLint level) const;
-    GLenum getInternalFormat(GLint level) const;
-    bool isDepth(GLint level) const;
-
     gl::Error setImage(GLenum target,
                        size_t level,
                        GLenum internalFormat,
@@ -492,18 +487,7 @@ class TextureD3D_External : public TextureD3D
     gl::Error updateStorage() override;
     void initMipmapsImages() override;
 
-    bool isValidLevel(int level) const;
-    bool isLevelComplete(int level) const;
     bool isImageComplete(const gl::ImageIndex &index) const override;
-
-    gl::Error updateStorageLevel(int level);
-
-    void redefineImage(size_t level,
-                       GLenum internalformat,
-                       const gl::Extents &size,
-                       bool forceRelease);
-
-    ImageD3D *mImage;
 };
 }
 

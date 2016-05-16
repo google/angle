@@ -1657,6 +1657,7 @@ gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
         {
             case GL_SAMPLER_2D:
             case GL_SAMPLER_CUBE:
+            case GL_SAMPLER_EXTERNAL_OES:
                 break;
             case GL_BOOL:
             case GL_BOOL_VEC2:

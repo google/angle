@@ -590,6 +590,7 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->colorBufferFloat = false;
     extensions->debugMarker = true;
     extensions->eglImage               = true;
+    extensions->eglImageExternal       = true;
     extensions->unpackSubimage         = true;
     extensions->packSubimage           = true;
     extensions->vertexArrayObject      = true;

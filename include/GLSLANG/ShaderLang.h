@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 145
+#define ANGLE_SH_VERSION 146
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -255,6 +255,7 @@ typedef struct
     // Set to 1 to enable the extension, else 0.
     int OES_standard_derivatives;
     int OES_EGL_image_external;
+    int OES_EGL_image_external_essl3;
     int NV_EGL_stream_consumer_external;
     int ARB_texture_rectangle;
     int EXT_blend_func_extended;

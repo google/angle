@@ -857,11 +857,16 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
       case GL_TEXTURE_COMPARE_FUNC:
       case GL_TEXTURE_MIN_LOD:
       case GL_TEXTURE_MAX_LOD:
-          // ES3 texture paramters are not supported on external textures as the extension is
-          // written against ES2.
-          if (context->getClientVersion() < 3 || target == GL_TEXTURE_EXTERNAL_OES)
+          if (context->getClientVersion() < 3)
         {
             context->handleError(Error(GL_INVALID_ENUM));
+            return false;
+        }
+        if (target == GL_TEXTURE_EXTERNAL_OES && !context->getExtensions().eglImageExternalEssl3)
+        {
+            context->handleError(Error(GL_INVALID_ENUM,
+                                       "ES3 texture parameters are not available without "
+                                       "GL_OES_EGL_image_external_essl3."));
             return false;
         }
         break;
@@ -1014,16 +1019,20 @@ bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pnam
         break;
 
       case GL_TEXTURE_BASE_LEVEL:
-      case GL_TEXTURE_MAX_LEVEL:
-          if (target == GL_TEXTURE_EXTERNAL_OES)
+          if (param < 0)
           {
-              // This is not specified, but in line with the spirit of OES_EGL_image_external spec,
-              // which generally forbids setting mipmap related parameters on external textures.
-              context->handleError(
-                  Error(GL_INVALID_OPERATION,
-                        "Setting the base level or max level of external textures not supported"));
+              context->handleError(Error(GL_INVALID_VALUE));
               return false;
           }
+          if (target == GL_TEXTURE_EXTERNAL_OES && param != 0)
+          {
+              context->handleError(
+                  Error(GL_INVALID_OPERATION, "Base level must be 0 for external textures."));
+              return false;
+          }
+          return true;
+
+      case GL_TEXTURE_MAX_LEVEL:
           if (param < 0)
           {
               context->handleError(Error(GL_INVALID_VALUE));
@@ -2398,6 +2407,20 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
     switch (target)
     {
         case GL_TEXTURE_2D:
+            if (!context->getExtensions().eglImage)
+            {
+                context->handleError(Error(
+                    GL_INVALID_ENUM, "GL_TEXTURE_2D texture target requires GL_OES_EGL_image."));
+            }
+            break;
+
+        case GL_TEXTURE_EXTERNAL_OES:
+            if (!context->getExtensions().eglImageExternal)
+            {
+                context->handleError(Error(
+                    GL_INVALID_ENUM,
+                    "GL_TEXTURE_EXTERNAL_OES texture target requires GL_OES_EGL_image_external."));
+            }
             break;
 
         default:

@@ -2089,6 +2089,7 @@ void Context::initCaps(GLuint clientVersion)
     {
         // Disable ES3+ extensions
         mExtensions.colorBufferFloat = false;
+        mExtensions.eglImageExternalEssl3 = false;
     }
 
     if (clientVersion > 2)
