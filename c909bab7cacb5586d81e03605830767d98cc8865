@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_daa84c34",
+        "filename": "src/tests/gl_tests/FramebufferMixedSamplesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-17T14:06:17Z",
+      "side": 1,
+      "message": "ultra-nit: we use camelCase for all variable, so fbo_type would become fboType. There was some code merged with snake_case in the other CL, but since it is test code I don\u0027t think we need to go back and change it.",
+      "revId": "c909bab7cacb5586d81e03605830767d98cc8865",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
