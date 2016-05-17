@@ -27,7 +27,7 @@
 namespace rx
 {
 class ContextImpl;
-class Renderer;
+class EGLImplFactory;
 }
 
 namespace egl
@@ -58,9 +58,9 @@ class TransformFeedback;
 class Context final : public ValidationContext
 {
   public:
-    Context(const egl::Config *config,
+    Context(rx::EGLImplFactory *implFactory,
+            const egl::Config *config,
             const Context *shareContext,
-            rx::Renderer *renderer,
             const egl::AttributeMap &attribs);
 
     virtual ~Context();
@@ -405,9 +405,8 @@ class Context final : public ValidationContext
     const std::string &getExtensionString(size_t idx) const;
     size_t getExtensionStringCount() const;
 
-    rx::Renderer *getRenderer() { return mRenderer; }
-
     State &getState() { return mState; }
+    rx::ContextImpl *getImplementation() const { return mImplementation.get(); }
 
   private:
     void syncRendererState();
@@ -444,7 +443,6 @@ class Context final : public ValidationContext
     // Shader compiler
     Compiler *mCompiler;
 
-    rx::Renderer *const mRenderer;
     State mState;
 
     int mClientVersion;

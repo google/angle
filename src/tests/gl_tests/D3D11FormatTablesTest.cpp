@@ -10,6 +10,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
@@ -38,8 +39,9 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
 
     // Hack the angle!
     gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
-    rx::Renderer11 *renderer = rx::GetAs<rx::Renderer11>(context->getRenderer());
-    const auto &textureCaps = renderer->getRendererTextureCaps();
+    rx::Context11 *context11 = rx::GetImplAs<rx::Context11>(context);
+    rx::Renderer11 *renderer = context11->getRenderer();
+    const auto &textureCaps  = renderer->getNativeTextureCaps();
 
     ID3D11Device *device = renderer->getDevice();
 

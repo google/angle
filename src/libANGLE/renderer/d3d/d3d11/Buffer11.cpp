@@ -1070,7 +1070,7 @@ void Buffer11::NativeStorage::fillBufferDesc(D3D11_BUFFER_DESC *bufferDesc,
             bufferDesc->ByteWidth = roundUp(bufferDesc->ByteWidth, 16u);
             bufferDesc->ByteWidth =
                 std::min<UINT>(bufferDesc->ByteWidth,
-                               static_cast<UINT>(renderer->getRendererCaps().maxUniformBlockSize));
+                               static_cast<UINT>(renderer->getNativeCaps().maxUniformBlockSize));
             break;
 
         default:

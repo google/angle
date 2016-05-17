@@ -14,7 +14,6 @@
 #include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
-#include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/Stream.h"
 
 #include <set>

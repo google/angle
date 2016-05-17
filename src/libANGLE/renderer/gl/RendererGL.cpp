@@ -82,16 +82,16 @@ namespace rx
 {
 
 RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &attribMap)
-    : Renderer(),
-      mMaxSupportedESVersion(0, 0),
+    : mMaxSupportedESVersion(0, 0),
       mFunctions(functions),
       mStateManager(nullptr),
       mBlitter(nullptr),
       mHasDebugOutput(false),
-      mSkipDrawCalls(false)
+      mSkipDrawCalls(false),
+      mCapsInitialized(false)
 {
     ASSERT(mFunctions);
-    mStateManager = new StateManagerGL(mFunctions, getRendererCaps());
+    mStateManager = new StateManagerGL(mFunctions, getNativeCaps());
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
     mBlitter = new BlitGL(functions, mWorkarounds, mStateManager);
 
@@ -157,18 +157,14 @@ gl::Error RendererGL::drawArrays(const gl::ContextState &data,
                                  GLint first,
                                  GLsizei count)
 {
-    gl::Error error = mStateManager->setDrawArraysState(data, first, count, 0);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mStateManager->setDrawArraysState(data, first, count, 0));
 
     if (!mSkipDrawCalls)
     {
         mFunctions->drawArrays(mode, first, count);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawArraysInstanced(const gl::ContextState &data,
@@ -177,18 +173,14 @@ gl::Error RendererGL::drawArraysInstanced(const gl::ContextState &data,
                                           GLsizei count,
                                           GLsizei instanceCount)
 {
-    gl::Error error = mStateManager->setDrawArraysState(data, first, count, instanceCount);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mStateManager->setDrawArraysState(data, first, count, instanceCount));
 
     if (!mSkipDrawCalls)
     {
         mFunctions->drawArraysInstanced(mode, first, count, instanceCount);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawElements(const gl::ContextState &data,
@@ -198,20 +190,15 @@ gl::Error RendererGL::drawElements(const gl::ContextState &data,
                                    const GLvoid *indices,
                                    const gl::IndexRange &indexRange)
 {
-    const GLvoid *drawIndexPointer = nullptr;
-    gl::Error error =
-        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer);
-    if (error.isError())
-    {
-        return error;
-    }
+    const GLvoid *drawIndexPtr = nullptr;
+    ANGLE_TRY(mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPtr));
 
     if (!mSkipDrawCalls)
     {
-        mFunctions->drawElements(mode, count, type, drawIndexPointer);
+        mFunctions->drawElements(mode, count, type, drawIndexPtr);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
@@ -223,19 +210,15 @@ gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
                                             const gl::IndexRange &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
-    gl::Error error = mStateManager->setDrawElementsState(data, count, type, indices, instances,
-                                                          &drawIndexPointer);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mStateManager->setDrawElementsState(data, count, type, indices, instances,
+                                                  &drawIndexPointer));
 
     if (!mSkipDrawCalls)
     {
         mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, instances);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
@@ -248,12 +231,8 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
                                         const gl::IndexRange &indexRange)
 {
     const GLvoid *drawIndexPointer = nullptr;
-    gl::Error error =
-        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(
+        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer));
 
     if (!mSkipDrawCalls)
     {
@@ -265,73 +244,7 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
 
 ContextImpl *RendererGL::createContext(const gl::ContextState &state)
 {
-    return new ContextGL(state);
-}
-
-CompilerImpl *RendererGL::createCompiler()
-{
-    return new CompilerGL(mFunctions);
-}
-
-ShaderImpl *RendererGL::createShader(const gl::ShaderState &data)
-{
-    return new ShaderGL(data, mFunctions, mWorkarounds);
-}
-
-ProgramImpl *RendererGL::createProgram(const gl::ProgramState &data)
-{
-    return new ProgramGL(data, mFunctions, mWorkarounds, mStateManager);
-}
-
-FramebufferImpl *RendererGL::createFramebuffer(const gl::FramebufferState &data)
-{
-    return new FramebufferGL(data, mFunctions, mStateManager, mWorkarounds, false);
-}
-
-TextureImpl *RendererGL::createTexture(const gl::TextureState &state)
-{
-    return new TextureGL(state, mFunctions, mWorkarounds, mStateManager, mBlitter);
-}
-
-RenderbufferImpl *RendererGL::createRenderbuffer()
-{
-    return new RenderbufferGL(mFunctions, mWorkarounds, mStateManager, getRendererTextureCaps());
-}
-
-BufferImpl *RendererGL::createBuffer()
-{
-    return new BufferGL(mFunctions, mStateManager);
-}
-
-VertexArrayImpl *RendererGL::createVertexArray(const gl::VertexArrayState &data)
-{
-    return new VertexArrayGL(data, mFunctions, mStateManager);
-}
-
-QueryImpl *RendererGL::createQuery(GLenum type)
-{
-    return new QueryGL(type, mFunctions, mStateManager);
-}
-
-FenceNVImpl *RendererGL::createFenceNV()
-{
-    return new FenceNVGL(mFunctions);
-}
-
-FenceSyncImpl *RendererGL::createFenceSync()
-{
-    return new FenceSyncGL(mFunctions);
-}
-
-TransformFeedbackImpl *RendererGL::createTransformFeedback()
-{
-    return new TransformFeedbackGL(mFunctions, mStateManager,
-                                   getRendererCaps().maxTransformFeedbackSeparateComponents);
-}
-
-SamplerImpl *RendererGL::createSampler()
-{
-    return new SamplerGL(mFunctions, mStateManager);
+    return new ContextGL(state, this);
 }
 
 void RendererGL::insertEventMarker(GLsizei length, const char *marker)
@@ -410,7 +323,7 @@ std::string RendererGL::getRendererDescription() const
 const gl::Version &RendererGL::getMaxSupportedESVersion() const
 {
     // Force generation of caps
-    getRendererCaps();
+    getNativeCaps();
 
     return mMaxSupportedESVersion;
 }
@@ -420,11 +333,6 @@ void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureC
                               gl::Limitations * /* outLimitations */) const
 {
     nativegl_gl::GenerateCaps(mFunctions, outCaps, outTextureCaps, outExtensions, &mMaxSupportedESVersion);
-}
-
-void RendererGL::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
-{
-    mStateManager->syncState(state, dirtyBits);
 }
 
 GLint RendererGL::getGPUDisjoint()
@@ -440,9 +348,37 @@ GLint64 RendererGL::getTimestamp()
     return result;
 }
 
-void RendererGL::onMakeCurrent(const gl::ContextState &data)
+void RendererGL::ensureCapsInitialized() const
 {
-    // Queries need to be paused/resumed on context switches
-    mStateManager->onMakeCurrent(data);
+    if (!mCapsInitialized)
+    {
+        generateCaps(&mNativeCaps, &mNativeTextureCaps, &mNativeExtensions, &mNativeLimitations);
+        mCapsInitialized = true;
+    }
 }
+
+const gl::Caps &RendererGL::getNativeCaps() const
+{
+    ensureCapsInitialized();
+    return mNativeCaps;
 }
+
+const gl::TextureCapsMap &RendererGL::getNativeTextureCaps() const
+{
+    ensureCapsInitialized();
+    return mNativeTextureCaps;
+}
+
+const gl::Extensions &RendererGL::getNativeExtensions() const
+{
+    ensureCapsInitialized();
+    return mNativeExtensions;
+}
+
+const gl::Limitations &RendererGL::getNativeLimitations() const
+{
+    ensureCapsInitialized();
+    return mNativeLimitations;
+}
+
+}  // namespace rx

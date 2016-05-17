@@ -289,7 +289,7 @@ gl::Error Blit11::initResources()
     vbDesc.ByteWidth =
         static_cast<unsigned int>(std::max(sizeof(d3d11::PositionLayerTexCoord3DVertex),
                                            sizeof(d3d11::PositionTexCoordVertex)) *
-                                  6 * mRenderer->getRendererCaps().max3DTextureSize);
+                                  6 * mRenderer->getNativeCaps().max3DTextureSize);
     vbDesc.Usage = D3D11_USAGE_DYNAMIC;
     vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

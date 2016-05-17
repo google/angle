@@ -10,13 +10,13 @@
 #include "libANGLE/ResourceManager.h"
 
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Fence.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
-#include "libANGLE/Sampler.h"
-#include "libANGLE/Fence.h"
-#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 
 namespace gl
 {

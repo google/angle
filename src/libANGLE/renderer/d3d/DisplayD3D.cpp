@@ -206,12 +206,10 @@ egl::Error DisplayD3D::getDevice(DeviceImpl **device)
     return mRenderer->getEGLDevice(device);
 }
 
-gl::Context *DisplayD3D::createContext(const egl::Config *config,
-                                       const gl::Context *shareContext,
-                                       const egl::AttributeMap &attribs)
+ContextImpl *DisplayD3D::createContext(const gl::ContextState &state)
 {
     ASSERT(mRenderer != nullptr);
-    return new gl::Context(config, shareContext, mRenderer, attribs);
+    return mRenderer->createContext(state);
 }
 
 StreamProducerImpl *DisplayD3D::createStreamProducerD3DTextureNV12(
@@ -231,12 +229,7 @@ egl::Error DisplayD3D::initialize(egl::Display *display)
 {
     ASSERT(mRenderer == nullptr && display != nullptr);
     mDisplay = display;
-    egl::Error error = CreateRendererD3D(display, &mRenderer);
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(CreateRendererD3D(display, &mRenderer));
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -322,7 +315,7 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
     // Display must be initialized to generate caps
     ASSERT(mRenderer != nullptr);
 
-    outCaps->textureNPOT = mRenderer->getRendererExtensions().textureNPOT;
+    outCaps->textureNPOT = mRenderer->getNativeExtensions().textureNPOT;
 }
 
 egl::Error DisplayD3D::waitClient() const
@@ -338,4 +331,4 @@ egl::Error DisplayD3D::waitNative(EGLint engine,
     // Unimplemented as it is a noop on D3D
     return egl::Error(EGL_SUCCESS);
 }
-}
+}  // namespace rx

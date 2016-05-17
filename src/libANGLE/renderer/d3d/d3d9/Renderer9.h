@@ -32,6 +32,7 @@ class AttributeMap;
 namespace rx
 {
 class Blit9;
+class Context9;
 class IndexDataManager;
 class ProgramD3D;
 class StreamingIndexBufferInterface;
@@ -76,8 +77,8 @@ class Renderer9 : public RendererD3D
     void startScene();
     void endScene();
 
-    gl::Error flush() override;
-    gl::Error finish() override;
+    gl::Error flush();
+    gl::Error finish();
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
     NativeWindowD3D *createNativeWindow(EGLNativeWindowType window,
@@ -91,8 +92,6 @@ class Renderer9 : public RendererD3D
                                   EGLint orientation) override;
 
     ContextImpl *createContext(const gl::ContextState &state) override;
-
-    CompilerImpl *createCompiler() override;
 
     gl::Error allocateEventQuery(IDirect3DQuery9 **outQuery);
     void freeEventQuery(IDirect3DQuery9* query);
@@ -110,7 +109,7 @@ class Renderer9 : public RendererD3D
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    gl::Error updateState(const gl::ContextState &data, GLenum drawMode) override;
+    gl::Error updateState(Context9 *context, GLenum drawMode);
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     void setViewport(const gl::Rectangle &viewport,
@@ -120,27 +119,28 @@ class Renderer9 : public RendererD3D
                      GLenum frontFace,
                      bool ignoreViewport);
 
-    gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) override;
-    gl::Error applyRenderTarget(const gl::FramebufferAttachment *colorAttachment,
+    gl::Error applyRenderTarget(GLImplFactory *implFactory, const gl::Framebuffer *frameBuffer);
+    gl::Error applyRenderTarget(GLImplFactory *implFactory,
+                                const gl::FramebufferAttachment *colorAttachment,
                                 const gl::FramebufferAttachment *depthStencilAttachment);
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
-    virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
-    virtual gl::Error applyVertexBuffer(const gl::State &state,
-                                        GLenum mode,
-                                        GLint first,
-                                        GLsizei count,
-                                        GLsizei instances,
-                                        TranslatedIndexData *indexInfo);
+    bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
+    gl::Error applyVertexBuffer(const gl::State &state,
+                                GLenum mode,
+                                GLint first,
+                                GLsizei count,
+                                GLsizei instances,
+                                TranslatedIndexData *indexInfo);
     gl::Error applyIndexBuffer(const gl::ContextState &data,
                                const GLvoid *indices,
                                GLsizei count,
                                GLenum mode,
                                GLenum type,
-                               TranslatedIndexData *indexInfo) override;
+                               TranslatedIndexData *indexInfo);
 
-    gl::Error applyTransformFeedbackBuffers(const gl::State &state) override;
+    gl::Error applyTransformFeedbackBuffers(const gl::State &state);
 
     gl::Error clear(const ClearParameters &clearParams,
                     const gl::FramebufferAttachment *colorBuffer,
@@ -150,19 +150,19 @@ class Renderer9 : public RendererD3D
 
     // lost device
     bool testDeviceLost() override;
-    bool testDeviceResettable() override;
+    bool testDeviceResettable();
 
     VendorID getVendorId() const;
-    std::string getRendererDescription() const override;
+    std::string getRendererDescription() const;
     DeviceIdentifier getAdapterIdentifier() const override;
 
     IDirect3DDevice9 *getDevice() { return mDevice; }
     void *getD3DDevice() override;
 
-    virtual unsigned int getReservedVertexUniformVectors() const;
-    virtual unsigned int getReservedFragmentUniformVectors() const;
-    virtual unsigned int getReservedVertexUniformBuffers() const;
-    virtual unsigned int getReservedFragmentUniformBuffers() const;
+    unsigned int getReservedVertexUniformVectors() const override;
+    unsigned int getReservedFragmentUniformVectors() const override;
+    unsigned int getReservedVertexUniformBuffers() const override;
+    unsigned int getReservedFragmentUniformBuffers() const override;
 
     bool getShareHandleSupport() const;
 
@@ -173,25 +173,39 @@ class Renderer9 : public RendererD3D
     DWORD getCapsDeclTypes() const;
 
     // Pixel operations
-    virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level);
-    virtual gl::Error copyImageCube(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                    const gl::Offset &destOffset, TextureStorage *storage, GLenum target, GLint level);
-    virtual gl::Error copyImage3D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level);
-    virtual gl::Error copyImage2DArray(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                       const gl::Offset &destOffset, TextureStorage *storage, GLint level);
+    gl::Error copyImage2D(const gl::Framebuffer *framebuffer,
+                          const gl::Rectangle &sourceRect,
+                          GLenum destFormat,
+                          const gl::Offset &destOffset,
+                          TextureStorage *storage,
+                          GLint level) override;
+    gl::Error copyImageCube(const gl::Framebuffer *framebuffer,
+                            const gl::Rectangle &sourceRect,
+                            GLenum destFormat,
+                            const gl::Offset &destOffset,
+                            TextureStorage *storage,
+                            GLenum target,
+                            GLint level) override;
+    gl::Error copyImage3D(const gl::Framebuffer *framebuffer,
+                          const gl::Rectangle &sourceRect,
+                          GLenum destFormat,
+                          const gl::Offset &destOffset,
+                          TextureStorage *storage,
+                          GLint level) override;
+    gl::Error copyImage2DArray(const gl::Framebuffer *framebuffer,
+                               const gl::Rectangle &sourceRect,
+                               GLenum destFormat,
+                               const gl::Offset &destOffset,
+                               TextureStorage *storage,
+                               GLint level) override;
 
     // RenderTarget creation
-    virtual gl::Error createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT);
+    gl::Error createRenderTarget(int width,
+                                 int height,
+                                 GLenum format,
+                                 GLsizei samples,
+                                 RenderTargetD3D **outRT) override;
     gl::Error createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT) override;
-
-    // Framebuffer creation
-    FramebufferImpl *createFramebuffer(const gl::FramebufferState &data) override;
-
-    // Shader creation
-    ShaderImpl *createShader(const gl::ShaderState &data) override;
-    ProgramImpl *createProgram(const gl::ProgramState &data) override;
 
     // Shader operations
     gl::Error loadExecutable(const void *function,
@@ -210,7 +224,7 @@ class Renderer9 : public RendererD3D
     UniformStorageD3D *createUniformStorage(size_t storageSize) override;
 
     // Image operations
-    virtual ImageD3D *createImage();
+    ImageD3D *createImage() override;
     gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) override;
     gl::Error generateMipmapsUsingD3D(TextureStorage *storage,
                                       const gl::TextureState &textureState) override;
@@ -219,32 +233,33 @@ class Renderer9 : public RendererD3D
     TextureStorage *createTextureStorageExternal(
         egl::Stream *stream,
         const egl::Stream::GLTextureDescription &desc) override;
-    virtual TextureStorage *createTextureStorage2D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly);
-    virtual TextureStorage *createTextureStorageCube(GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
-    virtual TextureStorage *createTextureStorage3D(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
-    virtual TextureStorage *createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels);
-
-    // Texture creation
-    TextureImpl *createTexture(const gl::TextureState &state) override;
-
-    // Renderbuffer creation
-    virtual RenderbufferImpl *createRenderbuffer();
+    TextureStorage *createTextureStorage2D(GLenum internalformat,
+                                           bool renderTarget,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           int levels,
+                                           bool hintLevelZeroOnly) override;
+    TextureStorage *createTextureStorageCube(GLenum internalformat,
+                                             bool renderTarget,
+                                             int size,
+                                             int levels,
+                                             bool hintLevelZeroOnly) override;
+    TextureStorage *createTextureStorage3D(GLenum internalformat,
+                                           bool renderTarget,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           int levels) override;
+    TextureStorage *createTextureStorage2DArray(GLenum internalformat,
+                                                bool renderTarget,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                int levels) override;
 
     // Buffer creation
-    virtual BufferImpl *createBuffer();
-    virtual VertexBuffer *createVertexBuffer();
-    virtual IndexBuffer *createIndexBuffer();
-
-    // Vertex Array creation
-    VertexArrayImpl *createVertexArray(const gl::VertexArrayState &data) override;
-
-    // Query and Fence creation
-    virtual QueryImpl *createQuery(GLenum type);
-    virtual FenceNVImpl *createFenceNV();
-    virtual FenceSyncImpl *createFenceSync();
-
-    // Transform Feedback creation
-    virtual TransformFeedbackImpl* createTransformFeedback();
+    VertexBuffer *createVertexBuffer() override;
+    IndexBuffer *createIndexBuffer() override;
 
     // Stream Creation
     StreamProducerImpl *createStreamProducerD3DTextureNV12(
@@ -255,8 +270,6 @@ class Renderer9 : public RendererD3D
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
-
-    void syncState(const gl::State &state, const gl::State::DirtyBits &bitmask) override;
 
     // D3D9-renderer specific methods
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
@@ -277,6 +290,25 @@ class Renderer9 : public RendererD3D
     D3DDEVTYPE getD3D9DeviceType() const { return mDeviceType; }
 
     egl::Error getEGLDevice(DeviceImpl **device) override;
+
+    StateManager9 *getStateManager() { return &mStateManager; }
+
+    gl::Error genericDrawArrays(Context9 *context,
+                                GLenum mode,
+                                GLint first,
+                                GLsizei count,
+                                GLsizei instances);
+
+    gl::Error genericDrawElements(Context9 *context,
+                                  GLenum mode,
+                                  GLsizei count,
+                                  GLenum type,
+                                  const GLvoid *indices,
+                                  GLsizei instances,
+                                  const gl::IndexRange &indexRange);
+
+    // Necessary hack for default framebuffers in D3D.
+    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
 
   protected:
     void createAnnotator() override;
@@ -316,7 +348,9 @@ class Renderer9 : public RendererD3D
 
     gl::Error getCountingIB(size_t count, StaticIndexBufferInterface **outIB);
 
-    gl::Error getNullColorbuffer(const gl::FramebufferAttachment *depthbuffer, const gl::FramebufferAttachment **outColorBuffer);
+    gl::Error getNullColorbuffer(GLImplFactory *implFactory,
+                                 const gl::FramebufferAttachment *depthbuffer,
+                                 const gl::FramebufferAttachment **outColorBuffer);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 
@@ -411,5 +445,6 @@ class Renderer9 : public RendererD3D
     std::vector<TranslatedAttribute> mTranslatedAttribCache;
 };
 
-}
+}  // namespace rx
+
 #endif // LIBANGLE_RENDERER_D3D_D3D9_RENDERER9_H_

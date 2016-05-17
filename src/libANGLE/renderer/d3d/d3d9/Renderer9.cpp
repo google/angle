@@ -348,7 +348,7 @@ void Renderer9::initializeDevice()
         mDevice->SetRenderState(D3DRS_POINTSIZE_MAX, 0x3F800000);   // 1.0f
     }
 
-    const gl::Caps &rendererCaps = getRendererCaps();
+    const gl::Caps &rendererCaps = getNativeCaps();
 
     mCurVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
     mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
@@ -368,7 +368,7 @@ void Renderer9::initializeDevice()
     mVertexDataManager = new VertexDataManager(this);
     mIndexDataManager = new IndexDataManager(this, getRendererClass());
 
-    mTranslatedAttribCache.resize(getRendererCaps().maxVertexAttributes);
+    mTranslatedAttribCache.resize(getNativeCaps().maxVertexAttributes);
 
     mStateManager.initialize();
 }
@@ -414,8 +414,8 @@ egl::ConfigSet Renderer9::generateConfigs() const
         GL_DEPTH_COMPONENT16,
     };
 
-    const gl::Caps &rendererCaps = getRendererCaps();
-    const gl::TextureCapsMap &rendererTextureCaps = getRendererTextureCaps();
+    const gl::Caps &rendererCaps                  = getNativeCaps();
+    const gl::TextureCapsMap &rendererTextureCaps = getNativeTextureCaps();
 
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -683,12 +683,7 @@ SwapChainD3D *Renderer9::createSwapChain(NativeWindowD3D *nativeWindow,
 
 ContextImpl *Renderer9::createContext(const gl::ContextState &state)
 {
-    return new Context9(state);
-}
-
-CompilerImpl *Renderer9::createCompiler()
-{
-    return new CompilerD3D(SH_HLSL_3_0_OUTPUT);
+    return new Context9(state, this);
 }
 
 void *Renderer9::getD3DDevice()
@@ -760,38 +755,6 @@ IndexBuffer *Renderer9::createIndexBuffer()
     return new IndexBuffer9(this);
 }
 
-BufferImpl *Renderer9::createBuffer()
-{
-    return new Buffer9(this);
-}
-
-VertexArrayImpl *Renderer9::createVertexArray(const gl::VertexArrayState &data)
-{
-    return new VertexArray9(data);
-}
-
-QueryImpl *Renderer9::createQuery(GLenum type)
-{
-    return new Query9(this, type);
-}
-
-FenceNVImpl *Renderer9::createFenceNV()
-{
-    return new FenceNV9(this);
-}
-
-FenceSyncImpl *Renderer9::createFenceSync()
-{
-    // Renderer9 doesn't support ES 3.0 and its sync objects.
-    UNREACHABLE();
-    return NULL;
-}
-
-TransformFeedbackImpl* Renderer9::createTransformFeedback()
-{
-    return new TransformFeedbackD3D();
-}
-
 StreamProducerImpl *Renderer9::createStreamProducerD3DTextureNV12(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)
@@ -861,7 +824,7 @@ gl::Error Renderer9::setSamplerState(gl::SamplerType type, int index, gl::Textur
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, baseLevel);
         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPMAPLODBIAS, static_cast<DWORD>(lodBias));
-        if (getRendererExtensions().textureFilterAnisotropic)
+        if (getNativeExtensions().textureFilterAnisotropic)
         {
             mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
         }
@@ -930,23 +893,16 @@ gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
     return gl::Error(GL_NO_ERROR);
 }
 
-void Renderer9::syncState(const gl::State &state, const gl::State::DirtyBits &bitmask)
+gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
 {
-    mStateManager.syncState(state, bitmask);
-}
+    const auto &data = context->getContextState();
 
-gl::Error Renderer9::updateState(const gl::ContextState &data, GLenum drawMode)
-{
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
     const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
     ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
 
-    gl::Error error = applyRenderTarget(framebufferObject);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(applyRenderTarget(context, framebufferObject));
 
     // Setting viewport state
     setViewport(data.state->getViewport(), data.state->getNearPlane(), data.state->getFarPlane(),
@@ -962,16 +918,11 @@ gl::Error Renderer9::updateState(const gl::ContextState &data, GLenum drawMode)
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(data, samples);
-    error             = setBlendDepthRasterStates(data, mask);
-
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(setBlendDepthRasterStates(data, mask));
 
     mStateManager.resetDirtyBits();
 
-    return error;
+    return gl::NoError();
 }
 
 void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
@@ -1040,8 +991,9 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSiz
     return mPrimitiveCount > 0;
 }
 
-
-gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbuffer, const gl::FramebufferAttachment **outColorBuffer)
+gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
+                                        const gl::FramebufferAttachment *depthbuffer,
+                                        const gl::FramebufferAttachment **outColorBuffer)
 {
     ASSERT(depthbuffer);
 
@@ -1060,7 +1012,7 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
         }
     }
 
-    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(createRenderbuffer(), 0);
+    gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(implFactory->createRenderbuffer(), 0);
     gl::Error error = nullRenderbuffer->setStorage(GL_NONE, size.width, size.height);
     if (error.isError())
     {
@@ -1090,7 +1042,8 @@ gl::Error Renderer9::getNullColorbuffer(const gl::FramebufferAttachment *depthbu
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAttachment,
+gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
+                                       const gl::FramebufferAttachment *colorAttachment,
                                        const gl::FramebufferAttachment *depthStencilAttachment)
 {
     const gl::FramebufferAttachment *renderAttachment = colorAttachment;
@@ -1100,7 +1053,7 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
     if (renderAttachment == nullptr)
     {
-        error = getNullColorbuffer(depthStencilAttachment, &renderAttachment);
+        error = getNullColorbuffer(implFactory, depthStencilAttachment, &renderAttachment);
         if (error.isError())
         {
             return error;
@@ -1194,9 +1147,11 @@ gl::Error Renderer9::applyRenderTarget(const gl::FramebufferAttachment *colorAtt
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyRenderTarget(const gl::Framebuffer *framebuffer)
+gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
+                                       const gl::Framebuffer *framebuffer)
 {
-    return applyRenderTarget(framebuffer->getColorbuffer(0), framebuffer->getDepthOrStencilbuffer());
+    return applyRenderTarget(implFactory, framebuffer->getColorbuffer(0),
+                             framebuffer->getDepthOrStencilbuffer());
 }
 
 gl::Error Renderer9::applyVertexBuffer(const gl::State &state,
@@ -1352,7 +1307,7 @@ gl::Error Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indi
 
     unsigned int startIndex = 0;
 
-    if (getRendererExtensions().elementIndexUint)
+    if (getNativeExtensions().elementIndexUint)
     {
         if (!mLineLoopIB)
         {
@@ -1596,7 +1551,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             }
         }
     }
-    else if (getRendererExtensions().elementIndexUint)
+    else if (getNativeExtensions().elementIndexUint)
     {
         const unsigned int spaceNeeded = static_cast<unsigned int>(count) * sizeof(unsigned int);
 
@@ -2388,7 +2343,7 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
 {
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);
 
-    const gl::TextureCaps &textureCaps = getRendererTextureCaps().get(format);
+    const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
 
     IDirect3DTexture9 *texture      = nullptr;
@@ -2475,21 +2430,6 @@ gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTarge
 
     *outRT = newRT;
     return gl::Error(GL_NO_ERROR);
-}
-
-FramebufferImpl *Renderer9::createFramebuffer(const gl::FramebufferState &data)
-{
-    return new Framebuffer9(data, this);
-}
-
-ShaderImpl *Renderer9::createShader(const gl::ShaderState &data)
-{
-    return new ShaderD3D(data);
-}
-
-ProgramImpl *Renderer9::createProgram(const gl::ProgramState &data)
-{
-    return new ProgramD3D(data, this);
 }
 
 gl::Error Renderer9::loadExecutable(const void *function,
@@ -2749,27 +2689,6 @@ TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat, bo
     return NULL;
 }
 
-TextureImpl *Renderer9::createTexture(const gl::TextureState &state)
-{
-    switch (state.target)
-    {
-        case GL_TEXTURE_2D:
-            return new TextureD3D_2D(state, this);
-        case GL_TEXTURE_CUBE_MAP:
-            return new TextureD3D_Cube(state, this);
-        default:
-            UNREACHABLE();
-    }
-
-    return NULL;
-}
-
-RenderbufferImpl *Renderer9::createRenderbuffer()
-{
-    RenderbufferD3D *renderbuffer = new RenderbufferD3D(this);
-    return renderbuffer;
-}
-
 bool Renderer9::getLUID(LUID *adapterLuid) const
 {
     adapterLuid->HighPart = 0;
@@ -2887,4 +2806,100 @@ Renderer9::CurSamplerState::CurSamplerState()
 {
 }
 
+gl::Error Renderer9::genericDrawElements(Context9 *context,
+                                         GLenum mode,
+                                         GLsizei count,
+                                         GLenum type,
+                                         const GLvoid *indices,
+                                         GLsizei instances,
+                                         const gl::IndexRange &indexRange)
+{
+    const auto &data     = context->getContextState();
+    gl::Program *program = context->getState().getProgram();
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    bool usesPointSize     = programD3D->usesPointSize();
+
+    programD3D->updateSamplerMapping();
+
+    ANGLE_TRY(generateSwizzles(data));
+
+    if (!applyPrimitiveType(mode, count, usesPointSize))
+    {
+        return gl::NoError();
+    }
+
+    ANGLE_TRY(updateState(context, mode));
+
+    TranslatedIndexData indexInfo;
+    indexInfo.indexRange = indexRange;
+
+    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
+
+    applyTransformFeedbackBuffers(*data.state);
+    // Transform feedback is not allowed for DrawElements, this error should have been caught at the
+    // API validation
+    // layer.
+    ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
+
+    size_t vertexCount = indexInfo.indexRange.vertexCount();
+    ANGLE_TRY(applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(programD3D->applyUniformBuffers(data));
+
+    if (!skipDraw(data, mode))
+    {
+        ANGLE_TRY(drawElementsImpl(data, indexInfo, mode, count, type, indices, instances));
+    }
+
+    return gl::NoError();
 }
+
+gl::Error Renderer9::genericDrawArrays(Context9 *context,
+                                       GLenum mode,
+                                       GLint first,
+                                       GLsizei count,
+                                       GLsizei instances)
+{
+    const auto &data     = context->getContextState();
+    gl::Program *program = context->getState().getProgram();
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    bool usesPointSize     = programD3D->usesPointSize();
+
+    programD3D->updateSamplerMapping();
+
+    ANGLE_TRY(generateSwizzles(data));
+    if (!applyPrimitiveType(mode, count, usesPointSize))
+    {
+        return gl::NoError();
+    }
+
+    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(applyTransformFeedbackBuffers(*data.state));
+    ANGLE_TRY(applyVertexBuffer(*data.state, mode, first, count, instances, nullptr));
+    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(programD3D->applyUniformBuffers(data));
+
+    if (!skipDraw(data, mode))
+    {
+        ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
+
+        if (data.state->isTransformFeedbackActiveUnpaused())
+        {
+            ANGLE_TRY(markTransformFeedbackUsage(data));
+        }
+    }
+
+    return gl::NoError();
+}
+
+FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::FramebufferState &state)
+{
+    return new Framebuffer9(state, this);
+}
+
+}  // namespace rx

@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "libANGLE/Uniform.h"
 #include "platform/Platform.h"
 
 namespace rx

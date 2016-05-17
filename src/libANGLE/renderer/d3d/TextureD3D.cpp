@@ -362,7 +362,8 @@ gl::Error TextureD3D::fastUnpackPixels(const gl::PixelUnpackState &unpack, const
 
 GLint TextureD3D::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
 {
-    if ((gl::isPow2(width) && gl::isPow2(height) && gl::isPow2(depth)) || mRenderer->getRendererExtensions().textureNPOT)
+    if ((gl::isPow2(width) && gl::isPow2(height) && gl::isPow2(depth)) ||
+        mRenderer->getNativeExtensions().textureNPOT)
     {
         // Maximum number of levels
         return gl::log2(std::max(std::max(width, height), depth)) + 1;

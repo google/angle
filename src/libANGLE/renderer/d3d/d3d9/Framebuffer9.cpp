@@ -59,7 +59,8 @@ gl::Error Framebuffer9::clearImpl(ContextImpl *context, const ClearParameters &c
     const gl::FramebufferAttachment *colorAttachment        = mState.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthOrStencilAttachment();
 
-    gl::Error error = mRenderer->applyRenderTarget(colorAttachment, depthStencilAttachment);
+    gl::Error error =
+        mRenderer->applyRenderTarget(context, colorAttachment, depthStencilAttachment);
     if (error.isError())
     {
         return error;

@@ -10,7 +10,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/renderer/Renderer.h"
 
 namespace gl
 {

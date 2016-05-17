@@ -10,8 +10,9 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_instantiate.h"
@@ -31,7 +32,8 @@ class D3D11EmulatedIndexedBufferTest : public ANGLETest
         ASSERT_EQ(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE, GetParam().getRenderer());
 
         gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
-        mRenderer = rx::GetAs<rx::Renderer11>(context->getRenderer());
+        rx::Context11 *context11 = rx::GetImplAs<rx::Context11>(context);
+        mRenderer                = context11->getRenderer();
 
         mSourceBuffer = new rx::Buffer11(mRenderer);
         GLfloat testData[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f };

@@ -18,7 +18,6 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/AttributeMap.h"
-#include "libANGLE/renderer/Renderer.h"
 
 namespace gl
 {

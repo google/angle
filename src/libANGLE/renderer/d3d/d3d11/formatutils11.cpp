@@ -16,7 +16,6 @@
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/generatemip.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
-#include "libANGLE/renderer/Renderer.h"
 
 namespace rx
 {

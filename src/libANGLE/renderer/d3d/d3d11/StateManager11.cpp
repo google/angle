@@ -11,6 +11,7 @@
 #include "common/BitSetIterator.h"
 #include "common/utilities.h"
 #include "libANGLE/Query.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
@@ -1084,7 +1085,7 @@ gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
     }
 
     // TODO(jmadill): Use context caps?
-    UINT drawBuffers = mRenderer->getRendererCaps().maxDrawBuffers;
+    UINT drawBuffers = mRenderer->getNativeCaps().maxDrawBuffers;
 
     // Apply the render target and depth stencil
     mRenderer->getDeviceContext()->OMSetRenderTargets(drawBuffers, framebufferRTVs.data(),

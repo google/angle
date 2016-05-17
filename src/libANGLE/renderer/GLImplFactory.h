@@ -43,9 +43,6 @@ class GLImplFactory : angle::NonCopyable
     GLImplFactory() {}
     virtual ~GLImplFactory() {}
 
-    // Context creation
-    virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
-
     // Shader creation
     virtual CompilerImpl *createCompiler() = 0;
     virtual ShaderImpl *createShader(const gl::ShaderState &data) = 0;

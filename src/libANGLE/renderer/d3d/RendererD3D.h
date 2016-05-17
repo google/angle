@@ -14,7 +14,6 @@
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/Renderer.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
@@ -30,6 +29,7 @@ class ConfigSet;
 namespace gl
 {
 class DebugAnnotator;
+class FramebufferState;
 class InfoLog;
 class Texture;
 struct LinkedVarying;
@@ -37,10 +37,12 @@ struct LinkedVarying;
 
 namespace rx
 {
+class ContextImpl;
 struct D3DUniform;
 struct D3DVarying;
 class DeviceD3D;
 class EGLImageD3D;
+class FramebufferImpl;
 class ImageD3D;
 class IndexBuffer;
 class NativeWindowD3D;
@@ -49,6 +51,7 @@ class RenderTargetD3D;
 class ShaderExecutableD3D;
 class SwapChainD3D;
 class TextureStorage;
+struct TranslatedIndexData;
 class UniformStorageD3D;
 class VertexBuffer;
 
@@ -76,7 +79,7 @@ enum RendererClass
 };
 
 // Useful for unit testing
-class BufferFactoryD3D
+class BufferFactoryD3D : angle::NonCopyable
 {
   public:
     BufferFactoryD3D() {}
@@ -96,7 +99,7 @@ class BufferFactoryD3D
 
 using AttribIndexArray = std::array<int, gl::MAX_VERTEX_ATTRIBS>;
 
-class RendererD3D : public Renderer, public BufferFactoryD3D
+class RendererD3D : public BufferFactoryD3D
 {
   public:
     explicit RendererD3D(egl::Display *display);
@@ -107,42 +110,11 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     virtual egl::ConfigSet generateConfigs() const = 0;
     virtual void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const = 0;
 
-    gl::Error drawArrays(const gl::ContextState &data,
-                         GLenum mode,
-                         GLint first,
-                         GLsizei count) override;
-    gl::Error drawArraysInstanced(const gl::ContextState &data,
-                                  GLenum mode,
-                                  GLint first,
-                                  GLsizei count,
-                                  GLsizei instanceCount) override;
+    virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
 
-    gl::Error drawElements(const gl::ContextState &data,
-                           GLenum mode,
-                           GLsizei count,
-                           GLenum type,
-                           const GLvoid *indices,
-                           const gl::IndexRange &indexRange) override;
-    gl::Error drawElementsInstanced(const gl::ContextState &data,
-                                    GLenum mode,
-                                    GLsizei count,
-                                    GLenum type,
-                                    const GLvoid *indices,
-                                    GLsizei instances,
-                                    const gl::IndexRange &indexRange) override;
-    gl::Error drawRangeElements(const gl::ContextState &data,
-                                GLenum mode,
-                                GLuint start,
-                                GLuint end,
-                                GLsizei count,
-                                GLenum type,
-                                const GLvoid *indices,
-                                const gl::IndexRange &indexRange) override;
-
-    bool isDeviceLost() const override;
-    std::string getVendorString() const override;
-
-    SamplerImpl *createSampler() override;
+    bool isDeviceLost() const;
+    virtual bool testDeviceLost() = 0;
+    std::string getVendorString() const;
 
     virtual int getMinorShaderModel() const = 0;
     virtual std::string getShaderModelSuffix() const = 0;
@@ -169,26 +141,9 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                         const std::vector<GLint> &vertexUniformBuffers,
                                         const std::vector<GLint> &fragmentUniformBuffers) = 0;
 
-    virtual gl::Error updateState(const gl::ContextState &data, GLenum drawMode) = 0;
-
-    virtual gl::Error applyRenderTarget(const gl::Framebuffer *frameBuffer) = 0;
     virtual gl::Error applyUniforms(const ProgramD3D &programD3D,
                                     GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
-    virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize) = 0;
-    virtual gl::Error applyVertexBuffer(const gl::State &state,
-                                        GLenum mode,
-                                        GLint first,
-                                        GLsizei count,
-                                        GLsizei instances,
-                                        TranslatedIndexData *indexInfo) = 0;
-    virtual gl::Error applyIndexBuffer(const gl::ContextState &data,
-                                       const GLvoid *indices,
-                                       GLsizei count,
-                                       GLenum mode,
-                                       GLenum type,
-                                       TranslatedIndexData *indexInfo) = 0;
-    virtual gl::Error applyTransformFeedbackBuffers(const gl::State &state) = 0;
 
     virtual unsigned int getReservedVertexUniformVectors() const = 0;
     virtual unsigned int getReservedFragmentUniformVectors() const = 0;
@@ -250,7 +205,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     // Device lost
-    void notifyDeviceLost() override;
+    void notifyDeviceLost();
     virtual bool resetDevice() = 0;
     virtual RendererClass getRendererClass() const = 0;
     virtual void *getD3DDevice() = 0;
@@ -258,16 +213,14 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     gl::Error getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut);
 
     // EXT_debug_marker
-    void insertEventMarker(GLsizei length, const char *marker) override;
-    void pushGroupMarker(GLsizei length, const char *marker) override;
-    void popGroupMarker() override;
+    void insertEventMarker(GLsizei length, const char *marker);
+    void pushGroupMarker(GLsizei length, const char *marker);
+    void popGroupMarker();
 
     void setGPUDisjoint();
 
-    GLint getGPUDisjoint() override;
-    GLint64 getTimestamp() override;
-
-    void onMakeCurrent(const gl::ContextState &data) override;
+    GLint getGPUDisjoint();
+    GLint64 getTimestamp();
 
     // In D3D11, faster than calling setTexture a jillion times
     virtual gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) = 0;
@@ -281,9 +234,21 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
         egl::Stream::ConsumerType consumerType,
         const egl::AttributeMap &attribs) = 0;
 
+    const gl::Caps &getNativeCaps() const;
+    const gl::TextureCapsMap &getNativeTextureCaps() const;
+    const gl::Extensions &getNativeExtensions() const;
+    const gl::Limitations &getNativeLimitations() const;
+
+    // Necessary hack for default framebuffers in D3D.
+    virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual gl::Error applyShadersImpl(const gl::ContextState &data, GLenum drawMode) = 0;
+    virtual void generateCaps(gl::Caps *outCaps,
+                              gl::TextureCapsMap *outTextureCaps,
+                              gl::Extensions *outExtensions,
+                              gl::Limitations *outLimitations) const = 0;
 
     void cleanup();
 
@@ -291,6 +256,12 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
 
     static unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples);
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
+
+    gl::Error generateSwizzles(const gl::ContextState &data);
+    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
+    gl::Error applyTextures(GLImplFactory *implFactory, const gl::ContextState &data);
+    bool skipDraw(const gl::ContextState &data, GLenum drawMode);
+    gl::Error markTransformFeedbackUsage(const gl::ContextState &data);
 
     egl::Display *mDisplay;
     bool mDeviceLost;
@@ -301,19 +272,7 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     bool mPresentPathFastEnabled;
 
   private:
-    gl::Error genericDrawArrays(const gl::ContextState &data,
-                                GLenum mode,
-                                GLint first,
-                                GLsizei count,
-                                GLsizei instances);
-
-    gl::Error genericDrawElements(const gl::ContextState &data,
-                                  GLenum mode,
-                                  GLsizei count,
-                                  GLenum type,
-                                  const GLvoid *indices,
-                                  GLsizei instances,
-                                  const gl::IndexRange &indexRange);
+    void ensureCapsInitialized() const;
 
     virtual gl::Error drawArraysImpl(const gl::ContextState &data,
                                      GLenum mode,
@@ -328,30 +287,30 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
                                        const GLvoid *indices,
                                        GLsizei instances) = 0;
 
-    //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
     typedef std::array<gl::Texture*, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureArray;
 
     gl::Error generateSwizzles(const gl::ContextState &data, gl::SamplerType type);
-    gl::Error generateSwizzles(const gl::ContextState &data);
 
     gl::Error applyState(const gl::ContextState &data, GLenum drawMode);
-    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
-    gl::Error applyTextures(const gl::ContextState &data,
+    gl::Error applyTextures(GLImplFactory *implFactory,
+                            const gl::ContextState &data,
                             gl::SamplerType shaderType,
                             const FramebufferTextureArray &framebufferTextures,
                             size_t framebufferTextureCount);
-    gl::Error applyTextures(const gl::ContextState &data);
-
-    bool skipDraw(const gl::ContextState &data, GLenum drawMode);
-    gl::Error markTransformFeedbackUsage(const gl::ContextState &data);
 
     size_t getBoundFramebufferTextures(const gl::ContextState &data,
                                        FramebufferTextureArray *outTextureArray);
-    gl::Texture *getIncompleteTexture(GLenum type);
+    gl::Texture *getIncompleteTexture(GLImplFactory *implFactory, GLenum type);
 
     gl::DebugAnnotator *getAnnotator();
 
     virtual WorkaroundsD3D generateWorkarounds() const = 0;
+
+    mutable bool mCapsInitialized;
+    mutable gl::Caps mNativeCaps;
+    mutable gl::TextureCapsMap mNativeTextureCaps;
+    mutable gl::Extensions mNativeExtensions;
+    mutable gl::Limitations mNativeLimitations;
 
     gl::TextureMap mIncompleteTextures;
     MemoryBuffer mScratchMemoryBuffer;
@@ -363,6 +322,6 @@ class RendererD3D : public Renderer, public BufferFactoryD3D
     bool mDisjoint;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_RENDERERD3D_H_

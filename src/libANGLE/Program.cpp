@@ -20,9 +20,10 @@
 #include "libANGLE/ContextState.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/features.h"
-#include "libANGLE/renderer/Renderer.h"
+#include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/Uniform.h"
 
 namespace gl
 {

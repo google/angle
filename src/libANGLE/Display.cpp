@@ -738,15 +738,10 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
 
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
-    gl::Context *context = *outContext =
-        mImplementation->createContext(configuration, shareContext, attribs);
+    gl::Context *context = new gl::Context(mImplementation, configuration, shareContext, attribs);
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);

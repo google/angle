@@ -30,9 +30,7 @@ class DisplayGL : public DisplayImpl
                            egl::ImageSibling *buffer,
                            const egl::AttributeMap &attribs) override;
 
-    gl::Context *createContext(const egl::Config *config,
-                               const gl::Context *shareContext,
-                               const egl::AttributeMap &attribs) override;
+    ContextImpl *createContext(const gl::ContextState &state) override;
 
     StreamProducerImpl *createStreamProducerD3DTextureNV12(
         egl::Stream::ConsumerType consumerType,

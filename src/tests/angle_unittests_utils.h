@@ -94,10 +94,7 @@ class MockEGLFactory : public EGLImplFactory
     MOCK_METHOD3(createPixmapSurface,
                  SurfaceImpl *(const egl::Config *, NativePixmapType, const egl::AttributeMap &));
     MOCK_METHOD3(createImage, ImageImpl *(EGLenum, egl::ImageSibling *, const egl::AttributeMap &));
-    MOCK_METHOD3(createContext,
-                 gl::Context *(const egl::Config *,
-                               const gl::Context *,
-                               const egl::AttributeMap &));
+    MOCK_METHOD1(createContext, ContextImpl *(const gl::ContextState &));
     MOCK_METHOD2(createStreamProducerD3DTextureNV12,
                  StreamProducerImpl *(egl::Stream::ConsumerType, const egl::AttributeMap &));
 };

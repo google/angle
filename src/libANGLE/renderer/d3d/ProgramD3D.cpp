@@ -13,6 +13,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/Uniform.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
@@ -1359,7 +1360,7 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
     fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
 
-    if (mRenderer->getRendererLimitations().noFrontFacingSupport)
+    if (mRenderer->getNativeLimitations().noFrontFacingSupport)
     {
         if (fragmentShaderD3D->usesFrontFacing())
         {

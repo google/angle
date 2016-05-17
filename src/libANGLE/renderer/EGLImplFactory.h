@@ -22,10 +22,12 @@ class ImageSibling;
 namespace gl
 {
 class Context;
+struct ContextState;
 }
 
 namespace rx
 {
+class ContextImpl;
 class ImageImpl;
 class SurfaceImpl;
 
@@ -51,9 +53,7 @@ class EGLImplFactory : angle::NonCopyable
                                    egl::ImageSibling *buffer,
                                    const egl::AttributeMap &attribs) = 0;
 
-    virtual gl::Context *createContext(const egl::Config *config,
-                                       const gl::Context *shareContext,
-                                       const egl::AttributeMap &attribs) = 0;
+    virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
 
     virtual StreamProducerImpl *createStreamProducerD3DTextureNV12(
         egl::Stream::ConsumerType consumerType,

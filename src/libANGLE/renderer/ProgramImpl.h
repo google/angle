@@ -14,9 +14,13 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
-#include "libANGLE/renderer/Renderer.h"
 
 #include <map>
+
+namespace sh
+{
+struct BlockMemberInfo;
+}
 
 namespace rx
 {

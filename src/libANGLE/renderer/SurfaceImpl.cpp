@@ -19,4 +19,4 @@ SurfaceImpl::~SurfaceImpl()
 {
 }
 
-}
+}  // namespace rx
