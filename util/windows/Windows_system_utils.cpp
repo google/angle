@@ -31,6 +31,11 @@ std::string GetExecutableDirectory()
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
+std::string GetSharedLibraryExtension()
+{
+    return "dll";
+}
+
 void Sleep(unsigned int milliseconds)
 {
     ::Sleep(static_cast<DWORD>(milliseconds));

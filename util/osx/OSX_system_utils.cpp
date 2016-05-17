@@ -42,4 +42,9 @@ std::string GetExecutableDirectory()
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
+std::string GetSharedLibraryExtension()
+{
+    return "dylib";
+}
+
 } // namespace angle
