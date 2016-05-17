@@ -16,6 +16,47 @@
       "revId": "9514b5047abcf322f514755500a48bcd8074fa9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e8ce66_6bbe91e3",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:42:01Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "5257a0e9_ba80e89e",
+      "revId": "9514b5047abcf322f514755500a48bcd8074fa9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e8ce66_4bb3cd19",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:42:01Z",
+      "side": 1,
+      "message": "we use this same block of code (including comment) 3 times.. can we make it a local static helper? you can probably pass just texture and level. Alternately it could be a method on TextureState.",
+      "range": {
+        "startLine": 870,
+        "startChar": 11,
+        "endLine": 873,
+        "endChar": 13
+      },
+      "revId": "9514b5047abcf322f514755500a48bcd8074fa9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
