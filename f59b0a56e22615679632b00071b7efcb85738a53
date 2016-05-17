@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5257a0e9_7ab3e0a6",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-17T14:04:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1720ba90_bef4dd95",
+      "revId": "f59b0a56e22615679632b00071b7efcb85738a53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b711ae44_e02196f0",
         "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-05-17T12:02:29Z",
       "side": 1,
       "message": "Seems like an oversight here. AFAIK ESSL 3 redefines \"attribute\" and \"varying\" were reserved identifiers, and the spec says using them should result in an error. Instead, in/out should be used.",
+      "revId": "f59b0a56e22615679632b00071b7efcb85738a53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_1ac2d4fb",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-17T14:04:06Z",
+      "side": 1,
+      "message": "Yep, fixed in the latest revision.  I wasn\u0027t able to run this test on my Win7 dev machine :(",
+      "parentUuid": "b711ae44_e02196f0",
       "revId": "f59b0a56e22615679632b00071b7efcb85738a53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
