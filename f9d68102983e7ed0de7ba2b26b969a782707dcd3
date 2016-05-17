@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77dc96fd_90f47496",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_6e84331e",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_5192b05a",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-05-13T14:17:18Z",
       "side": 1,
       "message": "ditto",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77dc96fd_b0f178a5",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_5192b05a",
       "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "77dc96fd_50284cdf",
+        "filename": "src/libANGLE/renderer/gl/functionsgl_typedefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_11a9088e",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_31b44ce1",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2016-05-13T14:17:18Z",
       "side": 1,
       "message": "Both sides of the || are the same, should one be GLES instead?",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77dc96fd_702d50ee",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Correct. Done.",
+      "parentUuid": "5257a0e9_31b44ce1",
       "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "77dc96fd_3037c83e",
+        "filename": "src/tests/gl_tests/FramebufferMixedSamplesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_51e470f2",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_31dfec1c",
         "filename": "src/tests/gl_tests/FramebufferMixedSamplesTest.cpp",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2016-05-13T14:17:18Z",
       "side": 1,
       "message": "Please update the comment",
+      "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77dc96fd_1032c44d",
+        "filename": "src/tests/gl_tests/FramebufferMixedSamplesTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-05-17T09:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_31dfec1c",
       "revId": "f9d68102983e7ed0de7ba2b26b969a782707dcd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
