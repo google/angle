@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "b7e8ce66_6ba7b1d1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "nit: don\u0027t encapsulate this in isError - handleError will check for that. Just call handleError(texture-\u003egenerateMipmaps());",
+      "range": {
+        "startLine": 2644,
+        "startChar": 4,
+        "endLine": 2647,
+        "endChar": 5
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e8ce66_cbc6bd7b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "Here we can use the beauty of TextureState to remove the \"maxLevel\" parameter to generateMipmaps. Make the ImageDescs all members of TexturState (which they should be, as they are a part of the Texture\u0027s state). Then you can make getImageDesc and getMipmapMaxLevel functions in TextureState, and make the Texture\u0027s version of these functions just call though to the TextureState. Then you can call getMipmapMaxLevel in TextureD3D::generateMipmaps, and keep the signature of the method the same. We would like to have the Impl methods mirror the gl API methods\u0027 parameters (with one exception, at some point we\u0027ll pass a gl::Context around).",
+      "range": {
+        "startLine": 606,
+        "startChar": 26,
+        "endLine": 606,
+        "endChar": 43
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_3a3eb8c9",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 5
@@ -13,6 +59,47 @@
       "writtenOn": "2016-05-17T14:27:15Z",
       "side": 1,
       "message": "I think there might be an overflow/UB in getLevelZeroWidth when the base level is big such as 64:\n - getLevelZeroWidth() is\n - getBaseLevelWidth() \u003c\u003c mBaseLevel is\n - something \u003c\u003c 64",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e8ce66_0bcdc597",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "We should just for this to be safe. I\u0027m not sure if we can ever compute a width that is greater than max texture size, but we should have a safety function something like IsUnsignedLeftShiftSafe",
+      "parentUuid": "5257a0e9_3a3eb8c9",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e8ce66_ebc9818b",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "It seems as though baseLevel is always \u003d\u003d effectiveBaseLevel. You shouldn\u0027t need to pass it as a parameter if so.",
+      "range": {
+        "startLine": 2247,
+        "startChar": 38,
+        "endLine": 2247,
+        "endChar": 54
+      },
       "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -36,6 +123,29 @@
     },
     {
       "key": {
+        "uuid": "5257a0e9_9a3fa4a1",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "makes me happy to see entry point cleanup.",
+      "range": {
+        "startLine": 1250,
+        "startChar": 17,
+        "endLine": 1250,
+        "endChar": 31
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_ba32a8f6",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 5
@@ -47,6 +157,52 @@
       "writtenOn": "2016-05-17T14:27:15Z",
       "side": 1,
       "message": "nit: These don\u0027t use class members and could be static functions instead",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_da492c53",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "nit: ASSERT_NE(0u, m2DProgram)",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 361,
+        "endChar": 9
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_1a7ad476",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-17T14:54:38Z",
+      "side": 1,
+      "message": "great tests",
+      "range": {
+        "startLine": 1061,
+        "startChar": 22,
+        "endLine": 1061,
+        "endChar": 55
+      },
       "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
