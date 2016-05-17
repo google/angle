@@ -64,6 +64,11 @@ if (is_win || is_linux || is_mac) {
                              ".",
                              "../..")
     }
+    if (use_x11) {
+      sources += rebase_path(end2end_gypi.angle_end2end_tests_x11_sources,
+                             ".",
+                             "../..")
+    }
 
     sources += [ "//gpu/angle_end2end_tests_main.cc" ]
 
