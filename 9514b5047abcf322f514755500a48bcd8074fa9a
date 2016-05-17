@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_ba80e89e",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 865,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-17T14:11:34Z",
+      "side": 1,
+      "message": "+1 for this interpretation",
+      "revId": "9514b5047abcf322f514755500a48bcd8074fa9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
