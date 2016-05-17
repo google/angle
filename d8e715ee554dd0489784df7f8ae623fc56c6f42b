@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5257a0e9_3a3eb8c9",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-17T14:27:15Z",
+      "side": 1,
+      "message": "I think there might be an overflow/UB in getLevelZeroWidth when the base level is big such as 64:\n - getLevelZeroWidth() is\n - getBaseLevelWidth() \u003c\u003c mBaseLevel is\n - something \u003c\u003c 64",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_5a41bc4b",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2253,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-17T14:27:15Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5257a0e9_ba32a8f6",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-17T14:27:15Z",
+      "side": 1,
+      "message": "nit: These don\u0027t use class members and could be static functions instead",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
