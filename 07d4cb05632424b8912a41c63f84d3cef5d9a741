@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_1e1a6f03",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T20:28:35Z",
+      "side": 1,
+      "message": "Yes, good catch.",
+      "parentUuid": "b727eef3_60a2ebc2",
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_5ba7d9d0",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 7
