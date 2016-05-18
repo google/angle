@@ -1454,7 +1454,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
         *params = static_cast<GLfloat>(mSampleAlphaToOne);
       case GL_COVERAGE_MODULATION_CHROMIUM:
-        params[0] = mCoverageModulation;
+        params[0] = static_cast<GLfloat>(mCoverageModulation);
         break;
       default:
         UNREACHABLE();
