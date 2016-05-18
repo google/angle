@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b727eef3_9eedbfd7",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 0,
+      "message": "nice cleanups",
+      "range": {
+        "startLine": 415,
+        "startChar": 0,
+        "endLine": 419,
+        "endChar": 36
+      },
+      "revId": "3531f40210d7ffbf7dde8b3d6ebe9c6103f99007",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_1ed9cf2e",
+        "filename": "src/tests/egl_tests/EGLStreamTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 0,
+      "message": "ah yes.",
+      "range": {
+        "startLine": 362,
+        "startChar": 8,
+        "endLine": 362,
+        "endChar": 14
+      },
+      "revId": "3531f40210d7ffbf7dde8b3d6ebe9c6103f99007",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

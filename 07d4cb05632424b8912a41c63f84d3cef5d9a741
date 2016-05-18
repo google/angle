@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b727eef3_5ba7d9d0",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "not super familiar with the extensions, but we can assume they won\u0027t be 3D?",
+      "range": {
+        "startLine": 204,
+        "startChar": 17,
+        "endLine": 204,
+        "endChar": 38
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_9b8af127",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "nit: missing space",
+      "range": {
+        "startLine": 852,
+        "startChar": 93,
+        "endLine": 852,
+        "endChar": 96
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_5eba27ce",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "this is a pretty nitty point, but I think it\u0027s slightly tidier if the extension logic is relegated to Texture.cpp as much as possible - that would mean an if statement in the Texture constructor setting the alternate default values for the external sampler state. This would also avoid constructor overloading/delegating, which is fine. Like it said, pretty nitty.",
+      "range": {
+        "startLine": 47,
+        "startChar": 16,
+        "endLine": 50,
+        "endChar": 80
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_7ede0b20",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "gl::NoError",
+      "range": {
+        "startLine": 3312,
+        "startChar": 11,
+        "endLine": 3312,
+        "endChar": 34
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_de38d72a",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "these should all be EXPECT_GLENUM_EQ, it could produce warnings otherwise.",
+      "range": {
+        "startLine": 882,
+        "startChar": 4,
+        "endLine": 882,
+        "endChar": 13
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_1e438fa3",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "once again this should be part of the fixture.",
+      "range": {
+        "startLine": 938,
+        "startChar": 25,
+        "endLine": 938,
+        "endChar": 32
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_5e16a797",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1410,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "comment before each test",
+      "range": {
+        "startLine": 1410,
+        "startChar": 0,
+        "endLine": 1410,
+        "endChar": 6
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_be0b636d",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:49:21Z",
+      "side": 1,
+      "message": "nice to have all these new tests for Images.",
+      "range": {
+        "startLine": 1490,
+        "startChar": 0,
+        "endLine": 1490,
+        "endChar": 6
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
