@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_1ec42f71",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:30:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_1e1a6f03",
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_5ba7d9d0",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 7
@@ -95,6 +113,24 @@
       "writtenOn": "2016-05-18T20:27:15Z",
       "side": 1,
       "message": "nit: alignment",
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_dec9f78b",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:30:15Z",
+      "side": 1,
+      "message": "What\u0027s not aligned here?",
+      "parentUuid": "b727eef3_808a7f27",
       "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
