@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b727eef3_bbf41502",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:32:29Z",
+      "side": 1,
+      "message": "this should still be Capitalized since it is a local static method.",
+      "range": {
+        "startLine": 34,
+        "startChar": 7,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_5b39998f",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:32:29Z",
+      "side": 1,
+      "message": "at this point the class is large enough I\u0027d like to make these private. How about for now to either a) forward declare rx::TextureGL and make rx::TextureGL a friend class with a TODO for me to fix the layering violation or b) add setters for TextureGL with a TODO for me to clean this up. Either of these or another solution would be fine.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 28
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_3b8f8588",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:32:29Z",
+      "side": 1,
+      "message": "let\u0027s make ImageDesc a gl:: scoped non-member class visible to all other classes. I\u0027d like to use this info in my Vulkan back-end and we could at some point use it for D3D or other back-ends.\n\nAlso while you\u0027re at it, can you define \"\u003d default\" copy and assignments and make the class final.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 6
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_5befd92f",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-18T19:32:29Z",
+      "side": 1,
+      "message": "This is OK. I think I\u0027ll probably do something to organize validation caching more systematically this quarter, so moving it around seems reasonable for now.",
+      "range": {
+        "startLine": 113,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 56
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
