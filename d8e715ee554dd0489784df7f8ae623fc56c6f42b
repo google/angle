@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_70ed90d4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2647,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7e8ce66_6ba7b1d1",
+      "range": {
+        "startLine": 2644,
+        "startChar": 4,
+        "endLine": 2647,
+        "endChar": 5
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7e8ce66_cbc6bd7b",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-05-17T14:54:38Z",
       "side": 1,
       "message": "Here we can use the beauty of TextureState to remove the \"maxLevel\" parameter to generateMipmaps. Make the ImageDescs all members of TexturState (which they should be, as they are a part of the Texture\u0027s state). Then you can make getImageDesc and getMipmapMaxLevel functions in TextureState, and make the Texture\u0027s version of these functions just call though to the TextureState. Then you can call getMipmapMaxLevel in TextureD3D::generateMipmaps, and keep the signature of the method the same. We would like to have the Impl methods mirror the gl API methods\u0027 parameters (with one exception, at some point we\u0027ll pass a gl::Context around).",
+      "range": {
+        "startLine": 606,
+        "startChar": 26,
+        "endLine": 606,
+        "endChar": 43
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_f0a98035",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "Did this. The refactoring that moved functions into TextureState is in the previous patch.",
+      "parentUuid": "b7e8ce66_cbc6bd7b",
       "range": {
         "startLine": 606,
         "startChar": 26,
@@ -83,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_d07d5ca1",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1061,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "This should be safe, but an additional check wouldn\u0027t hurt. I\u0027ll still add an assert, just wanted to upload changes to the previous patch before the end of the day.",
+      "parentUuid": "b7e8ce66_0bcdc597",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7e8ce66_ebc9818b",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 5
@@ -94,6 +160,30 @@
       "writtenOn": "2016-05-17T14:54:38Z",
       "side": 1,
       "message": "It seems as though baseLevel is always \u003d\u003d effectiveBaseLevel. You shouldn\u0027t need to pass it as a parameter if so.",
+      "range": {
+        "startLine": 2247,
+        "startChar": 38,
+        "endLine": 2247,
+        "endChar": 54
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_3065c810",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2247,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7e8ce66_ebc9818b",
       "range": {
         "startLine": 2247,
         "startChar": 38,
@@ -163,6 +253,24 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_30e308ee",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "drawQuad is a member of ANGLETest, and it uses mQuadVertexBuffer of ANGLETest. But I changed texImageCubeMapFaces into a static helper.",
+      "parentUuid": "5257a0e9_ba32a8f6",
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5257a0e9_da492c53",
         "filename": "src/tests/gl_tests/MipmapTest.cpp",
         "patchSetId": 5
@@ -174,6 +282,30 @@
       "writtenOn": "2016-05-17T14:54:38Z",
       "side": 1,
       "message": "nit: ASSERT_NE(0u, m2DProgram)",
+      "range": {
+        "startLine": 358,
+        "startChar": 0,
+        "endLine": 361,
+        "endChar": 9
+      },
+      "revId": "d8e715ee554dd0489784df7f8ae623fc56c6f42b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_50e88cc5",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-18T14:22:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5257a0e9_da492c53",
       "range": {
         "startLine": 358,
         "startChar": 0,
