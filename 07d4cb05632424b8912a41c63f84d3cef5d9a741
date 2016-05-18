@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_1e4eefb1",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "Yep, 2D only.",
+      "parentUuid": "b727eef3_5ba7d9d0",
+      "range": {
+        "startLine": 204,
+        "startChar": 17,
+        "endLine": 204,
+        "endChar": 38
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_9b8af127",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-05-18T19:49:21Z",
       "side": 1,
       "message": "nit: missing space",
+      "range": {
+        "startLine": 852,
+        "startChar": 93,
+        "endLine": 852,
+        "endChar": 96
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_fed79bcd",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_9b8af127",
       "range": {
         "startLine": 852,
         "startChar": 93,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_feb2fba1",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "I cleaned it up a bit by adding a static CreateDefaultForTarget method.  Since the default values for other texture types were already stored here, this keeps all that together.",
+      "parentUuid": "b727eef3_5eba27ce",
+      "range": {
+        "startLine": 47,
+        "startChar": 16,
+        "endLine": 50,
+        "endChar": 80
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_7ede0b20",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2016-05-18T19:49:21Z",
       "side": 1,
       "message": "gl::NoError",
+      "range": {
+        "startLine": 3312,
+        "startChar": 11,
+        "endLine": 3312,
+        "endChar": 34
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_1eaa6f29",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_7ede0b20",
       "range": {
         "startLine": 3312,
         "startChar": 11,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_de59f749",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_de38d72a",
+      "range": {
+        "startLine": 882,
+        "startChar": 4,
+        "endLine": 882,
+        "endChar": 13
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_1e438fa3",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 7
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "b727eef3_7e328b00",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "There are so many other tests in this fixture that I didn\u0027t want to add members used only by one.  There are no ASSERTs or early-exits so I think it\u0027s safe.\n\nThe best solution here would probably be to add RAII wrappers like dEQP.",
+      "parentUuid": "b727eef3_1e438fa3",
+      "range": {
+        "startLine": 938,
+        "startChar": 25,
+        "endLine": 938,
+        "endChar": 32
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_5e16a797",
         "filename": "src/tests/gl_tests/ImageTest.cpp",
         "patchSetId": 7
@@ -151,6 +295,30 @@
       "writtenOn": "2016-05-18T19:49:21Z",
       "side": 1,
       "message": "comment before each test",
+      "range": {
+        "startLine": 1410,
+        "startChar": 0,
+        "endLine": 1410,
+        "endChar": 6
+      },
+      "revId": "07d4cb05632424b8912a41c63f84d3cef5d9a741",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b727eef3_1e2d4f99",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1410,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-18T20:19:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_5e16a797",
       "range": {
         "startLine": 1410,
         "startChar": 0,
