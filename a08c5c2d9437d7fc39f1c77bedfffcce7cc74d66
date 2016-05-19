@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_9a9ab96e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_82cca29d",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_a2c99e8d",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_5ac6815d",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "I can guess some of them but making an exhaustive list would require a fresh install of Ubuntu, which is not something I have currently :S",
+      "parentUuid": "125a88dd_a2c99e8d",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_42c6aa7b",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -65,6 +101,24 @@
         "endLine": 25,
         "endChar": 112
       },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_7aa01da5",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_42c6aa7b",
       "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -117,6 +171,42 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_1aa7e9bb",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_22a84e9f",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_fab40de4",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Clang",
+      "parentUuid": "125a88dd_02a3d2c5",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_8297c255",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -134,6 +224,24 @@
         "endLine": 29,
         "endChar": 112
       },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_5a9d6163",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_8297c255",
       "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -163,6 +271,24 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_dae271e8",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_028af22d",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_c2837a15",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -180,6 +306,24 @@
         "endLine": 97,
         "endChar": 19
       },
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_9a05196c",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "125a88dd_c2837a15",
       "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
