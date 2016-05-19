@@ -22,6 +22,30 @@
       "revId": "f9fd82b5c983e92a700f86c93dde9b1cf217b221",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_7a749dbe",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-19T20:44:59Z",
+      "side": 1,
+      "message": "Hm, I tested in manually and it worked. Will verify again tomorrow.",
+      "parentUuid": "17fefabc_1aaa492a",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 14
+      },
+      "revId": "f9fd82b5c983e92a700f86c93dde9b1cf217b221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
