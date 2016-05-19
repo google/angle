@@ -22,6 +22,30 @@
       "revId": "a797e066c1307ada0077a8e6f1559e7ad70de531",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_b0e0d80c",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T13:15:44Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "b727eef3_5b6239a1",
+      "range": {
+        "startLine": 47,
+        "startChar": 17,
+        "endLine": 47,
+        "endChar": 25
+      },
+      "revId": "a797e066c1307ada0077a8e6f1559e7ad70de531",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

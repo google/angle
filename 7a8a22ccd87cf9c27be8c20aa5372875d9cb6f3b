@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_90475411",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T13:15:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b727eef3_bbf41502",
+      "range": {
+        "startLine": 34,
+        "startChar": 7,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_5b39998f",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_90e3d418",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T13:15:44Z",
+      "side": 1,
+      "message": "I chose option a).",
+      "parentUuid": "b727eef3_5b39998f",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 28
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b727eef3_3b8f8588",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2016-05-18T19:32:29Z",
       "side": 1,
       "message": "let\u0027s make ImageDesc a gl:: scoped non-member class visible to all other classes. I\u0027d like to use this info in my Vulkan back-end and we could at some point use it for D3D or other back-ends.\n\nAlso while you\u0027re at it, can you define \"\u003d default\" copy and assignments and make the class final.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 6
+      },
+      "revId": "7a8a22ccd87cf9c27be8c20aa5372875d9cb6f3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_50da4c59",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T13:15:44Z",
+      "side": 1,
+      "message": "Done. Also refactored SwizzleState into a separate struct since that can be reused in the swizzle cache of the D3D backend.",
+      "parentUuid": "b727eef3_3b8f8588",
       "range": {
         "startLine": 96,
         "startChar": 0,
