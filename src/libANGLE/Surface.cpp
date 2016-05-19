@@ -10,13 +10,15 @@
 
 #include "libANGLE/Surface.h"
 
-#include "libANGLE/Config.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/Texture.h"
 
 #include <EGL/eglext.h>
 
 #include <iostream>
+
+#include "libANGLE/Config.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/renderer/EGLImplFactory.h"
 
 namespace egl
 {
@@ -65,9 +67,6 @@ Surface::Surface(rx::SurfaceImpl *impl,
     }
 
     mOrientation = static_cast<EGLint>(attributes.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
-
-    mDefaultFramebuffer = createDefaultFramebuffer();
-    ASSERT(mDefaultFramebuffer != nullptr);
 }
 
 Surface::~Surface()
@@ -84,6 +83,17 @@ Surface::~Surface()
 
     SafeDelete(mDefaultFramebuffer);
     SafeDelete(mImplementation);
+}
+
+Error Surface::initialize()
+{
+    ANGLE_TRY(mImplementation->initialize());
+
+    // Must happen after implementation initialize for OSX.
+    mDefaultFramebuffer = createDefaultFramebuffer();
+    ASSERT(mDefaultFramebuffer != nullptr);
+
+    return Error(EGL_SUCCESS);
 }
 
 void Surface::setIsCurrent(bool isCurrent)
@@ -258,4 +268,57 @@ gl::Framebuffer *Surface::createDefaultFramebuffer()
 
     return framebuffer;
 }
+
+WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
+                             const egl::Config *config,
+                             EGLNativeWindowType window,
+                             const AttributeMap &attribs)
+    : Surface(implFactory->createWindowSurface(config, window, attribs),
+              EGL_WINDOW_BIT,
+              config,
+              attribs)
+{
 }
+
+WindowSurface::~WindowSurface()
+{
+}
+
+PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
+                               const Config *config,
+                               const AttributeMap &attribs)
+    : Surface(implFactory->createPbufferSurface(config, attribs), EGL_PBUFFER_BIT, config, attribs)
+{
+}
+
+PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
+                               const Config *config,
+                               EGLClientBuffer shareHandle,
+                               const AttributeMap &attribs)
+    : Surface(implFactory->createPbufferFromClientBuffer(config, shareHandle, attribs),
+              EGL_PBUFFER_BIT,
+              config,
+              attribs)
+{
+}
+
+PbufferSurface::~PbufferSurface()
+{
+}
+
+PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
+                             const Config *config,
+                             NativePixmapType nativePixmap,
+                             const AttributeMap &attribs)
+    : Surface(implFactory->createPixmapSurface(config, nativePixmap, attribs),
+              EGL_PIXMAP_BIT,
+              config,
+              attribs)
+{
+}
+
+PixmapSurface::~PixmapSurface()
+{
+}
+
+}  // namespace egl

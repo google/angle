@@ -14,8 +14,10 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/FramebufferImpl_mock.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
+#include "tests/angle_unittests_utils.h"
 
 using namespace rx;
+using namespace testing;
 
 namespace
 {
@@ -44,16 +46,16 @@ class MockSurfaceImpl : public rx::SurfaceImpl
 
 TEST(SurfaceTest, DestructionDeletesImpl)
 {
-    MockFramebufferImpl *framebuffer = new MockFramebufferImpl;
+    NiceMock<MockEGLFactory> factory;
 
     MockSurfaceImpl *impl = new MockSurfaceImpl;
     EXPECT_CALL(*impl, getSwapBehavior());
-    EXPECT_CALL(*impl, createDefaultFramebuffer(testing::_)).WillOnce(testing::Return(framebuffer));
+    EXPECT_CALL(factory, createWindowSurface(_, _, _)).WillOnce(Return(impl));
 
     egl::Config config;
-    egl::Surface *surface = new egl::Surface(impl, EGL_WINDOW_BIT, &config, egl::AttributeMap());
+    egl::Surface *surface = new egl::WindowSurface(
+        &factory, &config, static_cast<EGLNativeWindowType>(0), egl::AttributeMap());
 
-    EXPECT_CALL(*framebuffer, destroy()).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
 
     surface->onDestroy();
@@ -61,7 +63,7 @@ TEST(SurfaceTest, DestructionDeletesImpl)
     // Only needed because the mock is leaked if bugs are present,
     // which logs an error, but does not cause the test to fail.
     // Ordinarily mocks are verified when destroyed.
-    testing::Mock::VerifyAndClear(impl);
+    Mock::VerifyAndClear(impl);
 }
 
 } // namespace

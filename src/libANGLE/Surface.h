@@ -25,22 +25,27 @@ class Framebuffer;
 class Texture;
 }
 
+namespace rx
+{
+class EGLImplFactory;
+}
+
 namespace egl
 {
 class AttributeMap;
 class Display;
 struct Config;
 
-class Surface final : public gl::FramebufferAttachmentObject
+class Surface : public gl::FramebufferAttachmentObject
 {
   public:
-    Surface(rx::SurfaceImpl *impl, EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
+    virtual ~Surface();
 
-    rx::SurfaceImpl *getImplementation() { return mImplementation; }
-    const rx::SurfaceImpl *getImplementation() const { return mImplementation; }
+    rx::SurfaceImpl *getImplementation() const { return mImplementation; }
 
     EGLint getType() const;
 
+    Error initialize();
     Error swap();
     Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
@@ -86,8 +91,11 @@ class Surface final : public gl::FramebufferAttachmentObject
 
     bool directComposition() const { return mDirectComposition; }
 
-  private:
-    virtual ~Surface();
+  protected:
+    Surface(rx::SurfaceImpl *impl,
+            EGLint surfaceType,
+            const egl::Config *config,
+            const AttributeMap &attributes);
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
 
     gl::Framebuffer *createDefaultFramebuffer();
@@ -126,6 +134,39 @@ class Surface final : public gl::FramebufferAttachmentObject
     BindingPointer<gl::Texture> mTexture;
 };
 
-}
+class WindowSurface final : public Surface
+{
+  public:
+    WindowSurface(rx::EGLImplFactory *implFactory,
+                  const Config *config,
+                  EGLNativeWindowType window,
+                  const AttributeMap &attribs);
+    ~WindowSurface() override;
+};
+
+class PbufferSurface final : public Surface
+{
+  public:
+    PbufferSurface(rx::EGLImplFactory *implFactory,
+                   const Config *config,
+                   const AttributeMap &attribs);
+    PbufferSurface(rx::EGLImplFactory *implFactory,
+                   const Config *config,
+                   EGLClientBuffer shareHandle,
+                   const AttributeMap &attribs);
+    ~PbufferSurface() override;
+};
+
+class PixmapSurface final : public Surface
+{
+  public:
+    PixmapSurface(rx::EGLImplFactory *implFactory,
+                  const Config *config,
+                  NativePixmapType nativePixmap,
+                  const AttributeMap &attribs);
+    ~PixmapSurface() override;
+};
+
+}  // namespace egl
 
 #endif   // LIBANGLE_SURFACE_H_

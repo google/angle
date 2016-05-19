@@ -21,26 +21,6 @@
 namespace rx
 {
 
-SurfaceD3D *SurfaceD3D::createFromWindow(RendererD3D *renderer,
-                                         egl::Display *display,
-                                         const egl::Config *config,
-                                         EGLNativeWindowType window,
-                                         const egl::AttributeMap &attribs)
-{
-    return new SurfaceD3D(renderer, display, config, window, static_cast<EGLClientBuffer>(0),
-                          attribs);
-}
-
-SurfaceD3D *SurfaceD3D::createOffscreen(RendererD3D *renderer,
-                                        egl::Display *display,
-                                        const egl::Config *config,
-                                        EGLClientBuffer shareHandle,
-                                        const egl::AttributeMap &attribs)
-{
-    return new SurfaceD3D(renderer, display, config, static_cast<EGLNativeWindowType>(0),
-                          shareHandle, attribs);
-}
-
 SurfaceD3D::SurfaceD3D(RendererD3D *renderer,
                        egl::Display *display,
                        const egl::Config *config,
@@ -354,4 +334,35 @@ gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment:
     return gl::Error(GL_NO_ERROR);
 }
 
+WindowSurfaceD3D::WindowSurfaceD3D(RendererD3D *renderer,
+                                   egl::Display *display,
+                                   const egl::Config *config,
+                                   EGLNativeWindowType window,
+                                   const egl::AttributeMap &attribs)
+    : SurfaceD3D(renderer, display, config, window, static_cast<EGLClientBuffer>(0), attribs)
+{
 }
+
+WindowSurfaceD3D::~WindowSurfaceD3D()
+{
+}
+
+PbufferSurfaceD3D::PbufferSurfaceD3D(RendererD3D *renderer,
+                                     egl::Display *display,
+                                     const egl::Config *config,
+                                     EGLClientBuffer shareHandle,
+                                     const egl::AttributeMap &attribs)
+    : SurfaceD3D(renderer,
+                 display,
+                 config,
+                 static_cast<EGLNativeWindowType>(0),
+                 shareHandle,
+                 attribs)
+{
+}
+
+PbufferSurfaceD3D::~PbufferSurfaceD3D()
+{
+}
+
+}  // namespace rc

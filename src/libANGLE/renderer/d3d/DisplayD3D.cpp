@@ -168,14 +168,14 @@ SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return SurfaceD3D::createFromWindow(mRenderer, mDisplay, configuration, window, attribs);
+    return new WindowSurfaceD3D(mRenderer, mDisplay, configuration, window, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, nullptr, attribs);
+    return new PbufferSurfaceD3D(mRenderer, mDisplay, configuration, nullptr, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configuration,
@@ -183,7 +183,7 @@ SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *config
                                                        const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return SurfaceD3D::createOffscreen(mRenderer, mDisplay, configuration, shareHandle, attribs);
+    return new PbufferSurfaceD3D(mRenderer, mDisplay, configuration, shareHandle, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::Config *configuration,

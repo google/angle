@@ -407,17 +407,8 @@ Error Display::initialize()
         if (mDisplayExtensions.deviceQuery)
         {
             rx::DeviceImpl *impl = nullptr;
-            error = mImplementation->getDevice(&impl);
-            if (error.isError())
-            {
-                return error;
-            }
-
-            error = Device::CreateDevice(this, impl, &mDevice);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mImplementation->getDevice(&impl));
+            ANGLE_TRY(Device::CreateDevice(this, impl, &mDevice));
         }
         else
         {
@@ -539,32 +530,21 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
 {
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createWindowSurface(configuration, window, attribs);
-    ASSERT(surfaceImpl != nullptr);
+    std::unique_ptr<Surface> surface(
+        new WindowSurface(mImplementation, configuration, window, attribs));
+    ANGLE_TRY(surface->initialize());
 
-    Error error = surfaceImpl->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surfaceImpl);
-        return error;
-    }
-
-    Surface *surface = new Surface(surfaceImpl, EGL_WINDOW_BIT, configuration, attribs);
-    mImplementation->getSurfaceSet().insert(surface);
+    ASSERT(outSurface != nullptr);
+    *outSurface = surface.release();
+    mImplementation->getSurfaceSet().insert(*outSurface);
 
     WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
     ASSERT(windowSurfaces && windowSurfaces->find(window) == windowSurfaces->end());
-    windowSurfaces->insert(std::make_pair(window, surface));
+    windowSurfaces->insert(std::make_pair(window, *outSurface));
 
-    ASSERT(outSurface != nullptr);
-    *outSurface = surface;
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -574,28 +554,16 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
 
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createPbufferSurface(configuration, attribs);
-    ASSERT(surfaceImpl != nullptr);
-
-    Error error = surfaceImpl->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surfaceImpl);
-        return error;
-    }
-
-    Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
-    mImplementation->getSurfaceSet().insert(surface);
+    std::unique_ptr<Surface> surface(new PbufferSurface(mImplementation, configuration, attribs));
+    ANGLE_TRY(surface->initialize());
 
     ASSERT(outSurface != nullptr);
-    *outSurface = surface;
+    *outSurface = surface.release();
+    mImplementation->getSurfaceSet().insert(*outSurface);
+
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -606,28 +574,17 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration, EGLCli
 
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createPbufferFromClientBuffer(configuration, shareHandle, attribs);
-    ASSERT(surfaceImpl != nullptr);
-
-    Error error = surfaceImpl->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surfaceImpl);
-        return error;
-    }
-
-    Surface *surface = new Surface(surfaceImpl, EGL_PBUFFER_BIT, configuration, attribs);
-    mImplementation->getSurfaceSet().insert(surface);
+    std::unique_ptr<Surface> surface(
+        new PbufferSurface(mImplementation, configuration, shareHandle, attribs));
+    ANGLE_TRY(surface->initialize());
 
     ASSERT(outSurface != nullptr);
-    *outSurface = surface;
+    *outSurface = surface.release();
+    mImplementation->getSurfaceSet().insert(*outSurface);
+
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -638,28 +595,17 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
 
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
-    rx::SurfaceImpl *surfaceImpl = mImplementation->createPixmapSurface(configuration, nativePixmap, attribs);
-    ASSERT(surfaceImpl != nullptr);
-
-    Error error = surfaceImpl->initialize();
-    if (error.isError())
-    {
-        SafeDelete(surfaceImpl);
-        return error;
-    }
-
-    Surface *surface = new Surface(surfaceImpl, EGL_PIXMAP_BIT, configuration, attribs);
-    mImplementation->getSurfaceSet().insert(surface);
+    std::unique_ptr<Surface> surface(
+        new PixmapSurface(mImplementation, configuration, nativePixmap, attribs));
+    ANGLE_TRY(surface->initialize());
 
     ASSERT(outSurface != nullptr);
-    *outSurface = surface;
+    *outSurface = surface.release();
+    mImplementation->getSurfaceSet().insert(*outSurface);
+
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -673,11 +619,7 @@ Error Display::createImage(gl::Context *context,
 
     if (mImplementation->testDeviceLost())
     {
-        Error error = restoreLostDevice();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(restoreLostDevice());
     }
 
     egl::ImageSibling *sibling = nullptr;
@@ -698,11 +640,7 @@ Error Display::createImage(gl::Context *context,
     rx::ImageImpl *imageImpl = mImplementation->createImage(target, sibling, attribs);
     ASSERT(imageImpl != nullptr);
 
-    Error error = imageImpl->initialize();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(imageImpl->initialize());
 
     Image *image = new Image(imageImpl, target, sibling, attribs);
 
@@ -753,11 +691,7 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
 
 Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
 {
-    Error error = mImplementation->makeCurrent(drawSurface, readSurface, context);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mImplementation->makeCurrent(drawSurface, readSurface, context));
 
     if (context != nullptr && drawSurface != nullptr)
     {

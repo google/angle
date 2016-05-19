@@ -25,16 +25,6 @@ class RendererD3D;
 class SurfaceD3D : public SurfaceImpl
 {
   public:
-    static SurfaceD3D *createFromWindow(RendererD3D *renderer,
-                                        egl::Display *display,
-                                        const egl::Config *config,
-                                        EGLNativeWindowType window,
-                                        const egl::AttributeMap &attribs);
-    static SurfaceD3D *createOffscreen(RendererD3D *renderer,
-                                       egl::Display *display,
-                                       const egl::Config *config,
-                                       EGLClientBuffer shareHandle,
-                                       const egl::AttributeMap &attribs);
     ~SurfaceD3D() override;
     void releaseSwapChain();
 
@@ -65,7 +55,7 @@ class SurfaceD3D : public SurfaceImpl
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
-  private:
+  protected:
     SurfaceD3D(RendererD3D *renderer,
                egl::Display *display,
                const egl::Config *config,
@@ -98,7 +88,28 @@ class SurfaceD3D : public SurfaceImpl
     HANDLE mShareHandle;
 };
 
+class WindowSurfaceD3D : public SurfaceD3D
+{
+  public:
+    WindowSurfaceD3D(RendererD3D *renderer,
+                     egl::Display *display,
+                     const egl::Config *config,
+                     EGLNativeWindowType window,
+                     const egl::AttributeMap &attribs);
+    ~WindowSurfaceD3D() override;
+};
 
-}
+class PbufferSurfaceD3D : public SurfaceD3D
+{
+  public:
+    PbufferSurfaceD3D(RendererD3D *renderer,
+                      egl::Display *display,
+                      const egl::Config *config,
+                      EGLClientBuffer shareHandle,
+                      const egl::AttributeMap &attribs);
+    ~PbufferSurfaceD3D() override;
+};
+
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_SURFACED3D_H_
