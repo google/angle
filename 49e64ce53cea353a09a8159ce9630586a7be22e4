@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17fefabc_c2bde373",
+        "filename": "util/util.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-19T22:40:52Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in direct_dependent_settings? static libraries don\u0027t link things.",
+      "range": {
+        "startLine": 156,
+        "startChar": 27,
+        "endLine": 156,
+        "endChar": 35
+      },
+      "revId": "49e64ce53cea353a09a8159ce9630586a7be22e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
