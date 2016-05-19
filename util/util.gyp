@@ -149,6 +149,13 @@
                     [
                         '<@(util_linux_sources)',
                     ],
+                    'link_settings':
+                    {
+                        'libraries':
+                        [
+                            '-ldl',
+                        ],
+                    },
                 }],
                 ['use_x11==1',
                 {

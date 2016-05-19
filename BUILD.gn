@@ -117,7 +117,9 @@ static_library("angle_common") {
     "//build/config/compiler:no_chromium_code",
   ]
 
-  public_deps = [ ":commit_id" ]
+  public_deps = [
+    ":commit_id",
+  ]
 }
 
 static_library("translator_lib") {
@@ -290,9 +292,7 @@ static_library("libANGLE") {
     }
     if (use_x11) {
       sources += rebase_path(gles_gypi.libangle_gl_glx_sources, ".", "src")
-      deps += [
-        "src/third_party/libXNVCtrl:libXNVCtrl"
-      ]
+      deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       libs += [
         "X11",
         "Xi",
@@ -398,7 +398,10 @@ static_library("angle_util") {
 
   if (is_linux) {
     sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
-    libs = [ "rt" ]
+    libs = [
+      "rt",
+      "dl",
+    ]
   }
 
   if (is_mac) {
