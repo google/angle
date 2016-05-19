@@ -53,26 +53,11 @@
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.color_clear.rbo_rgb5_a1_depth_component16 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.stencil_clear.rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgb_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgb565_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgba4_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.npot_tex2d_rgb_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.npot_tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.npot_rbo_rgb565_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.npot_rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.stencil.npot_rbo_rgba4_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgb_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgba_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.rbo_rgb565_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.rbo_rgb5_a1_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.rbo_rgba4_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgb_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb565_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.resize.rbo_rgba4_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_tex2d_rgb_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_tex2d_rgba_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_rbo_rgb565_stencil_index8 = FAIL
@@ -80,19 +65,8 @@
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgb_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgb565_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_tex2d_rgb_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgb565_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_tex2d_rgb_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_tex2d_rgba_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgb565_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgb5_a1_stencil_index8 = FAIL
-1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
 1033 WIN : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
 1015 WIN : dEQP-GLES2.functional.shaders.functions.misc.missing_returns_vertex = FAIL
 1015 WIN : dEQP-GLES2.functional.shaders.functions.misc.missing_returns_fragment = FAIL
@@ -146,12 +120,6 @@
 
 1051 LINUX : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_global_inout_on_call_fragment = FAIL
 1051 LINUX : dEQP-GLES2.functional.shaders.functions.array_arguments.copy_global_inout_on_call_vertex = FAIL
-1051 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.basic_array.sampler2D_both = FAIL
-1051 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.basic_array.sampler2D_fragment = FAIL
-504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.array_in_struct.sampler2D_samplerCube_fragment = FAIL
-504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.array_in_struct.sampler2D_samplerCube_both = FAIL
-504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_both = FAIL
-504 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_pointer.render.nested_structs_arrays.sampler2D_samplerCube_fragment = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
 1019 LINUX : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
 1020 LINUX : dEQP-GLES2.functional.texture.mipmap.2d.projected.nearest_linear* = FAIL
@@ -162,64 +130,6 @@
 1143 LINUX : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
 1143 LINUX : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
 1143 LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
-1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_fragment = FAIL
-1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.basic_array.sampler2D_both = FAIL
-1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_fragment = FAIL
-1143 LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.array_in_struct.sampler2D_samplerCube_both = FAIL
-
-// While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.mixed_break_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_uniform_iterations.mixed_break_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.unconditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.while_dynamic_iterations.mixed_break_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.unconditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.mixed_break_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.unconditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_uniform_iterations.mixed_break_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.conditional_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.conditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.unconditional_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.only_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.only_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.double_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.double_continue_fragment = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_vertex = FAIL
-1324 LINUX : dEQP-GLES2.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_fragment = FAIL
 
 // Mac specific failures
 1143 MAC : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
@@ -248,7 +158,6 @@
 
 // Windows and Linux failures
 1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-504 WIN LINUX : dEQP-GLES2.functional.uniform_api.value.assigned.by_value.render.nested_structs_arrays.sampler2D_samplerCube_* = FAIL
 
 // Windows Linux and Mac failures
 989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
@@ -296,4 +205,3 @@
 1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat4 = FAIL
 1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat4_offset_1 = FAIL
 1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat4 = FAIL
-1032 WIN LINUX MAC : dEQP-GLES2.functional.state_query.shader.program_attached_shaders = FAIL
