@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_8505c26b",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-19T14:36:16Z",
+      "side": 1,
+      "message": "didn\u0027t notice this new function. agree, we should use uint32_t, also this should be Capitalized. we can also use the intrinsics if available (https://msdn.microsoft.com/en-us/library/bb384809.aspx)",
+      "range": {
+        "startLine": 470,
+        "startChar": 20,
+        "endLine": 470,
+        "endChar": 37
+      },
+      "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9712ead6_e9b455e4",
         "filename": "src/common/mathutil.h",
         "patchSetId": 11
