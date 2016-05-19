@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17fefabc_1aaa492a",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-05-19T20:44:08Z",
+      "side": 1,
+      "message": "This won\u0027t have the intended effect in Release builds; the C library\u0027s assert statement will translate to a no-op. Something else needs to be done in Release builds to crash the process. See LogMessage::~LogMessage and the call to base::debug::BreakDebugger in src/base/logging.cc in Chrome.",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 14
+      },
+      "revId": "f9fd82b5c983e92a700f86c93dde9b1cf217b221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
