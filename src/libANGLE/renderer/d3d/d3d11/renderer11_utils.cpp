@@ -327,16 +327,20 @@ GLint GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
     {
-      case D3D_FEATURE_LEVEL_11_1:
-      case D3D_FEATURE_LEVEL_11_0:
-      case D3D_FEATURE_LEVEL_10_1:
-      case D3D_FEATURE_LEVEL_10_0: return 3;
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+        case D3D_FEATURE_LEVEL_10_1:
+            return 3;
 
-      case D3D_FEATURE_LEVEL_9_3:
-      case D3D_FEATURE_LEVEL_9_2:
-      case D3D_FEATURE_LEVEL_9_1:  return 2;
+        case D3D_FEATURE_LEVEL_10_0:
+        case D3D_FEATURE_LEVEL_9_3:
+        case D3D_FEATURE_LEVEL_9_2:
+        case D3D_FEATURE_LEVEL_9_1:
+            return 2;
 
-      default: UNREACHABLE();      return 0;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
