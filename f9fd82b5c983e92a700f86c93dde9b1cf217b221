@@ -46,6 +46,30 @@
       "revId": "f9fd82b5c983e92a700f86c93dde9b1cf217b221",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_9a40794b",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-19T20:46:31Z",
+      "side": 1,
+      "message": "Just re-tested: http://imgur.com/KiPHE1M",
+      "parentUuid": "17fefabc_7a749dbe",
+      "range": {
+        "startLine": 109,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 14
+      },
+      "revId": "f9fd82b5c983e92a700f86c93dde9b1cf217b221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
