@@ -715,7 +715,7 @@ bool IsRenderbufferTarget(EGLenum target)
 {
     return target == EGL_GL_RENDERBUFFER_KHR;
 }
-}
+}  // namespace egl
 
 namespace egl_gl
 {
@@ -753,7 +753,7 @@ GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer)
 {
     return static_cast<GLuint>(reinterpret_cast<uintptr_t>(buffer));
 }
-}
+}  // namespace egl_gl
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 std::string getTempPath()

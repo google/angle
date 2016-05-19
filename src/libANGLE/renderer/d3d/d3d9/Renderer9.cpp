@@ -133,7 +133,7 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
     mAppliedPixelShader = NULL;
     mAppliedProgramSerial = 0;
 
-    initializeDebugAnnotator();
+    gl::InitializeDebugAnnotations(&mAnnotator);
 
     mEGLDevice = nullptr;
 }
@@ -155,6 +155,8 @@ Renderer9::~Renderer9()
 void Renderer9::release()
 {
     RendererD3D::cleanup();
+
+    gl::UninitializeDebugAnnotations();
 
     mTranslatedAttribCache.clear();
 
@@ -774,13 +776,6 @@ gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
-    UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
-}
-
-gl::Error Renderer9::generateSwizzle(gl::Texture *texture)
-{
-    // Swizzled textures are not available in ES2 or D3D9
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);
 }
@@ -1590,25 +1585,19 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::Error(GL_NO_ERROR);
 }
 
-gl::Error Renderer9::applyShadersImpl(const gl::ContextState &data, GLenum /*drawMode*/)
+gl::Error Renderer9::applyShaders(const gl::ContextState &data, GLenum drawMode)
 {
     ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
+    programD3D->updateCachedInputLayout(*data.state);
+
     const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
-    gl::Error error = programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr));
 
     const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe = NULL;
-    error = programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe));
 
     IDirect3DVertexShader9 *vertexShader = (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);
     IDirect3DPixelShader9 *pixelShader = (pixelExe ? GetAs<ShaderExecutable9>(pixelExe)->getPixelShader() : nullptr);
@@ -1638,7 +1627,7 @@ gl::Error Renderer9::applyShadersImpl(const gl::ContextState &data, GLenum /*dra
         mAppliedProgramSerial = programSerial;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return programD3D->applyUniforms(drawMode);
 }
 
 gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
@@ -2760,11 +2749,6 @@ WorkaroundsD3D Renderer9::generateWorkarounds() const
     return d3d9::GenerateWorkarounds();
 }
 
-void Renderer9::createAnnotator()
-{
-    mAnnotator = new DebugAnnotator9();
-}
-
 gl::Error Renderer9::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
 {
     // TODO(jmadill): faster way?
@@ -2823,8 +2807,6 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
 
     programD3D->updateSamplerMapping();
 
-    ANGLE_TRY(generateSwizzles(data));
-
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::NoError();
@@ -2872,7 +2854,6 @@ gl::Error Renderer9::genericDrawArrays(Context9 *context,
 
     programD3D->updateSamplerMapping();
 
-    ANGLE_TRY(generateSwizzles(data));
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::NoError();

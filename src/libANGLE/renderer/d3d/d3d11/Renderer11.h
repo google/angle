@@ -126,7 +126,6 @@ class Renderer11 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
-    virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
@@ -162,8 +161,8 @@ class Renderer11 : public RendererD3D
     std::string getRendererDescription() const;
     DeviceIdentifier getAdapterIdentifier() const override;
 
-    unsigned int getReservedVertexUniformVectors() const override;
-    unsigned int getReservedFragmentUniformVectors() const override;
+    unsigned int getReservedVertexUniformVectors() const;
+    unsigned int getReservedFragmentUniformVectors() const;
     unsigned int getReservedVertexUniformBuffers() const override;
     unsigned int getReservedFragmentUniformBuffers() const override;
 
@@ -279,6 +278,7 @@ class Renderer11 : public RendererD3D
 
     Blit11 *getBlitter() { return mBlit; }
     Clear11 *getClearer() { return mClear; }
+    gl::DebugAnnotator *getAnnotator();
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
@@ -339,24 +339,24 @@ class Renderer11 : public RendererD3D
     // Necessary hack for default framebuffers in D3D.
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
 
+    gl::Error getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut);
+
   protected:
-    void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
-    gl::Error applyShadersImpl(const gl::ContextState &data, GLenum drawMode) override;
 
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
-                             GLsizei instances) override;
+                             GLsizei instances);
     gl::Error drawElementsImpl(const gl::ContextState &data,
                                const TranslatedIndexData &indexInfo,
                                GLenum mode,
                                GLsizei count,
                                GLenum type,
                                const GLvoid *indices,
-                               GLsizei instances) override;
+                               GLsizei instances);
 
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
@@ -376,6 +376,11 @@ class Renderer11 : public RendererD3D
                               const GLvoid *indices,
                               int minIndex,
                               int instances);
+
+    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
+    gl::Error generateSwizzle(gl::Texture *texture);
+    gl::Error generateSwizzles(const gl::ContextState &data, gl::SamplerType type);
+    gl::Error generateSwizzles(const gl::ContextState &data);
 
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
@@ -527,6 +532,11 @@ class Renderer11 : public RendererD3D
     ID3D11Debug *mDebug;
 
     std::vector<GLuint> mScratchIndexDataBuffer;
+
+    MemoryBuffer mScratchMemoryBuffer;
+    unsigned int mScratchMemoryBufferResetCounter;
+
+    gl::DebugAnnotator *mAnnotator;
 
     mutable Optional<bool> mSupportsShareHandles;
 };

@@ -101,7 +101,6 @@ class Renderer9 : public RendererD3D
     gl::Error createPixelShader(const DWORD *function, size_t length, IDirect3DPixelShader9 **outShader);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
-    virtual gl::Error generateSwizzle(gl::Texture *texture);
     virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
     virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
@@ -159,8 +158,8 @@ class Renderer9 : public RendererD3D
     IDirect3DDevice9 *getDevice() { return mDevice; }
     void *getD3DDevice() override;
 
-    unsigned int getReservedVertexUniformVectors() const override;
-    unsigned int getReservedFragmentUniformVectors() const override;
+    unsigned int getReservedVertexUniformVectors() const;
+    unsigned int getReservedFragmentUniformVectors() const;
     unsigned int getReservedVertexUniformBuffers() const override;
     unsigned int getReservedFragmentUniformBuffers() const override;
 
@@ -271,6 +270,11 @@ class Renderer9 : public RendererD3D
     virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
 
+    // EXT_debug_marker
+    void insertEventMarker(GLsizei length, const char *marker);
+    void pushGroupMarker(GLsizei length, const char *marker);
+    void popGroupMarker();
+
     // D3D9-renderer specific methods
     gl::Error boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
@@ -310,24 +314,26 @@ class Renderer9 : public RendererD3D
     // Necessary hack for default framebuffers in D3D.
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
 
+    DebugAnnotator9 *getAnnotator() { return &mAnnotator; }
+
   protected:
-    void createAnnotator() override;
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
-    gl::Error applyShadersImpl(const gl::ContextState &data, GLenum drawMode) override;
 
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
-                             GLsizei instances) override;
+                             GLsizei instances);
     gl::Error drawElementsImpl(const gl::ContextState &data,
                                const TranslatedIndexData &indexInfo,
                                GLenum mode,
                                GLsizei count,
                                GLenum type,
                                const GLvoid *indices,
-                               GLsizei instances) override;
+                               GLsizei instances);
+
+    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
 
     void generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
@@ -443,6 +449,8 @@ class Renderer9 : public RendererD3D
 
     DeviceD3D *mEGLDevice;
     std::vector<TranslatedAttribute> mTranslatedAttribCache;
+
+    DebugAnnotator9 mAnnotator;
 };
 
 }  // namespace rx
