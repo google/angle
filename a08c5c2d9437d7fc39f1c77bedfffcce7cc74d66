@@ -207,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "17fefabc_ba69f5eb",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T20:44:51Z",
+      "side": 1,
+      "message": "My \"Clang\" comment here seems to be a PolyGerrit bug, it has been created by clicking the Done button.",
+      "parentUuid": "125a88dd_22a84e9f",
+      "revId": "a08c5c2d9437d7fc39f1c77bedfffcce7cc74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "125a88dd_8297c255",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
