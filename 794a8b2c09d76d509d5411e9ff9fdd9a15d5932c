@@ -22,6 +22,30 @@
       "revId": "794a8b2c09d76d509d5411e9ff9fdd9a15d5932c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_108b6431",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T16:05:41Z",
+      "side": 1,
+      "message": "Fixed the remaining instances of \"generateMipmaps\" as well.",
+      "parentUuid": "b727eef3_3b04a5b2",
+      "range": {
+        "startLine": 70,
+        "startChar": 22,
+        "endLine": 70,
+        "endChar": 36
+      },
+      "revId": "794a8b2c09d76d509d5411e9ff9fdd9a15d5932c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
