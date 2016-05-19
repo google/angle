@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17fefabc_e58b5627",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T14:19:44Z",
+      "side": 1,
+      "message": "It wouldbe good to use sized integers here, instead of assuming that ```int``` is 32 bits",
+      "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9712ead6_e9b455e4",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-19T14:19:44Z",
+      "side": 1,
+      "message": "should be 1u",
+      "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
