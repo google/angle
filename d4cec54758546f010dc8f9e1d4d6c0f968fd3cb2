@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "77a496ba_93fafe80",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T16:05:41Z",
+      "side": 1,
+      "message": "Agreed that uint32_t is better, I changed the type. However, I don\u0027t think that using intrinsics here makes sense unless this function would be used in a performance-critical path, it just adds unnecessary complexity.",
+      "parentUuid": "17fefabc_8505c26b",
+      "range": {
+        "startLine": 470,
+        "startChar": 20,
+        "endLine": 470,
+        "endChar": 37
+      },
+      "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9712ead6_e9b455e4",
         "filename": "src/common/mathutil.h",
         "patchSetId": 11
@@ -53,6 +77,24 @@
       "writtenOn": "2016-05-19T14:19:44Z",
       "side": 1,
       "message": "should be 1u",
+      "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77a496ba_d3f48697",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-05-19T16:05:41Z",
+      "side": 1,
+      "message": "No, 2u is correct here, it\u0027s needed for the early return optimization. Think if the early return optimization wasn\u0027t here - in this case this statement would decrement \"zeros\" by one, and x would end up as 1. The return statement would then return zeros - x - which we know at this point would be zeros decremented by one again, so we can just return zeros - 2 directly.\n\nI also added a unit test for this function to verify this.",
+      "parentUuid": "9712ead6_e9b455e4",
       "revId": "d4cec54758546f010dc8f9e1d4d6c0f968fd3cb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
