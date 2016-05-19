@@ -665,13 +665,6 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
     extensions->framebufferMixedSamples = functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
-
-    // ANGLE emulates vertex array objects in its GL layer
-    extensions->vertexArrayObject = true;
-
-    extensions->noError = true;
-
-    extensions->bindUniformLocation = true;
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

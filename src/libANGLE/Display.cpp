@@ -892,6 +892,10 @@ void Display::initDisplayExtensions()
 {
     mDisplayExtensions = mImplementation->getExtensions();
 
+    // Some extensions are always available because they are implemented in the EGL layer.
+    mDisplayExtensions.createContext        = true;
+    mDisplayExtensions.createContextNoError = true;
+
     // Force EGL_KHR_get_all_proc_addresses on.
     mDisplayExtensions.getAllProcAddresses = true;
 

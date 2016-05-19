@@ -621,12 +621,8 @@ egl::Error DisplayWGL::initializeD3DDevice()
 
 void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContext = true;
-    outExtensions->createContextNoError = true;
-
     // Only enable the surface orientation  and post sub buffer for DXGI swap chain surfaces, they
-    // prefer to swap with
-    // inverted Y.
+    // prefer to swap with inverted Y.
     outExtensions->postSubBuffer      = mUseDXGISwapChains;
     outExtensions->surfaceOrientation = mUseDXGISwapChains;
 }

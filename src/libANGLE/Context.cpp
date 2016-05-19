@@ -149,7 +149,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 {
     ASSERT(!mRobustAccess);  // Unimplemented
 
-    initCaps(mClientVersion);
+    initCaps();
 
     mState.initialize(mCaps, mExtensions, mClientVersion, GetDebug(attribs));
 
@@ -2077,7 +2077,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
     return false;
 }
 
-void Context::initCaps(GLuint clientVersion)
+void Context::initCaps()
 {
     mCaps = mImplementation->getNativeCaps();
 
@@ -2085,18 +2085,25 @@ void Context::initCaps(GLuint clientVersion)
 
     mLimitations = mImplementation->getNativeLimitations();
 
-    if (clientVersion < 3)
+    if (mClientVersion < 3)
     {
         // Disable ES3+ extensions
         mExtensions.colorBufferFloat = false;
         mExtensions.eglImageExternalEssl3 = false;
     }
 
-    if (clientVersion > 2)
+    if (mClientVersion > 2)
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
     }
+
+    // Some extensions are always available because they are implemented in the GL layer.
+    mExtensions.bindUniformLocation = true;
+    mExtensions.vertexArrayObject   = true;
+
+    // Enable the no error extension if the context was created with the flag.
+    mExtensions.noError = mSkipValidation;
 
     // Explicitly enable GL_KHR_debug
     mExtensions.debug                   = true;
@@ -2126,11 +2133,11 @@ void Context::initCaps(GLuint clientVersion)
         // Caps are AND'd with the renderer caps because some core formats are still unsupported in
         // ES3.
         formatCaps.texturable =
-            formatCaps.texturable && formatInfo.textureSupport(clientVersion, mExtensions);
+            formatCaps.texturable && formatInfo.textureSupport(mClientVersion, mExtensions);
         formatCaps.renderable =
-            formatCaps.renderable && formatInfo.renderSupport(clientVersion, mExtensions);
+            formatCaps.renderable && formatInfo.renderSupport(mClientVersion, mExtensions);
         formatCaps.filterable =
-            formatCaps.filterable && formatInfo.filterSupport(clientVersion, mExtensions);
+            formatCaps.filterable && formatInfo.filterSupport(mClientVersion, mExtensions);
 
         // OpenGL ES does not support multisampling with integer formats
         if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)

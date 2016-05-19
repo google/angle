@@ -435,7 +435,7 @@ class Context final : public ValidationContext
     void initRendererString();
     void initExtensionStrings();
 
-    void initCaps(GLuint clientVersion);
+    void initCaps();
 
     std::unique_ptr<rx::ContextImpl> mImplementation;
 

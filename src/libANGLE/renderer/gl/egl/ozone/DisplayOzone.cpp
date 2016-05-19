@@ -1000,8 +1000,6 @@ const FunctionsGL *DisplayOzone::getFunctionsGL() const
 
 void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContext        = true;
-    outExtensions->createContextNoError = true;
 }
 
 void DisplayOzone::generateCaps(egl::Caps *outCaps) const

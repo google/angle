@@ -887,8 +887,6 @@ const FunctionsGL *DisplayGLX::getFunctionsGL() const
 
 void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContext = true;
-    outExtensions->createContextNoError = true;
 }
 
 void DisplayGLX::generateCaps(egl::Caps *outCaps) const

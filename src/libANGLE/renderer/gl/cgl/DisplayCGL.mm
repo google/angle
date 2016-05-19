@@ -251,8 +251,6 @@ const FunctionsGL *DisplayCGL::getFunctionsGL() const
 
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContext = true;
-    outExtensions->createContextNoError = true;
 }
 
 void DisplayCGL::generateCaps(egl::Caps *outCaps) const
