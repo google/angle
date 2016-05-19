@@ -16,6 +16,24 @@
       "revId": "b5c1e2e8d1e396c9ba577f05692d4a5bad2dd9e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17fefabc_4bf7d9e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-19T17:45:03Z",
+      "side": 1,
+      "message": "Doh.. thanks for pointing that out.",
+      "parentUuid": "17fefabc_6b6bb5a9",
+      "revId": "b5c1e2e8d1e396c9ba577f05692d4a5bad2dd9e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
