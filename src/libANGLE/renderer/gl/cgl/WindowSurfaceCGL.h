@@ -54,7 +54,8 @@ struct SharedSwapState
 class WindowSurfaceCGL : public SurfaceGL
 {
   public:
-    WindowSurfaceCGL(RendererGL *renderer,
+    WindowSurfaceCGL(const egl::SurfaceState &state,
+                     RendererGL *renderer,
                      CALayer *layer,
                      const FunctionsGL *functions,
                      CGLContextObj context);

@@ -26,7 +26,8 @@ struct WorkaroundsGL;
 class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
 {
   public:
-    DXGISwapChainWindowSurfaceWGL(RendererGL *renderer,
+    DXGISwapChainWindowSurfaceWGL(const egl::SurfaceState &state,
+                                  RendererGL *renderer,
                                   EGLNativeWindowType window,
                                   ID3D11Device *device,
                                   HANDLE deviceHandle,

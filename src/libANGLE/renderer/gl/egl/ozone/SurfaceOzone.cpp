@@ -14,8 +14,10 @@
 namespace rx
 {
 
-SurfaceOzone::SurfaceOzone(RendererGL *renderer, DisplayOzone::Buffer *buffer)
-    : SurfaceGL(renderer), mBuffer(buffer)
+SurfaceOzone::SurfaceOzone(const egl::SurfaceState &state,
+                           RendererGL *renderer,
+                           DisplayOzone::Buffer *buffer)
+    : SurfaceGL(state, renderer), mBuffer(buffer)
 {
 }
 

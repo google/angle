@@ -19,7 +19,7 @@ class RendererGL;
 class SurfaceGL : public SurfaceImpl
 {
   public:
-    SurfaceGL(RendererGL *renderer);
+    SurfaceGL(const egl::SurfaceState &state, RendererGL *renderer);
     ~SurfaceGL() override;
 
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,

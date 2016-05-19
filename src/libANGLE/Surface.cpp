@@ -10,7 +10,6 @@
 
 #include "libANGLE/Surface.h"
 
-
 #include <EGL/eglext.h>
 
 #include <iostream>
@@ -23,13 +22,13 @@
 namespace egl
 {
 
-Surface::Surface(rx::SurfaceImpl *impl,
-                 EGLint surfaceType,
-                 const egl::Config *config,
-                 const AttributeMap &attributes)
+SurfaceState::SurfaceState() : defaultFramebuffer(nullptr)
+{
+}
+
+Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes)
     : FramebufferAttachmentObject(),
-      mImplementation(impl),
-      mDefaultFramebuffer(nullptr),
+      mImplementation(nullptr),
       mCurrentCount(0),
       mDestroyed(false),
       mType(surfaceType),
@@ -43,7 +42,7 @@ Surface::Surface(rx::SurfaceImpl *impl,
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
-      mSwapBehavior(impl->getSwapBehavior()),
+      mSwapBehavior(EGL_NONE),
       mOrientation(0),
       mTexture()
 {
@@ -81,17 +80,20 @@ Surface::~Surface()
         mTexture.set(nullptr);
     }
 
-    SafeDelete(mDefaultFramebuffer);
+    SafeDelete(mState.defaultFramebuffer);
     SafeDelete(mImplementation);
 }
 
 Error Surface::initialize()
 {
+    // Initialized here since impl is nullptr in the constructor.
+    mSwapBehavior = mImplementation->getSwapBehavior();
+
     ANGLE_TRY(mImplementation->initialize());
 
     // Must happen after implementation initialize for OSX.
-    mDefaultFramebuffer = createDefaultFramebuffer();
-    ASSERT(mDefaultFramebuffer != nullptr);
+    mState.defaultFramebuffer = createDefaultFramebuffer();
+    ASSERT(mState.defaultFramebuffer != nullptr);
 
     return Error(EGL_SUCCESS);
 }
@@ -273,11 +275,9 @@ WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
                              const egl::Config *config,
                              EGLNativeWindowType window,
                              const AttributeMap &attribs)
-    : Surface(implFactory->createWindowSurface(config, window, attribs),
-              EGL_WINDOW_BIT,
-              config,
-              attribs)
+    : Surface(EGL_WINDOW_BIT, config, attribs)
 {
+    mImplementation = implFactory->createWindowSurface(mState, config, window, attribs);
 }
 
 WindowSurface::~WindowSurface()
@@ -287,19 +287,19 @@ WindowSurface::~WindowSurface()
 PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const Config *config,
                                const AttributeMap &attribs)
-    : Surface(implFactory->createPbufferSurface(config, attribs), EGL_PBUFFER_BIT, config, attribs)
+    : Surface(EGL_PBUFFER_BIT, config, attribs)
 {
+    mImplementation = implFactory->createPbufferSurface(mState, config, attribs);
 }
 
 PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const Config *config,
                                EGLClientBuffer shareHandle,
                                const AttributeMap &attribs)
-    : Surface(implFactory->createPbufferFromClientBuffer(config, shareHandle, attribs),
-              EGL_PBUFFER_BIT,
-              config,
-              attribs)
+    : Surface(EGL_PBUFFER_BIT, config, attribs)
 {
+    mImplementation =
+        implFactory->createPbufferFromClientBuffer(mState, config, shareHandle, attribs);
 }
 
 PbufferSurface::~PbufferSurface()
@@ -310,11 +310,9 @@ PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
                              const Config *config,
                              NativePixmapType nativePixmap,
                              const AttributeMap &attribs)
-    : Surface(implFactory->createPixmapSurface(config, nativePixmap, attribs),
-              EGL_PIXMAP_BIT,
-              config,
-              attribs)
+    : Surface(EGL_PIXMAP_BIT, config, attribs)
 {
+    mImplementation = implFactory->createPixmapSurface(mState, config, nativePixmap, attribs);
 }
 
 PixmapSurface::~PixmapSurface()

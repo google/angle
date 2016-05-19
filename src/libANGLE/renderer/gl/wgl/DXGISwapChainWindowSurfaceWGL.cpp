@@ -22,7 +22,8 @@
 namespace rx
 {
 
-DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(RendererGL *renderer,
+DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceState &state,
+                                                             RendererGL *renderer,
                                                              EGLNativeWindowType window,
                                                              ID3D11Device *device,
                                                              HANDLE deviceHandle,
@@ -31,7 +32,7 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(RendererGL *rendere
                                                              const FunctionsGL *functionsGL,
                                                              const FunctionsWGL *functionsWGL,
                                                              EGLint orientation)
-    : SurfaceGL(renderer),
+    : SurfaceGL(state, renderer),
       mWindow(window),
       mStateManager(renderer->getStateManager()),
       mWorkarounds(renderer->getWorkarounds()),

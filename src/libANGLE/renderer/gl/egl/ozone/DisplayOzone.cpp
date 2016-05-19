@@ -830,7 +830,8 @@ void DisplayOzone::terminate()
     close(fd);
 }
 
-SurfaceImpl *DisplayOzone::createWindowSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
+                                               const egl::Config *configuration,
                                                EGLNativeWindowType window,
                                                const egl::AttributeMap &attribs)
 {
@@ -840,10 +841,11 @@ SurfaceImpl *DisplayOzone::createWindowSurface(const egl::Config *configuration,
     {
         return nullptr;
     }
-    return new SurfaceOzone(getRenderer(), buffer);
+    return new SurfaceOzone(state, getRenderer(), buffer);
 }
 
-SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
+                                                const egl::Config *configuration,
                                                 const egl::AttributeMap &attribs)
 {
     EGLAttrib width  = attribs.get(EGL_WIDTH, 0);
@@ -854,10 +856,11 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::Config *configuration
     {
         return nullptr;
     }
-    return new SurfaceOzone(getRenderer(), buffer);
+    return new SurfaceOzone(state, getRenderer(), buffer);
 }
 
-SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::Config *configuration,
+SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                         const egl::Config *configuration,
                                                          EGLClientBuffer shareHandle,
                                                          const egl::AttributeMap &attribs)
 {
@@ -865,7 +868,8 @@ SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::Config *conf
     return nullptr;
 }
 
-SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
+                                               const egl::Config *configuration,
                                                NativePixmapType nativePixmap,
                                                const egl::AttributeMap &attribs)
 {

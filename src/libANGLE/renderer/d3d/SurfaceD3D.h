@@ -56,7 +56,8 @@ class SurfaceD3D : public SurfaceImpl
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
   protected:
-    SurfaceD3D(RendererD3D *renderer,
+    SurfaceD3D(const egl::SurfaceState &state,
+               RendererD3D *renderer,
                egl::Display *display,
                const egl::Config *config,
                EGLNativeWindowType window,
@@ -91,7 +92,8 @@ class SurfaceD3D : public SurfaceImpl
 class WindowSurfaceD3D : public SurfaceD3D
 {
   public:
-    WindowSurfaceD3D(RendererD3D *renderer,
+    WindowSurfaceD3D(const egl::SurfaceState &state,
+                     RendererD3D *renderer,
                      egl::Display *display,
                      const egl::Config *config,
                      EGLNativeWindowType window,
@@ -102,7 +104,8 @@ class WindowSurfaceD3D : public SurfaceD3D
 class PbufferSurfaceD3D : public SurfaceD3D
 {
   public:
-    PbufferSurfaceD3D(RendererD3D *renderer,
+    PbufferSurfaceD3D(const egl::SurfaceState &state,
+                      RendererD3D *renderer,
                       egl::Display *display,
                       const egl::Config *config,
                       EGLClientBuffer shareHandle,

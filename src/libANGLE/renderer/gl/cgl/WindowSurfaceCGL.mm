@@ -142,11 +142,12 @@
     namespace rx
     {
 
-    WindowSurfaceCGL::WindowSurfaceCGL(RendererGL *renderer,
+    WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
+                                       RendererGL *renderer,
                                        CALayer *layer,
                                        const FunctionsGL *functions,
                                        CGLContextObj context)
-        : SurfaceGL(renderer),
+        : SurfaceGL(state, renderer),
           mSwapLayer(nil),
           mCurrentSwapId(0),
           mLayer(layer),

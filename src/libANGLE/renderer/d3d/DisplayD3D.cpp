@@ -162,31 +162,34 @@ DisplayD3D::DisplayD3D() : mRenderer(nullptr)
 {
 }
 
-
-SurfaceImpl *DisplayD3D::createWindowSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayD3D::createWindowSurface(const egl::SurfaceState &state,
+                                             const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new WindowSurfaceD3D(mRenderer, mDisplay, configuration, window, attribs);
+    return new WindowSurfaceD3D(state, mRenderer, mDisplay, configuration, window, attribs);
 }
 
-SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::SurfaceState &state,
+                                              const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new PbufferSurfaceD3D(mRenderer, mDisplay, configuration, nullptr, attribs);
+    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, configuration, nullptr, attribs);
 }
 
-SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::Config *configuration,
+SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                       const egl::Config *configuration,
                                                        EGLClientBuffer shareHandle,
                                                        const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new PbufferSurfaceD3D(mRenderer, mDisplay, configuration, shareHandle, attribs);
+    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, configuration, shareHandle, attribs);
 }
 
-SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::SurfaceState &state,
+                                             const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs)
 {

@@ -18,11 +18,12 @@
 namespace rx
 {
 
-PbufferSurfaceCGL::PbufferSurfaceCGL(RendererGL *renderer,
+PbufferSurfaceCGL::PbufferSurfaceCGL(const egl::SurfaceState &state,
+                                     RendererGL *renderer,
                                      EGLint width,
                                      EGLint height,
                                      const FunctionsGL *functions)
-    : SurfaceGL(renderer),
+    : SurfaceGL(state, renderer),
       mWidth(width),
       mHeight(height),
       mFunctions(functions),

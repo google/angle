@@ -14,7 +14,8 @@
 namespace rx
 {
 
-SurfaceGL::SurfaceGL(RendererGL *renderer) : SurfaceImpl(), mRenderer(renderer)
+SurfaceGL::SurfaceGL(const egl::SurfaceState &state, RendererGL *renderer)
+    : SurfaceImpl(state), mRenderer(renderer)
 {
 }
 

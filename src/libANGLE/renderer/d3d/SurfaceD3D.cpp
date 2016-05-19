@@ -21,13 +21,14 @@
 namespace rx
 {
 
-SurfaceD3D::SurfaceD3D(RendererD3D *renderer,
+SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
+                       RendererD3D *renderer,
                        egl::Display *display,
                        const egl::Config *config,
                        EGLNativeWindowType window,
                        EGLClientBuffer shareHandle,
                        const egl::AttributeMap &attribs)
-    : SurfaceImpl(),
+    : SurfaceImpl(state),
       mRenderer(renderer),
       mDisplay(display),
       mFixedSize(window == nullptr || attribs.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE),
@@ -334,12 +335,13 @@ gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment:
     return gl::Error(GL_NO_ERROR);
 }
 
-WindowSurfaceD3D::WindowSurfaceD3D(RendererD3D *renderer,
+WindowSurfaceD3D::WindowSurfaceD3D(const egl::SurfaceState &state,
+                                   RendererD3D *renderer,
                                    egl::Display *display,
                                    const egl::Config *config,
                                    EGLNativeWindowType window,
                                    const egl::AttributeMap &attribs)
-    : SurfaceD3D(renderer, display, config, window, static_cast<EGLClientBuffer>(0), attribs)
+    : SurfaceD3D(state, renderer, display, config, window, static_cast<EGLClientBuffer>(0), attribs)
 {
 }
 
@@ -347,12 +349,14 @@ WindowSurfaceD3D::~WindowSurfaceD3D()
 {
 }
 
-PbufferSurfaceD3D::PbufferSurfaceD3D(RendererD3D *renderer,
+PbufferSurfaceD3D::PbufferSurfaceD3D(const egl::SurfaceState &state,
+                                     RendererD3D *renderer,
                                      egl::Display *display,
                                      const egl::Config *config,
                                      EGLClientBuffer shareHandle,
                                      const egl::AttributeMap &attribs)
-    : SurfaceD3D(renderer,
+    : SurfaceD3D(state,
+                 renderer,
                  display,
                  config,
                  static_cast<EGLNativeWindowType>(0),

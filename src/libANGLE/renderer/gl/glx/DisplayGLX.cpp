@@ -382,18 +382,20 @@ void DisplayGLX::terminate()
     SafeDelete(mFunctionsGL);
 }
 
-SurfaceImpl *DisplayGLX::createWindowSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
+                                             const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
     glx::FBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
-    return new WindowSurfaceGLX(mGLX, this, this->getRenderer(), window, mGLX.getDisplay(),
+    return new WindowSurfaceGLX(state, mGLX, this, this->getRenderer(), window, mGLX.getDisplay(),
                                 mContext, fbConfig);
 }
 
-SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
+                                              const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
@@ -403,11 +405,12 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::Config *configuration,
     EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
-    return new PbufferSurfaceGLX(this->getRenderer(), width, height, largest, mGLX, mContext,
+    return new PbufferSurfaceGLX(state, this->getRenderer(), width, height, largest, mGLX, mContext,
                                  fbConfig);
 }
 
-SurfaceImpl* DisplayGLX::createPbufferFromClientBuffer(const egl::Config *configuration,
+SurfaceImpl *DisplayGLX::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                       const egl::Config *configuration,
                                                        EGLClientBuffer shareHandle,
                                                        const egl::AttributeMap &attribs)
 {
@@ -415,7 +418,8 @@ SurfaceImpl* DisplayGLX::createPbufferFromClientBuffer(const egl::Config *config
     return nullptr;
 }
 
-SurfaceImpl *DisplayGLX::createPixmapSurface(const egl::Config *configuration,
+SurfaceImpl *DisplayGLX::createPixmapSurface(const egl::SurfaceState &state,
+                                             const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs)
 {

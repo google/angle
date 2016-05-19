@@ -25,6 +25,7 @@ namespace
 class MockSurfaceImpl : public rx::SurfaceImpl
 {
   public:
+    MockSurfaceImpl() : SurfaceImpl(mockState) {}
     virtual ~MockSurfaceImpl() { destroy(); }
 
     MOCK_METHOD0(initialize, egl::Error());
@@ -42,6 +43,8 @@ class MockSurfaceImpl : public rx::SurfaceImpl
     MOCK_METHOD2(getAttachmentRenderTarget, gl::Error(const gl::FramebufferAttachment::Target &, rx::FramebufferAttachmentRenderTarget **));
 
     MOCK_METHOD0(destroy, void());
+
+    egl::SurfaceState mockState;
 };
 
 TEST(SurfaceTest, DestructionDeletesImpl)
@@ -49,8 +52,7 @@ TEST(SurfaceTest, DestructionDeletesImpl)
     NiceMock<MockEGLFactory> factory;
 
     MockSurfaceImpl *impl = new MockSurfaceImpl;
-    EXPECT_CALL(*impl, getSwapBehavior());
-    EXPECT_CALL(factory, createWindowSurface(_, _, _)).WillOnce(Return(impl));
+    EXPECT_CALL(factory, createWindowSurface(_, _, _, _)).WillOnce(Return(impl));
 
     egl::Config config;
     egl::Surface *surface = new egl::WindowSurface(

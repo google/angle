@@ -11,7 +11,7 @@
 namespace rx
 {
 
-SurfaceImpl::SurfaceImpl()
+SurfaceImpl::SurfaceImpl(const egl::SurfaceState &state) : mState(state)
 {
 }
 
