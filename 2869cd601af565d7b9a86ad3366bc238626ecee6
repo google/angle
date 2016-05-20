@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "179d1ad4_af90c852",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2103,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-20T14:17:27Z",
+      "side": 1,
+      "message": "We should be careful about this one.  It should probably only be set to true when the context creation flag is present.  I realize that there is no code checking for this extension yet but it could be a bit dangerous if we forget about it.",
+      "range": {
+        "startLine": 2103,
+        "startChar": 4,
+        "endLine": 2103,
+        "endChar": 43
+      },
+      "revId": "2869cd601af565d7b9a86ad3366bc238626ecee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
