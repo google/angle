@@ -46,6 +46,30 @@
       "revId": "2869cd601af565d7b9a86ad3366bc238626ecee6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179d1ad4_6fd9c02e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2103,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-20T14:32:34Z",
+      "side": 1,
+      "message": "The no-error GLES extension should only be enabled when the EGL context is created with the EGL_CONTEXT_OPENGL_NO_ERROR_KHR attribute.  I know that we hide it by not exposing the string but if we ever update validation to use the Extensions::noError bool then we have to come back and update this code so that the extension is not enabled all the time.",
+      "parentUuid": "179d1ad4_4fc9646b",
+      "range": {
+        "startLine": 2103,
+        "startChar": 4,
+        "endLine": 2103,
+        "endChar": 43
+      },
+      "revId": "2869cd601af565d7b9a86ad3366bc238626ecee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
