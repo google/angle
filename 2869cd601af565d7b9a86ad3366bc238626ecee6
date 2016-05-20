@@ -70,6 +70,30 @@
       "revId": "2869cd601af565d7b9a86ad3366bc238626ecee6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179d1ad4_0041eb4d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-20T18:12:53Z",
+      "side": 1,
+      "message": "Ah yes, remembering how this works. The context flags are actually different, it\u0027s something specific to desktop GL, but I can check for the context creation attribute.",
+      "parentUuid": "179d1ad4_6fd9c02e",
+      "range": {
+        "startLine": 2103,
+        "startChar": 4,
+        "endLine": 2103,
+        "endChar": 43
+      },
+      "revId": "2869cd601af565d7b9a86ad3366bc238626ecee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
