@@ -99,6 +99,27 @@ class TextureGL : public TextureImpl
     void setBaseLevel(GLuint) override {}
 
   private:
+    void setImageHelper(GLenum target,
+                        size_t level,
+                        GLenum internalFormat,
+                        const gl::Extents &size,
+                        GLenum format,
+                        GLenum type,
+                        const uint8_t *pixels);
+    void reserveTexImageToBeFilled(GLenum target,
+                                   size_t level,
+                                   GLenum internalFormat,
+                                   const gl::Extents &size,
+                                   GLenum format,
+                                   GLenum type);
+    gl::Error setSubImageRowByRowWorkaround(GLenum target,
+                                            size_t level,
+                                            const gl::Box &area,
+                                            GLenum format,
+                                            GLenum type,
+                                            const gl::PixelUnpackState &unpack,
+                                            const uint8_t *pixels);
+
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;

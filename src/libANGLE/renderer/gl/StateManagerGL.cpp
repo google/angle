@@ -432,7 +432,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipRows = skipRows;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, mUnpackSkipRows);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_ROWS);
     }
 
     if (mUnpackSkipPixels != skipPixels)
@@ -440,7 +440,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipPixels = skipPixels;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_PIXELS, mUnpackSkipPixels);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_PIXELS);
     }
 
     if (mUnpackImageHeight != imageHeight)
@@ -448,7 +448,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackImageHeight = imageHeight;
         mFunctions->pixelStorei(GL_UNPACK_IMAGE_HEIGHT, mUnpackImageHeight);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_IMAGE_HEIGHT);
     }
 
     if (mUnpackSkipImages != skipImages)
@@ -456,7 +456,7 @@ void StateManagerGL::setPixelUnpackState(GLint alignment,
         mUnpackSkipImages = skipImages;
         mFunctions->pixelStorei(GL_UNPACK_SKIP_IMAGES, mUnpackSkipImages);
 
-        // TODO: set dirty bit once one exists
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_UNPACK_SKIP_IMAGES);
     }
 
     bindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
@@ -1616,4 +1616,9 @@ void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
     }
 }
 
+GLuint StateManagerGL::getBoundBuffer(GLenum type)
+{
+    ASSERT(mBuffers.find(type) != mBuffers.end());
+    return mBuffers[type];
+}
 }

@@ -3388,6 +3388,67 @@ TEST_P(Texture2DTestES3, UnpackSkipPixelsOutOfBounds)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that unpacking rows that overlap in a pixel unpack buffer works as expected.
+TEST_P(Texture2DTestES3, UnpackOverlappingRowsFromUnpackBuffer)
+{
+    if (IsD3D11())
+    {
+        std::cout << "Test skipped on D3D." << std::endl;
+        return;
+    }
+    if (IsOSX() && IsAMD())
+    {
+        // Incorrect rendering results seen on OSX AMD.
+        std::cout << "Test skipped on OSX AMD." << std::endl;
+        return;
+    }
+
+    const GLuint width            = 8u;
+    const GLuint height           = 8u;
+    const GLuint unpackRowLength  = 5u;
+    const GLuint unpackSkipPixels = 1u;
+
+    setWindowWidth(width);
+    setWindowHeight(height);
+
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ASSERT_GL_NO_ERROR();
+
+    GLBuffer buf;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf.get());
+    std::vector<GLColor> pixelsGreen((height - 1u) * unpackRowLength + width + unpackSkipPixels,
+                                     GLColor::green);
+
+    for (GLuint skippedPixel = 0u; skippedPixel < unpackSkipPixels; ++skippedPixel)
+    {
+        pixelsGreen[skippedPixel] = GLColor(255, 0, 0, 255);
+    }
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixelsGreen.size() * 4u, pixelsGreen.data(),
+                 GL_DYNAMIC_COPY);
+    ASSERT_GL_NO_ERROR();
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, unpackRowLength);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, unpackSkipPixels);
+    ASSERT_GL_NO_ERROR();
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint windowPixelCount = getWindowWidth() * getWindowHeight();
+    std::vector<GLColor> actual(windowPixelCount, GLColor::black);
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 actual.data());
+    std::vector<GLColor> expected(windowPixelCount, GLColor::green);
+    EXPECT_EQ(expected, actual);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,

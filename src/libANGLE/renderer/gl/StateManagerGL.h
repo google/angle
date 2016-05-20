@@ -146,6 +146,8 @@ class StateManagerGL final : angle::NonCopyable
 
     void syncState(const gl::State &state, const gl::State::DirtyBits &glDirtyBits);
 
+    GLuint getBoundBuffer(GLenum type);
+
   private:
     gl::Error setGenericDrawState(const gl::ContextState &data);
 

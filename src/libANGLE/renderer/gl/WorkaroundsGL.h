@@ -20,7 +20,8 @@ struct WorkaroundsGL
           doesSRGBClearsOnLinearFramebufferAttachments(false),
           doWhileGLSLCausesGPUHang(false),
           finishDoesNotCauseQueriesToBeAvailable(false),
-          alwaysCallUseProgramAfterLink(false)
+          alwaysCallUseProgramAfterLink(false),
+          unpackOverlappingRowsSeparatelyUnpackBuffer(false)
     {
     }
 
@@ -63,6 +64,9 @@ struct WorkaroundsGL
     // workaround in Chromium (http://crbug.com/110263). It has been shown that this workaround is
     // not necessary for MacOSX 10.9 and higher (http://crrev.com/39eb535b).
     bool alwaysCallUseProgramAfterLink;
+
+    // In the case of unpacking from a pixel unpack buffer, unpack overlapping rows row by row.
+    bool unpackOverlappingRowsSeparatelyUnpackBuffer;
 };
 }
 
