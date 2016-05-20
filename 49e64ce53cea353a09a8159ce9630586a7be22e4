@@ -22,6 +22,30 @@
       "revId": "49e64ce53cea353a09a8159ce9630586a7be22e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7f702e0_b29fde0f",
+        "filename": "util/util.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-05-20T00:47:55Z",
+      "side": 1,
+      "message": "According to GYP documentation:\ndirect_dependent_settings only apply to direct dependents, so if you have sample exe depending on sample_util depending on angle_util, exe will not have the right flag.\nlink_settings on the other hand apply to \"targets in which this target’s contents are linked\". It says that \"executable and shared_library targets are linkable, so if they depend on a non-linkable target such as a static_library, they will adopt its link_settings\". I guess this works for indirect dependents as well, as now it compiles.",
+      "parentUuid": "17fefabc_c2bde373",
+      "range": {
+        "startLine": 156,
+        "startChar": 27,
+        "endLine": 156,
+        "endChar": 35
+      },
+      "revId": "49e64ce53cea353a09a8159ce9630586a7be22e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
