@@ -16,6 +16,7 @@
         'angle_end2end_tests_sources':
         [
             '<(angle_path)/src/tests/gl_tests/BindUniformLocationTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/BlendFuncExtendedTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BlendMinMaxTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BlitFramebufferANGLETest.cpp',
             '<(angle_path)/src/tests/gl_tests/BufferDataTest.cpp',

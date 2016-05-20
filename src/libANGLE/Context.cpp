@@ -1282,6 +1282,11 @@ void Context::getIntegerv(GLenum pname, GLint *params)
           *params = mImplementation->getGPUDisjoint();
           break;
 
+      // GL_EXT_blend_func_extended
+      case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
+          *params = mExtensions.maxDualSourceDrawBuffers;
+          break;
+
       default:
           mGLState.getIntegerv(mState, pname, params);
           break;
@@ -2083,6 +2088,10 @@ void Context::initCaps()
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
+
+        // EXT_blend_func_extended is only implemented against GLES2 now
+        // TODO(svaisanen@nvidia.com): remove this limitation once GLES3 support is in place.
+        mExtensions.blendFuncExtended = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.

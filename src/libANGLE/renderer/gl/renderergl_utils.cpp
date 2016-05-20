@@ -682,7 +682,6 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
 
-
     // NV_path_rendering
     // We also need interface query which is available in
     // >= 4.3 core or ARB_interface_query or >= GLES 3.1
@@ -696,6 +695,16 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->isAtLeastGLES(gl::Version(3, 1));
 
     extensions->pathRendering = canEnableGLPathRendering || canEnableESPathRendering;
+
+    // EXT_blend_func_extended.
+    // written against OpenGL ES3.1 but can apply to earlier versions.
+    extensions->blendFuncExtended = functions->hasGLExtension("GL_ARB_blend_func_extended") ||
+                                    functions->hasGLESExtension("GL_EXT_blend_func_extended");
+    if (extensions->blendFuncExtended)
+    {
+        extensions->maxDualSourceDrawBuffers =
+            QuerySingleGLInt(functions, GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT);
+    }
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

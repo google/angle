@@ -39,19 +39,20 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     const gl::Extensions &extensions = state.getExtensions();
 
     ShInitBuiltInResources(&mResources);
-    mResources.MaxVertexAttribs             = caps.maxVertexAttributes;
-    mResources.MaxVertexUniformVectors      = caps.maxVertexUniformVectors;
-    mResources.MaxVaryingVectors            = caps.maxVaryingVectors;
-    mResources.MaxVertexTextureImageUnits   = caps.maxVertexTextureImageUnits;
-    mResources.MaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
-    mResources.MaxTextureImageUnits         = caps.maxTextureImageUnits;
-    mResources.MaxFragmentUniformVectors    = caps.maxFragmentUniformVectors;
-    mResources.MaxDrawBuffers               = caps.maxDrawBuffers;
-    mResources.OES_standard_derivatives     = extensions.standardDerivatives;
-    mResources.EXT_draw_buffers             = extensions.drawBuffers;
-    mResources.EXT_shader_texture_lod       = extensions.shaderTextureLOD;
+    mResources.MaxVertexAttribs                = caps.maxVertexAttributes;
+    mResources.MaxVertexUniformVectors         = caps.maxVertexUniformVectors;
+    mResources.MaxVaryingVectors               = caps.maxVaryingVectors;
+    mResources.MaxVertexTextureImageUnits      = caps.maxVertexTextureImageUnits;
+    mResources.MaxCombinedTextureImageUnits    = caps.maxCombinedTextureImageUnits;
+    mResources.MaxTextureImageUnits            = caps.maxTextureImageUnits;
+    mResources.MaxFragmentUniformVectors       = caps.maxFragmentUniformVectors;
+    mResources.MaxDrawBuffers                  = caps.maxDrawBuffers;
+    mResources.OES_standard_derivatives        = extensions.standardDerivatives;
+    mResources.EXT_draw_buffers                = extensions.drawBuffers;
+    mResources.EXT_shader_texture_lod          = extensions.shaderTextureLOD;
     mResources.OES_EGL_image_external          = extensions.eglImageExternal;
     mResources.OES_EGL_image_external_essl3    = extensions.eglImageExternalEssl3;
+    mResources.EXT_blend_func_extended         = extensions.blendFuncExtended;
     mResources.NV_EGL_stream_consumer_external = extensions.eglStreamConsumerExternal;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
@@ -62,6 +63,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;
     mResources.MinProgramTexelOffset   = caps.minProgramTexelOffset;
     mResources.MaxProgramTexelOffset   = caps.maxProgramTexelOffset;
+
+    // EXT_blend_func_extended
+    mResources.MaxDualSourceDrawBuffers = extensions.maxDualSourceDrawBuffers;
 }
 
 Compiler::~Compiler()

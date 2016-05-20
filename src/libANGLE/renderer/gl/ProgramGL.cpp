@@ -142,6 +142,45 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         mFunctions->bindAttribLocation(mProgramID, attribute.location, attribute.name.c_str());
     }
 
+    // EXT_blend_func_extended.
+    // Bind the (transformed) secondary fragment color outputs.
+    //
+    // TODO(svaisanen@nvidia.com) We should probably check the actual context that we're
+    // using here. If our backing context happens to be only GLES2 then:
+    //  - the shader translator should not transform the gl_SecondaryFragColor/Data
+    //    and thus we shouldn't do the bind because it's not needed and the bind API
+    //    is not even available.
+    //
+    const auto &shaderOutputs = mState.getAttachedFragmentShader()->getActiveOutputVariables();
+    for (const auto &output : shaderOutputs)
+    {
+        if (output.name == "gl_SecondaryFragColorEXT")
+        {
+            mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 0, "webgl_FragColor");
+            mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 1, "angle_SecondaryFragColor");
+        }
+        else if (output.name == "gl_SecondaryFragDataEXT")
+        {
+            // Basically we should have a loop here going over the output
+            // array binding "webgl_FragData[i]" and "angle_SecondaryFragData[i]" array
+            // indices to the correct color buffers and color indices.
+            // However I'm not sure if this construct is legal or not, neither ARB or EXT
+            // version of the spec mention this.
+            //
+            // In practice it seems that binding array members works on some drivers and
+            // fails on others. One option could be to modify the shader translator to
+            // expand the arrays into individual output variables instead of using an array.
+            //
+            // For now we're going to have a limitation of assuming that
+            // GL_MAX_DUAL_SOURCE_DRAW_BUFFERS is *always* 1 and then only bind the basename
+            // of the variable ignoring any indices. This appears to work uniformly.
+            ASSERT(output.arraySize == 1);
+
+            mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 0, "webgl_FragData");
+            mFunctions->bindFragDataLocationIndexed(mProgramID, 0, 1, "angle_SecondaryFragData");
+        }
+    }
+
     // Link and verify
     mFunctions->linkProgram(mProgramID);
 

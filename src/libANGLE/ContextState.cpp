@@ -324,6 +324,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
+    if (getExtensions().blendFuncExtended)
+    {
+        switch (pname)
+        {
+            case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

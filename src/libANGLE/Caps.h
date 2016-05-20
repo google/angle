@@ -306,6 +306,10 @@ struct Extensions
 
     // GL_CHROMIUM_path_rendering
     bool pathRendering;
+
+    // GL_EXT_blend_func_extended
+    bool blendFuncExtended;
+    GLuint maxDualSourceDrawBuffers;
 };
 
 struct Limitations
