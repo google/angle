@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "179d1ad4_ef9ad06e",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-20T14:26:00Z",
+      "side": 0,
+      "message": "ref",
+      "range": {
+        "startLine": 781,
+        "startChar": 0,
+        "endLine": 786,
+        "endChar": 1
+      },
+      "revId": "b228f752efbb39af8458a901bea334d60a705bc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "179d1ad4_ecb77e02",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 6
@@ -13,6 +36,30 @@
       "writtenOn": "2016-05-20T13:48:01Z",
       "side": 0,
       "message": "I don\u0027t see where the call to generateSwizzles ended up.\n\nAlso, make sure that it is called before code that syncs the state since generating swizzles can modify the current texture, render target, vb/ib state.",
+      "range": {
+        "startLine": 2826,
+        "startChar": 4,
+        "endLine": 2826,
+        "endChar": 38
+      },
+      "revId": "b228f752efbb39af8458a901bea334d60a705bc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179d1ad4_6fa700bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2826,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-20T14:26:00Z",
+      "side": 0,
+      "message": "We don\u0027t support swizzle in D3D9.",
+      "parentUuid": "179d1ad4_ecb77e02",
       "range": {
         "startLine": 2826,
         "startChar": 4,
