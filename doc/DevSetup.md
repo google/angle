@@ -9,10 +9,12 @@ ANGLE uses git for version control. If you are not familiar with git, helpful do
 
 ### Required Tools
 On all platforms:
+
  * [depot_tools](http://dev.chromium.org/developers/how-tos/install-depot-tools)
    * Required to generate projects and build files, contribute patches, run the unit tests or build the shader compiler on non-Windows systems.
 
 On Windows:
+
  * [Visual Studio Community 2015 Update 2](http://www.visualstudio.com/downloads/download-visual-studio-vs)
      Required to build ANGLE on Windows and for the packaged Windows 8.1 SDK.
  * [Cygwin's Bison, flex, and patch](https://cygwin.com/setup-x86_64.exe) (optional)
@@ -20,11 +22,13 @@ On Windows:
      Use the latest versions of bison, flex and patch from the 64-bit cygwin distribution.
 
 On Linux:
+
  * The GCC or Clang compilers
  * Development packages for OpenGL, X11 and libpci
  * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
 On MacOS:
+
  * [XCode](https://developer.apple.com/xcode/) for Clang and development files.
  * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
@@ -32,11 +36,13 @@ On MacOS:
 Set the following environment variables as needed:
 
 On Windows:
+
  * `GYP_GENERATORS` to `msvs` (other options include `ninja` and `make`)
  * `GYP_DEFINES` to `windows_sdk_path=YOUR_WIN_SDK_INSTALL_DIR` if you did not install the Windows 8.1 SDK in the default location.
  * `GYP_MSVS_VERSION` to `2015`
 
 On Linux and MacOS:
+
  * `GYP_GENERATORS` to `ninja` (defaults to 'make' that pollutes your source directory)
 
 Download the ANGLE source by running the following commands:
@@ -81,6 +87,7 @@ By default, ANGLE will use a D3D11 renderer. To change the default:
 
 ### To Use ANGLE in Your Application
 On Windows:
+
  1. Configure your build environment to have access to the `include` folder to provide access to the standard Khronos EGL and GLES2 header files.
   * For Visual C++
      * Right-click your project in the _Solution Explorer_, and select _Properties_.
@@ -95,6 +102,7 @@ On Windows:
  4. Code your application to the Khronos [OpenGL ES 2.0](http://www.khronos.org/registry/gles/) and [EGL 1.4](http://www.khronos.org/registry/egl/) APIs.
 
 On Linux and MacOS, either:
+
  - Link you application against `libGLESv2` and `libEGL`
  - Use `dlopen` to load the OpenGL ES and EGL entry points at runtime.
 
