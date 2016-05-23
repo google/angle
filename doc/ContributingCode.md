@@ -1,7 +1,5 @@
 # Contributing Code
 
-If you want to contribute code to ANGLE, there are a few things you can do to make the process flow smoothly.  These are based on the [Chromium Projects: Contributing Code](http://www.chromium.org/developers/contributing-code/) guidelines.
-
 ## Communicate
 
  * Whether you're writing a new feature or fixing an existing bug, it pays to get a second opinion before you get too far. If it's a new feature idea, post to the discussion group ([angleproject](https://groups.google.com/forum/?fromgroups#!forum/angleproject)) and propose it or talk with the ANGLE team on IRC in the #ANGLEproject channel on FreeNode.
@@ -10,7 +8,7 @@ If you want to contribute code to ANGLE, there are a few things you can do to ma
 
 ## Get your code ready
 ### Code
- 1. Must conform to the [CodingStandard ANGLE style] guidelines.
+ 1. Must conform to the [ANGLE style](CodingStandard.md) guidelines.
  2. Must be tested. (see the 'Testing' section below)
  3.  Should be a reasonable size to review.  Giant patches are unlikely to get reviewed quickly.
 
@@ -50,7 +48,6 @@ If you want to contribute code to ANGLE, there are a few things you can do to ma
  4. *NOTE TO REVIEWERS*: Follow the [External Contributor Checklist](http://www.chromium.org/developers/contributing-code/external-contributor-checklist).
 
 ## Life of a Change List
-We use the [Gerrit](http://code.google.com/p/gerrit) open source code review tool. The process is similar, but not identical, to the one used by ChromiumOS, described here: [http://www.chromium.org/chromium-os/developer-guide/gerrit-guide](http://www.chromium.org/chromium-os/developer-guide/gerrit-guide).
 
 ### Getting started with Gerrit for ANGLE
   1. Go to [https://chromium-review.googlesource.com/new-password](https://chromium-review.googlesource.com/new-password)
@@ -76,16 +73,25 @@ We use the [Gerrit](http://code.google.com/p/gerrit) open source code review too
     * Use `git cl format` to amend the style of your CL. This saves both your time and the reviewers'!
  2. Upload the change list
     * `git cl upload`
-    * The change list and modified files will be uploaded to Gerrit.
+    * The change list and modified files will be uploaded to
+      [ANGLE Gerrit](https://chromium-review.googlesource.com/#/q/project:angle/angle).
     * Follow the generated URL to the new issue.
     * Take a moment to perform a self-review of your code. Gerrit's viewer makes it easy to see whitespace errors, erroneous tabs, and other simple style problems.
     * Designate reviewers-- if you don't do this, reviewers may not realize you're requesting a review!
       * If you don't know who to use, select either `geofflang at chromium dot org` or `jmadill at chromium dot org`.
     * Make changes, upload and repeat as necessary.
-    * Project members and others will review your code as described in the CodeReviewProcess.
+    * Project members and others will review your code as described in the [CodeReviewProcess](CodeReviewProcess.md).
  3. If your change list needs revision:
     * If you have correctly installed the commit hook from the section above, Gerrit will be able to track your changes by Change-Id.
     * You should need only to update your commit with `git commit --amend` and re-upload with `git cl upload`.
 4. Once your code is reviewed:
     * If you are a committer, you may submit the change yourself via the Gerrit web interface.
     * If you are not a committer, ask your reviewer to submit the change list.
+
+See also:
+
+* [ANGLE Gerrit](https://chromium-review.googlesource.com/#/q/project:angle/angle)
+* [Chromium Projects: Contributing Code](http://www.chromium.org/developers/contributing-code/)
+* [depot_tools tutorial](http://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html)
+
+
