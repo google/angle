@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "1c1b7fb9_5515f68b",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-24T19:54:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c1b7fb9_faf4d1cb",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c1b7fb9_5a59a5f0",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -96,6 +114,24 @@
     },
     {
       "key": {
+        "uuid": "1c1b7fb9_35fb1a23",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-24T19:54:34Z",
+      "side": 1,
+      "message": "Hadn\u0027t thought about the fancy init :) I think with ArraySize the code is much more reasonable so maybe we can have a pointer to the static segment instead of copying from that segment to a fresh memory allocation.",
+      "parentUuid": "1c1b7fb9_bad1b939",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c1b7fb9_d5a566ac",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -136,6 +172,24 @@
         "endLine": 922,
         "endChar": 36
       },
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_5544d65e",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-24T19:54:34Z",
+      "side": 1,
+      "message": "I tried using optional, but the value constructor being tagged explicit makes it require the verbose expression Optional\u003cgl::Version\u003e(gl::Version(4, 2)). Can we remove the explicit keyword?",
+      "parentUuid": "1c1b7fb9_b59eea67",
       "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
