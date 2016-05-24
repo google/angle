@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c8ed7f0_e6cbc883",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3160,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-24T15:00:07Z",
+      "side": 1,
+      "message": "Jamie may have a suggestion for moving this into ANGLETest.h",
+      "range": {
+        "startLine": 3159,
+        "startChar": 0,
+        "endLine": 3160,
+        "endChar": 77
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c8ed7f0_66b818f3",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3408,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-24T15:00:07Z",
+      "side": 1,
+      "message": "Add the ES3_OPENGL and ES3_OPENGLES targets here too to make sure they\u0027re tested if we add support.",
+      "range": {
+        "startLine": 3408,
+        "startChar": 47,
+        "endLine": 3408,
+        "endChar": 58
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
