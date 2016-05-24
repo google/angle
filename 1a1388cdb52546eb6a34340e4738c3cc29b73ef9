@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "5cdc17fd_b3d3c214",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3226,
+      "author": {
+        "id": 1153819
+      },
+      "writtenOn": "2016-05-24T19:48:57Z",
+      "side": 1,
+      "message": "I didn\u0027t do this in revision 2, because the textures are usually defined to a format specific to the currently tested format.\n\nThere is a single texture that could be kept for the whole test (the GL_RGBA16_EXT one). The FBO is mutable, so it could be kept too. I can move these out if still desired.",
+      "parentUuid": "1c1b7fb9_e6e0bea5",
+      "range": {
+        "startLine": 3226,
+        "startChar": 28,
+        "endLine": 3226,
+        "endChar": 36
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c1b7fb9_0696ba03",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
