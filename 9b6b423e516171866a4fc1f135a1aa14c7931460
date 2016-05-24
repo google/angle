@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c1b7fb9_35703a93",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "GLColor16",
+      "range": {
+        "startLine": 3167,
+        "startChar": 8,
+        "endLine": 3167,
+        "endChar": 16
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_d5e7264a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "cleanups: make a helper function that takes format, rvalue, and returns a GLColor16. Then use EXPECT_PIXEL_COLOR16_EQ.",
+      "range": {
+        "startLine": 3204,
+        "startChar": 8,
+        "endLine": 3218,
+        "endChar": 9
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_158b7e83",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "yeah I\u0027d mildly prefer if we re-TexImage and re-FramebufferTexture with the same objects, but it\u0027s fine this way",
+      "range": {
+        "startLine": 3221,
+        "startChar": 7,
+        "endLine": 3222,
+        "endChar": 38
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_f59342b4",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "GLColor16",
+      "range": {
+        "startLine": 3230,
+        "startChar": 8,
+        "endLine": 3230,
+        "endChar": 16
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_35331ab2",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "same deal",
+      "range": {
+        "startLine": 3260,
+        "startChar": 3,
+        "endLine": 3271,
+        "endChar": 9
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_d5be060a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3297,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "same deal, will also remove the need for the three switches",
+      "range": {
+        "startLine": 3286,
+        "startChar": 8,
+        "endLine": 3297,
+        "endChar": 9
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_d5156632",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "I don\u0027t see these defined. If you don\u0027t use them, best to remove.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 33
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_55d33671",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "can remove these two for now I think",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 81
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_75ce32cb",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:00:00Z",
+      "side": 1,
+      "message": "EXPECT_PIXEL_COLOR16_EQ",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 31
+      },
+      "revId": "9b6b423e516171866a4fc1f135a1aa14c7931460",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
