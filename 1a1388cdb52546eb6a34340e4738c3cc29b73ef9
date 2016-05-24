@@ -45,6 +45,30 @@
       "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cdc17fd_b0f178da",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3408,
+      "author": {
+        "id": 1153819
+      },
+      "writtenOn": "2016-05-24T16:23:00Z",
+      "side": 1,
+      "message": "Will do. At first I was worrying about the need to call glGetTexLevelParameter (available in ES3.1 but not ES3.0) with GL_TEXTURE_RED_SIZE etc. to guarantee that the tests do not fail if the implementation doesn\u0027t preserve all bits.\n\nThis is also why I added a getClientMinorVersion function, so I could call glGetTexLevelParameter if the client version is ES3.1, but then I realized the function is completely missing anyway. (getClientMinorVersion is accidentally still included in this patch.)\n\nIs it ok not to worry about this for now?",
+      "parentUuid": "5c8ed7f0_66b818f3",
+      "range": {
+        "startLine": 3408,
+        "startChar": 47,
+        "endLine": 3408,
+        "endChar": 58
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
