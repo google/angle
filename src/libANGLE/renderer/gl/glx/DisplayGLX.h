@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "common/Optional.h"
 #include "libANGLE/renderer/gl/DisplayGL.h"
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 
@@ -104,7 +105,7 @@ class DisplayGLX : public DisplayGL
 
     int getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const;
     egl::Error createContextAttribs(glx::FBConfig,
-                                    gl::Version version,
+                                    const Optional<gl::Version> &version,
                                     int profileMask,
                                     glx::Context *context) const;
 
