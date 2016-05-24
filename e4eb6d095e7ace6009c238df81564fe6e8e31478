@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c1b7fb9_faf4d1cb",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T19:38:21Z",
+      "side": 1,
+      "message": "I think you can just remove this constructor",
+      "range": {
+        "startLine": 486,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 9
+      },
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c1b7fb9_5a59a5f0",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -49,6 +72,70 @@
       "side": 1,
       "message": "Thanks I was looking for it but didn\u0027t find it.\nDone.",
       "parentUuid": "1c1b7fb9_5abd25e1",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_bad1b939",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T19:38:21Z",
+      "side": 1,
+      "message": "just use a vector? the fancy init syntax is allowed. also std::extent has not been discussed yet.",
+      "parentUuid": "1c1b7fb9_5a59a5f0",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_d5a566ac",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T19:38:21Z",
+      "side": 1,
+      "message": "if you use a vector you can use a range-for here",
+      "range": {
+        "startLine": 538,
+        "startChar": 4,
+        "endLine": 538,
+        "endChar": 44
+      },
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_b59eea67",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T19:38:21Z",
+      "side": 1,
+      "message": "can you mention when version is uninit? I think it usually makes sense to use angle\u0027s common/Optional.h in those cases.",
+      "range": {
+        "startLine": 922,
+        "startChar": 19,
+        "endLine": 922,
+        "endChar": 36
+      },
       "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
