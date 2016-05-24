@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c1b7fb9_5a59a5f0",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-24T19:25:53Z",
+      "side": 1,
+      "message": "Checked that decltype and type_traits are authorized in the style guide.",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
