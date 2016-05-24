@@ -16,6 +16,24 @@
       "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_5abd25e1",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-24T19:34:32Z",
+      "side": 1,
+      "message": "We also have the ArraySize function for this which is (IMO) much more readable.",
+      "parentUuid": "1c1b7fb9_5a59a5f0",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
