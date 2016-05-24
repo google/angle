@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c1b7fb9_95f12eed",
+        "filename": "src/libANGLE/Version.inl",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:03:54Z",
+      "side": 1,
+      "message": "I don\u0027t see the !\u003d version in the header. We should either undo these or make the !\u003d match.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 1
+      },
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c1b7fb9_faf4d1cb",
         "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
         "patchSetId": 1
@@ -190,6 +213,24 @@
       "side": 1,
       "message": "I tried using optional, but the value constructor being tagged explicit makes it require the verbose expression Optional\u003cgl::Version\u003e(gl::Version(4, 2)). Can we remove the explicit keyword?",
       "parentUuid": "1c1b7fb9_b59eea67",
+      "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_d56446a1",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T20:03:54Z",
+      "side": 1,
+      "message": "Yeah the explicit is annoying, I would be fine with lifting it in this case. We just have to make sure we don\u0027t accidentally cast to Optional.",
+      "parentUuid": "1c1b7fb9_5544d65e",
       "revId": "e4eb6d095e7ace6009c238df81564fe6e8e31478",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
