@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c1b7fb9_865e2a37",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "I take it our prior code allows for (false, false, true) triples.. seems odd but that\u0027s fine if our previous code allows it.",
+      "range": {
+        "startLine": 573,
+        "startChar": 257,
+        "endLine": 573,
+        "endChar": 272
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c8ed7f0_e6cbc883",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -18,6 +41,145 @@
         "startChar": 0,
         "endLine": 3160,
         "endChar": 77
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_4615528c",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "Yeah, let\u0027s make an angle::GLColor16 type and use EXPECT_PIXEL_COLOR16_EQ, instead of the vector. I think it would be fine in ANGLETest.h.",
+      "parentUuid": "5c8ed7f0_e6cbc883",
+      "range": {
+        "startLine": 3159,
+        "startChar": 0,
+        "endLine": 3160,
+        "endChar": 77
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_6687aeed",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "so in these cases you could use GLColor16",
+      "range": {
+        "startLine": 3167,
+        "startChar": 11,
+        "endLine": 3167,
+        "endChar": 32
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_e67a7ed6",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "This can be angle::ReadColor16.. no need to be a static member",
+      "range": {
+        "startLine": 3167,
+        "startChar": 33,
+        "endLine": 3167,
+        "endChar": 44
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_e6e0bea5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3226,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "fbo and textures should be a part of the fixture, and released in the TearDown override",
+      "range": {
+        "startLine": 3226,
+        "startChar": 28,
+        "endLine": 3226,
+        "endChar": 36
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_0696ba03",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3303,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "comment before every test",
+      "range": {
+        "startLine": 3303,
+        "startChar": 0,
+        "endLine": 3303,
+        "endChar": 6
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_e6327ef5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3322,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "nice, that this covers all the permutations.",
+      "range": {
+        "startLine": 3311,
+        "startChar": 4,
+        "endLine": 3322,
+        "endChar": 76
       },
       "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -84,6 +246,30 @@
       "side": 1,
       "message": "Yep, glGetTexLevelParameter isn\u0027t mentioned in the extension spec specifically so it makes sense that we don\u0027t add it. Leaving in the new getClientMinorVersion method is fine.",
       "parentUuid": "5cdc17fd_b0f178da",
+      "range": {
+        "startLine": 3408,
+        "startChar": 47,
+        "endLine": 3408,
+        "endChar": 58
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c1b7fb9_46a0b24e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3408,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-24T17:07:06Z",
+      "side": 1,
+      "message": "+1 on adding GL",
+      "parentUuid": "5c8ed7f0_8c8c5d11",
       "range": {
         "startLine": 3408,
         "startChar": 47,
