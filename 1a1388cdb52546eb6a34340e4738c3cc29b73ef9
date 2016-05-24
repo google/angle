@@ -69,6 +69,30 @@
       "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c8ed7f0_8c8c5d11",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3408,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-24T16:37:17Z",
+      "side": 1,
+      "message": "Yep, glGetTexLevelParameter isn\u0027t mentioned in the extension spec specifically so it makes sense that we don\u0027t add it. Leaving in the new getClientMinorVersion method is fine.",
+      "parentUuid": "5cdc17fd_b0f178da",
+      "range": {
+        "startLine": 3408,
+        "startChar": 47,
+        "endLine": 3408,
+        "endChar": 58
+      },
+      "revId": "1a1388cdb52546eb6a34340e4738c3cc29b73ef9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
