@@ -398,8 +398,8 @@ Renderer11::Renderer11(egl::Display *display)
       mStateManager(this),
       mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
       mDebug(nullptr),
-      mAnnotator(nullptr),
-      mScratchMemoryBufferResetCounter(0)
+      mScratchMemoryBufferResetCounter(0),
+      mAnnotator(nullptr)
 {
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
