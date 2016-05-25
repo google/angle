@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfdcbc0_0b16813d",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-25T12:49:21Z",
+      "side": 1,
+      "message": "This diff chunk can be discarded?",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfdcbc0_eb21e58e",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-25T12:49:21Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfdcbc0_cb2629a5",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-25T12:49:21Z",
+      "side": 1,
+      "message": "Maybe call it ANGLE\u0027s Gerrit then.",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfdcbc0_ab1bed62",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-05-25T12:49:21Z",
+      "side": 1,
+      "message": "I don\u0027t use the depot tools git helpers so I may be wrong, however I think most of the linked document is relevant only to Chrome that uses the Rietveld code review system, and that the instructions there wouldn\u0027t work for Gerrit.",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
