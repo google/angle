@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfdcbc0_2b681d74",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-25T14:21:51Z",
+      "side": 1,
+      "message": "nit: you don\u0027t need to gen the renderbuffer here. this would gen it for the tests that don\u0027t need it.",
+      "range": {
+        "startLine": 3192,
+        "startChar": 8,
+        "endLine": 3192,
+        "endChar": 46
+      },
+      "revId": "d66f1623cddf7ce33f2f827bcb142404f5e51769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
