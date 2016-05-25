@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfdcbc0_0b91e1ac",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3162,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-25T13:30:02Z",
+      "side": 1,
+      "message": "nit: place static locals at the top of the file in a namespace {} block instead of using the static keyword",
+      "range": {
+        "startLine": 3162,
+        "startChar": 0,
+        "endLine": 3162,
+        "endChar": 6
+      },
+      "revId": "e3b41fcb22a94d7dccfe1a79184a8512bb07579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfdcbc0_ebec4538",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-25T13:30:02Z",
+      "side": 1,
+      "message": "nit: std::numeric_limits\u003cGLushort\u003e::max() for these?",
+      "range": {
+        "startLine": 3167,
+        "startChar": 43,
+        "endLine": 3167,
+        "endChar": 49
+      },
+      "revId": "e3b41fcb22a94d7dccfe1a79184a8512bb07579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfdcbc0_4bdeb981",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-05-25T13:30:02Z",
+      "side": 1,
+      "message": "make mRenderbuffer part of the fixture too, might as well be consistent. Don\u0027t need to initialize it in the fixture, just to ensure it gets cleaned up.",
+      "range": {
+        "startLine": 3289,
+        "startChar": 34,
+        "endLine": 3289,
+        "endChar": 46
+      },
+      "revId": "e3b41fcb22a94d7dccfe1a79184a8512bb07579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
