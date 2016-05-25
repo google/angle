@@ -16,6 +16,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
+#include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
 namespace gl
 {
@@ -225,4 +226,11 @@ bool FramebufferAttachment::operator!=(const FramebufferAttachment &other) const
     return !(*this == other);
 }
 
+Error FramebufferAttachmentObject::getAttachmentRenderTarget(
+    const FramebufferAttachment::Target &target,
+    rx::FramebufferAttachmentRenderTarget **rtOut) const
+{
+    return getAttachmentImpl()->getAttachmentRenderTarget(target, rtOut);
 }
+
+}  // namespace gl

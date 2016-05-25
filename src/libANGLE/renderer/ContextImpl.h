@@ -24,14 +24,6 @@ class ContextImpl : public GLImplFactory
 
     virtual gl::Error initialize() = 0;
 
-    const gl::ContextState &getContextState() { return mState; }
-    int getClientVersion() const { return mState.clientVersion; }
-    const gl::State &getState() const { return *mState.state; }
-    const gl::Caps &getCaps() const { return *mState.caps; }
-    const gl::TextureCapsMap &getTextureCaps() const { return *mState.textureCaps; }
-    const gl::Extensions &getExtensions() const { return *mState.extensions; }
-    const gl::Limitations &getLimitations() const { return *mState.limitations; }
-
     // Flush and finish.
     virtual gl::Error flush() = 0;
     virtual gl::Error finish() = 0;
@@ -92,6 +84,14 @@ class ContextImpl : public GLImplFactory
     virtual const gl::TextureCapsMap &getNativeTextureCaps() const = 0;
     virtual const gl::Extensions &getNativeExtensions() const = 0;
     virtual const gl::Limitations &getNativeLimitations() const = 0;
+
+    const gl::ContextState &getContextState() { return mState; }
+    int getClientVersion() const { return mState.clientVersion; }
+    const gl::State &getState() const { return *mState.state; }
+    const gl::Caps &getCaps() const { return *mState.caps; }
+    const gl::TextureCapsMap &getTextureCaps() const { return *mState.textureCaps; }
+    const gl::Extensions &getExtensions() const { return *mState.extensions; }
+    const gl::Limitations &getLimitations() const { return *mState.limitations; }
 
   protected:
     const gl::ContextState &mState;

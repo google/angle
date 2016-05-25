@@ -146,6 +146,7 @@
             'libANGLE/renderer/EGLImplFactory.h',
             'libANGLE/renderer/FenceNVImpl.h',
             'libANGLE/renderer/FenceSyncImpl.h',
+            'libANGLE/renderer/FramebufferAttachmentObjectImpl.h',
             'libANGLE/renderer/FramebufferImpl.h',
             'libANGLE/renderer/GLImplFactory.h',
             'libANGLE/renderer/ImageImpl.h',

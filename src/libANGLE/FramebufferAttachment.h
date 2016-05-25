@@ -191,31 +191,4 @@ inline gl::Error FramebufferAttachment::getRenderTarget(rx::FramebufferAttachmen
 
 } // namespace gl
 
-namespace rx
-{
-
-class FramebufferAttachmentObjectImpl : angle::NonCopyable
-{
-  public:
-    FramebufferAttachmentObjectImpl() {}
-    virtual ~FramebufferAttachmentObjectImpl() {}
-
-    virtual gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
-                                                FramebufferAttachmentRenderTarget **rtOut) = 0;
-};
-
-} // namespace rx
-
-namespace gl
-{
-
-inline Error FramebufferAttachmentObject::getAttachmentRenderTarget(
-    const FramebufferAttachment::Target &target,
-    rx::FramebufferAttachmentRenderTarget **rtOut) const
-{
-    return getAttachmentImpl()->getAttachmentRenderTarget(target, rtOut);
-}
-
-}
-
 #endif // LIBANGLE_FRAMEBUFFERATTACHMENT_H_
