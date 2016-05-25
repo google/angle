@@ -2993,8 +2993,10 @@ gl::Error Renderer11::copyImageInternal(const gl::Framebuffer *framebuffer,
     gl::Extents destSize(destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1);
 
     // Use nearest filtering because source and destination are the same size for the direct copy.
+    // Convert to the unsized format before calling copyTexture.
+    const gl::InternalFormat &internalFormat = gl::GetInternalFormatInfo(destFormat);
     ANGLE_TRY(mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, nullptr,
-                                 destFormat, GL_NEAREST, false));
+                                 internalFormat.format, GL_NEAREST, false));
 
     return gl::NoError();
 }
