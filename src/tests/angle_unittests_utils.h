@@ -59,6 +59,11 @@ class NullFactory : public GLImplFactory
 
     // Sampler object creation
     SamplerImpl *createSampler() override { return nullptr; }
+
+    std::vector<PathImpl *> createPaths(GLsizei range) override
+    {
+        return std::vector<PathImpl *>();
+    }
 };
 
 // A class with all the factory methods mocked.
@@ -79,6 +84,7 @@ class MockGLFactory : public GLImplFactory
     MOCK_METHOD0(createFenceSync, FenceSyncImpl *());
     MOCK_METHOD0(createTransformFeedback, TransformFeedbackImpl *());
     MOCK_METHOD0(createSampler, SamplerImpl *());
+    MOCK_METHOD1(createPaths, std::vector<PathImpl *>(GLsizei));
 };
 
 class MockEGLFactory : public EGLImplFactory

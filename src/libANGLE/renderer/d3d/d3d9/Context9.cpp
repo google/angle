@@ -120,6 +120,11 @@ SamplerImpl *Context9::createSampler()
     return new SamplerD3D();
 }
 
+std::vector<PathImpl *> Context9::createPaths(GLsizei)
+{
+    return std::vector<PathImpl *>();
+}
+
 gl::Error Context9::flush()
 {
     return mRenderer->flush();

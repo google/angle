@@ -55,6 +55,9 @@ class Context9 : public ContextImpl
     // Sampler object creation
     SamplerImpl *createSampler() override;
 
+    // Path object creation
+    std::vector<PathImpl *> createPaths(GLsizei) override;
+
     // Flush and finish.
     gl::Error flush() override;
     gl::Error finish() override;

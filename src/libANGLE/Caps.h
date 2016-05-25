@@ -303,6 +303,9 @@ struct Extensions
     // GL_EXT_texture_norm16
     // written against ES 3.1 but can apply to ES 3.0 as well.
     bool textureNorm16;
+
+    // GL_CHROMIUM_path_rendering
+    bool pathRendering;
 };
 
 struct Limitations

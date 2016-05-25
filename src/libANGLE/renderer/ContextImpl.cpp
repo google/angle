@@ -20,4 +20,40 @@ ContextImpl::~ContextImpl()
 {
 }
 
+void ContextImpl::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
+{
+    UNREACHABLE();
+}
+
+void ContextImpl::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask)
+{
+    UNREACHABLE();
+}
+
+void ContextImpl::coverFillPath(const gl::Path *path, GLenum coverMode)
+{
+    UNREACHABLE();
+}
+
+void ContextImpl::coverStrokePath(const gl::Path *path, GLenum coverMode)
+{
+    UNREACHABLE();
+}
+
+void ContextImpl::stencilThenCoverFillPath(const gl::Path *path,
+                                           GLenum fillMode,
+                                           GLuint mask,
+                                           GLenum coverMode)
+{
+    UNREACHABLE();
+}
+
+void ContextImpl::stencilThenCoverStrokePath(const gl::Path *path,
+                                             GLint reference,
+                                             GLuint mask,
+                                             GLenum coverMode)
+{
+    UNREACHABLE();
+}
+
 }  // namespace rx

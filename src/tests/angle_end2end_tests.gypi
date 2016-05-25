@@ -15,8 +15,6 @@
     {
         'angle_end2end_tests_sources':
         [
-            '<(angle_path)/src/tests/gl_tests/MultisampleCompatibilityTest.cpp',
-            '<(angle_path)/src/tests/gl_tests/FramebufferMixedSamplesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BindUniformLocationTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BlendMinMaxTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BlitFramebufferANGLETest.cpp',
@@ -35,6 +33,7 @@
             '<(angle_path)/src/tests/gl_tests/DrawElementsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ETCTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FenceSyncTests.cpp',
+            '<(angle_path)/src/tests/gl_tests/FramebufferMixedSamplesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferRenderMipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',
@@ -46,8 +45,10 @@
             '<(angle_path)/src/tests/gl_tests/LineLoopTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MaxTextureSizeTest.cpp',
             '<(angle_path)/src/tests/gl_tests/MipmapTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/MultisampleCompatibilityTest.cpp',
             '<(angle_path)/src/tests/gl_tests/media/pixel.inl',
             '<(angle_path)/src/tests/gl_tests/PackUnpackTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/PathRenderingTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PbufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PBOExtensionTest.cpp',
             '<(angle_path)/src/tests/gl_tests/PointSpritesTest.cpp',

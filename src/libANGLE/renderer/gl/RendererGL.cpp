@@ -13,6 +13,7 @@
 #include "common/debug.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/ContextState.h"
+#include "libANGLE/Path.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
@@ -22,6 +23,7 @@
 #include "libANGLE/renderer/gl/FenceSyncGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
+#include "libANGLE/renderer/gl/PathGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
@@ -240,6 +242,77 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+void RendererGL::stencilFillPath(const gl::ContextState &state,
+                                 const gl::Path *path,
+                                 GLenum fillMode,
+                                 GLuint mask)
+{
+    const auto *pathObj = GetImplAs<PathGL>(path);
+
+    mFunctions->stencilFillPathNV(pathObj->getPathID(), fillMode, mask);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
+}
+
+void RendererGL::stencilStrokePath(const gl::ContextState &state,
+                                   const gl::Path *path,
+                                   GLint reference,
+                                   GLuint mask)
+{
+    const auto *pathObj = GetImplAs<PathGL>(path);
+
+    mFunctions->stencilStrokePathNV(pathObj->getPathID(), reference, mask);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
+}
+
+void RendererGL::coverFillPath(const gl::ContextState &state,
+                               const gl::Path *path,
+                               GLenum coverMode)
+{
+
+    const auto *pathObj = GetImplAs<PathGL>(path);
+    mFunctions->coverFillPathNV(pathObj->getPathID(), coverMode);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
+}
+
+void RendererGL::coverStrokePath(const gl::ContextState &state,
+                                 const gl::Path *path,
+                                 GLenum coverMode)
+{
+    const auto *pathObj = GetImplAs<PathGL>(path);
+    mFunctions->coverStrokePathNV(pathObj->getPathID(), coverMode);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
+}
+
+void RendererGL::stencilThenCoverFillPath(const gl::ContextState &state,
+                                          const gl::Path *path,
+                                          GLenum fillMode,
+                                          GLuint mask,
+                                          GLenum coverMode)
+{
+
+    const auto *pathObj = GetImplAs<PathGL>(path);
+    mFunctions->stencilThenCoverFillPathNV(pathObj->getPathID(), fillMode, mask, coverMode);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
+}
+
+void RendererGL::stencilThenCoverStrokePath(const gl::ContextState &state,
+                                            const gl::Path *path,
+                                            GLint reference,
+                                            GLuint mask,
+                                            GLenum coverMode)
+{
+
+    const auto *pathObj = GetImplAs<PathGL>(path);
+    mFunctions->stencilThenCoverStrokePathNV(pathObj->getPathID(), reference, mask, coverMode);
+
+    ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
 ContextImpl *RendererGL::createContext(const gl::ContextState &state)

@@ -116,6 +116,9 @@ class ContextVk : public ContextImpl
     // Sampler object creation
     SamplerImpl *createSampler() override;
 
+    // Path object creation
+    std::vector<PathImpl *> createPaths(GLsizei) override;
+
   private:
     RendererVk *mRenderer;
 };

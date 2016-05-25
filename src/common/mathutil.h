@@ -721,7 +721,41 @@ inline bool isInf(float f)
     return ((bitCast<uint32_t>(f) & 0x7f800000u) == 0x7f800000u) && !(bitCast<uint32_t>(f) & 0x7fffffu);
 }
 
+namespace priv
+{
+template <unsigned int N, unsigned int R>
+struct iSquareRoot
+{
+    static constexpr unsigned int solve()
+    {
+        return (R * R > N)
+                   ? 0
+                   : ((R * R == N) ? R : static_cast<unsigned int>(iSquareRoot<N, R + 1>::value));
+    }
+    enum Result
+    {
+        value = iSquareRoot::solve()
+    };
+};
+
+template <unsigned int N>
+struct iSquareRoot<N, N>
+{
+    enum result
+    {
+        value = N
+    };
+};
+
+}  // namespace priv
+
+template <unsigned int N>
+constexpr unsigned int iSquareRoot()
+{
+    return priv::iSquareRoot<N, 1>::value;
 }
+
+}  // namespace gl
 
 namespace rx
 {

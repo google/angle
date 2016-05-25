@@ -18,6 +18,7 @@ namespace gl
 {
 class ContextState;
 struct IndexRange;
+class Path;
 }
 
 namespace egl
@@ -76,6 +77,28 @@ class RendererGL : angle::NonCopyable
                                 GLenum type,
                                 const GLvoid *indices,
                                 const gl::IndexRange &indexRange);
+
+    // CHROMIUM_path_rendering implementation
+    void stencilFillPath(const gl::ContextState &state,
+                         const gl::Path *path,
+                         GLenum fillMode,
+                         GLuint mask);
+    void stencilStrokePath(const gl::ContextState &state,
+                           const gl::Path *path,
+                           GLint reference,
+                           GLuint mask);
+    void coverFillPath(const gl::ContextState &state, const gl::Path *path, GLenum coverMode);
+    void coverStrokePath(const gl::ContextState &state, const gl::Path *path, GLenum coverMode);
+    void stencilThenCoverFillPath(const gl::ContextState &state,
+                                  const gl::Path *path,
+                                  GLenum fillMode,
+                                  GLuint mask,
+                                  GLenum coverMode);
+    void stencilThenCoverStrokePath(const gl::ContextState &state,
+                                    const gl::Path *path,
+                                    GLint reference,
+                                    GLuint mask,
+                                    GLenum coverMode);
 
     // EXT_debug_marker
     void insertEventMarker(GLsizei length, const char *marker);

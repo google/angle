@@ -263,4 +263,9 @@ SamplerImpl *ContextVk::createSampler()
     return new SamplerVk();
 }
 
+std::vector<PathImpl *> ContextVk::createPaths(GLsizei)
+{
+    return std::vector<PathImpl *>();
+}
+
 }  // namespace rx

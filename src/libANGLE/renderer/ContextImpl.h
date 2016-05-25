@@ -14,6 +14,11 @@
 #include "libANGLE/ContextState.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 
+namespace gl
+{
+class Path;
+}
+
 namespace rx
 {
 class ContextImpl : public GLImplFactory
@@ -53,6 +58,21 @@ class ContextImpl : public GLImplFactory
                                         GLenum type,
                                         const GLvoid *indices,
                                         const gl::IndexRange &indexRange) = 0;
+
+    // CHROMIUM_path_rendering path drawing methods.
+    virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);
+    virtual void stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask);
+    virtual void coverFillPath(const gl::Path *path, GLenum coverMode);
+    virtual void coverStrokePath(const gl::Path *path, GLenum coverMode);
+    virtual void stencilThenCoverFillPath(const gl::Path *path,
+                                          GLenum fillMode,
+                                          GLuint mask,
+                                          GLenum coverMode);
+
+    virtual void stencilThenCoverStrokePath(const gl::Path *path,
+                                            GLint reference,
+                                            GLuint mask,
+                                            GLenum coverMode);
 
     // TODO(jmadill): Investigate proper impl methods for this.
     virtual void notifyDeviceLost() = 0;

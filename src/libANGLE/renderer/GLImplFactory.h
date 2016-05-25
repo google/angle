@@ -10,6 +10,9 @@
 #ifndef LIBANGLE_RENDERER_GLIMPLFACTORY_H_
 #define LIBANGLE_RENDERER_GLIMPLFACTORY_H_
 
+#include <vector>
+
+#include "angle_gl.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
@@ -28,6 +31,7 @@ class ContextImpl;
 class FenceNVImpl;
 class FenceSyncImpl;
 class FramebufferImpl;
+class PathImpl;
 class ProgramImpl;
 class QueryImpl;
 class RenderbufferImpl;
@@ -73,6 +77,8 @@ class GLImplFactory : angle::NonCopyable
 
     // Sampler object creation
     virtual SamplerImpl *createSampler() = 0;
+
+    virtual std::vector<PathImpl *> createPaths(GLsizei range) = 0;
 };
 
 }  // namespace rx

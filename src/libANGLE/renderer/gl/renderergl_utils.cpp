@@ -670,6 +670,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->framebufferMixedSamples =
         functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
+
+    // if NV_path_rendering is to be supported then EXT_direct_state_access
+    // must also be available. NV_path_rendering needs some of the matrix loads
+    // from this extension.
+    extensions->pathRendering = (functions->hasGLExtension("GL_NV_path_rendering") &&
+                                 functions->hasGLExtension("GL_EXT_direct_state_access")) ||
+                                (functions->hasGLESExtension("GL_NV_path_rendering") &&
+                                 functions->hasGLESExtension("GL_EXT_direct_state_access"));
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

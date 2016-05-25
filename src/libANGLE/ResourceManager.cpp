@@ -4,13 +4,14 @@
 // found in the LICENSE file.
 //
 
-// ResourceManager.cpp: Implements the gl::ResourceManager class, which tracks and 
+// ResourceManager.cpp: Implements the gl::ResourceManager class, which tracks and
 // retrieves objects which may be shared by multiple Contexts.
 
 #include "libANGLE/ResourceManager.h"
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Fence.h"
+#include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
@@ -59,6 +60,12 @@ ResourceManager::~ResourceManager()
     while (!mFenceSyncMap.empty())
     {
         deleteFenceSync(mFenceSyncMap.begin()->first);
+    }
+
+    for (auto it = mPathMap.begin(); it != mPathMap.end(); ++it)
+    {
+        const auto *p = it->second;
+        delete p;
     }
 }
 
@@ -153,6 +160,31 @@ GLuint ResourceManager::createFenceSync(rx::GLImplFactory *factory)
     return handle;
 }
 
+ErrorOrResult<GLuint> ResourceManager::createPaths(rx::GLImplFactory *factory, GLsizei range)
+{
+    // Allocate client side handles.
+    const GLuint client = mPathHandleAllocator.allocateRange(static_cast<GLuint>(range));
+    if (client == HandleRangeAllocator::kInvalidHandle)
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate path handle range.");
+
+    const auto &paths = factory->createPaths(range);
+    if (paths.empty())
+    {
+        mPathHandleAllocator.releaseRange(client, range);
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate path objects.");
+    }
+
+    auto hint = mPathMap.begin();
+
+    for (GLsizei i = 0; i < range; ++i)
+    {
+        const auto impl = paths[static_cast<unsigned>(i)];
+        const auto id   = client + i;
+        hint            = mPathMap.insert(hint, std::make_pair(id, new Path(impl)));
+    }
+    return client;
+}
+
 void ResourceManager::deleteBuffer(GLuint buffer)
 {
     auto bufferObject = mBufferMap.find(buffer);
@@ -197,7 +229,7 @@ void ResourceManager::deleteProgram(GLuint program)
             mProgramMap.erase(programObject);
         }
         else
-        { 
+        {
             programObject->second->flagForDeletion();
         }
     }
@@ -249,6 +281,21 @@ void ResourceManager::deleteFenceSync(GLuint fenceSync)
         if (fenceObjectIt->second) fenceObjectIt->second->release();
         mFenceSyncMap.erase(fenceObjectIt);
     }
+}
+
+void ResourceManager::deletePaths(GLuint first, GLsizei range)
+{
+    for (GLsizei i = 0; i < range; ++i)
+    {
+        const auto id = first + i;
+        const auto it = mPathMap.find(id);
+        if (it == mPathMap.end())
+            continue;
+        Path *p = it->second;
+        delete p;
+        mPathMap.erase(it);
+    }
+    mPathHandleAllocator.releaseRange(first, static_cast<GLuint>(range));
 }
 
 Buffer *ResourceManager::getBuffer(unsigned int handle)
@@ -350,6 +397,28 @@ FenceSync *ResourceManager::getFenceSync(unsigned int handle)
     {
         return fenceObjectIt->second;
     }
+}
+
+const Path *ResourceManager::getPath(GLuint handle) const
+{
+    auto it = mPathMap.find(handle);
+    if (it == std::end(mPathMap))
+        return nullptr;
+    return it->second;
+}
+
+Path *ResourceManager::getPath(GLuint handle)
+{
+    auto it = mPathMap.find(handle);
+    if (it == std::end(mPathMap))
+        return nullptr;
+
+    return it->second;
+}
+
+bool ResourceManager::hasPath(GLuint handle) const
+{
+    return mPathHandleAllocator.isUsed(handle);
 }
 
 void ResourceManager::setRenderbuffer(GLuint handle, Renderbuffer *buffer)

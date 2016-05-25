@@ -13,7 +13,9 @@
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
 #include "libANGLE/renderer/gl/FenceSyncGL.h"
+#include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
+#include "libANGLE/renderer/gl/PathGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
@@ -110,6 +112,26 @@ SamplerImpl *ContextGL::createSampler()
     return new SamplerGL(getFunctions(), getStateManager());
 }
 
+std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)
+{
+    const FunctionsGL *funcs = getFunctions();
+
+    std::vector<PathImpl *> ret;
+    ret.reserve(range);
+
+    const GLuint first = funcs->genPathsNV(range);
+    if (first == 0)
+        return ret;
+
+    for (GLsizei i = 0; i < range; ++i)
+    {
+        const auto id = first + i;
+        ret.push_back(new PathGL(funcs, id));
+    }
+
+    return ret;
+}
+
 gl::Error ContextGL::flush()
 {
     return mRenderer->flush();
@@ -162,6 +184,42 @@ gl::Error ContextGL::drawRangeElements(GLenum mode,
                                        const gl::IndexRange &indexRange)
 {
     return mRenderer->drawRangeElements(mState, mode, start, end, count, type, indices, indexRange);
+}
+
+void ContextGL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
+{
+    mRenderer->stencilFillPath(mState, path, fillMode, mask);
+}
+
+void ContextGL::stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask)
+{
+    mRenderer->stencilStrokePath(mState, path, reference, mask);
+}
+
+void ContextGL::coverFillPath(const gl::Path *path, GLenum coverMode)
+{
+    mRenderer->coverFillPath(mState, path, coverMode);
+}
+
+void ContextGL::coverStrokePath(const gl::Path *path, GLenum coverMode)
+{
+    mRenderer->coverStrokePath(mState, path, coverMode);
+}
+
+void ContextGL::stencilThenCoverFillPath(const gl::Path *path,
+                                         GLenum fillMode,
+                                         GLuint mask,
+                                         GLenum coverMode)
+{
+    mRenderer->stencilThenCoverFillPath(mState, path, fillMode, mask, coverMode);
+}
+
+void ContextGL::stencilThenCoverStrokePath(const gl::Path *path,
+                                           GLint reference,
+                                           GLuint mask,
+                                           GLenum coverMode)
+{
+    mRenderer->stencilThenCoverStrokePath(mState, path, reference, mask, coverMode);
 }
 
 void ContextGL::notifyDeviceLost()

@@ -276,6 +276,15 @@ class State : angle::NonCopyable
     void setCoverageModulation(GLenum components);
     GLenum getCoverageModulation() const;
 
+    // CHROMIUM_path_rendering
+    void loadPathRenderingMatrix(GLenum matrixMode, const GLfloat *matrix);
+    const GLfloat *getPathRenderingMatrix(GLenum which) const;
+    void setPathStencilFunc(GLenum func, GLint ref, GLuint mask);
+
+    GLenum getPathStencilFunc() const;
+    GLint getPathStencilRef() const;
+    GLuint getPathStencilMask() const;
+
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
@@ -344,7 +353,10 @@ class State : angle::NonCopyable
         DIRTY_BIT_PROGRAM_BINDING,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
-        DIRTY_BIT_COVERAGE_MODULATION,  // CHROMIUM_framebuffer_mixed_samples
+        DIRTY_BIT_COVERAGE_MODULATION,         // CHROMIUM_framebuffer_mixed_samples
+        DIRTY_BIT_PATH_RENDERING_MATRIX_MV,    // CHROMIUM_path_rendering path model view matrix
+        DIRTY_BIT_PATH_RENDERING_MATRIX_PROJ,  // CHROMIUM_path_rendering path projection matrix
+        DIRTY_BIT_PATH_RENDERING_STENCIL_STATE,
         DIRTY_BIT_CURRENT_VALUE_0,
         DIRTY_BIT_CURRENT_VALUE_MAX = DIRTY_BIT_CURRENT_VALUE_0 + MAX_VERTEX_ATTRIBS,
         DIRTY_BIT_INVALID           = DIRTY_BIT_CURRENT_VALUE_MAX,
@@ -451,6 +463,13 @@ class State : angle::NonCopyable
     bool mSampleAlphaToOne;
 
     GLenum mCoverageModulation;
+
+    // CHROMIUM_path_rendering
+    GLfloat mPathMatrixMV[16];
+    GLfloat mPathMatrixProj[16];
+    GLenum mPathStencilFunc;
+    GLint mPathStencilRef;
+    GLuint mPathStencilMask;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

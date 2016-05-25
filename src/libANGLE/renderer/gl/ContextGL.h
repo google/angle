@@ -63,6 +63,9 @@ class ContextGL : public ContextImpl
     // Sampler object creation
     SamplerImpl *createSampler() override;
 
+    // Path object creation
+    std::vector<PathImpl *> createPaths(GLsizei range) override;
+
     // Flush and finish.
     gl::Error flush() override;
     gl::Error finish() override;
@@ -92,6 +95,20 @@ class ContextGL : public ContextImpl
                                 GLenum type,
                                 const GLvoid *indices,
                                 const gl::IndexRange &indexRange) override;
+
+    // CHROMIUM_path_rendering implementation
+    void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask) override;
+    void stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask) override;
+    void coverFillPath(const gl::Path *path, GLenum coverMode) override;
+    void coverStrokePath(const gl::Path *path, GLenum coverMode) override;
+    void stencilThenCoverFillPath(const gl::Path *path,
+                                  GLenum fillMode,
+                                  GLuint mask,
+                                  GLenum coverMode) override;
+    void stencilThenCoverStrokePath(const gl::Path *path,
+                                    GLint reference,
+                                    GLuint mask,
+                                    GLenum coverMode) override;
 
     // TODO(jmadill): Investigate proper impl methods for this.
     void notifyDeviceLost() override;

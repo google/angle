@@ -312,6 +312,18 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
+    if (getExtensions().pathRendering)
+    {
+        switch (pname)
+        {
+            case GL_PATH_MODELVIEW_MATRIX_CHROMIUM:
+            case GL_PATH_PROJECTION_MATRIX_CHROMIUM:
+                *type = GL_FLOAT;
+                *numParams = 16;
+                return true;
+        }
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

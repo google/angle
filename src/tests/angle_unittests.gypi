@@ -24,6 +24,7 @@
             '<(angle_path)/src/libANGLE/Config_unittest.cpp',
             '<(angle_path)/src/libANGLE/Fence_unittest.cpp',
             '<(angle_path)/src/libANGLE/HandleAllocator_unittest.cpp',
+            '<(angle_path)/src/libANGLE/HandleRangeAllocator_unittest.cpp',
             '<(angle_path)/src/libANGLE/Image_unittest.cpp',
             '<(angle_path)/src/libANGLE/ImageIndexIterator_unittest.cpp',
             '<(angle_path)/src/libANGLE/Program_unittest.cpp',

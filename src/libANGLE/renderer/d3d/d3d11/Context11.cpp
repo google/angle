@@ -131,6 +131,11 @@ SamplerImpl *Context11::createSampler()
     return new SamplerD3D();
 }
 
+std::vector<PathImpl *> Context11::createPaths(GLsizei)
+{
+    return std::vector<PathImpl *>();
+}
+
 gl::Error Context11::flush()
 {
     return mRenderer->flush();

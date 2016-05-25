@@ -190,6 +190,36 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
 
 bool ValidateCoverageModulationCHROMIUM(Context *context, GLenum components);
 
+// CHROMIUM_path_rendering
+bool ValidateMatrix(Context *context, GLenum matrixMode, const GLfloat *matrix);
+bool ValidateMatrixMode(Context *context, GLenum matrixMode);
+bool ValidateGenPaths(Context *context, GLsizei range);
+bool ValidateDeletePaths(Context *context, GLuint first, GLsizei range);
+bool ValidatePathCommands(Context *context,
+                          GLuint path,
+                          GLsizei numCommands,
+                          const GLubyte *commands,
+                          GLsizei numCoords,
+                          GLenum coordType,
+                          const void *coords);
+bool ValidateSetPathParameter(Context *context, GLuint path, GLenum pname, GLfloat value);
+bool ValidateGetPathParameter(Context *context, GLuint path, GLenum pname, GLfloat *value);
+bool ValidatePathStencilFunc(Context *context, GLenum func, GLint ref, GLuint mask);
+bool ValidateStencilFillPath(Context *context, GLuint path, GLenum fillMode, GLuint mask);
+bool ValidateStencilStrokePath(Context *context, GLuint path, GLint reference, GLuint mask);
+bool ValidateCoverPath(Context *context, GLuint path, GLenum coverMode);
+bool ValidateStencilThenCoverFillPath(Context *context,
+                                      GLuint path,
+                                      GLenum fillMode,
+                                      GLuint mask,
+                                      GLenum coverMode);
+bool ValidateStencilThenCoverStrokePath(Context *context,
+                                        GLuint path,
+                                        GLint reference,
+                                        GLuint mask,
+                                        GLenum coverMode);
+bool ValidateIsPath(Context *context);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

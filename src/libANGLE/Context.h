@@ -81,6 +81,7 @@ class Context final : public ValidationContext
     GLuint createSampler();
     GLuint createTransformFeedback();
     GLsync createFenceSync();
+    GLuint createPaths(GLsizei range);
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -90,6 +91,20 @@ class Context final : public ValidationContext
     void deleteSampler(GLuint sampler);
     void deleteTransformFeedback(GLuint transformFeedback);
     void deleteFenceSync(GLsync fenceSync);
+    void deletePaths(GLuint first, GLsizei range);
+
+    // CHROMIUM_path_rendering
+    bool hasPathData(GLuint path) const;
+    bool hasPath(GLuint path) const;
+    void setPathCommands(GLuint path,
+                         GLsizei numCommands,
+                         const GLubyte *commands,
+                         GLsizei numCoords,
+                         GLenum coordType,
+                         const void *coords);
+    void setPathParameterf(GLuint path, GLenum pname, GLfloat value);
+    void getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) const;
+    void setPathStencilFunc(GLenum func, GLint ref, GLuint mask);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
@@ -466,6 +481,16 @@ class Context final : public ValidationContext
 
     // CHROMIUM_framebuffer_mixed_samples
     void setCoverageModulation(GLenum components);
+
+    // CHROMIUM_path_rendering
+    void loadPathRenderingMatrix(GLenum matrixMode, const GLfloat *matrix);
+    void loadPathRenderingIdentityMatrix(GLenum matrixMode);
+    void stencilFillPath(GLuint path, GLenum fillMode, GLuint mask);
+    void stencilStrokePath(GLuint path, GLint reference, GLuint mask);
+    void coverFillPath(GLuint path, GLenum coverMode);
+    void coverStrokePath(GLuint path, GLenum coverMode);
+    void stencilThenCoverFillPath(GLuint path, GLenum fillMode, GLuint mask, GLenum coverMode);
+    void stencilThenCoverStrokePath(GLuint path, GLint reference, GLuint mask, GLenum coverMode);
 
     void handleError(const Error &error) override;
 
