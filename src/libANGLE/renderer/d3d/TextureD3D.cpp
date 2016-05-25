@@ -755,19 +755,12 @@ gl::Error TextureD3D_2D::setImage(GLenum target,
     {
         // Will try to create RT storage if it does not exist
         RenderTargetD3D *destRenderTarget = NULL;
-        gl::Error error = getRenderTarget(index, &destRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(getRenderTarget(index, &destRenderTarget));
 
         gl::Box destArea(0, 0, 0, getWidth(level), getHeight(level), 1);
 
-        error = fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type, destRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(fastUnpackPixels(unpack, pixels, destArea, sizedInternalFormat, type,
+                                   destRenderTarget));
 
         // Ensure we don't overwrite our newly initialized data
         mImageArray[level]->markClean();
@@ -777,11 +770,7 @@ gl::Error TextureD3D_2D::setImage(GLenum target,
 
     if (!fastUnpacked)
     {
-        gl::Error error = setImageImpl(index, type, unpack, pixels, 0);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(setImageImpl(index, type, unpack, pixels, 0));
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -802,12 +791,7 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target,
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
         RenderTargetD3D *renderTarget = NULL;
-        gl::Error error = getRenderTarget(index, &renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(getRenderTarget(index, &renderTarget));
         ASSERT(!mImageArray[level]->isDirty());
 
         return fastUnpackPixels(unpack, pixels, area, getInternalFormat(level), type, renderTarget);
@@ -841,11 +825,7 @@ gl::Error TextureD3D_2D::setCompressedSubImage(GLenum target, size_t level, cons
     ASSERT(target == GL_TEXTURE_2D && area.depth == 1 && area.z == 0);
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(static_cast<GLint>(level));
-    gl::Error error = TextureD3D::subImageCompressed(index, area, format, unpack, pixels, 0);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(TextureD3D::subImageCompressed(index, area, format, unpack, pixels, 0));
 
     return commitRegion(index, area);
 }
@@ -870,31 +850,18 @@ gl::Error TextureD3D_2D::copyImage(GLenum target,
     // so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        gl::Error error = mImageArray[level]->copyFromFramebuffer(destOffset, sourceArea, source);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(destOffset, sourceArea, source));
         mDirtyImages = true;
     }
     else
     {
-        gl::Error error = ensureRenderTarget();
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(ensureRenderTarget());
         mImageArray[level]->markClean();
 
         if (sourceArea.width != 0 && sourceArea.height != 0 && isValidLevel(level))
         {
-            error = mRenderer->copyImage2D(source, sourceArea, internalFormat, destOffset, mTexStorage, level);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mRenderer->copyImage2D(source, sourceArea, internalFormat, destOffset,
+                                             mTexStorage, level));
         }
     }
 
@@ -919,37 +886,19 @@ gl::Error TextureD3D_2D::copySubImage(GLenum target,
     // so we should use the non-rendering copy path.
     if (!canCreateRenderTargetForImage(index) || mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        gl::Error error = mImageArray[level]->copyFromFramebuffer(destOffset, sourceArea, source);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(destOffset, sourceArea, source));
         mDirtyImages = true;
     }
     else
     {
-        gl::Error error = ensureRenderTarget();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(ensureRenderTarget());
 
         if (isValidLevel(level))
         {
-            error = updateStorageLevel(level);
-            if (error.isError())
-            {
-                return error;
-            }
-
-            error = mRenderer->copyImage2D(source, sourceArea,
-                                           gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
-                                           destOffset, mTexStorage, level);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(updateStorageLevel(level));
+            ANGLE_TRY(mRenderer->copyImage2D(
+                source, sourceArea, gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
+                destOffset, mTexStorage, level));
         }
     }
 

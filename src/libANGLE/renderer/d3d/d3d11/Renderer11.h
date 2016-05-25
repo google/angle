@@ -424,6 +424,12 @@ class Renderer11 : public RendererD3D
                                       size_t samplerMetadataReferencedBytes,
                                       ID3D11Buffer *driverConstantBuffer);
 
+    gl::Error copyImageInternal(const gl::Framebuffer *framebuffer,
+                                const gl::Rectangle &sourceRect,
+                                GLenum destFormat,
+                                const gl::Offset &destOffset,
+                                RenderTargetD3D *destRenderTarget);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HMODULE mDCompModule;

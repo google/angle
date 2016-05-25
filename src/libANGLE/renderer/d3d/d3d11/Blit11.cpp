@@ -770,11 +770,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
                               GLenum filter,
                               bool maskOffAlpha)
 {
-    gl::Error error = initResources();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(initResources());
 
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -794,12 +790,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
     ShaderDimension dimension = (sourceSRVDesc.ViewDimension == D3D11_SRV_DIMENSION_TEXTURE3D) ? SHADER_3D : SHADER_2D;
 
     const Shader *shader = nullptr;
-    error = getBlitShader(destFormat, isSigned, dimension, &shader);
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(getBlitShader(destFormat, isSigned, dimension, &shader));
     const ShaderSupport &support = getShaderSupport(*shader);
 
     // Set vertices
@@ -905,7 +896,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
 
     mRenderer->markAllStateDirty();
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
