@@ -230,6 +230,9 @@ config("libANGLE_config") {
       defines += [ "ANGLE_USE_X11" ]
     }
   }
+  if (angle_enable_vulkan) {
+    defines += [ "ANGLE_ENABLE_VULKAN" ]
+  }
   defines += [
     "GL_GLEXT_PROTOTYPES",
     "EGL_EGLEXT_PROTOTYPES",
@@ -308,6 +311,10 @@ static_library("libANGLE") {
         "QuartzCore.framework",
       ]
     }
+  }
+
+  if (angle_enable_vulkan) {
+    sources += rebase_path(gles_gypi.libangle_vulkan_sources, ".", "src")
   }
 
   if (is_debug) {

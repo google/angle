@@ -533,6 +533,47 @@
             'libANGLE/renderer/gl/cgl/WindowSurfaceCGL.mm',
             'libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h',
         ],
+        'libangle_vulkan_sources':
+        [
+            'libANGLE/renderer/vulkan/BufferVk.cpp',
+            'libANGLE/renderer/vulkan/BufferVk.h',
+            'libANGLE/renderer/vulkan/CompilerVk.cpp',
+            'libANGLE/renderer/vulkan/CompilerVk.h',
+            'libANGLE/renderer/vulkan/ContextVk.cpp',
+            'libANGLE/renderer/vulkan/ContextVk.h',
+            'libANGLE/renderer/vulkan/DeviceVk.cpp',
+            'libANGLE/renderer/vulkan/DeviceVk.h',
+            'libANGLE/renderer/vulkan/DisplayVk.cpp',
+            'libANGLE/renderer/vulkan/DisplayVk.h',
+            'libANGLE/renderer/vulkan/FenceNVVk.cpp',
+            'libANGLE/renderer/vulkan/FenceNVVk.h',
+            'libANGLE/renderer/vulkan/FenceSyncVk.cpp',
+            'libANGLE/renderer/vulkan/FenceSyncVk.h',
+            'libANGLE/renderer/vulkan/FramebufferVk.cpp',
+            'libANGLE/renderer/vulkan/FramebufferVk.h',
+            'libANGLE/renderer/vulkan/ImageVk.cpp',
+            'libANGLE/renderer/vulkan/ImageVk.h',
+            'libANGLE/renderer/vulkan/ProgramVk.cpp',
+            'libANGLE/renderer/vulkan/ProgramVk.h',
+            'libANGLE/renderer/vulkan/QueryVk.cpp',
+            'libANGLE/renderer/vulkan/QueryVk.h',
+            'libANGLE/renderer/vulkan/RenderbufferVk.cpp',
+            'libANGLE/renderer/vulkan/RenderbufferVk.h',
+            'libANGLE/renderer/vulkan/RendererVk.cpp',
+            'libANGLE/renderer/vulkan/RendererVk.h',
+            'libANGLE/renderer/vulkan/SamplerVk.cpp',
+            'libANGLE/renderer/vulkan/SamplerVk.h',
+            'libANGLE/renderer/vulkan/ShaderVk.cpp',
+            'libANGLE/renderer/vulkan/ShaderVk.h',
+            'libANGLE/renderer/vulkan/SurfaceVk.cpp',
+            'libANGLE/renderer/vulkan/SurfaceVk.h',
+            'libANGLE/renderer/vulkan/TextureVk.cpp',
+            'libANGLE/renderer/vulkan/TextureVk.h',
+            'libANGLE/renderer/vulkan/TransformFeedbackVk.cpp',
+            'libANGLE/renderer/vulkan/TransformFeedbackVk.h',
+            'libANGLE/renderer/vulkan/VertexArrayVk.cpp',
+            'libANGLE/renderer/vulkan/VertexArrayVk.h',
+        ],
         'libglesv2_sources':
         [
             'common/angleutils.h',
@@ -654,6 +695,13 @@
                                     'ANGLE_USE_X11',
                                 ],
                             }],
+                        ],
+                    }],
+                    ['angle_enable_vulkan==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_VULKAN',
                         ],
                     }],
                 ],
@@ -850,6 +898,17 @@
                                 },
                             }
                         }],
+                    ],
+                }],
+                ['angle_enable_vulkan==1',
+                {
+                    'sources':
+                    [
+                        '<@(libangle_vulkan_sources)',
+                    ],
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_VULKAN',
                     ],
                 }],
                 ['angle_build_winrt==0 and OS=="win"',
