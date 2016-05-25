@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5ca257c0_c00a9ec5",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1149194
+      },
+      "writtenOn": "2016-05-25T15:39:14Z",
+      "side": 1,
+      "message": "Yes, I think that referencing upstream doc only makes it more confusing. Moved to see also links.",
+      "parentUuid": "fcfdcbc0_0b16813d",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcfdcbc0_eb21e58e",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-05-25T12:49:21Z",
       "side": 1,
       "message": "ditto",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ca257c0_a00f9ad3",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1149194
+      },
+      "writtenOn": "2016-05-25T15:39:14Z",
+      "side": 1,
+      "message": "Removed as well.",
+      "parentUuid": "fcfdcbc0_eb21e58e",
       "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5ca257c0_80f5b6d9",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1149194
+      },
+      "writtenOn": "2016-05-25T15:39:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcfdcbc0_cb2629a5",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcfdcbc0_ab1bed62",
         "filename": "doc/ContributingCode.md",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2016-05-25T12:49:21Z",
       "side": 1,
       "message": "I don\u0027t use the depot tools git helpers so I may be wrong, however I think most of the linked document is relevant only to Chrome that uses the Rietveld code review system, and that the instructions there wouldn\u0027t work for Gerrit.",
+      "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ca257c0_60f2b2f1",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1149194
+      },
+      "writtenOn": "2016-05-25T15:39:14Z",
+      "side": 1,
+      "message": "I like `git new-branch` workflow for managing multiple changes, although it seems a bit orthogonal here.\n\nActually, `git commit --amend` was not enough to submit subsequent changeset without creating new issue have to use `git cl upload --squash`.",
+      "parentUuid": "fcfdcbc0_ab1bed62",
       "revId": "497f6c546a7633e2f4ac27be4fc8c9d1df1238f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
