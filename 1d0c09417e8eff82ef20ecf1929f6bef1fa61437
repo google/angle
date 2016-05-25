@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfdcbc0_8bbcb1e6",
+        "filename": "scripts/generate_new_renderer.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-05-25T15:03:44Z",
+      "side": 1,
+      "message": "nit: \"Defines the class interface for $TypedImpl, implementing $BaseImpl.\"",
+      "range": {
+        "startLine": 64,
+        "startChar": 48,
+        "endLine": 64,
+        "endChar": 49
+      },
+      "revId": "1d0c09417e8eff82ef20ecf1929f6bef1fa61437",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
