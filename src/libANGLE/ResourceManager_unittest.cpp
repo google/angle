@@ -25,7 +25,7 @@ class ResourceManagerTest : public testing::Test
   protected:
     void SetUp() override
     {
-        mResourceManager = new ResourceManager(&mMockFactory);
+        mResourceManager = new ResourceManager();
     }
 
     void TearDown() override
@@ -41,7 +41,7 @@ TEST_F(ResourceManagerTest, ReallocateBoundTexture)
 {
     EXPECT_CALL(mMockFactory, createTexture(_)).Times(1).RetiresOnSaturation();
 
-    mResourceManager->checkTextureAllocation(1, GL_TEXTURE_2D);
+    mResourceManager->checkTextureAllocation(&mMockFactory, 1, GL_TEXTURE_2D);
     GLuint newTexture = mResourceManager->createTexture();
     EXPECT_NE(1u, newTexture);
 }
@@ -50,7 +50,7 @@ TEST_F(ResourceManagerTest, ReallocateBoundBuffer)
 {
     EXPECT_CALL(mMockFactory, createBuffer()).Times(1).RetiresOnSaturation();
 
-    mResourceManager->checkBufferAllocation(1);
+    mResourceManager->checkBufferAllocation(&mMockFactory, 1);
     GLuint newBuffer = mResourceManager->createBuffer();
     EXPECT_NE(1u, newBuffer);
 }
@@ -59,9 +59,9 @@ TEST_F(ResourceManagerTest, ReallocateBoundRenderbuffer)
 {
     EXPECT_CALL(mMockFactory, createRenderbuffer()).Times(1).RetiresOnSaturation();
 
-    mResourceManager->checkRenderbufferAllocation(1);
+    mResourceManager->checkRenderbufferAllocation(&mMockFactory, 1);
     GLuint newRenderbuffer = mResourceManager->createRenderbuffer();
     EXPECT_NE(1u, newRenderbuffer);
 }
 
-}
+}  // anonymous namespace

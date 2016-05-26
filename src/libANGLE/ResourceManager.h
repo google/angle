@@ -34,19 +34,21 @@ class Texture;
 class ResourceManager : angle::NonCopyable
 {
   public:
-    explicit ResourceManager(rx::GLImplFactory *factory);
+    ResourceManager();
     ~ResourceManager();
 
     void addRef();
     void release();
 
     GLuint createBuffer();
-    GLuint createShader(const gl::Limitations &rendererLimitations, GLenum type);
-    GLuint createProgram();
+    GLuint createShader(rx::GLImplFactory *factory,
+                        const gl::Limitations &rendererLimitations,
+                        GLenum type);
+    GLuint createProgram(rx::GLImplFactory *factory);
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
-    GLuint createFenceSync();
+    GLuint createFenceSync(rx::GLImplFactory *factory);
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -66,17 +68,17 @@ class ResourceManager : angle::NonCopyable
 
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
-    Buffer *checkBufferAllocation(GLuint handle);
-    Texture *checkTextureAllocation(GLuint handle, GLenum type);
-    Renderbuffer *checkRenderbufferAllocation(GLuint handle);
-    Sampler *checkSamplerAllocation(GLuint samplerHandle);
+    Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle);
+    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum type);
+    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle);
+    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint samplerHandle);
 
     bool isSampler(GLuint sampler);
 
   private:
     void createTextureInternal(GLuint handle);
 
-    rx::GLImplFactory *mFactory;
+    ;
     std::size_t mRefCount;
 
     ResourceMap<Buffer> mBufferMap;
