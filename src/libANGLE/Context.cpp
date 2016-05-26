@@ -162,7 +162,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     }
     else
     {
-        mResourceManager = new ResourceManager(mImplementation.get());
+        mResourceManager = new ResourceManager();
     }
 
     mData.resourceManager = mResourceManager;
@@ -411,12 +411,13 @@ GLuint Context::createBuffer()
 
 GLuint Context::createProgram()
 {
-    return mResourceManager->createProgram();
+    return mResourceManager->createProgram(mImplementation.get());
 }
 
 GLuint Context::createShader(GLenum type)
 {
-    return mResourceManager->createShader(mImplementation->getNativeLimitations(), type);
+    return mResourceManager->createShader(mImplementation.get(),
+                                          mImplementation->getNativeLimitations(), type);
 }
 
 GLuint Context::createTexture()
@@ -431,7 +432,7 @@ GLuint Context::createRenderbuffer()
 
 GLsync Context::createFenceSync()
 {
-    GLuint handle = mResourceManager->createFenceSync();
+    GLuint handle = mResourceManager->createFenceSync(mImplementation.get());
 
     return reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 }
@@ -706,13 +707,13 @@ bool Context::isSampler(GLuint samplerName) const
 
 void Context::bindArrayBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setArrayBufferBinding(buffer);
 }
 
 void Context::bindElementArrayBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.getVertexArray()->setElementArrayBuffer(buffer);
 }
 
@@ -726,7 +727,7 @@ void Context::bindTexture(GLenum target, GLuint handle)
     }
     else
     {
-        texture = mResourceManager->checkTextureAllocation(handle, target);
+        texture = mResourceManager->checkTextureAllocation(mImplementation.get(), handle, target);
     }
 
     ASSERT(texture);
@@ -747,7 +748,8 @@ void Context::bindDrawFramebuffer(GLuint framebufferHandle)
 
 void Context::bindRenderbuffer(GLuint renderbufferHandle)
 {
-    Renderbuffer *renderbuffer = mResourceManager->checkRenderbufferAllocation(renderbufferHandle);
+    Renderbuffer *renderbuffer =
+        mResourceManager->checkRenderbufferAllocation(mImplementation.get(), renderbufferHandle);
     mState.setRenderbufferBinding(renderbuffer);
 }
 
@@ -760,13 +762,14 @@ void Context::bindVertexArray(GLuint vertexArrayHandle)
 void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
 {
     ASSERT(textureUnit < mCaps.maxCombinedTextureImageUnits);
-    Sampler *sampler = mResourceManager->checkSamplerAllocation(samplerHandle);
+    Sampler *sampler =
+        mResourceManager->checkSamplerAllocation(mImplementation.get(), samplerHandle);
     mState.setSamplerBinding(textureUnit, sampler);
 }
 
 void Context::bindGenericUniformBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setGenericUniformBufferBinding(buffer);
 }
 
@@ -775,13 +778,13 @@ void Context::bindIndexedUniformBuffer(GLuint bufferHandle,
                                        GLintptr offset,
                                        GLsizeiptr size)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setIndexedUniformBufferBinding(index, buffer, offset, size);
 }
 
 void Context::bindGenericTransformFeedbackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.getCurrentTransformFeedback()->bindGenericBuffer(buffer);
 }
 
@@ -790,31 +793,31 @@ void Context::bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
                                                  GLintptr offset,
                                                  GLsizeiptr size)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.getCurrentTransformFeedback()->bindIndexedBuffer(index, buffer, offset, size);
 }
 
 void Context::bindCopyReadBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setCopyReadBufferBinding(buffer);
 }
 
 void Context::bindCopyWriteBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setCopyWriteBufferBinding(buffer);
 }
 
 void Context::bindPixelPackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setPixelPackBufferBinding(buffer);
 }
 
 void Context::bindPixelUnpackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(bufferHandle);
+    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mState.setPixelUnpackBufferBinding(buffer);
 }
 
@@ -1910,7 +1913,7 @@ void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
 
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
 {
-    mResourceManager->checkSamplerAllocation(sampler);
+    mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
 
     Sampler *samplerObject = getSampler(sampler);
     ASSERT(samplerObject);
@@ -1935,7 +1938,7 @@ void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
 
 void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 {
-    mResourceManager->checkSamplerAllocation(sampler);
+    mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
 
     Sampler *samplerObject = getSampler(sampler);
     ASSERT(samplerObject);
@@ -1960,7 +1963,7 @@ void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
 GLint Context::getSamplerParameteri(GLuint sampler, GLenum pname)
 {
-    mResourceManager->checkSamplerAllocation(sampler);
+    mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
 
     Sampler *samplerObject = getSampler(sampler);
     ASSERT(samplerObject);
@@ -1985,7 +1988,7 @@ GLint Context::getSamplerParameteri(GLuint sampler, GLenum pname)
 
 GLfloat Context::getSamplerParameterf(GLuint sampler, GLenum pname)
 {
-    mResourceManager->checkSamplerAllocation(sampler);
+    mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
 
     Sampler *samplerObject = getSampler(sampler);
     ASSERT(samplerObject);
