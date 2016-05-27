@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 # import the use_x11 variable
+import("//build/config/dcheck_always_on.gni")
 import("//build/config/ui.gni")
 import("//third_party/angle/build/angle_common.gni")
 
@@ -107,6 +108,12 @@ config("debug_annotations_config") {
   }
 }
 
+config("angle_release_asserts_config") {
+  if (dcheck_always_on) {
+    defines = [ "ANGLE_ENABLE_RELEASE_ASSERTS" ]
+  }
+}
+
 static_library("angle_common") {
   sources = rebase_path(gles_gypi.libangle_common_sources, ".", "src")
 
@@ -120,6 +127,7 @@ static_library("angle_common") {
   public_deps = [
     ":commit_id",
   ]
+  public_configs = [ ":angle_release_asserts_config" ]
 }
 
 static_library("translator_lib") {
