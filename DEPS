@@ -28,7 +28,7 @@ deps = {
       Var('chromium_git') + "/chromium/src/third_party/zlib@afd8c4593c010c045902f6c0501718f1823064a3",
 
   "buildtools":
-      Var('chromium_git') + '/chromium/buildtools.git@125d157607de4d7c95bf8b02dd580aae17962f19',
+      Var('chromium_git') + '/chromium/buildtools.git@06e80a0e17319868d4a9b13f9bb6a248dc8d8b20',
 }
 
 hooks = [
