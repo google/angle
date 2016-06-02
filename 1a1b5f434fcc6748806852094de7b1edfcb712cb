@@ -46,6 +46,30 @@
       "revId": "1a1b5f434fcc6748806852094de7b1edfcb712cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_4eecc7c6",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-02T19:02:23Z",
+      "side": 1,
+      "message": "Doesn\u0027t matter.",
+      "parentUuid": "f9c5ddcd_8e051f70",
+      "range": {
+        "startLine": 47,
+        "startChar": 30,
+        "endLine": 47,
+        "endChar": 46
+      },
+      "revId": "1a1b5f434fcc6748806852094de7b1edfcb712cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
