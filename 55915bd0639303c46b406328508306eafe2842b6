@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f9c5ddcd_a5be3ede",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T18:02:38Z",
+      "side": 1,
+      "message": "Yeah realized what the correct spelling was midway through the review :P",
+      "parentUuid": "19771110_6de04609",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19771110_9bf4df96",
         "filename": "src/common/third_party/numerics/base/logging.h",
         "patchSetId": 8
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "I\u0027m not sure, I think it would add about the same amount of boilerplate. We\u0027d need to convert CheckedResults to this new type and back. Open to suggestions though.",
       "parentUuid": "19771110_9b585f7d",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_888eb737",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T18:02:38Z",
+      "side": 1,
+      "message": "Ah yes, it isn\u0027t that simple. Instead we could add a constructor to ErrorOrResult\u003cT\u003e taking a CheckedNumeric\u003cT\u003e so that we could just write return checkedResult. But it isn\u0027t as nice :/",
+      "parentUuid": "f9c5ddcd_653286f9",
       "revId": "55915bd0639303c46b406328508306eafe2842b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
