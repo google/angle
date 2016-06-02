@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19771110_db79f7e2",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "The math should be\ntemp \u003d value + alignement - 1\nreturn temp - temp % alignement\n\nCurrently CheckRoundUp(0, alignment) will return alignment.",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_9bf4df96",
+        "filename": "src/common/third_party/numerics/base/logging.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "typo: unfortunately",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_1b2e2fe7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "Seems that this is an unrelated patch that snuck in.",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_9b585f7d",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "How about having our own child class of CheckedResult that adds a  gl::ErrorOrResult\u003cT\u003e ValueOrError() member function?",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_db4bb7ba",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "nit alignement",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_fb4873c0",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "nit: alignement in the whole block is wrong",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_3b1ccbba",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "nit: alignement",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_5b1187a1",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "same.",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_9b2a1fc5",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "nit: Render    | should be bigger",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19771110_bb27dbfd",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-02T13:52:21Z",
+      "side": 1,
+      "message": "nit: filter and render should be bigger.",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
