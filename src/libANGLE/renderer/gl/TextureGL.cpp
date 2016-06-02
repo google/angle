@@ -389,10 +389,10 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                 {
                     if (internalFormatInfo.compressed)
                     {
-                        size_t dataSize = 0;
-                        ANGLE_TRY_RESULT(internalFormatInfo.computeBlockSize(
-                                             GL_UNSIGNED_BYTE, levelSize.width, levelSize.height),
-                                         dataSize);
+                        GLuint dataSize = 0;
+                        ANGLE_TRY_RESULT(
+                            internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize),
+                            dataSize);
                         mFunctions->compressedTexImage2D(target, static_cast<GLint>(level),
                                                          texStorageFormat.internalFormat,
                                                          levelSize.width, levelSize.height, 0,
@@ -412,10 +412,9 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
                     {
                         if (internalFormatInfo.compressed)
                         {
-                            size_t dataSize = 0;
+                            GLuint dataSize = 0;
                             ANGLE_TRY_RESULT(
-                                internalFormatInfo.computeBlockSize(
-                                    GL_UNSIGNED_BYTE, levelSize.width, levelSize.height),
+                                internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize),
                                 dataSize);
                             mFunctions->compressedTexImage2D(
                                 face, static_cast<GLint>(level), texStorageFormat.internalFormat,
@@ -464,14 +463,13 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
 
                 if (internalFormatInfo.compressed)
                 {
-                    GLuint blockSize = 0;
-                    ANGLE_TRY_RESULT(internalFormatInfo.computeBlockSize(
-                                         GL_UNSIGNED_BYTE, levelSize.width, levelSize.height),
-                                     blockSize);
-                    GLsizei dataSize = static_cast<GLsizei>(blockSize) * levelSize.depth;
+                    GLuint dataSize = 0;
+                    ANGLE_TRY_RESULT(
+                        internalFormatInfo.computeBlockSize(GL_UNSIGNED_BYTE, levelSize), dataSize);
                     mFunctions->compressedTexImage3D(target, i, texStorageFormat.internalFormat,
                                                      levelSize.width, levelSize.height,
-                                                     levelSize.depth, 0, dataSize, nullptr);
+                                                     levelSize.depth, 0,
+                                                     static_cast<GLsizei>(dataSize), nullptr);
                 }
                 else
                 {

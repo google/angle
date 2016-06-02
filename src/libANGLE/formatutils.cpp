@@ -696,7 +696,7 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
     }
     else
     {
-        ANGLE_TRY_RESULT(computeBlockSize(formatType, width, 1), rowBytes);
+        ANGLE_TRY_RESULT(computeBlockSize(formatType, gl::Extents(width, 1, 1)), rowBytes);
     }
     auto checkedResult = rx::CheckedRoundUp(rowBytes, static_cast<GLuint>(alignment));
     ANGLE_TRY_CHECKED_MATH(checkedResult);
@@ -729,17 +729,17 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
 }
 
 gl::ErrorOrResult<GLuint> InternalFormat::computeBlockSize(GLenum formatType,
-                                                           GLsizei width,
-                                                           GLsizei height) const
+                                                           const gl::Extents &size) const
 {
-    CheckedNumeric<GLuint> checkedWidth(width);
-    CheckedNumeric<GLuint> checkedHeight(height);
+    CheckedNumeric<GLuint> checkedWidth(size.width);
+    CheckedNumeric<GLuint> checkedHeight(size.height);
+    CheckedNumeric<GLuint> checkedDepth(size.depth);
 
     if (compressed)
     {
         auto numBlocksWide = (checkedWidth + compressedBlockWidth - 1u) / compressedBlockWidth;
         auto numBlocksHigh = (checkedHeight + compressedBlockHeight - 1u) / compressedBlockHeight;
-        auto bytes         = numBlocksWide * numBlocksHigh * pixelBytes;
+        auto bytes         = numBlocksWide * numBlocksHigh * pixelBytes * checkedDepth;
         ANGLE_TRY_CHECKED_MATH(bytes);
         return bytes.ValueOrDie();
     }
@@ -747,7 +747,7 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeBlockSize(GLenum formatType,
     const Type &typeInfo = GetTypeInfo(formatType);
     GLuint components    = typeInfo.specialInterpretation ? 1u : componentCount;
 
-    auto result = checkedWidth * checkedHeight * components * typeInfo.bytes;
+    auto result = checkedWidth * checkedHeight * checkedDepth * components * typeInfo.bytes;
     ANGLE_TRY_CHECKED_MATH(result);
     return result.ValueOrDie();
 }

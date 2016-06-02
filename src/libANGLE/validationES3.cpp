@@ -490,7 +490,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
 
         const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedFormat);
-        auto copyBytesOrErr                  = formatInfo.computeBlockSize(type, width, height);
+        auto copyBytesOrErr = formatInfo.computeBlockSize(type, gl::Extents(width, height, depth));
         if (copyBytesOrErr.isError())
         {
             context->handleError(copyBytesOrErr.getError());
@@ -1557,10 +1557,11 @@ bool ValidateCompressedTexImage3D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-    auto blockSizeOrErr              = formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height);
+    auto blockSizeOrErr =
+        formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, gl::Extents(width, height, depth));
     if (blockSizeOrErr.isError())
     {
-        context->handleError(blockSizeOrErr.getError());
+        context->handleError(Error(GL_INVALID_VALUE));
         return false;
     }
     if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
@@ -1905,7 +1906,8 @@ bool ValidateCompressedTexSubImage3D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetInternalFormatInfo(format);
-    auto blockSizeOrErr              = formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height);
+    auto blockSizeOrErr =
+        formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, gl::Extents(width, height, depth));
     if (blockSizeOrErr.isError())
     {
         context->handleError(blockSizeOrErr.getError());
