@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f9c5ddcd_0b95a153",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T19:09:55Z",
+      "side": 1,
+      "message": "Done. Don\u0027t forward declare these since they are typedefs.",
+      "parentUuid": "f9c5ddcd_a85a93e6",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 36
+      },
+      "revId": "5a9b79979c8a401df748b652239e585943129a21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9c5ddcd_c8270f4f",
         "filename": "src/libANGLE/BinaryStream.h",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-02T18:39:08Z",
       "side": 1,
       "message": "mOffset \u003d checkedOffset.ValueOrDie()\n\nDon\u0027t want to allow bugs to creep in where we update the logic but not the overflow check. (below too)",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 26
+      },
+      "revId": "5a9b79979c8a401df748b652239e585943129a21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_0b1ac10b",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T19:09:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9c5ddcd_c8270f4f",
       "range": {
         "startLine": 95,
         "startChar": 8,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "f9c5ddcd_2bea1de7",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T19:09:55Z",
+      "side": 1,
+      "message": "Yeah, a conflict with the x headers which define Always. Could be a bit split CL, but it\u0027s done now.",
+      "parentUuid": "f9c5ddcd_cb63892b",
+      "revId": "5a9b79979c8a401df748b652239e585943129a21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9c5ddcd_0bd3e1e9",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 9
@@ -76,6 +142,30 @@
       "writtenOn": "2016-06-02T18:39:08Z",
       "side": 1,
       "message": "It may be possible for this to overflow before overflowing the multiply with checkedBytes.",
+      "range": {
+        "startLine": 482,
+        "startChar": 24,
+        "endLine": 482,
+        "endChar": 58
+      },
+      "revId": "5a9b79979c8a401df748b652239e585943129a21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_abbe0dde",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T19:09:55Z",
+      "side": 1,
+      "message": "Good catch, done.",
+      "parentUuid": "f9c5ddcd_0bd3e1e9",
       "range": {
         "startLine": 482,
         "startChar": 24,
