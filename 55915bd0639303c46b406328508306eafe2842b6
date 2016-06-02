@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "19771110_6de04609",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "good catch here. There is actually a bug in CheckedRoundUp. (value - 1) % alignment will produce the correct value for zero, but it will produce an integer underflow for uint values, and a negative mod for signed ints. The bug was that (value - 1) % alignment had priority over the checked value, so CheckedRoundUp was missing this underflow.\n\nTests added to mathutil_unittest\n\n(fyi the spelling in English is \u0027alignment\u0027)",
+      "parentUuid": "19771110_db79f7e2",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19771110_9bf4df96",
         "filename": "src/common/third_party/numerics/base/logging.h",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2016-06-02T13:52:21Z",
       "side": 1,
       "message": "typo: unfortunately",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_65f9e659",
+        "filename": "src/common/third_party/numerics/base/logging.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19771110_9bf4df96",
       "revId": "55915bd0639303c46b406328508306eafe2842b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f9c5ddcd_658446b5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "I meant to comment on these changes, they are very related.\n\nBasically the previous implementation of IsIntegerCastSafe didn\u0027t work properly. The new IsValueInRangeForNumericType is correct, and correctly catches the annoying case where we try to serialize std::numeric_limits\u003csize_t\u003e::max() as an int32_t. I put in this somewhat tricky bit for negative one so we could continue to use the our code as it stands, but I\u0027m open to alternatives.",
+      "parentUuid": "19771110_1b2e2fe7",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19771110_9b585f7d",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 8
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "f9c5ddcd_653286f9",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "I\u0027m not sure, I think it would add about the same amount of boilerplate. We\u0027d need to convert CheckedResults to this new type and back. Open to suggestions though.",
+      "parentUuid": "19771110_9b585f7d",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19771110_db4bb7ba",
         "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
         "patchSetId": 8
@@ -81,6 +153,24 @@
       "writtenOn": "2016-06-02T13:52:21Z",
       "side": 1,
       "message": "nit alignement",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_45082a1f",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "Done. (aside... I guess the new gerrit extension doesn\u0027t allow you to comment on columns. a pity)",
+      "parentUuid": "19771110_db4bb7ba",
       "revId": "55915bd0639303c46b406328508306eafe2842b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -115,6 +205,24 @@
       "writtenOn": "2016-06-02T13:52:21Z",
       "side": 1,
       "message": "nit: alignement",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_a570fe95",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "did all these.. let us never speak of alignment format tables again. (except on how to replace them)",
+      "parentUuid": "19771110_3b1ccbba",
       "revId": "55915bd0639303c46b406328508306eafe2842b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -166,6 +274,24 @@
       "writtenOn": "2016-06-02T13:52:21Z",
       "side": 1,
       "message": "nit: filter and render should be bigger.",
+      "revId": "55915bd0639303c46b406328508306eafe2842b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9c5ddcd_053912bb",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-02T17:52:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19771110_bb27dbfd",
       "revId": "55915bd0639303c46b406328508306eafe2842b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
