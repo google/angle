@@ -663,7 +663,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->multisampleCompatibility = functions->isAtLeastGL(gl::Version(1, 3)) ||
         functions->hasGLESExtension("GL_EXT_multisample_compatibility");
 
-    extensions->framebufferMixedSamples = functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
+    extensions->framebufferMixedSamples =
+        functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
 }
 

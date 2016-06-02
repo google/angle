@@ -1004,8 +1004,8 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     for (const D3DUniform *uniform : mD3DUniforms)
     {
         // Type, name and arraySize are redundant, so aren't stored in the binary.
-        stream->writeInt(uniform->psRegisterIndex);
-        stream->writeInt(uniform->vsRegisterIndex);
+        stream->writeIntOrNegOne(uniform->psRegisterIndex);
+        stream->writeIntOrNegOne(uniform->vsRegisterIndex);
         stream->writeInt(uniform->registerCount);
         stream->writeInt(uniform->registerElement);
     }
@@ -1013,8 +1013,8 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
     stream->writeInt(mD3DUniformBlocks.size());
     for (const D3DUniformBlock &uniformBlock : mD3DUniformBlocks)
     {
-        stream->writeInt(uniformBlock.psRegisterIndex);
-        stream->writeInt(uniformBlock.vsRegisterIndex);
+        stream->writeIntOrNegOne(uniformBlock.psRegisterIndex);
+        stream->writeIntOrNegOne(uniformBlock.vsRegisterIndex);
     }
 
     stream->writeInt(mStreamOutVaryings.size());
@@ -1061,7 +1061,7 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 
         for (size_t inputIndex = 0; inputIndex < inputLayout.size(); inputIndex++)
         {
-            stream->writeInt(inputLayout[inputIndex]);
+            stream->writeInt(static_cast<unsigned int>(inputLayout[inputIndex]));
         }
 
         size_t vertexShaderSize = vertexExecutable->shaderExecutable()->getLength();

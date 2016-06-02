@@ -758,7 +758,7 @@ Error Program::saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, G
     for (const auto &outputPair : mState.mOutputVariables)
     {
         stream.writeInt(outputPair.first);
-        stream.writeInt(outputPair.second.element);
+        stream.writeIntOrNegOne(outputPair.second.element);
         stream.writeInt(outputPair.second.index);
         stream.writeString(outputPair.second.name);
     }
@@ -1122,7 +1122,7 @@ GLint Program::getActiveUniformi(GLuint index, GLenum pname) const
 
 bool Program::isValidUniformLocation(GLint location) const
 {
-    ASSERT(rx::IsIntegerCastSafe<GLint>(mState.mUniformLocations.size()));
+    ASSERT(angle::IsValueInRangeForNumericType<GLint>(mState.mUniformLocations.size()));
     return (location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size() &&
             mState.mUniformLocations[static_cast<size_t>(location)].used);
 }

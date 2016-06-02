@@ -9,13 +9,13 @@
 #ifndef LIBANGLE_FORMATUTILS_H_
 #define LIBANGLE_FORMATUTILS_H_
 
-#include "libANGLE/Caps.h"
-#include "libANGLE/angletypes.h"
-
-#include "angle_gl.h"
-
 #include <cstddef>
 #include <stdint.h>
+
+#include "angle_gl.h"
+#include "libANGLE/Caps.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 
 namespace gl
 {
@@ -33,6 +33,25 @@ const Type &GetTypeInfo(GLenum type);
 struct InternalFormat
 {
     InternalFormat();
+
+    gl::ErrorOrResult<GLuint> computeRowPitch(GLenum formatType,
+                                              GLsizei width,
+                                              GLint alignment,
+                                              GLint rowLength) const;
+    gl::ErrorOrResult<GLuint> computeDepthPitch(GLenum formatType,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLint alignment,
+                                                GLint rowLength,
+                                                GLint imageHeight) const;
+    gl::ErrorOrResult<GLuint> computeBlockSize(GLenum formatType,
+                                               GLsizei width,
+                                               GLsizei height) const;
+    GLuint computeSkipPixels(GLint rowPitch,
+                             GLint depthPitch,
+                             GLint skipImages,
+                             GLint skipRows,
+                             GLint skipPixels) const;
 
     GLuint redBits;
     GLuint greenBits;
@@ -64,21 +83,8 @@ struct InternalFormat
     SupportCheckFunction textureSupport;
     SupportCheckFunction renderSupport;
     SupportCheckFunction filterSupport;
-
-    GLuint computeRowPitch(GLenum formatType, GLsizei width, GLint alignment, GLint rowLength) const;
-    GLuint computeDepthPitch(GLenum formatType,
-                             GLsizei width,
-                             GLsizei height,
-                             GLint alignment,
-                             GLint rowLength,
-                             GLint imageHeight) const;
-    GLuint computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const;
-    GLuint computeSkipPixels(GLint rowPitch,
-                             GLint depthPitch,
-                             GLint skipImages,
-                             GLint skipRows,
-                             GLint skipPixels) const;
 };
+
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat);
 
 GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type);

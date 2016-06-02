@@ -248,9 +248,14 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unpack, GLenum type, const void *input)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength);
-    GLsizei inputDepthPitch = formatInfo.computeDepthPitch(
-        type, area.width, area.height, unpack.alignment, unpack.rowLength, unpack.imageHeight);
+    GLsizei inputRowPitch                = 0;
+    ANGLE_TRY_RESULT(
+        formatInfo.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
+        inputRowPitch);
+    GLsizei inputDepthPitch = 0;
+    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(type, area.width, area.height, unpack.alignment,
+                                                  unpack.rowLength, unpack.imageHeight),
+                     inputDepthPitch);
     GLsizei inputSkipBytes = formatInfo.computeSkipPixels(
         inputRowPitch, inputDepthPitch, unpack.skipImages, unpack.skipRows, unpack.skipPixels);
 
@@ -280,9 +285,12 @@ gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unp
 gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch = formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0);
-    GLsizei inputDepthPitch =
-        formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0);
+    GLsizei inputRowPitch                = 0;
+    ANGLE_TRY_RESULT(formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0), inputRowPitch);
+    GLsizei inputDepthPitch = 0;
+    ANGLE_TRY_RESULT(
+        formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0),
+        inputDepthPitch);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;

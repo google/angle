@@ -1393,7 +1393,7 @@ ANGLE_EXPORT void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
 {
     EVENT("(GLenum components = %u)", components);
 
-    Context* context = GetValidGlobalContext();
+    Context *context = GetValidGlobalContext();
     if (context)
     {
         if (!ValidateCoverageModulationCHROMIUM(context, components))
@@ -1403,5 +1403,4 @@ ANGLE_EXPORT void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
         context->setCoverageModulation(components);
     }
 }
-
 }

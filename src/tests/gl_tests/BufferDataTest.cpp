@@ -102,7 +102,7 @@ TEST_P(BufferDataTest, NULLData)
             for (int k = 0; k < bufferSize - j; k++)
             {
                 glBufferSubData(GL_ARRAY_BUFFER, k, j, NULL);
-                EXPECT_GL_NO_ERROR();
+                ASSERT_GL_NO_ERROR();
             }
         }
     }

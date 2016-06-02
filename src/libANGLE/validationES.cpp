@@ -7,6 +7,7 @@
 // validationES.h: Validation functions for generic OpenGL ES entry point parameters
 
 #include "libANGLE/validationES.h"
+
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/Context.h"
@@ -24,6 +25,8 @@
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
+
+using namespace angle;
 
 namespace gl
 {
@@ -1140,12 +1143,26 @@ bool ValidateReadnPixelsEXT(Context *context,
     GLenum sizedInternalFormat = GetSizedInternalFormat(format, type);
     const InternalFormat &sizedFormatInfo = GetInternalFormatInfo(sizedInternalFormat);
 
-    GLsizei outputPitch =
+    auto outputPitchOrErr =
         sizedFormatInfo.computeRowPitch(type, width, context->getState().getPackAlignment(),
                                         context->getState().getPackRowLength());
+
+    if (outputPitchOrErr.isError())
+    {
+        context->handleError(outputPitchOrErr.getError());
+        return false;
+    }
+
+    CheckedNumeric<GLuint> checkedOutputPitch(outputPitchOrErr.getResult());
+    auto checkedRequiredSize = checkedOutputPitch * height;
+    if (!checkedRequiredSize.IsValid())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Unsigned multiplication overflow."));
+        return false;
+    }
+
     // sized query sanity check
-    int requiredSize = outputPitch * height;
-    if (requiredSize > bufSize)
+    if (checkedRequiredSize.ValueOrDie() > static_cast<GLuint>(bufSize))
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -2815,11 +2832,10 @@ bool ValidateMapBufferRangeBase(Context *context,
     }
 
     // Check for buffer overflow
-    size_t offsetSize = static_cast<size_t>(offset);
-    size_t lengthSize = static_cast<size_t>(length);
+    CheckedNumeric<size_t> checkedOffset(offset);
+    auto checkedSize = checkedOffset + length;
 
-    if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-        offsetSize + lengthSize > static_cast<size_t>(buffer->getSize()))
+    if (!checkedSize.IsValid() || checkedSize.ValueOrDie() > static_cast<size_t>(buffer->getSize()))
     {
         context->handleError(
             Error(GL_INVALID_VALUE, "Mapped range does not fit into buffer dimensions."));
@@ -2911,11 +2927,11 @@ bool ValidateFlushMappedBufferRangeBase(Context *context,
     }
 
     // Check for buffer overflow
-    size_t offsetSize = static_cast<size_t>(offset);
-    size_t lengthSize = static_cast<size_t>(length);
+    CheckedNumeric<size_t> checkedOffset(offset);
+    auto checkedSize = checkedOffset + length;
 
-    if (!rx::IsUnsignedAdditionSafe(offsetSize, lengthSize) ||
-        offsetSize + lengthSize > static_cast<size_t>(buffer->getMapLength()))
+    if (!checkedSize.IsValid() ||
+        checkedSize.ValueOrDie() > static_cast<size_t>(buffer->getMapLength()))
     {
         context->handleError(
             Error(GL_INVALID_VALUE, "Flushed range does not fit into buffer mapping dimensions."));

@@ -16,12 +16,12 @@ using namespace angle;
 namespace
 {
 
-const GLuint kWidth = 100;
+const GLuint kWidth  = 100;
 const GLuint kHeight = 100;
 
 class CHROMIUMFramebufferMixedSamplesTest : public ANGLETest
 {
-protected:
+  protected:
     enum SetupFBOType
     {
         MixedSampleFBO,   // 1 color sample, N stencil samples.
@@ -31,7 +31,7 @@ protected:
     bool isApplicable() const
     {
         return extensionEnabled("GL_CHROMIUM_framebuffer_mixed_samples") &&
-            extensionEnabled("GL_OES_rgb8_rgba8");
+               extensionEnabled("GL_OES_rgb8_rgba8");
     }
 
     void SetUp() override
@@ -55,7 +55,7 @@ protected:
         mProgram = CompileProgram(kVertexShaderSource, kFragmentShaderSource);
 
         GLuint position_loc = glGetAttribLocation(mProgram, "position");
-        mColorLoc = glGetUniformLocation(mProgram, "color");
+        mColorLoc           = glGetUniformLocation(mProgram, "color");
 
         glGenBuffers(1, &mVBO);
         glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -90,8 +90,8 @@ protected:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA,
-           GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     NULL);
         glBindTexture(GL_TEXTURE_2D, 0);
 
         glGenRenderbuffers(1, &mStencilRB);
@@ -103,11 +103,10 @@ protected:
             GLsizei num_samples = 8, max_samples = 0;
             glGetIntegerv(GL_MAX_SAMPLES, &max_samples);
             num_samples = std::min(num_samples, max_samples);
-            glRenderbufferStorageMultisampleANGLE(
-                GL_RENDERBUFFER, num_samples, GL_STENCIL_INDEX8, kWidth, kHeight);
+            glRenderbufferStorageMultisampleANGLE(GL_RENDERBUFFER, num_samples, GL_STENCIL_INDEX8,
+                                                  kWidth, kHeight);
             GLint param = 0;
-            glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES,
-                &param);
+            glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES, &param);
             EXPECT_GT(param, 1);
         }
         else
@@ -119,10 +118,10 @@ protected:
         glGenFramebuffers(1, &mSampleFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mSampleFBO);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-                              GL_RENDERBUFFER, mStencilRB);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  mStencilRB);
         EXPECT_EQ(static_cast<GLenum>(GL_FRAMEBUFFER_COMPLETE),
-            glCheckFramebufferStatus(GL_FRAMEBUFFER));
+                  glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
         glUseProgram(mProgram);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -159,7 +158,7 @@ protected:
     GLint mColorLoc;
 };
 
-} //
+}  //
 
 TEST_P(CHROMIUMFramebufferMixedSamplesTest, StateSettingTest)
 {
@@ -207,7 +206,7 @@ TEST_P(CHROMIUMFramebufferMixedSamplesTest, CoverageModulation)
     {
         return;
     }
-    static const float kBlue[] = {0.0f, 0.0f, 1.0f, 1.0f};
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 1.0f};
     static const float kGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
     std::unique_ptr<uint8_t[]> results[3];
     const GLint kResultSize = kWidth * kHeight * 4;
@@ -230,8 +229,7 @@ TEST_P(CHROMIUMFramebufferMixedSamplesTest, CoverageModulation)
         }
         results[pass].reset(new uint8_t[kResultSize]);
         memset(results[pass].get(), 123u, kResultSize);
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-            results[pass].get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
 
         cleanup();
     }
@@ -252,7 +250,7 @@ TEST_P(CHROMIUMFramebufferMixedSamplesTest, MultisampleStencilEffective)
         return;
     }
 
-    static const float kBlue[] = {0.0f, 0.0f, 1.0f, 1.0f};
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 1.0f};
     static const float kGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
 
     std::unique_ptr<uint8_t[]> results[3];
@@ -276,8 +274,7 @@ TEST_P(CHROMIUMFramebufferMixedSamplesTest, MultisampleStencilEffective)
 
         results[pass].reset(new uint8_t[kResultSize]);
         memset(results[pass].get(), 12u, kResultSize);
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-           results[pass].get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
 
         cleanup();
     }
@@ -288,5 +285,7 @@ TEST_P(CHROMIUMFramebufferMixedSamplesTest, MultisampleStencilEffective)
     EXPECT_EQ(0, memcmp(results[0].get(), results[2].get(), kResultSize));
 }
 
-
-ANGLE_INSTANTIATE_TEST(CHROMIUMFramebufferMixedSamplesTest, ES2_OPENGL(), ES2_OPENGLES(), ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(CHROMIUMFramebufferMixedSamplesTest,
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES3_OPENGL());

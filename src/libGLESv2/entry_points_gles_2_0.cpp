@@ -7,6 +7,7 @@
 // entry_points_gles_2_0.cpp : Implements the GLES 2.0 entry points.
 
 #include "libGLESv2/entry_points_gles_2_0.h"
+
 #include "libGLESv2/global_state.h"
 
 #include "libANGLE/formatutils.h"
@@ -515,7 +516,9 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
         }
 
         // Check for possible overflow of size + offset
-        if (!rx::IsUnsignedAdditionSafe<size_t>(size, offset))
+        angle::CheckedNumeric<size_t> checkedSize(size);
+        checkedSize += offset;
+        if (!checkedSize.IsValid())
         {
             context->handleError(Error(GL_OUT_OF_MEMORY));
             return;

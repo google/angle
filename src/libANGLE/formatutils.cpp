@@ -11,6 +11,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 
+using namespace angle;
+
 namespace gl
 {
 
@@ -677,28 +679,36 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat)
     }
 }
 
-GLuint InternalFormat::computeRowPitch(GLenum formatType, GLsizei width, GLint alignment, GLint rowLength) const
+gl::ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
+                                                          GLsizei width,
+                                                          GLint alignment,
+                                                          GLint rowLength) const
 {
     ASSERT(alignment > 0 && isPow2(alignment));
     GLuint rowBytes;
     if (rowLength > 0)
     {
         ASSERT(!compressed);
-        rowBytes = pixelBytes * rowLength;
+        CheckedNumeric<GLuint> checkedBytes(pixelBytes);
+        checkedBytes *= rowLength;
+        ANGLE_TRY_CHECKED_MATH(checkedBytes);
+        rowBytes = checkedBytes.ValueOrDie();
     }
     else
     {
-        rowBytes = computeBlockSize(formatType, width, 1);
+        ANGLE_TRY_RESULT(computeBlockSize(formatType, width, 1), rowBytes);
     }
-    return rx::roundUp(rowBytes, static_cast<GLuint>(alignment));
+    auto checkedResult = rx::CheckedRoundUp(rowBytes, static_cast<GLuint>(alignment));
+    ANGLE_TRY_CHECKED_MATH(checkedResult);
+    return checkedResult.ValueOrDie();
 }
 
-GLuint InternalFormat::computeDepthPitch(GLenum formatType,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLint alignment,
-                                         GLint rowLength,
-                                         GLint imageHeight) const
+gl::ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
+                                                            GLsizei width,
+                                                            GLsizei height,
+                                                            GLint alignment,
+                                                            GLint rowLength,
+                                                            GLint imageHeight) const
 {
     GLuint rows;
     if (imageHeight > 0)
@@ -709,29 +719,37 @@ GLuint InternalFormat::computeDepthPitch(GLenum formatType,
     {
         rows = height;
     }
-    return computeRowPitch(formatType, width, alignment, rowLength) * rows;
+    GLuint rowPitch = 0;
+    ANGLE_TRY_RESULT(computeRowPitch(formatType, width, alignment, rowLength), rowPitch);
+
+    CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
+    auto depthPitch = checkedRowPitch * rows;
+    ANGLE_TRY_CHECKED_MATH(depthPitch);
+    return depthPitch.ValueOrDie();
 }
 
-GLuint InternalFormat::computeBlockSize(GLenum formatType, GLsizei width, GLsizei height) const
+gl::ErrorOrResult<GLuint> InternalFormat::computeBlockSize(GLenum formatType,
+                                                           GLsizei width,
+                                                           GLsizei height) const
 {
+    CheckedNumeric<GLuint> checkedWidth(width);
+    CheckedNumeric<GLuint> checkedHeight(height);
+
     if (compressed)
     {
-        GLsizei numBlocksWide = (width + compressedBlockWidth - 1) / compressedBlockWidth;
-        GLsizei numBlocksHight = (height + compressedBlockHeight - 1) / compressedBlockHeight;
-        return (pixelBytes * numBlocksWide * numBlocksHight);
+        auto numBlocksWide = (checkedWidth + compressedBlockWidth - 1u) / compressedBlockWidth;
+        auto numBlocksHigh = (checkedHeight + compressedBlockHeight - 1u) / compressedBlockHeight;
+        auto bytes         = numBlocksWide * numBlocksHigh * pixelBytes;
+        ANGLE_TRY_CHECKED_MATH(bytes);
+        return bytes.ValueOrDie();
     }
-    else
-    {
-        const Type &typeInfo = GetTypeInfo(formatType);
-        if (typeInfo.specialInterpretation)
-        {
-            return typeInfo.bytes * width * height;
-        }
-        else
-        {
-            return componentCount * typeInfo.bytes * width * height;
-        }
-    }
+
+    const Type &typeInfo = GetTypeInfo(formatType);
+    GLuint components    = typeInfo.specialInterpretation ? 1u : componentCount;
+
+    auto result = checkedWidth * checkedHeight * components * typeInfo.bytes;
+    ANGLE_TRY_CHECKED_MATH(result);
+    return result.ValueOrDie();
 }
 
 GLuint InternalFormat::computeSkipPixels(GLint rowPitch,

@@ -67,6 +67,7 @@
             [
                 '.',
                 '../include',
+                'common/third_party/numerics',
             ],
             'dependencies':
             [
@@ -76,8 +77,9 @@
             {
                 'include_dirs':
                 [
-                    '<(angle_path)/src',
                     '<(angle_path)/include',
+                    '<(angle_path)/src',
+                    '<(angle_path)/src/common/third_party/numerics',
                 ],
                 'conditions':
                 [

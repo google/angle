@@ -188,7 +188,7 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
                                          GLint location,
                                          const GLchar *name);
 
-bool ValidateCoverageModulationCHROMIUM(Context* context, GLenum components);
+bool ValidateCoverageModulationCHROMIUM(Context *context, GLenum components);
 
 }  // namespace gl
 

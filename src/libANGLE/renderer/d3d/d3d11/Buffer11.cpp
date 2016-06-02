@@ -503,7 +503,7 @@ void Buffer11::updateSystemMemoryDeallocThreshold()
     {
         mSystemMemoryDeallocThreshold = 8;
     }
-    else if (IsUnsignedMultiplicationSafe(mSystemMemoryDeallocThreshold, 2u))
+    else if (mSystemMemoryDeallocThreshold < std::numeric_limits<unsigned int>::max() / 2u)
     {
         mSystemMemoryDeallocThreshold *= 2u;
     }

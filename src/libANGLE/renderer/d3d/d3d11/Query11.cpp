@@ -7,11 +7,12 @@
 // Query11.cpp: Defines the rx::Query11 class which implements rx::QueryImpl.
 
 #include "libANGLE/renderer/d3d/d3d11/Query11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "common/utilities.h"
 
 #include <GLES2/gl2ext.h>
+
+#include "common/utilities.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace
 {
@@ -341,9 +342,14 @@ gl::Error Query11::testQuery(QueryState *queryState)
                         }
                         static_assert(sizeof(UINT64) == sizeof(unsigned long long),
                                       "D3D UINT64 isn't 64 bits");
-                        if (rx::IsUnsignedMultiplicationSafe(endTime - beginTime, 1000000000ull))
+
+                        angle::CheckedNumeric<UINT64> checkedTime(endTime);
+                        checkedTime -= beginTime;
+                        checkedTime *= 1000000000ull;
+                        checkedTime /= timeStats.Frequency;
+                        if (checkedTime.IsValid())
                         {
-                            mResult = ((endTime - beginTime) * 1000000000ull) / timeStats.Frequency;
+                            mResult = checkedTime.ValueOrDie();
                         }
                         else
                         {

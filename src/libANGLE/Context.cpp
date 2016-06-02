@@ -1671,7 +1671,6 @@ void Context::setCoverageModulation(GLenum components)
     mState.setCoverageModulation(components);
 }
 
-
 void Context::handleError(const Error &error)
 {
     if (error.isError())

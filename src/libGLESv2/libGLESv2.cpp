@@ -1572,5 +1572,4 @@ void GL_APIENTRY glCoverageModulationCHROMIUM(GLenum components)
 {
     return gl::CoverageModulationCHROMIUM(components);
 }
-
 }

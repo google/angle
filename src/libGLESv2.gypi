@@ -25,6 +25,11 @@
             'common/platform.h',
             'common/string_utils.cpp',
             'common/string_utils.h',
+            'common/third_party/numerics/base/logging.h',
+            'common/third_party/numerics/base/numerics/safe_conversions.h',
+            'common/third_party/numerics/base/numerics/safe_conversions_impl.h',
+            'common/third_party/numerics/base/numerics/safe_math.h',
+            'common/third_party/numerics/base/numerics/safe_math_impl.h',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',
@@ -631,6 +636,10 @@
             'defines':
             [
                 'LIBANGLE_IMPLEMENTATION',
+            ],
+            'export_dependent_settings':
+            [
+                'angle_common',
             ],
             'direct_dependent_settings':
             {

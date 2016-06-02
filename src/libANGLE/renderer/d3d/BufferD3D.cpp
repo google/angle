@@ -120,7 +120,7 @@ StaticVertexBufferInterface *BufferD3D::getStaticVertexBuffer(const gl::VertexAt
     }
 
     // Cache size limiting: Clean-up threshold is four times the base buffer size, with a minimum.
-    ASSERT(IsUnsignedMultiplicationSafe(getSize(), static_cast<size_t>(4u)));
+    ASSERT(getSize() < std::numeric_limits<size_t>::max() / 4u);
     size_t sizeThreshold = std::max(getSize() * 4u, static_cast<size_t>(0x1000u));
 
     // If we're past the threshold, clear the buffer cache. Note that this will release buffers

@@ -1830,9 +1830,14 @@ bool ValidateCompressedTexImage2D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
-    if (imageSize < 0 ||
-        static_cast<GLuint>(imageSize) !=
-            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    auto blockSizeOrErr              = formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height);
+    if (blockSizeOrErr.isError())
+    {
+        context->handleError(blockSizeOrErr.getError());
+        return false;
+    }
+
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
     {
         context->handleError(Error(GL_INVALID_VALUE));
         return false;
@@ -1872,9 +1877,14 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetInternalFormatInfo(format);
-    if (imageSize < 0 ||
-        static_cast<GLuint>(imageSize) !=
-            formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height))
+    auto blockSizeOrErr              = formatInfo.computeBlockSize(GL_UNSIGNED_BYTE, width, height);
+    if (blockSizeOrErr.isError())
+    {
+        context->handleError(blockSizeOrErr.getError());
+        return false;
+    }
+
+    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSizeOrErr.getResult())
     {
         context->handleError(Error(GL_INVALID_VALUE));
         return false;
@@ -2057,7 +2067,7 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
     return true;
 }
 
-bool ValidateCoverageModulationCHROMIUM(Context* context, GLenum components)
+bool ValidateCoverageModulationCHROMIUM(Context *context, GLenum components)
 {
     if (!context->getExtensions().framebufferMixedSamples)
     {
@@ -2074,7 +2084,8 @@ bool ValidateCoverageModulationCHROMIUM(Context* context, GLenum components)
             break;
         default:
             context->handleError(
-                Error(GL_INVALID_ENUM, "GLenum components is not one of GL_RGB, GL_RGBA, GL_ALPHA or GL_NONE."));
+                Error(GL_INVALID_ENUM,
+                      "GLenum components is not one of GL_RGB, GL_RGBA, GL_ALPHA or GL_NONE."));
             return false;
     }
 
