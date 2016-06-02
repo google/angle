@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9c5ddcd_cb85496d",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-02T18:47:23Z",
+      "side": 1,
+      "message": "Can you rename this to computeDataSize?",
+      "range": {
+        "startLine": 47,
+        "startChar": 30,
+        "endLine": 47,
+        "endChar": 46
+      },
+      "revId": "1a1b5f434fcc6748806852094de7b1edfcb712cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
