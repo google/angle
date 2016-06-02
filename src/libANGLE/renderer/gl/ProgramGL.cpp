@@ -230,7 +230,7 @@ void ProgramGL::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 void ProgramGL::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
     mStateManager->useProgram(mProgramID);
-    mFunctions->uniform1uiv(location, count, v);
+    mFunctions->uniform1uiv(uniLoc(location), count, v);
 }
 
 void ProgramGL::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
