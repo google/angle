@@ -71,7 +71,10 @@
     * Close the text editor.
     * Use `git commit --amend` to update your CL with new changes.
     * Use `git cl format` to amend the style of your CL. This saves both your time and the reviewers'!
- 2. Upload the change list
+ 2. Ensure your code is landed on top of latest changes
+    * `git pull --rebase`
+    * Resolve conflicts if necessary
+ 3. Upload the change list
     * `git cl upload`
     * The change list and modified files will be uploaded to
       [ANGLE Gerrit](https://chromium-review.googlesource.com/#/q/project:angle/angle).
@@ -81,12 +84,15 @@
       * If you don't know who to use, select either `geofflang at chromium dot org` or `jmadill at chromium dot org`.
     * Make changes, upload and repeat as necessary.
     * Project members and others will review your code as described in the [CodeReviewProcess](CodeReviewProcess.md).
- 3. If your change list needs revision:
+ 5. If your change list needs revision:
     * If you have correctly installed the commit hook from the section above, Gerrit will be able to track your changes by Change-Id.
     * You should need only to update your commit with `git commit --amend` and re-upload with `git cl upload`.
-4. Once your code is reviewed:
+ 6. Landing change after it receives +2 Code Review:
     * If you are a committer, you may submit the change yourself via the Gerrit web interface.
     * If you are not a committer, ask your reviewer to submit the change list.
+ 7. Pull and integrate reviewed CL:
+    * `git pull --rebase`
+
 
 See also:
 
