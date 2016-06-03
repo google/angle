@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86be3e8f_e39c0e71",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "nit: we have an UNREACHABLE macro for this",
+      "range": {
+        "startLine": 1438,
+        "startChar": 5,
+        "endLine": 1440,
+        "endChar": 40
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_c3a30aa8",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "I\u0027d just store these in an std::array.  We don\u0027t need to worry about allocating 32 extra floats per context.",
+      "range": {
+        "startLine": 475,
+        "startChar": 4,
+        "endLine": 476,
+        "endChar": 37
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_23aa267c",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "nit: add a comment (and below) that we\u0027re only loading entry points for this extension that are relevant to the path rendering extension.",
+      "range": {
+        "startLine": 843,
+        "startChar": 4,
+        "endLine": 843,
+        "endChar": 30
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_43af1a8b",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "I would just load everything that the extension exposes.",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 27
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_588e2947",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "nit: error messages missing (and a couple below).  These will be important soon because they will be displayed in chrome\u0027s log.",
+      "range": {
+        "startLine": 2297,
+        "startChar": 43,
+        "endLine": 2297,
+        "endChar": 59
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_388d7546",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2333,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "nit: perform this clamping the the path object, not the validation layer.",
+      "range": {
+        "startLine": 2333,
+        "startChar": 20,
+        "endLine": 2333,
+        "endChar": 45
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_f87efd01",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2348,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T14:55:29Z",
+      "side": 1,
+      "message": "nit: some of these lines are long, git cl format needed?",
+      "range": {
+        "startLine": 2348,
+        "startChar": 8,
+        "endLine": 2348,
+        "endChar": 106
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
