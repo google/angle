@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "461a8604_7a57d549",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T18:54:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6bb429f_8ac3eb9d",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6bb429f_aac02f91",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "461a8604_fac5251f",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T18:54:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6bb429f_aac02f91",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6bb429f_0a3b7b86",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2016-06-03T14:34:48Z",
       "side": 1,
       "message": "nit: could factor the static cast.",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "461a8604_dae701bb",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T18:54:33Z",
+      "side": 1,
+      "message": "I actually had this in a prior iteration, and removed it because it\u0027s a ?: statement with two potentially different types (GLint and GLsizei). Yes I am very detail oriented.",
+      "parentUuid": "a6bb429f_0a3b7b86",
       "revId": "89ac36ee7026f06c789d3490401e725763505279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
