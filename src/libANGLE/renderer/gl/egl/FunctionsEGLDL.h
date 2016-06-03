@@ -28,10 +28,10 @@ class FunctionsEGLDL : public FunctionsEGL
 {
   public:
     FunctionsEGLDL();
-    virtual ~FunctionsEGLDL();
+    ~FunctionsEGLDL() override;
 
     egl::Error initialize(EGLNativeDisplayType nativeDisplay, const char *libName);
-    virtual void *getProcAddress(const char *name) const override;
+    void *getProcAddress(const char *name) const override;
 
   private:
     PFNEGLGETPROCADDRESSPROC mGetProcAddressPtr;

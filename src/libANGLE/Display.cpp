@@ -46,6 +46,8 @@
 #       include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 #   elif defined(ANGLE_USE_OZONE)
 #       include "libANGLE/renderer/gl/egl/ozone/DisplayOzone.h"
+#   elif defined(ANGLE_PLATFORM_ANDROID)
+#       include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
 #   else
 #       error Unsupported OpenGL platform.
 #   endif
@@ -150,6 +152,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
         impl = new rx::DisplayCGL();
 #elif defined(ANGLE_USE_OZONE)
         impl = new rx::DisplayOzone();
+#elif defined(ANGLE_PLATFORM_ANDROID)
+        impl = new rx::DisplayAndroid();
 #else
         // No display available
         UNREACHABLE();
@@ -177,6 +181,9 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
 #elif defined(ANGLE_USE_OZONE)
         // This might work but has never been tried, so disallow for now.
         impl = nullptr;
+#elif defined(ANGLE_PLATFORM_ANDROID)
+        // No GL support on this platform, fail display creation.
+        impl = nullptr;
 #else
 #error Unsupported OpenGL platform.
 #endif
@@ -188,16 +195,18 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
 #if defined(ANGLE_ENABLE_OPENGL)
       case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
 #if defined(ANGLE_PLATFORM_WINDOWS)
-          impl = new rx::DisplayWGL();
+        impl = new rx::DisplayWGL();
 #elif defined(ANGLE_USE_X11)
-          impl = new rx::DisplayGLX();
+        impl = new rx::DisplayGLX();
 #elif defined(ANGLE_USE_OZONE)
-          impl = new rx::DisplayOzone();
+        impl = new rx::DisplayOzone();
+#elif defined(ANGLE_PLATFORM_ANDROID)
+        impl = new rx::DisplayAndroid();
 #else
-          // No GLES support on this platform, fail display creation.
-          impl = nullptr;
+        // No GLES support on this platform, fail display creation.
+        impl = nullptr;
 #endif
-          break;
+        break;
 #endif
 
       default:

@@ -38,6 +38,10 @@ VendorID GetVendorID(const FunctionsGL *functions)
     {
         return VENDOR_ID_AMD;
     }
+    else if (nativeVendorString.find("Qualcomm") != std::string::npos)
+    {
+        return VENDOR_ID_QUALCOMM;
+    }
     else
     {
         return VENDOR_ID_UNKNOWN;

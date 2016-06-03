@@ -40,6 +40,19 @@ bool AttributeMap::isEmpty() const
     return mAttributes.empty();
 }
 
+std::vector<EGLint> AttributeMap::toIntVector() const
+{
+    std::vector<EGLint> ret;
+    for (const auto &pair : mAttributes)
+    {
+        ret.push_back(pair.first);
+        ret.push_back(pair.second);
+    }
+    ret.push_back(EGL_NONE);
+
+    return ret;
+}
+
 AttributeMap::const_iterator AttributeMap::begin() const
 {
     return mAttributes.begin();

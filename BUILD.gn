@@ -333,6 +333,16 @@ static_library("libANGLE") {
         "QuartzCore.framework",
       ]
     }
+    if (is_android) {
+      sources += rebase_path(gles_gypi.libangle_gl_egl_sources, ".", "src")
+      sources += rebase_path(gles_gypi.libangle_gl_egl_dl_sources, ".", "src")
+      sources +=
+          rebase_path(gles_gypi.libangle_gl_egl_android_sources, ".", "src")
+      libs += [
+        "android",
+        "log",
+      ]
+    }
   }
 
   if (angle_enable_vulkan) {
@@ -441,6 +451,17 @@ static_library("angle_util") {
 
   if (use_x11) {
     sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
+  }
+
+  if (is_android) {
+    # To prevent linux sources filtering on android
+    set_sources_assignment_filter([])
+    sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
+    sources += rebase_path(util_gypi.util_android_sources, ".", "util")
+    libs = [
+      "android",
+      "log",
+    ]
   }
 
   defines = [

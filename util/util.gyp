@@ -83,6 +83,13 @@
             'osx/OSXWindow.h',
             'posix/Posix_system_utils.cpp',
         ],
+        'util_android_sources':
+        [
+            'android/AndroidWindow.cpp',
+            'android/AndroidWindow.h',
+            'android/third_party/android_native_app_glue.c',
+            'android/third_party/android_native_app_glue.h',
+        ],
     },
     'targets':
     [

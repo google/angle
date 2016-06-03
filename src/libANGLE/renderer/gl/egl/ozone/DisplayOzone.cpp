@@ -26,6 +26,7 @@
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
 #include "libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h"
 #include "platform/Platform.h"
 
@@ -325,14 +326,11 @@ void DisplayOzone::Buffer::present()
 }
 
 DisplayOzone::DisplayOzone()
-    : mContextConfig(nullptr),
-      mContext(nullptr),
+    : DisplayEGL(),
       mSwapControl(SwapControl::ABSENT),
       mMinSwapInterval(0),
       mMaxSwapInterval(0),
       mCurrentSwapInterval(-1),
-      mEGL(nullptr),
-      mFunctionsGL(nullptr),
       mGBM(nullptr),
       mConnector(nullptr),
       mMode(nullptr),
@@ -446,12 +444,9 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     // couldn't use LD_LIBRARY_PATH which is often useful during development.  Instead we take
     // advantage of the fact that the system lib is available under multiple names (for example
     // with a .1 suffix) while Angle only installs libEGL.so.
-    mEGL              = new FunctionsEGLDL();
-    egl::Error result = mEGL->initialize(display->getNativeDisplayId(), "libEGL.so.1");
-    if (result.isError())
-    {
-        return result;
-    }
+    FunctionsEGLDL *egl = new FunctionsEGLDL();
+    mEGL = egl;
+    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), "libEGL.so.1"));
 
     const char *necessaryExtensions[] = {
         "EGL_KHR_image_base", "EGL_EXT_image_dma_buf_import", "EGL_KHR_surfaceless_context",
@@ -466,7 +461,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
 
     if (mEGL->hasExtension("EGL_MESA_configless_context"))
     {
-        mContextConfig = EGL_NO_CONFIG_MESA;
+        mConfig = EGL_NO_CONFIG_MESA;
     }
     else
     {
@@ -489,14 +484,10 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
         {
             return egl::Error(EGL_NOT_INITIALIZED, "Could not get EGL config.");
         }
-        mContextConfig = config[0];
+        mConfig = config[0];
     }
 
-    mContext = initializeContext(mContextConfig, display->getAttributeMap());
-    if (mContext == EGL_NO_CONTEXT)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not create GLES context.");
-    }
+    ANGLE_TRY(initializeContext(display->getAttributeMap()));
 
     if (!mEGL->makeCurrent(EGL_NO_SURFACE, mContext))
     {
@@ -883,46 +874,6 @@ egl::Error DisplayOzone::getDevice(DeviceImpl **device)
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
-EGLContext DisplayOzone::initializeContext(EGLConfig config, const egl::AttributeMap &eglAttributes)
-{
-    if (!(mEGL->majorVersion > 1 || mEGL->minorVersion > 4 ||
-          mEGL->hasExtension("EGL_KHR_create_context")))
-    {
-        const EGLint attrib[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-        return mEGL->createContext(config, EGL_NO_CONTEXT, attrib);
-    }
-
-    std::vector<gl::Version> versions;
-
-    EGLint major = eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
-    EGLint minor = eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE);
-    if (major != EGL_DONT_CARE && minor != EGL_DONT_CARE)
-    {
-        // If specific version requested, only try that one.
-        versions.push_back(gl::Version(major, minor));
-    }
-    else
-    {
-        // Acceptable versions, from most to least preferred.
-        versions.push_back(gl::Version(3, 0));
-        versions.push_back(gl::Version(2, 0));
-    }
-
-    for (auto &version : versions)
-    {
-        const EGLint attrib[] = {EGL_CONTEXT_MAJOR_VERSION_KHR, UnsignedToSigned(version.major),
-                                 EGL_CONTEXT_MINOR_VERSION_KHR, UnsignedToSigned(version.minor),
-                                 EGL_NONE};
-        auto context = mEGL->createContext(config, EGL_NO_CONTEXT, attrib);
-        if (context != EGL_NO_CONTEXT)
-        {
-            return context;
-        }
-    }
-
-    return EGL_NO_CONTEXT;
-}
-
 egl::ConfigSet DisplayOzone::generateConfigs()
 {
     egl::ConfigSet configs;
@@ -963,11 +914,6 @@ bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
     return true;
 }
 
-std::string DisplayOzone::getVendorString() const
-{
-    return "";
-}
-
 egl::Error DisplayOzone::getDriverVersion(std::string *version) const
 {
     *version = "";
@@ -991,20 +937,6 @@ egl::Error DisplayOzone::waitNative(EGLint engine,
 void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
 {
     ASSERT(data != nullptr);
-}
-
-const FunctionsGL *DisplayOzone::getFunctionsGL() const
-{
-    return mFunctionsGL;
-}
-
-void DisplayOzone::generateExtensions(egl::DisplayExtensions *outExtensions) const
-{
-}
-
-void DisplayOzone::generateCaps(egl::Caps *outCaps) const
-{
-    outCaps->textureNPOT = true;
 }
 
 }  // namespace rx

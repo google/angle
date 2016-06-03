@@ -513,9 +513,17 @@
         ],
         'libangle_gl_egl_sources':
         [
+            'libANGLE/renderer/gl/egl/DisplayEGL.cpp',
+            'libANGLE/renderer/gl/egl/DisplayEGL.h',
             'libANGLE/renderer/gl/egl/FunctionsEGL.cpp',
             'libANGLE/renderer/gl/egl/FunctionsEGL.h',
             'libANGLE/renderer/gl/egl/functionsegl_typedefs.h',
+            'libANGLE/renderer/gl/egl/PbufferSurfaceEGL.cpp',
+            'libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h',
+            'libANGLE/renderer/gl/egl/SurfaceEGL.cpp',
+            'libANGLE/renderer/gl/egl/SurfaceEGL.h',
+            'libANGLE/renderer/gl/egl/WindowSurfaceEGL.cpp',
+            'libANGLE/renderer/gl/egl/WindowSurfaceEGL.h',
         ],
         'libangle_gl_egl_dl_sources':
         [
@@ -528,6 +536,11 @@
             'libANGLE/renderer/gl/egl/ozone/DisplayOzone.h',
             'libANGLE/renderer/gl/egl/ozone/SurfaceOzone.cpp',
             'libANGLE/renderer/gl/egl/ozone/SurfaceOzone.h',
+        ],
+        'libangle_gl_egl_android_sources':
+        [
+            'libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp',
+            'libANGLE/renderer/gl/egl/android/DisplayAndroid.h',
         ],
         'libangle_gl_cgl_sources':
         [

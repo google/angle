@@ -32,7 +32,7 @@ DynamicLib::~DynamicLib()
 // TODO(fjhenigman) File a bug and put a link here.
 DynamicLib FunctionsEGLDL::sNativeLib;
 
-FunctionsEGLDL::FunctionsEGLDL()
+FunctionsEGLDL::FunctionsEGLDL() : mGetProcAddressPtr(nullptr)
 {
 }
 

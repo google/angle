@@ -40,7 +40,7 @@ test("angle_unittests") {
   ]
 }
 
-if (is_win || is_linux || is_mac) {
+if (is_win || is_linux || is_mac || is_android) {
   end2end_gypi = exec_script("//build/gypi_to_gn.py",
                              [
                                rebase_path("angle_end2end_tests.gypi"),
@@ -55,6 +55,10 @@ if (is_win || is_linux || is_mac) {
       "../../src/tests",
       "../../util",
     ]
+
+    if (is_android) {
+      use_native_activity = true
+    }
 
     sources =
         rebase_path(end2end_gypi.angle_end2end_tests_sources, ".", "../..")

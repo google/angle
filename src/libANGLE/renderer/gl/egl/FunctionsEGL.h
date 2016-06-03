@@ -31,26 +31,38 @@ class FunctionsEGL
     int majorVersion;
     int minorVersion;
 
-    virtual egl::Error initialize(EGLNativeDisplayType nativeDisplay);
-    virtual egl::Error terminate();
+    egl::Error initialize(EGLNativeDisplayType nativeDisplay);
+    egl::Error terminate();
 
     virtual void *getProcAddress(const char *name) const = 0;
 
     FunctionsGL *makeFunctionsGL() const;
     bool hasExtension(const char *extension) const;
     EGLDisplay getDisplay() const;
+    EGLint getError() const;
 
     EGLBoolean chooseConfig(EGLint const *attrib_list,
                             EGLConfig *configs,
                             EGLint config_size,
-                            EGLint *num_config);
-    EGLBoolean getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
+                            EGLint *num_config) const;
+    EGLBoolean getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value) const;
     EGLContext createContext(EGLConfig config,
                              EGLContext share_context,
                              EGLint const *attrib_list) const;
+    EGLSurface createPbufferSurface(EGLConfig config, const EGLint *attrib_list) const;
+    EGLSurface createWindowSurface(EGLConfig config,
+                                   EGLNativeWindowType win,
+                                   const EGLint *attrib_list) const;
     EGLBoolean destroyContext(EGLContext context) const;
+    EGLBoolean destroySurface(EGLSurface surface) const;
     EGLBoolean makeCurrent(EGLSurface surface, EGLContext context) const;
     const char *queryString(EGLint name) const;
+    EGLBoolean querySurface(EGLSurface surface, EGLint attribute, EGLint *value) const;
+    EGLBoolean swapBuffers(EGLSurface surface) const;
+
+    EGLBoolean bindTexImage(EGLSurface surface, EGLint buffer) const;
+    EGLBoolean releaseTexImage(EGLSurface surface, EGLint buffer) const;
+    EGLBoolean swapInterval(EGLint interval) const;
 
     EGLImageKHR createImageKHR(EGLContext context,
                                EGLenum target,

@@ -38,14 +38,23 @@ struct FunctionsEGL::EGLDispatchTable
         : bindAPIPtr(nullptr),
           chooseConfigPtr(nullptr),
           createContextPtr(nullptr),
+          createPbufferSurfacePtr(nullptr),
+          createWindowSurfacePtr(nullptr),
           destroyContextPtr(nullptr),
+          destroySurfacePtr(nullptr),
           getConfigAttribPtr(nullptr),
           getDisplayPtr(nullptr),
           getErrorPtr(nullptr),
           initializePtr(nullptr),
           makeCurrentPtr(nullptr),
           queryStringPtr(nullptr),
+          querySurfacePtr(nullptr),
+          swapBuffersPtr(nullptr),
           terminatePtr(nullptr),
+
+          bindTexImagePtr(nullptr),
+          releaseTexImagePtr(nullptr),
+          swapIntervalPtr(nullptr),
 
           createImageKHRPtr(nullptr),
           destroyImageKHRPtr(nullptr),
@@ -57,17 +66,28 @@ struct FunctionsEGL::EGLDispatchTable
     {
     }
 
+    // 1.0
     PFNEGLBINDAPIPROC bindAPIPtr;
     PFNEGLCHOOSECONFIGPROC chooseConfigPtr;
     PFNEGLCREATECONTEXTPROC createContextPtr;
+    PFNEGLCREATEPBUFFERSURFACEPROC createPbufferSurfacePtr;
+    PFNEGLCREATEWINDOWSURFACEPROC createWindowSurfacePtr;
     PFNEGLDESTROYCONTEXTPROC destroyContextPtr;
+    PFNEGLDESTROYSURFACEPROC destroySurfacePtr;
     PFNEGLGETCONFIGATTRIBPROC getConfigAttribPtr;
     PFNEGLGETDISPLAYPROC getDisplayPtr;
     PFNEGLGETERRORPROC getErrorPtr;
     PFNEGLINITIALIZEPROC initializePtr;
     PFNEGLMAKECURRENTPROC makeCurrentPtr;
     PFNEGLQUERYSTRINGPROC queryStringPtr;
+    PFNEGLQUERYSURFACEPROC querySurfacePtr;
+    PFNEGLSWAPBUFFERSPROC swapBuffersPtr;
     PFNEGLTERMINATEPROC terminatePtr;
+
+    // 1.1
+    PFNEGLBINDTEXIMAGEPROC bindTexImagePtr;
+    PFNEGLRELEASETEXIMAGEPROC releaseTexImagePtr;
+    PFNEGLSWAPINTERVALPROC swapIntervalPtr;
 
     // EGL_KHR_image
     PFNEGLCREATEIMAGEKHRPROC createImageKHRPtr;
@@ -101,19 +121,28 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->bindAPIPtr, eglBindAPI);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->chooseConfigPtr, eglChooseConfig);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->createContextPtr, eglCreateContext);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->createPbufferSurfacePtr, eglCreatePbufferSurface);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->createWindowSurfacePtr, eglCreateWindowSurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroyContextPtr, eglDestroyContext);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroySurfacePtr, eglDestroySurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getConfigAttribPtr, eglGetConfigAttrib);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getDisplayPtr, eglGetDisplay);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getErrorPtr, eglGetError);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->initializePtr, eglInitialize);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->makeCurrentPtr, eglMakeCurrent);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->queryStringPtr, eglQueryString);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->querySurfacePtr, eglQuerySurface);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->swapBuffersPtr, eglSwapBuffers);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->terminatePtr, eglTerminate);
+
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->bindTexImagePtr, eglBindTexImage);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->releaseTexImagePtr, eglReleaseTexImage);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->swapIntervalPtr, eglSwapInterval);
 
     mEGLDisplay = mFnPtrs->getDisplayPtr(nativeDisplay);
     if (mEGLDisplay == EGL_NO_DISPLAY)
     {
-        return egl::Error(mFnPtrs->getErrorPtr(), "Failed to get system egl display");
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to get system egl display");
     }
     if (mFnPtrs->initializePtr(mEGLDisplay, &majorVersion, &minorVersion) != EGL_TRUE)
     {
@@ -194,15 +223,20 @@ EGLDisplay FunctionsEGL::getDisplay() const
     return mEGLDisplay;
 }
 
+EGLint FunctionsEGL::getError() const
+{
+    return mFnPtrs->getErrorPtr();
+}
+
 EGLBoolean FunctionsEGL::chooseConfig(EGLint const *attribList,
                                       EGLConfig *configs,
                                       EGLint configSize,
-                                      EGLint *numConfig)
+                                      EGLint *numConfig) const
 {
     return mFnPtrs->chooseConfigPtr(mEGLDisplay, attribList, configs, configSize, numConfig);
 }
 
-EGLBoolean FunctionsEGL::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
+EGLBoolean FunctionsEGL::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value) const
 {
     return mFnPtrs->getConfigAttribPtr(mEGLDisplay, config, attribute, value);
 }
@@ -214,9 +248,26 @@ EGLContext FunctionsEGL::createContext(EGLConfig config,
     return mFnPtrs->createContextPtr(mEGLDisplay, config, share_context, attrib_list);
 }
 
+EGLSurface FunctionsEGL::createPbufferSurface(EGLConfig config, const EGLint *attrib_list) const
+{
+    return mFnPtrs->createPbufferSurfacePtr(mEGLDisplay, config, attrib_list);
+}
+
+EGLSurface FunctionsEGL::createWindowSurface(EGLConfig config,
+                                             EGLNativeWindowType win,
+                                             const EGLint *attrib_list) const
+{
+    return mFnPtrs->createWindowSurfacePtr(mEGLDisplay, config, win, attrib_list);
+}
+
 EGLBoolean FunctionsEGL::destroyContext(EGLContext context) const
 {
     return mFnPtrs->destroyContextPtr(mEGLDisplay, context);
+}
+
+EGLBoolean FunctionsEGL::destroySurface(EGLSurface surface) const
+{
+    return mFnPtrs->destroySurfacePtr(mEGLDisplay, surface);
 }
 
 EGLBoolean FunctionsEGL::makeCurrent(EGLSurface surface, EGLContext context) const
@@ -227,6 +278,31 @@ EGLBoolean FunctionsEGL::makeCurrent(EGLSurface surface, EGLContext context) con
 char const *FunctionsEGL::queryString(EGLint name) const
 {
     return mFnPtrs->queryStringPtr(mEGLDisplay, name);
+}
+
+EGLBoolean FunctionsEGL::querySurface(EGLSurface surface, EGLint attribute, EGLint *value) const
+{
+    return mFnPtrs->querySurfacePtr(mEGLDisplay, surface, attribute, value);
+}
+
+EGLBoolean FunctionsEGL::swapBuffers(EGLSurface surface) const
+{
+    return mFnPtrs->swapBuffersPtr(mEGLDisplay, surface);
+}
+
+EGLBoolean FunctionsEGL::bindTexImage(EGLSurface surface, EGLint buffer) const
+{
+    return mFnPtrs->bindTexImagePtr(mEGLDisplay, surface, buffer);
+}
+
+EGLBoolean FunctionsEGL::releaseTexImage(EGLSurface surface, EGLint buffer) const
+{
+    return mFnPtrs->releaseTexImagePtr(mEGLDisplay, surface, buffer);
+}
+
+EGLBoolean FunctionsEGL::swapInterval(EGLint interval) const
+{
+    return mFnPtrs->swapIntervalPtr(mEGLDisplay, interval);
 }
 
 EGLImageKHR FunctionsEGL::createImageKHR(EGLContext context,

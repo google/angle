@@ -20,6 +20,8 @@ if (is_win) {
   angle_enable_gl = true
 } else if (is_mac) {
   angle_enable_gl = true
+} else if (is_android) {
+  angle_enable_gl = true
 }
 
 # TODO(gyp): Probably also want to angle_enable_gl = true if (use_ozone)
