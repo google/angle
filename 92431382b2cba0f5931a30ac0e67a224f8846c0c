@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "86be3e8f_d256751b",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "nit: alphabetical if possible?",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 18
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_32183174",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "this is interesting. what files are we filtering out here? something with linux? Maybe we should rename this folder instead of hacking in this solution.",
+      "range": {
+        "startLine": 441,
+        "startChar": 4,
+        "endLine": 441,
+        "endChar": 33
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_120f2d2e",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "nit: sort if possible?",
+      "range": {
+        "startLine": 445,
+        "startChar": 0,
+        "endLine": 446,
+        "endChar": 16
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_92255d9d",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "does this happen in practice?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_63ba5e7d",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 1
@@ -25,6 +117,53 @@
     },
     {
       "key": {
+        "uuid": "86be3e8f_92779d89",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "86be3e8f_63ba5e7d",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 93
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_72ef892e",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I\u0027d like to suggest a cleanup here - \n\nsplit the code into two sections. The first section populates a std::vector\u003cstd::vector\u003cEGLint\u003e\u003e with contextAttribLists. The second section tries each list in turn and breaks out when the first succeeds, or produces an error if they all fail.\n\nThis will I think represent the code a bit better.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 115,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_836af2da",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 1
@@ -36,6 +175,30 @@
       "writtenOn": "2016-06-03T15:48:15Z",
       "side": 1,
       "message": "The ANGLE extensions would require extra work and wouldn\u0027t be supported by the native driver.",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 92
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_b24e612e",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "You could structure this code to take a pair of a bool * and const char *, and do the queries in a loop. This would be marginally useful for running on top of swiftshader but I\u0027m fine with excluding them for now.",
+      "parentUuid": "86be3e8f_836af2da",
       "range": {
         "startLine": 129,
         "startChar": 4,
@@ -186,6 +349,30 @@
     },
     {
       "key": {
+        "uuid": "86be3e8f_320d91df",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "Yes, this is important. ANGLE supporting no error is not the same as telling the driver to run no error. We may want to implement that at some point, or potentially expose a different context attribute specifically for disabling native driver validation.\n\nSee Display::initDisplayExtensions",
+      "parentUuid": "86be3e8f_c37f8a93",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 92
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_434b9a7a",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 1
@@ -202,6 +389,351 @@
         "startChar": 4,
         "endLine": 156,
         "endChar": 63
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_52b605fd",
+        "filename": "src/libANGLE/renderer/gl/egl/PbufferSurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "don\u0027t need the else",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_32b11104",
+        "filename": "src/libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "this should be const \u0026",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 41
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_7589b333",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "const \u0026.. but now I see you\u0027re calling std::move. In this case it should be a \u0026\u0026, but that\u0027s a bit unusual",
+      "range": {
+        "startLine": 19,
+        "startChar": 23,
+        "endLine": 19,
+        "endChar": 43
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_35933b62",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I think you need to call UNUSED_ASSERTION_VARIABLE(success) if you only use the variable in an ASSERT",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_f59cc370",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "nit: no else",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_b5a64bb9",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "same, and so forth",
+      "range": {
+        "startLine": 60,
+        "startChar": 3,
+        "endLine": 61,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_35e57bea",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "this assert seems wrong",
+      "range": {
+        "startLine": 110,
+        "startChar": 8,
+        "endLine": 110,
+        "endChar": 37
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_55ea6fbb",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "need unused macros for these",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 10
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_127f2d00",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "const \u0026",
+      "range": {
+        "startLine": 26,
+        "startChar": 14,
+        "endLine": 26,
+        "endChar": 34
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_92931d69",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 1
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_d5473fb0",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "you can merge this with the above if in a ||. You can static assert the two enums are equal if you\u0027re worried.",
+      "range": {
+        "startLine": 44,
+        "startChar": 13,
+        "endLine": 44,
+        "endChar": 58
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_d51e5fac",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "this is pretty fancy but let\u0027s keep it without special chars for now. :) (Section)",
+      "range": {
+        "startLine": 58,
+        "startChar": 23,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_55658f2f",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I\u0027d rather you just turned on clang format for trivial structs like this, since it leads to formatting errors like this spacing.",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 12
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_75e8d38c",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I like that you try to log errors of this kind",
+      "range": {
+        "startLine": 140,
+        "startChar": 8,
+        "endLine": 140,
+        "endChar": 11
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_f5fb6351",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I feel this is unnecessary",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 23
       },
       "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -232,6 +764,76 @@
     },
     {
       "key": {
+        "uuid": "86be3e8f_7593f312",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "seems ok. can you also use a range-for?",
+      "parentUuid": "86be3e8f_63efbe2e",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 42
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_9598e72e",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 186,
+        "startChar": 3,
+        "endLine": 186,
+        "endChar": 23
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_b5ef2bbf",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "why is generateConfigs const? This seems like an error. a generate function should not be const. this can probably also do away with the mutable keyword",
+      "range": {
+        "startLine": 233,
+        "startChar": 31,
+        "endLine": 233,
+        "endChar": 46
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_e3e2ce3f",
         "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
         "patchSetId": 1
@@ -255,6 +857,53 @@
     },
     {
       "key": {
+        "uuid": "86be3e8f_b5908b00",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "86be3e8f_e3e2ce3f",
+      "range": {
+        "startLine": 242,
+        "startChar": 4,
+        "endLine": 242,
+        "endChar": 51
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_356fbbed",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "I think this can be a template helper function. sure you\u0027ll need to type GetAttrib(\u0026config.blueSize, EGL_BLUE_SIZE) instead of just GET_ATTRIB(blueSize, EGL_BLUE_SIZE), but avoiding macros is a win.",
+      "range": {
+        "startLine": 252,
+        "startChar": 8,
+        "endLine": 252,
+        "endChar": 18
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_23d0e662",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 1
@@ -266,6 +915,30 @@
       "writtenOn": "2016-06-03T15:48:15Z",
       "side": 1,
       "message": "This will now leak if initialize fails.",
+      "range": {
+        "startLine": 448,
+        "startChar": 4,
+        "endLine": 450,
+        "endChar": 15
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_b582cba8",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "yes, you can use a unique_ptr to do RAII, not sure if you need the typed version first or something.",
+      "parentUuid": "86be3e8f_23d0e662",
       "range": {
         "startLine": 448,
         "startChar": 4,
@@ -312,6 +985,24 @@
       "writtenOn": "2016-06-03T15:48:15Z",
       "side": 1,
       "message": "This should be put in a third_party directory, either here in the android folder or higher up.",
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_d5317fef",
+        "filename": "util/android/android_native_app_glue.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T17:12:11Z",
+      "side": 1,
+      "message": "+1. Also make a README.angle copying the template from README.chromium.",
+      "parentUuid": "86be3e8f_c3478ab0",
       "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
