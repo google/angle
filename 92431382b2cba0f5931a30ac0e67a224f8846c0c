@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "46ed2637_c5026eb0",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-03T22:10:11Z",
+      "side": 1,
+      "message": "Yes, paths having \"linux\" are filtered away in \"sources +\u003d\" operation if (is_android). This is done to be backward compatible with GYP in chrome, and will be removed once GYP is removed. We could rename \"util/linux\", but why bother if this solution works?",
+      "parentUuid": "86be3e8f_32183174",
+      "range": {
+        "startLine": 441,
+        "startChar": 4,
+        "endLine": 441,
+        "endChar": 33
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_120f2d2e",
         "filename": "BUILD.gn",
         "patchSetId": 1
@@ -82,6 +106,30 @@
       "writtenOn": "2016-06-03T17:12:11Z",
       "side": 1,
       "message": "does this happen in practice?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46ed2637_8854fb44",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-03T22:10:11Z",
+      "side": 1,
+      "message": "NULL is returned on failure.\nEGL_BAD_DISPLAY is generated if display is not an EGL display connection.\nEGL_NOT_INITIALIZED is generated if display has not been initialized.\nEGL_BAD_PARAMETER is generated if name is not an accepted value.\n\nI guess other than bugs this should not happen. Will ASSERT(vendor) be a good solution?",
+      "parentUuid": "86be3e8f_92255d9d",
       "range": {
         "startLine": 32,
         "startChar": 0,
@@ -384,6 +432,30 @@
       "writtenOn": "2016-06-03T15:48:15Z",
       "side": 1,
       "message": "ES2 still requires the npot extension, it only becomes core in ES3+",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 63
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46ed2637_88c4fba6",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-03T22:10:11Z",
+      "side": 1,
+      "message": "I guess textureNPOT meaning isn\u0027t clear.\nES2 does support NPOT to some extent:\nNon-power-of-two textures have restrictions on the allowed texture wrap modes and filters, as described in section 3.8.2.\n\nOES_texture_npot removes this restrictions.\n\nI\u0027ve read textureNPOT as: It\u0027s possible to have a non-power-of-two image for mipmap level 0 in TexImage2D. And this is supported by ES2. So, what does textureNPOT really mean?",
+      "parentUuid": "86be3e8f_434b9a7a",
       "range": {
         "startLine": 156,
         "startChar": 4,
