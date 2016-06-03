@@ -86,10 +86,11 @@ Surface::~Surface()
 
 Error Surface::initialize()
 {
-    // Initialized here since impl is nullptr in the constructor.
-    mSwapBehavior = mImplementation->getSwapBehavior();
-
     ANGLE_TRY(mImplementation->initialize());
+
+    // Initialized here since impl is nullptr in the constructor.
+    // Must happen after implementation initialize for Android.
+    mSwapBehavior = mImplementation->getSwapBehavior();
 
     // Must happen after implementation initialize for OSX.
     mState.defaultFramebuffer = createDefaultFramebuffer();
