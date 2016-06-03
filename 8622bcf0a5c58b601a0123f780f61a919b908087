@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86be3e8f_b845e53a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-03T11:53:56Z",
+      "side": 1,
+      "message": "when submitting ANGLE CLs.. use BUG\u003dangleproject:#### and BUG\u003dchromium:######. Bugdroid and Gerrit will assume any unlabeled CLs are Chromium, so it\u0027s best to be explicit.",
+      "range": {
+        "startLine": 11,
+        "startChar": 4,
+        "endLine": 11,
+        "endChar": 8
+      },
+      "revId": "8622bcf0a5c58b601a0123f780f61a919b908087",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
