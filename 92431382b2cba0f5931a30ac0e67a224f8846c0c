@@ -1,0 +1,320 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86be3e8f_63ba5e7d",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "You could just use the non-extension enums and static_assert they are equal.",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 93
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_836af2da",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "The ANGLE extensions would require extra work and wouldn\u0027t be supported by the native driver.",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 92
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_631ede65",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "This is UNIMPLEMENTED in your SurfaceEGL class, leave it as false for now.",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 80
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_63657e0b",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "We don\u0027t have a device object for EGL yet, this probably wouldnt work.",
+      "range": {
+        "startLine": 139,
+        "startChar": 4,
+        "endLine": 139,
+        "endChar": 76
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_4374faba",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "These should not be supported, EGL images don\u0027t work on GL yet.",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 146,
+        "endChar": 93
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_634c9e95",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "This can be set to true.",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 147,
+        "endChar": 94
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_8351922a",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "These ANGLE extensions should be disabled.",
+      "range": {
+        "startLine": 148,
+        "startChar": 4,
+        "endLine": 150,
+        "endChar": 90
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_c37f8a93",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "This is an extension we implement above the native EGL, no need to check the driver.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 92
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_434b9a7a",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "ES2 still requires the npot extension, it only becomes core in ES3+",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 63
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_63efbe2e",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "nit: could add a AttributeMap::toVector function",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 42
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_e3e2ce3f",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "Store these in a std::vector",
+      "range": {
+        "startLine": 242,
+        "startChar": 4,
+        "endLine": 242,
+        "endChar": 51
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_23d0e662",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "This will now leak if initialize fails.",
+      "range": {
+        "startLine": 448,
+        "startChar": 4,
+        "endLine": 450,
+        "endChar": 15
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_e3c96ec1",
+        "filename": "util/android/AndroidWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "nit: override",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 21
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_c3478ab0",
+        "filename": "util/android/android_native_app_glue.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:48:15Z",
+      "side": 1,
+      "message": "This should be put in a third_party directory, either here in the android folder or higher up.",
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
