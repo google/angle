@@ -38,14 +38,18 @@ View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Sto
 
 * Join our [Google group](https://groups.google.com/group/angleproject) to keep up to date.
 * Join us on IRC in the #ANGLEproject channel on FreeNode.
-* Read about ANGLE development in our [documentation](doc).
-
-* Become a [code contributor](doc/ContributingCode.md).
-* Refer to ANGLE's [coding standard](doc/CodingStandard.md).
-* Learn how to [build ANGLE for Chromium development](doc/BuildingAngleForChromiumDevelopment.md).
-* Notes on [debugging ANGLE](doc/DebuggingTips.md).
 * File bugs in the [issue tracker](http://code.google.com/p/angleproject/issues/list) (preferably with an isolated test-case).
 * [Choose an ANGLE branch](doc/ChoosingANGLEBranch.md) to track in your own project.
+
+
+* Read ANGLE development [documentation](doc).
+* Look at [pending](https://chromium-review.googlesource.com/#/q/project:angle/angle+status:open)
+  and [merged](https://chromium-review.googlesource.com/#/q/project:angle/angle+status:merged) changes.
+* Become a [code contributor](doc/ContributingCode.md).
+* Use ANGLE's [coding standard](doc/CodingStandard.md).
+* Learn how to [build ANGLE for Chromium development](doc/BuildingAngleForChromiumDevelopment.md).
+* Get help on [debugging ANGLE](doc/DebuggingTips.md).
+
 
 * Read about WebGL on the [Khronos WebGL Wiki](http://khronos.org/webgl/wiki/Main_Page).
 * Learn about implementation details in the [OpenGL Insights chapter on ANGLE](http://www.seas.upenn.edu/~pcozzi/OpenGLInsights/OpenGLInsights-ANGLE.pdf) and this [ANGLE presentation](https://drive.google.com/file/d/0Bw29oYeC09QbbHoxNE5EUFh0RGs/view?usp=sharing).
