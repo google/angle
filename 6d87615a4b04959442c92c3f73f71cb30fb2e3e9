@@ -45,6 +45,30 @@
       "revId": "6d87615a4b04959442c92c3f73f71cb30fb2e3e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86be3e8f_4312bafc",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-03T15:52:32Z",
+      "side": 1,
+      "message": "Yep.  Yuly, take a look in renderergl_utils.h, I have a MapBufferRangeWithFallback function.",
+      "parentUuid": "86be3e8f_3871f592",
+      "range": {
+        "startLine": 293,
+        "startChar": 0,
+        "endLine": 308,
+        "endChar": 9
+      },
+      "revId": "6d87615a4b04959442c92c3f73f71cb30fb2e3e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
