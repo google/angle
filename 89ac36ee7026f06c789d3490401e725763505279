@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6bb429f_8ac3eb9d",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-03T14:34:48Z",
+      "side": 1,
+      "message": "typo: pack/unpack",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6bb429f_aac02f91",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-03T14:34:48Z",
+      "side": 1,
+      "message": "This is always true because of the if above.",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6bb429f_0a3b7b86",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-03T14:34:48Z",
+      "side": 1,
+      "message": "nit: could factor the static cast.",
+      "revId": "89ac36ee7026f06c789d3490401e725763505279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
