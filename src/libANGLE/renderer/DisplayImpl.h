@@ -52,7 +52,7 @@ class DisplayImpl : public EGLImplFactory
 
     virtual egl::Error makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context) = 0;
 
-    virtual egl::ConfigSet generateConfigs() const = 0;
+    virtual egl::ConfigSet generateConfigs() = 0;
 
     virtual bool isDeviceLost() const = 0;
     virtual bool testDeviceLost() = 0;

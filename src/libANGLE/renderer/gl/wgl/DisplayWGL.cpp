@@ -466,7 +466,7 @@ egl::Error DisplayWGL::getDevice(DeviceImpl **device)
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
-egl::ConfigSet DisplayWGL::generateConfigs() const
+egl::ConfigSet DisplayWGL::generateConfigs()
 {
     egl::ConfigSet configs;
 

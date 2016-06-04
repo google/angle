@@ -241,7 +241,7 @@ void DisplayD3D::terminate()
     SafeDelete(mRenderer);
 }
 
-egl::ConfigSet DisplayD3D::generateConfigs() const
+egl::ConfigSet DisplayD3D::generateConfigs()
 {
     ASSERT(mRenderer != nullptr);
     return mRenderer->generateConfigs();

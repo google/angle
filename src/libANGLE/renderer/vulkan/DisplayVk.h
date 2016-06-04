@@ -28,7 +28,7 @@ class DisplayVk : public DisplayImpl
                            egl::Surface *readSurface,
                            gl::Context *context) override;
 
-    egl::ConfigSet generateConfigs() const override;
+    egl::ConfigSet generateConfigs() override;
 
     bool isDeviceLost() const override;
     bool testDeviceLost() override;

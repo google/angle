@@ -397,7 +397,7 @@ D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
     return presentParameters;
 }
 
-egl::ConfigSet Renderer9::generateConfigs() const
+egl::ConfigSet Renderer9::generateConfigs()
 {
     static const GLenum colorBufferFormats[] =
     {

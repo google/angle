@@ -107,7 +107,7 @@ class Renderer11 : public RendererD3D
     egl::Error initialize() override;
     virtual bool resetDevice();
 
-    egl::ConfigSet generateConfigs() const override;
+    egl::ConfigSet generateConfigs() override;
     void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const override;
 
     ContextImpl *createContext(const gl::ContextState &state) override;

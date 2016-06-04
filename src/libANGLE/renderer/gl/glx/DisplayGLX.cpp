@@ -550,7 +550,7 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
     return egl::Error(EGL_NOT_INITIALIZED, "Could not create a backing OpenGL context.");
 }
 
-egl::ConfigSet DisplayGLX::generateConfigs() const
+egl::ConfigSet DisplayGLX::generateConfigs()
 {
     egl::ConfigSet configs;
     configIdToGLXConfig.clear();

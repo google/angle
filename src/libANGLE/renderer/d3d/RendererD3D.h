@@ -106,7 +106,7 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual egl::Error initialize() = 0;
 
-    virtual egl::ConfigSet generateConfigs() const = 0;
+    virtual egl::ConfigSet generateConfigs() = 0;
     virtual void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const = 0;
 
     virtual ContextImpl *createContext(const gl::ContextState &state) = 0;

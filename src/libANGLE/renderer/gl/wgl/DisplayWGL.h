@@ -44,7 +44,7 @@ class DisplayWGL : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
-    egl::ConfigSet generateConfigs() const override;
+    egl::ConfigSet generateConfigs() override;
 
     bool isDeviceLost() const override;
     bool testDeviceLost() override;

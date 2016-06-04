@@ -916,7 +916,7 @@ void Renderer11::populateRenderer11DeviceCaps()
     SafeRelease(dxgiAdapter2);
 }
 
-egl::ConfigSet Renderer11::generateConfigs() const
+egl::ConfigSet Renderer11::generateConfigs()
 {
     std::vector<GLenum> colorBufferFormats;
 

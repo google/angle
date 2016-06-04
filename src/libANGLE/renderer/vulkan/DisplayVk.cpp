@@ -41,7 +41,7 @@ egl::Error DisplayVk::makeCurrent(egl::Surface *drawSurface,
     return egl::Error(EGL_BAD_ACCESS);
 }
 
-egl::ConfigSet DisplayVk::generateConfigs() const
+egl::ConfigSet DisplayVk::generateConfigs()
 {
     UNIMPLEMENTED();
     return egl::ConfigSet();

@@ -923,7 +923,7 @@ EGLContext DisplayOzone::initializeContext(EGLConfig config, const egl::Attribut
     return EGL_NO_CONTEXT;
 }
 
-egl::ConfigSet DisplayOzone::generateConfigs() const
+egl::ConfigSet DisplayOzone::generateConfigs()
 {
     egl::ConfigSet configs;
 

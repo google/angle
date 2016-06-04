@@ -150,7 +150,7 @@ egl::Error DisplayCGL::getDevice(DeviceImpl **device)
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
-egl::ConfigSet DisplayCGL::generateConfigs() const
+egl::ConfigSet DisplayCGL::generateConfigs()
 {
     // TODO(cwallez): generate more config permutations
     egl::ConfigSet configs;

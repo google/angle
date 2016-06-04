@@ -60,7 +60,7 @@ class DisplayGLX : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
-    egl::ConfigSet generateConfigs() const override;
+    egl::ConfigSet generateConfigs() override;
 
     bool isDeviceLost() const override;
     bool testDeviceLost() override;
@@ -113,8 +113,7 @@ class DisplayGLX : public DisplayGL
 
     FunctionsGL *mFunctionsGL;
 
-    //TODO(cwallez) yuck, change generateConfigs to be non-const or add a userdata member to egl::Config?
-    mutable std::map<int, glx::FBConfig> configIdToGLXConfig;
+    std::map<int, glx::FBConfig> configIdToGLXConfig;
 
     EGLint mRequestedVisual;
     glx::FBConfig mContextConfig;
