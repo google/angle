@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46ed2637_fc30e0a3",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "const auto \u0026 should work",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 13
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46ed2637_bcc498a6",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: this can be const auto \u0026",
+      "range": {
+        "startLine": 70,
+        "startChar": 17,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2353c428_00293ad3",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "aha, I think I understand - this is a mapping from the egl::ConfigSet id (internalId) to the native EGL ID (config.configID).\n\nI think the approach you have is reasonable here but I wonder if we can clean this up by storing the native config ID in the internal std::map in the egl::ConfigSet. You could try adding a method insert to egl::ConfigSet that takes an ID as a parameter, or you could have a sort method implemented somehow, but I think the first suggestion seems a bit more straight-forward. Sorry, not trying to hold up the review but it seems like this double-mapping is a weakness of ANGLE\u0027s internal code and not something that is an inherent implementation limitation. (Hopefully this won\u0027t mess up code elsewhere that is under some kind of assumptions)",
+      "range": {
+        "startLine": 316,
+        "startChar": 8,
+        "endLine": 316,
+        "endChar": 18
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63677c0f_1b897f39",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: put all this in a namespace {} block instead of the \u0027static\u0027",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 6
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3bb349f_2a8d1f0d",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: err \u003d\u003d 0?",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 15
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43b8b8a6_87be86b7",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: new code should use nullptr instead of NULL, same below",
+      "range": {
+        "startLine": 135,
+        "startChar": 42,
+        "endLine": 135,
+        "endChar": 46
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3bb349f_6a8317e5",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: can you design this to not assign in the if part of the while?",
+      "range": {
+        "startLine": 145,
+        "startChar": 12,
+        "endLine": 145,
+        "endChar": 17
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06efae33_1c894c03",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:24:49Z",
+      "side": 1,
+      "message": "nit: use c++-style casts",
+      "range": {
+        "startLine": 145,
+        "startChar": 55,
+        "endLine": 145,
+        "endChar": 64
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
