@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "835c7065_7f36073f",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done\nI\u0027ve put ASSERT(vendor), which has ERR() inside, so should be a good solution.",
+      "parentUuid": "03aa4053_859202b0",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_63ba5e7d",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 1
@@ -816,6 +840,30 @@
       "side": 1,
       "message": "Yep, this is pretty much a way of letting EGL that the ES context supports npot textures.  Some of the EGL validation has clauses like \"if the underlying opengl es implementation supports npot...\".  I think this is safe, ES would allow the texture being NPOT and may say it\u0027s incomplete only if bad sampling parameters are used.",
       "parentUuid": "03aa4053_4502cab2",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 63
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_a8dea37b",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done\nI\u0027ll interpret this as \"yes textureNPOT should be true on ES2\"",
+      "parentUuid": "835c7065_e2d43cfe",
       "range": {
         "startLine": 156,
         "startChar": 4,
