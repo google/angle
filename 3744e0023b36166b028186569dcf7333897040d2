@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "835c7065_28dc5380",
+        "filename": "src/libANGLE/AttributeMap.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46ed2637_fc30e0a3",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 13
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46ed2637_bcc498a6",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-06T18:24:49Z",
       "side": 1,
       "message": "nit: this can be const auto \u0026",
+      "range": {
+        "startLine": 70,
+        "startChar": 17,
+        "endLine": 70,
+        "endChar": 21
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_68d64b62",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46ed2637_bcc498a6",
       "range": {
         "startLine": 70,
         "startChar": 17,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "835c7065_4830a7a2",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done\nPer offline discussion, it was agreed that this is indeed required as filtering is applied in eglChooseConfig, and DisplayAndroid is the proper place to keep the mapping. DisplayGLX is similar here.",
+      "parentUuid": "2353c428_00293ad3",
+      "range": {
+        "startLine": 316,
+        "startChar": 8,
+        "endLine": 316,
+        "endChar": 18
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63677c0f_1b897f39",
         "filename": "util/android/AndroidWindow.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2016-06-06T18:24:49Z",
       "side": 1,
       "message": "nit: put all this in a namespace {} block instead of the \u0027static\u0027",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 6
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_e84a5b18",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63677c0f_1b897f39",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "835c7065_4859c7f0",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3bb349f_2a8d1f0d",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 15
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43b8b8a6_87be86b7",
         "filename": "util/android/AndroidWindow.cpp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2016-06-06T18:24:49Z",
       "side": 1,
       "message": "nit: new code should use nullptr instead of NULL, same below",
+      "range": {
+        "startLine": 135,
+        "startChar": 42,
+        "endLine": 135,
+        "endChar": 46
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_8853dfd0",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43b8b8a6_87be86b7",
       "range": {
         "startLine": 135,
         "startChar": 42,
@@ -179,6 +323,54 @@
         "startChar": 55,
         "endLine": 145,
         "endChar": 64
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_68580beb",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06efae33_1c894c03",
+      "range": {
+        "startLine": 145,
+        "startChar": 55,
+        "endLine": 145,
+        "endChar": 64
+      },
+      "revId": "3744e0023b36166b028186569dcf7333897040d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "835c7065_a869837c",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-06T22:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3bb349f_6a8317e5",
+      "range": {
+        "startLine": 145,
+        "startChar": 12,
+        "endLine": 145,
+        "endChar": 17
       },
       "revId": "3744e0023b36166b028186569dcf7333897040d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
