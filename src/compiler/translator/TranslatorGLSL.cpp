@@ -175,6 +175,11 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root)
             sink << "#extension GL_ARB_shader_texture_lod : " << getBehaviorString(iter.second)
                  << "\n";
         }
+
+        if (iter.first == "GL_EXT_draw_buffers")
+        {
+            sink << "#extension GL_ARB_draw_buffers : " << getBehaviorString(iter.second) << "\n";
+        }
     }
 
     // GLSL ES 3 explicit location qualifiers need to use an extension before GLSL 330
