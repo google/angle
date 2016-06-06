@@ -625,11 +625,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     ASSERT(!image->isDirty());
 
     ID3D11Resource *resource = nullptr;
-    gl::Error error = getResource(&resource);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(getResource(&resource));
     ASSERT(resource);
 
     UINT destSubresource = getSubresourceIndex(index);
@@ -679,12 +675,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     d3d11::LoadImageFunctionInfo loadFunctionInfo = d3d11Format.loadFunctions.at(type);
     if (loadFunctionInfo.requiresConversion)
     {
-        error = mRenderer->getScratchMemoryBuffer(neededSize, &conversionBuffer);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(mRenderer->getScratchMemoryBuffer(neededSize, &conversionBuffer));
         loadFunctionInfo.loadFunction(width, height, depth, pixelData + srcSkipBytes, srcRowPitch,
                                       srcDepthPitch, conversionBuffer->data(), bufferRowPitch,
                                       bufferDepthPitch);
@@ -720,7 +711,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
                                             bufferRowPitch, bufferDepthPitch);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)

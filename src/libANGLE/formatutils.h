@@ -44,12 +44,16 @@ struct InternalFormat
                                                 GLint alignment,
                                                 GLint rowLength,
                                                 GLint imageHeight) const;
-    gl::ErrorOrResult<GLuint> computeBlockSize(GLenum formatType, const gl::Extents &size) const;
+    gl::ErrorOrResult<GLuint> computeCompressedImageSize(GLenum formatType,
+                                                         const gl::Extents &size) const;
     GLuint computeSkipPixels(GLint rowPitch,
                              GLint depthPitch,
                              GLint skipImages,
                              GLint skipRows,
                              GLint skipPixels) const;
+    gl::ErrorOrResult<GLuint> computeUnpackSize(GLenum formatType,
+                                                const gl::Extents &size,
+                                                const gl::PixelUnpackState &unpack) const;
 
     GLuint redBits;
     GLuint greenBits;
