@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "03aa4053_859202b0",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:49:57Z",
+      "side": 1,
+      "message": "if this is something that could realistically happen you could do ERR() to try and log the error if possible. Having a graceful failure is fine. To be consistent with how ANGLE handles internal errors this should really return egl::Error if it can error, but I\u0027m fine with postponing that refactor to another day with a TODO",
+      "parentUuid": "46ed2637_8854fb44",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_63ba5e7d",
         "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
         "patchSetId": 1
@@ -744,6 +768,30 @@
       "side": 1,
       "message": "The only usage I saw in ANGLE is Pbuffer creation validation, and since ES2 supports NPOT for mipmap level 0, I\u0027m leaving this as true.",
       "parentUuid": "46ed2637_88c4fba6",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 156,
+        "endChar": 63
+      },
+      "revId": "92431382b2cba0f5931a30ac0e67a224f8846c0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03aa4053_4502cab2",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-06T18:49:57Z",
+      "side": 1,
+      "message": "I think this is a forward-reference to the GL extension? Geoff would know. If it\u0027s just a dummy for the ES extension we should follow the same procedures.",
+      "parentUuid": "46ed2637_01fe01dc",
       "range": {
         "startLine": 156,
         "startChar": 4,
