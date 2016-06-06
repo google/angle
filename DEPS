@@ -16,7 +16,7 @@ deps = {
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   "third_party/cherry":
-      "https://android.googlesource.com/platform/external/cherry@af6c09fe05115f0cca61ae23ee871bda27cf1ff5",
+      "https://android.googlesource.com/platform/external/cherry@d2e26b4d864ec2a6757e7f1174e464949ca5bf73",
 
   "third_party/deqp/src":
       "https://android.googlesource.com/platform/external/deqp@cc0ded6c77267bbb14d21aac358fc5d9690c07f8",
