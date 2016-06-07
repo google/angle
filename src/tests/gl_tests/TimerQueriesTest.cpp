@@ -79,6 +79,29 @@ class TimerQueriesTest : public ANGLETest
     GLuint mProgramCostly;
 };
 
+// Test that all proc addresses are loadable
+TEST_P(TimerQueriesTest, ProcAddresses)
+{
+    if (!extensionEnabled("GL_EXT_disjoint_timer_query"))
+    {
+        std::cout << "Test skipped because GL_EXT_disjoint_timer_query is not available."
+                  << std::endl;
+        return;
+    }
+
+    ASSERT_NE(nullptr, eglGetProcAddress("glGenQueriesEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glDeleteQueriesEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glIsQueryEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glBeginQueryEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glEndQueryEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glQueryCounterEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glGetQueryivEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glGetQueryObjectivEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glGetQueryObjectuivEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glGetQueryObjecti64vEXT"));
+    ASSERT_NE(nullptr, eglGetProcAddress("glGetQueryObjectui64vEXT"));
+}
+
 // Tests the time elapsed query
 TEST_P(TimerQueriesTest, TimeElapsed)
 {

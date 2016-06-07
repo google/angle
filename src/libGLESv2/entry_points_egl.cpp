@@ -1411,6 +1411,19 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, GetQueryivEXT);
         INSERT_PROC_ADDRESS(gl, GetQueryObjectuivEXT);
 
+        // GL_EXT_disjoint_timer_query
+        INSERT_PROC_ADDRESS(gl, GenQueriesEXT);
+        INSERT_PROC_ADDRESS(gl, DeleteQueriesEXT);
+        INSERT_PROC_ADDRESS(gl, IsQueryEXT);
+        INSERT_PROC_ADDRESS(gl, BeginQueryEXT);
+        INSERT_PROC_ADDRESS(gl, EndQueryEXT);
+        INSERT_PROC_ADDRESS(gl, QueryCounterEXT);
+        INSERT_PROC_ADDRESS(gl, GetQueryivEXT);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectivEXT);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectuivEXT);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjecti64vEXT);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectui64vEXT);
+
         // GL_EXT_draw_buffers
         INSERT_PROC_ADDRESS(gl, DrawBuffersEXT);
 
