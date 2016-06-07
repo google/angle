@@ -45,8 +45,8 @@ std::vector<EGLint> AttributeMap::toIntVector() const
     std::vector<EGLint> ret;
     for (const auto &pair : mAttributes)
     {
-        ret.push_back(pair.first);
-        ret.push_back(pair.second);
+        ret.push_back(static_cast<EGLint>(pair.first));
+        ret.push_back(static_cast<EGLint>(pair.second));
     }
     ret.push_back(EGL_NONE);
 
