@@ -16,6 +16,24 @@
       "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3989490_895efa33",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-07T21:57:24Z",
+      "side": 1,
+      "message": "Does Chromium pass skip directly or do a workaround somehow where we don\u0027t see skip directly? I only focused on fixing the broken tests. We may still have bugs that get exposed when not running on CB",
+      "parentUuid": "a3989490_a9865ecf",
+      "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
