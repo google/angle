@@ -34,6 +34,24 @@
       "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3989490_492c7280",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-07T22:00:44Z",
+      "side": 1,
+      "message": "Higher-level code in Chromium does apply skip to the pointer and keeps the skip passed down to ANGLE to 0, so I don\u0027t think that this will be a problem with current CB.",
+      "parentUuid": "a3989490_895efa33",
+      "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
