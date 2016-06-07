@@ -52,6 +52,24 @@
       "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3989490_8c3288dd",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-07T22:25:30Z",
+      "side": 1,
+      "message": "OK, so ANGLE is broken here still, but we can fix this in a follow up. This will at least let us pass the WebGL 2 test in Chromium -- but we should definitely fix the rest of the bugs.",
+      "parentUuid": "a3989490_492c7280",
+      "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
