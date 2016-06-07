@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3989490_a9865ecf",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-07T21:54:56Z",
+      "side": 1,
+      "message": "Is skip taken into account somewhere here? That may still be an issue, though this patch is certainly moving things to the right direction.",
+      "revId": "fdd9c0e4a55580b1b31e851ac00ea5bf91d2a0dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
