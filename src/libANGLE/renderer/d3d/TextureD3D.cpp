@@ -210,7 +210,7 @@ gl::Error TextureD3D::setImageImpl(const gl::ImageIndex &index,
         else
         {
             gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
-            error = image->loadData(fullImageArea, unpack, type, pixelData);
+            error = image->loadData(fullImageArea, unpack, type, pixelData, index.is3D());
         }
 
         if (error.isError())
@@ -245,7 +245,7 @@ gl::Error TextureD3D::subImage(const gl::ImageIndex &index, const gl::Box &area,
             return mTexStorage->setData(index, image, &area, type, unpack, pixelData);
         }
 
-        error = image->loadData(area, unpack, type, pixelData);
+        error = image->loadData(area, unpack, type, pixelData, index.is3D());
         if (error.isError())
         {
             return error;

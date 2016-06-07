@@ -27,6 +27,11 @@ ImageIndex &ImageIndex::operator=(const ImageIndex &other)
     return *this;
 }
 
+bool ImageIndex::is3D() const
+{
+    return type == GL_TEXTURE_3D || type == GL_TEXTURE_2D_ARRAY;
+}
+
 ImageIndex ImageIndex::Make2D(GLint mipIndex)
 {
     return ImageIndex(GL_TEXTURE_2D, mipIndex, ENTIRE_LEVEL);

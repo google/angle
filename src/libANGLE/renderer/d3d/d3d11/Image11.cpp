@@ -245,7 +245,11 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unpack, GLenum type, const void *input)
+gl::Error Image11::loadData(const gl::Box &area,
+                            const gl::PixelUnpackState &unpack,
+                            GLenum type,
+                            const void *input,
+                            bool applySkipImages)
 {
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
     GLsizei inputRowPitch                = 0;
@@ -256,8 +260,9 @@ gl::Error Image11::loadData(const gl::Box &area, const gl::PixelUnpackState &unp
     ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(type, area.width, area.height, unpack.alignment,
                                                   unpack.rowLength, unpack.imageHeight),
                      inputDepthPitch);
-    GLsizei inputSkipBytes = formatInfo.computeSkipPixels(
-        inputRowPitch, inputDepthPitch, unpack.skipImages, unpack.skipRows, unpack.skipPixels);
+    GLsizei inputSkipBytes =
+        formatInfo.computeSkipPixels(inputRowPitch, inputDepthPitch, unpack.skipImages,
+                                     unpack.skipRows, unpack.skipPixels, applySkipImages);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;
