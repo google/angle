@@ -69,6 +69,8 @@ class TextureD3D : public TextureImpl
 
     void setBaseLevel(GLuint baseLevel) override;
 
+    void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
+
   protected:
     gl::Error setImageImpl(const gl::ImageIndex &index,
                            GLenum type,

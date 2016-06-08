@@ -16,6 +16,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/Stream.h"
+#include "libANGLE/Texture.h"
 #include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
 namespace egl
@@ -88,6 +89,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
 
     virtual void bindTexImage(egl::Surface *surface) = 0;
     virtual void releaseTexImage() = 0;
+
+    virtual void syncState(const gl::Texture::DirtyBits &dirtyBits) = 0;
 
   protected:
     const gl::TextureState &mState;

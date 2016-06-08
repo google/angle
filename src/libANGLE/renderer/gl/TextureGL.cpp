@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/gl/TextureGL.h"
 
+#include "common/BitSetIterator.h"
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/State.h"
@@ -88,6 +89,16 @@ LevelInfoGL GetLevelInfo(GLenum originalFormat, GLenum destinationFormat)
     const gl::InternalFormat &originalFormatInfo = gl::GetInternalFormatInfo(originalFormat);
     return LevelInfoGL(originalFormat, GetDepthStencilWorkaround(originalFormatInfo),
                        GetLUMAWorkaroundInfo(originalFormatInfo, destinationFormat));
+}
+
+gl::Texture::DirtyBits GetLevelWorkaroundDirtyBits()
+{
+    gl::Texture::DirtyBits bits;
+    bits.set(gl::Texture::DIRTY_BIT_SWIZZLE_RED);
+    bits.set(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN);
+    bits.set(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE);
+    bits.set(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA);
+    return bits;
 }
 
 }  // anonymous namespace
@@ -229,7 +240,7 @@ void TextureGL::setImageHelper(GLenum target,
         UNREACHABLE();
     }
 
-    mLevelInfo[level] = GetLevelInfo(internalFormat, texImageFormat.internalFormat);
+    setLevelInfo(level, 1, GetLevelInfo(internalFormat, texImageFormat.internalFormat));
 }
 
 void TextureGL::reserveTexImageToBeFilled(GLenum target,
@@ -466,7 +477,7 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
         UNREACHABLE();
     }
 
-    mLevelInfo[level] = GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat);
+    setLevelInfo(level, 1, GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat));
     ASSERT(!mLevelInfo[level].lumaWorkaround.enabled);
 
     return gl::Error(GL_NO_ERROR);
@@ -543,7 +554,7 @@ gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle 
         }
     }
 
-    mLevelInfo[level] = levelInfo;
+    setLevelInfo(level, 1, levelInfo);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -726,11 +737,7 @@ gl::Error TextureGL::setStorage(GLenum target, size_t levels, GLenum internalFor
         UNREACHABLE();
     }
 
-    LevelInfoGL levelInfo = GetLevelInfo(internalFormat, texStorageFormat.internalFormat);
-    for (size_t level = 0; level < mLevelInfo.size(); level++)
-    {
-        mLevelInfo[level] = levelInfo;
-    }
+    setLevelInfo(0, levels, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -745,8 +752,6 @@ gl::Error TextureGL::setImageExternal(GLenum target,
 
 gl::Error TextureGL::generateMipmap()
 {
-    // Need to sync base level and max level to driver before calling GenerateMipmap.
-    syncState(0);
     mStateManager->bindTexture(mState.mTarget, mTextureID);
     mFunctions->generateMipmap(mState.mTarget);
 
@@ -755,10 +760,7 @@ gl::Error TextureGL::generateMipmap()
 
     ASSERT(maxLevel < mLevelInfo.size());
 
-    for (GLuint level = effectiveBaseLevel; level <= maxLevel; level++)
-    {
-        mLevelInfo[level] = mLevelInfo[effectiveBaseLevel];
-    }
+    setLevelInfo(effectiveBaseLevel, maxLevel - effectiveBaseLevel, mLevelInfo[effectiveBaseLevel]);
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -770,7 +772,7 @@ void TextureGL::bindTexImage(egl::Surface *surface)
     // Make sure this texture is bound
     mStateManager->bindTexture(mState.mTarget, mTextureID);
 
-    mLevelInfo[0] = LevelInfoGL();
+    setLevelInfo(0, 1, LevelInfoGL());
 }
 
 void TextureGL::releaseTexImage()
@@ -796,58 +798,110 @@ gl::Error TextureGL::setEGLImageTarget(GLenum target, egl::Image *image)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-template <typename T, typename ApplyTextureFuncType>
-static inline void SyncSamplerStateMember(const FunctionsGL *functions,
-                                          ApplyTextureFuncType applyTextureFunc,
-                                          const gl::SamplerState &newState,
-                                          gl::SamplerState &curState,
-                                          GLenum textureType,
-                                          GLenum name,
-                                          T(gl::SamplerState::*samplerMember))
+void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
 {
-    if (curState.*samplerMember != newState.*samplerMember)
+    ASSERT(dirtyBits.any());
+    mStateManager->bindTexture(mState.mTarget, mTextureID);
+
+    if (dirtyBits[gl::Texture::DIRTY_BIT_BASE_LEVEL] || dirtyBits[gl::Texture::DIRTY_BIT_MAX_LEVEL])
     {
-        applyTextureFunc();
-        curState.*samplerMember = newState.*samplerMember;
-        functions->texParameterf(textureType, name, static_cast<GLfloat>(curState.*samplerMember));
+        // Don't know if the previous base level was using any workarounds, always re-sync the
+        // workaround dirty bits
+        mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
     }
+
+    for (auto dirtyBit : angle::IterateBitSet(dirtyBits | mLocalDirtyBits))
+    {
+        switch (dirtyBit)
+        {
+            case gl::Texture::DIRTY_BIT_MIN_FILTER:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MIN_FILTER,
+                                          mState.getSamplerState().minFilter);
+                break;
+            case gl::Texture::DIRTY_BIT_MAG_FILTER:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAG_FILTER,
+                                          mState.getSamplerState().magFilter);
+                break;
+            case gl::Texture::DIRTY_BIT_WRAP_S:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_S,
+                                          mState.getSamplerState().wrapS);
+                break;
+            case gl::Texture::DIRTY_BIT_WRAP_T:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_T,
+                                          mState.getSamplerState().wrapT);
+                break;
+            case gl::Texture::DIRTY_BIT_WRAP_R:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_R,
+                                          mState.getSamplerState().wrapR);
+                break;
+            case gl::Texture::DIRTY_BIT_MAX_ANISOTROPY:
+                mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                                          mState.getSamplerState().maxAnisotropy);
+                break;
+            case gl::Texture::DIRTY_BIT_MIN_LOD:
+                mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MIN_LOD,
+                                          mState.getSamplerState().minLod);
+                break;
+            case gl::Texture::DIRTY_BIT_MAX_LOD:
+                mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MAX_LOD,
+                                          mState.getSamplerState().maxLod);
+                break;
+            case gl::Texture::DIRTY_BIT_COMPARE_MODE:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_COMPARE_MODE,
+                                          mState.getSamplerState().compareMode);
+                break;
+            case gl::Texture::DIRTY_BIT_COMPARE_FUNC:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_COMPARE_FUNC,
+                                          mState.getSamplerState().compareFunc);
+                break;
+
+            // Texture state
+            case gl::Texture::DIRTY_BIT_SWIZZLE_RED:
+                syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_R,
+                                        mState.getSwizzleState().swizzleRed);
+                break;
+            case gl::Texture::DIRTY_BIT_SWIZZLE_GREEN:
+                syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_G,
+                                        mState.getSwizzleState().swizzleGreen);
+                break;
+            case gl::Texture::DIRTY_BIT_SWIZZLE_BLUE:
+                syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_B,
+                                        mState.getSwizzleState().swizzleBlue);
+                break;
+            case gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA:
+                syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_A,
+                                        mState.getSwizzleState().swizzleAlpha);
+                break;
+            case gl::Texture::DIRTY_BIT_BASE_LEVEL:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_BASE_LEVEL,
+                                          mState.getEffectiveBaseLevel());
+                break;
+            case gl::Texture::DIRTY_BIT_MAX_LEVEL:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAX_LEVEL,
+                                          mState.getEffectiveMaxLevel());
+                break;
+            case gl::Texture::DIRTY_BIT_USAGE:
+                break;
+
+            default:
+                UNREACHABLE();
+        }
+    }
+
+    mLocalDirtyBits.reset();
 }
 
-template <typename T, typename ApplyTextureFuncType>
-static inline void SyncTextureStateMember(const FunctionsGL *functions,
-                                          ApplyTextureFuncType applyTextureFunc,
-                                          const gl::TextureState &newState,
-                                          gl::TextureState &curState,
-                                          GLenum textureType,
-                                          GLenum name,
-                                          T(gl::TextureState::*stateMember))
+void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions, GLenum name, GLenum value)
 {
-    if (curState.*stateMember != newState.*stateMember)
-    {
-        applyTextureFunc();
-        curState.*stateMember = newState.*stateMember;
-        functions->texParameterf(textureType, name, static_cast<GLfloat>(curState.*stateMember));
-    }
-}
-
-template <typename T, typename ApplyTextureFuncType>
-static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
-                                           ApplyTextureFuncType applyTextureFunc,
-                                           const LevelInfoGL &levelInfo,
-                                           const gl::SwizzleState &newState,
-                                           gl::SwizzleState &curState,
-                                           GLenum textureType,
-                                           GLenum name,
-                                           T(gl::SwizzleState::*stateMember))
-{
-    GLenum resultSwizzle = newState.*stateMember;
+    const LevelInfoGL &levelInfo = mLevelInfo[mState.getEffectiveBaseLevel()];
+    GLenum resultSwizzle         = value;
     if (levelInfo.lumaWorkaround.enabled || levelInfo.depthStencilWorkaround)
     {
         if (levelInfo.lumaWorkaround.enabled)
         {
             UNUSED_ASSERTION_VARIABLE(levelInfo.lumaWorkaround.workaroundFormat);
 
-            switch (newState.*stateMember)
+            switch (value)
             {
             case GL_RED:
             case GL_GREEN:
@@ -901,7 +955,7 @@ static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
             case GL_ZERO:
             case GL_ONE:
                 // Don't modify the swizzle state when requesting ZERO or ONE.
-                resultSwizzle = newState.*stateMember;
+                resultSwizzle = value;
                 break;
 
             default:
@@ -911,11 +965,11 @@ static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
         }
         else if (levelInfo.depthStencilWorkaround)
         {
-            switch (newState.*stateMember)
+            switch (value)
             {
                 case GL_RED:
                     // Don't modify the swizzle state when requesting the red channel.
-                    resultSwizzle = newState.*stateMember;
+                    resultSwizzle = value;
                     break;
 
                 case GL_GREEN:
@@ -932,7 +986,7 @@ static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
                 case GL_ZERO:
                 case GL_ONE:
                     // Don't modify the swizzle state when requesting ZERO or ONE.
-                    resultSwizzle = newState.*stateMember;
+                    resultSwizzle = value;
                     break;
 
                 default:
@@ -947,65 +1001,28 @@ static inline void SyncTextureStateSwizzle(const FunctionsGL *functions,
 
     }
 
-    if (curState.*stateMember != resultSwizzle)
-    {
-        applyTextureFunc();
-        curState.*stateMember = resultSwizzle;
-        functions->texParameterf(textureType, name, static_cast<GLfloat>(resultSwizzle));
-    }
+    functions->texParameteri(mState.mTarget, name, resultSwizzle);
 }
 
-void TextureGL::syncState(size_t textureUnit) const
+void TextureGL::setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL &levelInfo)
 {
-    // Callback lamdba to bind this texture only if needed.
-    bool textureApplied   = false;
-    auto applyTextureFunc = [&]()
-    {
-        if (!textureApplied)
-        {
-            mStateManager->activeTexture(textureUnit);
-            mStateManager->bindTexture(mState.mTarget, mTextureID);
-            textureApplied = true;
-        }
-    };
+    ASSERT(levelCount > 0 && level + levelCount < mLevelInfo.size());
 
-    // Sync texture state
-    // Apply the effective base level and max level instead of the base level and max level set from
-    // the API. This can help with buggy drivers.
-    if (mAppliedTextureState.getEffectiveBaseLevel() != mState.getEffectiveBaseLevel())
+    GLuint baseLevel              = mState.getEffectiveBaseLevel();
+    const auto &prevBaseLevelInfo = mLevelInfo[baseLevel];
+    bool needsResync =
+        level <= baseLevel && level + levelCount >= baseLevel &&
+        (prevBaseLevelInfo.depthStencilWorkaround != levelInfo.depthStencilWorkaround ||
+         prevBaseLevelInfo.lumaWorkaround.enabled != levelInfo.lumaWorkaround.enabled);
+    if (needsResync)
     {
-        applyTextureFunc();
-        mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_BASE_LEVEL,
-                                  mState.getEffectiveBaseLevel());
+        mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
     }
-    mAppliedTextureState.mBaseLevel = mState.mBaseLevel;
-    if (mAppliedTextureState.getEffectiveMaxLevel() != mState.getEffectiveMaxLevel())
+
+    for (size_t i = level; i < level + levelCount; i++)
     {
-        applyTextureFunc();
-        mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAX_LEVEL,
-                                  mState.getEffectiveMaxLevel());
+        mLevelInfo[i] = levelInfo;
     }
-    mAppliedTextureState.mMaxLevel = mState.mMaxLevel;
-
-    // clang-format off
-    const LevelInfoGL &levelInfo = mLevelInfo[mState.getEffectiveBaseLevel()];
-    SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState.mSwizzleState, mAppliedTextureState.mSwizzleState, mState.mTarget, GL_TEXTURE_SWIZZLE_R, &gl::SwizzleState::swizzleRed);
-    SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState.mSwizzleState, mAppliedTextureState.mSwizzleState, mState.mTarget, GL_TEXTURE_SWIZZLE_G, &gl::SwizzleState::swizzleGreen);
-    SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState.mSwizzleState, mAppliedTextureState.mSwizzleState, mState.mTarget, GL_TEXTURE_SWIZZLE_B, &gl::SwizzleState::swizzleBlue);
-    SyncTextureStateSwizzle(mFunctions, applyTextureFunc, levelInfo, mState.mSwizzleState, mAppliedTextureState.mSwizzleState, mState.mTarget, GL_TEXTURE_SWIZZLE_A, &gl::SwizzleState::swizzleAlpha);
-
-    // Sync sampler state
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_MIN_FILTER, &gl::SamplerState::minFilter);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_MAG_FILTER, &gl::SamplerState::magFilter);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_WRAP_S, &gl::SamplerState::wrapS);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_WRAP_T, &gl::SamplerState::wrapT);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_WRAP_R, &gl::SamplerState::wrapR);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, &gl::SamplerState::maxAnisotropy);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_MIN_LOD, &gl::SamplerState::minLod);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_MAX_LOD, &gl::SamplerState::maxLod);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_COMPARE_MODE, &gl::SamplerState::compareMode);
-    SyncSamplerStateMember(mFunctions, applyTextureFunc, mState.mSamplerState, mAppliedTextureState.mSamplerState, mState.mTarget, GL_TEXTURE_COMPARE_FUNC, &gl::SamplerState::compareFunc);
-    // clang-format on
 }
 
 GLuint TextureGL::getTextureID() const

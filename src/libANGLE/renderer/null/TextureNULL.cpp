@@ -135,4 +135,9 @@ void TextureNULL::releaseTexImage()
     UNIMPLEMENTED();
 }
 
+void TextureNULL::syncState(const gl::Texture::DirtyBits &dirtyBits)
+{
+    UNIMPLEMENTED();
+}
+
 }  // namespace rx

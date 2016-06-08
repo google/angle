@@ -80,6 +80,8 @@ class TextureNULL : public TextureImpl
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
+
+    void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
 };
 
 }  // namespace rx

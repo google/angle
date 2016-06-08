@@ -48,6 +48,8 @@ class MockTextureImpl : public TextureImpl
 
     MOCK_METHOD1(setBaseLevel, void(GLuint));
 
+    MOCK_METHOD1(syncState, void(const gl::Texture::DirtyBits &));
+
     MOCK_METHOD0(destructor, void());
 };
 

@@ -87,10 +87,11 @@ class TextureGL : public TextureImpl
 
     gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
-    void syncState(size_t textureUnit) const;
     GLuint getTextureID() const;
 
     void setBaseLevel(GLuint) override {}
+
+    void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
 
   private:
     void setImageHelper(GLenum target,
@@ -122,12 +123,17 @@ class TextureGL : public TextureImpl
                                            const gl::PixelUnpackState &unpack,
                                            const uint8_t *pixels);
 
+    void syncTextureStateSwizzle(const FunctionsGL *functions, GLenum name, GLenum value);
+
+    void setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL &levelInfo);
+
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
     BlitGL *mBlitter;
 
     std::vector<LevelInfoGL> mLevelInfo;
+    gl::Texture::DirtyBits mLocalDirtyBits;
 
     mutable gl::TextureState mAppliedTextureState;
     GLuint mTextureID;
