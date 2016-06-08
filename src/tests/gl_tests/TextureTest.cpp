@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -3352,6 +3353,39 @@ TEST_P(Texture2DTestES3, UnpackSkipImages2D)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that skip defined in unpack parameters is taken into account when determining whether
+// unpacking source extends outside unpack buffer bounds.
+TEST_P(Texture2DTestES3, UnpackSkipPixelsOutOfBounds)
+{
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ASSERT_GL_NO_ERROR();
+
+    GLBuffer buf;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf.get());
+    std::vector<GLColor> pixelsGreen(128u * 128u, GLColor::green);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixelsGreen.size() * 4u, pixelsGreen.data(),
+                 GL_DYNAMIC_COPY);
+    ASSERT_GL_NO_ERROR();
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 128, 128, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 128, 128, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

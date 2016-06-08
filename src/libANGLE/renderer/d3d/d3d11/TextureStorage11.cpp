@@ -647,17 +647,19 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     const int width  = destBox ? destBox->width : static_cast<int>(image->getWidth());
     const int height = destBox ? destBox->height : static_cast<int>(image->getHeight());
     const int depth = destBox ? destBox->depth : static_cast<int>(image->getDepth());
-    UINT srcRowPitch = 0;
+    GLuint srcRowPitch = 0;
     ANGLE_TRY_RESULT(
         internalFormatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength),
         srcRowPitch);
-    UINT srcDepthPitch = 0;
+    GLuint srcDepthPitch = 0;
     ANGLE_TRY_RESULT(internalFormatInfo.computeDepthPitch(type, width, height, unpack.alignment,
                                                           unpack.rowLength, unpack.imageHeight),
                      srcDepthPitch);
-    const GLsizei srcSkipBytes =
-        internalFormatInfo.computeSkipPixels(srcRowPitch, srcDepthPitch, unpack.skipImages,
-                                             unpack.skipRows, unpack.skipPixels, index.is3D());
+    GLuint srcSkipBytes = 0;
+    ANGLE_TRY_RESULT(
+        internalFormatInfo.computeSkipBytes(srcRowPitch, srcDepthPitch, unpack.skipImages,
+                                            unpack.skipRows, unpack.skipPixels, index.is3D()),
+        srcSkipBytes);
 
     const d3d11::TextureFormat &d3d11Format = d3d11::GetTextureFormatInfo(
         image->getInternalFormat(), mRenderer->getRenderer11DeviceCaps());

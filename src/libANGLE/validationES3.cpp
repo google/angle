@@ -487,6 +487,32 @@ bool ValidateES3TexImageParametersBase(Context *context,
         CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
         checkedCopyBytes += checkedOffset;
 
+        auto rowPitchOrErr =
+            formatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength);
+        if (rowPitchOrErr.isError())
+        {
+            context->handleError(rowPitchOrErr.getError());
+            return false;
+        }
+        auto depthPitchOrErr = formatInfo.computeDepthPitch(type, width, height, unpack.alignment,
+                                                            unpack.rowLength, unpack.imageHeight);
+        if (depthPitchOrErr.isError())
+        {
+            context->handleError(depthPitchOrErr.getError());
+            return false;
+        }
+
+        bool targetIs3D     = target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY;
+        auto skipBytesOrErr = formatInfo.computeSkipBytes(
+            rowPitchOrErr.getResult(), depthPitchOrErr.getResult(), unpack.skipImages,
+            unpack.skipRows, unpack.skipPixels, targetIs3D);
+        if (skipBytesOrErr.isError())
+        {
+            context->handleError(skipBytesOrErr.getError());
+            return false;
+        }
+        checkedCopyBytes += skipBytesOrErr.getResult();
+
         if (!checkedCopyBytes.IsValid() ||
             (checkedCopyBytes.ValueOrDie() > static_cast<size_t>(pixelUnpackBuffer->getSize())))
         {

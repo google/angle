@@ -483,13 +483,13 @@ gl::Error Image9::loadData(const gl::Box &area,
     ASSERT(area.z == 0 && area.depth == 1);
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
-    GLsizei inputRowPitch                = 0;
+    GLuint inputRowPitch                 = 0;
     ANGLE_TRY_RESULT(
         formatInfo.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
         inputRowPitch);
     ASSERT(!applySkipImages);
-    GLsizei inputSkipBytes = formatInfo.computeSkipPixels(
-        inputRowPitch, 0, unpack.skipImages, unpack.skipRows, unpack.skipPixels, false);
+    ASSERT(unpack.skipPixels == 0);
+    ASSERT(unpack.skipRows == 0);
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
     ASSERT(d3dFormatInfo.loadFunction != NULL);
@@ -508,9 +508,8 @@ gl::Error Image9::loadData(const gl::Box &area,
     }
 
     d3dFormatInfo.loadFunction(area.width, area.height, area.depth,
-                               reinterpret_cast<const uint8_t *>(input) + inputSkipBytes,
-                               inputRowPitch, 0, reinterpret_cast<uint8_t *>(locked.pBits),
-                               locked.Pitch, 0);
+                               reinterpret_cast<const uint8_t *>(input), inputRowPitch, 0,
+                               reinterpret_cast<uint8_t *>(locked.pBits), locked.Pitch, 0);
 
     unlock();
 

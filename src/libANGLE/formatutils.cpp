@@ -763,15 +763,28 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(GLenum form
     return bytes.ValueOrDie();
 }
 
-GLuint InternalFormat::computeSkipPixels(GLint rowPitch,
-                                         GLint depthPitch,
-                                         GLint skipImages,
-                                         GLint skipRows,
-                                         GLint skipPixels,
-                                         bool applySkipImages) const
+gl::ErrorOrResult<GLuint> InternalFormat::computeSkipBytes(GLuint rowPitch,
+                                                           GLuint depthPitch,
+                                                           GLint skipImages,
+                                                           GLint skipRows,
+                                                           GLint skipPixels,
+                                                           bool applySkipImages) const
 {
-    GLuint skipImagesBytes = applySkipImages ? skipImages * depthPitch : 0;
-    return skipImagesBytes + skipRows * rowPitch + skipPixels * pixelBytes;
+    CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
+    CheckedNumeric<GLuint> checkedDepthPitch(depthPitch);
+    CheckedNumeric<GLuint> checkedSkipImages(static_cast<GLuint>(skipImages));
+    CheckedNumeric<GLuint> checkedSkipRows(static_cast<GLuint>(skipRows));
+    CheckedNumeric<GLuint> checkedSkipPixels(static_cast<GLuint>(skipPixels));
+    CheckedNumeric<GLuint> checkedPixelBytes(pixelBytes);
+    auto checkedSkipImagesBytes = checkedSkipImages * checkedDepthPitch;
+    if (!applySkipImages)
+    {
+        checkedSkipImagesBytes = 0;
+    }
+    auto skipBytes = checkedSkipImagesBytes + checkedSkipRows * checkedRowPitch +
+                     checkedSkipPixels * checkedPixelBytes;
+    ANGLE_TRY_CHECKED_MATH(skipBytes);
+    return skipBytes.ValueOrDie();
 }
 
 gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(

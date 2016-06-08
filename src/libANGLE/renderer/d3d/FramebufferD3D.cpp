@@ -246,8 +246,10 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
     ANGLE_TRY_RESULT(
         sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, packState.rowLength),
         outputPitch);
-    GLsizei outputSkipBytes = sizedFormatInfo.computeSkipPixels(
-        outputPitch, 0, 0, packState.skipRows, packState.skipPixels, false);
+    GLuint outputSkipBytes = 0;
+    ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(outputPitch, 0, 0, packState.skipRows,
+                                                      packState.skipPixels, false),
+                     outputSkipBytes);
 
     return readPixelsImpl(area, format, type, outputPitch, packState,
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);

@@ -59,12 +59,12 @@ struct InternalFormat
                                                 GLint imageHeight) const;
     gl::ErrorOrResult<GLuint> computeCompressedImageSize(GLenum formatType,
                                                          const gl::Extents &size) const;
-    GLuint computeSkipPixels(GLint rowPitch,
-                             GLint depthPitch,
-                             GLint skipImages,
-                             GLint skipRows,
-                             GLint skipPixels,
-                             bool applySkipImages) const;
+    gl::ErrorOrResult<GLuint> computeSkipBytes(GLuint rowPitch,
+                                               GLuint depthPitch,
+                                               GLint skipImages,
+                                               GLint skipRows,
+                                               GLint skipPixels,
+                                               bool applySkipImages) const;
     gl::ErrorOrResult<GLuint> computeUnpackSize(GLenum formatType,
                                                 const gl::Extents &size,
                                                 const gl::PixelUnpackState &unpack) const;
