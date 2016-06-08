@@ -291,6 +291,11 @@
         "loadFunction": "LoadToNative<GLubyte,4>",
         "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
         "requiresConversion": "false"
+      },
+      {
+        "loadFunction": "LoadRGBA8ToBGR5A1",
+        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
+        "requiresConversion": "true"
       }
     ],
     "GL_UNSIGNED_SHORT_5_5_5_1": [

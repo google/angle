@@ -1549,6 +1549,7 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                 {
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
                         { GL_UNSIGNED_SHORT_5_5_5_1, LoadImageFunctionInfo(LoadRGB5A1ToA1RGB5, true) },
+                        { GL_UNSIGNED_BYTE, LoadImageFunctionInfo(LoadRGBA8ToBGR5A1, true) },
                     };
 
                     return loadFunctionsMap;
