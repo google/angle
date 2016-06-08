@@ -15,6 +15,11 @@
 namespace angle
 {
 
+const GLColorRGB GLColorRGB::blue(0u, 0u, 255u);
+const GLColorRGB GLColorRGB::green(0u, 255u, 0u);
+const GLColorRGB GLColorRGB::red(255u, 0u, 0u);
+const GLColorRGB GLColorRGB::yellow(255u, 255u, 0);
+
 const GLColor GLColor::black = GLColor(0u, 0u, 0u, 255u);
 const GLColor GLColor::blue   = GLColor(0u, 0u, 255u, 255u);
 const GLColor GLColor::cyan   = GLColor(0u, 255u, 255u, 255u);
@@ -85,6 +90,14 @@ void TestPlatform::enableMessages()
 
 TestPlatform g_testPlatformInstance;
 }  // anonymous namespace
+
+GLColorRGB::GLColorRGB() : R(0), G(0), B(0)
+{
+}
+
+GLColorRGB::GLColorRGB(GLubyte r, GLubyte g, GLubyte b) : R(r), G(g), B(b)
+{
+}
 
 GLColor::GLColor() : R(0), G(0), B(0), A(0)
 {

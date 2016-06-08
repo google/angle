@@ -303,6 +303,27 @@ TEST_P(SixteenBppTextureTestES3, RGBA4UploadRGBA8)
     simpleValidationBase(tex.get());
 }
 
+// Test uploading RGB8 data to RGB565 textures.
+TEST_P(SixteenBppTextureTestES3, RGB565UploadRGB8)
+{
+    std::vector<GLColorRGB> fourColors;
+    fourColors.push_back(GLColorRGB::red);
+    fourColors.push_back(GLColorRGB::green);
+    fourColors.push_back(GLColorRGB::blue);
+    fourColors.push_back(GLColorRGB::yellow);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, fourColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    simpleValidationBase(tex.get());
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D9(),

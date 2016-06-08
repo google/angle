@@ -222,6 +222,38 @@ void LoadLA16FToRGBA16F(size_t width, size_t height, size_t depth,
     }
 }
 
+void LoadRGB8ToBGR565(size_t width,
+                      size_t height,
+                      size_t depth,
+                      const uint8_t *input,
+                      size_t inputRowPitch,
+                      size_t inputDepthPitch,
+                      uint8_t *output,
+                      size_t outputRowPitch,
+                      size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const uint8_t *source =
+                OffsetDataPointer<uint8_t>(input, y, z, inputRowPitch, inputDepthPitch);
+            uint16_t *dest =
+                OffsetDataPointer<uint16_t>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (size_t x = 0; x < width; x++)
+            {
+                uint8_t r8 = source[x * 3 + 0];
+                uint8_t g8 = source[x * 3 + 1];
+                uint8_t b8 = source[x * 3 + 2];
+                auto r5    = static_cast<uint16_t>(r8 >> 3);
+                auto g6    = static_cast<uint16_t>(g8 >> 2);
+                auto b5    = static_cast<uint16_t>(b8 >> 3);
+                dest[x]    = (r5 << 11) | (g6 << 5) | b5;
+            }
+        }
+    }
+}
+
 void LoadRGB8ToBGRX8(size_t width, size_t height, size_t depth,
                      const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,
                      uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch)

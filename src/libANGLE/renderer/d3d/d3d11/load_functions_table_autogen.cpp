@@ -1522,6 +1522,7 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                 case DXGI_FORMAT_B5G6R5_UNORM:
                 {
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
+                        { GL_UNSIGNED_BYTE, LoadImageFunctionInfo(LoadRGB8ToBGR565, true) },
                         { GL_UNSIGNED_SHORT_5_6_5, LoadImageFunctionInfo(LoadToNative<GLushort,1>, false) },
                     };
 

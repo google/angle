@@ -943,6 +943,11 @@
         "loadFunction": "LoadToNative3To4<GLubyte,0xFF>",
         "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
         "requiresConversion": "true"
+      },
+      {
+        "loadFunction": "LoadRGB8ToBGR565",
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
+        "requiresConversion": "true"
       }
     ],
     "GL_UNSIGNED_SHORT_5_6_5": [

@@ -44,6 +44,19 @@
 
 namespace angle
 {
+struct GLColorRGB
+{
+    GLColorRGB();
+    GLColorRGB(GLubyte r, GLubyte g, GLubyte b);
+
+    GLubyte R, G, B;
+
+    static const GLColorRGB blue;
+    static const GLColorRGB green;
+    static const GLColorRGB red;
+    static const GLColorRGB yellow;
+};
+
 struct GLColor
 {
     GLColor();
