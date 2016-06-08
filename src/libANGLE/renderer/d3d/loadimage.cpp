@@ -8,6 +8,8 @@
 
 #include "libANGLE/renderer/d3d/loadimage.h"
 
+#include "libANGLE/renderer/imageformats.h"
+
 namespace rx
 {
 
@@ -521,6 +523,39 @@ void LoadRGBA8ToBGR5A1(size_t width,
                 auto b5        = static_cast<uint16_t>((rgba8 & 0x00FF0000) >> 19);
                 auto a1        = static_cast<uint16_t>((rgba8 & 0xFF000000) >> 31);
                 dest[x]        = (a1 << 15) | (r5 << 10) | (g5 << 5) | b5;
+            }
+        }
+    }
+}
+
+void LoadRGB10A2ToBGR5A1(size_t width,
+                         size_t height,
+                         size_t depth,
+                         const uint8_t *input,
+                         size_t inputRowPitch,
+                         size_t inputDepthPitch,
+                         uint8_t *output,
+                         size_t outputRowPitch,
+                         size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const R10G10B10A2 *source =
+                OffsetDataPointer<R10G10B10A2>(input, y, z, inputRowPitch, inputDepthPitch);
+            uint16_t *dest =
+                OffsetDataPointer<uint16_t>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (size_t x = 0; x < width; x++)
+            {
+                R10G10B10A2 rgb10a2 = source[x];
+
+                uint16_t r5 = static_cast<uint16_t>(rgb10a2.R >> 5u);
+                uint16_t g5 = static_cast<uint16_t>(rgb10a2.G >> 5u);
+                uint16_t b5 = static_cast<uint16_t>(rgb10a2.B >> 5u);
+                uint16_t a1 = static_cast<uint16_t>(rgb10a2.A >> 1u);
+
+                dest[x] = (a1 << 15) | (r5 << 10) | (g5 << 5) | b5;
             }
         }
     }

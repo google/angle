@@ -343,6 +343,42 @@ TEST_P(SixteenBppTextureTestES3, RGB5A1UploadRGBA8)
     simpleValidationBase(tex.get());
 }
 
+// Test uploading RGB10A2 data to RGB5A1 textures.
+TEST_P(SixteenBppTextureTestES3, RGB5A1UploadRGB10A2)
+{
+    struct RGB10A2
+    {
+        RGB10A2(uint32_t r, uint32_t g, uint32_t b, uint32_t a) : R(r), G(g), B(b), A(a) {}
+
+        uint32_t R : 10;
+        uint32_t G : 10;
+        uint32_t B : 10;
+        uint32_t A : 2;
+    };
+
+    uint32_t one10 = (1u << 10u) - 1u;
+
+    RGB10A2 red(one10, 0u, 0u, 0x3u);
+    RGB10A2 green(0u, one10, 0u, 0x3u);
+    RGB10A2 blue(0u, 0u, one10, 0x3u);
+    RGB10A2 yellow(one10, one10, 0u, 0x3u);
+
+    std::vector<RGB10A2> fourColors;
+    fourColors.push_back(red);
+    fourColors.push_back(green);
+    fourColors.push_back(blue);
+    fourColors.push_back(yellow);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB5_A1, 2, 2, 0, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV,
+                 fourColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    simpleValidationBase(tex.get());
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D9(),
