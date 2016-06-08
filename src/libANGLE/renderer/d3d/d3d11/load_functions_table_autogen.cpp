@@ -1813,6 +1813,7 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                 {
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
                         { GL_UNSIGNED_SHORT_4_4_4_4, LoadImageFunctionInfo(LoadRGBA4ToARGB4, true) },
+                        { GL_UNSIGNED_BYTE, LoadImageFunctionInfo(LoadRGBA8ToBGRA4, true) },
                     };
 
                     return loadFunctionsMap;

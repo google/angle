@@ -126,6 +126,10 @@ class SixteenBppTextureTest : public ANGLETest
     GLint mTexture2DUniformLocation;
 };
 
+class SixteenBppTextureTestES3 : public SixteenBppTextureTest
+{
+};
+
 // Simple validation test for GL_RGB565 textures.
 // Samples from the texture, renders to it, generates mipmaps etc.
 TEST_P(SixteenBppTextureTest, RGB565Validation)
@@ -281,6 +285,24 @@ TEST_P(SixteenBppTextureTest, RGBA4444Validation)
     simpleValidationBase(tex.get());
 }
 
+// Test uploading RGBA8 data to RGBA4 textures.
+TEST_P(SixteenBppTextureTestES3, RGBA4UploadRGBA8)
+{
+    std::vector<GLColor> fourColors;
+    fourColors.push_back(GLColor::red);
+    fourColors.push_back(GLColor::green);
+    fourColors.push_back(GLColor::blue);
+    fourColors.push_back(GLColor::yellow);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, fourColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    simpleValidationBase(tex.get());
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D9(),
@@ -288,5 +310,7 @@ ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D11_FL9_3(),
                        ES2_OPENGL(),
                        ES2_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(SixteenBppTextureTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 } // namespace
