@@ -7,6 +7,7 @@
 //   Basic tests using 16bpp texture formats (e.g. GL_RGB565).
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -73,14 +74,16 @@ class SixteenBppTextureTest : public ANGLETest
         glUseProgram(m2DProgram);
         glUniform1i(mTexture2DUniformLocation, 0);
         drawQuad(m2DProgram, "position", 0.5f);
-        EXPECT_GL_NO_ERROR();
+        ASSERT_GL_NO_ERROR();
+
+        int w = getWindowWidth() - 1;
+        int h = getWindowHeight() - 1;
 
         // Check that it drew as expected
-        EXPECT_PIXEL_EQ(0,                     0,                    255,   0,   0, 255);
-        EXPECT_PIXEL_EQ(getWindowHeight() - 1, 0,                      0, 255,   0, 255);
-        EXPECT_PIXEL_EQ(0,                     getWindowWidth() - 1,   0,   0, 255, 255);
-        EXPECT_PIXEL_EQ(getWindowHeight() - 1, getWindowWidth() - 1, 255, 255,   0, 255);
-        swapBuffers();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -90,19 +93,17 @@ class SixteenBppTextureTest : public ANGLETest
         glUseProgram(m2DProgram);
         glUniform1i(mTexture2DUniformLocation, 0);
         drawQuad(m2DProgram, "position", 0.5f);
-        EXPECT_GL_NO_ERROR();
+        ASSERT_GL_NO_ERROR();
 
         // Check that it drew as expected
-        EXPECT_PIXEL_EQ(0,                     0,                    255,   0,   0, 255);
-        EXPECT_PIXEL_EQ(getWindowHeight() - 1, 0,                      0, 255,   0, 255);
-        EXPECT_PIXEL_EQ(0,                     getWindowWidth() - 1,   0,   0, 255, 255);
-        EXPECT_PIXEL_EQ(getWindowHeight() - 1, getWindowWidth() - 1, 255, 255,   0, 255);
-        swapBuffers();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(0, h, GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(w, h, GLColor::yellow);
 
         // Bind the texture as a framebuffer, render to it, then check the results
-        GLuint fbo = 0;
-        glGenFramebuffers(1, &fbo);
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
         glBindTexture(GL_TEXTURE_2D, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
@@ -119,8 +120,6 @@ class SixteenBppTextureTest : public ANGLETest
         {
             std::cout << "Skipping rendering to an unsupported framebuffer format" << std::endl;
         }
-
-        glDeleteFramebuffers(1, &fbo);
     }
 
     GLuint m2DProgram;
@@ -151,9 +150,8 @@ TEST_P(SixteenBppTextureTest, RGB565Validation)
     glClearColor(0, 0, 0, 0);
 
     // Create a simple RGB565 texture
-    GLuint tex = 0;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -163,9 +161,7 @@ TEST_P(SixteenBppTextureTest, RGB565Validation)
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, pixels);
     EXPECT_GL_NO_ERROR();
 
-    simpleValidationBase(tex);
-
-    glDeleteTextures(1, &tex);
+    simpleValidationBase(tex.get());
 }
 
 // Simple validation test for GL_RGBA5551 textures.
@@ -190,9 +186,8 @@ TEST_P(SixteenBppTextureTest, RGBA5551Validation)
     };
 
     // Create a simple 5551 texture
-    GLuint tex = 0;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -201,9 +196,7 @@ TEST_P(SixteenBppTextureTest, RGBA5551Validation)
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, pixels);
     EXPECT_GL_NO_ERROR();
 
-    simpleValidationBase(tex);
-
-    glDeleteTextures(1, &tex);
+    simpleValidationBase(tex.get());
 }
 
 // Test to ensure calling Clear() on an RGBA5551 texture does something reasonable
@@ -219,22 +212,20 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
         return;
     }
 
-    GLuint tex = 0;
-    GLuint fbo = 0;
+    GLTexture tex;
+    GLFramebuffer fbo;
 
     // Create a simple 5551 texture
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     EXPECT_GL_NO_ERROR();
 
     // Bind the texture as a framebuffer, clear it, then check the results
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
     glBindTexture(GL_TEXTURE_2D, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.get(), 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_UNSUPPORTED)
     {
@@ -250,10 +241,6 @@ TEST_P(SixteenBppTextureTest, RGBA5551ClearAlpha)
     {
         std::cout << "Skipping rendering to an unsupported framebuffer format" << std::endl;
     }
-
-    glDeleteFramebuffers(1, &fbo);
-    glDeleteTextures(1, &tex);
-    glDeleteFramebuffers(1, &fbo);
 }
 
 // Simple validation test for GL_RGBA4444 textures.
@@ -280,9 +267,8 @@ TEST_P(SixteenBppTextureTest, RGBA4444Validation)
     glClearColor(0, 0, 0, 0);
 
     // Generate a RGBA4444 texture, no mipmaps
-    GLuint tex = 0;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -292,9 +278,7 @@ TEST_P(SixteenBppTextureTest, RGBA4444Validation)
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, pixels);
     EXPECT_GL_NO_ERROR();
 
-    simpleValidationBase(tex);
-
-    glDeleteTextures(1, &tex);
+    simpleValidationBase(tex.get());
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

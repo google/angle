@@ -83,6 +83,7 @@
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
+            '<(angle_path)/src/tests/test_utils/gl_raii.h',
         ],
         'angle_end2end_tests_win_sources':
         [

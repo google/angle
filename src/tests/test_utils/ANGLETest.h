@@ -54,12 +54,13 @@ struct GLColor
 
     GLubyte R, G, B, A;
 
-    static const GLColor red;
-    static const GLColor green;
+    static const GLColor black;
     static const GLColor blue;
     static const GLColor cyan;
-    static const GLColor black;
+    static const GLColor green;
+    static const GLColor red;
     static const GLColor white;
+    static const GLColor yellow;
 };
 
 // Useful to cast any type to GLubyte.

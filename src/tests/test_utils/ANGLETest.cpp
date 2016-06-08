@@ -15,11 +15,12 @@
 namespace angle
 {
 
-const GLColor GLColor::red   = GLColor(255u, 0u, 0u, 255u);
-const GLColor GLColor::green = GLColor(0u, 255u, 0u, 255u);
-const GLColor GLColor::blue  = GLColor(0u, 0u, 255u, 255u);
-const GLColor GLColor::cyan  = GLColor(0u, 255u, 255u, 255u);
 const GLColor GLColor::black = GLColor(0u, 0u, 0u, 255u);
+const GLColor GLColor::blue   = GLColor(0u, 0u, 255u, 255u);
+const GLColor GLColor::cyan   = GLColor(0u, 255u, 255u, 255u);
+const GLColor GLColor::green  = GLColor(0u, 255u, 0u, 255u);
+const GLColor GLColor::red    = GLColor(255u, 0u, 0u, 255u);
+const GLColor GLColor::yellow = GLColor(255u, 255u, 0, 255u);
 const GLColor GLColor::white = GLColor(255u, 255u, 255u, 255u);
 
 const GLColor16 GLColor16::white = GLColor16(65535u, 65535u, 65535u, 65535u);
