@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "032c002d_e17251d0",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3321,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-08T18:01:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "032c002d_b5e7c0b9",
+      "range": {
+        "startLine": 3321,
+        "startChar": 0,
+        "endLine": 3321,
+        "endChar": 6
+      },
+      "revId": "ed9c81c3b08bdbed543d53d025c517ba7dbb7e3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "032c002d_75fa884f",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-08T00:00:04Z",
       "side": 1,
       "message": "probably safest to use ASSERT_GL_NO_ERROR for everything",
+      "range": {
+        "startLine": 3326,
+        "startChar": 4,
+        "endLine": 3326,
+        "endChar": 22
+      },
+      "revId": "ed9c81c3b08bdbed543d53d025c517ba7dbb7e3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "032c002d_014d0d8f",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3326,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-08T18:01:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "032c002d_75fa884f",
       "range": {
         "startLine": 3326,
         "startChar": 4,
