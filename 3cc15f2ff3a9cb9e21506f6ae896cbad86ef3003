@@ -171,6 +171,30 @@
     },
     {
       "key": {
+        "uuid": "6febe063_3e8e7794",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-09T17:55:01Z",
+      "side": 1,
+      "message": "I meant that some class could inherit from SignalReciver\u003cTextureDirtyBits\u003e and another would inherit from BroadcastChannel\u003cTextureDirtyBits\u003e to make the connection",
+      "parentUuid": "6febe063_15439629",
+      "range": {
+        "startLine": 24,
+        "startChar": 24,
+        "endLine": 24,
+        "endChar": 32
+      },
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2353c428_ac8147a8",
         "filename": "src/libANGLE/signal_utils.h",
         "patchSetId": 2
