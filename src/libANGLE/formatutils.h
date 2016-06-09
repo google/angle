@@ -63,8 +63,7 @@ struct InternalFormat
                              GLint depthPitch,
                              GLint skipImages,
                              GLint skipRows,
-                             GLint skipPixels,
-                             bool applySkipImages) const;
+                             GLint skipPixels) const;
     gl::ErrorOrResult<GLuint> computeUnpackSize(GLenum formatType,
                                                 const gl::Extents &size,
                                                 const gl::PixelUnpackState &unpack) const;

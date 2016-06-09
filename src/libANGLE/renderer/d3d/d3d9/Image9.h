@@ -42,12 +42,8 @@ class Image9 : public ImageD3D
     virtual gl::Error setManagedSurfaceCube(TextureStorage *storage, int face, int level);
     virtual gl::Error copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region);
 
-    gl::Error loadData(const gl::Box &area,
-                       const gl::PixelUnpackState &unpack,
-                       GLenum type,
-                       const void *input,
-                       bool applySkipImages) override;
-    gl::Error loadCompressedData(const gl::Box &area, const void *input) override;
+    virtual gl::Error loadData(const gl::Box &area, const gl::PixelUnpackState &unpack, GLenum type, const void *input);
+    virtual gl::Error loadCompressedData(const gl::Box &area, const void *input);
 
     gl::Error copyFromTexStorage(const gl::ImageIndex &imageIndex, TextureStorage *source) override;
     gl::Error copyFromFramebuffer(const gl::Offset &destOffset,

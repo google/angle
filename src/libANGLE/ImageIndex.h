@@ -28,7 +28,6 @@ struct ImageIndex
     ImageIndex &operator=(const ImageIndex &other);
 
     bool hasLayer() const { return layerIndex != ENTIRE_LEVEL; }
-    bool is3D() const;
 
     static ImageIndex Make2D(GLint mipIndex);
     static ImageIndex MakeCube(GLenum target, GLint mipIndex);

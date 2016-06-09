@@ -767,11 +767,9 @@ GLuint InternalFormat::computeSkipPixels(GLint rowPitch,
                                          GLint depthPitch,
                                          GLint skipImages,
                                          GLint skipRows,
-                                         GLint skipPixels,
-                                         bool applySkipImages) const
+                                         GLint skipPixels) const
 {
-    GLuint skipImagesBytes = applySkipImages ? skipImages * depthPitch : 0;
-    return skipImagesBytes + skipRows * rowPitch + skipPixels * pixelBytes;
+    return skipImages * depthPitch + skipRows * rowPitch + skipPixels * pixelBytes;
 }
 
 gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(

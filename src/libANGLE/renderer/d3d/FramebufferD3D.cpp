@@ -247,7 +247,7 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
         sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, packState.rowLength),
         outputPitch);
     GLsizei outputSkipBytes = sizedFormatInfo.computeSkipPixels(
-        outputPitch, 0, 0, packState.skipRows, packState.skipPixels, false);
+        outputPitch, 0, 0, packState.skipRows, packState.skipPixels);
 
     return readPixelsImpl(area, format, type, outputPitch, packState,
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);

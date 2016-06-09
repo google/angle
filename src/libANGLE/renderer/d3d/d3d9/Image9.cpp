@@ -473,11 +473,7 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image9::loadData(const gl::Box &area,
-                           const gl::PixelUnpackState &unpack,
-                           GLenum type,
-                           const void *input,
-                           bool applySkipImages)
+gl::Error Image9::loadData(const gl::Box &area, const gl::PixelUnpackState &unpack, GLenum type, const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(area.z == 0 && area.depth == 1);
@@ -487,9 +483,8 @@ gl::Error Image9::loadData(const gl::Box &area,
     ANGLE_TRY_RESULT(
         formatInfo.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
         inputRowPitch);
-    ASSERT(!applySkipImages);
-    GLsizei inputSkipBytes = formatInfo.computeSkipPixels(
-        inputRowPitch, 0, unpack.skipImages, unpack.skipRows, unpack.skipPixels, false);
+    GLsizei inputSkipBytes = formatInfo.computeSkipPixels(inputRowPitch, 0, unpack.skipImages,
+                                                          unpack.skipRows, unpack.skipPixels);
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
     ASSERT(d3dFormatInfo.loadFunction != NULL);
