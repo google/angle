@@ -188,6 +188,82 @@ class Context final : public ValidationContext
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
+    void activeTexture(GLenum texture);
+    void blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+    void blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha);
+    void blendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha);
+    void clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+    void clearDepthf(GLclampf depth);
+    void clearStencil(GLint s);
+    void colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
+    void cullFace(GLenum mode);
+    void depthFunc(GLenum func);
+    void depthMask(GLboolean flag);
+    void depthRangef(GLclampf zNear, GLclampf zFar);
+    void disable(GLenum cap);
+    void disableVertexAttribArray(GLuint index);
+    void enable(GLenum cap);
+    void enableVertexAttribArray(GLuint index);
+    void frontFace(GLenum mode);
+    void hint(GLenum target, GLenum mode);
+    void lineWidth(GLfloat width);
+    void pixelStorei(GLenum pname, GLint param);
+    void polygonOffset(GLfloat factor, GLfloat units);
+    void sampleCoverage(GLclampf value, GLboolean invert);
+    void scissor(GLint x, GLint y, GLsizei width, GLsizei height);
+    void stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask);
+    void stencilMaskSeparate(GLenum face, GLuint mask);
+    void stencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum zpass);
+    void vertexAttrib1f(GLuint index, GLfloat x);
+    void vertexAttrib1fv(GLuint index, const GLfloat *values);
+    void vertexAttrib2f(GLuint index, GLfloat x, GLfloat y);
+    void vertexAttrib2fv(GLuint index, const GLfloat *values);
+    void vertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z);
+    void vertexAttrib3fv(GLuint index, const GLfloat *values);
+    void vertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    void vertexAttrib4fv(GLuint index, const GLfloat *values);
+    void vertexAttribPointer(GLuint index,
+                             GLint size,
+                             GLenum type,
+                             GLboolean normalized,
+                             GLsizei stride,
+                             const GLvoid *ptr);
+    void viewport(GLint x, GLint y, GLsizei width, GLsizei height);
+
+    void vertexAttribIPointer(GLuint index,
+                              GLint size,
+                              GLenum type,
+                              GLsizei stride,
+                              const GLvoid *pointer);
+    void vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w);
+    void vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);
+    void vertexAttribI4iv(GLuint index, const GLint *v);
+    void vertexAttribI4uiv(GLuint index, const GLuint *v);
+
+    void debugMessageControl(GLenum source,
+                             GLenum type,
+                             GLenum severity,
+                             GLsizei count,
+                             const GLuint *ids,
+                             GLboolean enabled);
+    void debugMessageInsert(GLenum source,
+                            GLenum type,
+                            GLuint id,
+                            GLenum severity,
+                            GLsizei length,
+                            const GLchar *buf);
+    void debugMessageCallback(GLDEBUGPROCKHR callback, const void *userParam);
+    GLuint getDebugMessageLog(GLuint count,
+                              GLsizei bufSize,
+                              GLenum *sources,
+                              GLenum *types,
+                              GLuint *ids,
+                              GLenum *severities,
+                              GLsizei *lengths,
+                              GLchar *messageLog);
+    void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message);
+    void popDebugGroup();
+
     void clear(GLbitfield mask);
     void clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values);
     void clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values);

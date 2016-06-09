@@ -1139,9 +1139,7 @@ void GL_APIENTRY DebugMessageControlKHR(GLenum source,
             return;
         }
 
-        std::vector<GLuint> idVector(ids, ids + count);
-        context->getState().getDebug().setMessageControl(
-            source, type, severity, std::move(idVector), (enabled != GL_FALSE));
+        context->debugMessageControl(source, type, severity, count, ids, enabled);
     }
 }
 
@@ -1165,8 +1163,7 @@ void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
             return;
         }
 
-        std::string msg(buf, (length > 0) ? static_cast<size_t>(length) : strlen(buf));
-        context->getState().getDebug().insertMessage(source, type, id, severity, std::move(msg));
+        context->debugMessageInsert(source, type, id, severity, length, buf);
     }
 }
 
@@ -1183,7 +1180,7 @@ void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *us
             return;
         }
 
-        context->getState().getDebug().setCallback(callback, userParam);
+        context->debugMessageCallback(callback, userParam);
     }
 }
 
@@ -1211,8 +1208,8 @@ GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
             return 0;
         }
 
-        return static_cast<GLuint>(context->getState().getDebug().getMessages(
-            count, bufSize, sources, types, ids, severities, lengths, messageLog));
+        return context->getDebugMessageLog(count, bufSize, sources, types, ids, severities, lengths,
+                                           messageLog);
     }
 
     return 0;
@@ -1234,7 +1231,7 @@ void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, con
         }
 
         std::string msg(message, (length > 0) ? static_cast<size_t>(length) : strlen(message));
-        context->getState().getDebug().pushGroup(source, id, std::move(msg));
+        context->pushDebugGroup(source, id, length, message);
     }
 }
 
@@ -1250,7 +1247,7 @@ void GL_APIENTRY PopDebugGroupKHR(void)
             return;
         }
 
-        context->getState().getDebug().popGroup();
+        context->popDebugGroup();
     }
 }
 

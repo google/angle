@@ -2748,4 +2748,375 @@ void Context::syncStateForBlit()
     syncRendererState(mBlitDirtyBits, mBlitDirtyObjects);
 }
 
+void Context::activeTexture(GLenum texture)
+{
+    mState.setActiveSampler(texture - GL_TEXTURE0);
+}
+
+void Context::blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
+{
+    mState.setBlendColor(clamp01(red), clamp01(green), clamp01(blue), clamp01(alpha));
+}
+
+void Context::blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
+{
+    mState.setBlendEquation(modeRGB, modeAlpha);
+}
+
+void Context::blendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+{
+    mState.setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
+}
+
+void Context::clearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
+{
+    mState.setColorClearValue(red, green, blue, alpha);
+}
+
+void Context::clearDepthf(GLclampf depth)
+{
+    mState.setDepthClearValue(depth);
+}
+
+void Context::clearStencil(GLint s)
+{
+    mState.setStencilClearValue(s);
+}
+
+void Context::colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
+{
+    mState.setColorMask(red == GL_TRUE, green == GL_TRUE, blue == GL_TRUE, alpha == GL_TRUE);
+}
+
+void Context::cullFace(GLenum mode)
+{
+    mState.setCullMode(mode);
+}
+
+void Context::depthFunc(GLenum func)
+{
+    mState.setDepthFunc(func);
+}
+
+void Context::depthMask(GLboolean flag)
+{
+    mState.setDepthMask(flag != GL_FALSE);
+}
+
+void Context::depthRangef(GLclampf zNear, GLclampf zFar)
+{
+    mState.setDepthRange(zNear, zFar);
+}
+
+void Context::disable(GLenum cap)
+{
+    mState.setEnableFeature(cap, false);
+}
+
+void Context::disableVertexAttribArray(GLuint index)
+{
+    mState.setEnableVertexAttribArray(index, false);
+}
+
+void Context::enable(GLenum cap)
+{
+    mState.setEnableFeature(cap, true);
+}
+
+void Context::enableVertexAttribArray(GLuint index)
+{
+    mState.setEnableVertexAttribArray(index, true);
+}
+
+void Context::frontFace(GLenum mode)
+{
+    mState.setFrontFace(mode);
+}
+
+void Context::hint(GLenum target, GLenum mode)
+{
+    switch (target)
+    {
+        case GL_GENERATE_MIPMAP_HINT:
+            mState.setGenerateMipmapHint(mode);
+            break;
+
+        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
+            mState.setFragmentShaderDerivativeHint(mode);
+            break;
+
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
+void Context::lineWidth(GLfloat width)
+{
+    mState.setLineWidth(width);
+}
+
+void Context::pixelStorei(GLenum pname, GLint param)
+{
+    switch (pname)
+    {
+        case GL_UNPACK_ALIGNMENT:
+            mState.setUnpackAlignment(param);
+            break;
+
+        case GL_PACK_ALIGNMENT:
+            mState.setPackAlignment(param);
+            break;
+
+        case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
+            mState.setPackReverseRowOrder(param != 0);
+            break;
+
+        case GL_UNPACK_ROW_LENGTH:
+            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            mState.setUnpackRowLength(param);
+            break;
+
+        case GL_UNPACK_IMAGE_HEIGHT:
+            ASSERT(getClientVersion() >= 3);
+            mState.setUnpackImageHeight(param);
+            break;
+
+        case GL_UNPACK_SKIP_IMAGES:
+            ASSERT(getClientVersion() >= 3);
+            mState.setUnpackSkipImages(param);
+            break;
+
+        case GL_UNPACK_SKIP_ROWS:
+            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            mState.setUnpackSkipRows(param);
+            break;
+
+        case GL_UNPACK_SKIP_PIXELS:
+            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            mState.setUnpackSkipPixels(param);
+            break;
+
+        case GL_PACK_ROW_LENGTH:
+            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            mState.setPackRowLength(param);
+            break;
+
+        case GL_PACK_SKIP_ROWS:
+            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            mState.setPackSkipRows(param);
+            break;
+
+        case GL_PACK_SKIP_PIXELS:
+            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            mState.setPackSkipPixels(param);
+            break;
+
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
+void Context::polygonOffset(GLfloat factor, GLfloat units)
+{
+    mState.setPolygonOffsetParams(factor, units);
+}
+
+void Context::sampleCoverage(GLclampf value, GLboolean invert)
+{
+    mState.setSampleCoverageParams(clamp01(value), invert == GL_TRUE);
+}
+
+void Context::scissor(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    mState.setScissorParams(x, y, width, height);
+}
+
+void Context::stencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
+{
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilParams(func, ref, mask);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilBackParams(func, ref, mask);
+    }
+}
+
+void Context::stencilMaskSeparate(GLenum face, GLuint mask)
+{
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilWritemask(mask);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilBackWritemask(mask);
+    }
+}
+
+void Context::stencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenum zpass)
+{
+    if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilOperations(fail, zfail, zpass);
+    }
+
+    if (face == GL_BACK || face == GL_FRONT_AND_BACK)
+    {
+        mState.setStencilBackOperations(fail, zfail, zpass);
+    }
+}
+
+void Context::vertexAttrib1f(GLuint index, GLfloat x)
+{
+    GLfloat vals[4] = {x, 0, 0, 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib1fv(GLuint index, const GLfloat *values)
+{
+    GLfloat vals[4] = {values[0], 0, 0, 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
+{
+    GLfloat vals[4] = {x, y, 0, 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib2fv(GLuint index, const GLfloat *values)
+{
+    GLfloat vals[4] = {values[0], values[1], 0, 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
+{
+    GLfloat vals[4] = {x, y, z, 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib3fv(GLuint index, const GLfloat *values)
+{
+    GLfloat vals[4] = {values[0], values[1], values[2], 1};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+    GLfloat vals[4] = {x, y, z, w};
+    mState.setVertexAttribf(index, vals);
+}
+
+void Context::vertexAttrib4fv(GLuint index, const GLfloat *values)
+{
+    mState.setVertexAttribf(index, values);
+}
+
+void Context::vertexAttribPointer(GLuint index,
+                                  GLint size,
+                                  GLenum type,
+                                  GLboolean normalized,
+                                  GLsizei stride,
+                                  const GLvoid *ptr)
+{
+    mState.setVertexAttribState(index, mState.getTargetBuffer(GL_ARRAY_BUFFER), size, type,
+                                normalized == GL_TRUE, false, stride, ptr);
+}
+
+void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    mState.setViewportParams(x, y, width, height);
+}
+
+void Context::vertexAttribIPointer(GLuint index,
+                                   GLint size,
+                                   GLenum type,
+                                   GLsizei stride,
+                                   const GLvoid *pointer)
+{
+    mState.setVertexAttribState(index, mState.getTargetBuffer(GL_ARRAY_BUFFER), size, type, false,
+                                true, stride, pointer);
+}
+
+void Context::vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
+{
+    GLint vals[4] = {x, y, z, w};
+    mState.setVertexAttribi(index, vals);
+}
+
+void Context::vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+{
+    GLuint vals[4] = {x, y, z, w};
+    mState.setVertexAttribu(index, vals);
+}
+
+void Context::vertexAttribI4iv(GLuint index, const GLint *v)
+{
+    mState.setVertexAttribi(index, v);
+}
+
+void Context::vertexAttribI4uiv(GLuint index, const GLuint *v)
+{
+    mState.setVertexAttribu(index, v);
+}
+
+void Context::debugMessageControl(GLenum source,
+                                  GLenum type,
+                                  GLenum severity,
+                                  GLsizei count,
+                                  const GLuint *ids,
+                                  GLboolean enabled)
+{
+    std::vector<GLuint> idVector(ids, ids + count);
+    mState.getDebug().setMessageControl(source, type, severity, std::move(idVector),
+                                        (enabled != GL_FALSE));
+}
+
+void Context::debugMessageInsert(GLenum source,
+                                 GLenum type,
+                                 GLuint id,
+                                 GLenum severity,
+                                 GLsizei length,
+                                 const GLchar *buf)
+{
+    std::string msg(buf, (length > 0) ? static_cast<size_t>(length) : strlen(buf));
+    mState.getDebug().insertMessage(source, type, id, severity, std::move(msg));
+}
+
+void Context::debugMessageCallback(GLDEBUGPROCKHR callback, const void *userParam)
+{
+    mState.getDebug().setCallback(callback, userParam);
+}
+
+GLuint Context::getDebugMessageLog(GLuint count,
+                                   GLsizei bufSize,
+                                   GLenum *sources,
+                                   GLenum *types,
+                                   GLuint *ids,
+                                   GLenum *severities,
+                                   GLsizei *lengths,
+                                   GLchar *messageLog)
+{
+    return static_cast<GLuint>(mState.getDebug().getMessages(count, bufSize, sources, types, ids,
+                                                             severities, lengths, messageLog));
+}
+
+void Context::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message)
+{
+    std::string msg(message, (length > 0) ? static_cast<size_t>(length) : strlen(message));
+    mState.getDebug().pushGroup(source, id, std::move(msg));
+}
+
+void Context::popDebugGroup()
+{
+    mState.getDebug().popGroup();
+}
+
 }  // namespace gl
