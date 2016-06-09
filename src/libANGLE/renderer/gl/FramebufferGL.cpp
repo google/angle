@@ -232,7 +232,7 @@ Error FramebufferGL::readPixels(ContextImpl *context,
 {
     // TODO: don't sync the pixel pack state here once the dirty bits contain the pixel pack buffer
     // binding
-    const PixelPackState &packState = context->getState().getPackState();
+    const PixelPackState &packState = context->getGLState().getPackState();
     mStateManager->setPixelPackState(packState);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
@@ -247,7 +247,7 @@ Error FramebufferGL::blit(ContextImpl *context,
                           GLbitfield mask,
                           GLenum filter)
 {
-    const Framebuffer *sourceFramebuffer     = context->getState().getReadFramebuffer();
+    const Framebuffer *sourceFramebuffer     = context->getGLState().getReadFramebuffer();
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());

@@ -610,7 +610,7 @@ void State::setEnableFeature(GLenum feature, bool enabled)
     }
 }
 
-bool State::getEnableFeature(GLenum feature)
+bool State::getEnableFeature(GLenum feature) const
 {
     switch (feature)
     {
@@ -810,7 +810,7 @@ GLuint State::getRenderbufferId() const
     return mRenderbuffer.id();
 }
 
-Renderbuffer *State::getCurrentRenderbuffer()
+Renderbuffer *State::getCurrentRenderbuffer() const
 {
     return mRenderbuffer.get();
 }

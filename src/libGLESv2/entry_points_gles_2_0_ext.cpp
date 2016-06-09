@@ -557,7 +557,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
+        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
         Error error = renderbuffer->setStorageMultisample(samples, internalformat, width, height);
         if (error.isError())
         {
@@ -1027,7 +1027,7 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
+        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
         Error error = renderbuffer->setStorageEGLImageTarget(imageObject);
         if (error.isError())
         {

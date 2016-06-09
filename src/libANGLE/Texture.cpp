@@ -199,17 +199,17 @@ bool TextureState::isSamplerComplete(const SamplerState &samplerState,
                                      const ContextState &data) const
 {
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
-    const TextureCaps &textureCaps = data.textureCaps->get(baseImageDesc.internalFormat);
+    const TextureCaps &textureCaps = data.getTextureCap(baseImageDesc.internalFormat);
     if (!mCompletenessCache.cacheValid || mCompletenessCache.samplerState != samplerState ||
         mCompletenessCache.filterable != textureCaps.filterable ||
-        mCompletenessCache.clientVersion != data.clientVersion ||
-        mCompletenessCache.supportsNPOT != data.extensions->textureNPOT)
+        mCompletenessCache.clientVersion != data.getClientVersion() ||
+        mCompletenessCache.supportsNPOT != data.getExtensions().textureNPOT)
     {
         mCompletenessCache.cacheValid      = true;
         mCompletenessCache.samplerState    = samplerState;
         mCompletenessCache.filterable      = textureCaps.filterable;
-        mCompletenessCache.clientVersion   = data.clientVersion;
-        mCompletenessCache.supportsNPOT    = data.extensions->textureNPOT;
+        mCompletenessCache.clientVersion   = data.getClientVersion();
+        mCompletenessCache.supportsNPOT    = data.getExtensions().textureNPOT;
         mCompletenessCache.samplerComplete = computeSamplerCompleteness(samplerState, data);
     }
     return mCompletenessCache.samplerComplete;
@@ -237,13 +237,13 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         return false;
     }
 
-    const TextureCaps &textureCaps = data.textureCaps->get(baseImageDesc.internalFormat);
+    const TextureCaps &textureCaps = data.getTextureCap(baseImageDesc.internalFormat);
     if (!textureCaps.filterable && !IsPointSampled(samplerState))
     {
         return false;
     }
 
-    bool npotSupport = data.extensions->textureNPOT || data.clientVersion >= 3;
+    bool npotSupport = data.getExtensions().textureNPOT || data.getClientVersion() >= 3;
     if (!npotSupport)
     {
         if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !gl::isPow2(baseImageDesc.size.width)) ||
@@ -303,7 +303,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(baseImageDesc.internalFormat);
-    if (formatInfo.depthBits > 0 && data.clientVersion > 2)
+    if (formatInfo.depthBits > 0 && data.getClientVersion() > 2)
     {
         if (samplerState.compareMode == GL_NONE)
         {

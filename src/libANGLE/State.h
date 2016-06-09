@@ -136,7 +136,7 @@ class State : angle::NonCopyable
 
     // Generic state toggle & query
     void setEnableFeature(GLenum feature, bool enabled);
-    bool getEnableFeature(GLenum feature);
+    bool getEnableFeature(GLenum feature) const;
 
     // Line width state setter
     void setLineWidth(GLfloat width);
@@ -169,7 +169,7 @@ class State : angle::NonCopyable
     // Renderbuffer binding manipulation
     void setRenderbufferBinding(Renderbuffer *renderbuffer);
     GLuint getRenderbufferId() const;
-    Renderbuffer *getCurrentRenderbuffer();
+    Renderbuffer *getCurrentRenderbuffer() const;
     void detachRenderbuffer(GLuint renderbuffer);
 
     // Framebuffer binding manipulation

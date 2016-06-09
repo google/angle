@@ -55,10 +55,11 @@ void RendererD3D::cleanup()
 
 unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int samples)
 {
+    const auto &glState = data.getState();
     unsigned int mask = 0;
-    if (data.state->isSampleCoverageEnabled())
+    if (glState.isSampleCoverageEnabled())
     {
-        GLclampf coverageValue = data.state->getSampleCoverageValue();
+        GLclampf coverageValue = glState.getSampleCoverageValue();
         if (coverageValue != 0)
         {
             float threshold = 0.5f;
@@ -75,7 +76,7 @@ unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int s
             }
         }
 
-        bool coverageInvert = data.state->getSampleCoverageInvert();
+        bool coverageInvert = glState.getSampleCoverageInvert();
         if (coverageInvert)
         {
             mask = ~mask;
@@ -99,7 +100,9 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
                                      const FramebufferTextureArray &framebufferTextures,
                                      size_t framebufferTextureCount)
 {
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.state->getProgram());
+    const auto &glState    = data.getState();
+    const auto &caps       = data.getCaps();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
     ASSERT(!programD3D->isSamplerMappingDirty());
 
@@ -107,13 +110,13 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
-        GLint textureUnit = programD3D->getSamplerMapping(shaderType, samplerIndex, *data.caps);
+        GLint textureUnit  = programD3D->getSamplerMapping(shaderType, samplerIndex, caps);
         if (textureUnit != -1)
         {
-            gl::Texture *texture = data.state->getSamplerTexture(textureUnit, textureType);
+            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
             ASSERT(texture);
 
-            gl::Sampler *samplerObject = data.state->getSampler(textureUnit);
+            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
 
             const gl::SamplerState &samplerState =
                 samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
@@ -144,8 +147,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
     }
 
     // Set all the remaining textures to NULL
-    size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? data.caps->maxTextureImageUnits
-                                                            : data.caps->maxVertexTextureImageUnits;
+    size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? caps.maxTextureImageUnits
+                                                            : caps.maxVertexTextureImageUnits;
     clearTextures(shaderType, samplerRange, samplerCount);
 
     return gl::NoError();
@@ -165,7 +168,7 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory, const gl::Conte
 
 bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     if (drawMode == GL_POINTS)
     {
@@ -197,7 +200,7 @@ bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
 
 gl::Error RendererD3D::markTransformFeedbackUsage(const gl::ContextState &data)
 {
-    const gl::TransformFeedback *transformFeedback = data.state->getCurrentTransformFeedback();
+    const gl::TransformFeedback *transformFeedback = data.getState().getCurrentTransformFeedback();
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
     {
         const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
@@ -216,7 +219,7 @@ size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
 {
     size_t textureCount = 0;
 
-    const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
+    const gl::Framebuffer *drawFramebuffer = data.getState().getDrawFramebuffer();
     for (size_t i = 0; i < drawFramebuffer->getNumColorBuffers(); i++)
     {
         const gl::FramebufferAttachment *attachment = drawFramebuffer->getColorbuffer(i);

@@ -889,24 +889,25 @@ gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
 gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
 {
     const auto &data = context->getContextState();
+    const auto &glState = data.getState();
 
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
-    const gl::Framebuffer *framebufferObject = data.state->getDrawFramebuffer();
+    const gl::Framebuffer *framebufferObject = glState.getDrawFramebuffer();
     ASSERT(framebufferObject && framebufferObject->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE);
 
     ANGLE_TRY(applyRenderTarget(context, framebufferObject));
 
     // Setting viewport state
-    setViewport(data.state->getViewport(), data.state->getNearPlane(), data.state->getFarPlane(),
-                drawMode, data.state->getRasterizerState().frontFace, false);
+    setViewport(glState.getViewport(), glState.getNearPlane(), glState.getFarPlane(), drawMode,
+                glState.getRasterizerState().frontFace, false);
 
     // Setting scissors state
-    setScissorRectangle(data.state->getScissor(), data.state->isScissorTestEnabled());
+    setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     // Setting blend, depth stencil, and rasterizer states
     int samples                    = framebufferObject->getSamples(data);
-    gl::RasterizerState rasterizer = data.state->getRasterizerState();
+    gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
@@ -925,13 +926,14 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 
 gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode)
 {
-    int samples                    = glData.state->getDrawFramebuffer()->getSamples(glData);
-    gl::RasterizerState rasterizer = glData.state->getRasterizerState();
+    const auto &glState            = glData.getState();
+    int samples                    = glState.getDrawFramebuffer()->getSamples(glData);
+    gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(glData, samples);
-    return mStateManager.setBlendDepthRasterStates(*glData.state, mask);
+    return mStateManager.setBlendDepthRasterStates(glState, mask);
 }
 
 void Renderer9::setViewport(const gl::Rectangle &viewport,
@@ -1172,7 +1174,7 @@ gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
                                       GLenum type,
                                       TranslatedIndexData *indexInfo)
 {
-    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::VertexArray *vao           = data.getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
     gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
                                                           indexInfo, false);
@@ -1207,7 +1209,7 @@ gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
                                     GLsizei count,
                                     GLsizei instances)
 {
-    ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
+    ASSERT(!data.getState().isTransformFeedbackActiveUnpaused());
 
     startScene();
 
@@ -1258,7 +1260,7 @@ gl::Error Renderer9::drawElementsImpl(const gl::ContextState &data,
 
     int minIndex = static_cast<int>(indexInfo.indexRange.start);
 
-    gl::VertexArray *vao           = data.state->getVertexArray();
+    gl::VertexArray *vao           = data.getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
     if (mode == GL_POINTS)
@@ -1585,15 +1587,15 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
 
 gl::Error Renderer9::applyShaders(const gl::ContextState &data, GLenum drawMode)
 {
-    ProgramD3D *programD3D  = GetImplAs<ProgramD3D>(data.state->getProgram());
-    programD3D->updateCachedInputLayout(*data.state);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
+    programD3D->updateCachedInputLayout(data.getState());
 
     const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = NULL;
     ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr));
 
-    const gl::Framebuffer *drawFramebuffer = data.state->getDrawFramebuffer();
+    const gl::Framebuffer *drawFramebuffer = data.getState().getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe = NULL;
     ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe));
 
@@ -2798,7 +2800,7 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
                                          const gl::IndexRange &indexRange)
 {
     const auto &data     = context->getContextState();
-    gl::Program *program = context->getState().getProgram();
+    gl::Program *program = context->getGLState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
@@ -2817,14 +2819,15 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
 
     ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
 
-    applyTransformFeedbackBuffers(*data.state);
+    applyTransformFeedbackBuffers(data.getState());
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation
     // layer.
-    ASSERT(!data.state->isTransformFeedbackActiveUnpaused());
+    ASSERT(!data.getState().isTransformFeedbackActiveUnpaused());
 
     size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(*data.state, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+    ANGLE_TRY(applyVertexBuffer(data.getState(), mode,
+                                static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
     ANGLE_TRY(applyTextures(context, data));
     ANGLE_TRY(applyShaders(data, mode));
@@ -2845,7 +2848,7 @@ gl::Error Renderer9::genericDrawArrays(Context9 *context,
                                        GLsizei instances)
 {
     const auto &data     = context->getContextState();
-    gl::Program *program = context->getState().getProgram();
+    gl::Program *program = context->getGLState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
@@ -2858,8 +2861,8 @@ gl::Error Renderer9::genericDrawArrays(Context9 *context,
     }
 
     ANGLE_TRY(updateState(context, mode));
-    ANGLE_TRY(applyTransformFeedbackBuffers(*data.state));
-    ANGLE_TRY(applyVertexBuffer(*data.state, mode, first, count, instances, nullptr));
+    ANGLE_TRY(applyTransformFeedbackBuffers(data.getState()));
+    ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context, data));
     ANGLE_TRY(applyShaders(data, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
@@ -2868,7 +2871,7 @@ gl::Error Renderer9::genericDrawArrays(Context9 *context,
     {
         ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
 
-        if (data.state->isTransformFeedbackActiveUnpaused())
+        if (data.getState().isTransformFeedbackActiveUnpaused())
         {
             ANGLE_TRY(markTransformFeedbackUsage(data));
         }

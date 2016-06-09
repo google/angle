@@ -14,13 +14,14 @@
 
 namespace gl
 {
+class ValidationContext;
 
-struct ContextState final : public angle::NonCopyable
+class ContextState final : public angle::NonCopyable
 {
   public:
     ContextState(uintptr_t context,
                  GLint clientVersion,
-                 const State &state,
+                 State *state,
                  const Caps &caps,
                  const TextureCapsMap &textureCaps,
                  const Extensions &extensions,
@@ -28,21 +29,36 @@ struct ContextState final : public angle::NonCopyable
                  const Limitations &limitations);
     ~ContextState();
 
-    uintptr_t context;
-    GLint clientVersion;
-    const State *state;
-    const Caps *caps;
-    const TextureCapsMap *textureCaps;
-    const Extensions *extensions;
-    const ResourceManager *resourceManager;
-    const Limitations *limitations;
+    uintptr_t getContext() const { return mContext; }
+    GLint getClientVersion() const { return mClientVersion; }
+    const State &getState() const { return *mState; }
+    const Caps &getCaps() const { return mCaps; }
+    const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
+    const Extensions &getExtensions() const { return mExtensions; }
+    const ResourceManager &getResourceManager() const { return *mResourceManager; }
+    const Limitations &getLimitations() const { return mLimitations; }
+
+    const TextureCaps &getTextureCap(GLenum internalFormat) const;
+
+  private:
+    friend class Context;
+    friend class ValidationContext;
+
+    uintptr_t mContext;
+    GLint mClientVersion;
+    State *mState;
+    const Caps &mCaps;
+    const TextureCapsMap &mTextureCaps;
+    const Extensions &mExtensions;
+    const ResourceManager *mResourceManager;
+    const Limitations &mLimitations;
 };
 
 class ValidationContext : angle::NonCopyable
 {
   public:
     ValidationContext(GLint clientVersion,
-                      const State &state,
+                      State *state,
                       const Caps &caps,
                       const TextureCapsMap &textureCaps,
                       const Extensions &extensions,
@@ -53,19 +69,23 @@ class ValidationContext : angle::NonCopyable
 
     virtual void handleError(const Error &error) = 0;
 
-    const ContextState &getData() const { return mData; }
-    int getClientVersion() const { return mData.clientVersion; }
-    const State &getState() const { return *mData.state; }
-    const Caps &getCaps() const { return *mData.caps; }
-    const TextureCapsMap &getTextureCaps() const { return *mData.textureCaps; }
-    const Extensions &getExtensions() const { return *mData.extensions; }
-    const Limitations &getLimitations() const { return *mData.limitations; }
+    const ContextState &getContextState() const { return mState; }
+    int getClientVersion() const { return mState.getClientVersion(); }
+    const State &getGLState() const { return mState.getState(); }
+    const Caps &getCaps() const { return mState.getCaps(); }
+    const TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }
+    const Extensions &getExtensions() const { return mState.getExtensions(); }
+    const Limitations &getLimitations() const { return mState.getLimitations(); }
     bool skipValidation() const { return mSkipValidation; }
 
+    // Specific methods needed for validation.
+    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
+    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
+
   protected:
-    ContextState mData;
+    ContextState mState;
     bool mSkipValidation;
 };
-}
+}  // namespace gl
 
 #endif  // LIBANGLE_CONTEXTSTATE_H_

@@ -472,19 +472,19 @@ Error Program::link(const ContextState &data)
         return Error(GL_NO_ERROR);
     }
 
-    if (!linkUniforms(mInfoLog, *data.caps, mUniformBindings))
+    if (!linkUniforms(mInfoLog, data.getCaps(), mUniformBindings))
     {
         return Error(GL_NO_ERROR);
     }
 
-    if (!linkUniformBlocks(mInfoLog, *data.caps))
+    if (!linkUniformBlocks(mInfoLog, data.getCaps()))
     {
         return Error(GL_NO_ERROR);
     }
 
     const auto &mergedVaryings = getMergedVaryings();
 
-    if (!linkValidateTransformFeedback(mInfoLog, mergedVaryings, *data.caps))
+    if (!linkValidateTransformFeedback(mInfoLog, mergedVaryings, data.getCaps()))
     {
         return Error(GL_NO_ERROR);
     }
@@ -1825,7 +1825,7 @@ bool Program::linkAttributes(const ContextState &data,
 {
     unsigned int usedLocations = 0;
     mState.mAttributes         = vertexShader->getActiveAttributes();
-    GLuint maxAttribs = data.caps->maxVertexAttributes;
+    GLuint maxAttribs          = data.getCaps().maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
     if (mState.mAttributes.size() > maxAttribs)
@@ -1834,7 +1834,7 @@ bool Program::linkAttributes(const ContextState &data,
         return false;
     }
 
-    std::vector<sh::Attribute *> usedAttribMap(data.caps->maxVertexAttributes, nullptr);
+    std::vector<sh::Attribute *> usedAttribMap(maxAttribs, nullptr);
 
     // Link attributes that have a binding location
     for (sh::Attribute &attribute : mState.mAttributes)

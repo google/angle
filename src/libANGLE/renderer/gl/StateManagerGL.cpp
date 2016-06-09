@@ -601,7 +601,7 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::ContextState &data,
                                              GLsizei count,
                                              GLsizei instanceCount)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     const gl::Program *program = state.getProgram();
 
@@ -627,7 +627,7 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
                                                GLsizei instanceCount,
                                                const GLvoid **outIndices)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     const gl::Program *program = state.getProgram();
 
@@ -649,10 +649,10 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
 
 gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     // If the context has changed, pause the previous context's transform feedback and queries
-    if (data.context != mPrevDrawContext)
+    if (data.getContext() != mPrevDrawContext)
     {
         if (mPrevDrawTransformFeedback != nullptr)
         {
@@ -666,7 +666,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
-    mPrevDrawContext = data.context;
+    mPrevDrawContext           = data.getContext();
 
     // Set the current query state
     for (GLenum queryType : QueryTypes)
@@ -686,7 +686,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
 
 gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     // Sync the current program state
     const gl::Program *program = state.getProgram();
@@ -697,8 +697,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
          uniformBlockIndex++)
     {
         GLuint binding = program->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
-        const OffsetBindingPointer<gl::Buffer> &uniformBuffer =
-            data.state->getIndexedUniformBuffer(binding);
+        const auto &uniformBuffer = state.getIndexedUniformBuffer(binding);
 
         if (uniformBuffer.get() != nullptr)
         {
@@ -764,7 +763,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
     framebufferGL->syncDrawState();
 
     // Seamless cubemaps are required for ES3 and higher contexts.
-    setTextureCubemapSeamlessEnabled(data.clientVersion >= 3);
+    setTextureCubemapSeamlessEnabled(data.getClientVersion() >= 3);
 
     // Set the current transform feedback state
     gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();

@@ -16,7 +16,7 @@
 
 namespace gl
 {
-struct ContextState;
+class ContextState;
 struct IndexRange;
 }
 

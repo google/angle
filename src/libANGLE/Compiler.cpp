@@ -25,18 +25,18 @@ size_t activeCompilerHandles = 0;
 
 }  // anonymous namespace
 
-Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &data)
+Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     : mImplementation(implFactory->createCompiler()),
-      mSpec(data.clientVersion > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
+      mSpec(state.getClientVersion() > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources(),
       mFragmentCompiler(nullptr),
       mVertexCompiler(nullptr)
 {
-    ASSERT(data.clientVersion == 2 || data.clientVersion == 3);
+    ASSERT(state.getClientVersion() == 2 || state.getClientVersion() == 3);
 
-    const gl::Caps &caps             = *data.caps;
-    const gl::Extensions &extensions = *data.extensions;
+    const gl::Caps &caps             = state.getCaps();
+    const gl::Extensions &extensions = state.getExtensions();
 
     ShInitBuiltInResources(&mResources);
     mResources.MaxVertexAttribs             = caps.maxVertexAttributes;

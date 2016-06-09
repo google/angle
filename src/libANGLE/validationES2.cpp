@@ -47,9 +47,9 @@ bool IsPartialBlit(gl::Context *context,
         return true;
     }
 
-    if (context->getState().isScissorTestEnabled())
+    if (context->getGLState().isScissorTestEnabled())
     {
-        const Rectangle &scissor = context->getState().getScissor();
+        const Rectangle &scissor = context->getGLState().getScissor();
         return scissor.x > 0 || scissor.y > 0 || scissor.width < writeSize.width ||
                scissor.height < writeSize.height;
     }
@@ -495,7 +495,7 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
         return false;
     }
 
-    const gl::Framebuffer *framebuffer = context->getState().getReadFramebuffer();
+    const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
     GLenum colorbufferFormat = framebuffer->getReadColorbuffer()->getInternalFormat();
     const auto &internalFormatInfo = gl::GetInternalFormatInfo(textureInternalFormat);
     GLenum textureFormat = internalFormatInfo.format;
@@ -963,7 +963,7 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
 }
 
 // check for combinations of format and type that are valid for ReadPixels
-bool ValidES2ReadFormatType(Context *context, GLenum format, GLenum type)
+bool ValidES2ReadFormatType(ValidationContext *context, GLenum format, GLenum type)
 {
     switch (format)
     {
@@ -1022,8 +1022,9 @@ bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numA
     switch (target)
     {
       case GL_FRAMEBUFFER:
-        defaultFramebuffer = (context->getState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
-        break;
+          defaultFramebuffer =
+              (context->getGLState().getTargetFramebuffer(GL_FRAMEBUFFER)->id() == 0);
+          break;
       default:
           context->handleError(Error(GL_INVALID_ENUM, "Invalid framebuffer target"));
         return false;
@@ -1230,7 +1231,7 @@ bool ValidateDebugMessageInsertKHR(Context *context,
         return false;
     }
 
-    if (!context->getState().getDebug().isOutputEnabled())
+    if (!context->getGLState().getDebug().isOutputEnabled())
     {
         // If the DEBUG_OUTPUT state is disabled calls to DebugMessageInsert are discarded and do
         // not generate an error.
@@ -1331,7 +1332,7 @@ bool ValidatePushDebugGroupKHR(Context *context,
         return false;
     }
 
-    size_t currentStackSize = context->getState().getDebug().getGroupStackDepth();
+    size_t currentStackSize = context->getGLState().getDebug().getGroupStackDepth();
     if (currentStackSize >= context->getExtensions().maxDebugGroupStackDepth)
     {
         context->handleError(
@@ -1351,7 +1352,7 @@ bool ValidatePopDebugGroupKHR(Context *context)
         return false;
     }
 
-    size_t currentStackSize = context->getState().getDebug().getGroupStackDepth();
+    size_t currentStackSize = context->getGLState().getDebug().getGroupStackDepth();
     if (currentStackSize <= 1)
     {
         context->handleError(Error(GL_STACK_UNDERFLOW, "Cannot pop the default debug group."));
@@ -1631,8 +1632,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
         return false;
     }
 
-    const Framebuffer *readFramebuffer = context->getState().getReadFramebuffer();
-    const Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
+    const Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
+    const Framebuffer *drawFramebuffer = context->getGLState().getDrawFramebuffer();
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
@@ -1675,7 +1676,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 }
             }
 
-            int readSamples = readFramebuffer->getSamples(context->getData());
+            int readSamples = readFramebuffer->getSamples(context->getContextState());
 
             if (readSamples != 0 &&
                 IsPartialBlit(context, readColorAttachment, drawColorAttachment, srcX0, srcY0,
@@ -1726,10 +1727,10 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(ValidationContext *context, GLbitfield mask)
 {
-    const Framebuffer *framebufferObject = context->getState().getDrawFramebuffer();
+    const Framebuffer *framebufferObject = context->getGLState().getDrawFramebuffer();
     ASSERT(framebufferObject);
 
-    if (framebufferObject->checkStatus(context->getData()) != GL_FRAMEBUFFER_COMPLETE)
+    if (framebufferObject->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;
@@ -1920,7 +1921,7 @@ bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
         return false;
     }
 
-    Buffer *buffer = context->getState().getTargetBuffer(target);
+    Buffer *buffer = context->getGLState().getTargetBuffer(target);
 
     if (buffer == nullptr)
     {

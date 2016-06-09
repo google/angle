@@ -388,7 +388,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-GLenum Framebuffer::checkStatus(const ContextState &data) const
+GLenum Framebuffer::checkStatus(const ContextState &state) const
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
@@ -412,7 +412,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
             }
 
             GLenum internalformat = colorAttachment.getInternalFormat();
-            const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
+            const TextureCaps &formatCaps    = state.getTextureCap(internalformat);
             const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
             if (colorAttachment.type() == GL_TEXTURE)
             {
@@ -462,7 +462,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
 
                 // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
                 // in GLES 3.0, there is no such restriction
-                if (data.clientVersion < 3)
+                if (state.getClientVersion() < 3)
                 {
                     if (formatInfo.pixelBytes != colorbufferSize)
                     {
@@ -489,12 +489,12 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
         }
 
         GLenum internalformat = depthAttachment.getInternalFormat();
-        const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
+        const TextureCaps &formatCaps    = state.getTextureCap(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
         if (depthAttachment.type() == GL_TEXTURE)
         {
             // depth texture attachments require OES/ANGLE_depth_texture
-            if (!data.extensions->depthTextures)
+            if (!state.getExtensions().depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -527,7 +527,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
             // CHROMIUM_framebuffer_mixed_samples allows a framebuffer to be
             // considered complete when its depth or stencil samples are a
             // multiple of the number of color samples.
-            const bool mixedSamples = data.extensions->framebufferMixedSamples;
+            const bool mixedSamples = state.getExtensions().framebufferMixedSamples;
             if (!mixedSamples)
                 return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
 
@@ -548,13 +548,13 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
         }
 
         GLenum internalformat = stencilAttachment.getInternalFormat();
-        const TextureCaps &formatCaps = data.textureCaps->get(internalformat);
+        const TextureCaps &formatCaps    = state.getTextureCap(internalformat);
         const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
         if (stencilAttachment.type() == GL_TEXTURE)
         {
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture
-            if (!data.extensions->depthTextures)
+            if (!state.getExtensions().depthTextures)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -585,7 +585,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
         else if (samples != stencilAttachment.getSamples())
         {
             // see the comments in depth attachment check.
-            const bool mixedSamples = data.extensions->framebufferMixedSamples;
+            const bool mixedSamples = state.getExtensions().framebufferMixedSamples;
             if (!mixedSamples)
                 return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
 
@@ -596,7 +596,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
         }
 
         // Starting from ES 3.0 stencil and depth, if present, should be the same image
-        if (data.clientVersion >= 3 && depthAttachment.isAttached() &&
+        if (state.getClientVersion() >= 3 && depthAttachment.isAttached() &&
             stencilAttachment != depthAttachment)
         {
             return GL_FRAMEBUFFER_UNSUPPORTED;
@@ -611,7 +611,7 @@ GLenum Framebuffer::checkStatus(const ContextState &data) const
 
     // In ES 2.0, all color attachments must have the same width and height.
     // In ES 3.0, there is no such restriction.
-    if (data.clientVersion < 3 && !mState.attachmentsHaveSameDimensions())
+    if (state.getClientVersion() < 3 && !mState.attachmentsHaveSameDimensions())
     {
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
     }
@@ -642,7 +642,7 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
 
 Error Framebuffer::clear(rx::ContextImpl *context, GLbitfield mask)
 {
-    if (context->getState().isRasterizerDiscardEnabled())
+    if (context->getGLState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -655,7 +655,7 @@ Error Framebuffer::clearBufferfv(rx::ContextImpl *context,
                                  GLint drawbuffer,
                                  const GLfloat *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled())
+    if (context->getGLState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -668,7 +668,7 @@ Error Framebuffer::clearBufferuiv(rx::ContextImpl *context,
                                   GLint drawbuffer,
                                   const GLuint *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled())
+    if (context->getGLState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -681,7 +681,7 @@ Error Framebuffer::clearBufferiv(rx::ContextImpl *context,
                                  GLint drawbuffer,
                                  const GLint *values)
 {
-    if (context->getState().isRasterizerDiscardEnabled())
+    if (context->getGLState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -695,7 +695,7 @@ Error Framebuffer::clearBufferfi(rx::ContextImpl *context,
                                  GLfloat depth,
                                  GLint stencil)
 {
-    if (context->getState().isRasterizerDiscardEnabled())
+    if (context->getGLState().isRasterizerDiscardEnabled())
     {
         return gl::Error(GL_NO_ERROR);
     }
@@ -725,7 +725,7 @@ Error Framebuffer::readPixels(rx::ContextImpl *context,
         return error;
     }
 
-    Buffer *unpackBuffer = context->getState().getUnpackState().pixelBuffer.get();
+    Buffer *unpackBuffer = context->getGLState().getUnpackState().pixelBuffer.get();
     if (unpackBuffer)
     {
         unpackBuffer->onPixelUnpack();
@@ -743,9 +743,9 @@ Error Framebuffer::blit(rx::ContextImpl *context,
     return mImpl->blit(context, sourceArea, destArea, mask, filter);
 }
 
-int Framebuffer::getSamples(const ContextState &data) const
+int Framebuffer::getSamples(const ContextState &state) const
 {
-    if (checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)
+    if (checkStatus(state) == GL_FRAMEBUFFER_COMPLETE)
     {
         // for a complete framebuffer, all attachments must have the same sample count
         // in this case return the first nonzero sample size

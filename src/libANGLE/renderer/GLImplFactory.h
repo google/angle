@@ -17,7 +17,7 @@
 
 namespace gl
 {
-struct ContextState;
+class ContextState;
 }
 
 namespace rx

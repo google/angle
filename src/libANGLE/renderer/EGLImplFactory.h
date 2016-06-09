@@ -23,7 +23,7 @@ struct SurfaceState;
 namespace gl
 {
 class Context;
-struct ContextState;
+class ContextState;
 }
 
 namespace rx

@@ -97,7 +97,7 @@ FramebufferD3D::~FramebufferD3D()
 
 gl::Error FramebufferD3D::clear(ContextImpl *context, GLbitfield mask)
 {
-    ClearParameters clearParams = GetClearParameters(context->getState(), mask);
+    ClearParameters clearParams = GetClearParameters(context->getGLState(), mask);
     return clearImpl(context, clearParams);
 }
 
@@ -107,7 +107,7 @@ gl::Error FramebufferD3D::clearBufferfv(ContextImpl *context,
                                         const GLfloat *values)
 {
     // glClearBufferfv can be called to clear the color buffer or depth buffer
-    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -134,7 +134,7 @@ gl::Error FramebufferD3D::clearBufferuiv(ContextImpl *context,
                                          const GLuint *values)
 {
     // glClearBufferuiv can only be called to clear a color buffer
-    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
     for (unsigned int i = 0; i < ArraySize(clearParams.clearColor); i++)
     {
         clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
@@ -151,7 +151,7 @@ gl::Error FramebufferD3D::clearBufferiv(ContextImpl *context,
                                         const GLint *values)
 {
     // glClearBufferiv can be called to clear the color buffer or stencil buffer
-    ClearParameters clearParams = GetClearParameters(context->getState(), 0);
+    ClearParameters clearParams = GetClearParameters(context->getGLState(), 0);
 
     if (buffer == GL_COLOR)
     {
@@ -179,7 +179,7 @@ gl::Error FramebufferD3D::clearBufferfi(ContextImpl *context,
                                         GLint stencil)
 {
     // glClearBufferfi can only be called to clear a depth stencil buffer
-    ClearParameters clearParams   = GetClearParameters(context->getState(), 0);
+    ClearParameters clearParams   = GetClearParameters(context->getGLState(), 0);
     clearParams.clearDepth = true;
     clearParams.depthClearValue = depth;
     clearParams.clearStencil = true;
@@ -238,7 +238,7 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
                                      GLenum type,
                                      GLvoid *pixels) const
 {
-    const gl::PixelPackState &packState = context->getState().getPackState();
+    const gl::PixelPackState &packState = context->getGLState().getPackState();
 
     GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
@@ -259,7 +259,7 @@ gl::Error FramebufferD3D::blit(ContextImpl *context,
                                GLbitfield mask,
                                GLenum filter)
 {
-    const auto &glState                      = context->getState();
+    const auto &glState                      = context->getGLState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
     bool blitRenderTarget = false;
     if ((mask & GL_COLOR_BUFFER_BIT) && sourceFramebuffer->getReadColorbuffer() != nullptr &&

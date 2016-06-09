@@ -117,10 +117,11 @@ Error Stream::createConsumerGLTextureExternal(const AttributeMap &attributes, gl
     ASSERT(mProducerType == ProducerType::NoProducer);
     ASSERT(context != nullptr);
 
+    const auto &glState = context->getGLState();
     EGLenum bufferType = attributes.getAsInt(EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER);
     if (bufferType == EGL_RGB_BUFFER)
     {
-        mPlanes[0].texture = context->getState().getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
+        mPlanes[0].texture = glState.getTargetTexture(GL_TEXTURE_EXTERNAL_OES);
         ASSERT(mPlanes[0].texture != nullptr);
         mPlanes[0].texture->bindStream(this);
         mConsumerType = ConsumerType::GLTextureRGB;
@@ -136,8 +137,8 @@ Error Stream::createConsumerGLTextureExternal(const AttributeMap &attributes, gl
             mPlanes[i].textureUnit = attributes.getAsInt(EGL_YUV_PLANE0_TEXTURE_UNIT_NV + i, -1);
             if (mPlanes[i].textureUnit != EGL_NONE)
             {
-                mPlanes[i].texture = context->getState().getSamplerTexture(mPlanes[i].textureUnit,
-                                                                           GL_TEXTURE_EXTERNAL_OES);
+                mPlanes[i].texture =
+                    glState.getSamplerTexture(mPlanes[i].textureUnit, GL_TEXTURE_EXTERNAL_OES);
                 ASSERT(mPlanes[i].texture != nullptr);
             }
         }

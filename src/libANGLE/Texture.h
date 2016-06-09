@@ -38,7 +38,7 @@ class TextureGL;
 
 namespace gl
 {
-struct ContextState;
+class ContextState;
 class Framebuffer;
 class Texture;
 

@@ -20,7 +20,7 @@
 namespace gl
 {
 struct Caps;
-struct ContextState;
+class ContextState;
 class State;
 }
 

@@ -464,7 +464,7 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
             return;
         }
 
-        Buffer *buffer = context->getState().getTargetBuffer(target);
+        Buffer *buffer = context->getGLState().getTargetBuffer(target);
 
         if (!buffer)
         {
@@ -501,7 +501,7 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             return;
         }
 
-        Buffer *buffer = context->getState().getTargetBuffer(target);
+        Buffer *buffer = context->getGLState().getTargetBuffer(target);
 
         if (!buffer)
         {
@@ -557,10 +557,10 @@ GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
             return 0;
         }
 
-        Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        return framebuffer->checkStatus(context->getData());
+        return framebuffer->checkStatus(context->getContextState());
     }
 
     return 0;
@@ -1473,7 +1473,7 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint* params
             return;
         }
 
-        Buffer *buffer = context->getState().getTargetBuffer(target);
+        Buffer *buffer = context->getGLState().getTargetBuffer(target);
 
         if (!buffer)
         {
@@ -1631,7 +1631,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             break;
         }
 
-        const Framebuffer *framebuffer = context->getState().getTargetFramebuffer(target);
+        const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
         if (framebuffer->id() == 0)
@@ -1964,14 +1964,14 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
             return;
         }
 
-        if (context->getState().getRenderbufferId() == 0)
+        if (context->getGLState().getRenderbufferId() == 0)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
         Renderbuffer *renderbuffer =
-            context->getRenderbuffer(context->getState().getRenderbufferId());
+            context->getRenderbuffer(context->getGLState().getRenderbufferId());
 
         switch (pname)
         {
@@ -2616,7 +2616,7 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
         if (pname == GL_CURRENT_VERTEX_ATTRIB)
         {
             const VertexAttribCurrentValueData &currentValueData =
-                context->getState().getVertexAttribCurrentValue(index);
+                context->getGLState().getVertexAttribCurrentValue(index);
             for (int i = 0; i < 4; ++i)
             {
                 params[i] = currentValueData.FloatValues[i];
@@ -2625,7 +2625,7 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
         else
         {
             const VertexAttribute &attribState =
-                context->getState().getVertexArray()->getVertexAttribute(index);
+                context->getGLState().getVertexArray()->getVertexAttribute(index);
             *params = QuerySingleVertexAttributeParameter<GLfloat>(attribState, pname);
         }
     }
@@ -2652,7 +2652,7 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
         if (pname == GL_CURRENT_VERTEX_ATTRIB)
         {
             const VertexAttribCurrentValueData &currentValueData =
-                context->getState().getVertexAttribCurrentValue(index);
+                context->getGLState().getVertexAttribCurrentValue(index);
             for (int i = 0; i < 4; ++i)
             {
                 float currentValue = currentValueData.FloatValues[i];
@@ -2662,7 +2662,7 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
         else
         {
             const VertexAttribute &attribState =
-                context->getState().getVertexArray()->getVertexAttribute(index);
+                context->getGLState().getVertexArray()->getVertexAttribute(index);
             *params = QuerySingleVertexAttributeParameter<GLint>(attribState, pname);
         }
     }
@@ -2687,7 +2687,7 @@ void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
             return;
         }
 
-        *pointer = const_cast<GLvoid *>(context->getState().getVertexAttribPointer(index));
+        *pointer = const_cast<GLvoid *>(context->getGLState().getVertexAttribPointer(index));
     }
 }
 
@@ -2756,7 +2756,7 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
             return GL_FALSE;
         }
 
-        return context->getState().getEnableFeature(cap);
+        return context->getGLState().getEnableFeature(cap);
     }
 
     return false;
@@ -2887,7 +2887,7 @@ void GL_APIENTRY LinkProgram(GLuint program)
             return;
         }
 
-        Error error = programObject->link(context->getData());
+        Error error = programObject->link(context->getContextState());
         if (error.isError())
         {
             context->handleError(error);
@@ -3042,7 +3042,7 @@ void GL_APIENTRY RenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getState().getCurrentRenderbuffer();
+        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
         Error error = renderbuffer->setStorage(internalformat, width, height);
         if (error.isError())
         {
@@ -3454,7 +3454,7 @@ void GL_APIENTRY Uniform1fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform1fv(location, count, v);
     }
 }
@@ -3476,7 +3476,7 @@ void GL_APIENTRY Uniform1iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform1iv(location, count, v);
     }
 }
@@ -3500,7 +3500,7 @@ void GL_APIENTRY Uniform2fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform2fv(location, count, v);
     }
 }
@@ -3524,7 +3524,7 @@ void GL_APIENTRY Uniform2iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform2iv(location, count, v);
     }
 }
@@ -3548,7 +3548,7 @@ void GL_APIENTRY Uniform3fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform3fv(location, count, v);
     }
 }
@@ -3572,7 +3572,7 @@ void GL_APIENTRY Uniform3iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform3iv(location, count, v);
     }
 }
@@ -3596,7 +3596,7 @@ void GL_APIENTRY Uniform4fv(GLint location, GLsizei count, const GLfloat* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform4fv(location, count, v);
     }
 }
@@ -3620,7 +3620,7 @@ void GL_APIENTRY Uniform4iv(GLint location, GLsizei count, const GLint* v)
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniform4iv(location, count, v);
     }
 }
@@ -3638,7 +3638,7 @@ void GL_APIENTRY UniformMatrix2fv(GLint location, GLsizei count, GLboolean trans
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniformMatrix2fv(location, count, transpose, value);
     }
 }
@@ -3656,7 +3656,7 @@ void GL_APIENTRY UniformMatrix3fv(GLint location, GLsizei count, GLboolean trans
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniformMatrix3fv(location, count, transpose, value);
     }
 }
@@ -3674,7 +3674,7 @@ void GL_APIENTRY UniformMatrix4fv(GLint location, GLsizei count, GLboolean trans
             return;
         }
 
-        Program *program = context->getState().getProgram();
+        Program *program = context->getGLState().getProgram();
         program->setUniformMatrix4fv(location, count, transpose, value);
     }
 }
@@ -3913,8 +3913,8 @@ void GL_APIENTRY VertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
         // An INVALID_OPERATION error is generated when a non-zero vertex array object
         // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
         // and the pointer argument is not NULL.
-        if (context->getState().getVertexArray()->id() != 0 &&
-            context->getState().getArrayBufferId() == 0 && ptr != NULL)
+        if (context->getGLState().getVertexArray()->id() != 0 &&
+            context->getGLState().getArrayBufferId() == 0 && ptr != NULL)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;

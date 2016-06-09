@@ -843,7 +843,7 @@ void StateManager11::onDeleteQueryObject(Query11 *query)
 
 gl::Error StateManager11::onMakeCurrent(const gl::ContextState &data)
 {
-    const gl::State &state = *data.state;
+    const gl::State &state = data.getState();
 
     for (Query11 *query : mCurrentQueries)
     {

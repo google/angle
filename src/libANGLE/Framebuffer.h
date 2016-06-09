@@ -42,7 +42,7 @@ class State;
 class Texture;
 class TextureCapsMap;
 struct Caps;
-struct ContextState;
+class ContextState;
 struct Extensions;
 struct ImageIndex;
 struct Rectangle;
@@ -134,10 +134,10 @@ class Framebuffer final : public LabeledObject
     size_t getNumColorBuffers() const;
     bool hasDepth() const;
     bool hasStencil() const;
-    int getSamples(const ContextState &data) const;
+    int getSamples(const ContextState &state) const;
     bool usingExtendedDrawBuffers() const;
 
-    GLenum checkStatus(const ContextState &data) const;
+    GLenum checkStatus(const ContextState &state) const;
     bool hasValidDepthStencil() const;
 
     Error discard(size_t count, const GLenum *attachments);

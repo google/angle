@@ -30,7 +30,7 @@ class MockValidationContext : public ValidationContext
 {
   public:
     MockValidationContext(GLint clientVersion,
-                          const State &state,
+                          State *state,
                           const Caps &caps,
                           const TextureCapsMap &textureCaps,
                           const Extensions &extensions,
@@ -42,7 +42,7 @@ class MockValidationContext : public ValidationContext
 };
 
 MockValidationContext::MockValidationContext(GLint clientVersion,
-                                             const State &state,
+                                             State *state,
                                              const Caps &caps,
                                              const TextureCapsMap &textureCaps,
                                              const Extensions &extensions,
@@ -105,7 +105,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setDrawFramebufferBinding(framebuffer);
     state.setProgram(program);
 
-    NiceMock<MockValidationContext> testContext(3, state, caps, textureCaps, extensions, nullptr,
+    NiceMock<MockValidationContext> testContext(3, &state, caps, textureCaps, extensions, nullptr,
                                                 limitations, false);
 
     // Set the expectation for the validation error here.

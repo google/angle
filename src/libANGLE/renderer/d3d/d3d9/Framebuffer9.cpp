@@ -67,7 +67,7 @@ gl::Error Framebuffer9::clearImpl(ContextImpl *context, const ClearParameters &c
         return error;
     }
 
-    const gl::State &glState = context->getState();
+    const gl::State &glState = context->getGLState();
     float nearZ              = glState.getNearPlane();
     float farZ = glState.getFarPlane();
     mRenderer->setViewport(glState.getViewport(), nearZ, farZ, GL_TRIANGLES,

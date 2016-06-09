@@ -33,7 +33,7 @@ class ShaderSh;
 namespace gl
 {
 class Compiler;
-struct ContextState;
+class ContextState;
 struct Limitations;
 class ResourceManager;
 

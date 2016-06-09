@@ -21,7 +21,7 @@ class GLImplFactory;
 
 namespace gl
 {
-struct ContextState;
+class ContextState;
 
 class Compiler final : angle::NonCopyable
 {

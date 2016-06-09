@@ -38,7 +38,7 @@ struct TranslatedAttribute;
 namespace gl
 {
 struct Caps;
-struct ContextState;
+class ContextState;
 class ResourceManager;
 class Shader;
 class InfoLog;

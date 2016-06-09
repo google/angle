@@ -185,9 +185,6 @@ class Context final : public ValidationContext
     bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
     bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
 
-    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
-    bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
-
     void activeTexture(GLenum texture);
     void blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
     void blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha);
@@ -486,7 +483,6 @@ class Context final : public ValidationContext
     const std::string &getExtensionString(size_t idx) const;
     size_t getExtensionStringCount() const;
 
-    State &getState() { return mState; }
     rx::ContextImpl *getImplementation() const { return mImplementation.get(); }
 
   private:
@@ -524,7 +520,7 @@ class Context final : public ValidationContext
     // Shader compiler
     Compiler *mCompiler;
 
-    State mState;
+    State mGLState;
 
     int mClientVersion;
 

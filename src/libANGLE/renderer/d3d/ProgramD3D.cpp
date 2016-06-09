@@ -399,7 +399,7 @@ int ProgramD3DMetadata::getRendererMajorShaderModel() const
 
 bool ProgramD3DMetadata::usesBroadcast(const gl::ContextState &data) const
 {
-    return (mFragmentShader->usesFragColor() && data.clientVersion < 3);
+    return (mFragmentShader->usesFragColor() && data.getClientVersion() < 3);
 }
 
 bool ProgramD3DMetadata::usesFragDepth() const
@@ -1354,8 +1354,8 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
     const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(vertexShader);
     const ShaderD3D *fragmentShaderD3D = GetImplAs<ShaderD3D>(fragmentShader);
 
-    mSamplersVS.resize(data.caps->maxVertexTextureImageUnits);
-    mSamplersPS.resize(data.caps->maxTextureImageUnits);
+    mSamplersVS.resize(data.getCaps().maxVertexTextureImageUnits);
+    mSamplersPS.resize(data.getCaps().maxTextureImageUnits);
 
     vertexShaderD3D->generateWorkarounds(&mVertexWorkarounds);
     fragmentShaderD3D->generateWorkarounds(&mPixelWorkarounds);
@@ -1373,7 +1373,7 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         MergeVaryings(*vertexShader, *fragmentShader, mState.getTransformFeedbackVaryingNames());
 
     // Map the varyings to the register file
-    VaryingPacking varyingPacking(data.caps->maxVaryingVectors);
+    VaryingPacking varyingPacking(data.getCaps().maxVaryingVectors);
     if (!varyingPacking.packVaryings(infoLog, packedVaryings,
                                      mState.getTransformFeedbackVaryingNames()))
     {
@@ -1388,7 +1388,7 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
     varyingPacking.enableBuiltins(SHADER_VERTEX, metadata);
     varyingPacking.enableBuiltins(SHADER_PIXEL, metadata);
 
-    if (static_cast<GLuint>(varyingPacking.getRegisterCount()) > data.caps->maxVaryingVectors)
+    if (static_cast<GLuint>(varyingPacking.getRegisterCount()) > data.getCaps().maxVaryingVectors)
     {
         infoLog << "No varying registers left to support gl_FragCoord/gl_PointCoord";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
@@ -1398,7 +1398,7 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
     // We can fail here because we use one semantic per GLSL varying. D3D11 can pack varyings
     // intelligently, but D3D9 assumes one semantic per register.
     if (mRenderer->getRendererClass() == RENDERER_D3D9 &&
-        varyingPacking.getMaxSemanticIndex() > data.caps->maxVaryingVectors)
+        varyingPacking.getMaxSemanticIndex() > data.getCaps().maxVaryingVectors)
     {
         infoLog << "Cannot pack these varyings on D3D9.";
         return LinkResult(false, gl::Error(GL_NO_ERROR));
@@ -1596,7 +1596,7 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
         if (uniformBlock.vertexStaticUse())
         {
             unsigned int registerIndex = uniformBlock.vsRegisterIndex - reservedBuffersInVS;
-            ASSERT(registerIndex < data.caps->maxVertexUniformBlocks);
+            ASSERT(registerIndex < data.getCaps().maxVertexUniformBlocks);
 
             if (mVertexUBOCache.size() <= registerIndex)
             {
@@ -1610,7 +1610,7 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
         if (uniformBlock.fragmentStaticUse())
         {
             unsigned int registerIndex = uniformBlock.psRegisterIndex - reservedBuffersInFS;
-            ASSERT(registerIndex < data.caps->maxFragmentUniformBlocks);
+            ASSERT(registerIndex < data.getCaps().maxFragmentUniformBlocks);
 
             if (mFragmentUBOCache.size() <= registerIndex)
             {
