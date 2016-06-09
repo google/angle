@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6febe063_d51e4e59",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2353c428_6c646f11",
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2353c428_ec297f8c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6febe063_b523caa0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2353c428_ec297f8c",
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2353c428_ac3387f8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2016-06-06T15:13:17Z",
       "side": 1,
       "message": "nit: I think the * is extraneous here.",
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6febe063_751d4259",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2353c428_ac3387f8",
       "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +147,30 @@
     },
     {
       "key": {
+        "uuid": "6febe063_15439629",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:06:33Z",
+      "side": 1,
+      "message": "Sure. It\u0027s not ideal to template it, would require changing all of the classes to template classes. For now it\u0027s OK as a uint32_t, we can reassess later.",
+      "parentUuid": "6febe063_c311fd49",
+      "range": {
+        "startLine": 24,
+        "startChar": 24,
+        "endLine": 24,
+        "endChar": 32
+      },
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2353c428_ac8147a8",
         "filename": "src/libANGLE/signal_utils.h",
         "patchSetId": 2
@@ -104,6 +182,24 @@
       "writtenOn": "2016-06-06T15:13:17Z",
       "side": 1,
       "message": "nit: couldn\u0027t parse the sentence.",
+      "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6febe063_755422e5",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2353c428_ac8147a8",
       "revId": "3cc15f2ff3a9cb9e21506f6ae896cbad86ef3003",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
