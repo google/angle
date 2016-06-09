@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6febe063_35d21a68",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T14:15:46Z",
+      "side": 1,
+      "message": "SignalToken",
+      "range": {
+        "startLine": 208,
+        "startChar": 16,
+        "endLine": 208,
+        "endChar": 24
+      },
+      "revId": "48892da28f1f9a92bf9967ddd3e09257c843dc76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
