@@ -6,8 +6,8 @@
 
 // loadimage.h: Defines image loading functions
 
-#ifndef LIBANGLE_RENDERER_D3D_LOADIMAGE_H_
-#define LIBANGLE_RENDERER_D3D_LOADIMAGE_H_
+#ifndef LIBANGLE_RENDERER_LOADIMAGE_H_
+#define LIBANGLE_RENDERER_LOADIMAGE_H_
 
 #include "libANGLE/angletypes.h"
 
@@ -198,4 +198,4 @@ inline const T *OffsetDataPointer(const uint8_t *data, size_t y, size_t z, size_
 
 #include "loadimage.inl"
 
-#endif // LIBANGLE_RENDERER_D3D_LOADIMAGE_H_
+#endif  // LIBANGLE_RENDERER_LOADIMAGE_H_

@@ -22,6 +22,7 @@ class FramebufferAttachment;
 
 namespace rx
 {
+struct PackPixelsParams;
 class Renderer11;
 struct SourceIndexData;
 struct TranslatedAttribute;
@@ -38,21 +39,6 @@ enum BufferUsage
     BUFFER_USAGE_EMULATED_INDEXED_VERTEX,
 
     BUFFER_USAGE_COUNT,
-};
-
-struct PackPixelsParams
-{
-    PackPixelsParams();
-    PackPixelsParams(const gl::Rectangle &area, GLenum format, GLenum type, GLuint outputPitch,
-                     const gl::PixelPackState &pack, ptrdiff_t offset);
-
-    gl::Rectangle area;
-    GLenum format;
-    GLenum type;
-    GLuint outputPitch;
-    gl::Buffer *packBuffer;
-    gl::PixelPackState pack;
-    ptrdiff_t offset;
 };
 
 typedef size_t DataRevision;

@@ -28,8 +28,8 @@ void CopyPixel(const uint8_t *source, uint8_t *dest);
 
 void CopyBGRA8ToRGBA8(const uint8_t *source, uint8_t *dest);
 
-}
+}  // namespace rx
 
 #include "copyimage.inl"
 
-#endif // LIBANGLE_RENDERER_D3D_COPYIMAGE_H_
+#endif  // LIBANGLE_RENDERER_D3D_COPYIMAGE_H_

@@ -1,37 +1,39 @@
 //
-// Copyright (c) 2015 The ANGLE Project Authors. All rights reserved.
+// Copyright 2016 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// renderer_utils:
+//   Helper methods pertaining to most or all back-ends.
+//
 
-// formatutils9.cpp: Queries for GL image formats and their translations to D3D
-// formats.
+#include "libANGLE/renderer/renderer_utils.h"
 
-#include "libANGLE/renderer/d3d/formatutilsD3D.h"
-
-#include <map>
-
-#include "common/debug.h"
-#include "libANGLE/renderer/d3d/imageformats.h"
-#include "libANGLE/renderer/d3d/copyimage.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/copyimage.h"
+#include "libANGLE/renderer/imageformats.h"
 
 namespace rx
 {
 
-typedef std::pair<GLenum, GLenum> FormatTypePair;
-typedef std::pair<FormatTypePair, ColorWriteFunction> FormatWriteFunctionPair;
-typedef std::map<FormatTypePair, ColorWriteFunction> FormatWriteFunctionMap;
+namespace
+{
+typedef std::pair<gl::FormatType, ColorWriteFunction> FormatWriteFunctionPair;
+typedef std::map<gl::FormatType, ColorWriteFunction> FormatWriteFunctionMap;
 
-static inline void InsertFormatWriteFunctionMapping(FormatWriteFunctionMap *map, GLenum format, GLenum type,
+static inline void InsertFormatWriteFunctionMapping(FormatWriteFunctionMap *map,
+                                                    GLenum format,
+                                                    GLenum type,
                                                     ColorWriteFunction writeFunc)
 {
-    map->insert(FormatWriteFunctionPair(FormatTypePair(format, type), writeFunc));
+    map->insert(FormatWriteFunctionPair(gl::FormatType(format, type), writeFunc));
 }
 
 static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
 {
     FormatWriteFunctionMap map;
 
+    // clang-format off
     //                                    | Format               | Type                             | Color write function             |
     InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLfloat>     );
     InsertFormatWriteFunctionMapping(&map, GL_RGBA,               GL_BYTE,                           WriteColor<R8G8B8A8S, GLfloat>    );
@@ -135,14 +137,112 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
 
     InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              NULL                              );
     InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, NULL                              );
+    // clang-format on
 
     return map;
 }
+}  // anonymous namespace
 
-ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type)
+PackPixelsParams::PackPixelsParams()
+    : format(GL_NONE), type(GL_NONE), outputPitch(0), packBuffer(nullptr), offset(0)
+{
+}
+
+PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
+                                   GLenum formatIn,
+                                   GLenum typeIn,
+                                   GLuint outputPitchIn,
+                                   const gl::PixelPackState &packIn,
+                                   ptrdiff_t offsetIn)
+    : area(areaIn),
+      format(formatIn),
+      type(typeIn),
+      outputPitch(outputPitchIn),
+      packBuffer(packIn.pixelBuffer.get()),
+      pack(packIn.alignment, packIn.reverseRowOrder),
+      offset(offsetIn)
+{
+}
+
+void PackPixels(const PackPixelsParams &params,
+                const gl::InternalFormat &sourceFormatInfo,
+                const FastCopyFunctionMap &fastCopyFunctionsMap,
+                ColorReadFunction colorReadFunction,
+                int inputPitchIn,
+                const uint8_t *sourceIn,
+                uint8_t *destWithoutOffset)
+{
+    uint8_t *destWithOffset = destWithoutOffset + params.offset;
+
+    const uint8_t *source = sourceIn;
+    int inputPitch        = inputPitchIn;
+
+    if (params.pack.reverseRowOrder)
+    {
+        source += inputPitch * (params.area.height - 1);
+        inputPitch = -inputPitch;
+    }
+
+    if (sourceFormatInfo.format == params.format && sourceFormatInfo.type == params.type)
+    {
+        // Direct copy possible
+        for (int y = 0; y < params.area.height; ++y)
+        {
+            memcpy(destWithOffset + y * params.outputPitch, source + y * inputPitch,
+                   params.area.width * sourceFormatInfo.pixelBytes);
+        }
+        return;
+    }
+
+    gl::FormatType formatType(params.format, params.type);
+    ColorCopyFunction fastCopyFunc = GetFastCopyFunction(fastCopyFunctionsMap, formatType);
+    GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(formatType.format, formatType.type);
+    const auto &destFormatInfo     = gl::GetInternalFormatInfo(sizedDestInternalFormat);
+
+    if (fastCopyFunc)
+    {
+        // Fast copy is possible through some special function
+        for (int y = 0; y < params.area.height; ++y)
+        {
+            for (int x = 0; x < params.area.width; ++x)
+            {
+                uint8_t *dest =
+                    destWithOffset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
+                const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
+
+                fastCopyFunc(src, dest);
+            }
+        }
+        return;
+    }
+
+    ColorWriteFunction colorWriteFunction = GetColorWriteFunction(formatType);
+
+    // Maximum size of any Color<T> type used.
+    uint8_t temp[16];
+    static_assert(sizeof(temp) >= sizeof(gl::ColorF) && sizeof(temp) >= sizeof(gl::ColorUI) &&
+                      sizeof(temp) >= sizeof(gl::ColorI),
+                  "Unexpected size of gl::Color struct.");
+
+    for (int y = 0; y < params.area.height; ++y)
+    {
+        for (int x = 0; x < params.area.width; ++x)
+        {
+            uint8_t *dest      = destWithOffset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
+            const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
+
+            // readFunc and writeFunc will be using the same type of color, CopyTexImage
+            // will not allow the copy otherwise.
+            colorReadFunction(src, temp);
+            colorWriteFunction(temp, dest);
+        }
+    }
+}
+
+ColorWriteFunction GetColorWriteFunction(const gl::FormatType &formatType)
 {
     static const FormatWriteFunctionMap formatTypeMap = BuildFormatWriteFunctionMap();
-    FormatWriteFunctionMap::const_iterator iter = formatTypeMap.find(FormatTypePair(format, type));
+    auto iter = formatTypeMap.find(formatType);
     ASSERT(iter != formatTypeMap.end());
     if (iter != formatTypeMap.end())
     {
@@ -150,8 +250,15 @@ ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
+ColorCopyFunction GetFastCopyFunction(const FastCopyFunctionMap &fastCopyFunctions,
+                                      const gl::FormatType &formatType)
+{
+    auto iter = fastCopyFunctions.find(formatType);
+    return (iter != fastCopyFunctions.end()) ? iter->second : nullptr;
 }
+
+}  // namespace rx

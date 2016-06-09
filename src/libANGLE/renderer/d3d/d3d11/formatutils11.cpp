@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/d3d/copyimage.h"
+#include "libANGLE/renderer/copyimage.h"
 #include "libANGLE/renderer/d3d/d3d11/copyvertex.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
@@ -39,15 +39,25 @@ struct D3D11FastCopyFormat
     }
 };
 
-typedef std::multimap<DXGI_FORMAT, D3D11FastCopyFormat> D3D11FastCopyMap;
-
-static D3D11FastCopyMap BuildFastCopyMap()
+static const FastCopyFunctionMap &GetFastCopyFunctionMap(DXGI_FORMAT dxgiFormat)
 {
-    D3D11FastCopyMap map;
-
-    map.insert(std::make_pair(DXGI_FORMAT_B8G8R8A8_UNORM, D3D11FastCopyFormat(GL_RGBA, GL_UNSIGNED_BYTE, CopyBGRA8ToRGBA8)));
-
-    return map;
+    switch (dxgiFormat)
+    {
+        case DXGI_FORMAT_B8G8R8A8_UNORM:
+        {
+            static FastCopyFunctionMap fastCopyMap;
+            if (fastCopyMap.empty())
+            {
+                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = CopyBGRA8ToRGBA8;
+            }
+            return fastCopyMap;
+        }
+        default:
+        {
+            static FastCopyFunctionMap emptyMap;
+            return emptyMap;
+        }
+    }
 }
 
 struct DXGIColorFormatInfo
@@ -225,12 +235,6 @@ static bool RequiresFeatureLevel(D3D_FEATURE_LEVEL featureLevel)
     return featureLevel >= requiredFeatureLevel;
 }
 
-ColorCopyFunction DXGIFormat::getFastCopyFunction(GLenum format, GLenum type) const
-{
-    FastCopyFunctionMap::const_iterator iter = fastCopyFunctions.find(std::make_pair(format, type));
-    return (iter != fastCopyFunctions.end()) ? iter->second : NULL;
-}
-
 void AddDXGIFormat(DXGIFormatInfoMap *map,
                    DXGI_FORMAT dxgiFormat,
                    GLenum componentType,
@@ -260,14 +264,7 @@ void AddDXGIFormat(DXGIFormatInfoMap *map,
     }
 
     info.componentType = componentType;
-
-    static const D3D11FastCopyMap fastCopyMap = BuildFastCopyMap();
-    std::pair<D3D11FastCopyMap::const_iterator, D3D11FastCopyMap::const_iterator> fastCopyIter = fastCopyMap.equal_range(dxgiFormat);
-    for (D3D11FastCopyMap::const_iterator i = fastCopyIter.first; i != fastCopyIter.second; i++)
-    {
-        info.fastCopyFunctions.insert(std::make_pair(std::make_pair(i->second.destFormat, i->second.destType), i->second.copyFunction));
-    }
-
+    info.fastCopyFunctions   = GetFastCopyFunctionMap(dxgiFormat);
     info.nativeMipmapSupport = nativeMipmapSupport;
 
     map->insert(std::make_pair(dxgiFormat, info));

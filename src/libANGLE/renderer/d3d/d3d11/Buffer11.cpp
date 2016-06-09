@@ -11,6 +11,7 @@
 #include <memory>
 
 #include "common/MemoryBuffer.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
@@ -38,27 +39,6 @@ enum class CopyResult
 };
 
 }  // anonymous namespace
-
-PackPixelsParams::PackPixelsParams()
-    : format(GL_NONE), type(GL_NONE), outputPitch(0), packBuffer(nullptr), offset(0)
-{
-}
-
-PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
-                                   GLenum formatIn,
-                                   GLenum typeIn,
-                                   GLuint outputPitchIn,
-                                   const gl::PixelPackState &packIn,
-                                   ptrdiff_t offsetIn)
-    : area(areaIn),
-      format(formatIn),
-      type(typeIn),
-      outputPitch(outputPitchIn),
-      packBuffer(packIn.pixelBuffer.get()),
-      pack(packIn.alignment, packIn.reverseRowOrder),
-      offset(offsetIn)
-{
-}
 
 namespace gl_d3d11
 {

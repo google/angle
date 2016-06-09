@@ -13,6 +13,7 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
@@ -187,72 +188,27 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal render target.");
     }
 
-    uint8_t *source;
-    int inputPitch;
-    if (pack.reverseRowOrder)
-    {
-        source = reinterpret_cast<uint8_t*>(lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
-        inputPitch = -lock.Pitch;
-    }
-    else
-    {
-        source = reinterpret_cast<uint8_t*>(lock.pBits);
-        inputPitch = lock.Pitch;
-    }
+    uint8_t *source = reinterpret_cast<uint8_t *>(lock.pBits);
+    int inputPitch  = lock.Pitch;
 
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
     const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(d3dFormatInfo.internalFormat);
-    if (sourceFormatInfo.format == format && sourceFormatInfo.type == type)
-    {
-        // Direct copy possible
-        for (int y = 0; y < rect.bottom - rect.top; y++)
-        {
-            memcpy(pixels + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourceFormatInfo.pixelBytes);
-        }
-    }
-    else
-    {
-        const d3d9::D3DFormat &sourceD3DFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-        ColorCopyFunction fastCopyFunc = sourceD3DFormatInfo.getFastCopyFunction(format, type);
+    gl::FormatType formatType(format, type);
+    ColorReadFunction colorReadFunction = d3dFormatInfo.colorReadFunction;
 
-        GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(format, type);
-        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(sizedDestInternalFormat);
+    // TODO(jmadill): Maybe we can avoid a copy of pack parameters here?
+    PackPixelsParams packParams;
+    packParams.area.x      = rect.left;
+    packParams.area.y      = rect.top;
+    packParams.area.width  = rect.right - rect.left;
+    packParams.area.height = rect.bottom - rect.top;
+    packParams.format      = format;
+    packParams.type        = type;
+    packParams.outputPitch = static_cast<GLuint>(outputPitch);
+    packParams.pack        = pack;
 
-        if (fastCopyFunc)
-        {
-            // Fast copy is possible through some special function
-            for (int y = 0; y < rect.bottom - rect.top; y++)
-            {
-                for (int x = 0; x < rect.right - rect.left; x++)
-                {
-                    uint8_t *dest = pixels + y * outputPitch + x * destFormatInfo.pixelBytes;
-                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
-
-                    fastCopyFunc(src, dest);
-                }
-            }
-        }
-        else
-        {
-            ColorReadFunction colorReadFunction = sourceD3DFormatInfo.colorReadFunction;
-            ColorWriteFunction colorWriteFunction = GetColorWriteFunction(format, type);
-
-            uint8_t temp[sizeof(gl::ColorF)];
-            for (int y = 0; y < rect.bottom - rect.top; y++)
-            {
-                for (int x = 0; x < rect.right - rect.left; x++)
-                {
-                    uint8_t *dest = pixels + y * outputPitch + x * destFormatInfo.pixelBytes;
-                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
-
-                    // readFunc and writeFunc will be using the same type of color, CopyTexImage
-                    // will not allow the copy otherwise.
-                    colorReadFunction(src, temp);
-                    colorWriteFunction(temp, dest);
-                }
-            }
-        }
-    }
+    PackPixels(packParams, sourceFormatInfo, d3dFormatInfo.fastCopyFunctions, colorReadFunction,
+               inputPitch, source, pixels);
 
     systemSurface->UnlockRect();
     SafeRelease(systemSurface);
@@ -454,4 +410,4 @@ GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTargetD3D *render
     return d3dFormatInfo.internalFormat;
 }
 
-}
+}  // namespace rx

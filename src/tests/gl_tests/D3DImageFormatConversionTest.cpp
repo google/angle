@@ -8,7 +8,7 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include "libANGLE/renderer/d3d/imageformats.h"
+#include "libANGLE/renderer/imageformats.h"
 
 using namespace angle;
 

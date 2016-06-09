@@ -20,14 +20,28 @@ namespace gl
 // can decide the true, sized, internal format. The ES2FormatMap determines the internal format for all valid
 // format and type combinations.
 
-typedef std::pair<GLenum, GLenum> FormatTypePair;
-typedef std::pair<FormatTypePair, GLenum> FormatPair;
-typedef std::map<FormatTypePair, GLenum> FormatMap;
+typedef std::pair<FormatType, GLenum> FormatPair;
+typedef std::map<FormatType, GLenum> FormatMap;
+
+FormatType::FormatType() : format(GL_NONE), type(GL_NONE)
+{
+}
+
+FormatType::FormatType(GLenum format_, GLenum type_) : format(format_), type(type_)
+{
+}
+
+bool FormatType::operator<(const FormatType &other) const
+{
+    if (format != other.format)
+        return format < other.format;
+    return type < other.type;
+}
 
 // A helper function to insert data into the format map with fewer characters.
 static inline void InsertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLenum internalFormat)
 {
-    map->insert(FormatPair(FormatTypePair(format, type), internalFormat));
+    map->insert(FormatPair(FormatType(format, type), internalFormat));
 }
 
 FormatMap BuildFormatMap()
@@ -799,7 +813,7 @@ GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type)
     }
 
     static const FormatMap formatMap = BuildFormatMap();
-    auto iter                        = formatMap.find(FormatTypePair(internalFormat, type));
+    auto iter                        = formatMap.find(FormatType(internalFormat, type));
     if (iter != formatMap.end())
     {
         return iter->second;

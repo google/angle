@@ -14,6 +14,7 @@
 
 #include "common/angleutils.h"
 #include "common/platform.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.h"
 

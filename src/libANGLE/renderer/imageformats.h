@@ -7,8 +7,8 @@
 // imageformats.h: Defines image format types with functions for mip generation
 // and copying.
 
-#ifndef LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
-#define LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
+#ifndef LIBANGLE_RENDERER_IMAGEFORMATS_H_
+#define LIBANGLE_RENDERER_IMAGEFORMATS_H_
 
 #include "libANGLE/angletypes.h"
 
@@ -28,10 +28,10 @@ struct L8
     static void readColor(gl::ColorF *dst, const L8 *src)
     {
         const float lum = gl::normalizedToFloat(src->L);
-        dst->red   = lum;
-        dst->green = lum;
-        dst->blue  = lum;
-        dst->alpha = 1.0f;
+        dst->red        = lum;
+        dst->green      = lum;
+        dst->blue       = lum;
+        dst->alpha      = 1.0f;
     }
 
     static void writeColor(L8 *dst, const gl::ColorF *src)
@@ -112,10 +112,10 @@ struct L8A8
     static void readColor(gl::ColorF *dst, const L8A8 *src)
     {
         const float lum = gl::normalizedToFloat(src->L);
-        dst->red   = lum;
-        dst->green = lum;
-        dst->blue  = lum;
-        dst->alpha = gl::normalizedToFloat(src->A);
+        dst->red        = lum;
+        dst->green      = lum;
+        dst->blue       = lum;
+        dst->alpha      = gl::normalizedToFloat(src->A);
     }
 
     static void writeColor(L8A8 *dst, const gl::ColorF *src)
@@ -126,7 +126,9 @@ struct L8A8
 
     static void average(L8A8 *dst, const L8A8 *src1, const L8A8 *src2)
     {
-        *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
+        *(unsigned short *)dst =
+            (((*(unsigned short *)src1 ^ *(unsigned short *)src2) & 0xFEFE) >> 1) +
+            (*(unsigned short *)src1 & *(unsigned short *)src2);
     }
 };
 
@@ -138,10 +140,10 @@ struct A8L8
     static void readColor(gl::ColorF *dst, const A8L8 *src)
     {
         const float lum = gl::normalizedToFloat(src->L);
-        dst->red   = lum;
-        dst->green = lum;
-        dst->blue  = lum;
-        dst->alpha = gl::normalizedToFloat(src->A);
+        dst->red        = lum;
+        dst->green      = lum;
+        dst->blue       = lum;
+        dst->alpha      = gl::normalizedToFloat(src->A);
     }
 
     static void writeColor(A8L8 *dst, const gl::ColorF *src)
@@ -152,7 +154,9 @@ struct A8L8
 
     static void average(A8L8 *dst, const A8L8 *src1, const A8L8 *src2)
     {
-        *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
+        *(unsigned short *)dst =
+            (((*(unsigned short *)src1 ^ *(unsigned short *)src2) & 0xFEFE) >> 1) +
+            (*(unsigned short *)src1 & *(unsigned short *)src2);
     }
 };
 
@@ -191,7 +195,9 @@ struct R8G8
 
     static void average(R8G8 *dst, const R8G8 *src1, const R8G8 *src2)
     {
-        *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
+        *(unsigned short *)dst =
+            (((*(unsigned short *)src1 ^ *(unsigned short *)src2) & 0xFEFE) >> 1) +
+            (*(unsigned short *)src1 & *(unsigned short *)src2);
     }
 };
 
@@ -285,30 +291,35 @@ struct B8G8R8
 
 struct R5G6B5
 {
-    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the most significant
-    // bits of the bitfield, and successive component occupying progressively less significant locations"
+    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the
+    // most significant
+    // bits of the bitfield, and successive component occupying progressively less significant
+    // locations"
     unsigned short RGB;
 
     static void readColor(gl::ColorF *dst, const R5G6B5 *src)
     {
         dst->red   = gl::normalizedToFloat<5>(gl::getShiftedData<5, 11>(src->RGB));
-        dst->green = gl::normalizedToFloat<6>(gl::getShiftedData<6,  5>(src->RGB));
-        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5,  0>(src->RGB));
+        dst->green = gl::normalizedToFloat<6>(gl::getShiftedData<6, 5>(src->RGB));
+        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5, 0>(src->RGB));
         dst->alpha = 1.0f;
     }
 
     static void writeColor(R5G6B5 *dst, const gl::ColorF *src)
     {
-        dst->RGB = gl::shiftData<5, 11>(gl::floatToNormalized<5, unsigned short>(src->red))   |
-                   gl::shiftData<6,  5>(gl::floatToNormalized<6, unsigned short>(src->green)) |
-                   gl::shiftData<5,  0>(gl::floatToNormalized<5, unsigned short>(src->blue));
+        dst->RGB = gl::shiftData<5, 11>(gl::floatToNormalized<5, unsigned short>(src->red)) |
+                   gl::shiftData<6, 5>(gl::floatToNormalized<6, unsigned short>(src->green)) |
+                   gl::shiftData<5, 0>(gl::floatToNormalized<5, unsigned short>(src->blue));
     }
 
     static void average(R5G6B5 *dst, const R5G6B5 *src1, const R5G6B5 *src2)
     {
-        dst->RGB = gl::shiftData<5, 11>(gl::average(gl::getShiftedData<5, 11>(src1->RGB), gl::getShiftedData<5, 11>(src2->RGB))) |
-                   gl::shiftData<6,  5>(gl::average(gl::getShiftedData<6,  5>(src1->RGB), gl::getShiftedData<6,  5>(src2->RGB))) |
-                   gl::shiftData<5,  0>(gl::average(gl::getShiftedData<5,  0>(src1->RGB), gl::getShiftedData<5,  0>(src2->RGB)));
+        dst->RGB = gl::shiftData<5, 11>(gl::average(gl::getShiftedData<5, 11>(src1->RGB),
+                                                    gl::getShiftedData<5, 11>(src2->RGB))) |
+                   gl::shiftData<6, 5>(gl::average(gl::getShiftedData<6, 5>(src1->RGB),
+                                                   gl::getShiftedData<6, 5>(src2->RGB))) |
+                   gl::shiftData<5, 0>(gl::average(gl::getShiftedData<5, 0>(src1->RGB),
+                                                   gl::getShiftedData<5, 0>(src2->RGB)));
     }
 };
 
@@ -353,7 +364,9 @@ struct A8R8G8B8
 
     static void average(A8R8G8B8 *dst, const A8R8G8B8 *src1, const A8R8G8B8 *src2)
     {
-        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+        *(unsigned int *)dst =
+            (((*(unsigned int *)src1 ^ *(unsigned int *)src2) & 0xFEFEFEFE) >> 1) +
+            (*(unsigned int *)src1 & *(unsigned int *)src2);
     }
 };
 
@@ -398,7 +411,9 @@ struct R8G8B8A8
 
     static void average(R8G8B8A8 *dst, const R8G8B8A8 *src1, const R8G8B8A8 *src2)
     {
-        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+        *(unsigned int *)dst =
+            (((*(unsigned int *)src1 ^ *(unsigned int *)src2) & 0xFEFEFEFE) >> 1) +
+            (*(unsigned int *)src1 & *(unsigned int *)src2);
     }
 };
 
@@ -443,7 +458,9 @@ struct B8G8R8A8
 
     static void average(B8G8R8A8 *dst, const B8G8R8A8 *src1, const B8G8R8A8 *src2)
     {
-        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+        *(unsigned int *)dst =
+            (((*(unsigned int *)src1 ^ *(unsigned int *)src2) & 0xFEFEFEFE) >> 1) +
+            (*(unsigned int *)src1 & *(unsigned int *)src2);
     }
 };
 
@@ -456,17 +473,17 @@ struct B8G8R8X8
 
     static void readColor(gl::ColorF *dst, const B8G8R8X8 *src)
     {
-        dst->red = gl::normalizedToFloat(src->R);
+        dst->red   = gl::normalizedToFloat(src->R);
         dst->green = gl::normalizedToFloat(src->G);
-        dst->blue = gl::normalizedToFloat(src->B);
+        dst->blue  = gl::normalizedToFloat(src->B);
         dst->alpha = 1.0f;
     }
 
     static void readColor(gl::ColorUI *dst, const B8G8R8X8 *src)
     {
-        dst->red = src->R;
+        dst->red   = src->R;
         dst->green = src->G;
-        dst->blue = src->B;
+        dst->blue  = src->B;
         dst->alpha = 1;
     }
 
@@ -488,7 +505,9 @@ struct B8G8R8X8
 
     static void average(B8G8R8X8 *dst, const B8G8R8X8 *src1, const B8G8R8X8 *src2)
     {
-        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+        *(unsigned int *)dst =
+            (((*(unsigned int *)src1 ^ *(unsigned int *)src2) & 0xFEFEFEFE) >> 1) +
+            (*(unsigned int *)src1 & *(unsigned int *)src2);
         dst->X = 255;
     }
 };
@@ -501,86 +520,102 @@ struct A1R5G5B5
     {
         dst->alpha = gl::normalizedToFloat<1>(gl::getShiftedData<1, 15>(src->ARGB));
         dst->red   = gl::normalizedToFloat<5>(gl::getShiftedData<5, 10>(src->ARGB));
-        dst->green = gl::normalizedToFloat<5>(gl::getShiftedData<5,  5>(src->ARGB));
-        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5,  0>(src->ARGB));
+        dst->green = gl::normalizedToFloat<5>(gl::getShiftedData<5, 5>(src->ARGB));
+        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5, 0>(src->ARGB));
     }
 
     static void writeColor(A1R5G5B5 *dst, const gl::ColorF *src)
     {
         dst->ARGB = gl::shiftData<1, 15>(gl::floatToNormalized<1, unsigned short>(src->alpha)) |
-                    gl::shiftData<5, 10>(gl::floatToNormalized<5, unsigned short>(src->red))   |
-                    gl::shiftData<5,  5>(gl::floatToNormalized<5, unsigned short>(src->green)) |
-                    gl::shiftData<5,  0>(gl::floatToNormalized<5, unsigned short>(src->blue));
+                    gl::shiftData<5, 10>(gl::floatToNormalized<5, unsigned short>(src->red)) |
+                    gl::shiftData<5, 5>(gl::floatToNormalized<5, unsigned short>(src->green)) |
+                    gl::shiftData<5, 0>(gl::floatToNormalized<5, unsigned short>(src->blue));
     }
 
     static void average(A1R5G5B5 *dst, const A1R5G5B5 *src1, const A1R5G5B5 *src2)
     {
-        dst->ARGB = gl::shiftData<1, 15>(gl::average(gl::getShiftedData<1, 15>(src1->ARGB), gl::getShiftedData<1, 15>(src2->ARGB))) |
-                    gl::shiftData<5, 10>(gl::average(gl::getShiftedData<5, 10>(src1->ARGB), gl::getShiftedData<5, 10>(src2->ARGB))) |
-                    gl::shiftData<5,  5>(gl::average(gl::getShiftedData<5,  5>(src1->ARGB), gl::getShiftedData<5,  5>(src2->ARGB))) |
-                    gl::shiftData<5,  0>(gl::average(gl::getShiftedData<5,  0>(src1->ARGB), gl::getShiftedData<5,  0>(src2->ARGB)));
+        dst->ARGB = gl::shiftData<1, 15>(gl::average(gl::getShiftedData<1, 15>(src1->ARGB),
+                                                     gl::getShiftedData<1, 15>(src2->ARGB))) |
+                    gl::shiftData<5, 10>(gl::average(gl::getShiftedData<5, 10>(src1->ARGB),
+                                                     gl::getShiftedData<5, 10>(src2->ARGB))) |
+                    gl::shiftData<5, 5>(gl::average(gl::getShiftedData<5, 5>(src1->ARGB),
+                                                    gl::getShiftedData<5, 5>(src2->ARGB))) |
+                    gl::shiftData<5, 0>(gl::average(gl::getShiftedData<5, 0>(src1->ARGB),
+                                                    gl::getShiftedData<5, 0>(src2->ARGB)));
     }
 };
 
 struct R5G5B5A1
 {
-    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the most significant
-    // bits of the bitfield, and successive component occupying progressively less significant locations"
+    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the
+    // most significant
+    // bits of the bitfield, and successive component occupying progressively less significant
+    // locations"
     unsigned short RGBA;
 
     static void readColor(gl::ColorF *dst, const R5G5B5A1 *src)
     {
         dst->red   = gl::normalizedToFloat<5>(gl::getShiftedData<5, 11>(src->RGBA));
-        dst->green = gl::normalizedToFloat<5>(gl::getShiftedData<5,  6>(src->RGBA));
-        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5,  1>(src->RGBA));
-        dst->alpha = gl::normalizedToFloat<1>(gl::getShiftedData<1,  0>(src->RGBA));
+        dst->green = gl::normalizedToFloat<5>(gl::getShiftedData<5, 6>(src->RGBA));
+        dst->blue  = gl::normalizedToFloat<5>(gl::getShiftedData<5, 1>(src->RGBA));
+        dst->alpha = gl::normalizedToFloat<1>(gl::getShiftedData<1, 0>(src->RGBA));
     }
 
     static void writeColor(R5G5B5A1 *dst, const gl::ColorF *src)
     {
-        dst->RGBA = gl::shiftData<5, 11>(gl::floatToNormalized<5, unsigned short>(src->red))   |
-                    gl::shiftData<5,  6>(gl::floatToNormalized<5, unsigned short>(src->green)) |
-                    gl::shiftData<5,  1>(gl::floatToNormalized<5, unsigned short>(src->blue))  |
-                    gl::shiftData<1,  0>(gl::floatToNormalized<1, unsigned short>(src->alpha));
+        dst->RGBA = gl::shiftData<5, 11>(gl::floatToNormalized<5, unsigned short>(src->red)) |
+                    gl::shiftData<5, 6>(gl::floatToNormalized<5, unsigned short>(src->green)) |
+                    gl::shiftData<5, 1>(gl::floatToNormalized<5, unsigned short>(src->blue)) |
+                    gl::shiftData<1, 0>(gl::floatToNormalized<1, unsigned short>(src->alpha));
     }
 
     static void average(R5G5B5A1 *dst, const R5G5B5A1 *src1, const R5G5B5A1 *src2)
     {
-        dst->RGBA = gl::shiftData<5, 11>(gl::average(gl::getShiftedData<5, 11>(src1->RGBA), gl::getShiftedData<5, 11>(src2->RGBA))) |
-                    gl::shiftData<5,  6>(gl::average(gl::getShiftedData<5,  6>(src1->RGBA), gl::getShiftedData<5,  6>(src2->RGBA))) |
-                    gl::shiftData<5,  1>(gl::average(gl::getShiftedData<5,  1>(src1->RGBA), gl::getShiftedData<5,  1>(src2->RGBA))) |
-                    gl::shiftData<1,  0>(gl::average(gl::getShiftedData<1,  0>(src1->RGBA), gl::getShiftedData<1,  0>(src2->RGBA)));
+        dst->RGBA = gl::shiftData<5, 11>(gl::average(gl::getShiftedData<5, 11>(src1->RGBA),
+                                                     gl::getShiftedData<5, 11>(src2->RGBA))) |
+                    gl::shiftData<5, 6>(gl::average(gl::getShiftedData<5, 6>(src1->RGBA),
+                                                    gl::getShiftedData<5, 6>(src2->RGBA))) |
+                    gl::shiftData<5, 1>(gl::average(gl::getShiftedData<5, 1>(src1->RGBA),
+                                                    gl::getShiftedData<5, 1>(src2->RGBA))) |
+                    gl::shiftData<1, 0>(gl::average(gl::getShiftedData<1, 0>(src1->RGBA),
+                                                    gl::getShiftedData<1, 0>(src2->RGBA)));
     }
 };
 
 struct R4G4B4A4
 {
-    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the most significant
-    // bits of the bitfield, and successive component occupying progressively less significant locations"
+    // OpenGL ES 2.0.25 spec Section 3.6.2: "Components are packed with the first component in the
+    // most significant
+    // bits of the bitfield, and successive component occupying progressively less significant
+    // locations"
     unsigned short RGBA;
 
     static void readColor(gl::ColorF *dst, const R4G4B4A4 *src)
     {
         dst->red   = gl::normalizedToFloat<4>(gl::getShiftedData<4, 12>(src->RGBA));
-        dst->green = gl::normalizedToFloat<4>(gl::getShiftedData<4,  8>(src->RGBA));
-        dst->blue  = gl::normalizedToFloat<4>(gl::getShiftedData<4,  4>(src->RGBA));
-        dst->alpha = gl::normalizedToFloat<4>(gl::getShiftedData<4,  0>(src->RGBA));
+        dst->green = gl::normalizedToFloat<4>(gl::getShiftedData<4, 8>(src->RGBA));
+        dst->blue  = gl::normalizedToFloat<4>(gl::getShiftedData<4, 4>(src->RGBA));
+        dst->alpha = gl::normalizedToFloat<4>(gl::getShiftedData<4, 0>(src->RGBA));
     }
 
     static void writeColor(R4G4B4A4 *dst, const gl::ColorF *src)
     {
-        dst->RGBA = gl::shiftData<4, 12>(gl::floatToNormalized<4, unsigned short>(src->red))  |
-                    gl::shiftData<4,  8>(gl::floatToNormalized<4, unsigned short>(src->green)) |
-                    gl::shiftData<4,  4>(gl::floatToNormalized<4, unsigned short>(src->blue))   |
-                    gl::shiftData<4,  0>(gl::floatToNormalized<4, unsigned short>(src->alpha));
+        dst->RGBA = gl::shiftData<4, 12>(gl::floatToNormalized<4, unsigned short>(src->red)) |
+                    gl::shiftData<4, 8>(gl::floatToNormalized<4, unsigned short>(src->green)) |
+                    gl::shiftData<4, 4>(gl::floatToNormalized<4, unsigned short>(src->blue)) |
+                    gl::shiftData<4, 0>(gl::floatToNormalized<4, unsigned short>(src->alpha));
     }
 
     static void average(R4G4B4A4 *dst, const R4G4B4A4 *src1, const R4G4B4A4 *src2)
     {
-        dst->RGBA = gl::shiftData<4, 12>(gl::average(gl::getShiftedData<4, 12>(src1->RGBA), gl::getShiftedData<4, 12>(src2->RGBA))) |
-                    gl::shiftData<4,  8>(gl::average(gl::getShiftedData<4,  8>(src1->RGBA), gl::getShiftedData<4,  8>(src2->RGBA))) |
-                    gl::shiftData<4,  4>(gl::average(gl::getShiftedData<4,  4>(src1->RGBA), gl::getShiftedData<4,  4>(src2->RGBA))) |
-                    gl::shiftData<4,  0>(gl::average(gl::getShiftedData<4,  0>(src1->RGBA), gl::getShiftedData<4,  0>(src2->RGBA)));
+        dst->RGBA = gl::shiftData<4, 12>(gl::average(gl::getShiftedData<4, 12>(src1->RGBA),
+                                                     gl::getShiftedData<4, 12>(src2->RGBA))) |
+                    gl::shiftData<4, 8>(gl::average(gl::getShiftedData<4, 8>(src1->RGBA),
+                                                    gl::getShiftedData<4, 8>(src2->RGBA))) |
+                    gl::shiftData<4, 4>(gl::average(gl::getShiftedData<4, 4>(src1->RGBA),
+                                                    gl::getShiftedData<4, 4>(src2->RGBA))) |
+                    gl::shiftData<4, 0>(gl::average(gl::getShiftedData<4, 0>(src1->RGBA),
+                                                    gl::getShiftedData<4, 0>(src2->RGBA)));
     }
 };
 
@@ -591,25 +626,29 @@ struct A4R4G4B4
     static void readColor(gl::ColorF *dst, const A4R4G4B4 *src)
     {
         dst->alpha = gl::normalizedToFloat<4>(gl::getShiftedData<4, 12>(src->ARGB));
-        dst->red   = gl::normalizedToFloat<4>(gl::getShiftedData<4,  8>(src->ARGB));
-        dst->green = gl::normalizedToFloat<4>(gl::getShiftedData<4,  4>(src->ARGB));
-        dst->blue  = gl::normalizedToFloat<4>(gl::getShiftedData<4,  0>(src->ARGB));
+        dst->red   = gl::normalizedToFloat<4>(gl::getShiftedData<4, 8>(src->ARGB));
+        dst->green = gl::normalizedToFloat<4>(gl::getShiftedData<4, 4>(src->ARGB));
+        dst->blue  = gl::normalizedToFloat<4>(gl::getShiftedData<4, 0>(src->ARGB));
     }
 
     static void writeColor(A4R4G4B4 *dst, const gl::ColorF *src)
     {
-        dst->ARGB = gl::shiftData<4, 12>(gl::floatToNormalized<4, unsigned short>(src->alpha))  |
-                    gl::shiftData<4,  8>(gl::floatToNormalized<4, unsigned short>(src->red)) |
-                    gl::shiftData<4,  4>(gl::floatToNormalized<4, unsigned short>(src->green))   |
-                    gl::shiftData<4,  0>(gl::floatToNormalized<4, unsigned short>(src->blue));
+        dst->ARGB = gl::shiftData<4, 12>(gl::floatToNormalized<4, unsigned short>(src->alpha)) |
+                    gl::shiftData<4, 8>(gl::floatToNormalized<4, unsigned short>(src->red)) |
+                    gl::shiftData<4, 4>(gl::floatToNormalized<4, unsigned short>(src->green)) |
+                    gl::shiftData<4, 0>(gl::floatToNormalized<4, unsigned short>(src->blue));
     }
 
     static void average(A4R4G4B4 *dst, const A4R4G4B4 *src1, const A4R4G4B4 *src2)
     {
-        dst->ARGB = gl::shiftData<4, 12>(gl::average(gl::getShiftedData<4, 12>(src1->ARGB), gl::getShiftedData<4, 12>(src2->ARGB))) |
-                    gl::shiftData<4,  8>(gl::average(gl::getShiftedData<4,  8>(src1->ARGB), gl::getShiftedData<4,  8>(src2->ARGB))) |
-                    gl::shiftData<4,  4>(gl::average(gl::getShiftedData<4,  4>(src1->ARGB), gl::getShiftedData<4,  4>(src2->ARGB))) |
-                    gl::shiftData<4,  0>(gl::average(gl::getShiftedData<4,  0>(src1->ARGB), gl::getShiftedData<4,  0>(src2->ARGB)));
+        dst->ARGB = gl::shiftData<4, 12>(gl::average(gl::getShiftedData<4, 12>(src1->ARGB),
+                                                     gl::getShiftedData<4, 12>(src2->ARGB))) |
+                    gl::shiftData<4, 8>(gl::average(gl::getShiftedData<4, 8>(src1->ARGB),
+                                                    gl::getShiftedData<4, 8>(src2->ARGB))) |
+                    gl::shiftData<4, 4>(gl::average(gl::getShiftedData<4, 4>(src1->ARGB),
+                                                    gl::getShiftedData<4, 4>(src2->ARGB))) |
+                    gl::shiftData<4, 0>(gl::average(gl::getShiftedData<4, 0>(src1->ARGB),
+                                                    gl::getShiftedData<4, 0>(src2->ARGB)));
     }
 };
 
@@ -664,7 +703,7 @@ struct R16G16
 
     static void readColor(gl::ColorUI *dst, const R16G16 *src)
     {
-        dst->red = src->R;
+        dst->red   = src->R;
         dst->green = src->G;
         dst->blue  = 0;
         dst->alpha = 1;
@@ -1533,7 +1572,7 @@ struct R16F
     {
         dst->R = gl::float32ToFloat16(src->red);
     }
-    
+
     static void average(R16F *dst, const R16F *src1, const R16F *src2)
     {
         dst->R = gl::averageHalfFloat(src1->R, src2->R);
@@ -1569,7 +1608,7 @@ struct L16F
 
     static void readColor(gl::ColorF *dst, const L16F *src)
     {
-        float lum = gl::float16ToFloat32(src->L);
+        float lum  = gl::float16ToFloat32(src->L);
         dst->red   = lum;
         dst->green = lum;
         dst->blue  = lum;
@@ -1594,7 +1633,7 @@ struct L16A16F
 
     static void readColor(gl::ColorF *dst, const L16A16F *src)
     {
-        float lum = gl::float16ToFloat32(src->L);
+        float lum  = gl::float16ToFloat32(src->L);
         dst->red   = lum;
         dst->green = lum;
         dst->blue  = lum;
@@ -1745,10 +1784,7 @@ struct R32F
         dst->alpha = 1.0f;
     }
 
-    static void writeColor(R32F *dst, const gl::ColorF *src)
-    {
-        dst->R = src->red;
-    }
+    static void writeColor(R32F *dst, const gl::ColorF *src) { dst->R = src->red; }
 
     static void average(R32F *dst, const R32F *src1, const R32F *src2)
     {
@@ -1768,10 +1804,7 @@ struct A32F
         dst->alpha = src->A;
     }
 
-    static void writeColor(A32F *dst, const gl::ColorF *src)
-    {
-        dst->A = src->alpha;
-    }
+    static void writeColor(A32F *dst, const gl::ColorF *src) { dst->A = src->alpha; }
 
     static void average(A32F *dst, const A32F *src1, const A32F *src2)
     {
@@ -1895,7 +1928,7 @@ struct R10G10B10A2
         dst->red   = gl::normalizedToFloat<10>(src->R);
         dst->green = gl::normalizedToFloat<10>(src->G);
         dst->blue  = gl::normalizedToFloat<10>(src->B);
-        dst->alpha = gl::normalizedToFloat< 2>(src->A);
+        dst->alpha = gl::normalizedToFloat<2>(src->A);
     }
 
     static void readColor(gl::ColorUI *dst, const R10G10B10A2 *src)
@@ -1911,7 +1944,7 @@ struct R10G10B10A2
         dst->R = gl::floatToNormalized<10, unsigned int>(src->red);
         dst->G = gl::floatToNormalized<10, unsigned int>(src->green);
         dst->B = gl::floatToNormalized<10, unsigned int>(src->blue);
-        dst->A = gl::floatToNormalized< 2, unsigned int>(src->alpha);
+        dst->A = gl::floatToNormalized<2, unsigned int>(src->alpha);
     }
 
     static void writeColor(R10G10B10A2 *dst, const gl::ColorUI *src)
@@ -1940,28 +1973,27 @@ struct R9G9B9E5
 
     static void readColor(gl::ColorF *dst, const R9G9B9E5 *src)
     {
-        gl::convert999E5toRGBFloats(gl::bitCast<unsigned int>(*src), &dst->red, &dst->green, &dst->blue);
+        gl::convert999E5toRGBFloats(gl::bitCast<unsigned int>(*src), &dst->red, &dst->green,
+                                    &dst->blue);
         dst->alpha = 1.0f;
     }
 
     static void writeColor(R9G9B9E5 *dst, const gl::ColorF *src)
     {
-        *reinterpret_cast<unsigned int*>(dst) = gl::convertRGBFloatsTo999E5(src->red,
-                                                                            src->green,
-                                                                            src->blue);
+        *reinterpret_cast<unsigned int *>(dst) =
+            gl::convertRGBFloatsTo999E5(src->red, src->green, src->blue);
     }
 
     static void average(R9G9B9E5 *dst, const R9G9B9E5 *src1, const R9G9B9E5 *src2)
     {
         float r1, g1, b1;
-        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int*>(src1), &r1, &g1, &b1);
+        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int *>(src1), &r1, &g1, &b1);
 
         float r2, g2, b2;
-        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int*>(src2), &r2, &g2, &b2);
+        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int *>(src2), &r2, &g2, &b2);
 
-        *reinterpret_cast<unsigned int*>(dst) = gl::convertRGBFloatsTo999E5(gl::average(r1, r2),
-                                                                            gl::average(g1, g2),
-                                                                            gl::average(b1, b2));
+        *reinterpret_cast<unsigned int *>(dst) = gl::convertRGBFloatsTo999E5(
+            gl::average(r1, r2), gl::average(g1, g2), gl::average(b1, b2));
     }
 };
 
@@ -1993,7 +2025,6 @@ struct R11G11B10F
         dst->B = gl::averageFloat10(src1->B, src2->B);
     }
 };
+}  // namespace rx
 
-}
-
-#endif // LIBANGLE_RENDERER_D3D_IMAGEFORMATS_H_
+#endif  // LIBANGLE_RENDERER_IMAGEFORMATS_H_

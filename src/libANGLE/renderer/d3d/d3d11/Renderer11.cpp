@@ -21,6 +21,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/histogram_macros.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
@@ -3756,79 +3757,17 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to map internal texture for reading, result: 0x%X.", hr);
     }
 
-    uint8_t *source;
-    int inputPitch;
-    if (params.pack.reverseRowOrder)
-    {
-        source = static_cast<uint8_t*>(mapping.pData) + mapping.RowPitch * (params.area.height - 1);
-        inputPitch = -static_cast<int>(mapping.RowPitch);
-    }
-    else
-    {
-        source = static_cast<uint8_t*>(mapping.pData);
-        inputPitch = static_cast<int>(mapping.RowPitch);
-    }
+    uint8_t *source = static_cast<uint8_t *>(mapping.pData);
+    int inputPitch  = static_cast<int>(mapping.RowPitch);
 
     const auto &angleFormatInfo = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
     const gl::InternalFormat &sourceFormatInfo =
         gl::GetInternalFormatInfo(angleFormatInfo.glInternalFormat);
-    if (sourceFormatInfo.format == params.format && sourceFormatInfo.type == params.type)
-    {
-        uint8_t *dest = pixelsOut + params.offset;
-        for (int y = 0; y < params.area.height; y++)
-        {
-            memcpy(dest + y * params.outputPitch, source + y * inputPitch, params.area.width * sourceFormatInfo.pixelBytes);
-        }
-    }
-    else
-    {
-        const d3d11::DXGIFormat &dxgiFormatInfo =
-            d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
-        ColorCopyFunction fastCopyFunc =
-            dxgiFormatInfo.getFastCopyFunction(params.format, params.type);
-        GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(params.format, params.type);
-        const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(sizedDestInternalFormat);
+    const auto &dxgiFormatInfo          = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
+    ColorReadFunction colorReadFunction = angleFormatInfo.colorReadFunction;
 
-        if (fastCopyFunc)
-        {
-            // Fast copy is possible through some special function
-            for (int y = 0; y < params.area.height; y++)
-            {
-                for (int x = 0; x < params.area.width; x++)
-                {
-                    uint8_t *dest = pixelsOut + params.offset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
-                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
-
-                    fastCopyFunc(src, dest);
-                }
-            }
-        }
-        else
-        {
-            ColorReadFunction colorReadFunction   = angleFormatInfo.colorReadFunction;
-            ColorWriteFunction colorWriteFunction = GetColorWriteFunction(params.format, params.type);
-
-            uint8_t temp[16]; // Maximum size of any Color<T> type used.
-            static_assert(sizeof(temp) >= sizeof(gl::ColorF)  &&
-                          sizeof(temp) >= sizeof(gl::ColorUI) &&
-                          sizeof(temp) >= sizeof(gl::ColorI),
-                          "Unexpected size of gl::Color struct.");
-
-            for (int y = 0; y < params.area.height; y++)
-            {
-                for (int x = 0; x < params.area.width; x++)
-                {
-                    uint8_t *dest = pixelsOut + params.offset + y * params.outputPitch + x * destFormatInfo.pixelBytes;
-                    const uint8_t *src = source + y * inputPitch + x * sourceFormatInfo.pixelBytes;
-
-                    // readFunc and writeFunc will be using the same type of color, CopyTexImage
-                    // will not allow the copy otherwise.
-                    colorReadFunction(src, temp);
-                    colorWriteFunction(temp, dest);
-                }
-            }
-        }
-    }
+    PackPixels(params, sourceFormatInfo, dxgiFormatInfo.fastCopyFunctions, colorReadFunction,
+               inputPitch, source, pixelsOut);
 
     mDeviceContext->Unmap(readResource, 0);
 

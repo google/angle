@@ -8,8 +8,8 @@
 
 #include "libANGLE/renderer/d3d/loadimage_etc.h"
 
+#include "libANGLE/renderer/imageformats.h"
 #include "libANGLE/renderer/d3d/loadimage.h"
-#include "libANGLE/renderer/d3d/imageformats.h"
 
 namespace rx
 {

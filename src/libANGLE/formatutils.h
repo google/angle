@@ -20,6 +20,19 @@
 namespace gl
 {
 
+struct FormatType final
+{
+    FormatType();
+    FormatType(GLenum format_, GLenum type_);
+    FormatType(const FormatType &other) = default;
+    FormatType &operator=(const FormatType &other) = default;
+
+    bool operator<(const FormatType &other) const;
+
+    GLenum format;
+    GLenum type;
+};
+
 struct Type
 {
     Type();
