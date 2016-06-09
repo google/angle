@@ -16,6 +16,24 @@
       "revId": "d0eda631063cbe792e75e86222968fef57ccc7e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6febe063_3ed55750",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-09T17:55:50Z",
+      "side": 1,
+      "message": "I would be against it.\n\nhttps://google.github.io/styleguide/cppguide.html#Implicit_Conversions",
+      "parentUuid": "6febe063_7e9d1fd2",
+      "revId": "d0eda631063cbe792e75e86222968fef57ccc7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
