@@ -187,22 +187,12 @@ RenderTarget11::~RenderTarget11()
     signalDirty();
 }
 
-void RenderTarget11::addDirtyCallback(const NotificationCallback *callback)
-{
-    mDirtyCallbacks.add(callback);
-}
-
-void RenderTarget11::removeDirtyCallback(const NotificationCallback *callback)
-{
-    mDirtyCallbacks.remove(callback);
-}
-
 void RenderTarget11::signalDirty()
 {
-    mDirtyCallbacks.signal();
+    mBroadcastChannel.signal();
 
-    // Clear the signal list. We can't do this in the callback because it mutates the iterator.
-    mDirtyCallbacks.clear();
+    // Clear the list. We can't do this in the receiver because it would mutate during iteration.
+    mBroadcastChannel.reset();
 }
 
 TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv,

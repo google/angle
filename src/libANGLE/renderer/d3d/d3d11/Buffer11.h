@@ -13,7 +13,7 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/signal_utils.h"
 
 namespace gl
 {
@@ -79,14 +79,11 @@ class Buffer11 : public BufferD3D
     gl::Error unmap(GLboolean *result) override;
     gl::Error markTransformFeedbackUsage() override;
 
-    // We use two set of dirty callbacks for two events. Static buffers are marked dirty whenever
-    // the data is changed, because they must be re-translated. Direct buffers only need to be
+    // We use two set of dirty events. Static buffers are marked dirty whenever
+    // data changes, because they must be re-translated. Direct buffers only need to be
     // updated when the underlying ID3D11Buffer pointer changes - hopefully far less often.
-    void addStaticBufferDirtyCallback(const NotificationCallback *callback);
-    void removeStaticBufferDirtyCallback(const NotificationCallback *callback);
-
-    void addDirectBufferDirtyCallback(const NotificationCallback *callback);
-    void removeDirectBufferDirtyCallback(const NotificationCallback *callback);
+    angle::BroadcastChannel *getStaticBroadcastChannel();
+    angle::BroadcastChannel *getDirectBroadcastChannel();
 
   private:
     class BufferStorage;
@@ -139,8 +136,8 @@ class Buffer11 : public BufferD3D
     unsigned int mReadUsageCount;
     unsigned int mSystemMemoryDeallocThreshold;
 
-    NotificationSet mStaticBufferDirtyCallbacks;
-    NotificationSet mDirectBufferDirtyCallbacks;
+    angle::BroadcastChannel mStaticBroadcastChannel;
+    angle::BroadcastChannel mDirectBroadcastChannel;
 };
 
 }  // namespace rx

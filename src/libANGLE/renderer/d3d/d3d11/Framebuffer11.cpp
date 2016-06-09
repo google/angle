@@ -22,6 +22,8 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
 
+using namespace angle;
+
 namespace rx
 {
 
@@ -56,7 +58,7 @@ gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *attachme
 
 void UpdateCachedRenderTarget(const gl::FramebufferAttachment *attachment,
                               RenderTarget11 *&cachedRenderTarget,
-                              const NotificationCallback &callbackFunc)
+                              ChannelBinding *channelBinding)
 {
     RenderTarget11 *newRenderTarget = nullptr;
     if (attachment)
@@ -65,54 +67,30 @@ void UpdateCachedRenderTarget(const gl::FramebufferAttachment *attachment,
     }
     if (newRenderTarget != cachedRenderTarget)
     {
-        if (cachedRenderTarget)
-        {
-            cachedRenderTarget->removeDirtyCallback(&callbackFunc);
-        }
-
-        if (newRenderTarget)
-        {
-            newRenderTarget->addDirtyCallback(&callbackFunc);
-        }
-
+        auto channel = (newRenderTarget ? newRenderTarget->getBroadcastChannel() : nullptr);
+        channelBinding->bind(channel);
         cachedRenderTarget = newRenderTarget;
     }
 }
 }  // anonymous namespace
 
 Framebuffer11::Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer)
-    : FramebufferD3D(data, renderer), mRenderer(renderer), mCachedDepthStencilRenderTarget(nullptr)
+    : FramebufferD3D(data, renderer),
+      mRenderer(renderer),
+      mCachedDepthStencilRenderTarget(nullptr),
+      mDepthStencilRenderTargetDirty(this, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
 {
     ASSERT(mRenderer != nullptr);
     mCachedColorRenderTargets.fill(nullptr);
     for (size_t colorIndex = 0; colorIndex < data.getColorAttachments().size(); ++colorIndex)
     {
-        auto callback = [this, colorIndex]()
-        {
-            this->markColorRenderTargetDirty(colorIndex);
-        };
-        mColorRenderTargetsDirty.push_back(callback);
+        mColorRenderTargetsDirty.push_back(
+            ChannelBinding(this, static_cast<SignalToken>(colorIndex)));
     }
-    mDepthStencilRenderTargetDirty = [this]()
-    {
-        this->markDepthStencilRenderTargetDirty();
-    };
 }
 
 Framebuffer11::~Framebuffer11()
 {
-    for (size_t colorIndex = 0; colorIndex < mCachedColorRenderTargets.size(); ++colorIndex)
-    {
-        auto *colorRenderTarget = mCachedColorRenderTargets[colorIndex];
-        if (colorRenderTarget)
-        {
-            colorRenderTarget->removeDirtyCallback(&mColorRenderTargetsDirty[colorIndex]);
-        }
-    }
-    if (mCachedDepthStencilRenderTarget)
-    {
-        mCachedDepthStencilRenderTarget->removeDirtyCallback(&mDepthStencilRenderTargetDirty);
-    }
 }
 
 gl::Error Framebuffer11::invalidateSwizzles() const
@@ -488,13 +466,13 @@ void Framebuffer11::updateColorRenderTarget(size_t colorIndex)
 {
     UpdateCachedRenderTarget(mState.getColorAttachment(colorIndex),
                              mCachedColorRenderTargets[colorIndex],
-                             mColorRenderTargetsDirty[colorIndex]);
+                             &mColorRenderTargetsDirty[colorIndex]);
 }
 
 void Framebuffer11::updateDepthStencilRenderTarget()
 {
     UpdateCachedRenderTarget(mState.getDepthOrStencilAttachment(), mCachedDepthStencilRenderTarget,
-                             mDepthStencilRenderTargetDirty);
+                             &mDepthStencilRenderTargetDirty);
 }
 
 void Framebuffer11::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
@@ -504,7 +482,7 @@ void Framebuffer11::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
     const auto &mergedDirtyBits = dirtyBits | mInternalDirtyBits;
     mInternalDirtyBits.reset();
 
-    for (auto dirtyBit : angle::IterateBitSet(mergedDirtyBits))
+    for (auto dirtyBit : IterateBitSet(mergedDirtyBits))
     {
         switch (dirtyBit)
         {
@@ -533,17 +511,19 @@ void Framebuffer11::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
     FramebufferD3D::syncState(dirtyBits);
 }
 
-void Framebuffer11::markColorRenderTargetDirty(size_t colorIndex)
+void Framebuffer11::signal(SignalToken token)
 {
-    mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
-    mCachedColorRenderTargets[colorIndex] = nullptr;
-}
-
-void Framebuffer11::markDepthStencilRenderTargetDirty()
-{
-    // Stencil is redundant in this case.
-    mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT);
-    mCachedDepthStencilRenderTarget = nullptr;
+    if (token == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
+    {
+        // Stencil is redundant in this case.
+        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT);
+        mCachedDepthStencilRenderTarget = nullptr;
+    }
+    else
+    {
+        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + token);
+        mCachedColorRenderTargets[token] = nullptr;
+    }
 }
 
 bool Framebuffer11::hasAnyInternalDirtyBit() const

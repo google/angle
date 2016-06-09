@@ -11,9 +11,9 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_
 
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
+#include "libANGLE/signal_utils.h"
 
 namespace rx
 {
@@ -34,14 +34,13 @@ class RenderTarget11 : public RenderTargetD3D
 
     virtual unsigned int getSubresourceIndex() const = 0;
 
-    void addDirtyCallback(const NotificationCallback *callback);
-    void removeDirtyCallback(const NotificationCallback *callback);
     void signalDirty() override;
+    angle::BroadcastChannel *getBroadcastChannel() { return &mBroadcastChannel; }
 
     d3d11::ANGLEFormat getANGLEFormat() const { return mANGLEFormat; }
 
   protected:
-    NotificationSet mDirtyCallbacks;
+    angle::BroadcastChannel mBroadcastChannel;
     d3d11::ANGLEFormat mANGLEFormat;
 };
 
@@ -132,6 +131,6 @@ class SurfaceRenderTarget11 : public RenderTarget11
     bool mDepth;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERTARGET11_H_

@@ -404,23 +404,6 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
 
 bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);
 
-using NotificationCallback = std::function<void()>;
-
-class NotificationSet final : angle::NonCopyable
-{
-  public:
-    NotificationSet();
-    ~NotificationSet();
-
-    void add(const NotificationCallback *callback);
-    void remove(const NotificationCallback *callback);
-    void signal() const;
-    void clear();
-
-  private:
-    std::set<const NotificationCallback *> mCallbacks;
-};
-
 }  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_

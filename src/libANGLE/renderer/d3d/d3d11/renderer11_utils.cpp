@@ -1724,40 +1724,4 @@ bool UsePresentPathFast(const Renderer11 *renderer,
             renderer->presentPathFastEnabled());
 }
 
-NotificationSet::NotificationSet()
-{
-}
-
-NotificationSet::~NotificationSet()
-{
-}
-
-void NotificationSet::add(const NotificationCallback *callback)
-{
-    ASSERT(mCallbacks.count(callback) == 0);
-    mCallbacks.insert(callback);
-}
-
-void NotificationSet::remove(const NotificationCallback *callback)
-{
-    ASSERT(mCallbacks.count(callback) == 1);
-    mCallbacks.erase(callback);
-}
-
-void NotificationSet::signal() const
-{
-    if (mCallbacks.empty())
-        return;
-
-    for (const auto *callback : mCallbacks)
-    {
-        (*callback)();
-    }
-}
-
-void NotificationSet::clear()
-{
-    mCallbacks.clear();
-}
-
 }  // namespace rx

@@ -11,12 +11,13 @@
 
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/signal_utils.h"
 
 namespace rx
 {
 class Renderer11;
 
-class Framebuffer11 : public FramebufferD3D
+class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
 {
   public:
     Framebuffer11(const gl::FramebufferState &data, Renderer11 *renderer);
@@ -40,12 +41,11 @@ class Framebuffer11 : public FramebufferD3D
         return mCachedDepthStencilRenderTarget;
     }
 
-    void markColorRenderTargetDirty(size_t colorIndex);
-    void markDepthStencilRenderTargetDirty();
-
     bool hasAnyInternalDirtyBit() const;
     // TODO(jmadill): make this non-const
     void syncInternalState() const;
+
+    void signal(angle::SignalToken token) override;
 
   private:
     gl::Error clearImpl(ContextImpl *context, const ClearParameters &clearParams) override;
@@ -77,8 +77,8 @@ class Framebuffer11 : public FramebufferD3D
     RenderTargetArray mCachedColorRenderTargets;
     RenderTarget11 *mCachedDepthStencilRenderTarget;
 
-    std::vector<NotificationCallback> mColorRenderTargetsDirty;
-    NotificationCallback mDepthStencilRenderTargetDirty;
+    std::vector<angle::ChannelBinding> mColorRenderTargetsDirty;
+    angle::ChannelBinding mDepthStencilRenderTargetDirty;
 
     gl::Framebuffer::DirtyBits mInternalDirtyBits;
 };
