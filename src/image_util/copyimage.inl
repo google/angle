@@ -6,19 +6,21 @@
 
 // copyimage.inl: Defines image copying functions
 
-namespace rx
+namespace angle
 {
 
 template <typename sourceType, typename colorDataType>
 inline void ReadColor(const uint8_t *source, uint8_t *dest)
 {
-    sourceType::readColor(reinterpret_cast<gl::Color<colorDataType>*>(dest), reinterpret_cast<const sourceType*>(source));
+    sourceType::readColor(reinterpret_cast<Color<colorDataType>*>(dest),
+                          reinterpret_cast<const sourceType*>(source));
 }
 
 template <typename destType, typename colorDataType>
 inline void WriteColor(const uint8_t *source, uint8_t *dest)
 {
-    destType::writeColor(reinterpret_cast<destType*>(dest), reinterpret_cast<const gl::Color<colorDataType>*>(source));
+    destType::writeColor(reinterpret_cast<destType*>(dest),
+                         reinterpret_cast<const Color<colorDataType>*>(source));
 }
 
 template <typename sourceType, typename destType, typename colorDataType>
@@ -29,4 +31,4 @@ inline void CopyPixel(const uint8_t *source, uint8_t *dest)
     WriteColor<destType, colorDataType>(&temp, dest);
 }
 
-}
+}  // namespace angle

@@ -9,11 +9,12 @@
 
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 
-#include "libANGLE/renderer/copyimage.h"
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
+#include "image_util/loadimage.h"
+
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/vertexconversion.h"
-#include "libANGLE/renderer/d3d/generatemip.h"
-#include "libANGLE/renderer/d3d/loadimage.h"
 
 namespace rx
 {
@@ -49,7 +50,7 @@ static const FastCopyFunctionMap &GetFastCopyFunctionMap(D3DFORMAT d3dFormat)
             static FastCopyFunctionMap fastCopyMap;
             if (fastCopyMap.empty())
             {
-                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = CopyBGRA8ToRGBA8;
+                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = angle::CopyBGRA8ToRGBA8;
             }
             return fastCopyMap;
         }
@@ -109,6 +110,8 @@ static inline void InsertD3DFormatInfo(D3D9FormatInfoMap *map, D3DFORMAT format,
 
 static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
 {
+    using namespace angle;  // For image reading and mipmap generation functions
+
     D3D9FormatInfoMap map;
 
     //                       | D3DFORMAT           | S  |W |H | R | G | B | A | L | D | S | Internal format                   | Mip generation function   | Color read function             |
@@ -166,6 +169,8 @@ typedef std::map<GLint, InitializeTextureDataFunction> InternalFormatInitialzerM
 
 static InternalFormatInitialzerMap BuildInternalFormatInitialzerMap()
 {
+    using namespace angle;  // For image initialization functions
+
     InternalFormatInitialzerMap map;
 
     map.insert(InternalFormatInitialzerPair(GL_RGB16F, Initialize4ComponentData<GLhalf,   0x0000,     0x0000,     0x0000,     gl::Float16One>));
@@ -232,6 +237,8 @@ static inline void InsertD3D9FormatInfo(D3D9FormatMap *map, GLenum internalForma
 
 static D3D9FormatMap BuildD3D9FormatMap()
 {
+    using namespace angle;  // For image loading functions
+
     D3D9FormatMap map;
 
     //                       | Internal format                     | Texture format      | Render format        | Load function                           |

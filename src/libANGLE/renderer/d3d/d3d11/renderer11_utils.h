@@ -14,7 +14,8 @@
 #include <functional>
 #include <vector>
 
-#include "libANGLE/angletypes.h"
+#include "common/Color.h"
+
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"

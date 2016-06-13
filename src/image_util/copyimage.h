@@ -6,15 +6,16 @@
 
 // copyimage.h: Defines image copying functions
 
-#ifndef LIBANGLE_RENDERER_D3D_COPYIMAGE_H_
-#define LIBANGLE_RENDERER_D3D_COPYIMAGE_H_
+#ifndef IMAGEUTIL_COPYIMAGE_H_
+#define IMAGEUTIL_COPYIMAGE_H_
 
-#include "common/mathutil.h"
-#include "libANGLE/angletypes.h"
+#include "common/Color.h"
+
+#include "image_util/imageformats.h"
 
 #include <stdint.h>
 
-namespace rx
+namespace angle
 {
 
 template <typename sourceType, typename colorDataType>
@@ -28,8 +29,8 @@ void CopyPixel(const uint8_t *source, uint8_t *dest);
 
 void CopyBGRA8ToRGBA8(const uint8_t *source, uint8_t *dest);
 
-}  // namespace rx
+}  // namespace angle
 
 #include "copyimage.inl"
 
-#endif  // LIBANGLE_RENDERER_D3D_COPYIMAGE_H_
+#endif  // IMAGEUTIL_COPYIMAGE_H_

@@ -9,7 +9,9 @@
 
 #include "common/mathutil.h"
 
-namespace rx
+#include "image_util/imageformats.h"
+
+namespace angle
 {
 
 namespace priv
@@ -245,7 +247,7 @@ static MipGenerationFunction GetMipGenerationFunction(size_t sourceWidth, size_t
     return NULL;
 }
 
-}
+}  // namespace priv
 
 template <typename T>
 inline void GenerateMip(size_t sourceWidth, size_t sourceHeight, size_t sourceDepth,
@@ -263,4 +265,4 @@ inline void GenerateMip(size_t sourceWidth, size_t sourceHeight, size_t sourceDe
                        mipWidth, mipHeight, mipDepth, destData, destRowPitch, destDepthPitch);
 }
 
-}
+}  // namespace angle

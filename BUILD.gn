@@ -150,6 +150,29 @@ static_library("angle_common") {
   ]
 }
 
+config("angle_image_util_config") {
+  include_dirs = [
+    "include",
+    "src",
+  ]
+}
+
+source_set("angle_image_util") {
+  sources = rebase_path(gles_gypi.libangle_image_util_sources, ".", "src")
+
+  configs -= angle_undefine_configs
+  configs += [
+    ":internal_config",
+    "//build/config/compiler:no_chromium_code",
+  ]
+
+  public_configs = [ ":angle_image_util_config" ]
+
+  public_deps = [
+    ":angle_common",
+  ]
+}
+
 static_library("translator_lib") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
   defines = []
@@ -292,6 +315,7 @@ static_library("libANGLE") {
     ":angle_common",
   ]
   deps = [
+    ":angle_image_util",
     ":commit_id",
     ":includes",
     ":translator_static",

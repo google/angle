@@ -6,12 +6,13 @@
 
 // loadimage_etc.cpp: Decodes ETC and EAC encoded textures.
 
-#include "libANGLE/renderer/d3d/loadimage_etc.h"
+#include "image_util/loadimage.h"
 
-#include "libANGLE/renderer/imageformats.h"
-#include "libANGLE/renderer/d3d/loadimage.h"
+#include "common/mathutil.h"
 
-namespace rx
+#include "image_util/imageformats.h"
+
+namespace angle
 {
 namespace
 {
@@ -93,7 +94,7 @@ struct ETC2Block
             const auto &block = u.idht.mode.idm.colors.diff;
             int r             = (block.R + block.dR);
             int g             = (block.G + block.dG);
-            int b = (block.B + block.dB);
+            int b             = (block.B + block.dB);
             if (r < 0 || r > 31)
             {
                 decodeTBlock(dest, x, y, w, h, destRowPitch, alphaValues,
@@ -138,7 +139,7 @@ struct ETC2Block
             const auto &block = u.idht.mode.idm.colors.diff;
             int r             = (block.R + block.dR);
             int g             = (block.G + block.dG);
-            int b = (block.B + block.dB);
+            int b             = (block.B + block.dB);
             if (r < 0 || r > 31)
             {
                 transcodeTBlockToBC1(dest, x, y, w, h, alphaValues, nonOpaquePunchThroughAlpha);
@@ -165,18 +166,15 @@ struct ETC2Block
     }
 
   private:
-    union
-    {
+    union {
         // Individual, differential, H and T modes
         struct
         {
-            union
-            {
+            union {
                 // Individual and differential modes
                 struct
                 {
-                    union
-                    {
+                    union {
                         struct  // Individual colors
                         {
                             unsigned char R2 : 4;
@@ -286,8 +284,7 @@ struct ETC2Block
         // Single channel block
         struct
         {
-            union
-            {
+            union {
                 unsigned char us;
                 signed char s;
             } base_codeword;
@@ -361,7 +358,7 @@ struct ETC2Block
         int b1            = extend_4to8bits(block.B1);
         int r2            = extend_4to8bits(block.R2);
         int g2            = extend_4to8bits(block.G2);
-        int b2 = extend_4to8bits(block.B2);
+        int b2            = extend_4to8bits(block.B2);
         decodeIndividualOrDifferentialBlock(dest, x, y, w, h, destRowPitch, r1, g1, b1, r2, g2, b2,
                                             alphaValues, nonOpaquePunchThroughAlpha);
     }
@@ -381,7 +378,7 @@ struct ETC2Block
         int r1            = extend_5to8bits(block.R);
         int r2            = extend_5to8bits(block.R + block.dR);
         int g2            = extend_5to8bits(block.G + block.dG);
-        int b2 = extend_5to8bits(block.B + block.dB);
+        int b2            = extend_5to8bits(block.B + block.dB);
         decodeIndividualOrDifferentialBlock(dest, x, y, w, h, destRowPitch, r1, g1, b1, r2, g2, b2,
                                             alphaValues, nonOpaquePunchThroughAlpha);
     }
@@ -529,7 +526,7 @@ struct ETC2Block
         int b2 = extend_4to8bits(block.HB2);
 
         static const int distance[8] = {3, 6, 11, 16, 23, 32, 41, 64};
-        const int d = distance[(block.Hda << 2) | (block.Hdb << 1) |
+        const int d                  = distance[(block.Hda << 2) | (block.Hdb << 1) |
                                ((r1 << 16 | g1 << 8 | b1) >= (r2 << 16 | g2 << 8 | b2) ? 1 : 0)];
 
         const R8G8B8A8 paintColors[4] = {
@@ -599,7 +596,7 @@ struct ETC2Block
         size_t bitIndex  = x * 4 + y;
         size_t bitOffset = bitIndex & 7;
         size_t lsb       = (u.idht.pixelIndexLSB[1 - (bitIndex >> 3)] >> bitOffset) & 1;
-        size_t msb = (u.idht.pixelIndexMSB[1 - (bitIndex >> 3)] >> bitOffset) & 1;
+        size_t msb       = (u.idht.pixelIndexMSB[1 - (bitIndex >> 3)] >> bitOffset) & 1;
         return (msb << 1) | lsb;
     }
 
@@ -821,7 +818,7 @@ struct ETC2Block
         int b1            = extend_4to8bits(block.B1);
         int r2            = extend_4to8bits(block.R2);
         int g2            = extend_4to8bits(block.G2);
-        int b2 = extend_4to8bits(block.B2);
+        int b2            = extend_4to8bits(block.B2);
         transcodeIndividualOrDifferentialBlockToBC1(dest, x, y, w, h, r1, g1, b1, r2, g2, b2,
                                                     alphaValues, nonOpaquePunchThroughAlpha);
     }
@@ -840,7 +837,7 @@ struct ETC2Block
         int r1            = extend_5to8bits(block.R);
         int r2            = extend_5to8bits(block.R + block.dR);
         int g2            = extend_5to8bits(block.G + block.dG);
-        int b2 = extend_5to8bits(block.B + block.dB);
+        int b2            = extend_5to8bits(block.B + block.dB);
         transcodeIndividualOrDifferentialBlockToBC1(dest, x, y, w, h, r1, g1, b1, r2, g2, b2,
                                                     alphaValues, nonOpaquePunchThroughAlpha);
     }
@@ -858,7 +855,7 @@ struct ETC2Block
         size_t dxBegin = 0;
         size_t dxEnd   = 4;
         size_t dyBegin = subblockIdx * 2;
-        size_t dyEnd = dyBegin + 2;
+        size_t dyEnd   = dyBegin + 2;
         if (!flipbit)
         {
             std::swap(dxBegin, dyBegin);
@@ -948,7 +945,7 @@ struct ETC2Block
         int vr, vg, vb;
 
         static const float kDefaultLuminanceThreshold = 4.0f * 255;
-        static const float kQuantizeRange = 512.0f;
+        static const float kQuantizeRange             = 512.0f;
         if (eigenvalue < kDefaultLuminanceThreshold)  // too small, default to luminance
         {
             // Luminance weights defined by ITU-R Recommendation BT.601, scaled by 1000
@@ -1177,9 +1174,9 @@ void LoadR11EACToR8(size_t width,
         for (size_t y = 0; y < height; y += 4)
         {
             const ETC2Block *sourceRow =
-                OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
+                priv::OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
             uint8_t *destRow =
-                OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
+                priv::OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
 
             for (size_t x = 0; x < width; x += 4)
             {
@@ -1209,9 +1206,9 @@ void LoadRG11EACToRG8(size_t width,
         for (size_t y = 0; y < height; y += 4)
         {
             const ETC2Block *sourceRow =
-                OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
+                priv::OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
             uint8_t *destRow =
-                OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
+                priv::OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
 
             for (size_t x = 0; x < width; x += 4)
             {
@@ -1245,9 +1242,9 @@ void LoadETC2RGB8ToRGBA8(size_t width,
         for (size_t y = 0; y < height; y += 4)
         {
             const ETC2Block *sourceRow =
-                OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
+                priv::OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
             uint8_t *destRow =
-                OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
+                priv::OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
 
             for (size_t x = 0; x < width; x += 4)
             {
@@ -1277,9 +1274,9 @@ void LoadETC2RGB8ToBC1(size_t width,
         for (size_t y = 0; y < height; y += 4)
         {
             const ETC2Block *sourceRow =
-                OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
-            uint8_t *destRow =
-                OffsetDataPointer<uint8_t>(output, y / 4, z, outputRowPitch, outputDepthPitch);
+                priv::OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
+            uint8_t *destRow = priv::OffsetDataPointer<uint8_t>(output, y / 4, z, outputRowPitch,
+                                                                outputDepthPitch);
 
             for (size_t x = 0; x < width; x += 4)
             {
@@ -1311,9 +1308,9 @@ void LoadETC2RGBA8ToRGBA8(size_t width,
         for (size_t y = 0; y < height; y += 4)
         {
             const ETC2Block *sourceRow =
-                OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
+                priv::OffsetDataPointer<ETC2Block>(input, y / 4, z, inputRowPitch, inputDepthPitch);
             uint8_t *destRow =
-                OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
+                priv::OffsetDataPointer<uint8_t>(output, y, z, outputRowPitch, outputDepthPitch);
 
             for (size_t x = 0; x < width; x += 4)
             {
@@ -1501,4 +1498,4 @@ void LoadETC2SRGBA8ToSRGBA8(size_t width,
                          outputRowPitch, outputDepthPitch, true);
 }
 
-}  // namespace rx
+}  // namespace angle

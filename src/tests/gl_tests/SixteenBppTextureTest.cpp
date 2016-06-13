@@ -9,27 +9,27 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
-#include "libANGLE/renderer/imageformats.h"
+#include "image_util/imageformats.h"
 
 using namespace angle;
 
 namespace
 {
 
-GLColor Convert565(const rx::R5G6B5 &rgb565)
+GLColor Convert565(const R5G6B5 &rgb565)
 {
     gl::ColorF colorf;
-    rx::R5G6B5::readColor(&colorf, &rgb565);
+    R5G6B5::readColor(&colorf, &rgb565);
     Vector4 vecColor(colorf.red, colorf.green, colorf.blue, colorf.alpha);
     return GLColor(vecColor);
 }
 
-rx::R5G6B5 Convert565(const GLColor &glColor)
+R5G6B5 Convert565(const GLColor &glColor)
 {
     const Vector4 &vecColor = glColor.toNormalizedVector();
     gl::ColorF colorf(vecColor.x, vecColor.y, vecColor.z, vecColor.w);
-    rx::R5G6B5 rgb565;
-    rx::R5G6B5::writeColor(&rgb565, &colorf);
+    R5G6B5 rgb565;
+    R5G6B5::writeColor(&rgb565, &colorf);
     return rgb565;
 }
 
@@ -165,8 +165,8 @@ TEST_P(SixteenBppTextureTest, RGB565Validation)
     GLuint test;
     memcpy(&test, &GLColor::black, 4);
 
-    rx::R5G6B5 pixels[4] = {Convert565(GLColor::red), Convert565(GLColor::green),
-                            Convert565(GLColor::blue), Convert565(GLColor::yellow)};
+    R5G6B5 pixels[4] = {Convert565(GLColor::red), Convert565(GLColor::green),
+                        Convert565(GLColor::blue), Convert565(GLColor::yellow)};
 
     glClearColor(0, 0, 0, 0);
 
@@ -525,7 +525,7 @@ TEST_P(SixteenBppTextureTestES3, RGB565FramebufferReadback)
 
     if (colorReadFormat == GL_RGB && colorReadType == GL_UNSIGNED_SHORT_5_6_5)
     {
-        std::vector<rx::R5G6B5> readColors(w * h);
+        std::vector<R5G6B5> readColors(w * h);
         glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, readColors.data());
 
         int hoffset = (h - 1) * w;

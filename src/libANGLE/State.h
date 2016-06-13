@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "common/angleutils.h"
+#include "common/Color.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/RefCountObject.h"

@@ -9,13 +9,14 @@
 
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
+#include "image_util/loadimage.h"
+
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/copyimage.h"
 #include "libANGLE/renderer/d3d/d3d11/copyvertex.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/generatemip.h"
-#include "libANGLE/renderer/d3d/loadimage.h"
 
 namespace rx
 {
@@ -48,7 +49,7 @@ static const FastCopyFunctionMap &GetFastCopyFunctionMap(DXGI_FORMAT dxgiFormat)
             static FastCopyFunctionMap fastCopyMap;
             if (fastCopyMap.empty())
             {
-                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = CopyBGRA8ToRGBA8;
+                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = angle::CopyBGRA8ToRGBA8;
             }
             return fastCopyMap;
         }

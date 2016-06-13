@@ -9,9 +9,12 @@
 
 #include "libANGLE/renderer/renderer_utils.h"
 
+#include "image_util/copyimage.h"
+#include "image_util/imageformats.h"
+
 #include "libANGLE/formatutils.h"
-#include "libANGLE/renderer/copyimage.h"
-#include "libANGLE/renderer/imageformats.h"
+
+#include <string.h>
 
 namespace rx
 {
@@ -31,6 +34,8 @@ static inline void InsertFormatWriteFunctionMapping(FormatWriteFunctionMap *map,
 
 static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
 {
+    using namespace angle;  //  For image writing functions
+
     FormatWriteFunctionMap map;
 
     // clang-format off

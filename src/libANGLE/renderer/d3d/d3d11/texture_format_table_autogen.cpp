@@ -11,12 +11,15 @@
 
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
-#include "libANGLE/renderer/copyimage.h"
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
+#include "image_util/loadimage.h"
+
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/load_functions_table.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/generatemip.h"
-#include "libANGLE/renderer/d3d/loadimage.h"
+
+using namespace angle;
 
 namespace rx
 {

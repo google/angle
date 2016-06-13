@@ -798,8 +798,8 @@ inline uint16_t RotR16(uint16_t x, int8_t r)
     return (x >> r) | (x << (16 - r));
 }
 
-#define ANGLE_ROTL(x,y) RotL(x,y)
-#define ANGLE_ROTR16(x,y) RotR16(x,y)
+#define ANGLE_ROTL(x, y) ::rx::RotL(x, y)
+#define ANGLE_ROTR16(x, y) ::rx::RotR16(x, y)
 
 #endif // namespace rx
 
