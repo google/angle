@@ -4,8 +4,13 @@
 
 # import the use_x11 variable
 import("//build/config/dcheck_always_on.gni")
+import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
 import("//third_party/angle/build/angle_common.gni")
+
+pkg_config("libdrm") {
+  packages = [ "libdrm" ]
+}
 
 angle_git_is_present = exec_script("src/commit_id.py",
                                    [
@@ -343,6 +348,14 @@ static_library("libANGLE") {
         "log",
       ]
     }
+    if (use_ozone) {
+      configs += [ ":libdrm" ]
+      defines += [ "ANGLE_USE_OZONE" ]
+      deps += [ "//third_party/minigbm" ]
+      sources += rebase_path(gles_gypi.libangle_gl_egl_sources, ".", "src")
+      sources += rebase_path(gles_gypi.libangle_gl_egl_dl_sources, ".", "src")
+      sources += rebase_path(gles_gypi.libangle_gl_ozone_sources, ".", "src")
+    }
   }
 
   if (angle_enable_vulkan) {
@@ -443,7 +456,7 @@ util_gypi = exec_script("//build/gypi_to_gn.py",
 
 config("angle_util_config") {
   include_dirs = [ "util" ]
-  if (is_linux) {
+  if (is_linux && use_x11) {
     libs = [ "X11" ]
   }
 }
@@ -480,6 +493,10 @@ static_library("angle_util") {
       "android",
       "log",
     ]
+  }
+
+  if (use_ozone) {
+    sources += rebase_path(util_gypi.util_ozone_sources, ".", "util")
   }
 
   defines = [
