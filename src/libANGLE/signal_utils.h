@@ -24,6 +24,7 @@ using SignalToken = uint32_t;
 class SignalReceiver
 {
   public:
+    virtual ~SignalReceiver() = default;
     virtual void signal(SignalToken token) = 0;
 };
 
