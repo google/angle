@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f09f4df_afad89b7",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-13T17:24:04Z",
+      "side": 1,
+      "message": "You shouldn\u0027t even have to typedef these, it can just be \"typename\" if you want.",
+      "range": {
+        "startLine": 22,
+        "startChar": 10,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "262b9a6c08678c931eafb61ed83b0cc858c8d788",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f09f4df_ef8e6143",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-13T17:24:04Z",
+      "side": 1,
+      "message": "Instead of making new classes:\n\n   using GLBuffer \u003d GLWrapper\u003cglGenBuffers, glDeleteBuffers\u003e;\n\nThat way if we add new constructors, we don\u0027t have to forward them.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 2
+      },
+      "revId": "262b9a6c08678c931eafb61ed83b0cc858c8d788",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
