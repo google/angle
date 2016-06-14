@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9483cd1c_8d1e65b3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "Instead of doing these through the resource manager, just grab the path and do the operation here.  The extra layer shouldn\u0027t be needed.",
+      "range": {
+        "startLine": 583,
+        "startChar": 4,
+        "endLine": 583,
+        "endChar": 59
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9483cd1c_4df70d98",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "If possible, turn these into specific getters and setters for each enum and move the switch higher up.",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 40,
+        "endChar": 62
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9483cd1c_4df1cd71",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "nit: good opportunity to construct the vector with the full size.",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 31
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9483cd1c_2dfbb91c",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "Can even just keep passing the gl::Path down all the way to the renderer.",
+      "range": {
+        "startLine": 192,
+        "startChar": 39,
+        "endLine": 192,
+        "endChar": 53
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9483cd1c_ad4969a2",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "These should probably pass the gl::Path objects.  We have a GetImplAs function for quick casting to specific impl types.",
+      "range": {
+        "startLine": 100,
+        "startChar": 31,
+        "endLine": 100,
+        "endChar": 39
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9483cd1c_ed29a17b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T20:37:37Z",
+      "side": 1,
+      "message": "nit: explicit !\u003d 0 for clarity",
+      "range": {
+        "startLine": 1626,
+        "startChar": 8,
+        "endLine": 1626,
+        "endChar": 60
+      },
+      "revId": "297ba03a9375a838dbb9bc98d0b66d9a5612bc7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
