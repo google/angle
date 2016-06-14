@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94fe6d6e_617960b0",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-14T18:49:04Z",
+      "side": 1,
+      "message": "Interesting, I didn\u0027t know you could have function as template arguments integrals.",
+      "revId": "9b08a3d55185bf9cfb7021c611a55c1ae0d28a5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
