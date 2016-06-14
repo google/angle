@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9484adcd_45c4fcfb",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "nit: this should be checked",
+      "range": {
+        "startLine": 774,
+        "startChar": 61,
+        "endLine": 774,
+        "endChar": 84
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9484adcd_c5afac3e",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "nit: I\u0027d prefer if you make the cast to GLuint when you define the checked inputs here, same for skipPixels and pixelBytes",
+      "range": {
+        "startLine": 775,
+        "startChar": 19,
+        "endLine": 775,
+        "endChar": 24
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9484adcd_656a60d8",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "call ANGLE_TRY_CHECKED_MATH on skipBytes before you return (ValueOrDie will abort on failure, but really we want to generate an error)",
+      "range": {
+        "startLine": 781,
+        "startChar": 4,
+        "endLine": 781,
+        "endChar": 10
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_f2a528ca",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "I feel like this should use the exact type of the function return (GLuint)",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 11
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_d2a2a4bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 263,
+        "startChar": 4,
+        "endLine": 263,
+        "endChar": 12
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_32917069",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 658,
+        "startChar": 4,
+        "endLine": 658,
+        "endChar": 8
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_1296ec60",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 491,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 11
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_b2844024",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3366,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T15:40:05Z",
+      "side": 1,
+      "message": "if you wait for https://chromium-review.googlesource.com/#/c/350904/ to land, you\u0027ll be able to use RAII types here. If you want to land this before, make sure you call delete or make this a part of the fixture.",
+      "range": {
+        "startLine": 3366,
+        "startChar": 4,
+        "endLine": 3366,
+        "endChar": 15
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
