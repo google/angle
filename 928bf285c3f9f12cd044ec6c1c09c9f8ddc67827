@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14e0bddf_de04a543",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-14T19:11:52Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of the weird recursion this causes. An alternative would be putting the current code of setImage in a helper function and do\nif (workaround) {\n    // Call setImageHelper with no PBO\n    // Do workaround\n} else {\n    // Just call setImageHelper\n}",
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e0bddf_7eab913f",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-14T19:11:52Z",
+      "side": 1,
+      "message": "if (applySkipImages) but rename it to something else?",
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e0bddf_beb51996",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-14T19:11:52Z",
+      "side": 1,
+      "message": "We\u0027ll want this in the StateManager with dirtybits eventually",
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
