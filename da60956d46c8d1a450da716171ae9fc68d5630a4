@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94fe6d6e_789c79d6",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T17:32:51Z",
+      "side": 1,
+      "message": "nit: method",
+      "range": {
+        "startLine": 140,
+        "startChar": 12,
+        "endLine": 140,
+        "endChar": 17
+      },
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_f87ea9fd",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T17:32:51Z",
+      "side": 1,
+      "message": "I feel like this style convolutes the process of checking framebuffer completeness by going through context to get a non-const version of the same framebuffer when mutable variables are a great fit for hiding internal caching on methods that should appear to be const from the outside.  Thoughts?",
+      "range": {
+        "startLine": 681,
+        "startChar": 9,
+        "endLine": 681,
+        "endChar": 61
+      },
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
