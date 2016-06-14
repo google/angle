@@ -16,6 +16,18 @@
 #include "libANGLE/renderer/gl/egl/PbufferSurfaceEGL.h"
 #include "libANGLE/renderer/gl/egl/WindowSurfaceEGL.h"
 
+namespace
+{
+const char *GetEGLPath()
+{
+#if defined(__LP64__)
+    return "/system/lib64/libEGL.so";
+#else
+    return "/system/lib/libEGL.so";
+#endif
+}
+}  // namespace
+
 namespace rx
 {
 
@@ -31,7 +43,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
 {
     FunctionsEGLDL *egl = new FunctionsEGLDL();
     mEGL = egl;
-    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), "libEGL.so"));
+    ANGLE_TRY(egl->initialize(display->getNativeDisplayId(), GetEGLPath()));
 
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
     ASSERT(eglVersion >= gl::Version(1, 4));
