@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "14e0bddf_7e31d150",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T19:02:47Z",
+      "side": 1,
+      "message": "just fyi, I\u0027m actually using the function pointer *value* as the template argument here, rather than the type.",
+      "parentUuid": "f44de986_1a6c09b6",
+      "range": {
+        "startLine": 22,
+        "startChar": 10,
+        "endLine": 22,
+        "endChar": 15
+      },
+      "revId": "262b9a6c08678c931eafb61ed83b0cc858c8d788",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f09f4df_ef8e6143",
         "filename": "src/tests/test_utils/gl_raii.h",
         "patchSetId": 3
