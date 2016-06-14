@@ -45,6 +45,24 @@
       "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_e196f001",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-14T18:47:24Z",
+      "side": 1,
+      "message": "I agree that mutable variable would work in this case. The usual guideline being that the object has to appear as const which would be the case here. However for this specific case I think the amount of boilerplate is still small, and that having internal mutability could cause problems if we need to modify GPU objects when handling the dirty bits.",
+      "parentUuid": "94fe6d6e_f87ea9fd",
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
