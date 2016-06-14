@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b4de1159_cbd8752d",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T21:16:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94fe6d6e_789c79d6",
+      "range": {
+        "startLine": 140,
+        "startChar": 12,
+        "endLine": 140,
+        "endChar": 17
+      },
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_f87ea9fd",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
@@ -60,6 +84,24 @@
       "side": 1,
       "message": "I agree that mutable variable would work in this case. The usual guideline being that the object has to appear as const which would be the case here. However for this specific case I think the amount of boilerplate is still small, and that having internal mutability could cause problems if we need to modify GPU objects when handling the dirty bits.",
       "parentUuid": "94fe6d6e_f87ea9fd",
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4de1159_2bbdb9c9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-14T21:16:51Z",
+      "side": 1,
+      "message": "I agree with Corentin. I removed the blurb about mutability - I was thinking that checking status can be a bit of a \u0027heavyweight\u0027 operation, which interacts with dirty bits, and calls through to the impl/driver. It\u0027s nice to have a (small) amount of layering for checking status.",
+      "parentUuid": "94fe6d6e_e196f001",
       "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
