@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94fe6d6e_81f1e474",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T18:46:05Z",
+      "side": 1,
+      "message": "Can this be removed now?",
+      "range": {
+        "startLine": 518,
+        "startChar": 16,
+        "endLine": 518,
+        "endChar": 48
+      },
+      "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94fe6d6e_419c1c28",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-14T18:46:05Z",
+      "side": 1,
+      "message": "nit: Dunno if it\u0027s worth casting these to uint8_t instead",
+      "range": {
+        "startLine": 520,
+        "startChar": 45,
+        "endLine": 520,
+        "endChar": 53
+      },
+      "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
