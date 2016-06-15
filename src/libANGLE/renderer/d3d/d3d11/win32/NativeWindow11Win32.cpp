@@ -166,6 +166,7 @@ HRESULT NativeWindow11Win32::createSwapChain(ID3D11Device *device,
                                                           nullptr, nullptr, &swapChain1);
         if (SUCCEEDED(result))
         {
+            factory2->MakeWindowAssociation(getNativeWindow(), DXGI_MWA_NO_ALT_ENTER);
             *swapChain = static_cast<IDXGISwapChain *>(swapChain1);
         }
         SafeRelease(factory2);
@@ -190,7 +191,12 @@ HRESULT NativeWindow11Win32::createSwapChain(ID3D11Device *device,
     swapChainDesc.Windowed           = TRUE;
     swapChainDesc.SwapEffect         = DXGI_SWAP_EFFECT_DISCARD;
 
-    return factory->CreateSwapChain(device, &swapChainDesc, swapChain);
+    HRESULT result = factory->CreateSwapChain(device, &swapChainDesc, swapChain);
+    if (SUCCEEDED(result))
+    {
+        factory->MakeWindowAssociation(getNativeWindow(), DXGI_MWA_NO_ALT_ENTER);
+    }
+    return result;
 }
 
 void NativeWindow11Win32::commitChange()
