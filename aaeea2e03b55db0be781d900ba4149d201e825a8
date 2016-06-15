@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f45969e9_08422726",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "I agree with Corentin, this should go through the state manager, with StateManagerGL::setPixelUnpackState. You\u0027ll need to finish off the TODOs in that section.",
+      "range": {
+        "startLine": 253,
+        "startChar": 3,
+        "endLine": 257,
+        "endChar": 54
+      },
+      "revId": "aaeea2e03b55db0be781d900ba4149d201e825a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f45969e9_886617d8",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "if you use the state manager this shouldn\u0027t be necessary I believe",
+      "range": {
+        "startLine": 308,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 70
+      },
+      "revId": "aaeea2e03b55db0be781d900ba4149d201e825a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
