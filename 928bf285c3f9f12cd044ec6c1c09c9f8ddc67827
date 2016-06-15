@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1490bdc9_def0a571",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:51:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14e0bddf_de04a543",
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14e0bddf_7eab913f",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2016-06-14T19:11:52Z",
       "side": 1,
       "message": "if (applySkipImages) but rename it to something else?",
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_5aec959b",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:51:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14e0bddf_7eab913f",
       "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
