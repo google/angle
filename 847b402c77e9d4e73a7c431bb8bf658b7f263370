@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "947cad58_22640e36",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86be3e8f_e39c0e71",
+      "range": {
+        "startLine": 1438,
+        "startChar": 5,
+        "endLine": 1440,
+        "endChar": 40
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_c3a30aa8",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 7
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "f48a499e_fdfba77f",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86be3e8f_23aa267c",
+      "range": {
+        "startLine": 843,
+        "startChar": 4,
+        "endLine": 843,
+        "endChar": 30
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_43af1a8b",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 7
@@ -82,6 +130,30 @@
       "writtenOn": "2016-06-03T14:55:29Z",
       "side": 1,
       "message": "I would just load everything that the extension exposes.",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 27
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5486b597_20f16aa1",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "That\u0027s a lot of functions (57) and not sure what would be the gain.",
+      "parentUuid": "86be3e8f_43af1a8b",
       "range": {
         "startLine": 846,
         "startChar": 4,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "545f95f9_b8013968",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2297,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86be3e8f_588e2947",
+      "range": {
+        "startLine": 2297,
+        "startChar": 43,
+        "endLine": 2297,
+        "endChar": 59
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_388d7546",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 7
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "f48a499e_1df133a1",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2333,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86be3e8f_388d7546",
+      "range": {
+        "startLine": 2333,
+        "startChar": 20,
+        "endLine": 2333,
+        "endChar": 45
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "86be3e8f_f87efd01",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 7
@@ -151,6 +271,30 @@
       "writtenOn": "2016-06-03T14:55:29Z",
       "side": 1,
       "message": "nit: some of these lines are long, git cl format needed?",
+      "range": {
+        "startLine": 2348,
+        "startChar": 8,
+        "endLine": 2348,
+        "endChar": 106
+      },
+      "revId": "847b402c77e9d4e73a7c431bb8bf658b7f263370",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5486b597_40ee6ebe",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2348,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-15T10:15:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86be3e8f_f87efd01",
       "range": {
         "startLine": 2348,
         "startChar": 8,
