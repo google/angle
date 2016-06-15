@@ -331,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "f45969e9_0861c7ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T13:07:49Z",
+      "side": 1,
+      "message": "That sounds sensible to me, if you\u0027re pretty sure we don\u0027t expose any extensions that affect skip. (I don\u0027t think we do)",
+      "parentUuid": "94658dc6_fadc89ee",
+      "range": {
+        "startLine": 491,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 11
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_b2844024",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -366,6 +390,30 @@
       "side": 1,
       "message": "RAII would be slightly nicer, but I don\u0027t think I want to hold back this patch for that. I added the missing DeleteBuffers call.",
       "parentUuid": "94fe6d6e_b2844024",
+      "range": {
+        "startLine": 3366,
+        "startChar": 4,
+        "endLine": 3366,
+        "endChar": 15
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f45969e9_285e032a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3366,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T13:07:49Z",
+      "side": 1,
+      "message": "Well, it\u0027s already landed, so I would prefer if you use RAII to fix the problem of missing deletion if an ASSERT call gets tripped. See gl_raii.h.",
+      "parentUuid": "94658dc6_1ae21dac",
       "range": {
         "startLine": 3366,
         "startChar": 4,
