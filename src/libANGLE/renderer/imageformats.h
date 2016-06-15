@@ -621,7 +621,7 @@ struct R4G4B4A4
 
 struct A4R4G4B4
 {
-    unsigned short ARGB;
+    uint16_t ARGB;
 
     static void readColor(gl::ColorF *dst, const A4R4G4B4 *src)
     {
@@ -633,10 +633,10 @@ struct A4R4G4B4
 
     static void writeColor(A4R4G4B4 *dst, const gl::ColorF *src)
     {
-        dst->ARGB = gl::shiftData<4, 12>(gl::floatToNormalized<4, unsigned short>(src->alpha)) |
-                    gl::shiftData<4, 8>(gl::floatToNormalized<4, unsigned short>(src->red)) |
-                    gl::shiftData<4, 4>(gl::floatToNormalized<4, unsigned short>(src->green)) |
-                    gl::shiftData<4, 0>(gl::floatToNormalized<4, unsigned short>(src->blue));
+        dst->ARGB = gl::shiftData<4, 12>(gl::floatToNormalized<4, uint16_t>(src->alpha)) |
+                    gl::shiftData<4, 8>(gl::floatToNormalized<4, uint16_t>(src->red)) |
+                    gl::shiftData<4, 4>(gl::floatToNormalized<4, uint16_t>(src->green)) |
+                    gl::shiftData<4, 0>(gl::floatToNormalized<4, uint16_t>(src->blue));
     }
 
     static void average(A4R4G4B4 *dst, const A4R4G4B4 *src1, const A4R4G4B4 *src2)

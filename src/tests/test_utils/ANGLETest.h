@@ -57,10 +57,14 @@ struct GLColorRGB
     static const GLColorRGB yellow;
 };
 
+struct GLColor16;
+
 struct GLColor
 {
     GLColor();
     GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a);
+    GLColor(const Vector4 &floatColor);
+    GLColor(const GLColor16 &color16);
     GLColor(GLuint colorValue);
 
     Vector4 toNormalizedVector() const;
@@ -119,7 +123,6 @@ GLColor16 ReadColor16(GLint x, GLint y);
 
 #define EXPECT_PIXEL_COLOR_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor(x, y))
 
-// TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
 #define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
 { \
     GLubyte pixel[4]; \
@@ -131,7 +134,21 @@ GLColor16 ReadColor16(GLint x, GLint y);
     EXPECT_NEAR((a), pixel[3], abs_error); \
 }
 
+// TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
+#define EXPECT_PIXEL_COLOR_NEAR(x, y, angleColor, abs_error) \
+    EXPECT_PIXEL_NEAR(x, y, angleColor.R, angleColor.G, angleColor.B, angleColor.A, abs_error)
+
 #define EXPECT_PIXEL_COLOR16_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor16(x, y))
+
+#define EXPECT_COLOR_NEAR(expected, actual, abs_error) \
+    \
+{                                               \
+        EXPECT_NEAR(expected.R, actual.R, abs_error);  \
+        EXPECT_NEAR(expected.G, actual.G, abs_error);  \
+        EXPECT_NEAR(expected.B, actual.B, abs_error);  \
+        EXPECT_NEAR(expected.A, actual.A, abs_error);  \
+    \
+}
 
 class EGLWindow;
 class OSWindow;
