@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f45969e9_685e3bfd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:42:11Z",
+      "side": 1,
+      "message": "nit: can you open a bug for this (anglebug.com/new) and add a tag BUG\u003dangleproject:####",
+      "revId": "607635d9762bf6387e563eef95b652ff48deea41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
