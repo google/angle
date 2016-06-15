@@ -93,6 +93,24 @@
       "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e0bddf_de3585ec",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-15T14:41:42Z",
+      "side": 1,
+      "message": "It would cause the a1 shift below to be an undefined behavior, and wouldn\u0027t give a perf advantage.",
+      "parentUuid": "94fe6d6e_419c1c28",
+      "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
