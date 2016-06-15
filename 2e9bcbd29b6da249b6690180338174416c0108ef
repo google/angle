@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f417a9f9_afcd85c2",
+        "filename": "src/tests/gl_tests/SixteenBppTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:49:07Z",
+      "side": 1,
+      "message": "There are, in the WebGL 2 tests. I felt lazy and didn\u0027t want to make ANGLE tests for the 565 and RGB5A1, but should be fine.",
+      "parentUuid": "f417a9f9_7e3685f8",
+      "revId": "2e9bcbd29b6da249b6690180338174416c0108ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_4f903109",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2016-06-15T19:34:41Z",
       "side": 1,
       "message": "nit: unneeded newline?",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 5
+      },
+      "revId": "2e9bcbd29b6da249b6690180338174416c0108ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_afe4654a",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:49:07Z",
+      "side": 1,
+      "message": "Git cl format refuses to format this properly. :( not sure what\u0027s up.",
+      "parentUuid": "f417a9f9_4f903109",
       "range": {
         "startLine": 144,
         "startChar": 0,
