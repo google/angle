@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_7a44f987",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9484adcd_45c4fcfb",
+      "range": {
+        "startLine": 774,
+        "startChar": 61,
+        "endLine": 774,
+        "endChar": 84
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9484adcd_c5afac3e",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-14T15:40:05Z",
       "side": 1,
       "message": "nit: I\u0027d prefer if you make the cast to GLuint when you define the checked inputs here, same for skipPixels and pixelBytes",
+      "range": {
+        "startLine": 775,
+        "startChar": 19,
+        "endLine": 775,
+        "endChar": 24
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_ba5db164",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Yep, the types here are a bit of a mess, that\u0027s probably the best option. skip* values should be \u003e\u003d 0.",
+      "parentUuid": "9484adcd_c5afac3e",
       "range": {
         "startLine": 775,
         "startChar": 19,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_5a47358d",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Ah, yes.",
+      "parentUuid": "9484adcd_656a60d8",
+      "range": {
+        "startLine": 781,
+        "startChar": 4,
+        "endLine": 781,
+        "endChar": 10
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_f2a528ca",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2016-06-14T15:40:05Z",
       "side": 1,
       "message": "I feel like this should use the exact type of the function return (GLuint)",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 11
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "947cad58_62d29609",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94fe6d6e_f2a528ca",
       "range": {
         "startLine": 249,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_9acd4d3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94fe6d6e_d2a2a4bf",
+      "range": {
+        "startLine": 263,
+        "startChar": 4,
+        "endLine": 263,
+        "endChar": 12
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_32917069",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2016-06-14T15:40:05Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 658,
+        "startChar": 4,
+        "endLine": 658,
+        "endChar": 8
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_bad211db",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94fe6d6e_32917069",
       "range": {
         "startLine": 658,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_fadc89ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "Done. Though could this actually be replaced by asserts saying that the skip params are 0? There\u0027s no way to specify unpack skip in GLES 2.0.",
+      "parentUuid": "94fe6d6e_1296ec60",
+      "range": {
+        "startLine": 491,
+        "startChar": 4,
+        "endLine": 491,
+        "endChar": 11
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_b2844024",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -174,6 +342,30 @@
       "writtenOn": "2016-06-14T15:40:05Z",
       "side": 1,
       "message": "if you wait for https://chromium-review.googlesource.com/#/c/350904/ to land, you\u0027ll be able to use RAII types here. If you want to land this before, make sure you call delete or make this a part of the fixture.",
+      "range": {
+        "startLine": 3366,
+        "startChar": 4,
+        "endLine": 3366,
+        "endChar": 15
+      },
+      "revId": "b76450b80e66770a6cec897bd16f40ea151da803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_1ae21dac",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3366,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-15T11:50:46Z",
+      "side": 1,
+      "message": "RAII would be slightly nicer, but I don\u0027t think I want to hold back this patch for that. I added the missing DeleteBuffers call.",
+      "parentUuid": "94fe6d6e_b2844024",
       "range": {
         "startLine": 3366,
         "startChar": 4,
