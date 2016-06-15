@@ -1,0 +1,1061 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f417a9f9_cff5612a",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "Can you try using the angle::Matrix\u003cfloat\u003e class in common/matrix_utils.h for these? It would be nice if we could reuse the code instead of having a custom setToIdentity method.",
+      "range": {
+        "startLine": 724,
+        "startChar": 5,
+        "endLine": 724,
+        "endChar": 18
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_c9c28163",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "no need for the comment.",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_49d79121",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "if the resource manager can fail to allocate, it should return a gl::Error. You can use the gl::ErrorOrResult helper class for returning the value OR error.",
+      "range": {
+        "startLine": 450,
+        "startChar": 8,
+        "endLine": 450,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_29821517",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "is it possible to use better names than \u0027p\u0027? Say, \u0027pathObj\u0027",
+      "range": {
+        "startLine": 562,
+        "startChar": 16,
+        "endLine": 562,
+        "endChar": 17
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_69a36dc5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "just use handleError(p-\u003esetCommands).. it checks isError",
+      "range": {
+        "startLine": 582,
+        "startChar": 5,
+        "endLine": 585,
+        "endChar": 25
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a48acc27",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "you can put the assert in the scope, git cl format will be confused otherwise.",
+      "range": {
+        "startLine": 1132,
+        "startChar": 8,
+        "endLine": 1132,
+        "endChar": 42
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_84a4f0bd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "ISTR std::memcpy not being so standard. it may be safe in C++11 or something, but just plain memcpy for sure is safe.",
+      "range": {
+        "startLine": 1135,
+        "startChar": 12,
+        "endLine": 1135,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e4ade49b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1817,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "do you know what GL states path rendering depends on? it seems like a good idea.",
+      "range": {
+        "startLine": 1817,
+        "startChar": 7,
+        "endLine": 1817,
+        "endChar": 63
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e933fda0",
+        "filename": "src/libANGLE/Path.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "Use:\n\n ANGLE_TRY(blah);\n mHasData \u003d true;\n return NoError();",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 87
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_c9d9e161",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "don\u0027t need public on NonCopyable",
+      "range": {
+        "startLine": 26,
+        "startChar": 23,
+        "endLine": 26,
+        "endChar": 29
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_49ee71f7",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "it\u0027s OK to return non-const here, for the case where the back-end needs a mutable pointer.",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_8923694d",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "don\u0027t need multiple privates",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a9390585",
+        "filename": "src/libANGLE/PathAllocator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "just 2016 is fine",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_6907edbc",
+        "filename": "src/libANGLE/PathAllocator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "the header should have a comment describing the file contents.",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e9c77d9e",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "I see no reason to tie this object to paths -- if there are similarly batched allocations for other objects we could use it for those. Maybe HandleRangeAllocator?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a942a5f8",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: add trailing _",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_6959ade8",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: map before the user includes... see \n\nhttps://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_29ba1524",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "\u0027  // namespace gl\u0027",
+      "range": {
+        "startLine": 59,
+        "startChar": 5,
+        "endLine": 59,
+        "endChar": 7
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_890a49c3",
+        "filename": "src/libANGLE/PathAllocator_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nice tests.. please add a one or two line comment before each describing the contents in a bit more detail than the name.",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 6
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_0fbf5977",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "I don\u0027t see you actually using the factory in this method",
+      "range": {
+        "startLine": 287,
+        "startChar": 53,
+        "endLine": 287,
+        "endChar": 60
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e9ee5d26",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "run git cl format, the * alignment is incorrect.",
+      "range": {
+        "startLine": 295,
+        "startChar": 8,
+        "endLine": 295,
+        "endChar": 12
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a9e4654a",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_2f085554",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "same as other comments",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_cf9ba12f",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "same as other comments",
+      "range": {
+        "startLine": 191,
+        "startChar": 23,
+        "endLine": 191,
+        "endChar": 33
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_6fe9ad8a",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "best to put these in the cpp file",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a425acb7",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "these should all be functions in PathImpl that take the gl::Context as the first parameter. From the gl::Context you can get a rx::ContextImpl -\u003e rx::ContextGL and from that rx::RendererGL. Unless I\u0027m mis-understanding why you have these here in the first place.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 115
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a46e4ce7",
+        "filename": "src/libANGLE/renderer/gl/PathGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "file-level comment",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_2f35f5cb",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "ASSERT, with caps. Also we don\u0027t do this usually, but seems OK to do so.",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 10
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_8405103f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "include order, and can remove the comment",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_44901809",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: use std::numeric_limits\u003cGLuint\u003e::max() to be consistent with the rest of the code style",
+      "range": {
+        "startLine": 124,
+        "startChar": 23,
+        "endLine": 124,
+        "endChar": 33
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_24b6bca0",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1542,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "I like that you added these. Are these the only states that are relevant for path rendering?",
+      "range": {
+        "startLine": 1536,
+        "startChar": 11,
+        "endLine": 1542,
+        "endChar": 67
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_04f10073",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: include order",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 18
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_440bf852",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "can you list error messages wherever you add new validation?",
+      "range": {
+        "startLine": 2221,
+        "startChar": 39,
+        "endLine": 2221,
+        "endChar": 55
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_6f852db3",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "I know it seems silly for such a small function, but can you put this in the same form as the other functions (with a Validate method)?\n\nThe end goal is for each and every API call to use the same templating so we can auto-generate them all at once.",
+      "range": {
+        "startLine": 1469,
+        "startChar": 8,
+        "endLine": 1470,
+        "endChar": 46
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_4f2cb1a5",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "same for these",
+      "range": {
+        "startLine": 1633,
+        "startChar": 10,
+        "endLine": 1636,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e47e84c8",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 18,
+        "endChar": 63
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_047aa0d6",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 17,
+        "startChar": 31,
+        "endLine": 17,
+        "endChar": 39
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_84bd10cc",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: Capitalize local statics",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_c4fc287e",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "use angle::GLColor",
+      "range": {
+        "startLine": 28,
+        "startChar": 23,
+        "endLine": 28,
+        "endChar": 30
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_e4e204dc",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "use GLColor for these",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a4264c18",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "once https://chromium-review.googlesource.com/#/c/352252/ lands, you can do the following:\n\n for (const auto \u0026actual : pixels)\n {\n   EXPECT_COLOR_NEAR(expected, actual, tolerance);\n }\n\nWhich seems to do the same as the below code but a lot more succinct.\n\nYou can add ASSERT_COLOR_NEAR if you want to avoid repeated error spam.",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 41,
+        "endChar": 9
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a4d80c2c",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "extra spaces",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_a40f6c80",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "extra space, a few other places in this file and the code",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_441f78b0",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "comment before each test",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 6
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_44649836",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "pretty much all of these can be ASSERT, if we get a GL error all bets are off",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 205,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_646b9404",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "for EXPECT_EQ and EXPECT_NE, the \u0027expected\u0027 value is first, so EXPECT_NE(0u, path), and so on below",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_c4cd483b",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T19:44:15Z",
+      "side": 1,
+      "message": "nit: these actually return GLboolean, so you\u0027d do EXPECT_TRUE(glIsPathCHROMIM(path) \u003d\u003d GL_TRUE).. might seem pedantic but it\u0027s how we try to use GLbooleans in the code.\n\nso on below",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 15
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
