@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "f417a9f9_0f9c79d4",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: A more verbose name, maybe setIdentityMatrix4",
+      "range": {
+        "startLine": 724,
+        "startChar": 5,
+        "endLine": 724,
+        "endChar": 18
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_c9c28163",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -41,6 +64,29 @@
         "startChar": 18,
         "endLine": 14,
         "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_efc77d9e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "Probably don\u0027t need this",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 1
       },
       "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -186,6 +232,115 @@
     },
     {
       "key": {
+        "uuid": "f417a9f9_cf6601ab",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1820,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "Just call these on mImplementation (and below)",
+      "range": {
+        "startLine": 1820,
+        "startChar": 4,
+        "endLine": 1820,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_efa01d0e",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: can be removed.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 24
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_8f89a98a",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: add the \u0027f\u0027 and \u0027fv\u0027 suffixes, it will help us auto-generate things eventually.",
+      "range": {
+        "startLine": 105,
+        "startChar": 3,
+        "endLine": 106,
+        "endChar": 75
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_6fdb6d82",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: extra newline.",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_8fdec970",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "This can be deleted.",
+      "range": {
+        "startLine": 516,
+        "startChar": 4,
+        "endLine": 516,
+        "endChar": 46
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e933fda0",
         "filename": "src/libANGLE/Path.cpp",
         "patchSetId": 10
@@ -243,6 +398,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "it\u0027s OK to return non-const here, for the case where the back-end needs a mutable pointer.",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_8f75294d",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "Two getters would also be fine.",
+      "parentUuid": "f417a9f9_49ee71f7",
       "range": {
         "startLine": 53,
         "startChar": 8,
@@ -565,6 +744,98 @@
     },
     {
       "key": {
+        "uuid": "f417a9f9_8f7fe9f9",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: use UNREACHABLE instead.",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 24
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_0fb2b917",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: I think this header will become unreadable with lots of methods like this, let\u0027s move these to the cpp file.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_5e646436",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "nit: std::vector has a constructor with the size (or use reserve and push_back).",
+      "range": {
+        "startLine": 120,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_724d11ad",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "I still think that these should take a const gl::Path* instead.  Those objects often have state that isn\u0027t as easily accessible from the impl.  The cast to PathGL is as simple as:\n\n  const auto p \u003d GetImplAs\u003cPathGL\u003e(path);\n\nThe dependencies are still well defined, the renderer (rx) layer has access to any gl layer objects while the gl layer only talks back through the Impl object interfaces.",
+      "range": {
+        "startLine": 189,
+        "startChar": 32,
+        "endLine": 189,
+        "endChar": 52
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a425acb7",
         "filename": "src/libANGLE/renderer/gl/ContextGL.h",
         "patchSetId": 10
@@ -576,6 +847,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "these should all be functions in PathImpl that take the gl::Context as the first parameter. From the gl::Context you can get a rx::ContextImpl -\u003e rx::ContextGL and from that rx::RendererGL. Unless I\u0027m mis-understanding why you have these here in the first place.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 115
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_7e16809b",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "I think they will probably fit better here because they are similar to draw calls.  When he adds the Instanced versions that act upon multiple paths, it probably makes more sense that the ContextGL knows how to handle that.",
+      "parentUuid": "f417a9f9_a425acb7",
       "range": {
         "startLine": 99,
         "startChar": 4,
@@ -616,6 +911,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "ASSERT, with caps. Also we don\u0027t do this usually, but seems OK to do so.",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 10
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_72e231ad",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "Yea, usually I catch these errors above using KHR_debug (LogGLDebugMessage)",
+      "parentUuid": "f417a9f9_2f35f5cb",
       "range": {
         "startLine": 249,
         "startChar": 4,
@@ -690,6 +1009,29 @@
         "startChar": 11,
         "endLine": 1542,
         "endChar": 67
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_12f65d6a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T20:14:00Z",
+      "side": 1,
+      "message": "I would just add these to the initial check for better readability.",
+      "range": {
+        "startLine": 680,
+        "startChar": 8,
+        "endLine": 681,
+        "endChar": 70
       },
       "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
