@@ -105,6 +105,24 @@
       "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f45969e9_a81af317",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-15T15:24:13Z",
+      "side": 1,
+      "message": "Had a brief discussion.  I still prefer the previous method of checking status on the framebuffer object directly but instead of making it const, let\u0027s just get non-const framebuffers from the state instead since that\u0027s what the Context is doing internally.",
+      "parentUuid": "b4de1159_2bbdb9c9",
+      "revId": "da60956d46c8d1a450da716171ae9fc68d5630a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
