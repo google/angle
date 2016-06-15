@@ -16,6 +16,24 @@
       "revId": "174ed743893f79fba2816c671fcc962c77d86a84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_cdcd64c2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T21:13:51Z",
+      "side": 1,
+      "message": "Yes, it gets set in the constructor of the FBO state. I added an assert to make this clear.",
+      "parentUuid": "f417a9f9_b214c93b",
+      "revId": "174ed743893f79fba2816c671fcc962c77d86a84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
