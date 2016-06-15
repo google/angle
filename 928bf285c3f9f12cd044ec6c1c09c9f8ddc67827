@@ -86,6 +86,121 @@
       "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e0bddf_5ea9758e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 701,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "which platforms did you test? have you tested on AMD or Intel?",
+      "range": {
+        "startLine": 701,
+        "startChar": 73,
+        "endLine": 701,
+        "endChar": 89
+      },
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14e0bddf_5e90955a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3398,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "I\u0027m guessing this is something to do with how skip is broken currently on D3D11, but works in Chromium because Chromium emulates skip with offsets.",
+      "range": {
+        "startLine": 3394,
+        "startChar": 0,
+        "endLine": 3398,
+        "endChar": 5
+      },
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34d9413f_bf96f752",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3413,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "use the RAII types",
+      "range": {
+        "startLine": 3413,
+        "startChar": 4,
+        "endLine": 3413,
+        "endChar": 10
+      },
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b447f166_6558fd42",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3440,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "use a std::vector to avoid new/delete.",
+      "range": {
+        "startLine": 3440,
+        "startChar": 4,
+        "endLine": 3440,
+        "endChar": 11
+      },
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b447f166_4542a14a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T14:39:06Z",
+      "side": 1,
+      "message": "if this test fails it\u0027s going to produce a lot of spammy errors. maybe make an \u0027expected\u0027 array to mirror the \u0027actual\u0027 array, filled with green.",
+      "range": {
+        "startLine": 3446,
+        "startChar": 8,
+        "endLine": 3446,
+        "endChar": 17
+      },
+      "revId": "928bf285c3f9f12cd044ec6c1c09c9f8ddc67827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
