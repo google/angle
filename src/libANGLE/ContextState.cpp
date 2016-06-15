@@ -7,6 +7,8 @@
 // Data.cpp: Container class for all GL relevant state, caps and objects
 
 #include "libANGLE/ContextState.h"
+
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/ResourceManager.h"
 
 namespace gl

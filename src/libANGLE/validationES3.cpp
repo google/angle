@@ -891,9 +891,9 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
         return false;
     }
 
-    const auto &state                  = context->getGLState();
-    const gl::Framebuffer *framebuffer = state.getReadFramebuffer();
-    GLuint readFramebufferID           = framebuffer->id();
+    const auto &state            = context->getGLState();
+    gl::Framebuffer *framebuffer = state.getReadFramebuffer();
+    GLuint readFramebufferID     = framebuffer->id();
 
     if (framebuffer->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -1414,8 +1414,8 @@ bool ValidateClearBuffer(ValidationContext *context)
         return false;
     }
 
-    const gl::Framebuffer *fbo = context->getGLState().getDrawFramebuffer();
-    if (!fbo || fbo->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
+    if (context->getGLState().getDrawFramebuffer()->checkStatus(context->getContextState()) !=
+        GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;

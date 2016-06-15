@@ -1632,8 +1632,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
         return false;
     }
 
-    const Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
-    const Framebuffer *drawFramebuffer = context->getGLState().getDrawFramebuffer();
+    Framebuffer *readFramebuffer = context->getGLState().getReadFramebuffer();
+    Framebuffer *drawFramebuffer = context->getGLState().getDrawFramebuffer();
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
@@ -1676,9 +1676,7 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                 }
             }
 
-            int readSamples = readFramebuffer->getSamples(context->getContextState());
-
-            if (readSamples != 0 &&
+            if (readFramebuffer->getSamples(context->getContextState()) != 0 &&
                 IsPartialBlit(context, readColorAttachment, drawColorAttachment, srcX0, srcY0,
                               srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
             {
@@ -1727,10 +1725,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
 
 bool ValidateClear(ValidationContext *context, GLbitfield mask)
 {
-    const Framebuffer *framebufferObject = context->getGLState().getDrawFramebuffer();
-    ASSERT(framebufferObject);
-
-    if (framebufferObject->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
+    auto fbo = context->getGLState().getDrawFramebuffer();
+    if (fbo->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
     {
         context->handleError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;

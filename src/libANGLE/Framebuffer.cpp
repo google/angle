@@ -388,7 +388,7 @@ bool Framebuffer::usingExtendedDrawBuffers() const
     return false;
 }
 
-GLenum Framebuffer::checkStatus(const ContextState &state) const
+GLenum Framebuffer::checkStatus(const ContextState &state)
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
@@ -743,7 +743,7 @@ Error Framebuffer::blit(rx::ContextImpl *context,
     return mImpl->blit(context, sourceArea, destArea, mask, filter);
 }
 
-int Framebuffer::getSamples(const ContextState &state) const
+int Framebuffer::getSamples(const ContextState &state)
 {
     if (checkStatus(state) == GL_FRAMEBUFFER_COMPLETE)
     {
@@ -834,6 +834,20 @@ void Framebuffer::syncState() const
         mImpl->syncState(mDirtyBits);
         mDirtyBits.reset();
     }
+}
+
+int Framebuffer::getCachedSamples(const ContextState &state) const
+{
+    // TODO(jmadill): Framebuffer samples caching.
+    ASSERT(mDirtyBits.none());
+    return const_cast<Framebuffer *>(this)->getSamples(state);
+}
+
+GLenum Framebuffer::getCachedStatus(const ContextState &state) const
+{
+    // TODO(jmadill): Framebuffer status caching.
+    ASSERT(mDirtyBits.none());
+    return const_cast<Framebuffer *>(this)->checkStatus(state);
 }
 
 }  // namespace gl

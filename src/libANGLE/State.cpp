@@ -889,22 +889,12 @@ Framebuffer *State::getTargetFramebuffer(GLenum target) const
     }
 }
 
-Framebuffer *State::getReadFramebuffer()
+Framebuffer *State::getReadFramebuffer() const
 {
     return mReadFramebuffer;
 }
 
-Framebuffer *State::getDrawFramebuffer()
-{
-    return mDrawFramebuffer;
-}
-
-const Framebuffer *State::getReadFramebuffer() const
-{
-    return mReadFramebuffer;
-}
-
-const Framebuffer *State::getDrawFramebuffer() const
+Framebuffer *State::getDrawFramebuffer() const
 {
     return mDrawFramebuffer;
 }

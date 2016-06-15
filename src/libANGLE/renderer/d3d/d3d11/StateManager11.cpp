@@ -981,9 +981,9 @@ void StateManager11::deinitialize()
     mCurrentValueAttribs.clear();
 }
 
-gl::Error StateManager11::syncFramebuffer(const gl::Framebuffer *framebuffer)
+gl::Error StateManager11::syncFramebuffer(gl::Framebuffer *framebuffer)
 {
-    const Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
+    Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
     gl::Error error = framebuffer11->invalidateSwizzles();
     if (error.isError())
     {

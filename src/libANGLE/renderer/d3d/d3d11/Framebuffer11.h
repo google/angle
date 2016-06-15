@@ -42,8 +42,7 @@ class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
     }
 
     bool hasAnyInternalDirtyBit() const;
-    // TODO(jmadill): make this non-const
-    void syncInternalState() const;
+    void syncInternalState();
 
     void signal(angle::SignalToken token) override;
 

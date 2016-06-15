@@ -531,10 +531,9 @@ bool Framebuffer11::hasAnyInternalDirtyBit() const
     return mInternalDirtyBits.any();
 }
 
-void Framebuffer11::syncInternalState() const
+void Framebuffer11::syncInternalState()
 {
-    // TODO(jmadill): Clean up this hack.
-    const_cast<Framebuffer11 *>(this)->syncState(gl::Framebuffer::DirtyBits());
+    syncState(gl::Framebuffer::DirtyBits());
 }
 
 }  // namespace rx

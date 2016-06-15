@@ -77,7 +77,7 @@ class StateManager11 final : angle::NonCopyable
                            ID3D11ShaderResourceView *srv);
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
 
-    gl::Error syncFramebuffer(const gl::Framebuffer *framebuffer);
+    gl::Error syncFramebuffer(gl::Framebuffer *framebuffer);
 
     void invalidateRenderTarget();
     void invalidateBoundViews();
