@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f45969e9_c8208fa9",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T13:31:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94fe6d6e_81f1e474",
+      "range": {
+        "startLine": 518,
+        "startChar": 16,
+        "endLine": 518,
+        "endChar": 48
+      },
+      "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94fe6d6e_419c1c28",
         "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-14T18:46:05Z",
       "side": 1,
       "message": "nit: Dunno if it\u0027s worth casting these to uint8_t instead",
+      "range": {
+        "startLine": 520,
+        "startChar": 45,
+        "endLine": 520,
+        "endChar": 53
+      },
+      "revId": "b1cb27f94348d3659037572756f67948bca45b9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f45969e9_e8254bb6",
+        "filename": "src/libANGLE/renderer/d3d/loadimage.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-15T13:31:45Z",
+      "side": 1,
+      "message": "uint16_t is nice because dest[x] is uint16_t, and the a1/r5/etc values need to be cast to uint16_t before written to dest.",
+      "parentUuid": "94fe6d6e_419c1c28",
       "range": {
         "startLine": 520,
         "startChar": 45,
