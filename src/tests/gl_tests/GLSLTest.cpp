@@ -624,6 +624,39 @@ TEST_P(GLSLTest, TwoElseIfRewriting)
     EXPECT_NE(0u, program);
 }
 
+// Verify that linking shaders declaring different shading language versions fails.
+TEST_P(GLSLTest_ES3, VersionMismatch)
+{
+    const std::string fragmentShaderSource100 =
+        "precision mediump float;\n"
+        "varying float v_varying;\n"
+        "void main() { gl_FragColor = vec4(v_varying, 0, 0, 1.0); }\n";
+
+    const std::string vertexShaderSource100 =
+        "attribute vec4 a_position;\n"
+        "varying float v_varying;\n"
+        "void main() { v_varying = a_position.x; gl_Position = a_position; }\n";
+
+    const std::string fragmentShaderSource300 =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "in float v_varying;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() { my_FragColor = vec4(v_varying, 0, 0, 1.0); }\n";
+
+    const std::string vertexShaderSource300 =
+        "#version 300 es\n"
+        "in vec4 a_position;\n"
+        "out float v_varying;\n"
+        "void main() { v_varying = a_position.x; gl_Position = a_position; }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource300, fragmentShaderSource100);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(vertexShaderSource100, fragmentShaderSource300);
+    EXPECT_EQ(0u, program);
+}
+
 TEST_P(GLSLTest, InvariantVaryingOut)
 {
     // TODO(geofflang): Some OpenGL drivers have compile errors when varyings do not have matching

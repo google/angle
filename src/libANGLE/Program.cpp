@@ -462,6 +462,13 @@ Error Program::link(const ContextState &data)
     }
     ASSERT(mState.mAttachedVertexShader->getType() == GL_VERTEX_SHADER);
 
+    if (mState.mAttachedFragmentShader->getShaderVersion() !=
+        mState.mAttachedVertexShader->getShaderVersion())
+    {
+        mInfoLog << "Fragment shader version does not match vertex shader version.";
+        return Error(GL_NO_ERROR);
+    }
+
     if (!linkAttributes(data, mInfoLog, mAttributeBindings, mState.mAttachedVertexShader))
     {
         return Error(GL_NO_ERROR);
