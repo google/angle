@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f417a9f9_4f6c9eb6",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-16T09:50:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f45969e9_08422726",
+      "range": {
+        "startLine": 253,
+        "startChar": 3,
+        "endLine": 257,
+        "endChar": 54
+      },
+      "revId": "aaeea2e03b55db0be781d900ba4149d201e825a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f45969e9_886617d8",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-15T14:39:06Z",
       "side": 1,
       "message": "if you use the state manager this shouldn\u0027t be necessary I believe",
+      "range": {
+        "startLine": 308,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 70
+      },
+      "revId": "aaeea2e03b55db0be781d900ba4149d201e825a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f417a9f9_cf2a6e6f",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-16T09:50:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f45969e9_886617d8",
       "range": {
         "startLine": 308,
         "startChar": 4,
