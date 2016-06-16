@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_fd04830d",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_cff5612a",
+      "range": {
+        "startLine": 724,
+        "startChar": 5,
+        "endLine": 724,
+        "endChar": 18
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_c9c28163",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -59,6 +83,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "no need for the comment.",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d499c5fa_fcc7299e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c9c28163",
       "range": {
         "startLine": 14,
         "startChar": 18,
@@ -117,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "545f95f9_db2b47df",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_49d79121",
+      "range": {
+        "startLine": 450,
+        "startChar": 8,
+        "endLine": 450,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_29821517",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -128,6 +200,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "is it possible to use better names than \u0027p\u0027? Say, \u0027pathObj\u0027",
+      "range": {
+        "startLine": 562,
+        "startChar": 16,
+        "endLine": 562,
+        "endChar": 17
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1490bdc9_a1ae5898",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_29821517",
       "range": {
         "startLine": 562,
         "startChar": 16,
@@ -163,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "743659c9_298dedec",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_69a36dc5",
+      "range": {
+        "startLine": 582,
+        "startChar": 5,
+        "endLine": 585,
+        "endChar": 25
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a48acc27",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -174,6 +294,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "you can put the assert in the scope, git cl format will be confused otherwise.",
+      "range": {
+        "startLine": 1132,
+        "startChar": 8,
+        "endLine": 1132,
+        "endChar": 42
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "747f394d_aadf1373",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a48acc27",
       "range": {
         "startLine": 1132,
         "startChar": 8,
@@ -209,6 +353,30 @@
     },
     {
       "key": {
+        "uuid": "1490bdc9_7e7cf104",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "As you probably know in C++ the standard C headers are \u003ccstring\u003e, \u003ccstdlib\u003e etc. These are guaranteed to put the C runtime functions in std namespace. This has been so since c++98",
+      "parentUuid": "f417a9f9_84a4f0bd",
+      "range": {
+        "startLine": 1135,
+        "startChar": 12,
+        "endLine": 1135,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e4ade49b",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -220,6 +388,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "do you know what GL states path rendering depends on? it seems like a good idea.",
+      "range": {
+        "startLine": 1817,
+        "startChar": 7,
+        "endLine": 1817,
+        "endChar": 63
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "545f95f9_5ba497bc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1817,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "At least the path rendering state (matrices, stencil, path objects), program, textures, viewport, scissor, stencil, depth test, blend, color mask, fbo/render targets.. hmm, probably will be easiest to ask what state is not relevant. I\u0027ll have to consult with driver devs to be sure.\n\nMaybe something for later optimization?",
+      "parentUuid": "f417a9f9_e4ade49b",
       "range": {
         "startLine": 1817,
         "startChar": 7,
@@ -255,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "747f394d_6adeeb73",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1820,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_cf6601ab",
+      "range": {
+        "startLine": 1820,
+        "startChar": 4,
+        "endLine": 1820,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_efa01d0e",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 10
@@ -266,6 +482,30 @@
       "writtenOn": "2016-06-15T20:14:00Z",
       "side": 1,
       "message": "nit: can be removed.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 24
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d499c5fa_5cd1fd29",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_efa01d0e",
       "range": {
         "startLine": 31,
         "startChar": 0,
@@ -301,6 +541,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_3deb5be7",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_8f89a98a",
+      "range": {
+        "startLine": 105,
+        "startChar": 3,
+        "endLine": 106,
+        "endChar": 75
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_6fdb6d82",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 10
@@ -318,6 +582,24 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_5df80fba",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6fdb6d82",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_8fdec970",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 10
@@ -329,6 +611,30 @@
       "writtenOn": "2016-06-15T20:14:00Z",
       "side": 1,
       "message": "This can be deleted.",
+      "range": {
+        "startLine": 516,
+        "startChar": 4,
+        "endLine": 516,
+        "endChar": 46
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "545f95f9_db418746",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_8fdec970",
       "range": {
         "startLine": 516,
         "startChar": 4,
@@ -364,6 +670,30 @@
     },
     {
       "key": {
+        "uuid": "d499c5fa_5c5c9dd9",
+        "filename": "src/libANGLE/Path.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e933fda0",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 87
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_c9d9e161",
         "filename": "src/libANGLE/Path.h",
         "patchSetId": 10
@@ -375,6 +705,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "don\u0027t need public on NonCopyable",
+      "range": {
+        "startLine": 26,
+        "startChar": 23,
+        "endLine": 26,
+        "endChar": 29
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d499c5fa_7c5959e8",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c9d9e161",
       "range": {
         "startLine": 26,
         "startChar": 23,
@@ -434,6 +788,30 @@
     },
     {
       "key": {
+        "uuid": "d420e584_846fa615",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_49ee71f7",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_8923694d",
         "filename": "src/libANGLE/Path.h",
         "patchSetId": 10
@@ -445,6 +823,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "don\u0027t need multiple privates",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "743659c9_a93c7ddb",
+        "filename": "src/libANGLE/Path.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_8923694d",
       "range": {
         "startLine": 57,
         "startChar": 4,
@@ -480,6 +882,30 @@
     },
     {
       "key": {
+        "uuid": "d420e584_a474a2ec",
+        "filename": "src/libANGLE/PathAllocator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a9390585",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_6907edbc",
         "filename": "src/libANGLE/PathAllocator.cpp",
         "patchSetId": 10
@@ -497,6 +923,24 @@
     },
     {
       "key": {
+        "uuid": "7468199f_dcbee179",
+        "filename": "src/libANGLE/PathAllocator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6907edbc",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e9c77d9e",
         "filename": "src/libANGLE/PathAllocator.h",
         "patchSetId": 10
@@ -508,6 +952,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "I see no reason to tie this object to paths -- if there are similarly batched allocations for other objects we could use it for those. Maybe HandleRangeAllocator?",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "346221c1_170034a6",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e9c77d9e",
       "range": {
         "startLine": 7,
         "startChar": 3,
@@ -543,6 +1011,30 @@
     },
     {
       "key": {
+        "uuid": "d420e584_e47e9ac8",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a942a5f8",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_6959ade8",
         "filename": "src/libANGLE/PathAllocator.h",
         "patchSetId": 10
@@ -554,6 +1046,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nit: map before the user includes... see \n\nhttps://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_fd6ba39d",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6959ade8",
       "range": {
         "startLine": 16,
         "startChar": 0,
@@ -589,6 +1105,30 @@
     },
     {
       "key": {
+        "uuid": "743659c9_29124d59",
+        "filename": "src/libANGLE/PathAllocator.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_29ba1524",
+      "range": {
+        "startLine": 59,
+        "startChar": 5,
+        "endLine": 59,
+        "endChar": 7
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_890a49c3",
         "filename": "src/libANGLE/PathAllocator_unittest.cpp",
         "patchSetId": 10
@@ -600,6 +1140,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nice tests.. please add a one or two line comment before each describing the contents in a bit more detail than the name.",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 6
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_5dde4f73",
+        "filename": "src/libANGLE/PathAllocator_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_890a49c3",
       "range": {
         "startLine": 253,
         "startChar": 0,
@@ -635,6 +1199,30 @@
     },
     {
       "key": {
+        "uuid": "7468199f_5c61f1eb",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "I have a feeling we\u0027ll revisit the path object allocation/deallocation scheme at some point. Hence I left the factory parameter here as a provision for future. I can remove it ofc.",
+      "parentUuid": "f417a9f9_0fbf5977",
+      "range": {
+        "startLine": 287,
+        "startChar": 53,
+        "endLine": 287,
+        "endChar": 60
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e9ee5d26",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 10
@@ -646,6 +1234,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "run git cl format, the * alignment is incorrect.",
+      "range": {
+        "startLine": 295,
+        "startChar": 8,
+        "endLine": 295,
+        "endChar": 12
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b49451c2_5ea491bc",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e9ee5d26",
       "range": {
         "startLine": 295,
         "startChar": 8,
@@ -675,6 +1287,24 @@
     },
     {
       "key": {
+        "uuid": "b49451c2_7ea14dab",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a9e4654a",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_2f085554",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 10
@@ -686,6 +1316,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "same as other comments",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "743659c9_c9fff104",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_2f085554",
       "range": {
         "startLine": 22,
         "startChar": 0,
@@ -721,6 +1375,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_5db72f3b",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_cf9ba12f",
+      "range": {
+        "startLine": 191,
+        "startChar": 23,
+        "endLine": 191,
+        "endChar": 33
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_6fe9ad8a",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 10
@@ -732,6 +1410,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "best to put these in the cpp file",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "747f394d_751970c9",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6fe9ad8a",
       "range": {
         "startLine": 286,
         "startChar": 0,
@@ -767,6 +1469,30 @@
     },
     {
       "key": {
+        "uuid": "1490bdc9_619a9028",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_8f7fe9f9",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 24
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_0fb2b917",
         "filename": "src/libANGLE/renderer/ContextImpl.h",
         "patchSetId": 10
@@ -778,6 +1504,30 @@
       "writtenOn": "2016-06-15T20:14:00Z",
       "side": 1,
       "message": "nit: I think this header will become unreadable with lots of methods like this, let\u0027s move these to the cpp file.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b49451c2_7e6b0d04",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_0fb2b917",
       "range": {
         "startLine": 58,
         "startChar": 4,
@@ -813,6 +1563,30 @@
     },
     {
       "key": {
+        "uuid": "545f95f9_9b1e2f57",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_5e646436",
+      "range": {
+        "startLine": 120,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_724d11ad",
         "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
         "patchSetId": 10
@@ -824,6 +1598,30 @@
       "writtenOn": "2016-06-15T20:14:00Z",
       "side": 1,
       "message": "I still think that these should take a const gl::Path* instead.  Those objects often have state that isn\u0027t as easily accessible from the impl.  The cast to PathGL is as simple as:\n\n  const auto p \u003d GetImplAs\u003cPathGL\u003e(path);\n\nThe dependencies are still well defined, the renderer (rx) layer has access to any gl layer objects while the gl layer only talks back through the Impl object interfaces.",
+      "range": {
+        "startLine": 189,
+        "startChar": 32,
+        "endLine": 189,
+        "endChar": 52
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_40974250",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_724d11ad",
       "range": {
         "startLine": 189,
         "startChar": 32,
@@ -883,6 +1681,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_ddc25f91",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "The single path draw methods would fit better in terms of current class mechanics in the Path class, however putting the instanced methods in the same place would indeed be a bit strange.\n\nAnyway, should I keep these here, or?",
+      "parentUuid": "f417a9f9_7e16809b",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 115
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a46e4ce7",
         "filename": "src/libANGLE/renderer/gl/PathGL.cpp",
         "patchSetId": 10
@@ -894,6 +1716,24 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "file-level comment",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_fdc7239e",
+        "filename": "src/libANGLE/renderer/gl/PathGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a46e4ce7",
       "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -947,6 +1787,30 @@
     },
     {
       "key": {
+        "uuid": "743659c9_a9239da1",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Changed to ASSERT.",
+      "parentUuid": "f417a9f9_72e231ad",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 10
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_8405103f",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 10
@@ -958,6 +1822,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "include order, and can remove the comment",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 32
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "743659c9_c918d16c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_8405103f",
       "range": {
         "startLine": 28,
         "startChar": 0,
@@ -993,6 +1881,30 @@
     },
     {
       "key": {
+        "uuid": "7468199f_dc1a6172",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_44901809",
+      "range": {
+        "startLine": 124,
+        "startChar": 23,
+        "endLine": 124,
+        "endChar": 33
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_24b6bca0",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 10
@@ -1004,6 +1916,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "I like that you added these. Are these the only states that are relevant for path rendering?",
+      "range": {
+        "startLine": 1536,
+        "startChar": 11,
+        "endLine": 1542,
+        "endChar": 67
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1490bdc9_41df54df",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1542,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "These are the ones specific to path rendering, but the whole path rendering state is more than this. See the other comment regarding the state sync in Context.cpp",
+      "parentUuid": "f417a9f9_24b6bca0",
       "range": {
         "startLine": 1536,
         "startChar": 11,
@@ -1039,6 +1975,30 @@
     },
     {
       "key": {
+        "uuid": "1490bdc9_a1c498ff",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_12f65d6a",
+      "range": {
+        "startLine": 680,
+        "startChar": 8,
+        "endLine": 681,
+        "endChar": 70
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_04f10073",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 10
@@ -1050,6 +2010,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nit: include order",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 18
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "545f95f9_5b47378d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_04f10073",
       "range": {
         "startLine": 23,
         "startChar": 0,
@@ -1085,6 +2069,30 @@
     },
     {
       "key": {
+        "uuid": "b49451c2_fefb9d7f",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2221,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_440bf852",
+      "range": {
+        "startLine": 2221,
+        "startChar": 39,
+        "endLine": 2221,
+        "endChar": 55
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_6f852db3",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 10
@@ -1096,6 +2104,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "I know it seems silly for such a small function, but can you put this in the same form as the other functions (with a Validate method)?\n\nThe end goal is for each and every API call to use the same templating so we can auto-generate them all at once.",
+      "range": {
+        "startLine": 1469,
+        "startChar": 8,
+        "endLine": 1470,
+        "endChar": 46
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1490bdc9_01f62c6a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6f852db3",
       "range": {
         "startLine": 1469,
         "startChar": 8,
@@ -1131,6 +2163,30 @@
     },
     {
       "key": {
+        "uuid": "7468199f_1c0a1917",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_4f2cb1a5",
+      "range": {
+        "startLine": 1633,
+        "startChar": 10,
+        "endLine": 1636,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e47e84c8",
         "filename": "src/tests/angle_end2end_tests.gypi",
         "patchSetId": 10
@@ -1142,6 +2198,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nit: sort",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 18,
+        "endChar": 63
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d420e584_4405ae3b",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e47e84c8",
       "range": {
         "startLine": 18,
         "startChar": 46,
@@ -1177,6 +2257,30 @@
     },
     {
       "key": {
+        "uuid": "d499c5fa_1cee95f6",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 10
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_047aa0d6",
+      "range": {
+        "startLine": 17,
+        "startChar": 31,
+        "endLine": 17,
+        "endChar": 39
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_84bd10cc",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1188,6 +2292,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nit: Capitalize local statics",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 16
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_dd15ffeb",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_84bd10cc",
       "range": {
         "startLine": 23,
         "startChar": 5,
@@ -1223,6 +2351,30 @@
     },
     {
       "key": {
+        "uuid": "d499c5fa_9cc2a562",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c4fc287e",
+      "range": {
+        "startLine": 28,
+        "startChar": 23,
+        "endLine": 28,
+        "endChar": 30
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e4e204dc",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1234,6 +2386,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "use GLColor for these",
+      "range": {
+        "startLine": 32,
+        "startChar": 16,
+        "endLine": 32,
+        "endChar": 23
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94658dc6_fd1ac318",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e4e204dc",
       "range": {
         "startLine": 32,
         "startChar": 16,
@@ -1292,6 +2468,30 @@
     },
     {
       "key": {
+        "uuid": "b49451c2_7e16ad9b",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a4d80c2c",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a40f6c80",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1309,6 +2509,24 @@
     },
     {
       "key": {
+        "uuid": "7468199f_1c6139bf",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a40f6c80",
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_441f78b0",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1320,6 +2538,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "comment before each test",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 6
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "346221c1_179cb482",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_441f78b0",
       "range": {
         "startLine": 135,
         "startChar": 0,
@@ -1355,6 +2597,30 @@
     },
     {
       "key": {
+        "uuid": "d420e584_04901608",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "I assume you mean ASSERT_GL_NO_ERROR",
+      "parentUuid": "f417a9f9_44649836",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 205,
+        "endChar": 22
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_646b9404",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1378,6 +2644,30 @@
     },
     {
       "key": {
+        "uuid": "94658dc6_bdde8b45",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_646b9404",
+      "range": {
+        "startLine": 232,
+        "startChar": 4,
+        "endLine": 232,
+        "endChar": 13
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_c4cd483b",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -1389,6 +2679,30 @@
       "writtenOn": "2016-06-15T19:44:15Z",
       "side": 1,
       "message": "nit: these actually return GLboolean, so you\u0027d do EXPECT_TRUE(glIsPathCHROMIM(path) \u003d\u003d GL_TRUE).. might seem pedantic but it\u0027s how we try to use GLbooleans in the code.\n\nso on below",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 15
+      },
+      "revId": "cd1b295bc8935642617d835a1d93c5b18b528364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d499c5fa_1cd77522",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-16T15:06:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c4cd483b",
       "range": {
         "startLine": 265,
         "startChar": 4,
