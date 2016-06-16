@@ -180,7 +180,16 @@ void DrawCallPerfBenchmark::destroyBenchmark()
 
 void DrawCallPerfBenchmark::drawBenchmark()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    // This workaround fixes a huge queue of graphics commands accumulating on the GL
+    // back-end. The GL back-end doesn't have a proper NULL device at the moment.
+    // TODO(jmadill): Remove this when/if we ever get a proper OpenGL NULL device.
+    const auto &eglParams = GetParam().eglParameters;
+    if (eglParams.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE ||
+        (eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE &&
+         eglParams.renderer != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE))
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
 
     const auto &params = GetParam();
 
