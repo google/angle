@@ -235,6 +235,7 @@ class ANGLETestEnvironment : public testing::Environment
 };
 
 bool IsIntel();
+bool IsAdreno();
 bool IsAMD();
 bool IsNVIDIA();
 // Note: FL9_3 is explicitly *not* considered D3D11.
@@ -244,6 +245,7 @@ bool IsD3D11_FL93();
 bool IsD3D9();
 // Is D3D9 or SM9_3 renderer.
 bool IsD3DSM3();
+bool IsAndroid();
 bool IsLinux();
 bool IsOSX();
 

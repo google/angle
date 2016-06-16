@@ -662,6 +662,12 @@ bool IsIntel()
     return (rendererString.find("Intel") != std::string::npos);
 }
 
+bool IsAdreno()
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Adreno") != std::string::npos);
+}
+
 bool IsAMD()
 {
     std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
@@ -696,6 +702,15 @@ bool IsD3D9()
 bool IsD3DSM3()
 {
     return IsD3D9() || IsD3D11_FL93();
+}
+
+bool IsAndroid()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    return true;
+#else
+    return false;
+#endif
 }
 
 bool IsLinux()
