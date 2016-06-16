@@ -29,6 +29,46 @@
 #include "angle_gl.h"
 #include "common/utilities.h"
 
+#include <iostream>
+
+namespace
+{
+
+#if defined(ANGLE_ENABLE_FUZZER_CORPUS_OUTPUT)
+void DumpFuzzerCase(char const *const *shaderStrings,
+                    size_t numStrings,
+                    uint32_t type,
+                    uint32_t spec,
+                    uint32_t output,
+                    uint64_t options)
+{
+    static int fileIndex = 0;
+
+    std::ostringstream o;
+    o << "corpus/" << fileIndex++ << ".sample";
+    std::string s = o.str();
+
+    // Must match the input format of the fuzzer
+    FILE *f = fopen(s.c_str(), "w");
+    fwrite(&type, sizeof(type), 1, f);
+    fwrite(&spec, sizeof(spec), 1, f);
+    fwrite(&output, sizeof(output), 1, f);
+    fwrite(&options, sizeof(options), 1, f);
+
+    char zero[128 - 20] = {0};
+    fwrite(&zero, 128 - 20, 1, f);
+
+    for (size_t i = 0; i < numStrings; i++)
+    {
+        fwrite(shaderStrings[i], sizeof(char), strlen(shaderStrings[i]), f);
+    }
+    fwrite(&zero, 1, 1, f);
+
+    fclose(f);
+}
+#endif  // defined(ANGLE_ENABLE_FUZZER_CORPUS_OUTPUT)
+}  // anonymous namespace
+
 bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
     return (spec == SH_WEBGL_SPEC || spec == SH_WEBGL2_SPEC || spec == SH_WEBGL3_SPEC);
@@ -402,6 +442,10 @@ bool TCompiler::compile(const char *const shaderStrings[],
                         size_t numStrings,
                         ShCompileOptions compileOptionsIn)
 {
+#if defined(ANGLE_ENABLE_FUZZER_CORPUS_OUTPUT)
+    DumpFuzzerCase(shaderStrings, numStrings, shaderType, shaderSpec, outputType, compileOptionsIn);
+#endif  // defined(ANGLE_ENABLE_FUZZER_CORPUS_OUTPUT)
+
     if (numStrings == 0)
         return true;
 

@@ -6,6 +6,7 @@
 import("//build/config/dcheck_always_on.gni")
 import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
+import("//testing/libfuzzer/fuzzer_test.gni")
 import("//third_party/angle/build/angle_common.gni")
 import("//ui/ozone/ozone.gni")
 
@@ -114,6 +115,9 @@ static_library("preprocessor") {
 
 config("translator_static_config") {
   defines = [ "ANGLE_TRANSLATOR_STATIC" ]
+  if (use_libfuzzer) {
+    defines += [ "ANGLE_TRANSLATOR_DISABLE_POOL_ALLOC" ]
+  }
 }
 
 config("debug_annotations_config") {
@@ -176,19 +180,19 @@ static_library("translator_lib") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
   defines = []
 
-  if (angle_enable_essl) {
+  if (angle_enable_essl || use_libfuzzer) {
     sources +=
         rebase_path(compiler_gypi.angle_translator_lib_essl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_ESSL" ]
   }
 
-  if (angle_enable_glsl) {
+  if (angle_enable_glsl || use_libfuzzer) {
     sources +=
         rebase_path(compiler_gypi.angle_translator_lib_glsl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_GLSL" ]
   }
 
-  if (angle_enable_hlsl) {
+  if (angle_enable_hlsl || use_libfuzzer) {
     sources +=
         rebase_path(compiler_gypi.angle_translator_lib_hlsl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_HLSL" ]
@@ -232,6 +236,21 @@ static_library("translator_static") {
 
   public_deps = [
     ":translator_lib",
+  ]
+}
+
+fuzzer_test("translator_fuzzer") {
+  sources = [
+    "src/compiler/fuzz/translator_fuzzer.cpp",
+  ]
+
+  include_dirs = [
+    "include",
+    "src",
+  ]
+
+  deps = [
+    ":translator_static",
   ]
 }
 
