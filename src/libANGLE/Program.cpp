@@ -1628,6 +1628,8 @@ bool Program::linkVaryings(InfoLog &infoLog,
                            const Shader *vertexShader,
                            const Shader *fragmentShader)
 {
+    ASSERT(vertexShader->getShaderVersion() == fragmentShader->getShaderVersion());
+
     const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
     const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
 
@@ -1646,7 +1648,8 @@ bool Program::linkVaryings(InfoLog &infoLog,
             if (output.name == input.name)
             {
                 ASSERT(!input.isBuiltIn());
-                if (!linkValidateVaryings(infoLog, output.name, input, output))
+                if (!linkValidateVaryings(infoLog, output.name, input, output,
+                                          vertexShader->getShaderVersion()))
                 {
                     return false;
                 }
@@ -2103,7 +2106,11 @@ bool Program::linkValidateUniforms(InfoLog &infoLog, const std::string &uniformN
     return true;
 }
 
-bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingName, const sh::Varying &vertexVarying, const sh::Varying &fragmentVarying)
+bool Program::linkValidateVaryings(InfoLog &infoLog,
+                                   const std::string &varyingName,
+                                   const sh::Varying &vertexVarying,
+                                   const sh::Varying &fragmentVarying,
+                                   int shaderVersion)
 {
     if (!linkValidateVariablesBase(infoLog, varyingName, vertexVarying, fragmentVarying, false))
     {
@@ -2112,7 +2119,15 @@ bool Program::linkValidateVaryings(InfoLog &infoLog, const std::string &varyingN
 
     if (!sh::InterpolationTypesMatch(vertexVarying.interpolation, fragmentVarying.interpolation))
     {
-        infoLog << "Interpolation types for " << varyingName << " differ between vertex and fragment shaders";
+        infoLog << "Interpolation types for " << varyingName
+                << " differ between vertex and fragment shaders.";
+        return false;
+    }
+
+    if (shaderVersion == 100 && vertexVarying.isInvariant != fragmentVarying.isInvariant)
+    {
+        infoLog << "Invariance for " << varyingName
+                << " differs between vertex and fragment shaders.";
         return false;
     }
 
