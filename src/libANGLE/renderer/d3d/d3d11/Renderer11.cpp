@@ -1498,16 +1498,14 @@ gl::Error Renderer11::updateState(const gl::ContextState &data, GLenum drawMode)
 
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
-    gl::Framebuffer *framebufferObject = glState.getDrawFramebuffer();
-    ASSERT(framebufferObject &&
-           framebufferObject->getCachedStatus(data) == GL_FRAMEBUFFER_COMPLETE);
-    ANGLE_TRY(applyRenderTarget(framebufferObject));
+    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
+    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->complete(data));
+    ANGLE_TRY(applyRenderTarget(framebuffer));
 
     // Set the present path state
-    const bool presentPathFastActive =
-        UsePresentPathFast(this, framebufferObject->getFirstColorbuffer());
-    mStateManager.updatePresentPath(presentPathFastActive,
-                                    framebufferObject->getFirstColorbuffer());
+    auto firstColorAttachment        = framebuffer->getFirstColorbuffer();
+    const bool presentPathFastActive = UsePresentPathFast(this, firstColorAttachment);
+    mStateManager.updatePresentPath(presentPathFastActive, firstColorAttachment);
 
     // Setting viewport state
     mStateManager.setViewport(&data.getCaps(), glState.getViewport(), glState.getNearPlane(),
@@ -1517,7 +1515,7 @@ gl::Error Renderer11::updateState(const gl::ContextState &data, GLenum drawMode)
     mStateManager.setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     // Applying rasterizer state to D3D11 device
-    int samples                    = framebufferObject->getCachedSamples(data);
+    int samples                    = framebuffer->getSamples(data);
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
@@ -1526,7 +1524,7 @@ gl::Error Renderer11::updateState(const gl::ContextState &data, GLenum drawMode)
 
     // Setting blend state
     unsigned int mask = GetBlendSampleMask(data, samples);
-    ANGLE_TRY(mStateManager.setBlendState(framebufferObject, glState.getBlendState(),
+    ANGLE_TRY(mStateManager.setBlendState(framebuffer, glState.getBlendState(),
                                           glState.getBlendColor(), mask));
 
     // Setting depth stencil state

@@ -12,12 +12,14 @@
 
 #include <vector>
 
+#include "common/Optional.h"
 #include "common/angleutils.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/signal_utils.h"
 
 namespace rx
 {
@@ -86,7 +88,7 @@ class FramebufferState final : angle::NonCopyable
     GLenum mReadBufferState;
 };
 
-class Framebuffer final : public LabeledObject
+class Framebuffer final : public LabeledObject, public angle::SignalReceiver
 {
   public:
     Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id);
@@ -140,10 +142,8 @@ class Framebuffer final : public LabeledObject
     int getSamples(const ContextState &state);
     GLenum checkStatus(const ContextState &state);
 
-    // These methods do not change any state.
-    // TODO(jmadill): Remove ContextState parameter when able.
-    int getCachedSamples(const ContextState &state) const;
-    GLenum getCachedStatus(const ContextState &state) const;
+    // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
+    bool complete(const ContextState &state);
 
     bool hasValidDepthStencil() const;
 
@@ -200,19 +200,31 @@ class Framebuffer final : public LabeledObject
     typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    void syncState() const;
+    void syncState();
 
-  protected:
+    // angle::SignalReceiver implementation
+    void signal(angle::SignalToken token) override;
+
+  private:
     void detachResourceById(GLenum resourceType, GLuint resourceId);
+    void detachMatchingAttachment(FramebufferAttachment *attachment,
+                                  GLenum matchType,
+                                  GLuint matchId,
+                                  size_t dirtyBit);
+    GLenum checkStatusImpl(const ContextState &state);
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
     GLuint mId;
 
-    // TODO(jmadill): See if we can make this non-mutable.
-    mutable DirtyBits mDirtyBits;
+    Optional<GLenum> mCachedStatus;
+    std::vector<angle::ChannelBinding> mDirtyColorAttachmentBindings;
+    angle::ChannelBinding mDirtyDepthAttachmentBinding;
+    angle::ChannelBinding mDirtyStencilAttachmentBinding;
+
+    DirtyBits mDirtyBits;
 };
 
-}
+}  // namespace gl
 
 #endif   // LIBANGLE_FRAMEBUFFER_H_

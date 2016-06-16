@@ -38,11 +38,7 @@ gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *attachme
         TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = nullptr;
-        gl::Error error = textureD3D->getNativeTexture(&texStorage);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(textureD3D->getNativeTexture(&texStorage));
 
         if (texStorage)
         {
@@ -53,7 +49,7 @@ gl::Error InvalidateAttachmentSwizzles(const gl::FramebufferAttachment *attachme
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void UpdateCachedRenderTarget(const gl::FramebufferAttachment *attachment,
@@ -99,33 +95,19 @@ gl::Error Framebuffer11::invalidateSwizzles() const
     {
         if (colorAttachment.isAttached())
         {
-            gl::Error error = InvalidateAttachmentSwizzles(&colorAttachment);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(InvalidateAttachmentSwizzles(&colorAttachment));
         }
     }
 
-    gl::Error error = InvalidateAttachmentSwizzles(mState.getDepthAttachment());
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(InvalidateAttachmentSwizzles(mState.getDepthAttachment()));
+    ANGLE_TRY(InvalidateAttachmentSwizzles(mState.getStencilAttachment()));
 
-    error = InvalidateAttachmentSwizzles(mState.getStencilAttachment());
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Framebuffer11::clearImpl(ContextImpl *context, const ClearParameters &clearParams)
 {
     Clear11 *clearer = mRenderer->getClearer();
-    gl::Error error(GL_NO_ERROR);
 
     const gl::FramebufferAttachment *colorAttachment = mState.getFirstColorAttachment();
     if (clearParams.scissorEnabled == true && colorAttachment != nullptr &&
@@ -139,25 +121,16 @@ gl::Error Framebuffer11::clearImpl(ContextImpl *context, const ClearParameters &
         presentPathFastClearParams.scissor.y       = framebufferSize.height -
                                                presentPathFastClearParams.scissor.y -
                                                presentPathFastClearParams.scissor.height;
-        error = clearer->clearFramebuffer(presentPathFastClearParams, mState);
+        ANGLE_TRY(clearer->clearFramebuffer(presentPathFastClearParams, mState));
     }
     else
     {
-        error = clearer->clearFramebuffer(clearParams, mState);
+        ANGLE_TRY(clearer->clearFramebuffer(clearParams, mState));
     }
 
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(invalidateSwizzles());
 
-    error = invalidateSwizzles();
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Framebuffer11::invalidate(size_t count, const GLenum *attachments)
@@ -177,7 +150,7 @@ gl::Error Framebuffer11::invalidateBase(size_t count, const GLenum *attachments,
     if (!deviceContext1)
     {
         // DiscardView() is only supported on ID3D11DeviceContext1
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     bool foundDepth = false;
@@ -206,37 +179,10 @@ gl::Error Framebuffer11::invalidateBase(size_t count, const GLenum *attachments,
                 ASSERT((attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15) ||
                        (attachments[i] == GL_COLOR));
 
-                RenderTarget11 *renderTarget = nullptr;
-                ID3D11View *colorView = nullptr;
-                gl::Error error(GL_NO_ERROR);
-                size_t colorAttachmentID = 0;
-
-                if (attachments[i] == GL_COLOR)
-                {
-                    colorAttachmentID = 0;
-                }
-                else
-                {
-                    colorAttachmentID = attachments[i] - GL_COLOR_ATTACHMENT0;
-                }
-
-                if (mState.getColorAttachment(static_cast<unsigned int>(colorAttachmentID)))
-                {
-                    error = mState.getColorAttachment(static_cast<unsigned int>(colorAttachmentID))
-                                ->getRenderTarget(&renderTarget);
-                    if (error.isError())
-                    {
-                        return error;
-                    }
-
-                    colorView = renderTarget->getRenderTargetView();
-
-                    if (colorView != nullptr)
-                    {
-                        deviceContext1->DiscardView(colorView);
-                    }
-                }
-
+                size_t colorIndex =
+                    (attachments[i] == GL_COLOR ? 0u : (attachments[i] - GL_COLOR_ATTACHMENT0));
+                auto colorAttachment = mState.getColorAttachment(colorIndex);
+                ANGLE_TRY(invalidateAttachment(colorAttachment));
                 break;
             }
         }
@@ -268,51 +214,39 @@ gl::Error Framebuffer11::invalidateBase(size_t count, const GLenum *attachments,
 
     if (discardDepth && mState.getDepthAttachment())
     {
-        RenderTarget11 *renderTarget = nullptr;
-        ID3D11View *depthView = nullptr;
-        gl::Error error(GL_NO_ERROR);
-
-        error = mState.getDepthAttachment()->getRenderTarget(&renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        depthView = renderTarget->getDepthStencilView();
-
-        if (depthView != nullptr)
-        {
-            deviceContext1->DiscardView(depthView);
-        }
+        ANGLE_TRY(invalidateAttachment(mState.getDepthAttachment()));
     }
 
     if (discardStencil && mState.getStencilAttachment())
     {
-        RenderTarget11 *renderTarget = nullptr;
-        ID3D11View *stencilView = nullptr;
-        gl::Error error(GL_NO_ERROR);
-
-        error = mState.getStencilAttachment()->getRenderTarget(&renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
-
-        stencilView = renderTarget->getDepthStencilView();
-
-        if (stencilView != nullptr)
-        {
-            deviceContext1->DiscardView(stencilView);
-        }
+        ANGLE_TRY(invalidateAttachment(mState.getStencilAttachment()));
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Framebuffer11::invalidateSub(size_t, const GLenum *, const gl::Rectangle &)
 {
     // A no-op implementation conforms to the spec, so don't call UNIMPLEMENTED()
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
+}
+
+gl::Error Framebuffer11::invalidateAttachment(const gl::FramebufferAttachment *attachment) const
+{
+    ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
+    ASSERT(deviceContext1);
+    ASSERT(attachment && attachment->isAttached());
+
+    RenderTarget11 *renderTarget = nullptr;
+    ANGLE_TRY(attachment->getRenderTarget(&renderTarget));
+    ID3D11View *view = renderTarget->getRenderTargetView();
+
+    if (view != nullptr)
+    {
+        deviceContext1->DiscardView(view);
+    }
+
+    return gl::NoError();
 }
 
 gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
@@ -361,11 +295,7 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
         ASSERT(readBuffer);
 
         RenderTargetD3D *readRenderTarget = nullptr;
-        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(readBuffer->getRenderTarget(&readRenderTarget));
         ASSERT(readRenderTarget);
 
         const auto &colorAttachments = mState.getColorAttachments();
@@ -379,11 +309,7 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
                 drawBufferStates[colorAttachment] != GL_NONE)
             {
                 RenderTargetD3D *drawRenderTarget = nullptr;
-                error = drawBuffer.getRenderTarget(&drawRenderTarget);
-                if (error.isError())
-                {
-                    return error;
-                }
+                ANGLE_TRY(drawBuffer.getRenderTarget(&drawRenderTarget));
                 ASSERT(drawRenderTarget);
 
                 const bool invertColorSource   = UsePresentPathFast(mRenderer, readBuffer);
@@ -404,13 +330,9 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
                     actualDestArea.height              = -destArea.height;
                 }
 
-                error = mRenderer->blitRenderbufferRect(actualSourceArea, actualDestArea,
-                                                        readRenderTarget, drawRenderTarget, filter,
-                                                        scissor, blitRenderTarget, false, false);
-                if (error.isError())
-                {
-                    return error;
-                }
+                ANGLE_TRY(mRenderer->blitRenderbufferRect(
+                    actualSourceArea, actualDestArea, readRenderTarget, drawRenderTarget, filter,
+                    scissor, blitRenderTarget, false, false));
             }
         }
     }
@@ -421,39 +343,23 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
         ASSERT(readBuffer);
 
         RenderTargetD3D *readRenderTarget = nullptr;
-        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(readBuffer->getRenderTarget(&readRenderTarget));
         ASSERT(readRenderTarget);
 
         const gl::FramebufferAttachment *drawBuffer = mState.getDepthOrStencilAttachment();
         ASSERT(drawBuffer);
 
         RenderTargetD3D *drawRenderTarget = nullptr;
-        error = drawBuffer->getRenderTarget(&drawRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(drawBuffer->getRenderTarget(&drawRenderTarget));
         ASSERT(drawRenderTarget);
 
-        error = mRenderer->blitRenderbufferRect(sourceArea, destArea, readRenderTarget, drawRenderTarget, filter, scissor,
-                                                false, blitDepth, blitStencil);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mRenderer->blitRenderbufferRect(sourceArea, destArea, readRenderTarget,
+                                                  drawRenderTarget, filter, scissor, false,
+                                                  blitDepth, blitStencil));
     }
 
-    gl::Error error = invalidateSwizzles();
-    if (error.isError())
-    {
-        return error;
-    }
-
-    return gl::Error(GL_NO_ERROR);
+    ANGLE_TRY(invalidateSwizzles());
+    return gl::NoError();
 }
 
 GLenum Framebuffer11::getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const

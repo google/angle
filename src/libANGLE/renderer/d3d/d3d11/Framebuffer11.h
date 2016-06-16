@@ -66,6 +66,7 @@ class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
                        const gl::Framebuffer *sourceFramebuffer) override;
 
     gl::Error invalidateBase(size_t count, const GLenum *attachments, bool useEXTBehavior) const;
+    gl::Error invalidateAttachment(const gl::FramebufferAttachment *attachment) const;
 
     GLenum getRenderTargetImplementationFormat(RenderTargetD3D *renderTarget) const override;
 

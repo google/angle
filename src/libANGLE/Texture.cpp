@@ -779,17 +779,14 @@ Error Texture::setImage(const PixelUnpackState &unpackState,
     releaseTexImageInternal();
     orphanImages();
 
-    Error error =
-        mTexture->setImage(target, level, internalFormat, size, format, type, unpackState, pixels);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(
+        mTexture->setImage(target, level, internalFormat, size, format, type, unpackState, pixels));
 
     mState.setImageDesc(target, level,
                         ImageDesc(size, GetSizedInternalFormat(internalFormat, type)));
+    mDirtyChannel.signal();
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 Error Texture::setSubImage(const PixelUnpackState &unpackState,
@@ -820,17 +817,14 @@ Error Texture::setCompressedImage(const PixelUnpackState &unpackState,
     releaseTexImageInternal();
     orphanImages();
 
-    Error error = mTexture->setCompressedImage(target, level, internalFormat, size, unpackState,
-                                               imageSize, pixels);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTexture->setCompressedImage(target, level, internalFormat, size, unpackState,
+                                           imageSize, pixels));
 
     mState.setImageDesc(target, level,
                         ImageDesc(size, GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
+    mDirtyChannel.signal();
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 Error Texture::setCompressedSubImage(const PixelUnpackState &unpackState,
@@ -858,17 +852,14 @@ Error Texture::copyImage(GLenum target, size_t level, const Rectangle &sourceAre
     releaseTexImageInternal();
     orphanImages();
 
-    Error error = mTexture->copyImage(target, level, sourceArea, internalFormat, source);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTexture->copyImage(target, level, sourceArea, internalFormat, source));
 
     mState.setImageDesc(target, level,
                         ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
                                   GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE)));
+    mDirtyChannel.signal();
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 Error Texture::copySubImage(GLenum target, size_t level, const Offset &destOffset, const Rectangle &sourceArea,
@@ -888,17 +879,15 @@ Error Texture::setStorage(GLenum target, GLsizei levels, GLenum internalFormat, 
     releaseTexImageInternal();
     orphanImages();
 
-    Error error = mTexture->setStorage(target, levels, internalFormat, size);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTexture->setStorage(target, levels, internalFormat, size));
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
     mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, internalFormat);
-    return Error(GL_NO_ERROR);
+    mDirtyChannel.signal();
+
+    return NoError();
 }
 
 Error Texture::generateMipmap()
@@ -926,6 +915,8 @@ Error Texture::generateMipmap()
                                  baseImageInfo.internalFormat);
     }
 
+    mDirtyChannel.signal();
+
     return NoError();
 }
 
@@ -946,6 +937,7 @@ void Texture::bindTexImageFromSurface(egl::Surface *surface)
     Extents size(surface->getWidth(), surface->getHeight(), 1);
     ImageDesc desc(size, surface->getConfig()->renderTargetFormat);
     mState.setImageDesc(mState.mTarget, 0, desc);
+    mDirtyChannel.signal();
 }
 
 void Texture::releaseTexImageFromSurface()
@@ -957,6 +949,7 @@ void Texture::releaseTexImageFromSurface()
     // Erase the image info for level 0
     ASSERT(mState.mTarget == GL_TEXTURE_2D);
     mState.clearImageDesc(mState.mTarget, 0);
+    mDirtyChannel.signal();
 }
 
 void Texture::bindStream(egl::Stream *stream)
@@ -984,6 +977,7 @@ void Texture::acquireImageFromStream(const egl::Stream::GLTextureDescription &de
 
     Extents size(desc.width, desc.height, 1);
     mState.setImageDesc(mState.mTarget, 0, ImageDesc(size, desc.internalFormat));
+    mDirtyChannel.signal();
 }
 
 void Texture::releaseImageFromStream()
@@ -993,6 +987,7 @@ void Texture::releaseImageFromStream()
 
     // Set to incomplete
     mState.clearImageDesc(mState.mTarget, 0);
+    mDirtyChannel.signal();
 }
 
 void Texture::releaseTexImageInternal()
@@ -1016,11 +1011,7 @@ Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
     releaseTexImageInternal();
     orphanImages();
 
-    Error error = mTexture->setEGLImageTarget(target, imageTarget);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTexture->setEGLImageTarget(target, imageTarget));
 
     setTargetImage(imageTarget);
 
@@ -1031,8 +1022,9 @@ Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
 
     mState.clearImageDescs();
     mState.setImageDesc(target, 0, ImageDesc(size, GetSizedInternalFormat(internalFormat, type)));
+    mDirtyChannel.signal();
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 Extents Texture::getAttachmentSize(const gl::FramebufferAttachment::Target &target) const
@@ -1070,4 +1062,4 @@ rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
 {
     return mTexture;
 }
-}
+}  // namespace gl

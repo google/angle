@@ -233,4 +233,9 @@ Error FramebufferAttachmentObject::getAttachmentRenderTarget(
     return getAttachmentImpl()->getAttachmentRenderTarget(target, rtOut);
 }
 
+angle::BroadcastChannel *FramebufferAttachmentObject::getDirtyChannel()
+{
+    return &mDirtyChannel;
+}
+
 }  // namespace gl

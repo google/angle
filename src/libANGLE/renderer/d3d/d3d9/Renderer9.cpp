@@ -893,11 +893,10 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
 
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
-    const gl::Framebuffer *framebufferObject = glState.getDrawFramebuffer();
-    ASSERT(framebufferObject &&
-           framebufferObject->getCachedStatus(data) == GL_FRAMEBUFFER_COMPLETE);
+    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
+    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->complete(data));
 
-    ANGLE_TRY(applyRenderTarget(context, framebufferObject));
+    ANGLE_TRY(applyRenderTarget(context, framebuffer));
 
     // Setting viewport state
     setViewport(glState.getViewport(), glState.getNearPlane(), glState.getFarPlane(), drawMode,
@@ -907,7 +906,7 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
     setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     // Setting blend, depth stencil, and rasterizer states
-    int samples                    = framebufferObject->getCachedSamples(data);
+    int samples                    = framebuffer->getSamples(data);
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
@@ -927,8 +926,10 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 
 gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode)
 {
-    const auto &glState            = glData.getState();
-    int samples                    = glState.getDrawFramebuffer()->getCachedSamples(glData);
+    const auto &glState  = glData.getState();
+    auto drawFramebuffer = glState.getDrawFramebuffer();
+    ASSERT(!drawFramebuffer->hasAnyDirtyBit());
+    int samples                    = drawFramebuffer->getSamples(glData);
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);

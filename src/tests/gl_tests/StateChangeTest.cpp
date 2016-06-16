@@ -9,6 +9,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -18,7 +19,7 @@ namespace
 class StateChangeTest : public ANGLETest
 {
   protected:
-    StateChangeTest() : mFramebuffer(0)
+    StateChangeTest()
     {
         setWindowWidth(64);
         setWindowHeight(64);
@@ -36,9 +37,8 @@ class StateChangeTest : public ANGLETest
         ANGLETest::SetUp();
 
         glGenFramebuffers(1, &mFramebuffer);
-
-        mTextures.resize(2, 0);
         glGenTextures(2, mTextures.data());
+        glGenRenderbuffers(1, &mRenderbuffer);
 
         ASSERT_GL_NO_ERROR();
     }
@@ -57,11 +57,14 @@ class StateChangeTest : public ANGLETest
             mTextures.clear();
         }
 
+        glDeleteRenderbuffers(1, &mRenderbuffer);
+
         ANGLETest::TearDown();
     }
 
-    GLuint mFramebuffer;
-    std::vector<GLuint> mTextures;
+    GLuint mFramebuffer           = 0;
+    GLuint mRenderbuffer          = 0;
+    std::vector<GLuint> mTextures = {0, 0};
 };
 
 class StateChangeTestES3 : public StateChangeTest
@@ -137,6 +140,148 @@ TEST_P(StateChangeTest, CopyTexSubImage2DSync)
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 16, 16);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[1], 0);
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that Framebuffer completeness caching works when color attachments change.
+TEST_P(StateChangeTest, FramebufferIncompleteColorAttachment)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture at color attachment 0 to be non-color-renderable.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, 16, 16, 0, GL_ALPHA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that caching works when color attachments change with TexStorage.
+TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
+{
+    if (!extensionEnabled("GL_EXT_texture_storage"))
+    {
+        std::cout << "Test skipped because TexStorage2DEXT not available." << std::endl;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture at color attachment 0 to be non-color-renderable.
+    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_ALPHA8_EXT, 16, 16);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that caching works when color attachments change with CompressedTexImage2D.
+TEST_P(StateChangeTestES3, FramebufferIncompleteWithCompressedTex)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture at color attachment 0 to be non-color-renderable.
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB8_ETC2, 16, 16, 0, 64, nullptr);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that caching works when color attachments are deleted.
+TEST_P(StateChangeTestES3, FramebufferIncompleteWhenAttachmentDeleted)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Delete the texture at color attachment 0.
+    glDeleteTextures(1, &mTextures[0]);
+    mTextures[0] = 0;
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that Framebuffer completeness caching works when depth attachments change.
+TEST_P(StateChangeTest, FramebufferIncompleteDepthAttachment)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 16, 16);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRenderbuffer);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture at color attachment 0 to be non-depth-renderable.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that Framebuffer completeness caching works when stencil attachments change.
+TEST_P(StateChangeTest, FramebufferIncompleteStencilAttachment)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, 16, 16);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              mRenderbuffer);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture at the stencil attachment to be non-stencil-renderable.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that Framebuffer completeness caching works when depth-stencil attachments change.
+TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
+{
+    if (getClientVersion() < 3 && !extensionEnabled("GL_OES_packed_depth_stencil"))
+    {
+        std::cout << "Test skipped because packed depth+stencil not availble." << std::endl;
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 16, 16);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              mRenderbuffer);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Change the texture the depth-stencil attachment to be non-depth-stencil-renderable.
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     ASSERT_GL_NO_ERROR();
 }
@@ -237,6 +382,51 @@ TEST_P(StateChangeTestES3, ReadBufferAndDrawBuffersSync)
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
 
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests calling invalidate on incomplete framebuffers after switching attachments.
+// Adapted partially from WebGL 2 test "renderbuffers/invalidate-framebuffer"
+TEST_P(StateChangeTestES3, IncompleteRenderbufferAttachmentInvalidateSync)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    GLint samples = 0;
+    glGetInternalformativ(GL_RENDERBUFFER, GL_RGBA8, GL_SAMPLES, 1, &samples);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+    ASSERT_GL_NO_ERROR();
+
+    // invalidate the framebuffer when the attachment is incomplete: no storage allocated to the
+    // attached renderbuffer
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    GLenum attachments1[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments1);
+    ASSERT_GL_NO_ERROR();
+
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, static_cast<GLsizei>(samples), GL_RGBA8,
+                                     getWindowWidth(), getWindowHeight());
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    GLRenderbuffer renderbuf;
+
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuf.get());
+    ASSERT_GL_NO_ERROR();
+
+    // invalidate the framebuffer when the attachment is incomplete: no storage allocated to the
+    // attached renderbuffer
+    // Note: the bug will only repro *without* a call to checkStatus before the invalidate.
+    GLenum attachments2[] = {GL_DEPTH_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments2);
+
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, static_cast<GLsizei>(samples),
+                                     GL_DEPTH_COMPONENT16, getWindowWidth(), getWindowHeight());
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    glClear(GL_DEPTH_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
 }
 
