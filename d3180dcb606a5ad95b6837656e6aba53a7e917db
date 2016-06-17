@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29b2c8f6_0c58a3e2",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-17T21:52:11Z",
+      "side": 1,
+      "message": "we actually have these flags here, not sure if you wanted to use them",
+      "range": {
+        "startLine": 745,
+        "startChar": 16,
+        "endLine": 745,
+        "endChar": 24
+      },
+      "revId": "d3180dcb606a5ad95b6837656e6aba53a7e917db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
