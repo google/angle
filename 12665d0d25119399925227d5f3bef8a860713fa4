@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29b2c8f6_af2164aa",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-17T23:07:42Z",
+      "side": 1,
+      "message": "I think this should be isOpenGL().\nAlso, I think it\u0027s a good idea to add IsWindows() in ANGLETest.cpp and use here (look for IsLinux / IsOSX)",
+      "range": {
+        "startLine": 270,
+        "startChar": 21,
+        "endLine": 270,
+        "endChar": 27
+      },
+      "revId": "12665d0d25119399925227d5f3bef8a860713fa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29b2c8f6_2f0d5436",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-17T23:07:42Z",
+      "side": 1,
+      "message": "OpenGL, if I\u0027m right above.",
+      "range": {
+        "startLine": 273,
+        "startChar": 53,
+        "endLine": 273,
+        "endChar": 58
+      },
+      "revId": "12665d0d25119399925227d5f3bef8a860713fa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
