@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "895f3427_2aa0940b",
+        "filename": "src/image_util/imageformats.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-17T15:15:55Z",
+      "side": 1,
+      "message": "At least for the packed formats, can we have unittests checking the bitfields are in the right position? I think it is left to the compiler to pack the bitfields and their order might change.",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_aaab64ed",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-17T15:15:55Z",
+      "side": 1,
+      "message": "nit: did clang format do this?",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_6a7d6c55",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-17T15:15:55Z",
+      "side": 1,
+      "message": "nit: order of the includes",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_4a72a885",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-17T15:15:55Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_2a777475",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-17T15:15:55Z",
+      "side": 1,
+      "message": "nit: common/Color.h (casing)",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
