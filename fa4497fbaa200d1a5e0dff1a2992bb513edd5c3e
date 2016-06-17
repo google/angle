@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "29df28f4_8fd455f1",
+        "filename": "src/common/mathutil.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_02154f36",
+      "range": {
+        "startLine": 67,
+        "startChar": 6,
+        "endLine": 67,
+        "endChar": 8
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_62052307",
         "filename": "src/common/mathutil.h",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "not sure where this code came from.. can you elaborate? it certainly looks different from ANGLE code.",
+      "range": {
+        "startLine": 724,
+        "startChar": 10,
+        "endLine": 724,
+        "endChar": 16
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89301414_22262e1c",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "It\u0027s compile time square root extraction. Used by the the static setToIdentity in the matrix template that takes an fixed size array as a parameter, so that the method is reusable for any square matrix such as 2x2, 3x3, 4x4 etc stored in a simple row major array.",
+      "parentUuid": "f417a9f9_62052307",
       "range": {
         "startLine": 724,
         "startChar": 10,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "293d68ee_1fb1c3f8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "That macro doesn\u0027t work here, it tries to return a gl::Error on error.",
+      "parentUuid": "f417a9f9_c26197c0",
+      "range": {
+        "startLine": 444,
+        "startChar": 0,
+        "endLine": 446,
+        "endChar": 35
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a2a3bb15",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 12
@@ -82,6 +154,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "I\u0027m fine with leaving this as TODO, but if you can, label them as TODO(email) so we know who added them.",
+      "range": {
+        "startLine": 1806,
+        "startChar": 7,
+        "endLine": 1806,
+        "endChar": 11
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6933e020_e1b606eb",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a2a3bb15",
       "range": {
         "startLine": 1806,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "e9c0b017_edc72546",
+        "filename": "src/libANGLE/HandleRangeAllocator.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e2865377",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 17
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_c28fd78c",
         "filename": "src/libANGLE/HandleRangeAllocator.cpp",
         "patchSetId": 12
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "89bbb49f_0aa61bc3",
+        "filename": "src/libANGLE/HandleRangeAllocator.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c28fd78c",
+      "range": {
+        "startLine": 225,
+        "startChar": 6,
+        "endLine": 225,
+        "endChar": 8
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_e2adb3ff",
         "filename": "src/libANGLE/HandleRangeAllocator.h",
         "patchSetId": 12
@@ -151,6 +295,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "I think you can remove this typedef, I didn\u0027t see it used anywhere except to define the map. Also, maybe unordered_map is better? Not sure.",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 46
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9c0b017_8dd461f1",
+        "filename": "src/libANGLE/HandleRangeAllocator.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_e2adb3ff",
       "range": {
         "startLine": 54,
         "startChar": 4,
@@ -209,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "293d68ee_bfbff7c2",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_42c907b5",
+      "range": {
+        "startLine": 168,
+        "startChar": 25,
+        "endLine": 168,
+        "endChar": 41
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_82c31f95",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 12
@@ -232,6 +424,30 @@
     },
     {
       "key": {
+        "uuid": "293d68ee_9fbcb3cf",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_82c31f95",
+      "range": {
+        "startLine": 174,
+        "startChar": 25,
+        "endLine": 174,
+        "endChar": 41
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_82615f93",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 12
@@ -243,6 +459,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "a factory doesn\u0027t delete things, so I\u0027d be happy if you would remove this arg.",
+      "range": {
+        "startLine": 286,
+        "startChar": 34,
+        "endLine": 286,
+        "endChar": 60
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09c6e430_eebcffcf",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_82615f93",
       "range": {
         "startLine": 286,
         "startChar": 34,
@@ -301,6 +541,30 @@
     },
     {
       "key": {
+        "uuid": "89bbb49f_8ab9abde",
+        "filename": "src/libANGLE/renderer/GLImplFactory.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_c20077a9",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 17
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_621b631e",
         "filename": "src/libANGLE/renderer/GLImplFactory.h",
         "patchSetId": 12
@@ -312,6 +576,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "nit: sort",
+      "range": {
+        "startLine": 41,
+        "startChar": 6,
+        "endLine": 41,
+        "endChar": 14
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09c6e430_6edc8f1e",
+        "filename": "src/libANGLE/renderer/GLImplFactory.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_621b631e",
       "range": {
         "startLine": 41,
         "startChar": 6,
@@ -347,6 +635,30 @@
     },
     {
       "key": {
+        "uuid": "09c6e430_0ee14bd9",
+        "filename": "src/libANGLE/renderer/GLImplFactory.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_a2fd7bbc",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 5
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_02242f53",
         "filename": "src/libANGLE/renderer/PathImpl.h",
         "patchSetId": 12
@@ -358,6 +670,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "trailing _",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 36
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29df28f4_ef31614d",
+        "filename": "src/libANGLE/renderer/PathImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_02242f53",
       "range": {
         "startLine": 10,
         "startChar": 8,
@@ -393,6 +729,30 @@
     },
     {
       "key": {
+        "uuid": "c9cf6c46_6cdc9b1e",
+        "filename": "src/libANGLE/renderer/PathImpl.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_6234038a",
+      "range": {
+        "startLine": 23,
+        "startChar": 24,
+        "endLine": 23,
+        "endChar": 34
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_02a70fd2",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 12
@@ -416,6 +776,30 @@
     },
     {
       "key": {
+        "uuid": "49b53cab_c8ca4f51",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1424,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_02a70fd2",
+      "range": {
+        "startLine": 1422,
+        "startChar": 3,
+        "endLine": 1424,
+        "endChar": 39
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_82bddfef",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 12
@@ -427,6 +811,30 @@
       "writtenOn": "2016-06-16T19:58:53Z",
       "side": 1,
       "message": "this needs its own method",
+      "range": {
+        "startLine": 1653,
+        "startChar": 0,
+        "endLine": 1656,
+        "endChar": 23
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c9cf6c46_ccca6f51",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1656,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-17T08:35:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f417a9f9_82bddfef",
       "range": {
         "startLine": 1653,
         "startChar": 0,
