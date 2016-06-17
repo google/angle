@@ -379,64 +379,6 @@ TEST_P(SixteenBppTextureTestES3, RGB5A1UploadRGB10A2)
     simpleValidationBase(tex.get());
 }
 
-// Test reading from RGBA4 textures attached to FBO.
-TEST_P(SixteenBppTextureTestES3, RGBA4FramebufferReadback)
-{
-    // TODO(jmadill): Fix bug with GLES
-    if (isGLES())
-    {
-        std::cout << "Test skipped on GLES." << std::endl;
-        return;
-    }
-
-    Vector4 rawColor(0.5f, 0.7f, 1.0f, 0.0f);
-    GLColor expectedColor(rawColor);
-
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
-
-    GLTexture tex;
-    glBindTexture(GL_TEXTURE_2D, tex.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex.get(), 0);
-
-    glClearColor(rawColor.x, rawColor.y, rawColor.z, rawColor.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    ASSERT_GL_NO_ERROR();
-
-    GLenum colorReadFormat = GL_NONE;
-    GLenum colorReadType   = GL_NONE;
-    glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, reinterpret_cast<GLint *>(&colorReadFormat));
-    glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE, reinterpret_cast<GLint *>(&colorReadType));
-
-    if (colorReadFormat == GL_RGBA && colorReadType == GL_UNSIGNED_BYTE)
-    {
-        GLColor actualColor = GLColor::black;
-        glReadPixels(0, 0, 1, 1, colorReadFormat, colorReadType, &actualColor);
-        EXPECT_COLOR_NEAR(expectedColor, actualColor, 20);
-    }
-    else
-    {
-        ASSERT_GLENUM_EQ(GL_RGBA, colorReadFormat);
-        ASSERT_TRUE(colorReadType == GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT ||
-                    colorReadType == GL_UNSIGNED_SHORT_4_4_4_4);
-
-        uint16_t rgba = 0;
-        glReadPixels(0, 0, 1, 1, colorReadFormat, colorReadType, &rgba);
-
-        GLubyte r8 = static_cast<GLubyte>((rgba & 0xF000) >> 12);
-        GLubyte g8 = static_cast<GLubyte>((rgba & 0x0F00) >> 8);
-        GLubyte b8 = static_cast<GLubyte>((rgba & 0x00F0) >> 4);
-        GLubyte a8 = static_cast<GLubyte>((rgba & 0x000F));
-
-        GLColor actualColor(r8 << 4, g8 << 4, b8 << 4, a8 << 4);
-        EXPECT_COLOR_NEAR(expectedColor, actualColor, 20);
-    }
-
-    ASSERT_GL_NO_ERROR();
-}
-
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SixteenBppTextureTest,
                        ES2_D3D9(),

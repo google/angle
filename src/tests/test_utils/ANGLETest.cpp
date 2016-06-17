@@ -37,11 +37,6 @@ float ColorNorm(GLubyte channelValue)
     return static_cast<float>(channelValue) / 255.0f;
 }
 
-GLubyte ColorDenorm(float colorValue)
-{
-    return static_cast<GLubyte>(colorValue * 255.0f);
-}
-
 // Use a custom ANGLE platform class to capture and report internal errors.
 class TestPlatform : public angle::Platform
 {
@@ -109,22 +104,6 @@ GLColor::GLColor() : R(0), G(0), B(0), A(0)
 }
 
 GLColor::GLColor(GLubyte r, GLubyte g, GLubyte b, GLubyte a) : R(r), G(g), B(b), A(a)
-{
-}
-
-GLColor::GLColor(const Vector4 &floatColor)
-    : R(ColorDenorm(floatColor.x)),
-      G(ColorDenorm(floatColor.y)),
-      B(ColorDenorm(floatColor.z)),
-      A(ColorDenorm(floatColor.w))
-{
-}
-
-GLColor::GLColor(const GLColor16 &color16)
-    : R(static_cast<GLubyte>(color16.R)),
-      G(static_cast<GLubyte>(color16.G)),
-      B(static_cast<GLubyte>(color16.B)),
-      A(static_cast<GLubyte>(color16.A))
 {
 }
 

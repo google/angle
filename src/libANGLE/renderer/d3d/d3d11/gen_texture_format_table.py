@@ -141,7 +141,6 @@ bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
 ANGLEFormatSet::ANGLEFormatSet()
     : format(ANGLE_FORMAT_NONE),
       glInternalFormat(GL_NONE),
-      fboImplementationInternalFormat(GL_NONE),
       texFormat(DXGI_FORMAT_UNKNOWN),
       srvFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
@@ -173,7 +172,6 @@ TextureFormat::TextureFormat(GLenum internalFormat,
 
 ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
                                GLenum glInternalFormat,
-                               GLenum fboImplementationInternalFormat,
                                DXGI_FORMAT texFormat,
                                DXGI_FORMAT srvFormat,
                                DXGI_FORMAT rtvFormat,
@@ -184,7 +182,6 @@ ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
                                ColorReadFunction colorReadFunction)
     : format(format),
       glInternalFormat(glInternalFormat),
-      fboImplementationInternalFormat(fboImplementationInternalFormat),
       texFormat(texFormat),
       srvFormat(srvFormat),
       rtvFormat(rtvFormat),
@@ -466,7 +463,6 @@ def parse_json_into_switch_angle_format_string(json_data):
         table_data += '        case ' + angle_format_item[0] + ':\n'
         angle_format = angle_format_item[1]
         gl_internal_format = angle_format["glInternalFormat"] if "glInternalFormat" in angle_format else "GL_NONE"
-        fbo_internal_format = angle_format["fboImplementationInternalFormat"] if "fboImplementationInternalFormat" in angle_format else gl_internal_format
         tex_format = angle_format["texFormat"] if "texFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         srv_format = angle_format["srvFormat"] if "srvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
         rtv_format = angle_format["rtvFormat"] if "rtvFormat" in angle_format else "DXGI_FORMAT_UNKNOWN"
@@ -478,7 +474,6 @@ def parse_json_into_switch_angle_format_string(json_data):
         table_data += '        {\n'
         table_data += '            static const ANGLEFormatSet formatInfo(' + angle_format_item[0] + ',\n'
         table_data += '                                                   ' + gl_internal_format + ',\n'
-        table_data += '                                                   ' + fbo_internal_format + ',\n'
         table_data += '                                                   ' + tex_format + ',\n'
         table_data += '                                                   ' + srv_format + ',\n'
         table_data += '                                                   ' + rtv_format + ',\n'

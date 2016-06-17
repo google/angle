@@ -43,7 +43,6 @@ struct ANGLEFormatSet
     ANGLEFormatSet();
     ANGLEFormatSet(ANGLEFormat format,
                    GLenum glInternalFormat,
-                   GLenum fboImplementationInternalFormat,
                    DXGI_FORMAT texFormat,
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
@@ -60,11 +59,6 @@ struct ANGLEFormatSet
     // The closest matching GL internal format for the DXGI formats this format uses. Note that this
     // may be a different internal format than the one this ANGLE format is used for.
     GLenum glInternalFormat;
-
-    // The format we should report to the GL layer when querying implementation formats from a FBO.
-    // This might not be the same as the glInternalFormat, since some DXGI formats don't have
-    // matching GL format enums, like BGRA4, BGR5A1 and B5G6R6.
-    GLenum fboImplementationInternalFormat;
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;
