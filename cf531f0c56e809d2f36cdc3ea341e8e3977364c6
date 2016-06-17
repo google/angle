@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "895f3427_ca70d8f1",
+        "filename": "BUILD.gn",
+        "patchSetId": 9
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Will it correctly set the root include path though?",
+      "parentUuid": "895f3427_ca63432e",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 14
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_aaea4f81",
         "filename": "src/common/Color.h",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2016-06-16T21:07:12Z",
       "side": 1,
       "message": "nit: namespace comment",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 1
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_aa6da41b",
+        "filename": "src/common/Color.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_aaea4f81",
       "range": {
         "startLine": 48,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "895f3427_8a5ae069",
+        "filename": "src/common/Color.inl",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_aa47ef8d",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 1
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_4aa4f372",
         "filename": "src/image_util/copyimage.inl",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2016-06-16T21:07:12Z",
       "side": 1,
       "message": "it looks like git cl format ignores these .inl files.. can we fix this?",
+      "range": {
+        "startLine": 32,
+        "startChar": 2,
+        "endLine": 32,
+        "endChar": 20
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_4a54e83b",
+        "filename": "src/image_util/copyimage.inl",
+        "patchSetId": 9
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_4aa4f372",
       "range": {
         "startLine": 32,
         "startChar": 2,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "895f3427_ea4a7c97",
+        "filename": "src/image_util/generatemip.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_aa9c8f21",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 1
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_2ac09fe8",
         "filename": "src/image_util/imageformats.h",
         "patchSetId": 9
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "895f3427_caea1883",
+        "filename": "src/image_util/imageformats.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_2ac09fe8",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_8ab0ab9f",
         "filename": "src/image_util/imageformats.h",
         "patchSetId": 9
@@ -151,6 +295,30 @@
       "writtenOn": "2016-06-16T21:07:12Z",
       "side": 1,
       "message": "this bitfield stuff is non-portable, we should make a TODO to fix it.",
+      "range": {
+        "startLine": 663,
+        "startChar": 0,
+        "endLine": 665,
+        "endChar": 24
+      },
+      "revId": "cf531f0c56e809d2f36cdc3ea341e8e3977364c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_aae7e4b8",
+        "filename": "src/image_util/imageformats.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T14:35:18Z",
+      "side": 1,
+      "message": "Added a static assert so it wont bite us.",
+      "parentUuid": "895f3427_8ab0ab9f",
       "range": {
         "startLine": 663,
         "startChar": 0,
