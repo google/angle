@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "895f3427_c7a8d1a4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-17T13:39:21Z",
+      "side": 1,
+      "message": "Hm, you\u0027re right. Still, calling getResult on something that is an Error is not defined, we probably want something more like what you had before. \n\n  auto resultOrErr \u003d ....;\n  if (resultOrErr.isError()) {\n    handleError(resultOrErr.getError());\n    return \u003cdefault\u003e;\n  }\n\n  return resultOrErr.getResult();",
+      "parentUuid": "293d68ee_1fb1c3f8",
+      "range": {
+        "startLine": 444,
+        "startChar": 0,
+        "endLine": 446,
+        "endChar": 35
+      },
+      "revId": "fa4497fbaa200d1a5e0dff1a2992bb513edd5c3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f417a9f9_a2a3bb15",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 12
