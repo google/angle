@@ -318,7 +318,10 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // Built-in function emulation needs to happen after validateLimitations pass.
         if (success)
         {
+            // TODO(jmadill): Remove global pool allocator.
+            GetGlobalPoolAllocator()->lock();
             initBuiltInFunctionEmulator(&builtInFunctionEmulator, compileOptions);
+            GetGlobalPoolAllocator()->unlock();
             builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(root);
         }
 
