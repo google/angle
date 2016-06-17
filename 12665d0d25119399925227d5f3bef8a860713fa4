@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "29b2c8f6_2f42b425",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-17T23:11:10Z",
+      "side": 1,
+      "message": "Oh, I see that https://chromium-review.googlesource.com/353693 already defines IsWindows, so rebase on top of it and just use it here.\nOr the other way around.",
+      "parentUuid": "29b2c8f6_af2164aa",
+      "range": {
+        "startLine": 270,
+        "startChar": 21,
+        "endLine": 270,
+        "endChar": 27
+      },
+      "revId": "12665d0d25119399925227d5f3bef8a860713fa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29b2c8f6_2f0d5436",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 1
