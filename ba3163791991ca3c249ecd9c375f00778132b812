@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "895f3427_4ac4e89d",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T16:28:06Z",
+      "side": 1,
+      "message": "Yea, maybe we\u0027re missing a configuration about unions.",
+      "parentUuid": "895f3427_aaab64ed",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_6a7d6c55",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
         "patchSetId": 10
@@ -47,6 +65,24 @@
       "writtenOn": "2016-06-17T15:15:55Z",
       "side": 1,
       "message": "nit: order of the includes",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_8521b19c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_load_functions_table.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T16:28:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_6a7d6c55",
       "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -81,6 +117,24 @@
       "writtenOn": "2016-06-17T15:15:55Z",
       "side": 1,
       "message": "nit: common/Color.h (casing)",
+      "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "895f3427_0abef017",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/renderer9_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-17T16:28:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_2a777475",
       "revId": "ba3163791991ca3c249ecd9c375f00778132b812",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
