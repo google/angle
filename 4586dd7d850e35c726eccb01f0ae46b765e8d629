@@ -91,6 +91,30 @@
       "revId": "4586dd7d850e35c726eccb01f0ae46b765e8d629",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29b2c8f6_bdba8720",
+        "filename": "src/libANGLE/renderer/GLImplFactory.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-17T19:38:14Z",
+      "side": 1,
+      "message": "Sorry, I asked for him to keep this virtual \u003d 0, I\u0027d prefer that for the factory classes.",
+      "parentUuid": "29b2c8f6_fd35dfe7",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 67
+      },
+      "revId": "4586dd7d850e35c726eccb01f0ae46b765e8d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
