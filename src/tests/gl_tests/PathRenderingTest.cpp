@@ -274,7 +274,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathParameter)
 
         GLfloat f;
         glPathParameterfCHROMIUM(path, GL_PATH_END_CAPS_CHROMIUM,
-                                 static_cast<GLenum>(kEndCaps[(i + 1) % 3]));
+                                 static_cast<GLfloat>(kEndCaps[(i + 1) % 3]));
         glGetPathParameterfvCHROMIUM(path, GL_PATH_END_CAPS_CHROMIUM, &f);
         ASSERT_GL_NO_ERROR();
         EXPECT_EQ(kEndCaps[(i + 1) % 3], static_cast<GLenum>(f));
@@ -294,7 +294,7 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathParameter)
 
         GLfloat f;
         glPathParameterfCHROMIUM(path, GL_PATH_JOIN_STYLE_CHROMIUM,
-                                 static_cast<GLenum>(kJoinStyles[(i + 1) % 3]));
+                                 static_cast<GLfloat>(kJoinStyles[(i + 1) % 3]));
         ASSERT_GL_NO_ERROR();
         glGetPathParameterfvCHROMIUM(path, GL_PATH_JOIN_STYLE_CHROMIUM, &f);
         ASSERT_GL_NO_ERROR();
@@ -604,32 +604,32 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void verifyTestPatternFill(float x, float y)
+    void verifyTestPatternFill(GLint x, GLint y)
     {
-        static const float kFillCoords[]  = {55.0f, 54.0f, 50.0f, 28.0f, 66.0f, 63.0f};
+        static const GLint kFillCoords[]  = {55, 54, 50, 28, 66, 63};
         static const angle::GLColor kBlue = {0, 0, 255, 255};
 
         for (size_t i = 0; i < 6; i += 2)
         {
-            float fx = kFillCoords[i];
-            float fy = kFillCoords[i + 1];
+            GLint fx = kFillCoords[i];
+            GLint fy = kFillCoords[i + 1];
             EXPECT_TRUE(CheckPixels(x + fx, y + fy, 1, 1, 0, kBlue));
         }
     }
-    void verifyTestPatternBg(float x, float y)
+    void verifyTestPatternBg(GLint x, GLint y)
     {
-        static const float kBackgroundCoords[]     = {80.0f, 80.0f, 20.0f, 20.0f, 90.0f, 1.0f};
+        static const GLint kBackgroundCoords[]     = {80, 80, 20, 20, 90, 1};
         static const angle::GLColor kExpectedColor = {0, 0, 0, 0};
 
         for (size_t i = 0; i < 6; i += 2)
         {
-            float bx = kBackgroundCoords[i];
-            float by = kBackgroundCoords[i + 1];
+            GLint bx = kBackgroundCoords[i];
+            GLint by = kBackgroundCoords[i + 1];
             EXPECT_TRUE(CheckPixels(x + bx, y + by, 1, 1, 0, kExpectedColor));
         }
     }
 
-    void verifyTestPatternStroke(float x, float y)
+    void verifyTestPatternStroke(GLint x, GLint y)
     {
         // Inside the stroke we should have green.
         static const angle::GLColor kGreen = {0, 255, 0, 255};
@@ -689,9 +689,9 @@ TEST_P(CHROMIUMPathRenderingDrawTest, TestPathRendering)
     ASSERT_GL_NO_ERROR();
 
     // Verify the image.
-    verifyTestPatternFill(0.0f, 0.0f);
-    verifyTestPatternBg(0.0f, 0.0f);
-    verifyTestPatternStroke(0.0f, 0.0f);
+    verifyTestPatternFill(0, 0);
+    verifyTestPatternBg(0, 0);
+    verifyTestPatternStroke(0, 0);
 }
 
 // Test that StencilThen{Stroke,Fill} path rendering functions work
@@ -723,9 +723,9 @@ TEST_P(CHROMIUMPathRenderingDrawTest, TestPathRenderingThenFunctions)
     glDeletePathsCHROMIUM(path, 1);
 
     // Verify the image.
-    verifyTestPatternFill(0.0f, 0.0f);
-    verifyTestPatternBg(0.0f, 0.0f);
-    verifyTestPatternStroke(0.0f, 0.0f);
+    verifyTestPatternFill(0, 0);
+    verifyTestPatternBg(0, 0);
+    verifyTestPatternStroke(0, 0);
 }
 
 }  // namespace
