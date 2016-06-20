@@ -268,6 +268,12 @@ TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
         return;
     }
 
+    if (IsWindows() && IsIntel() && IsOpenGL())
+    {
+        // TODO(jmadill): Investigate the failure (https://anglebug.com/1388)
+        std::cout << "Test disabled on Windows Intel OpenGL." << std::endl;
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);

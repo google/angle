@@ -2215,19 +2215,19 @@ TEST_P(Texture2DTestES3, ImmutableTextureBaseLevelOutOfRange)
 // Test that changing base level works when it affects the format of the texture.
 TEST_P(Texture2DTestES3, TextureFormatChangesWithBaseLevel)
 {
-    if (IsNVIDIA() && (isOpenGL() || isGLES()))
+    if (IsNVIDIA() && IsOpenGL())
     {
         // Observed rendering corruption on NVIDIA OpenGL.
         std::cout << "Test skipped on NVIDIA OpenGL." << std::endl;
         return;
     }
-    if (IsIntel() && isOpenGL())
+    if (IsIntel() && IsDesktopOpenGL())
     {
         // Observed incorrect rendering on Intel OpenGL.
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;
     }
-    if (IsAMD() && isOpenGL())
+    if (IsAMD() && IsDesktopOpenGL())
     {
         // Observed incorrect rendering on AMD OpenGL.
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
@@ -3323,7 +3323,7 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16Test)
 // GLES 3.0.4 section 3.8.3.
 TEST_P(Texture2DTestES3, UnpackSkipImages2D)
 {
-    if (IsIntel() && isOpenGL())
+    if (IsIntel() && IsDesktopOpenGL())
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;

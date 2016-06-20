@@ -910,7 +910,7 @@ TEST_P(MipmapTestES3, MipmapsForTexture3D)
 // the levelbase array, are left unchanged by this computation."
 TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
 {
-    if (IsAMD() && isOpenGL())
+    if (IsAMD() && IsDesktopOpenGL())
     {
         // Observed incorrect rendering on AMD, sampling level 2 returns black.
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
@@ -949,7 +949,7 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 
-    if (IsNVIDIA() && (isOpenGL() || isGLES()))
+    if (IsNVIDIA() && IsOpenGL())
     {
         // Observed incorrect rendering on NVIDIA, level zero seems to be incorrectly affected by
         // GenerateMipmap.
@@ -971,7 +971,7 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
 // the levelbase array, are left unchanged by this computation."
 TEST_P(MipmapTestES3, GenerateMipmapCubeBaseLevel)
 {
-    if (IsAMD() && isOpenGL())
+    if (IsAMD() && IsDesktopOpenGL())
     {
         // Observed incorrect rendering on AMD, sampling level 2 returns black.
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
@@ -1010,7 +1010,7 @@ TEST_P(MipmapTestES3, GenerateMipmapCubeBaseLevel)
     clearAndDrawQuad(mCubeProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 
-    if (IsNVIDIA() && (isOpenGL() || isGLES()))
+    if (IsNVIDIA() && IsOpenGL())
     {
         // Observed incorrect rendering on NVIDIA, level zero seems to be incorrectly affected by
         // GenerateMipmap.

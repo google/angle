@@ -466,7 +466,7 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
     // (http://anglebug.com/1292)
     // TODO(geofflang): Find out why this doesn't compile on AMD OpenGL drivers
     // (http://anglebug.com/1291)
-    if (isOpenGL() && (IsOSX() || !IsNVIDIA()))
+    if (IsDesktopOpenGL() && (IsOSX() || !IsNVIDIA()))
     {
         std::cout << "Test disabled on this OpenGL configuration." << std::endl;
         return;
@@ -730,7 +730,7 @@ TEST_P(GLSLTest_ES3, InvariantVaryingOut)
 {
     // TODO: ESSL 3.00 -> GLSL 1.20 translation should add "invariant" in fragment shader
     // for varyings which are invariant in vertex shader (http://anglebug.com/1293)
-    if (isOpenGL())
+    if (IsDesktopOpenGL())
     {
         std::cout << "Test disabled on OpenGL." << std::endl;
         return;
@@ -872,7 +872,7 @@ TEST_P(GLSLTest, InvariantAllBoth)
     // TODO: ESSL 1.00 -> GLSL 1.20 translation should add "invariant" in fragment shader
     // for varyings which are invariant in vertex shader individually,
     // and remove invariant(all) from fragment shader (http://anglebug.com/1293)
-    if (isOpenGL())
+    if (IsDesktopOpenGL())
     {
         std::cout << "Test disabled on OpenGL." << std::endl;
         return;
@@ -979,7 +979,7 @@ TEST_P(GLSLTest_ES3, InvariantAllOut)
     // TODO: ESSL 3.00 -> GLSL 1.20 translation should add "invariant" in fragment shader
     // for varyings which are invariant in vertex shader,
     // because of invariant(all) being used in vertex shader (http://anglebug.com/1293)
-    if (isOpenGL())
+    if (IsDesktopOpenGL())
     {
         std::cout << "Test disabled on OpenGL." << std::endl;
         return;

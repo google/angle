@@ -36,7 +36,7 @@ class ReadPixelsTest : public ANGLETest
 TEST_P(ReadPixelsTest, OutOfBounds)
 {
     // TODO: re-enable once root cause of http://anglebug.com/1413 is fixed
-    if (IsAndroid() && IsAdreno() && isGLES())
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
     {
         std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
         return;
@@ -219,7 +219,7 @@ TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
 TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
 {
     // TODO: re-enable once root cause of http://anglebug.com/1415 is fixed
-    if (IsAndroid() && IsAdreno() && isGLES())
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
     {
         std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
         return;

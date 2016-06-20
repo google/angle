@@ -787,7 +787,7 @@ void VertexAttributeCachingTest::SetUp()
 // to stress-test the caching code.
 TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 {
-    if (IsAMD() && isOpenGL())
+    if (IsAMD() && IsDesktopOpenGL())
     {
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
         return;
@@ -825,7 +825,7 @@ TEST_P(VertexAttributeCachingTest, BufferMulticaching)
 // after enough iterations. It validates the unchanged attributes don't get deleted incidentally.
 TEST_P(VertexAttributeCachingTest, BufferMulticachingWithOneUnchangedAttrib)
 {
-    if (IsAMD() && isOpenGL())
+    if (IsAMD() && IsDesktopOpenGL())
     {
         std::cout << "Test skipped on AMD OpenGL." << std::endl;
         return;
