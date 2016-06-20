@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c914cc8a_847906b0",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-20T06:57:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_2791ed62",
+      "range": {
+        "startLine": 724,
+        "startChar": 10,
+        "endLine": 724,
+        "endChar": 16
+      },
+      "revId": "4586dd7d850e35c726eccb01f0ae46b765e8d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_0786e92c",
         "filename": "src/common/mathutil.h",
         "patchSetId": 14
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "292488f2_67d7b2c9",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-20T06:57:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "895f3427_0786e92c",
+      "range": {
+        "startLine": 729,
+        "startChar": 4,
+        "endLine": 729,
+        "endChar": 30
+      },
+      "revId": "4586dd7d850e35c726eccb01f0ae46b765e8d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "895f3427_478ce14e",
         "filename": "src/common/mathutil.h",
         "patchSetId": 14
@@ -59,6 +107,30 @@
       "writtenOn": "2016-06-17T13:39:21Z",
       "side": 1,
       "message": "is this cast necessary? it should always be unsigned int from the definition of iSquareRoot. If you really need the cast, use c++-style casts.",
+      "range": {
+        "startLine": 733,
+        "startChar": 53,
+        "endLine": 733,
+        "endChar": 59
+      },
+      "revId": "4586dd7d850e35c726eccb01f0ae46b765e8d629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89cc947e_023cea22",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-20T06:57:23Z",
+      "side": 1,
+      "message": "Actually yes, there was a warning about implicit cast form enum type to unsigned int. Using static_cast now.",
+      "parentUuid": "895f3427_478ce14e",
       "range": {
         "startLine": 733,
         "startChar": 53,
