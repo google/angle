@@ -49,6 +49,7 @@ GLuint HandleRangeAllocator::allocateAtOrAbove(GLuint wanted)
     }
 
     GLuint firstId = current->first;
+    UNUSED_ASSERTION_VARIABLE(firstId);
     GLuint lastId = current->second;
     ASSERT(wanted >= firstId);
 
