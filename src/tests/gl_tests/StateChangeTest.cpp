@@ -272,6 +272,7 @@ TEST_P(StateChangeTest, FramebufferIncompleteDepthStencilAttachment)
     {
         // TODO(jmadill): Investigate the failure (https://anglebug.com/1388)
         std::cout << "Test disabled on Windows Intel OpenGL." << std::endl;
+        return;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
