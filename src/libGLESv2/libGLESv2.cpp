@@ -1617,7 +1617,7 @@ void GL_APIENTRY glPathParameterfCHROMIUM(GLuint path, GLenum pname, GLfloat val
 
 void GL_APIENTRY glPathParameteriCHROMIUM(GLuint path, GLenum pname, GLint value)
 {
-    gl::PathParameterfCHROMIUM(path, pname, value);
+    gl::PathParameteriCHROMIUM(path, pname, value);
 }
 
 void GL_APIENTRY glGetPathParameterfvCHROMIUM(GLuint path, GLenum pname, GLfloat *value)
