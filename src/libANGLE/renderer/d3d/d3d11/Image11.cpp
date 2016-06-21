@@ -356,10 +356,11 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorbuffer();
     ASSERT(srcAttachment);
 
-    const auto &d3d11Format = d3d11::GetTextureFormatInfo(srcAttachment->getInternalFormat(),
-                                                          mRenderer->getRenderer11DeviceCaps());
+    GLenum sourceInternalFormat = srcAttachment->getInternalFormat();
+    const auto &d3d11Format =
+        d3d11::GetTextureFormatInfo(sourceInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    if (d3d11Format.formatSet->texFormat == mDXGIFormat)
+    if (d3d11Format.formatSet->texFormat == mDXGIFormat && sourceInternalFormat == mInternalFormat)
     {
         RenderTargetD3D *renderTarget = nullptr;
         gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
@@ -396,11 +397,32 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
                           mappedImage.RowPitch * destOffset.y + rowOffset +
                           destOffset.z * mappedImage.DepthPitch;
 
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(mInternalFormat);
+    const auto &destD3D11Format =
+        d3d11::GetTextureFormatInfo(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    error = mRenderer->readFromAttachment(*srcAttachment, sourceArea, formatInfo.format,
-                                          formatInfo.type, mappedImage.RowPitch,
-                                          gl::PixelPackState(), dataOffset);
+    auto loadFunction = destD3D11Format.loadFunctions.at(destFormatInfo.type);
+    if (loadFunction.requiresConversion)
+    {
+        size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
+        MemoryBuffer *memoryBuffer = nullptr;
+        mRenderer->getScratchMemoryBuffer(bufferSize, &memoryBuffer);
+        GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
+
+        error = mRenderer->readFromAttachment(*srcAttachment, sourceArea, destFormatInfo.format,
+                                              destFormatInfo.type, memoryBufferRowPitch,
+                                              gl::PixelPackState(), memoryBuffer->data());
+
+        loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
+                                  memoryBufferRowPitch, 0, dataOffset, mappedImage.RowPitch,
+                                  mappedImage.DepthPitch);
+    }
+    else
+    {
+        error = mRenderer->readFromAttachment(*srcAttachment, sourceArea, destFormatInfo.format,
+                                              destFormatInfo.type, mappedImage.RowPitch,
+                                              gl::PixelPackState(), dataOffset);
+    }
 
     unmap();
     mDirty = true;

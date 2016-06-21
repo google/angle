@@ -36,7 +36,7 @@ struct L8
 
     static void writeColor(L8 *dst, const gl::ColorF *src)
     {
-        dst->L = gl::floatToNormalized<unsigned char>((src->red + src->green + src->blue) / 3.0f);
+        dst->L = gl::floatToNormalized<unsigned char>(src->red);
     }
 
     static void average(L8 *dst, const L8 *src1, const L8 *src2)
@@ -120,7 +120,7 @@ struct L8A8
 
     static void writeColor(L8A8 *dst, const gl::ColorF *src)
     {
-        dst->L = gl::floatToNormalized<unsigned char>((src->red + src->green + src->blue) / 3.0f);
+        dst->L = gl::floatToNormalized<unsigned char>(src->red);
         dst->A = gl::floatToNormalized<unsigned char>(src->alpha);
     }
 
@@ -148,7 +148,7 @@ struct A8L8
 
     static void writeColor(A8L8 *dst, const gl::ColorF *src)
     {
-        dst->L = gl::floatToNormalized<unsigned char>((src->red + src->green + src->blue) / 3.0f);
+        dst->L = gl::floatToNormalized<unsigned char>(src->red);
         dst->A = gl::floatToNormalized<unsigned char>(src->alpha);
     }
 
@@ -1617,7 +1617,7 @@ struct L16F
 
     static void writeColor(L16F *dst, const gl::ColorF *src)
     {
-        dst->L = gl::float32ToFloat16((src->red + src->green + src->blue) / 3.0f);
+        dst->L = gl::float32ToFloat16(src->red);
     }
 
     static void average(L16F *dst, const L16F *src1, const L16F *src2)
@@ -1642,7 +1642,7 @@ struct L16A16F
 
     static void writeColor(L16A16F *dst, const gl::ColorF *src)
     {
-        dst->L = gl::float32ToFloat16((src->red + src->green + src->blue) / 3.0f);
+        dst->L = gl::float32ToFloat16(src->red);
         dst->A = gl::float32ToFloat16(src->alpha);
     }
 
@@ -1826,7 +1826,7 @@ struct L32F
 
     static void writeColor(L32F *dst, const gl::ColorF *src)
     {
-        dst->L = (src->red + src->green + src->blue) / 3.0f;
+        dst->L = src->red;
     }
 
     static void average(L32F *dst, const L32F *src1, const L32F *src2)
@@ -1850,7 +1850,7 @@ struct L32A32F
 
     static void writeColor(L32A32F *dst, const gl::ColorF *src)
     {
-        dst->L = (src->red + src->green + src->blue) / 3.0f;
+        dst->L = src->red;
         dst->A = src->alpha;
     }
 

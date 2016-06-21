@@ -118,9 +118,6 @@
 1095 WIN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth32f_stencil8 = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.texsubimage2d_depth.depth_component32f = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.texsubimage2d_depth.depth32f_stencil8 = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_rgba = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_alpha = FAIL
 1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_luminance_alpha = FAIL
