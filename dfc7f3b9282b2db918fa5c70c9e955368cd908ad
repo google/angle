@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69b12057_74a9a6a6",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-21T14:30:28Z",
+      "side": 1,
+      "message": "Instead of limiting support here, do it in Context::initCaps.",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 252,
+        "endChar": 5
+      },
+      "revId": "dfc7f3b9282b2db918fa5c70c9e955368cd908ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
