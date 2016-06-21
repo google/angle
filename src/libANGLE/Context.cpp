@@ -12,6 +12,7 @@
 #include <iterator>
 #include <sstream>
 #include <string.h>
+#include <vector>
 
 #include "common/matrix_utils.h"
 #include "common/platform.h"
@@ -39,6 +40,58 @@
 
 namespace
 {
+
+template <typename T>
+std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
+                                    GLsizei numPaths,
+                                    const void *paths,
+                                    GLuint pathBase)
+{
+    std::vector<gl::Path *> ret;
+    ret.reserve(numPaths);
+
+    const auto *nameArray = static_cast<const T *>(paths);
+
+    for (GLsizei i = 0; i < numPaths; ++i)
+    {
+        const GLuint pathName = nameArray[i] + pathBase;
+
+        ret.push_back(resourceManager.getPath(pathName));
+    }
+
+    return ret;
+}
+
+std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
+                                    GLsizei numPaths,
+                                    GLenum pathNameType,
+                                    const void *paths,
+                                    GLuint pathBase)
+{
+    switch (pathNameType)
+    {
+        case GL_UNSIGNED_BYTE:
+            return GatherPaths<GLubyte>(resourceManager, numPaths, paths, pathBase);
+
+        case GL_BYTE:
+            return GatherPaths<GLbyte>(resourceManager, numPaths, paths, pathBase);
+
+        case GL_UNSIGNED_SHORT:
+            return GatherPaths<GLushort>(resourceManager, numPaths, paths, pathBase);
+
+        case GL_SHORT:
+            return GatherPaths<GLshort>(resourceManager, numPaths, paths, pathBase);
+
+        case GL_UNSIGNED_INT:
+            return GatherPaths<GLuint>(resourceManager, numPaths, paths, pathBase);
+
+        case GL_INT:
+            return GatherPaths<GLint>(resourceManager, numPaths, paths, pathBase);
+    }
+
+    UNREACHABLE();
+    return std::vector<gl::Path *>();
+}
 
 template <typename T>
 gl::Error GetQueryObjectParameter(gl::Context *context, GLuint id, GLenum pname, T *params)
@@ -1469,6 +1522,114 @@ void Context::stencilThenCoverStrokePath(GLuint path,
     syncRendererState();
 
     mImplementation->stencilThenCoverStrokePath(pathObj, reference, mask, coverMode);
+}
+
+void Context::coverFillPathInstanced(GLsizei numPaths,
+                                     GLenum pathNameType,
+                                     const void *paths,
+                                     GLuint pathBase,
+                                     GLenum coverMode,
+                                     GLenum transformType,
+                                     const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->coverFillPathInstanced(pathObjects, coverMode, transformType, transformValues);
+}
+void Context::coverStrokePathInstanced(GLsizei numPaths,
+                                       GLenum pathNameType,
+                                       const void *paths,
+                                       GLuint pathBase,
+                                       GLenum coverMode,
+                                       GLenum transformType,
+                                       const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->coverStrokePathInstanced(pathObjects, coverMode, transformType,
+                                              transformValues);
+}
+void Context::stencilFillPathInstanced(GLsizei numPaths,
+                                       GLenum pathNameType,
+                                       const void *paths,
+                                       GLuint pathBase,
+                                       GLenum fillMode,
+                                       GLuint mask,
+                                       GLenum transformType,
+                                       const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->stencilFillPathInstanced(pathObjects, fillMode, mask, transformType,
+                                              transformValues);
+}
+void Context::stencilStrokePathInstanced(GLsizei numPaths,
+                                         GLenum pathNameType,
+                                         const void *paths,
+                                         GLuint pathBase,
+                                         GLint reference,
+                                         GLuint mask,
+                                         GLenum transformType,
+                                         const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->stencilStrokePathInstanced(pathObjects, reference, mask, transformType,
+                                                transformValues);
+}
+void Context::stencilThenCoverFillPathInstanced(GLsizei numPaths,
+                                                GLenum pathNameType,
+                                                const void *paths,
+                                                GLuint pathBase,
+                                                GLenum fillMode,
+                                                GLuint mask,
+                                                GLenum coverMode,
+                                                GLenum transformType,
+                                                const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->stencilThenCoverFillPathInstanced(pathObjects, coverMode, fillMode, mask,
+                                                       transformType, transformValues);
+}
+void Context::stencilThenCoverStrokePathInstanced(GLsizei numPaths,
+                                                  GLenum pathNameType,
+                                                  const void *paths,
+                                                  GLuint pathBase,
+                                                  GLint reference,
+                                                  GLuint mask,
+                                                  GLenum coverMode,
+                                                  GLenum transformType,
+                                                  const GLfloat *transformValues)
+{
+    const auto &pathObjects =
+        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+
+    // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
+    syncRendererState();
+
+    mImplementation->stencilThenCoverStrokePathInstanced(pathObjects, coverMode, reference, mask,
+                                                         transformType, transformValues);
 }
 
 void Context::handleError(const Error &error)

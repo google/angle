@@ -220,8 +220,14 @@ EXPORTS
     glStencilStrokePathCHROMIUM     @332
     glCoverFillPathCHROMIUM         @333
     glCoverStrokePathCHROMIUM       @334
-    glStencilThenCoverFillPathCHROMIUM   @335
-    glStencilThenCoverStrokePathCHROMIUM @336
+    glStencilThenCoverFillPathCHROMIUM            @335
+    glStencilThenCoverStrokePathCHROMIUM          @336
+    glCoverFillPathInstancedCHROMIUM              @337
+    glCoverStrokePathInstancedCHROMIUM            @338
+    glStencilStrokePathInstancedCHROMIUM          @339
+    glStencilFillPathInstancedCHROMIUM            @340
+    glStencilThenCoverFillPathInstancedCHROMIUM   @341
+    glStencilThenCoverStrokePathInstancedCHROMIUM @342
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

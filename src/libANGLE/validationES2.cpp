@@ -60,6 +60,150 @@ bool IsPartialBlit(gl::Context *context,
     return false;
 }
 
+template <typename T>
+bool ValidatePathInstances(gl::Context *context,
+                           GLsizei numPaths,
+                           const void *paths,
+                           GLuint pathBase)
+{
+    const auto *array = static_cast<const T *>(paths);
+
+    for (GLsizei i = 0; i < numPaths; ++i)
+    {
+        const GLuint pathName = array[i] + pathBase;
+        if (context->hasPath(pathName) && !context->hasPathData(pathName))
+        {
+            context->handleError(gl::Error(GL_INVALID_OPERATION, "No such path object."));
+            return false;
+        }
+    }
+    return true;
+}
+
+bool ValidateInstancedPathParameters(gl::Context *context,
+                                     GLsizei numPaths,
+                                     GLenum pathNameType,
+                                     const void *paths,
+                                     GLuint pathBase,
+                                     GLenum transformType,
+                                     const GLfloat *transformValues)
+{
+    if (!context->getExtensions().pathRendering)
+    {
+        context->handleError(
+            gl::Error(GL_INVALID_OPERATION, "GL_CHROMIUM_path_rendering is not available."));
+        return false;
+    }
+
+    if (paths == nullptr)
+    {
+        context->handleError(gl::Error(GL_INVALID_VALUE, "No path name array."));
+        return false;
+    }
+
+    if (numPaths < 0)
+    {
+        context->handleError(gl::Error(GL_INVALID_VALUE, "Invalid (negative) numPaths."));
+        return false;
+    }
+
+    if (!angle::IsValueInRangeForNumericType<std::uint32_t>(numPaths))
+    {
+        context->handleError(gl::Error(GL_INVALID_OPERATION, "Overflow in numPaths."));
+        return false;
+    }
+
+    std::uint32_t pathNameTypeSize = 0;
+    std::uint32_t componentCount   = 0;
+
+    switch (pathNameType)
+    {
+        case GL_UNSIGNED_BYTE:
+            pathNameTypeSize = sizeof(GLubyte);
+            if (!ValidatePathInstances<GLubyte>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        case GL_BYTE:
+            pathNameTypeSize = sizeof(GLbyte);
+            if (!ValidatePathInstances<GLbyte>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        case GL_UNSIGNED_SHORT:
+            pathNameTypeSize = sizeof(GLushort);
+            if (!ValidatePathInstances<GLushort>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        case GL_SHORT:
+            pathNameTypeSize = sizeof(GLshort);
+            if (!ValidatePathInstances<GLshort>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        case GL_UNSIGNED_INT:
+            pathNameTypeSize = sizeof(GLuint);
+            if (!ValidatePathInstances<GLuint>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        case GL_INT:
+            pathNameTypeSize = sizeof(GLint);
+            if (!ValidatePathInstances<GLint>(context, numPaths, paths, pathBase))
+                return false;
+            break;
+
+        default:
+            context->handleError(gl::Error(GL_INVALID_ENUM, "Invalid path name type."));
+            return false;
+    }
+
+    switch (transformType)
+    {
+        case GL_NONE:
+            componentCount = 0;
+            break;
+        case GL_TRANSLATE_X_CHROMIUM:
+        case GL_TRANSLATE_Y_CHROMIUM:
+            componentCount = 1;
+            break;
+        case GL_TRANSLATE_2D_CHROMIUM:
+            componentCount = 2;
+            break;
+        case GL_TRANSLATE_3D_CHROMIUM:
+            componentCount = 3;
+            break;
+        case GL_AFFINE_2D_CHROMIUM:
+        case GL_TRANSPOSE_AFFINE_2D_CHROMIUM:
+            componentCount = 6;
+            break;
+        case GL_AFFINE_3D_CHROMIUM:
+        case GL_TRANSPOSE_AFFINE_3D_CHROMIUM:
+            componentCount = 12;
+            break;
+        default:
+            context->handleError(gl::Error(GL_INVALID_ENUM, "Invalid transformation."));
+            return false;
+    }
+    if (componentCount != 0 && transformValues == nullptr)
+    {
+        context->handleError(gl::Error(GL_INVALID_VALUE, "No transform array given."));
+        return false;
+    }
+
+    angle::CheckedNumeric<std::uint32_t> checkedSize(0);
+    checkedSize += (numPaths * pathNameTypeSize);
+    checkedSize += (numPaths * sizeof(GLfloat) * componentCount);
+    if (!checkedSize.IsValid())
+    {
+        context->handleError(gl::Error(GL_INVALID_OPERATION, "Overflow in num paths."));
+        return false;
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
@@ -2549,6 +2693,184 @@ bool ValidateIsPath(Context *context)
             Error(GL_INVALID_OPERATION, "GL_CHROMIUM_path_rendering is not available."));
         return false;
     }
+    return true;
+}
+
+bool ValidateCoverFillPathInstanced(Context *context,
+                                    GLsizei numPaths,
+                                    GLenum pathNameType,
+                                    const void *paths,
+                                    GLuint pathBase,
+                                    GLenum coverMode,
+                                    GLenum transformType,
+                                    const GLfloat *transformValues)
+{
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    switch (coverMode)
+    {
+        case GL_CONVEX_HULL_CHROMIUM:
+        case GL_BOUNDING_BOX_CHROMIUM:
+        case GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid cover mode."));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateCoverStrokePathInstanced(Context *context,
+                                      GLsizei numPaths,
+                                      GLenum pathNameType,
+                                      const void *paths,
+                                      GLuint pathBase,
+                                      GLenum coverMode,
+                                      GLenum transformType,
+                                      const GLfloat *transformValues)
+{
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    switch (coverMode)
+    {
+        case GL_CONVEX_HULL_CHROMIUM:
+        case GL_BOUNDING_BOX_CHROMIUM:
+        case GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid cover mode."));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilFillPathInstanced(Context *context,
+                                      GLsizei numPaths,
+                                      GLenum pathNameType,
+                                      const void *paths,
+                                      GLuint pathBase,
+                                      GLenum fillMode,
+                                      GLuint mask,
+                                      GLenum transformType,
+                                      const GLfloat *transformValues)
+{
+
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    switch (fillMode)
+    {
+        case GL_COUNT_UP_CHROMIUM:
+        case GL_COUNT_DOWN_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid fill mode."));
+            return false;
+    }
+    if (!isPow2(mask + 1))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid stencil bit mask."));
+        return false;
+    }
+    return true;
+}
+
+bool ValidateStencilStrokePathInstanced(Context *context,
+                                        GLsizei numPaths,
+                                        GLenum pathNameType,
+                                        const void *paths,
+                                        GLuint pathBase,
+                                        GLint reference,
+                                        GLuint mask,
+                                        GLenum transformType,
+                                        const GLfloat *transformValues)
+{
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    // no more validation here.
+
+    return true;
+}
+
+bool ValidateStencilThenCoverFillPathInstanced(Context *context,
+                                               GLsizei numPaths,
+                                               GLenum pathNameType,
+                                               const void *paths,
+                                               GLuint pathBase,
+                                               GLenum fillMode,
+                                               GLuint mask,
+                                               GLenum coverMode,
+                                               GLenum transformType,
+                                               const GLfloat *transformValues)
+{
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    switch (coverMode)
+    {
+        case GL_CONVEX_HULL_CHROMIUM:
+        case GL_BOUNDING_BOX_CHROMIUM:
+        case GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid cover mode."));
+            return false;
+    }
+
+    switch (fillMode)
+    {
+        case GL_COUNT_UP_CHROMIUM:
+        case GL_COUNT_DOWN_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid fill mode."));
+            return false;
+    }
+    if (!isPow2(mask + 1))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid stencil bit mask."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilThenCoverStrokePathInstanced(Context *context,
+                                                 GLsizei numPaths,
+                                                 GLenum pathNameType,
+                                                 const void *paths,
+                                                 GLuint pathBase,
+                                                 GLint reference,
+                                                 GLuint mask,
+                                                 GLenum coverMode,
+                                                 GLenum transformType,
+                                                 const GLfloat *transformValues)
+{
+    if (!ValidateInstancedPathParameters(context, numPaths, pathNameType, paths, pathBase,
+                                         transformType, transformValues))
+        return false;
+
+    switch (coverMode)
+    {
+        case GL_CONVEX_HULL_CHROMIUM:
+        case GL_BOUNDING_BOX_CHROMIUM:
+        case GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid cover mode."));
+            return false;
+    }
+
     return true;
 }
 

@@ -109,6 +109,36 @@ class ContextGL : public ContextImpl
                                     GLint reference,
                                     GLuint mask,
                                     GLenum coverMode) override;
+    void coverFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                GLenum coverMode,
+                                GLenum transformType,
+                                const GLfloat *transformValues) override;
+    void coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                  GLenum coverMode,
+                                  GLenum transformType,
+                                  const GLfloat *transformValues) override;
+    void stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                  GLenum fillMode,
+                                  GLuint mask,
+                                  GLenum transformType,
+                                  const GLfloat *transformValues) override;
+    void stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                    GLint reference,
+                                    GLuint mask,
+                                    GLenum transformType,
+                                    const GLfloat *transformValues) override;
+    void stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                           GLenum coverMode,
+                                           GLenum fillMode,
+                                           GLuint mask,
+                                           GLenum transformType,
+                                           const GLfloat *transformValues) override;
+    void stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                             GLenum coverMode,
+                                             GLint reference,
+                                             GLuint mask,
+                                             GLenum transformType,
+                                             const GLfloat *transformValues) override;
 
     // TODO(jmadill): Investigate proper impl methods for this.
     void notifyDeviceLost() override;

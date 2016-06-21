@@ -1665,4 +1665,186 @@ ANGLE_EXPORT void GL_APIENTRY StencilThenCoverStrokePathCHROMIUM(GLuint path,
     }
 }
 
+ANGLE_EXPORT void GL_APIENTRY CoverFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                                             GLenum pathNameType,
+                                                             const void *paths,
+                                                             GLuint pathBase,
+                                                             GLenum coverMode,
+                                                             GLenum transformType,
+                                                             const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %d, GLenum pathNameType = %u, const void *paths = %p "
+        "GLuint pathBase = %u, GLenum coverMode = %u, GLenum transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCoverFillPathInstanced(context, numPaths, pathNameType, paths, pathBase,
+                                            coverMode, transformType, transformValues))
+        {
+            return;
+        }
+        context->coverFillPathInstanced(numPaths, pathNameType, paths, pathBase, coverMode,
+                                        transformType, transformValues);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY CoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                                               GLenum pathNameType,
+                                                               const void *paths,
+                                                               GLuint pathBase,
+                                                               GLenum coverMode,
+                                                               GLenum transformType,
+                                                               const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %d, GLenum pathNameType = %u, const void *paths = %p "
+        "GLuint pathBase = %u, GLenum coverMode = %u, GLenum transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, coverMode, transformType, transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCoverStrokePathInstanced(context, numPaths, pathNameType, paths, pathBase,
+                                              coverMode, transformType, transformValues))
+        {
+            return;
+        }
+        context->coverStrokePathInstanced(numPaths, pathNameType, paths, pathBase, coverMode,
+                                          transformType, transformValues);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY StencilStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                                                 GLenum pathNameType,
+                                                                 const void *paths,
+                                                                 GLuint pathBase,
+                                                                 GLint reference,
+                                                                 GLuint mask,
+                                                                 GLenum transformType,
+                                                                 const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %u, GLenum pathNameType = %u, const void *paths = %p "
+        "GLuint pathBase = %u, GLint reference = %d GLuint mask = %u GLenum transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, reference, mask, transformType, transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateStencilStrokePathInstanced(context, numPaths, pathNameType, paths, pathBase,
+                                                reference, mask, transformType, transformValues))
+        {
+            return;
+        }
+        context->stencilStrokePathInstanced(numPaths, pathNameType, paths, pathBase, reference,
+                                            mask, transformType, transformValues);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY StencilFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                                               GLenum pathNameType,
+                                                               const void *paths,
+                                                               GLuint pathBase,
+                                                               GLenum fillMode,
+                                                               GLuint mask,
+                                                               GLenum transformType,
+                                                               const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %u, GLenum pathNameType = %u const void *paths = %p "
+        "GLuint pathBase = %u, GLenum fillMode = %u, GLuint mask = %u, GLenum transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, fillMode, mask, transformType, transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateStencilFillPathInstanced(context, numPaths, pathNameType, paths, pathBase,
+                                              fillMode, mask, transformType, transformValues))
+        {
+            return;
+        }
+        context->stencilFillPathInstanced(numPaths, pathNameType, paths, pathBase, fillMode, mask,
+                                          transformType, transformValues);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY
+StencilThenCoverFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                          GLenum pathNameType,
+                                          const void *paths,
+                                          GLuint pathBase,
+                                          GLenum fillMode,
+                                          GLuint mask,
+                                          GLenum coverMode,
+                                          GLenum transformType,
+                                          const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %u, GLenum pathNameType = %u const void *paths = %p "
+        "GLuint pathBase = %u, GLenum coverMode = %u, GLuint mask = %u, GLenum transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, coverMode, mask, transformType, transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateStencilThenCoverFillPathInstanced(context, numPaths, pathNameType, paths,
+                                                       pathBase, fillMode, mask, coverMode,
+                                                       transformType, transformValues))
+        {
+            return;
+        }
+        context->stencilThenCoverFillPathInstanced(numPaths, pathNameType, paths, pathBase,
+                                                   fillMode, mask, coverMode, transformType,
+                                                   transformValues);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY
+StencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                            GLenum pathNameType,
+                                            const void *paths,
+                                            GLuint pathBase,
+                                            GLint reference,
+                                            GLuint mask,
+                                            GLenum coverMode,
+                                            GLenum transformType,
+                                            const GLfloat *transformValues)
+{
+    EVENT(
+        "(GLsizei numPaths = %u, GLenum pathNameType = %u, const void *paths = %p "
+        "GLuint pathBase = %u GLenum coverMode = %u GLint reference = %d GLuint mask = %u GLenum "
+        "transformType = %u "
+        "const GLfloat *transformValues = %p)",
+        numPaths, pathNameType, paths, pathBase, coverMode, reference, mask, transformType,
+        transformValues);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateStencilThenCoverStrokePathInstanced(context, numPaths, pathNameType, paths,
+                                                         pathBase, reference, mask, coverMode,
+                                                         transformType, transformValues))
+        {
+            return;
+        }
+        context->stencilThenCoverStrokePathInstanced(numPaths, pathNameType, paths, pathBase,
+                                                     reference, mask, coverMode, transformType,
+                                                     transformValues);
+    }
+}
+
 }  // gl

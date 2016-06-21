@@ -483,38 +483,185 @@ TEST_P(CHROMIUMPathRenderingTest, TestPathRenderingInvalidArgs)
                                        GL_BOUNDING_BOX_CHROMIUM + 1);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    // For instanced variants, we need this to error the same way
-    // regardless of whether # of paths == 0 would cause an early return.
-
-    // TODO: enable this once instanced path rendering is implemented.
-    // for (int path_count = 0; path_count <= 1; ++path_count)
-    // {
-    //     glStencilFillPathInstancedCHROMIUM(path_count, GL_UNSIGNED_INT, &path, 0,
-    //         GL_COUNT_UP_CHROMIUM - 1, 0x7F, GL_NONE, NULL);
-    //     EXPECT_EQ(static_cast<GLenum>(GL_INVALID_ENUM), glGetError());
-    //     glStencilThenCoverFillPathInstancedCHROMIUM(
-    //         path_count, GL_UNSIGNED_INT, &path, 0, GL_COUNT_UP_CHROMIUM - 1, 0x7F,
-    //         GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM, GL_NONE, NULL);
-    //     EXPECT_EQ(static_cast<GLenum>(GL_INVALID_ENUM), glGetError());
-    // }
-
     // Using mask+1 not being power of two causes INVALID_VALUE with up/down fill mode
     glStencilFillPathCHROMIUM(path, GL_COUNT_UP_CHROMIUM, 0x40);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
     glStencilThenCoverFillPathCHROMIUM(path, GL_COUNT_DOWN_CHROMIUM, 12, GL_BOUNDING_BOX_CHROMIUM);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
-    // TODO: enable this once instanced path rendering is implemented.
-    // for (int path_count = 0; path_count <= 1; ++path_count)
-    // {
-    //     glStencilFillPathInstancedCHROMIUM(path_count, GL_UNSIGNED_INT, &path, 0,
-    //         GL_COUNT_UP_CHROMIUM, 0x30, GL_NONE, NULL);
-    //     EXPECT_EQ(static_cast<GLenum>(GL_INVALID_VALUE), glGetError());
-    //     glStencilThenCoverFillPathInstancedCHROMIUM(
-    //         path_count, GL_UNSIGNED_INT, &path, 0, GL_COUNT_DOWN_CHROMIUM, 0xFE,
-    //         GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM, GL_NONE, NULL);
-    //     EXPECT_EQ(static_cast<GLenum>(GL_INVALID_VALUE), glGetError());
-    // }
+    // check incorrect instance parameters.
+
+    // CoverFillPathInstanced
+    {
+        glCoverFillPathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                         GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glCoverFillPathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, GL_CONVEX_HULL_CHROMIUM, GL_NONE,
+                                         NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, NULL, 0, GL_CONVEX_HULL_CHROMIUM,
+                                         GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_UNSIGNED_INT, GL_NONE,
+                                         NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                         GL_UNSIGNED_INT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                         GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // CoverStrokePathInstanced
+    {
+        glCoverStrokePathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glCoverStrokePathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, GL_CONVEX_HULL_CHROMIUM, GL_NONE,
+                                           NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, NULL, 0, GL_CONVEX_HULL_CHROMIUM,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_UNSIGNED_INT, GL_NONE,
+                                           NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                           GL_UNSIGNED_INT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                           GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // StencilFillPathInstanced
+    {
+        glStencilFillPathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0, GL_COUNT_UP_CHROMIUM, 0x0,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, GL_COUNT_UP_CHROMIUM, 0x0,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, NULL, 0, GL_COUNT_UP_CHROMIUM, 0x0,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_UNSIGNED_INT, 0x0,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_COUNT_UP_CHROMIUM, 0x2,
+                                           GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_COUNT_UP_CHROMIUM, 0x0,
+                                           GL_UNSIGNED_INT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_COUNT_UP_CHROMIUM, 0x0,
+                                           GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // StencilStrokePathInstanced
+    {
+        glStencilStrokePathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0, 0x00, 0x00, GL_NONE,
+                                             NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilStrokePathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, 0x00, 0x00, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, nullptr, 0, 0x00, 0x00, GL_NONE,
+                                             NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, 0x00, 0x00,
+                                             GL_UNSIGNED_INT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, 0x00, 0x00,
+                                             GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // StencilThenCoverFillPathInstanced
+    {
+        glStencilThenCoverFillPathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0,
+                                                    GL_COUNT_UP_CHROMIUM, 0, GL_COUNT_UP_CHROMIUM,
+                                                    GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, GL_CONVEX_HULL_CHROMIUM,
+                                                    0, GL_COUNT_UP_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, NULL, 0,
+                                                    GL_CONVEX_HULL_CHROMIUM, 0,
+                                                    GL_COUNT_UP_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, GL_UNSIGNED_INT,
+                                                    0, GL_COUNT_UP_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0,
+                                                    GL_CONVEX_HULL_CHROMIUM, 0, GL_UNSIGNED_INT,
+                                                    GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0,
+                                                    GL_CONVEX_HULL_CHROMIUM, 0,
+                                                    GL_COUNT_UP_CHROMIUM, GL_FLOAT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverFillPathInstancedCHROMIUM(
+            1, GL_UNSIGNED_INT, &path, 0, GL_CONVEX_HULL_CHROMIUM, 0, GL_COUNT_UP_CHROMIUM,
+            GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
+
+    // StencilThenCoverStrokePathInstanced
+    {
+        glStencilThenCoverStrokePathInstancedCHROMIUM(-1, GL_UNSIGNED_INT, &path, 0, 0x0, 0x0,
+                                                      GL_CONVEX_HULL_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilThenCoverStrokePathInstancedCHROMIUM(1, GL_FLOAT, &path, 0, 0x0, 0x0,
+                                                      GL_CONVEX_HULL_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, NULL, 0, 0x0, 0x0,
+                                                      GL_CONVEX_HULL_CHROMIUM, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glStencilThenCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, 0x0, 0x0,
+                                                      GL_FLOAT, GL_NONE, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, 0x0, 0x0,
+                                                      GL_CONVEX_HULL_CHROMIUM, GL_FLOAT, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        glStencilThenCoverStrokePathInstancedCHROMIUM(1, GL_UNSIGNED_INT, &path, 0, 0x0, 0x0,
+                                                      GL_CONVEX_HULL_CHROMIUM,
+                                                      GL_TRANSLATE_X_CHROMIUM, NULL);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    }
 
     glDeletePathsCHROMIUM(path, 1);
 }
@@ -726,6 +873,151 @@ TEST_P(CHROMIUMPathRenderingDrawTest, TestPathRenderingThenFunctions)
     verifyTestPatternFill(0, 0);
     verifyTestPatternBg(0, 0);
     verifyTestPatternStroke(0, 0);
+}
+
+// Tests that drawing with *Instanced functions work.
+TEST_P(CHROMIUMPathRenderingDrawTest, TestPathRenderingInstanced)
+{
+    if (!isApplicable())
+        return;
+
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 1.0f};
+    static const float kGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
+
+    setupStateForTestPattern();
+
+    GLuint path = glGenPathsCHROMIUM(1);
+    setupPathStateForTestPattern(path);
+
+    const GLuint kPaths[]                             = {1, 1, 1, 1, 1};
+    const GLsizei kPathCount                          = 5;
+    const GLfloat kShapeSize                          = 80.0f;
+    static const GLfloat kTransforms[kPathCount * 12] = {
+        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,           0.0f,       0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, kShapeSize,     0.0f,       0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, kShapeSize * 2, 0.0f,       0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,           kShapeSize, 0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, kShapeSize,     kShapeSize, 0.0f};
+
+    // The test pattern is the same as in the simple draw case above,
+    // except that the path is drawn kPathCount times with different offsets.
+    glPathStencilFuncCHROMIUM(GL_ALWAYS, 0, 0xFF);
+    glStencilStrokePathInstancedCHROMIUM(kPathCount, GL_UNSIGNED_INT, kPaths, path - 1, 0x80, 0x80,
+                                         GL_AFFINE_3D_CHROMIUM, kTransforms);
+
+    glPathStencilFuncCHROMIUM(GL_ALWAYS, 0, 0x7F);
+    glUniform4fv(mColorLoc, 1, kBlue);
+    glStencilFillPathInstancedCHROMIUM(kPathCount, GL_UNSIGNED_INT, kPaths, path - 1,
+                                       GL_COUNT_UP_CHROMIUM, 0x7F, GL_AFFINE_3D_CHROMIUM,
+                                       kTransforms);
+
+    ASSERT_GL_NO_ERROR();
+
+    glStencilFunc(GL_LESS, 0, 0x7F);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+    glCoverFillPathInstancedCHROMIUM(kPathCount, GL_UNSIGNED_INT, kPaths, path - 1,
+                                     GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM,
+                                     GL_AFFINE_3D_CHROMIUM, kTransforms);
+
+    ASSERT_GL_NO_ERROR();
+
+    glStencilFunc(GL_EQUAL, 0x80, 0x80);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+    glUniform4fv(mColorLoc, 1, kGreen);
+    glCoverStrokePathInstancedCHROMIUM(kPathCount, GL_UNSIGNED_INT, kPaths, path - 1,
+                                       GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM,
+                                       GL_AFFINE_3D_CHROMIUM, kTransforms);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDeletePathsCHROMIUM(path, 1);
+
+    // Verify the image.
+    verifyTestPatternFill(0.0f, 0.0f);
+    verifyTestPatternBg(0.0f, 0.0f);
+    verifyTestPatternStroke(0.0f, 0.0f);
+
+    verifyTestPatternFill(kShapeSize, 0.0f);
+    verifyTestPatternBg(kShapeSize, 0.0f);
+    verifyTestPatternStroke(kShapeSize, 0.0f);
+
+    verifyTestPatternFill(kShapeSize * 2, 0.0f);
+    verifyTestPatternBg(kShapeSize * 2, 0.0f);
+    verifyTestPatternStroke(kShapeSize * 2, 0.0f);
+
+    verifyTestPatternFill(0.0f, kShapeSize);
+    verifyTestPatternBg(0.0f, kShapeSize);
+    verifyTestPatternStroke(0.0f, kShapeSize);
+
+    verifyTestPatternFill(kShapeSize, kShapeSize);
+    verifyTestPatternBg(kShapeSize, kShapeSize);
+    verifyTestPatternStroke(kShapeSize, kShapeSize);
+}
+
+// Test that instanced fill/stroke then cover functions work.
+TEST_P(CHROMIUMPathRenderingDrawTest, TestPathRenderingThenFunctionsInstanced)
+{
+    if (!isApplicable())
+        return;
+
+    static const float kBlue[]  = {0.0f, 0.0f, 1.0f, 1.0f};
+    static const float kGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
+
+    setupStateForTestPattern();
+
+    GLuint path = glGenPathsCHROMIUM(1);
+    setupPathStateForTestPattern(path);
+
+    const GLuint kPaths[]              = {1, 1, 1, 1, 1};
+    const GLsizei kPathCount           = 5;
+    const GLfloat kShapeSize           = 80.0f;
+    static const GLfloat kTransforms[] = {
+        0.0f, 0.0f, kShapeSize, 0.0f,       kShapeSize * 2,
+        0.0f, 0.0f, kShapeSize, kShapeSize, kShapeSize,
+    };
+
+    glPathStencilFuncCHROMIUM(GL_ALWAYS, 0, 0xFF);
+    glStencilFunc(GL_EQUAL, 0x80, 0x80);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+    glUniform4fv(mColorLoc, 1, kGreen);
+    glStencilThenCoverStrokePathInstancedCHROMIUM(
+        kPathCount, GL_UNSIGNED_INT, kPaths, path - 1, 0x80, 0x80,
+        GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM, GL_TRANSLATE_2D_CHROMIUM, kTransforms);
+
+    ASSERT_GL_NO_ERROR();
+
+    glPathStencilFuncCHROMIUM(GL_ALWAYS, 0, 0x7F);
+    glStencilFunc(GL_LESS, 0, 0x7F);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+    glUniform4fv(mColorLoc, 1, kBlue);
+    glStencilThenCoverFillPathInstancedCHROMIUM(
+        kPathCount, GL_UNSIGNED_INT, kPaths, path - 1, GL_COUNT_UP_CHROMIUM, 0x7F,
+        GL_BOUNDING_BOX_OF_BOUNDING_BOXES_CHROMIUM, GL_TRANSLATE_2D_CHROMIUM, kTransforms);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDeletePathsCHROMIUM(path, 1);
+
+    // Verify the image.
+    verifyTestPatternFill(0.0f, 0.0f);
+    verifyTestPatternBg(0.0f, 0.0f);
+    verifyTestPatternStroke(0.0f, 0.0f);
+
+    verifyTestPatternFill(kShapeSize, 0.0f);
+    verifyTestPatternBg(kShapeSize, 0.0f);
+    verifyTestPatternStroke(kShapeSize, 0.0f);
+
+    verifyTestPatternFill(kShapeSize * 2, 0.0f);
+    verifyTestPatternBg(kShapeSize * 2, 0.0f);
+    verifyTestPatternStroke(kShapeSize * 2, 0.0f);
+
+    verifyTestPatternFill(0.0f, kShapeSize);
+    verifyTestPatternBg(0.0f, kShapeSize);
+    verifyTestPatternStroke(0.0f, kShapeSize);
+
+    verifyTestPatternFill(kShapeSize, kShapeSize);
+    verifyTestPatternBg(kShapeSize, kShapeSize);
+    verifyTestPatternStroke(kShapeSize, kShapeSize);
 }
 
 }  // namespace

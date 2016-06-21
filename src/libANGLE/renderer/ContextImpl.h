@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_CONTEXTIMPL_H_
 #define LIBANGLE_RENDERER_CONTEXTIMPL_H_
 
+#include <vector>
+
 #include "common/angleutils.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/renderer/GLImplFactory.h"
@@ -73,6 +75,37 @@ class ContextImpl : public GLImplFactory
                                             GLint reference,
                                             GLuint mask,
                                             GLenum coverMode);
+
+    virtual void coverFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                        GLenum coverMode,
+                                        GLenum transformType,
+                                        const GLfloat *transformValues);
+    virtual void coverStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                          GLenum coverMode,
+                                          GLenum transformType,
+                                          const GLfloat *transformValues);
+    virtual void stencilFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                          GLenum fillMode,
+                                          GLuint mask,
+                                          GLenum transformType,
+                                          const GLfloat *transformValues);
+    virtual void stencilStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                            GLint reference,
+                                            GLuint mask,
+                                            GLenum transformType,
+                                            const GLfloat *transformValues);
+    virtual void stencilThenCoverFillPathInstanced(const std::vector<gl::Path *> &paths,
+                                                   GLenum coverMode,
+                                                   GLenum fillMode,
+                                                   GLuint mask,
+                                                   GLenum transformType,
+                                                   const GLfloat *transformValues);
+    virtual void stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *> &paths,
+                                                     GLenum coverMode,
+                                                     GLint reference,
+                                                     GLuint mask,
+                                                     GLenum transformType,
+                                                     const GLfloat *transformValues);
 
     // TODO(jmadill): Investigate proper impl methods for this.
     virtual void notifyDeviceLost() = 0;

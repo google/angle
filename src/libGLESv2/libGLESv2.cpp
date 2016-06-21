@@ -1670,3 +1670,82 @@ void GL_APIENTRY glStencilThenCoverStrokePathCHROMIUM(GLuint path,
 {
     gl::StencilThenCoverStrokePathCHROMIUM(path, reference, mask, coverMode);
 }
+
+void GL_APIENTRY glCoverFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                                  GLenum pathNameType,
+                                                  const void *paths,
+                                                  GLuint pathBase,
+                                                  GLenum coverMode,
+                                                  GLenum transformType,
+                                                  const GLfloat *transformValues)
+{
+    gl::CoverFillPathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase, coverMode,
+                                       transformType, transformValues);
+}
+
+void GL_APIENTRY glCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                                    GLenum pathNameType,
+                                                    const void *paths,
+                                                    GLuint pathBase,
+                                                    GLenum coverMode,
+                                                    GLenum transformType,
+                                                    const GLfloat *transformValues)
+{
+    gl::CoverStrokePathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase, coverMode,
+                                         transformType, transformValues);
+}
+
+void GL_APIENTRY glStencilFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                                    GLenum pathNameType,
+                                                    const void *paths,
+                                                    GLuint pathBase,
+                                                    GLenum fillMode,
+                                                    GLuint mask,
+                                                    GLenum transformType,
+                                                    const GLfloat *transformValues)
+{
+    gl::StencilFillPathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase, fillMode, mask,
+                                         transformType, transformValues);
+}
+
+void GL_APIENTRY glStencilStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                                      GLenum pathNameType,
+                                                      const void *paths,
+                                                      GLuint pathBase,
+                                                      GLint reference,
+                                                      GLuint mask,
+                                                      GLenum transformType,
+                                                      const GLfloat *transformValues)
+{
+    gl::StencilStrokePathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase, reference, mask,
+                                           transformType, transformValues);
+}
+
+void GL_APIENTRY glStencilThenCoverFillPathInstancedCHROMIUM(GLsizei numPaths,
+                                                             GLenum pathNameType,
+                                                             const void *paths,
+                                                             GLuint pathBase,
+                                                             GLenum fillMode,
+                                                             GLuint mask,
+                                                             GLenum coverMode,
+                                                             GLenum transformType,
+                                                             const GLfloat *transformValues)
+{
+    gl::StencilThenCoverFillPathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase, fillMode,
+                                                  mask, coverMode, transformType, transformValues);
+}
+
+void GL_APIENTRY glStencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
+                                                               GLenum pathNameType,
+                                                               const void *paths,
+                                                               GLuint pathBase,
+                                                               GLint reference,
+                                                               GLuint mask,
+                                                               GLenum coverMode,
+                                                               GLenum transformType,
+                                                               const GLfloat *transformValues)
+{
+    gl::StencilThenCoverStrokePathInstancedCHROMIUM(numPaths, pathNameType, paths, pathBase,
+                                                    reference, mask, coverMode, transformType,
+                                                    transformValues);
+}
