@@ -309,22 +309,31 @@ bool FramebufferD3D::checkStatus() const
         return false;
     }
 
-    // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
-    const auto &colorAttachments = mState.getColorAttachments();
-    for (size_t colorAttachment = 0; colorAttachment < colorAttachments.size(); colorAttachment++)
+    // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness by checking the
+    // enabled draw buffers
+    for (size_t firstDrawBufferIdx = 0; firstDrawBufferIdx < mState.getDrawBufferCount();
+         firstDrawBufferIdx++)
     {
-        const gl::FramebufferAttachment &attachment = colorAttachments[colorAttachment];
-        if (attachment.isAttached())
+        const gl::FramebufferAttachment *firstAttachment = mState.getDrawBuffer(firstDrawBufferIdx);
+        if (firstAttachment == nullptr)
         {
-            for (size_t prevColorAttachment = 0; prevColorAttachment < colorAttachment; prevColorAttachment++)
+            continue;
+        }
+
+        for (size_t secondDrawBufferIdx = firstDrawBufferIdx + 1;
+             secondDrawBufferIdx < mState.getDrawBufferCount(); secondDrawBufferIdx++)
+        {
+            const gl::FramebufferAttachment *secondAttachment =
+                mState.getDrawBuffer(secondDrawBufferIdx);
+            if (secondAttachment == nullptr)
             {
-                const gl::FramebufferAttachment &prevAttachment = colorAttachments[prevColorAttachment];
-                if (prevAttachment.isAttached() &&
-                    (attachment.id() == prevAttachment.id() &&
-                     attachment.type() == prevAttachment.type()))
-                {
-                    return false;
-                }
+                continue;
+            }
+
+            if (firstAttachment->id() == secondAttachment->id() &&
+                firstAttachment->type() == secondAttachment->type())
+            {
+                return false;
             }
         }
     }
