@@ -369,12 +369,25 @@ static_library("libANGLE") {
   }
 }
 
+config("shared_library_public_config") {
+  if (is_mac && !is_component_build) {
+    # Executable targets that depend on the shared libraries below need to have
+    # the rpath setup in non-component build configurations.
+    ldflags = [ "-rpath", "@executable_path/" ]
+  }
+}
+
 shared_library("libGLESv2") {
   sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
 
   if (is_win) {
     ldflags =
         [ "/DEF:" + rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
+  }
+
+  if (is_mac && !is_component_build) {
+    ldflags = [ "-install_name", "@rpath/${target_name}.dylib" ]
+    public_configs = [ ":shared_library_public_config" ]
   }
 
   configs -= angle_undefine_configs
@@ -399,6 +412,11 @@ shared_library("libEGL") {
 
   if (is_win) {
     ldflags = [ "/DEF:" + rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+  }
+
+  if (is_mac && !is_component_build) {
+    ldflags = [ "-install_name", "@rpath/${target_name}.dylib" ]
+    public_configs = [ ":shared_library_public_config" ]
   }
 
   configs -= angle_undefine_configs
