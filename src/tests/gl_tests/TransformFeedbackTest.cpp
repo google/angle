@@ -707,6 +707,55 @@ TEST_P(TransformFeedbackTest, PackingBug)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that transform feedback varyings that can be optimized out yet do not cause program
+// compilation to fail
+TEST_P(TransformFeedbackTest, OptimizedVaryings)
+{
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec4 a_vertex;\n"
+        "in vec3 a_normal; \n"
+        "\n"
+        "uniform Transform\n"
+        "{\n"
+        "    mat4 u_modelViewMatrix;\n"
+        "    mat4 u_projectionMatrix;\n"
+        "    mat3 u_normalMatrix;\n"
+        "};\n"
+        "\n"
+        "out vec3 normal;\n"
+        "out vec4 ecPosition;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    normal = normalize(u_normalMatrix * a_normal);\n"
+        "    ecPosition = u_modelViewMatrix * a_vertex;\n"
+        "    gl_Position = u_projectionMatrix * ecPosition;\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "\n"
+        "in vec3 normal;\n"
+        "in vec4 ecPosition;\n"
+        "\n"
+        "out vec4 fragColor;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = vec4(normal/2.0+vec3(0.5), 1);\n"
+        "}\n";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("normal");
+    tfVaryings.push_back("ecPosition");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+}
+
 class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 {
   protected:
