@@ -112,6 +112,7 @@
 1025 WIN : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.reverse_subtract_constant_alpha_one_minus_constant_color = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_constant_color = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
+1418 WIN : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_pos_x_pos_y_pos_z_and_neg_x_pos_y_pos_z_and_neg_x_neg_y_neg_z = FAIL
 
 // Failures on the dEQP Windows bots that do not reproduce locally
 1108 WIN : dEQP-GLES2.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
