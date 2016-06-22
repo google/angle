@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae9cfe2a_c72a5172",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2540,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-22T13:30:22Z",
+      "side": 1,
+      "message": "nit: TODO(ynovikov): to note who added the TODO",
+      "range": {
+        "startLine": 2540,
+        "startChar": 11,
+        "endLine": 2540,
+        "endChar": 15
+      },
+      "revId": "1f37a0190e22b0ff6a22a98c6305c89d7acad885",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
