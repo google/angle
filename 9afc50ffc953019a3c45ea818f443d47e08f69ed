@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0ec6ea30_62cc9e40",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-22T14:40:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e67020f_1f3724d4",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 5
+      },
+      "revId": "9afc50ffc953019a3c45ea818f443d47e08f69ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4edc62fd_f9892b8b",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "eec0b617_5637ea8f",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-22T14:40:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4edc62fd_f9892b8b",
+      "range": {
+        "startLine": 312,
+        "startChar": 44,
+        "endLine": 312,
+        "endChar": 61
+      },
+      "revId": "9afc50ffc953019a3c45ea818f443d47e08f69ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e6aced9_8079976b",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-06-22T13:55:07Z",
       "side": 1,
       "message": "we added FBOAttachment::operator\u003d\u003d here not long ago. It\u0027s interesting, but this operator may allow us to render to non-overlapping RTVs (eg same texture, but different mips or array slices, or cube map faces)\n\nCan you check this out potentially? I could see it being useful to render to different 3D texture slices, or even cube map faces, with MRT.",
+      "range": {
+        "startLine": 332,
+        "startChar": 0,
+        "endLine": 336,
+        "endChar": 13
+      },
+      "revId": "9afc50ffc953019a3c45ea818f443d47e08f69ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e564e46_fa24e558",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-22T14:40:29Z",
+      "side": 1,
+      "message": "I tried writing a test but our TextureStorage code is currently incapable of handling this case so I\u0027m going to leave this check as is until we address the other issues.",
+      "parentUuid": "2e6aced9_8079976b",
       "range": {
         "startLine": 332,
         "startChar": 0,
