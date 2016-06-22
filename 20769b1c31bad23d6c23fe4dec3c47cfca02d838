@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e67020f_7b043b78",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1148164
+      },
+      "writtenOn": "2016-06-22T02:21:34Z",
+      "side": 1,
+      "message": "Does this one also need forcing the allocation of the mangled name?",
+      "revId": "20769b1c31bad23d6c23fe4dec3c47cfca02d838",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
