@@ -2532,11 +2532,18 @@ TEST_P(Texture2DTestES3, TextureLuminance16ImplicitAlpha1)
 {
     if (extensionEnabled("GL_OES_texture_half_float"))
     {
-        if (IsNVIDIA() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+        if (IsNVIDIA() && IsOpenGLES())
         {
             std::cout << "Test skipped on NVIDIA" << std::endl;
             return;
         }
+        // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1420 is fixed
+        if (IsAndroid() && IsAdreno() && IsOpenGLES())
+        {
+            std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+            return;
+        }
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTexture2D);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_HALF_FLOAT_OES,
