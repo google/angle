@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e564e46_005decfb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-06-22T17:34:39Z",
+      "side": 1,
+      "message": "Nit: same here",
+      "range": {
+        "startLine": 270,
+        "startChar": 41,
+        "endLine": 270,
+        "endChar": 57
+      },
+      "revId": "3c63eb3f1cc6cbb0a63fc536a6c1c6b7757a6777",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e6aced9_76f5295e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-06-22T17:34:39Z",
+      "side": 1,
+      "message": "Nit: \"const Size \u0026size\" to match style guidelines",
+      "range": {
+        "startLine": 102,
+        "startChar": 30,
+        "endLine": 102,
+        "endChar": 31
+      },
+      "revId": "3c63eb3f1cc6cbb0a63fc536a6c1c6b7757a6777",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
