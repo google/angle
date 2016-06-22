@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ed2dae5_f56132f0",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-06-22T00:56:33Z",
+      "side": 1,
+      "message": "Maybe also mGBM \u003d nullptr, to be on the safe side?",
+      "revId": "e15a4b0ec8145ecd920bb0883be06e6298425a03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
