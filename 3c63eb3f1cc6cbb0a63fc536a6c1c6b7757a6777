@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "eec35658_552a2cdf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-22T20:03:10Z",
+      "side": 1,
+      "message": "ultra-nit: add an empty line between the title and the description",
+      "revId": "3c63eb3f1cc6cbb0a63fc536a6c1c6b7757a6777",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ec6ea30_3d36bb91",
         "filename": "AUTHORS",
         "patchSetId": 2
