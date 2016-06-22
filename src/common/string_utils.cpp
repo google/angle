@@ -9,6 +9,8 @@
 
 #include "string_utils.h"
 
+#include <stdlib.h>
+
 #include <fstream>
 #include <sstream>
 
