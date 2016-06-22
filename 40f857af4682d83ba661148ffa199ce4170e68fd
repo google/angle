@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e67020f_622fa7ee",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-22T15:51:24Z",
+      "side": 1,
+      "message": "this works because packedVarying.varying points to the ShaderVariable that the translator returns from the fragment shader. staticuse is a bit flaky though, and someone could potentially break this. I think it\u0027s OK if you comment here what\u0027s going on, but we might instead want to change MergeVaryings in ProgramD3D.cpp to set \"vertexOnly\" if the fragment shader\u0027s staticuse is false but the varying exists (maybe renaming it to notUsedInFS or something more specific)",
+      "range": {
+        "startLine": 723,
+        "startChar": 41,
+        "endLine": 723,
+        "endChar": 58
+      },
+      "revId": "40f857af4682d83ba661148ffa199ce4170e68fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
