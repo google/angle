@@ -88,12 +88,12 @@ bool CoreWindowNativeWindow::initialize(EGLNativeWindowType window, IPropertySet
         }
         else
         {
-            SIZE coreWindowSize;
+            Size coreWindowSize;
             result = GetCoreWindowSizeInPixels(mCoreWindow, &coreWindowSize);
 
             if (SUCCEEDED(result))
             {
-                mClientRect = { 0, 0, static_cast<long>(coreWindowSize.cx * mSwapChainScale), static_cast<long>(coreWindowSize.cy * mSwapChainScale) };
+                mClientRect = clientRect(coreWindowSize);
             }
         }
     }
@@ -194,14 +194,16 @@ HRESULT CoreWindowNativeWindow::createSwapChain(ID3D11Device *device,
     return result;
 }
 
-inline HRESULT CoreWindowNativeWindow::scaleSwapChain(const SIZE &windowSize, const RECT &clientRect)
+inline HRESULT CoreWindowNativeWindow::scaleSwapChain(const Size &windowSize,
+                                                      const RECT &clientRect)
 {
     // We don't need to do any additional work to scale CoreWindow swapchains.
     // Using DXGI_SCALING_STRETCH to create the swapchain above does all the necessary work.
     return S_OK;
 }
 
-HRESULT GetCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWindow>& coreWindow, SIZE *windowSize)
+HRESULT GetCoreWindowSizeInPixels(const ComPtr<ABI::Windows::UI::Core::ICoreWindow> &coreWindow,
+                                  Size *windowSize)
 {
     ABI::Windows::Foundation::Rect bounds;
     HRESULT result = coreWindow->get_Bounds(&bounds);
@@ -230,9 +232,9 @@ static float GetLogicalDpi()
     return 96.0f;
 }
 
-long ConvertDipsToPixels(float dips)
+float ConvertDipsToPixels(float dips)
 {
     static const float dipsPerInch = 96.0f;
-    return lround((dips * GetLogicalDpi() / dipsPerInch));
+    return dips * GetLogicalDpi() / dipsPerInch;
 }
 }
