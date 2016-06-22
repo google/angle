@@ -22,6 +22,30 @@
       "revId": "40f857af4682d83ba661148ffa199ce4170e68fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8ed2dae5_8cdbfb24",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-22T16:19:14Z",
+      "side": 1,
+      "message": "Done, added a comment for now.  I don\u0027t want to dive in too deep on this.",
+      "parentUuid": "4e67020f_622fa7ee",
+      "range": {
+        "startLine": 723,
+        "startChar": 41,
+        "endLine": 723,
+        "endChar": 58
+      },
+      "revId": "40f857af4682d83ba661148ffa199ce4170e68fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
