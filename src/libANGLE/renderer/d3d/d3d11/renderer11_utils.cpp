@@ -1658,11 +1658,13 @@ void TextureHelper11::reset()
 }
 
 gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
-                                                        DXGI_FORMAT dxgiFormat,
                                                         d3d11::ANGLEFormat angleFormat,
                                                         const gl::Extents &size,
+                                                        StagingAccess readAndWriteAccess,
                                                         ID3D11Device *device)
 {
+    const auto &formatSet = d3d11::GetANGLEFormatSet(angleFormat);
+
     if (textureType == GL_TEXTURE_2D)
     {
         D3D11_TEXTURE2D_DESC stagingDesc;
@@ -1670,13 +1672,18 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
         stagingDesc.Height             = size.height;
         stagingDesc.MipLevels          = 1;
         stagingDesc.ArraySize          = 1;
-        stagingDesc.Format             = dxgiFormat;
+        stagingDesc.Format             = formatSet.texFormat;
         stagingDesc.SampleDesc.Count   = 1;
         stagingDesc.SampleDesc.Quality = 0;
         stagingDesc.Usage              = D3D11_USAGE_STAGING;
         stagingDesc.BindFlags          = 0;
         stagingDesc.CPUAccessFlags     = D3D11_CPU_ACCESS_READ;
         stagingDesc.MiscFlags          = 0;
+
+        if (readAndWriteAccess == StagingAccess::READ_WRITE)
+        {
+            stagingDesc.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
+        }
 
         ID3D11Texture2D *stagingTex = nullptr;
         HRESULT result = device->CreateTexture2D(&stagingDesc, nullptr, &stagingTex);
@@ -1695,7 +1702,7 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
     stagingDesc.Height         = size.height;
     stagingDesc.Depth          = 1;
     stagingDesc.MipLevels      = 1;
-    stagingDesc.Format         = dxgiFormat;
+    stagingDesc.Format         = formatSet.texFormat;
     stagingDesc.Usage          = D3D11_USAGE_STAGING;
     stagingDesc.BindFlags      = 0;
     stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;

@@ -396,10 +396,16 @@ class TextureHelper11 : angle::NonCopyable
     ID3D11Texture3D *mTexture3D;
 };
 
+enum class StagingAccess
+{
+    READ,
+    READ_WRITE,
+};
+
 gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
-                                                        DXGI_FORMAT dxgiFormat,
                                                         d3d11::ANGLEFormat angleFormat,
                                                         const gl::Extents &size,
+                                                        StagingAccess readAndWriteAccess,
                                                         ID3D11Device *device);
 
 bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);

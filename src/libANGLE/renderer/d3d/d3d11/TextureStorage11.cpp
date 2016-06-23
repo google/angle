@@ -408,22 +408,16 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
                     copyArea.depth == texSize.depth;
 
     ID3D11Resource *dstTexture = nullptr;
-    gl::Error error(GL_NO_ERROR);
 
     // If the zero-LOD workaround is active and we want to update a level greater than zero, then we
     // should update the mipmapped texture, even if mapmaps are currently disabled.
     if (index.mipIndex > 0 && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
-        error = getMippedResource(&dstTexture);
+        ANGLE_TRY(getMippedResource(&dstTexture));
     }
     else
     {
-        error = getResource(&dstTexture);
-    }
-
-    if (error.isError())
-    {
-        return error;
+        ANGLE_TRY(getResource(&dstTexture));
     }
 
     unsigned int dstSubresource = getSubresourceIndex(index);
@@ -436,29 +430,27 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
         Blit11 *blitter = mRenderer->getBlitter();
-
-        return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
-                                         dstTexture, dstSubresource, copyArea, texSize, nullptr);
+        TextureHelper11 source = TextureHelper11::MakeAndReference(srcTexture, getANGLEFormat());
+        TextureHelper11 dest   = TextureHelper11::MakeAndReference(dstTexture, getANGLEFormat());
+        return blitter->copyDepthStencil(source, sourceSubresource, copyArea, texSize, dest,
+                                         dstSubresource, copyArea, texSize, nullptr);
     }
-    else
-    {
-        D3D11_BOX srcBox;
-        srcBox.left = copyArea.x;
-        srcBox.top = copyArea.y;
-        srcBox.right =
-            copyArea.x + roundUp(static_cast<UINT>(copyArea.width), dxgiFormatSizeInfo.blockWidth);
-        srcBox.bottom = copyArea.y +
-                        roundUp(static_cast<UINT>(copyArea.height), dxgiFormatSizeInfo.blockHeight);
-        srcBox.front = copyArea.z;
-        srcBox.back  = copyArea.z + copyArea.depth;
 
-        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    D3D11_BOX srcBox;
+    srcBox.left = copyArea.x;
+    srcBox.top  = copyArea.y;
+    srcBox.right =
+        copyArea.x + roundUp(static_cast<UINT>(copyArea.width), dxgiFormatSizeInfo.blockWidth);
+    srcBox.bottom =
+        copyArea.y + roundUp(static_cast<UINT>(copyArea.height), dxgiFormatSizeInfo.blockHeight);
+    srcBox.front = copyArea.z;
+    srcBox.back  = copyArea.z + copyArea.depth;
 
-        context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y,
-                                       copyArea.z, srcTexture, sourceSubresource,
-                                       fullCopy ? nullptr : &srcBox);
-        return gl::Error(GL_NO_ERROR);
-    }
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y, copyArea.z,
+                                   srcTexture, sourceSubresource, fullCopy ? nullptr : &srcBox);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,

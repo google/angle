@@ -382,7 +382,9 @@ class Renderer11 : public RendererD3D
     gl::Error generateSwizzles(const gl::ContextState &data, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::ContextState &data);
 
-    ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
+    gl::ErrorOrResult<TextureHelper11> resolveMultisampledTexture(RenderTarget11 *renderTarget,
+                                                                  bool depth,
+                                                                  bool stencil);
 
     void populateRenderer11DeviceCaps();
 
