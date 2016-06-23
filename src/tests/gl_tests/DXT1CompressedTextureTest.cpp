@@ -10,10 +10,10 @@
 
 using namespace angle;
 
-class CompressedTextureTest : public ANGLETest
+class DXT1CompressedTextureTest : public ANGLETest
 {
   protected:
-    CompressedTextureTest()
+    DXT1CompressedTextureTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -75,7 +75,7 @@ class CompressedTextureTest : public ANGLETest
     GLint mTextureUniformLocation;
 };
 
-TEST_P(CompressedTextureTest, CompressedTexImage)
+TEST_P(DXT1CompressedTextureTest, CompressedTexImage)
 {
     if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -116,7 +116,7 @@ TEST_P(CompressedTextureTest, CompressedTexImage)
     EXPECT_GL_NO_ERROR();
 }
 
-TEST_P(CompressedTextureTest, CompressedTexStorage)
+TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
 {
     if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -173,12 +173,19 @@ TEST_P(CompressedTextureTest, CompressedTexStorage)
     EXPECT_GL_NO_ERROR();
 }
 
-class CompressedTextureTestES3 : public CompressedTextureTest { };
+class DXT1CompressedTextureTestES3 : public DXT1CompressedTextureTest { };
 
-class CompressedTextureTestD3D11 : public CompressedTextureTest { };
+class DXT1CompressedTextureTestD3D11 : public DXT1CompressedTextureTest { };
 
-TEST_P(CompressedTextureTestES3, PBOCompressedTexImage)
+TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
 {
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    {
+        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available."
+                  << std::endl;
+        return;
+    }
+
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -230,7 +237,7 @@ TEST_P(CompressedTextureTestES3, PBOCompressedTexImage)
 }
 
 
-TEST_P(CompressedTextureTestD3D11, PBOCompressedTexStorage)
+TEST_P(DXT1CompressedTextureTestD3D11, PBOCompressedTexStorage)
 {
     if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
@@ -302,7 +309,7 @@ TEST_P(CompressedTextureTestD3D11, PBOCompressedTexStorage)
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(CompressedTextureTest,
+ANGLE_INSTANTIATE_TEST(DXT1CompressedTextureTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
                        ES2_D3D11_FL9_3(),
@@ -312,6 +319,6 @@ ANGLE_INSTANTIATE_TEST(CompressedTextureTest,
                        ES3_OPENGLES());
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
-ANGLE_INSTANTIATE_TEST(CompressedTextureTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(DXT1CompressedTextureTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
-ANGLE_INSTANTIATE_TEST(CompressedTextureTestD3D11, ES2_D3D11(), ES3_D3D11(), ES2_D3D11_FL9_3());
+ANGLE_INSTANTIATE_TEST(DXT1CompressedTextureTestD3D11, ES2_D3D11(), ES3_D3D11(), ES2_D3D11_FL9_3());
