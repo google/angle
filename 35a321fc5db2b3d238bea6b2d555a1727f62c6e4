@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2391090e_1f7f23c5",
+        "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-23T14:10:54Z",
+      "side": 1,
+      "message": "It seems a bit odd - if zero compressed formats, use a compressed format? I\u0027m not sure exactly what\u0027s being tested here.",
+      "parentUuid": "438efdf0_2031aa4d",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 9
+      },
+      "revId": "35a321fc5db2b3d238bea6b2d555a1727f62c6e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "235ca935_67cb722c",
         "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
         "patchSetId": 1
