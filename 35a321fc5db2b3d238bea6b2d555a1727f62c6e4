@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "438efdf0_2031aa4d",
+        "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-23T14:00:14Z",
+      "side": 1,
+      "message": "I don\u0027t think this is right, It relies on GL_COMPRESSED_RGBA_S3TC_DXT1_EXT being the first compressed format returned.",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 9
+      },
+      "revId": "35a321fc5db2b3d238bea6b2d555a1727f62c6e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "235ca935_67cb722c",
+        "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-23T14:00:14Z",
+      "side": 1,
+      "message": "Why is this check not sufficient?",
+      "range": {
+        "startLine": 95,
+        "startChar": 8,
+        "endLine": 95,
+        "endChar": 60
+      },
+      "revId": "35a321fc5db2b3d238bea6b2d555a1727f62c6e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "235ca935_87466692",
+        "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-23T14:00:14Z",
+      "side": 1,
+      "message": "This data is of the GL_COMPRESSED_RGBA_S3TC_DXT1_EXT format, I don\u0027t think it makes sense to use a member for the format even though it\u0027s checked above.",
+      "range": {
+        "startLine": 109,
+        "startChar": 45,
+        "endLine": 109,
+        "endChar": 62
+      },
+      "revId": "35a321fc5db2b3d238bea6b2d555a1727f62c6e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
