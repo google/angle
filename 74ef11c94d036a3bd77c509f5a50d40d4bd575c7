@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3c2ed56_ba58c914",
+        "filename": "src/tests/gl_tests/CompressedTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-23T21:40:13Z",
+      "side": 1,
+      "message": "make make a note as a comment of the test that this is for DXT + rename the test",
+      "range": {
+        "startLine": 180,
+        "startChar": 33,
+        "endLine": 180,
+        "endChar": 54
+      },
+      "revId": "74ef11c94d036a3bd77c509f5a50d40d4bd575c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
