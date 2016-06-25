@@ -1790,6 +1790,13 @@ TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 // transformations are applied to the declaration also in the case of ESSL output.
 TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
 {
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1428 is fixed
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+        return;
+    }
+
     const std::string vertexShaderSource =
         "#version 300 es\n"
         "precision highp float;\n"
