@@ -2756,6 +2756,12 @@ TEST_P(SamplerInStructTest, SamplerInStruct)
 // Use a sampler in a uniform struct that's passed as a function parameter.
 TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParameter)
 {
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+        return;
+    }
     runSamplerInStructTest();
 }
 
@@ -2768,6 +2774,12 @@ TEST_P(SamplerInStructArrayAsFunctionParameterTest, SamplerInStructArrayAsFuncti
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;
     }
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+        return;
+    }
     runSamplerInStructTest();
 }
 
@@ -2778,6 +2790,12 @@ TEST_P(SamplerInNestedStructAsFunctionParameterTest, SamplerInNestedStructAsFunc
     if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
     {
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1427 is fixed
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
         return;
     }
     runSamplerInStructTest();
