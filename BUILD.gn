@@ -8,8 +8,10 @@ import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
 import("//third_party/angle/build/angle_common.gni")
 
-pkg_config("libdrm") {
-  packages = [ "libdrm" ]
+if (use_ozone) {
+  pkg_config("libdrm") {
+    packages = [ "libdrm" ]
+  }
 }
 
 angle_git_is_present = exec_script("src/commit_id.py",
