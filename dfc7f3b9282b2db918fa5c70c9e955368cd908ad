@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e321b186_852322ae",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-27T10:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69b12057_74a9a6a6",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 252,
+        "endChar": 5
+      },
+      "revId": "dfc7f3b9282b2db918fa5c70c9e955368cd908ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6968409f_9972bbfd",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -60,6 +84,30 @@
       "writtenOn": "2016-06-21T17:53:52Z",
       "side": 1,
       "message": "for code cleanliness, don\u0027t use fall-through rules in case in ANGLE. return false if the extension isn\u0027t present, otherwise break.",
+      "range": {
+        "startLine": 130,
+        "startChar": 13,
+        "endLine": 130,
+        "endChar": 38
+      },
+      "revId": "dfc7f3b9282b2db918fa5c70c9e955368cd908ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e321b186_c51d1a70",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-27T10:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6968409f_9972bbfd",
       "range": {
         "startLine": 130,
         "startChar": 13,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "e321b186_0518127c",
+        "filename": "src/tests/gl_tests/BlendFuncExtendedTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-27T10:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6968409f_59ebc387",
+      "range": {
+        "startLine": 133,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 16
+      },
+      "revId": "dfc7f3b9282b2db918fa5c70c9e955368cd908ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6968409f_194eabad",
         "filename": "src/tests/gl_tests/BlendFuncExtendedTest.cpp",
         "patchSetId": 6
@@ -106,6 +178,30 @@
       "writtenOn": "2016-06-21T17:53:52Z",
       "side": 1,
       "message": "comment before every test",
+      "range": {
+        "startLine": 206,
+        "startChar": 0,
+        "endLine": 206,
+        "endChar": 6
+      },
+      "revId": "dfc7f3b9282b2db918fa5c70c9e955368cd908ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e321b186_e56696d2",
+        "filename": "src/tests/gl_tests/BlendFuncExtendedTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-06-27T10:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6968409f_194eabad",
       "range": {
         "startLine": 206,
         "startChar": 0,
