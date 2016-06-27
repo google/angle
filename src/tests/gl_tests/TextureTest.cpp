@@ -3353,6 +3353,12 @@ TEST_P(Texture2DTestES3, UnpackSkipImages2D)
         std::cout << "Test skipped on Intel OpenGL." << std::endl;
         return;
     }
+    // TODO(ynovikov): re-enable once root cause of http://anglebug.com/1429 is fixed
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+        return;
+    }
 
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
