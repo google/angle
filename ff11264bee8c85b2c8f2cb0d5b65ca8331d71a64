@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "806d4bef_1a517d22",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-28T13:58:27Z",
+      "side": 1,
+      "message": "Doesn\u0027t it fix more than just the cubemap tests?",
+      "revId": "ff11264bee8c85b2c8f2cb0d5b65ca8331d71a64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
