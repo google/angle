@@ -16,6 +16,24 @@
       "revId": "ff11264bee8c85b2c8f2cb0d5b65ca8331d71a64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3c531ce_efcc716d",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-28T14:00:00Z",
+      "side": 1,
+      "message": "No, these are another issue, I\u0027ll try to address that next.",
+      "parentUuid": "806d4bef_1a517d22",
+      "revId": "ff11264bee8c85b2c8f2cb0d5b65ca8331d71a64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
