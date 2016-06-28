@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "806d4bef_fa7e0993",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1034,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-06-28T13:45:25Z",
+      "side": 1,
+      "message": "The condition here is a bit messy, how about\n     // Both any sampled passed queries can\u0027t be active at the same time so we decay conservative to non-conservative\n     type \u003d type \u003d\u003d GL_ANY_SAMPLES_PASSED ? GL_ANY_SAMPLES_PASSED_CONSERVATIVE : type;\n     for (...) {\n          otherType \u003d // same condition\n          if (type \u003d\u003d otherType) {return true;}\n     }",
+      "revId": "8b687d9010842958d7722f50973afdfc0a81237e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
