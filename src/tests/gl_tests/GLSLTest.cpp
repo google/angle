@@ -1821,6 +1821,50 @@ TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
     EXPECT_NE(0u, program);
 }
 
+// Test that index-constant sampler array indexing is supported.
+TEST_P(GLSLTest, IndexConstantSamplerArrayIndexing)
+{
+    if (IsD3D11_FL93()) {
+        std::cout << "Test skipped on D3D11 FL 9.3." << std::endl;
+        return;
+    }
+
+    const std::string vertexShaderSource =
+        "attribute vec4 vPosition;\n"
+        "void main()\n"
+        "{\n"
+        "      gl_Position = vPosition;\n"
+        "}";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "uniform sampler2D uni[2];\n"
+        "\n"
+        "float zero(int x)\n"
+        "{\n"
+        "    return float(x) - float(x);\n"
+        "}\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 c = vec4(0,0,0,0);\n"
+        "    for (int ii = 1; ii < 3; ++ii) {\n"
+        "        if (c.x > 255.0) {\n"
+        "            c.x = 255.0 + zero(ii);\n"
+        "            break;\n"
+        "        }\n"
+        // Index the sampler array with a predictable loop index (index-constant) as opposed to
+        // a true constant. This is valid in OpenGL ES but isn't in many Desktop OpenGL versions,
+        // without an extension.
+        "        c += texture2D(uni[ii - 1], vec2(0.5, 0.5));\n"
+        "    }\n"
+        "    gl_FragColor = c;\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
