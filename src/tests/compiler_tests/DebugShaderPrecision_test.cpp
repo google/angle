@@ -71,6 +71,52 @@ TEST_F(DebugShaderPrecisionTest, RoundingFunctionsDefined)
     ASSERT_TRUE(foundInGLSLCode("mat2 angle_frl(in mat2"));
     ASSERT_TRUE(foundInGLSLCode("mat3 angle_frl(in mat3"));
     ASSERT_TRUE(foundInGLSLCode("mat4 angle_frl(in mat4"));
+
+    // Check that ESSL 3.00 rounding functions for non-square matrices are not defined.
+    ASSERT_TRUE(notFoundInCode("mat2x"));
+    ASSERT_TRUE(notFoundInCode("mat3x"));
+    ASSERT_TRUE(notFoundInCode("mat4x"));
+}
+
+// Test that all ESSL 3.00 shaders get rounding function definitions for non-square matrices.
+TEST_F(DebugShaderPrecisionTest, NonSquareMatrixRoundingFunctionsDefinedES3)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform float u;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInESSLCode("highp mat2x3 angle_frm(in highp mat2x3"));
+    ASSERT_TRUE(foundInESSLCode("highp mat2x4 angle_frm(in highp mat2x4"));
+    ASSERT_TRUE(foundInESSLCode("highp mat3x2 angle_frm(in highp mat3x2"));
+    ASSERT_TRUE(foundInESSLCode("highp mat3x4 angle_frm(in highp mat3x4"));
+    ASSERT_TRUE(foundInESSLCode("highp mat4x2 angle_frm(in highp mat4x2"));
+    ASSERT_TRUE(foundInESSLCode("highp mat4x3 angle_frm(in highp mat4x3"));
+
+    ASSERT_TRUE(foundInESSLCode("highp mat2x3 angle_frl(in highp mat2x3"));
+    ASSERT_TRUE(foundInESSLCode("highp mat2x4 angle_frl(in highp mat2x4"));
+    ASSERT_TRUE(foundInESSLCode("highp mat3x2 angle_frl(in highp mat3x2"));
+    ASSERT_TRUE(foundInESSLCode("highp mat3x4 angle_frl(in highp mat3x4"));
+    ASSERT_TRUE(foundInESSLCode("highp mat4x2 angle_frl(in highp mat4x2"));
+    ASSERT_TRUE(foundInESSLCode("highp mat4x3 angle_frl(in highp mat4x3"));
+
+    ASSERT_TRUE(foundInGLSLCode("mat2x3 angle_frm(in mat2x3"));
+    ASSERT_TRUE(foundInGLSLCode("mat2x4 angle_frm(in mat2x4"));
+    ASSERT_TRUE(foundInGLSLCode("mat3x2 angle_frm(in mat3x2"));
+    ASSERT_TRUE(foundInGLSLCode("mat3x4 angle_frm(in mat3x4"));
+    ASSERT_TRUE(foundInGLSLCode("mat4x2 angle_frm(in mat4x2"));
+    ASSERT_TRUE(foundInGLSLCode("mat4x3 angle_frm(in mat4x3"));
+
+    ASSERT_TRUE(foundInGLSLCode("mat2x3 angle_frl(in mat2x3"));
+    ASSERT_TRUE(foundInGLSLCode("mat2x4 angle_frl(in mat2x4"));
+    ASSERT_TRUE(foundInGLSLCode("mat3x2 angle_frl(in mat3x2"));
+    ASSERT_TRUE(foundInGLSLCode("mat3x4 angle_frl(in mat3x4"));
+    ASSERT_TRUE(foundInGLSLCode("mat4x2 angle_frl(in mat4x2"));
+    ASSERT_TRUE(foundInGLSLCode("mat4x3 angle_frl(in mat4x3"));
 }
 
 TEST_F(DebugShaderPrecisionTest, PragmaDisablesEmulation)
@@ -311,6 +357,32 @@ TEST_F(DebugShaderPrecisionTest, CompoundMatrixTimesMatrixFunction)
         "mat4 angle_compound_mul_frm(inout mat4 x, in mat4 y) {\n"
         "    x = angle_frm(angle_frm(x) * y);"
     ));
+    ASSERT_TRUE(foundInCode("angle_compound_mul_frm(m, angle_frm(u2));"));
+    ASSERT_TRUE(notFoundInCode("*="));
+}
+
+// Test that compound multiplying a non-square matrix with another matrix gets translated into an
+// angle_compound_mul function call.
+TEST_F(DebugShaderPrecisionTest, CompoundNonSquareMatrixTimesMatrixFunction)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform mat2x4 u;\n"
+        "uniform mat2 u2;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   mat2x4 m = u;\n"
+        "   m *= u2;\n"
+        "   my_FragColor = m[0];\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInESSLCode(
+        "highp mat2x4 angle_compound_mul_frm(inout highp mat2x4 x, in highp mat2 y) {\n"
+        "    x = angle_frm(angle_frm(x) * y);"));
+    ASSERT_TRUE(
+        foundInGLSLCode("mat2x4 angle_compound_mul_frm(inout mat2x4 x, in mat2 y) {\n"
+                        "    x = angle_frm(angle_frm(x) * y);"));
     ASSERT_TRUE(foundInCode("angle_compound_mul_frm(m, angle_frm(u2));"));
     ASSERT_TRUE(notFoundInCode("*="));
 }

@@ -49,7 +49,7 @@ void TranslatorGLSL::translate(TIntermNode *root, int compileOptions)
         EmulatePrecision emulatePrecision(getSymbolTable(), getShaderVersion());
         root->traverse(&emulatePrecision);
         emulatePrecision.updateTree();
-        emulatePrecision.writeEmulationHelpers(sink, getOutputType());
+        emulatePrecision.writeEmulationHelpers(sink, getShaderVersion(), getOutputType());
     }
 
     // Write emulated built-in functions if needed.

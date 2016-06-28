@@ -9,8 +9,9 @@
 namespace
 {
 
-static void writeVectorPrecisionEmulationHelpers(
-    TInfoSinkBase& sink, ShShaderOutput outputLanguage, unsigned int size)
+static void writeVectorPrecisionEmulationHelpers(TInfoSinkBase &sink,
+                                                 const ShShaderOutput outputLanguage,
+                                                 const unsigned int size)
 {
     std::stringstream vecTypeStrStr;
     if (outputLanguage == SH_ESSL_OUTPUT)
@@ -37,19 +38,27 @@ static void writeVectorPrecisionEmulationHelpers(
     "}\n";
 }
 
-static void writeMatrixPrecisionEmulationHelper(
-    TInfoSinkBase& sink, ShShaderOutput outputLanguage, unsigned int size, const char *functionName)
+static void writeMatrixPrecisionEmulationHelper(TInfoSinkBase &sink,
+                                                const ShShaderOutput outputLanguage,
+                                                const unsigned int columns,
+                                                const unsigned int rows,
+                                                const char *functionName)
 {
     std::stringstream matTypeStrStr;
     if (outputLanguage == SH_ESSL_OUTPUT)
         matTypeStrStr << "highp ";
-    matTypeStrStr << "mat" << size;
+    matTypeStrStr << "mat" << columns;
+    if (rows != columns)
+    {
+        matTypeStrStr << "x" << rows;
+    }
+
     std::string matType = matTypeStrStr.str();
 
     sink << matType << " " << functionName << "(in " << matType << " m) {\n"
             "    " << matType << " rounded;\n";
 
-    for (unsigned int i = 0; i < size; ++i)
+    for (unsigned int i = 0; i < columns; ++i)
     {
         sink << "    rounded[" << i << "] = " << functionName << "(m[" << i << "]);\n";
     }
@@ -58,7 +67,9 @@ static void writeMatrixPrecisionEmulationHelper(
             "}\n";
 }
 
-static void writeCommonPrecisionEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput outputLanguage)
+static void writeCommonPrecisionEmulationHelpers(TInfoSinkBase &sink,
+                                                 const int shaderVersion,
+                                                 const ShShaderOutput outputLanguage)
 {
     // Write the angle_frm functions that round floating point numbers to
     // half precision, and angle_frl functions that round them to minimum lowp
@@ -134,10 +145,26 @@ static void writeCommonPrecisionEmulationHelpers(TInfoSinkBase& sink, ShShaderOu
     writeVectorPrecisionEmulationHelpers(sink, outputLanguage, 2);
     writeVectorPrecisionEmulationHelpers(sink, outputLanguage, 3);
     writeVectorPrecisionEmulationHelpers(sink, outputLanguage, 4);
-    for (unsigned int size = 2; size <= 4; ++size)
+    if (shaderVersion > 100)
     {
-        writeMatrixPrecisionEmulationHelper(sink, outputLanguage, size, "angle_frm");
-        writeMatrixPrecisionEmulationHelper(sink, outputLanguage, size, "angle_frl");
+        for (unsigned int columns = 2; columns <= 4; ++columns)
+        {
+            for (unsigned int rows = 2; rows <= 4; ++rows)
+            {
+                writeMatrixPrecisionEmulationHelper(sink, outputLanguage, columns, rows,
+                                                    "angle_frm");
+                writeMatrixPrecisionEmulationHelper(sink, outputLanguage, columns, rows,
+                                                    "angle_frl");
+            }
+        }
+    }
+    else
+    {
+        for (unsigned int size = 2; size <= 4; ++size)
+        {
+            writeMatrixPrecisionEmulationHelper(sink, outputLanguage, size, size, "angle_frm");
+            writeMatrixPrecisionEmulationHelper(sink, outputLanguage, size, size, "angle_frl");
+        }
     }
 }
 
@@ -174,8 +201,8 @@ static void writeCompoundAssignmentPrecisionEmulation(
 
 bool canRoundFloat(const TType &type)
 {
-    return type.getBasicType() == EbtFloat && !type.isNonSquareMatrix() && !type.isArray() &&
-        (type.getPrecision() == EbpLow || type.getPrecision() == EbpMedium);
+    return type.getBasicType() == EbtFloat && !type.isArray() &&
+           (type.getPrecision() == EbpLow || type.getPrecision() == EbpMedium);
 }
 
 TIntermAggregate *createInternalFunctionCallNode(TString name, TIntermNode *child)
@@ -443,13 +470,15 @@ bool EmulatePrecision::visitUnary(Visit visit, TIntermUnary *node)
     return true;
 }
 
-void EmulatePrecision::writeEmulationHelpers(TInfoSinkBase& sink, ShShaderOutput outputLanguage)
+void EmulatePrecision::writeEmulationHelpers(TInfoSinkBase &sink,
+                                             const int shaderVersion,
+                                             const ShShaderOutput outputLanguage)
 {
     // Other languages not yet supported
     ASSERT(outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
            IsGLSL130OrNewer(outputLanguage) ||
            outputLanguage == SH_ESSL_OUTPUT);
-    writeCommonPrecisionEmulationHelpers(sink, outputLanguage);
+    writeCommonPrecisionEmulationHelpers(sink, shaderVersion, outputLanguage);
 
     EmulationSet::const_iterator it;
     for (it = mEmulateCompoundAdd.begin(); it != mEmulateCompoundAdd.end(); it++)
