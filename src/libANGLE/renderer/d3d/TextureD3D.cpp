@@ -268,6 +268,14 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::ImageIndex &index,
                                              const uint8_t *pixels,
                                              ptrdiff_t layerOffset)
 {
+    ImageD3D *image = getImage(index);
+    ASSERT(image);
+
+    if (image->getWidth() == 0 || image->getHeight() == 0 || image->getDepth() == 0)
+    {
+        return gl::NoError();
+    }
+
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = NULL;
@@ -279,9 +287,6 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::ImageIndex &index,
 
     if (pixelData != NULL)
     {
-        ImageD3D *image = getImage(index);
-        ASSERT(image);
-
         gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
         error = image->loadCompressedData(fullImageArea, pixelData);
         if (error.isError())
