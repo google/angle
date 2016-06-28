@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "00c6bb30_ee7e3f93",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-28T17:04:10Z",
+      "side": 1,
+      "message": "I remember that there were other problems with raising the epsilon on some drivers.  I think this is ok, it\u0027s just making sure that subnormals don\u0027t completely fail.",
+      "parentUuid": "205c9f35_06302ff7",
+      "revId": "636836e121d191dc7206e55a71e5001ced5a0fa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3c531ce_6f67e1cf",
         "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
         "patchSetId": 5
