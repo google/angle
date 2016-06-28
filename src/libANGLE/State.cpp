@@ -23,6 +23,16 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 
+namespace
+{
+
+GLenum ActiveQueryType(const GLenum type)
+{
+    return (type == GL_ANY_SAMPLES_PASSED_CONSERVATIVE) ? GL_ANY_SAMPLES_PASSED : type;
+}
+
+}  // anonymous namepace
+
 namespace gl
 {
 
@@ -1026,12 +1036,12 @@ bool State::removeTransformFeedbackBinding(GLuint transformFeedback)
     return false;
 }
 
-bool State::isQueryActive(GLenum type) const
+bool State::isQueryActive(const GLenum type) const
 {
     for (auto &iter : mActiveQueries)
     {
-        Query *query = iter.second.get();
-        if (query != nullptr && query->getType() == type)
+        const Query *query = iter.second.get();
+        if (query != nullptr && ActiveQueryType(query->getType()) == ActiveQueryType(type))
         {
             return true;
         }
