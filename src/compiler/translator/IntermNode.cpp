@@ -57,8 +57,10 @@ bool ValidateMultiplication(TOperator op, const TType &left, const TType &right)
       case EOpMatrixTimesMatrix:
         return left.getCols() == right.getRows();
       case EOpMatrixTimesMatrixAssign:
-        return left.getCols() == right.getCols() &&
-               left.getRows() == right.getRows();
+          // We need to check two things:
+          // 1. The matrix multiplication step is valid.
+          // 2. The result will have the same number of columns as the lvalue.
+          return left.getCols() == right.getRows() && left.getCols() == right.getCols();
 
       default:
         UNREACHABLE();
