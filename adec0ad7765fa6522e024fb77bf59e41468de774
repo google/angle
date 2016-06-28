@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3c531ce_8fa4ddb4",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-28T13:50:41Z",
+      "side": 1,
+      "message": "Would it be reasonable to just remove this and always pause the transform feedback state in the preMakeCurrent code?",
+      "range": {
+        "startLine": 688,
+        "startChar": 8,
+        "endLine": 691,
+        "endChar": 9
+      },
+      "revId": "adec0ad7765fa6522e024fb77bf59e41468de774",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
