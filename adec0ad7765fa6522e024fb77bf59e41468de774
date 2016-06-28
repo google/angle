@@ -46,6 +46,30 @@
       "revId": "adec0ad7765fa6522e024fb77bf59e41468de774",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3c531ce_52d1ee0a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-06-28T16:12:58Z",
+      "side": 1,
+      "message": "Sorry I missed that comment.  Yes, I\u0027d be fine with it being a permanent solution",
+      "parentUuid": "e3c531ce_2f0e89e2",
+      "range": {
+        "startLine": 688,
+        "startChar": 8,
+        "endLine": 691,
+        "endChar": 9
+      },
+      "revId": "adec0ad7765fa6522e024fb77bf59e41468de774",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
