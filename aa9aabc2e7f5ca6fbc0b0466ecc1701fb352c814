@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "609db76f_342a1e82",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-29T14:54:28Z",
+      "side": 1,
+      "message": "we\u0027re not allowed to use global non-pod type initializers. you could initialize the mutex from a call to ShInitialize, which then calls a static method in TCache to allocate the mutex. we\u0027ll also want to free it on ShFinalize in this case. probably we can do this in TCache::initialize, TCache::destroy.",
+      "revId": "aa9aabc2e7f5ca6fbc0b0466ecc1701fb352c814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "609db76f_b4152e46",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-29T14:54:28Z",
+      "side": 1,
+      "message": "I don\u0027t think initialize::destroy should be locked - they should only be called from ShInitialize / ShDestroy, really. Can you see if you still get crashes without the locking here?",
+      "revId": "aa9aabc2e7f5ca6fbc0b0466ecc1701fb352c814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
