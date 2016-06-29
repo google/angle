@@ -1677,6 +1677,12 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << DisambiguateFunctionName(node->getSequence());
                 out << (lod0 ? "Lod0(" : "(");
             }
+            else if (node->getNameObj().isInternal())
+            {
+                // This path is used for internal functions that don't have their definitions in the
+                // AST, such as precision emulation functions.
+                out << DecorateFunctionIfNeeded(node->getNameObj()) << "(";
+            }
             else
             {
                 TString name           = TFunction::unmangleName(node->getNameObj().getString());
