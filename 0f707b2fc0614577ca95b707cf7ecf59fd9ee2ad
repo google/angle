@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "609db76f_14c19af2",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-29T14:37:54Z",
+      "side": 1,
+      "message": "don\u0027t assign to function parameters, this can lead to programming errors. Make a new local temporary, or better yet, make a helper function for IsSameActiveQueryType instead to use below.",
+      "revId": "0f707b2fc0614577ca95b707cf7ecf59fd9ee2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
