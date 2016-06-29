@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "609db76f_f46ed60e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-29T14:11:04Z",
+      "side": 1,
+      "message": "nit: I believe you can check the \u0027requiresConversion\u0027 flag of the loadFunction info and avoid using the extra copy in this case. would be nice if there\u0027s any formats that would be faster this way, and if not, you could possibly add an ASSERT?",
+      "range": {
+        "startLine": 401,
+        "startChar": 4,
+        "endLine": 416,
+        "endChar": 54
+      },
+      "revId": "ff11264bee8c85b2c8f2cb0d5b65ca8331d71a64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "806d4bef_1a517d22",
         "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
         "patchSetId": 6
