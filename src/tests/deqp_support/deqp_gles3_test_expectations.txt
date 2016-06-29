@@ -92,10 +92,11 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_float_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_fixed_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_float_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_* = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
+1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_vertex = FAIL
+1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_fragment = FAIL
+1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_fragment = FAIL
-1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.sampler2dshadow_vertex = FAIL
+1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.sampler2dshadow_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.sampler2dshadow_vertex = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojlodoffset.sampler2dshadow_fragment = FAIL
