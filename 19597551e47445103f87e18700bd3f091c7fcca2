@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00acfbb3_7ef251db",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-06-29T19:57:06Z",
+      "side": 1,
+      "message": "This seems fraught with danger. A thread which doesn\u0027t actually own the cache will use the allocator and populate the cache with objects, while another will eventually delete the cache.\n\nInstead of pursuing this approach, what about making the TCache instance thread-local?",
+      "range": {
+        "startLine": 101,
+        "startChar": 4,
+        "endLine": 101,
+        "endChar": 20
+      },
+      "revId": "19597551e47445103f87e18700bd3f091c7fcca2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
