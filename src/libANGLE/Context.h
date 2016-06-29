@@ -539,6 +539,12 @@ class Context final : public ValidationContext
                                              GLenum coverMode,
                                              GLenum transformType,
                                              const GLfloat *transformValues);
+    void bindFragmentInputLocation(GLuint program, GLint location, const GLchar *name);
+    void programPathFragmentInputGen(GLuint program,
+                                     GLint location,
+                                     GLenum genMode,
+                                     GLint components,
+                                     const GLfloat *coeffs);
 
     void handleError(const Error &error) override;
 

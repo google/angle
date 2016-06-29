@@ -2309,4 +2309,13 @@ bool ProgramD3D::getUniformBlockMemberInfo(const std::string &memberUniformName,
     *memberInfoOut = infoIter->second;
     return true;
 }
+
+void ProgramD3D::setPathFragmentInputGen(const std::string &inputName,
+                                         GLenum genMode,
+                                         GLint components,
+                                         const GLfloat *coeffs)
+{
+    UNREACHABLE();
+}
+
 }  // namespace rx

@@ -228,6 +228,8 @@ EXPORTS
     glStencilFillPathInstancedCHROMIUM            @340
     glStencilThenCoverFillPathInstancedCHROMIUM   @341
     glStencilThenCoverStrokePathInstancedCHROMIUM @342
+    glBindFragmentInputLocationCHROMIUM           @343
+    glProgramPathFragmentInputGenCHROMIUM         @344
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

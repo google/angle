@@ -21,6 +21,7 @@
 #include "libANGLE/Uniform.h"
 
 #include "common/mathutil.h"
+#include "common/string_utils.h"
 #include "common/utilities.h"
 
 namespace gl
@@ -2871,6 +2872,148 @@ bool ValidateStencilThenCoverStrokePathInstanced(Context *context,
             return false;
     }
 
+    return true;
+}
+
+bool ValidateBindFragmentInputLocation(Context *context,
+                                       GLuint program,
+                                       GLint location,
+                                       const GLchar *name)
+{
+    if (!context->getExtensions().pathRendering)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GL_CHROMIUM_path_rendering is not available."));
+        return false;
+    }
+
+    const GLint MaxLocation = context->getCaps().maxVaryingVectors * 4;
+    if (location >= MaxLocation)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Location exceeds max varying."));
+        return false;
+    }
+
+    const auto *programObject = context->getProgram(program);
+    if (!programObject)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "No such program."));
+        return false;
+    }
+
+    if (!name)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "No name given."));
+        return false;
+    }
+
+    if (angle::BeginsWith(name, "gl_"))
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Cannot bind a built-in variable."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateProgramPathFragmentInputGen(Context *context,
+                                         GLuint program,
+                                         GLint location,
+                                         GLenum genMode,
+                                         GLint components,
+                                         const GLfloat *coeffs)
+{
+    if (!context->getExtensions().pathRendering)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GL_CHROMIUM_path_rendering is not available."));
+        return false;
+    }
+
+    const auto *programObject = context->getProgram(program);
+    if (!programObject || programObject->isFlaggedForDeletion())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "No such program."));
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Program is not linked."));
+        return false;
+    }
+
+    switch (genMode)
+    {
+        case GL_NONE:
+            if (components != 0)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Invalid components."));
+                return false;
+            }
+            break;
+
+        case GL_OBJECT_LINEAR_CHROMIUM:
+        case GL_EYE_LINEAR_CHROMIUM:
+        case GL_CONSTANT_CHROMIUM:
+            if (components < 1 || components > 4)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Invalid components."));
+                return false;
+            }
+            if (!coeffs)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "No coefficients array given."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid gen mode."));
+            return false;
+    }
+
+    // If the location is -1 then the command is silently ignored
+    // and no further validation is needed.
+    if (location == -1)
+        return true;
+
+    const auto &binding = programObject->getFragmentInputBindingInfo(location);
+
+    if (!binding.valid)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "No such binding."));
+        return false;
+    }
+
+    if (binding.type != GL_NONE)
+    {
+        GLint expectedComponents = 0;
+        switch (binding.type)
+        {
+            case GL_FLOAT:
+                expectedComponents = 1;
+                break;
+            case GL_FLOAT_VEC2:
+                expectedComponents = 2;
+                break;
+            case GL_FLOAT_VEC3:
+                expectedComponents = 3;
+                break;
+            case GL_FLOAT_VEC4:
+                expectedComponents = 4;
+                break;
+            default:
+                context->handleError(Error(GL_INVALID_OPERATION,
+                    "Fragment input type is not a floating point scalar or vector."));
+                return false;
+        }
+        if (expectedComponents != components && genMode != GL_NONE)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Unexpected number of components"));
+            return false;
+        }
+    }
     return true;
 }
 

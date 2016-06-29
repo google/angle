@@ -137,6 +137,24 @@ struct VariableLocation
     bool ignored;
 };
 
+// Information about a variable binding.
+// Currently used by CHROMIUM_path_rendering
+struct BindingInfo
+{
+    // The type of binding, for example GL_FLOAT_VEC3.
+    // This can be GL_NONE if the variable is optimized away.
+    GLenum type;
+
+    // This is the name of the variable in
+    // the translated shader program. Note that
+    // this can be empty in the case where the
+    // variable has been optimized away.
+    std::string name;
+
+    // True if the binding is valid, otherwise false.
+    bool valid;
+};
+
 class ProgramState final : angle::NonCopyable
 {
   public:
@@ -228,6 +246,14 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(GLuint index, const char *name);
+
+    // CHROMIUM_path_rendering
+    BindingInfo getFragmentInputBindingInfo(GLint index) const;
+    void bindFragmentInputLocation(GLint index, const char *name);
+    void pathFragmentInputGen(GLint index,
+                              GLenum genMode,
+                              GLint components,
+                              const GLfloat *coeffs);
 
     Error link(const ContextState &data);
     bool isLinked() const;
@@ -352,9 +378,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                         const Bindings &attributeBindings,
                         const Shader *vertexShader);
     bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
-    static bool linkVaryings(InfoLog &infoLog,
-                             const Shader *vertexShader,
-                             const Shader *fragmentShader);
+    bool linkVaryings(InfoLog &infoLog, const Shader *vertexShader, const Shader *fragmentShader) const;
     bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
     bool indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
     bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog, const sh::InterfaceBlock &vertexInterfaceBlock,
@@ -429,6 +453,9 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     Bindings mAttributeBindings;
     Bindings mUniformBindings;
+
+    // CHROMIUM_path_rendering
+    Bindings mFragmentInputBindings;
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use

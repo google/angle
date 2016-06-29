@@ -174,6 +174,10 @@ class ProgramD3D : public ProgramImpl
     bool getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const override;
     bool getUniformBlockMemberInfo(const std::string &memberUniformName,
                                    sh::BlockMemberInfo *memberInfoOut) const override;
+    void setPathFragmentInputGen(const std::string &inputName,
+                                 GLenum genMode,
+                                 GLint components,
+                                 const GLfloat *coeffs) override;
 
     void initializeUniformStorage();
     gl::Error applyUniforms(GLenum drawMode);

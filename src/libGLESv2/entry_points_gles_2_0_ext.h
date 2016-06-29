@@ -229,6 +229,14 @@ StencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
                                             GLenum coverMode,
                                             GLenum transformType,
                                             const GLfloat *transformValues);
+ANGLE_EXPORT void GL_APIENTRY BindFragmentInputLocationCHROMIUM(GLuint program,
+                                                                GLint location,
+                                                                const GLchar *name);
+ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program,
+                                                                  GLint location,
+                                                                  GLenum genMode,
+                                                                  GLint components,
+                                                                  const GLfloat *coeffs);
 
 }  // namespace gl
 

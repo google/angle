@@ -1749,3 +1749,19 @@ void GL_APIENTRY glStencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
                                                     reference, mask, coverMode, transformType,
                                                     transformValues);
 }
+
+void GL_APIENTRY glBindFragmentInputLocationCHROMIUM(GLuint program,
+                                                     GLint location,
+                                                     const GLchar *name)
+{
+    gl::BindFragmentInputLocationCHROMIUM(program, location, name);
+}
+
+void GL_APIENTRY glProgramPathFragmentInputGenCHROMIUM(GLuint program,
+                                                       GLint location,
+                                                       GLenum genMode,
+                                                       GLint components,
+                                                       const GLfloat *coeffs)
+{
+    gl::ProgramPathFragmentInputGenCHROMIUM(program, location, genMode, components, coeffs);
+}

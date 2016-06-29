@@ -682,13 +682,20 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
 
-    // if NV_path_rendering is to be supported then EXT_direct_state_access
-    // must also be available. NV_path_rendering needs some of the matrix loads
-    // from this extension.
-    extensions->pathRendering = (functions->hasGLExtension("GL_NV_path_rendering") &&
-                                 functions->hasGLExtension("GL_EXT_direct_state_access")) ||
-                                (functions->hasGLESExtension("GL_NV_path_rendering") &&
-                                 functions->hasGLESExtension("GL_EXT_direct_state_access"));
+
+    // NV_path_rendering
+    // We also need interface query which is available in
+    // >= 4.3 core or ARB_interface_query or >= GLES 3.1
+    const bool canEnableGLPathRendering =
+        functions->hasGLExtension("GL_NV_path_rendering") &&
+        (functions->hasGLExtension("GL_ARB_program_interface_query") ||
+         functions->isAtLeastGL(gl::Version(4, 3)));
+
+    const bool canEnableESPathRendering =
+        functions->hasGLESExtension("GL_NV_path_rendering") &&
+        functions->isAtLeastGLES(gl::Version(3, 1));
+
+    extensions->pathRendering = canEnableGLPathRendering || canEnableESPathRendering;
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

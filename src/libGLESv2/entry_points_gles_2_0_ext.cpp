@@ -1847,4 +1847,47 @@ StencilThenCoverStrokePathInstancedCHROMIUM(GLsizei numPaths,
     }
 }
 
+ANGLE_EXPORT void GL_APIENTRY BindFragmentInputLocationCHROMIUM(GLuint program,
+                                                                GLint location,
+                                                                const GLchar *name)
+{
+    EVENT("(GLuint program = %u, GLint location = %d, const GLchar *name = %p)", program, location,
+          name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateBindFragmentInputLocation(context, program, location, name))
+        {
+            return;
+        }
+        context->bindFragmentInputLocation(program, location, name);
+    }
+}
+
+ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program,
+                                                                  GLint location,
+                                                                  GLenum genMode,
+                                                                  GLint components,
+                                                                  const GLfloat *coeffs)
+{
+    EVENT(
+        "(GLuint program = %u, GLint location %d, GLenum genMode = %u, GLint components = %d, "
+        "const GLfloat * coeffs = %p)",
+        program, location, genMode, components, coeffs);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateProgramPathFragmentInputGen(context, program, location, genMode, components,
+                                                 coeffs))
+        {
+            return;
+        }
+        context->programPathFragmentInputGen(program, location, genMode, components, coeffs);
+    }
+}
+
 }  // gl
