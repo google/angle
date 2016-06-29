@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "609db76f_17e43c46",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1159305
+      },
+      "writtenOn": "2016-06-29T16:41:39Z",
+      "side": 1,
+      "message": "Ok, I can do that, though I don\u0027t know how to tackle this off-hand without any synchronization primitive.",
+      "parentUuid": "609db76f_342a1e82",
+      "revId": "aa9aabc2e7f5ca6fbc0b0466ecc1701fb352c814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "609db76f_b4152e46",
         "filename": "src/compiler/translator/Cache.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-06-29T14:54:28Z",
       "side": 1,
       "message": "I don\u0027t think initialize::destroy should be locked - they should only be called from ShInitialize / ShDestroy, really. Can you see if you still get crashes without the locking here?",
+      "revId": "aa9aabc2e7f5ca6fbc0b0466ecc1701fb352c814",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "609db76f_d75634e7",
+        "filename": "src/compiler/translator/Cache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1159305
+      },
+      "writtenOn": "2016-06-29T16:41:39Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem to crash, you\u0027re right, I was over-conservative :)",
+      "parentUuid": "609db76f_b4152e46",
       "revId": "aa9aabc2e7f5ca6fbc0b0466ecc1701fb352c814",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
