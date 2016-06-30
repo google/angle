@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d4856a2_bb8f0795",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-30T17:56:07Z",
+      "side": 1,
+      "message": "nit: EXPECT_NE(end, find).. use auto found \u003d find(output) so you can reuse it below",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 15
+      },
+      "revId": "6acbdf733e3c97e1cc3d76b3b7420b6f800d62d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d4856a2_5bf6c3fc",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-30T17:56:07Z",
+      "side": 1,
+      "message": "EXPECT_NE",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 114,
+        "endChar": 15
+      },
+      "revId": "6acbdf733e3c97e1cc3d76b3b7420b6f800d62d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
