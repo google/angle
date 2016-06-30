@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "9d4856a2_5e535127",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-06-30T18:12:30Z",
+      "side": 1,
+      "message": "Yeah, the return and unreachable are literally unreachable, so should be deleted.",
+      "parentUuid": "a0116f0b_33bf28c2",
+      "revId": "0804e4f234527af921d36ebc7085a73fbf32f2f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "609db76f_5415e235",
         "filename": "src/tests/gl_tests/BlendFuncExtendedTest.cpp",
         "patchSetId": 8
