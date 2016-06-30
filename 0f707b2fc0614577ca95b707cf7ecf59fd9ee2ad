@@ -34,6 +34,24 @@
       "revId": "0f707b2fc0614577ca95b707cf7ecf59fd9ee2ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0116f0b_d32354ab",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-06-30T14:00:21Z",
+      "side": 1,
+      "message": "Implemented this suggestion. Should preference for making all function parameters \"const\" be mentioned explicitly in the code style guide, by the way?",
+      "parentUuid": "609db76f_547882a9",
+      "revId": "0f707b2fc0614577ca95b707cf7ecf59fd9ee2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
