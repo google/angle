@@ -12,82 +12,23 @@
 #include "GLSLANG/ShaderLang.h"
 #include "tests/test_utils/compiler_test.h"
 
-class DebugShaderPrecisionTest : public testing::Test
+class DebugShaderPrecisionTest : public MatchOutputCodeTest
 {
   public:
-    DebugShaderPrecisionTest() {}
-
-  protected:
-    void compile(const std::string& shaderString)
+    DebugShaderPrecisionTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_ESSL_OUTPUT)
     {
-        std::string infoLog;
-        bool compilationSuccess = compileWithSettings(SH_ESSL_OUTPUT, shaderString, &mESSLCode, &infoLog);
-        if (!compilationSuccess)
-        {
-            FAIL() << "Shader compilation into ESSL failed " << infoLog;
-        }
-
-        compilationSuccess = compileWithSettings(SH_GLSL_COMPATIBILITY_OUTPUT, shaderString, &mGLSLCode, &infoLog);
-        if (!compilationSuccess)
-        {
-            FAIL() << "Shader compilation into GLSL failed " << infoLog;
-        }
+        addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
+        getResources()->WEBGL_debug_shader_precision = 1;
     }
-
-    bool foundInESSLCode(const char* stringToFind)
-    {
-        return mESSLCode.find(stringToFind) != std::string::npos;
-    }
-
-    bool foundInGLSLCode(const char* stringToFind)
-    {
-        return mGLSLCode.find(stringToFind) != std::string::npos;
-    }
-
-    bool foundInCode(const char* stringToFind)
-    {
-        return foundInESSLCode(stringToFind) && foundInGLSLCode(stringToFind);
-    }
-
-    bool notFoundInCode(const char* stringToFind)
-    {
-        return !foundInESSLCode(stringToFind) && !foundInGLSLCode(stringToFind);
-    }
-
-  private:
-    bool compileWithSettings(ShShaderOutput output, const std::string &shaderString,
-                             std::string *translatedCode, std::string *infoLog)
-    {
-        ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
-        resources.WEBGL_debug_shader_precision = 1;
-        return compileTestShader(GL_FRAGMENT_SHADER, SH_GLES3_SPEC, output, shaderString,
-                                 &resources, translatedCode, infoLog);
-    }
-
-    std::string mESSLCode;
-    std::string mGLSLCode;
 };
 
-class NoDebugShaderPrecisionTest : public testing::Test
+class NoDebugShaderPrecisionTest : public MatchOutputCodeTest
 {
   public:
-    NoDebugShaderPrecisionTest() {}
-
-  protected:
-    bool compile(const std::string& shaderString)
+    NoDebugShaderPrecisionTest()
+        : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_COMPATIBILITY_OUTPUT)
     {
-        return compileTestShader(GL_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT,
-                                 shaderString, &mCode, nullptr);
     }
-
-    bool foundInCode(const char* stringToFind)
-    {
-        return mCode.find(stringToFind) != std::string::npos;
-    }
-
-  private:
-    std::string mCode;
 };
 
 TEST_F(DebugShaderPrecisionTest, RoundingFunctionsDefined)
@@ -178,7 +119,7 @@ TEST_F(NoDebugShaderPrecisionTest, HelpersWrittenOnlyWithExtension)
         "void main() {\n"
         "   gl_FragColor = vec4(u);\n"
         "}\n";
-    ASSERT_TRUE(compile(shaderString));
+    compile(shaderString);
     ASSERT_FALSE(foundInCode("angle_frm"));
 }
 
@@ -191,7 +132,7 @@ TEST_F(NoDebugShaderPrecisionTest, PragmaHasEffectsOnlyWithExtension)
         "void main() {\n"
         "   gl_FragColor = vec4(u);\n"
         "}\n";
-    ASSERT_TRUE(compile(shaderString));
+    compile(shaderString);
     ASSERT_FALSE(foundInCode("angle_frm"));
 }
 

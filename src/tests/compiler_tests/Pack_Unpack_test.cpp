@@ -15,31 +15,10 @@
 namespace
 {
 
-class PackUnpackTest : public testing::Test
+class PackUnpackTest : public MatchOutputCodeTest
 {
   public:
-    PackUnpackTest() {}
-
-  protected:
-    void compile(const std::string& shaderString)
-    {
-        std::string infoLog;
-        bool compilationSuccess = compileTestShader(GL_FRAGMENT_SHADER, SH_GLES3_SPEC,
-                                                    SH_GLSL_410_CORE_OUTPUT,
-                                                    shaderString, &mGLSLCode, &infoLog);
-        if (!compilationSuccess)
-        {
-            FAIL() << "Shader compilation into GLSL 4.1 failed " << infoLog;
-        }
-    }
-
-    bool foundInGLSLCode(const char* stringToFind)
-    {
-        return mGLSLCode.find(stringToFind) != std::string::npos;
-    }
-
-  private:
-    std::string mGLSLCode;
+    PackUnpackTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_GLSL_410_CORE_OUTPUT) {}
 };
 
 //Check if PackSnorm2x16 Emulation for GLSL 4.1 compile correctly.
@@ -55,7 +34,7 @@ TEST_F(PackUnpackTest, PackSnorm2x16Emulation)
         "   fragColor = vec4(0.0);\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInGLSLCode("uint webgl_packSnorm2x16_emu(vec2 v)"));
+    ASSERT_TRUE(foundInCode("uint webgl_packSnorm2x16_emu(vec2 v)"));
 }
 
 //Check if UnpackSnorm2x16 Emulation for GLSL 4.1 compile correctly.
@@ -71,7 +50,7 @@ TEST_F(PackUnpackTest, UnpackSnorm2x16Emulation)
         "   fragColor = vec4(0.0);\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInGLSLCode("vec2 webgl_unpackSnorm2x16_emu(uint u)"));
+    ASSERT_TRUE(foundInCode("vec2 webgl_unpackSnorm2x16_emu(uint u)"));
 }
 
 //Check if PackHalf2x16 Emulation for GLSL 4.1 compile correctly.
@@ -87,7 +66,7 @@ TEST_F(PackUnpackTest, PackHalf2x16Emulation)
         "   fragColor = vec4(0.0);\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInGLSLCode("uint webgl_packHalf2x16_emu(vec2 v)"));
+    ASSERT_TRUE(foundInCode("uint webgl_packHalf2x16_emu(vec2 v)"));
 }
 
 //Check if UnpackHalf2x16 Emulation for GLSL 4.1 compile correctly.
@@ -103,7 +82,7 @@ TEST_F(PackUnpackTest, UnpackHalf2x16Emulation)
         "   fragColor = vec4(0.0);\n"
         "}\n";
     compile(shaderString);
-    ASSERT_TRUE(foundInGLSLCode("vec2 webgl_unpackHalf2x16_emu(uint u)"));
+    ASSERT_TRUE(foundInCode("vec2 webgl_unpackHalf2x16_emu(uint u)"));
 }
 
 } // namespace
