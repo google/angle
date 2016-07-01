@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dd9c63e_020cec34",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-01T21:28:35Z",
+      "side": 1,
+      "message": "The condition seems wrong here, shouldn\u0027t it be if (!hasPath || !hasPathData) instead? This could be reduced to just !hasPathData since hasPathData checks the path exists.",
+      "revId": "3ebcb3773941b9751de984af15fa7f999b11aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
