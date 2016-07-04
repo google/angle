@@ -63,8 +63,6 @@
 
 // Windows only failure
 
-1101 WIN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = FAIL
-1101 WIN : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.scalar = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec2 = FAIL
 1093 WIN : dEQP-GLES3.functional.shaders.builtin_functions.precision.tanh.highp_vertex.vec3 = FAIL
@@ -269,7 +267,6 @@
 // UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
 1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
 
-1323 LINUX : dEQP-GLES3.functional.default_vertex_attrib.int.vertex_attribi_4i = FAIL
 1323 LINUX : dEQP-GLES3.functional.draw.random.210 = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.fbo.blit.default_framebuffer.srgb8_alpha8_linear_out_of_bounds_blit_to_default = FAIL
@@ -281,9 +278,6 @@
 1323 LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 1323 LINUX : dEQP-GLES3.functional.negative_api.state.get_integeri_v = FAIL
 1323 LINUX : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.points = FAIL
-1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_2_dynamic_fragment = FAIL
-1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_dynamic_fragment = FAIL
-1323 LINUX : dEQP-GLES3.functional.shaders.switch.conditional_fall_through_dynamic_vertex = FAIL
 1323 LINUX : dEQP-GLES3.functional.state_query.integers64.max_server_wait_timeout_getfloat = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_clamp = FAIL
 1323 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_linear_mirror = FAIL
