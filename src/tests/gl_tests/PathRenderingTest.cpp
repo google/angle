@@ -751,10 +751,13 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    void verifyTestPatternFill(GLint x, GLint y)
+    void verifyTestPatternFill(GLfloat flx, GLfloat fly)
     {
         static const GLint kFillCoords[]  = {55, 54, 50, 28, 66, 63};
         static const angle::GLColor kBlue = {0, 0, 255, 255};
+
+        GLint x = static_cast<GLint>(flx);
+        GLint y = static_cast<GLint>(fly);
 
         for (size_t i = 0; i < 6; i += 2)
         {
@@ -763,10 +766,13 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
             EXPECT_TRUE(CheckPixels(x + fx, y + fy, 1, 1, 0, kBlue));
         }
     }
-    void verifyTestPatternBg(GLint x, GLint y)
+    void verifyTestPatternBg(GLfloat fx, GLfloat fy)
     {
         static const GLint kBackgroundCoords[]     = {80, 80, 20, 20, 90, 1};
         static const angle::GLColor kExpectedColor = {0, 0, 0, 0};
+
+        GLint x = static_cast<GLint>(fx);
+        GLint y = static_cast<GLint>(fy);
 
         for (size_t i = 0; i < 6; i += 2)
         {
@@ -776,8 +782,11 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         }
     }
 
-    void verifyTestPatternStroke(GLint x, GLint y)
+    void verifyTestPatternStroke(GLfloat fx, GLfloat fy)
     {
+        GLint x = static_cast<GLint>(fx);
+        GLint y = static_cast<GLint>(fy);
+
         // Inside the stroke we should have green.
         static const angle::GLColor kGreen = {0, 255, 0, 255};
         EXPECT_TRUE(CheckPixels(x + 50, y + 53, 1, 1, 0, kGreen));
