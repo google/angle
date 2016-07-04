@@ -194,6 +194,8 @@ void PackPixels(const PackPixelsParams &params,
         return;
     }
 
+    ASSERT(sourceFormatInfo.pixelBytes > 0);
+
     gl::FormatType formatType(params.format, params.type);
     ColorCopyFunction fastCopyFunc = GetFastCopyFunction(fastCopyFunctionsMap, formatType);
     GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(formatType.format, formatType.type);

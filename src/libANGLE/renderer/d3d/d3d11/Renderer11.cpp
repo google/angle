@@ -3729,6 +3729,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     int inputPitch  = static_cast<int>(mapping.RowPitch);
 
     const auto &angleFormatInfo = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
+    ASSERT(angleFormatInfo.glInternalFormat != GL_NONE);
     const gl::InternalFormat &sourceFormatInfo =
         gl::GetInternalFormatInfo(angleFormatInfo.glInternalFormat);
     const auto &dxgiFormatInfo          = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());

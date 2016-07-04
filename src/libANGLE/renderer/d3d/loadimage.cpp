@@ -256,6 +256,38 @@ void LoadRGB8ToBGR565(size_t width,
     }
 }
 
+void LoadRGB565ToBGR565(size_t width,
+                        size_t height,
+                        size_t depth,
+                        const uint8_t *input,
+                        size_t inputRowPitch,
+                        size_t inputDepthPitch,
+                        uint8_t *output,
+                        size_t outputRowPitch,
+                        size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const uint16_t *source =
+                OffsetDataPointer<uint16_t>(input, y, z, inputRowPitch, inputDepthPitch);
+            uint16_t *dest =
+                OffsetDataPointer<uint16_t>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (size_t x = 0; x < width; x++)
+            {
+                // The GL type RGB is packed with with red in the MSB, while the D3D11 type BGR
+                // is packed with red in the LSB
+                auto rgb    = source[x];
+                uint16_t r5 = gl::getShiftedData<5, 11>(rgb);
+                uint16_t g6 = gl::getShiftedData<6, 5>(rgb);
+                uint16_t b5 = gl::getShiftedData<5, 0>(rgb);
+                dest[x]     = (r5 << 11) | (g6 << 5) | b5;
+            }
+        }
+    }
+}
+
 void LoadRGB8ToBGRX8(size_t width, size_t height, size_t depth,
                      const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,
                      uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch)

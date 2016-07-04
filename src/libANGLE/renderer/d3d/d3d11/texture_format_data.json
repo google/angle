@@ -26,7 +26,8 @@
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
     "channels": "rgba",
     "componentType": "unorm",
-    "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 }
+    "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 },
+    "glInternalFormat": "GL_RGBA16_EXT"
   },
   "ANGLE_FORMAT_R16G16B16A16_FLOAT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
@@ -424,8 +425,9 @@
     "channels": "bgr",
     "componentType":  "unorm",
     "bits": { "red": 5, "green": 6, "blue": 5 },
-    "glInternalFormat": "GL_RGB565",
-    "channelStruct": "R5G6B5"
+    "glInternalFormat": "GL_BGR565_ANGLEX",
+    "fboImplementationInternalFormat": "GL_RGB565",
+    "channelStruct": "B5G6R5"
   },
   "ANGLE_FORMAT_B5G5R5A1_UNORM": {
     "texFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
@@ -434,7 +436,8 @@
     "channels": "bgra",
     "componentType": "unorm",
     "bits": { "red": 5, "green": 5, "blue": 5, "alpha": 1 },
-    "glInternalFormat": "GL_RGB5_A1",
+    "glInternalFormat": "GL_BGR5_A1_ANGLEX",
+    "fboImplementationInternalFormat": "GL_RGB5_A1",
     "channelStruct": "A1R5G5B5"
   },
   "ANGLE_FORMAT_R8G8B8A8_SINT": {
@@ -479,7 +482,8 @@
     "channels": "bgra",
     "componentType":  "unorm",
     "bits": { "red": 4, "green": 4, "blue": 4, "alpha": 4 },
-    "glInternalFormat": "GL_RGBA4",
+    "glInternalFormat": "GL_BGRA4_ANGLEX",
+    "fboImplementationInternalFormat": "GL_RGBA4",
     "channelStruct":  "A4R4G4B4"
   },
   "ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB": {
@@ -505,7 +509,8 @@
     "rtvFormat": "DXGI_FORMAT_R16_UNORM",
     "channels": "r",
     "componentType": "unorm",
-    "bits": { "red": 16 }
+    "bits": { "red": 16 },
+    "glInternalFormat": "GL_R16_EXT"
   },
   "ANGLE_FORMAT_R16G16_UNORM": {
     "texFormat": "DXGI_FORMAT_R16G16_UNORM",
@@ -513,7 +518,8 @@
     "rtvFormat": "DXGI_FORMAT_R16G16_UNORM",
     "channels": "rg",
     "componentType": "unorm",
-    "bits": { "red": 16, "green": 16 }
+    "bits": { "red": 16, "green": 16 },
+    "glInternalFormat": "GL_RG16_EXT"
   },
   "ANGLE_FORMAT_R16_SNORM": {
     "texFormat": "DXGI_FORMAT_R16_SNORM",

@@ -177,6 +177,23 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                     break;
             }
         }
+        case GL_BGR565_ANGLEX:
+        {
+            switch (dxgiFormat)
+            {
+                case DXGI_FORMAT_B5G6R5_UNORM:
+                {
+                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
+                        { GL_UNSIGNED_SHORT_5_6_5, LoadImageFunctionInfo(LoadRGB565ToBGR565, true) },
+                        { GL_UNSIGNED_BYTE, LoadImageFunctionInfo(LoadToNative<GLushort,1>, false) },
+                    };
+
+                    return loadFunctionsMap;
+                }
+                default:
+                    break;
+            }
+        }
         case GL_BGR5_A1_ANGLEX:
         {
             switch (dxgiFormat)

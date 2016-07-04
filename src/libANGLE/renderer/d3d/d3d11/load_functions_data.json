@@ -680,6 +680,22 @@
       }
     ]
   },
+  "GL_BGR565_ANGLEX": {
+    "GL_UNSIGNED_SHORT_5_6_5": [
+      {
+        "loadFunction": "LoadRGB565ToBGR565",
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
+        "requiresConversion": "true"
+      }
+    ],
+    "GL_UNSIGNED_BYTE": [
+      {
+        "loadFunction": "LoadToNative<GLushort,1>",
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
+        "requiresConversion": "false"
+      }
+    ]
+  },
   "GL_COMPRESSED_RG11_EAC": {
     "GL_UNSIGNED_BYTE": [
       {
