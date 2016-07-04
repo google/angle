@@ -16,6 +16,24 @@
       "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_286b8a6b",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-04T14:24:23Z",
+      "side": 1,
+      "message": "The way the symbol table level popping works is pretty weird. I hadn\u0027t realized we use RAII in other places in this method. You could just reset the global invariance in TScopedSymbolTableLevel::~TScopedSymbolTableLevel.. it does the check for the symbol table level in there.",
+      "parentUuid": "5d9b3e8d_a152fe21",
+      "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
