@@ -172,63 +172,6 @@ static void writeCompoundAssignmentPrecisionEmulation(
     "}\n";
 }
 
-const char *getFloatTypeStr(const TType& type)
-{
-    switch (type.getNominalSize())
-    {
-      case 1:
-        return "float";
-      case 2:
-        switch(type.getSecondarySize())
-        {
-          case 1:
-            return "vec2";
-          case 2:
-            return "mat2";
-          case 3:
-            return "mat2x3";
-          case 4:
-            return "mat2x4";
-          default:
-            UNREACHABLE();
-            return NULL;
-        }
-      case 3:
-        switch(type.getSecondarySize())
-        {
-          case 1:
-            return "vec3";
-          case 2:
-            return "mat3x2";
-          case 3:
-            return "mat3";
-          case 4:
-            return "mat3x4";
-          default:
-            UNREACHABLE();
-            return NULL;
-        }
-      case 4:
-        switch(type.getSecondarySize())
-        {
-          case 1:
-            return "vec4";
-          case 2:
-            return "mat4x2";
-          case 3:
-            return "mat4x3";
-          case 4:
-            return "mat4";
-          default:
-            UNREACHABLE();
-            return NULL;
-        }
-      default:
-        UNREACHABLE();
-        return NULL;
-    }
-}
-
 bool canRoundFloat(const TType &type)
 {
     return type.getBasicType() == EbtFloat && !type.isNonSquareMatrix() && !type.isArray() &&
@@ -359,19 +302,25 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
           // Compound assignment cases need to replace the operator with a function call.
           case EOpAddAssign:
           {
-            mEmulateCompoundAdd.insert(TypePair(getFloatTypeStr(type), getFloatTypeStr(node->getRight()->getType())));
-            TIntermNode *parent = getParentNode();
-            TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(node->getLeft(), node->getRight(), "add");
-            mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
-            break;
+              mEmulateCompoundAdd.insert(
+                  TypePair(type.getBuiltInTypeNameString(),
+                           node->getRight()->getType().getBuiltInTypeNameString()));
+              TIntermNode *parent      = getParentNode();
+              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                  node->getLeft(), node->getRight(), "add");
+              mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
+              break;
           }
           case EOpSubAssign:
           {
-            mEmulateCompoundSub.insert(TypePair(getFloatTypeStr(type), getFloatTypeStr(node->getRight()->getType())));
-            TIntermNode *parent = getParentNode();
-            TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(node->getLeft(), node->getRight(), "sub");
-            mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
-            break;
+              mEmulateCompoundSub.insert(
+                  TypePair(type.getBuiltInTypeNameString(),
+                           node->getRight()->getType().getBuiltInTypeNameString()));
+              TIntermNode *parent      = getParentNode();
+              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                  node->getLeft(), node->getRight(), "sub");
+              mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
+              break;
           }
           case EOpMulAssign:
           case EOpVectorTimesMatrixAssign:
@@ -379,19 +328,25 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
           case EOpMatrixTimesScalarAssign:
           case EOpMatrixTimesMatrixAssign:
           {
-            mEmulateCompoundMul.insert(TypePair(getFloatTypeStr(type), getFloatTypeStr(node->getRight()->getType())));
-            TIntermNode *parent = getParentNode();
-            TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(node->getLeft(), node->getRight(), "mul");
-            mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
-            break;
+              mEmulateCompoundMul.insert(
+                  TypePair(type.getBuiltInTypeNameString(),
+                           node->getRight()->getType().getBuiltInTypeNameString()));
+              TIntermNode *parent      = getParentNode();
+              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                  node->getLeft(), node->getRight(), "mul");
+              mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
+              break;
           }
           case EOpDivAssign:
           {
-            mEmulateCompoundDiv.insert(TypePair(getFloatTypeStr(type), getFloatTypeStr(node->getRight()->getType())));
-            TIntermNode *parent = getParentNode();
-            TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(node->getLeft(), node->getRight(), "div");
-            mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
-            break;
+              mEmulateCompoundDiv.insert(
+                  TypePair(type.getBuiltInTypeNameString(),
+                           node->getRight()->getType().getBuiltInTypeNameString()));
+              TIntermNode *parent      = getParentNode();
+              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                  node->getLeft(), node->getRight(), "div");
+              mReplacements.push_back(NodeUpdateEntry(parent, node, replacement, false));
+              break;
           }
           default:
             // The rest of the binary operations should not need precision emulation.

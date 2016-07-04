@@ -61,6 +61,122 @@ bool TStructure::equals(const TStructure &other) const
     return (uniqueId() == other.uniqueId());
 }
 
+const char *TType::getBuiltInTypeNameString() const
+{
+    if (isMatrix())
+    {
+        switch (getCols())
+        {
+            case 2:
+                switch (getRows())
+                {
+                    case 2:
+                        return "mat2";
+                    case 3:
+                        return "mat2x3";
+                    case 4:
+                        return "mat2x4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            case 3:
+                switch (getRows())
+                {
+                    case 2:
+                        return "mat3x2";
+                    case 3:
+                        return "mat3";
+                    case 4:
+                        return "mat3x4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            case 4:
+                switch (getRows())
+                {
+                    case 2:
+                        return "mat4x2";
+                    case 3:
+                        return "mat4x3";
+                    case 4:
+                        return "mat4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            default:
+                UNREACHABLE();
+                return nullptr;
+        }
+    }
+    if (isVector())
+    {
+        switch (getBasicType())
+        {
+            case EbtFloat:
+                switch (getNominalSize())
+                {
+                    case 2:
+                        return "vec2";
+                    case 3:
+                        return "vec3";
+                    case 4:
+                        return "vec4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            case EbtInt:
+                switch (getNominalSize())
+                {
+                    case 2:
+                        return "ivec2";
+                    case 3:
+                        return "ivec3";
+                    case 4:
+                        return "ivec4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            case EbtBool:
+                switch (getNominalSize())
+                {
+                    case 2:
+                        return "bvec2";
+                    case 3:
+                        return "bvec3";
+                    case 4:
+                        return "bvec4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            case EbtUInt:
+                switch (getNominalSize())
+                {
+                    case 2:
+                        return "uvec2";
+                    case 3:
+                        return "uvec3";
+                    case 4:
+                        return "uvec4";
+                    default:
+                        UNREACHABLE();
+                        return nullptr;
+                }
+            default:
+                UNREACHABLE();
+                return nullptr;
+        }
+    }
+    ASSERT(getBasicType() != EbtStruct);
+    ASSERT(getBasicType() != EbtInterfaceBlock);
+    return getBasicString();
+}
+
 TString TType::getCompleteString() const
 {
     TStringStream stream;

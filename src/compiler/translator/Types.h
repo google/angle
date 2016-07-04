@@ -508,6 +508,7 @@ class TType
     {
         return ::getBasicString(type);
     }
+
     const char *getPrecisionString() const
     {
         return ::getPrecisionString(precision);
@@ -516,6 +517,9 @@ class TType
     {
         return ::getQualifierString(qualifier);
     }
+
+    const char *getBuiltInTypeNameString() const;
+
     TString getCompleteString() const;
 
     // If this type is a struct, returns the deepest struct nesting of
