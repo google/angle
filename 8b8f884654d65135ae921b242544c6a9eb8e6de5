@@ -34,6 +34,42 @@
       "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_8b2f30eb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-04T19:37:59Z",
+      "side": 1,
+      "message": "Thanks for the suggestion; this seems much simpler.",
+      "parentUuid": "5d9b3e8d_a152fe21",
+      "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_ab34f43b",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-04T19:37:59Z",
+      "side": 1,
+      "message": "Decided to go with Corentin\u0027s suggestion since it\u0027s known here that this is the outer scope.",
+      "parentUuid": "1dd9c63e_286b8a6b",
+      "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
