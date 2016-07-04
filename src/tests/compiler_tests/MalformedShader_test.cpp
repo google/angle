@@ -1610,3 +1610,28 @@ TEST_F(MalformedShaderTest, CompoundMultiplyMatrixValidNonSquareDimensions)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Covers a bug where we would set the incorrect result size on an out-of-bounds vector sizzle.
+TEST_F(MalformedShaderTest, OutOfBoundsVectorSwizzle)
+{
+    const std::string &shaderString =
+        "void main() {\n"
+        "   vec2(0).qq * a(b);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Covers a bug where strange preprocessor defines could trigger asserts.
+TEST_F(MalformedShaderTest, DefineWithSemicolon)
+{
+    const std::string &shaderString =
+        "#define Def; highp\n"
+        "uniform Def vec2 a;\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

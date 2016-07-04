@@ -1899,7 +1899,14 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
     }
 
     const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
-    ASSERT(!layoutQualifier.isEmpty());
+
+    // It should never be the case, but some strange parser errors can send us here.
+    if (layoutQualifier.isEmpty())
+    {
+        error(typeQualifier.line, "Error during layout qualifier parsing.", "?");
+        recover();
+        return;
+    }
 
     if (mShaderVersion < 300)
     {
@@ -2469,21 +2476,22 @@ TIntermTyped *TParseContext::addConstVectorNode(TVectorFields &fields,
     ASSERT(unionArray);
 
     TConstantUnion *constArray = new TConstantUnion[fields.num];
+    const auto &type           = node->getType();
 
     for (int i = 0; i < fields.num; i++)
     {
-        if (fields.offsets[i] >= node->getType().getNominalSize())
+        if (fields.offsets[i] >= type.getNominalSize())
         {
             std::stringstream extraInfoStream;
             extraInfoStream << "vector field selection out of range '" << fields.offsets[i] << "'";
             std::string extraInfo = extraInfoStream.str();
             outOfRangeError(outOfRangeIndexIsError, line, "", "[", extraInfo.c_str());
-            fields.offsets[i] = node->getType().getNominalSize() - 1;
+            fields.offsets[i] = type.getNominalSize() - 1;
         }
 
         constArray[i] = unionArray[fields.offsets[i]];
     }
-    return intermediate.addConstantUnion(constArray, node->getType(), line);
+    return intermediate.addConstantUnion(constArray, type, line);
 }
 
 //
@@ -3056,7 +3064,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             // Note that the qualifier set here will be corrected later.
             indexedExpression->setType(TType(baseExpression->getBasicType(),
                                              baseExpression->getPrecision(), EvqTemporary,
-                                             (unsigned char)(fieldString).size()));
+                                             static_cast<unsigned char>(fields.num)));
         }
     }
     else if (baseExpression->getBasicType() == EbtStruct)
