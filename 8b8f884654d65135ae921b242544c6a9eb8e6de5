@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d9b3e8d_a152fe21",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-04T14:19:00Z",
+      "side": 1,
+      "message": "RAII seems a bit complex for this, how about adding an argument to setGlbalVariant, and calling symbolTable.setGlobalInvariant(mPragma.stdgl.invariantAll) instead? This would make sure this has the correct value for all compilations.",
+      "revId": "8b8f884654d65135ae921b242544c6a9eb8e6de5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
