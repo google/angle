@@ -16,6 +16,24 @@
       "revId": "3ebcb3773941b9751de984af15fa7f999b11aacf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdd4f22f_b605a867",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-04T07:36:01Z",
+      "side": 1,
+      "message": "The condition seems weird, but it\u0027s correct. If a Path object doesn\u0027t exist it\u0027s silently discarded, however if it exists but hasn\u0027t been specified with data we have an error condition.",
+      "parentUuid": "1dd9c63e_020cec34",
+      "revId": "3ebcb3773941b9751de984af15fa7f999b11aacf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
