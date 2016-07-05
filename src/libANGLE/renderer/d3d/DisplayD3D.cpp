@@ -323,7 +323,12 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
 
 egl::Error DisplayD3D::waitClient() const
 {
-    // Unimplemented as it is a noop on D3D
+    for (auto &surface : getSurfaceSet())
+    {
+        SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
+        surfaceD3D->checkForOutOfDateSwapChain();
+    }
+
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -331,7 +336,18 @@ egl::Error DisplayD3D::waitNative(EGLint engine,
                                   egl::Surface *drawSurface,
                                   egl::Surface *readSurface) const
 {
-    // Unimplemented as it is a noop on D3D
+    if (drawSurface != nullptr)
+    {
+        SurfaceD3D *drawSurfaceD3D = GetImplAs<SurfaceD3D>(drawSurface);
+        drawSurfaceD3D->checkForOutOfDateSwapChain();
+    }
+
+    if (readSurface != nullptr)
+    {
+        SurfaceD3D *readurfaceD3D = GetImplAs<SurfaceD3D>(readSurface);
+        readurfaceD3D->checkForOutOfDateSwapChain();
+    }
+
     return egl::Error(EGL_SUCCESS);
 }
 }  // namespace rx
