@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fdd4f22f_59b327aa",
+        "filename": "src/compiler/translator/OutputGLSLBase.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-05T13:30:46Z",
+      "side": 1,
+      "message": "I forgot to clean this up. I\u0027ll fix this.",
+      "parentUuid": "1dd9c63e_febb181f",
+      "range": {
+        "startLine": 32,
+        "startChar": 23,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "1bb8d91635267d48ddda65d5aaccce2f66322687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_debe5412",
         "filename": "src/compiler/translator/Types.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-05T13:27:19Z",
       "side": 1,
       "message": "nit: the else cases aren\u0027t needed since the functions always return. also the UNREACHABLE() code might fall through to the next line, not the nullptr, but I\u0027m not overly worried about that.",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "1bb8d91635267d48ddda65d5aaccce2f66322687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdd4f22f_f96c33f2",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-05T13:30:46Z",
+      "side": 1,
+      "message": "Fall through from the UNREACHABLE() should not cause any issues at least in the current version of the code. I can add \"return nullptr\" statements after each UNREACHABLE() in case you think that is better.",
+      "parentUuid": "1dd9c63e_debe5412",
       "range": {
         "startLine": 168,
         "startChar": 0,
