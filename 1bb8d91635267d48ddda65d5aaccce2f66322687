@@ -93,6 +93,30 @@
       "revId": "1bb8d91635267d48ddda65d5aaccce2f66322687",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_01adc1ae",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-05T19:26:23Z",
+      "side": 1,
+      "message": "it\u0027s not really that much of a risk, i\u0027m fine with leaving it out. still lgtm.",
+      "parentUuid": "fdd4f22f_f96c33f2",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "1bb8d91635267d48ddda65d5aaccce2f66322687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
