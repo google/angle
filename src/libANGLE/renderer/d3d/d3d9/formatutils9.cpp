@@ -179,28 +179,6 @@ static InternalFormatInitialzerMap BuildInternalFormatInitialzerMap()
     return map;
 }
 
-// Each GL internal format corresponds to one D3D format and data loading function.
-// Due to not all formats being available all the time, some of the function/format types are wrapped
-// in templates that perform format support queries on a Renderer9 object which is supplied
-// when requesting the function or format.
-
-typedef bool(*FallbackPredicateFunction)();
-
-template <FallbackPredicateFunction pred, LoadImageFunction prefered, LoadImageFunction fallback>
-static void FallbackLoad(size_t width, size_t height, size_t depth,
-                         const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,
-                         uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch)
-{
-    if (pred())
-    {
-        prefered(width, height, depth, input, inputRowPitch, inputDepthPitch, output, outputRowPitch, outputDepthPitch);
-    }
-    else
-    {
-        fallback(width, height, depth, input, inputRowPitch, inputDepthPitch, output, outputRowPitch, outputDepthPitch);
-    }
-}
-
 static void UnreachableLoad(size_t width, size_t height, size_t depth,
                             const uint8_t *input, size_t inputRowPitch, size_t inputDepthPitch,
                             uint8_t *output, size_t outputRowPitch, size_t outputDepthPitch)
@@ -241,6 +219,7 @@ static D3D9FormatMap BuildD3D9FormatMap()
 
     D3D9FormatMap map;
 
+    // clang-format off
     //                       | Internal format                     | Texture format      | Render format        | Load function                           |
     InsertD3D9FormatInfo(&map, GL_NONE,                             D3DFMT_NULL,          D3DFMT_NULL,           UnreachableLoad                          );
 
@@ -274,11 +253,11 @@ static D3D9FormatMap BuildD3D9FormatMap()
     InsertD3D9FormatInfo(&map, GL_LUMINANCE16F_EXT,                 D3DFMT_A16B16G16R16F, D3DFMT_UNKNOWN,        LoadL16FToRGBA16F                        );
     InsertD3D9FormatInfo(&map, GL_LUMINANCE_ALPHA16F_EXT,           D3DFMT_A16B16G16R16F, D3DFMT_UNKNOWN,        LoadLA16FToRGBA16F                       );
 
-    InsertD3D9FormatInfo(&map, GL_ALPHA8_EXT,                       D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       FallbackLoad<gl::supportsSSE2, LoadA8ToBGRA8_SSE2, LoadA8ToBGRA8>);
+    InsertD3D9FormatInfo(&map, GL_ALPHA8_EXT,                       D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadA8ToBGRA8                            );
 
     InsertD3D9FormatInfo(&map, GL_RGB8_OES,                         D3DFMT_X8R8G8B8,      D3DFMT_X8R8G8B8,       LoadRGB8ToBGRX8                           );
     InsertD3D9FormatInfo(&map, GL_RGB565,                           D3DFMT_X8R8G8B8,      D3DFMT_X8R8G8B8,       LoadR5G6B5ToBGRA8                         );
-    InsertD3D9FormatInfo(&map, GL_RGBA8_OES,                        D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       FallbackLoad<gl::supportsSSE2, LoadRGBA8ToBGRA8_SSE2, LoadRGBA8ToBGRA8>);
+    InsertD3D9FormatInfo(&map, GL_RGBA8_OES,                        D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadRGBA8ToBGRA8                          );
     InsertD3D9FormatInfo(&map, GL_RGBA4,                            D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadRGBA4ToBGRA8                          );
     InsertD3D9FormatInfo(&map, GL_RGB5_A1,                          D3DFMT_A8R8G8B8,      D3DFMT_A8R8G8B8,       LoadRGB5A1ToBGRA8                         );
     InsertD3D9FormatInfo(&map, GL_R8_EXT,                           D3DFMT_X8R8G8B8,      D3DFMT_X8R8G8B8,       LoadR8ToBGRX8                             );
@@ -297,6 +276,7 @@ static D3D9FormatMap BuildD3D9FormatMap()
     // then changing the format and loading function appropriately.
     InsertD3D9FormatInfo(&map, GL_LUMINANCE8_EXT,                   D3DFMT_L8,            D3DFMT_UNKNOWN,        LoadToNative<GLubyte, 1>                  );
     InsertD3D9FormatInfo(&map, GL_LUMINANCE8_ALPHA8_EXT,            D3DFMT_A8L8,          D3DFMT_UNKNOWN,        LoadToNative<GLubyte, 2>                  );
+    // clang-format on
 
     return map;
 }

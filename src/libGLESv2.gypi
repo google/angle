@@ -51,7 +51,6 @@
             'image_util/loadimage.h',
             'image_util/loadimage.inl',
             'image_util/loadimage_etc.cpp',
-            'image_util/loadimage_sse2.cpp',
         ],
         'libangle_includes':
         [

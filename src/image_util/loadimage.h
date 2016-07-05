@@ -35,16 +35,6 @@ void LoadA8ToBGRA8(size_t width,
                    size_t outputRowPitch,
                    size_t outputDepthPitch);
 
-void LoadA8ToBGRA8_SSE2(size_t width,
-                        size_t height,
-                        size_t depth,
-                        const uint8_t *input,
-                        size_t inputRowPitch,
-                        size_t inputDepthPitch,
-                        uint8_t *output,
-                        size_t outputRowPitch,
-                        size_t outputDepthPitch);
-
 void LoadA32FToRGBA32F(size_t width,
                        size_t height,
                        size_t depth,
@@ -214,16 +204,6 @@ void LoadR5G6B5ToRGBA8(size_t width,
                        uint8_t *output,
                        size_t outputRowPitch,
                        size_t outputDepthPitch);
-
-void LoadRGBA8ToBGRA8_SSE2(size_t width,
-                           size_t height,
-                           size_t depth,
-                           const uint8_t *input,
-                           size_t inputRowPitch,
-                           size_t inputDepthPitch,
-                           uint8_t *output,
-                           size_t outputRowPitch,
-                           size_t outputDepthPitch);
 
 void LoadRGBA8ToBGRA8(size_t width,
                       size_t height,

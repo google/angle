@@ -135,7 +135,7 @@ inline unsigned int unorm(float x)
 
 inline bool supportsSSE2()
 {
-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM)
+#if defined(ANGLE_USE_SSE)
     static bool checked = false;
     static bool supports = false;
 
@@ -144,21 +144,22 @@ inline bool supportsSSE2()
         return supports;
     }
 
-    int info[4];
-    __cpuid(info, 0);
-
-    if (info[0] >= 1)
+#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM)
     {
-        __cpuid(info, 1);
+        int info[4];
+        __cpuid(info, 0);
 
-        supports = (info[3] >> 26) & 1;
+        if (info[0] >= 1)
+        {
+            __cpuid(info, 1);
+
+            supports = (info[3] >> 26) & 1;
+        }
     }
-
+#endif  // defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM)
     checked = true;
-
     return supports;
-#else
-    UNIMPLEMENTED();
+#else  // defined(ANGLE_USE_SSE)
     return false;
 #endif
 }
