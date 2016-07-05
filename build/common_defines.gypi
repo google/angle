@@ -7,7 +7,7 @@
     {
         'component%': 'static_library',
         'use_libpci%': 1,
-        'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/8.1',
+        'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/10',
         # build/gyp_angle sets this to 1.
         'angle_standalone%': '0',
 
