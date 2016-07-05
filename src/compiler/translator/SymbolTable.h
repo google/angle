@@ -469,7 +469,8 @@ class TSymbolTable : angle::NonCopyable
               mInvariantVaryings.count(originalName) > 0);
     }
 
-    void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
+    void setGlobalInvariant() { mGlobalInvariant = true; }
+    bool getGlobalInvariant() const { return mGlobalInvariant; }
 
     static int nextUniqueId()
     {

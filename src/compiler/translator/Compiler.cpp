@@ -246,7 +246,10 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     if (success)
     {
         mPragma = parseContext.pragma();
-        symbolTable.setGlobalInvariant(mPragma.stdgl.invariantAll);
+        if (mPragma.stdgl.invariantAll)
+        {
+            symbolTable.setGlobalInvariant();
+        }
 
         root = parseContext.getTreeRoot();
         root = intermediate.postProcess(root);
