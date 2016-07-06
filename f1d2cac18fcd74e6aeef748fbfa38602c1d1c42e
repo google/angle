@@ -70,6 +70,24 @@
       "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_daa2d2a9",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-07-06T20:10:25Z",
+      "side": 1,
+      "message": "Good point on using TexImage or TexStorage.\n\nInstead of extending EXT_copy_image, how about we add the parameters we need to CHROMIUM_copy_texture?   \n\nI also wonder how the lack of mip level is enough for Chromium to implement what it needs for WebGL. MipLevels are just the beginning. texSubImage3D takes an arbitrary level and depth and it also accepts a Canvas or Video element as input. I suppose you could always introduce a single level intermediate texture but that is suboptimal.",
+      "parentUuid": "1dd9c63e_ba76f372",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
