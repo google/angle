@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dd9c63e_548860d1",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "nit: We could avoid the copy here by using strlen and std::string::compare",
+      "range": {
+        "startLine": 173,
+        "startChar": 3,
+        "endLine": 173,
+        "endChar": 34
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_b420cca2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "We have a ParseAndStripArrayIndex helper function.  It may help simplify this logic.",
+      "range": {
+        "startLine": 486,
+        "startChar": 16,
+        "endLine": 514,
+        "endChar": 17
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_54114051",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "Can this be validated higher up?",
+      "range": {
+        "startLine": 552,
+        "startChar": 12,
+        "endLine": 553,
+        "endChar": 90
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_94f6682c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "Same comment about validation.",
+      "range": {
+        "startLine": 558,
+        "startChar": 8,
+        "endLine": 558,
+        "endChar": 79
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_d417103a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1751,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "If we\u0027re dropping the static, I think it could at least remain const.",
+      "range": {
+        "startLine": 1749,
+        "startChar": 0,
+        "endLine": 1751,
+        "endChar": 56
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_7443a434",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "nit: Can make this have a default implementation with UNREACHABLE",
+      "range": {
+        "startLine": 87,
+        "startChar": 63,
+        "endLine": 87,
+        "endChar": 67
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_d4a4701f",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:11:59Z",
+      "side": 1,
+      "message": "This doesn\u0027t look like an ES extension",
+      "range": {
+        "startLine": 1783,
+        "startChar": 7,
+        "endLine": 1783,
+        "endChar": 37
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
