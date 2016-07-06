@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_bcf99885",
+        "filename": "src/libANGLE/renderer/TextureImpl.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_0184e124",
+      "range": {
+        "startLine": 30,
+        "startChar": 21,
+        "endLine": 30,
+        "endChar": 41
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_2181e514",
         "filename": "src/libANGLE/renderer/TextureImpl.cpp",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "namespace comment",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 1
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_dced7cc2",
+        "filename": "src/libANGLE/renderer/TextureImpl.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_2181e514",
       "range": {
         "startLine": 43,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_fcea40a7",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_5c816c12",
+      "range": {
+        "startLine": 264,
+        "startChar": 11,
+        "endLine": 264,
+        "endChar": 15
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_7c86302d",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 14
@@ -82,6 +154,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 278,
+        "startChar": 7,
+        "endLine": 278,
+        "endChar": 11
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_1ce8c4ad",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_7c86302d",
       "range": {
         "startLine": 278,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_3ce588d5",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1868,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_9c8bf432",
+      "range": {
+        "startLine": 1868,
+        "startChar": 13,
+        "endLine": 1868,
+        "endChar": 40
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_bc90b85b",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 14
@@ -128,6 +248,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "nit: add the skipValidation checks",
+      "range": {
+        "startLine": 1902,
+        "startChar": 13,
+        "endLine": 1902,
+        "endChar": 43
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_5c25ec0a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1902,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_bc90b85b",
       "range": {
         "startLine": 1902,
         "startChar": 13,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_1c4c44b6",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_dc949c50",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 11
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_7cad509b",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 14
@@ -174,6 +342,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "nit: comment",
+      "range": {
+        "startLine": 244,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 6
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_7cce303e",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_7cad509b",
       "range": {
         "startLine": 244,
         "startChar": 0,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_2d11d452",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_fc91605d",
+      "range": {
+        "startLine": 289,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 5
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_1c9fe46a",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 14
@@ -220,6 +436,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "can you replace all these with GLColor arrays and use them when possible in this file?",
+      "range": {
+        "startLine": 296,
+        "startChar": 4,
+        "endLine": 296,
+        "endChar": 11
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_4df1b834",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_1c9fe46a",
       "range": {
         "startLine": 296,
         "startChar": 4,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "1dd9c63e_cd04e812",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_5ca88c8c",
+      "range": {
+        "startLine": 559,
+        "startChar": 13,
+        "endLine": 559,
+        "endChar": 26
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_3c9ca873",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 14
@@ -266,6 +530,30 @@
       "writtenOn": "2016-07-05T19:47:02Z",
       "side": 1,
       "message": "nice to have all these tests, do they come from Chromium?",
+      "range": {
+        "startLine": 560,
+        "startChar": 7,
+        "endLine": 560,
+        "endChar": 22
+      },
+      "revId": "25dd421a1f73c4c339de1449a4d859c685dd82bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_0d0fb02c",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T15:19:00Z",
+      "side": 1,
+      "message": "About half of these did.  I had to write a bunch of new ones to cover the flipping and multiplying logic.",
+      "parentUuid": "1dd9c63e_3c9ca873",
       "range": {
         "startLine": 560,
         "startChar": 7,
