@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dd9c63e_346e7c7c",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-07-06T18:19:28Z",
+      "side": 1,
+      "message": "I know I am a bit late to the party but can we get this part of the implementation enhanced to handle any texture level or subresource? Since developers will be using this extension to implement texImage2D from an arbitrary source, they will need to be able to copy into levels other than level zero.",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
