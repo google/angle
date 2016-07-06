@@ -34,6 +34,24 @@
       "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_7a6aab9e",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-07-06T19:28:39Z",
+      "side": 1,
+      "message": "I presume you mean the extension at https://www.khronos.org/registry/gles/extensions/EXT/EXT_copy_image.txt?\n\nFrom reading the spec for EXT_copy_image, it only has CopyImageSubDataEXT. I think we also need the equivalent of CopyImageDataEXT, which is analogous to glCopyTextureCHROMIUM.\n\nDoes EXT_copy_image handle things cube maps and volume textures?",
+      "parentUuid": "1dd9c63e_17c41a46",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
