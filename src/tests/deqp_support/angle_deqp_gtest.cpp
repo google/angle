@@ -31,14 +31,12 @@ const char *g_TestExpectationsSearchPaths[] = {
 };
 
 const char *g_CaseListFiles[] = {
-    "gles2-master.txt", "gles3-master.txt", "egl-master.txt",
+    "gles2-master.txt", "gles3-master.txt", "gles31-master.txt", "egl-master.txt",
 };
 
-const char *g_TestExpectationsFiles[] =
-{
-    "deqp_gles2_test_expectations.txt",
-    "deqp_gles3_test_expectations.txt",
-    "deqp_egl_test_expectations.txt",
+const char *g_TestExpectationsFiles[] = {
+    "deqp_gles2_test_expectations.txt", "deqp_gles3_test_expectations.txt",
+    "deqp_gles31_test_expectations.txt", "deqp_egl_test_expectations.txt",
 };
 
 // During the CaseList initialization we cannot use the GTEST FAIL macro to quit the program because
@@ -238,7 +236,11 @@ class dEQP_GLES3 : public dEQPTest<1>
 {
 };
 
-class dEQP_EGL : public dEQPTest<2>
+class dEQP_GLES31 : public dEQPTest<2>
+{
+};
+
+class dEQP_EGL : public dEQPTest<3>
 {
 };
 
@@ -258,6 +260,10 @@ ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES2);
 
 #ifdef ANGLE_DEQP_GLES3_TESTS
 ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES3);
+#endif
+
+#ifdef ANGLE_DEQP_GLES31_TESTS
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES31);
 #endif
 
 #ifdef ANGLE_DEQP_EGL_TESTS

@@ -262,16 +262,19 @@ if (build_angle_deqp_tests) {
   api_names = [
     "gles2",
     "gles3",
+    "gles31",
     "egl",
   ]
   target_defines = [
     "ANGLE_DEQP_GLES2_TESTS",
     "ANGLE_DEQP_GLES3_TESTS",
+    "ANGLE_DEQP_GLES31_TESTS",
     "ANGLE_DEQP_EGL_TESTS",
   ]
   target_sources = [
     deqp_gypi.deqp_gles2_sources,
     deqp_gypi.deqp_gles3_sources,
+    deqp_gypi.deqp_gles31_sources,
     deqp_gypi.deqp_egl_sources,
   ]
 
@@ -280,6 +283,7 @@ if (build_angle_deqp_tests) {
             0,
             1,
             2,
+            3,
           ]) {
     api_name = api_names[index]
     config_name = "angle_deqp_lib${api_name}_config"
