@@ -16,6 +16,24 @@
       "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_17c41a46",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T18:27:01Z",
+      "side": 1,
+      "message": "Maybe I should look into implementing EXT_copy_image but with some additional parameters for the premultiply/unmultiply/flip?",
+      "parentUuid": "1dd9c63e_346e7c7c",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
