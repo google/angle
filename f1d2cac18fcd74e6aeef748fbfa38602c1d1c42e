@@ -52,6 +52,24 @@
       "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1dd9c63e_ba76f372",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-06T19:36:35Z",
+      "side": 1,
+      "message": "Only having CopyImageSubDataEXT should be enough, you can always create an empty mip level using TexImage or TexStorage.\n\nI think that extension doesn\u0027t do everything we\u0027d want though, it wouldn\u0027t convert things like RGBA-\u003eRGB or LA-\u003eRGBA.\n\nI wonder how the lack of mip level is enough for chromium to implement what it needs for WebGL.",
+      "parentUuid": "1dd9c63e_7a6aab9e",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
