@@ -7,8 +7,9 @@ import("//build/config/dcheck_always_on.gni")
 import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
 import("//third_party/angle/build/angle_common.gni")
+import("//ui/ozone/ozone.gni")
 
-if (use_ozone) {
+if (ozone_platform_gbm) {
   pkg_config("libdrm") {
     packages = [ "libdrm" ]
   }
@@ -374,7 +375,7 @@ static_library("libANGLE") {
         "log",
       ]
     }
-    if (use_ozone) {
+    if (ozone_platform_gbm) {
       configs += [ ":libdrm" ]
       defines += [ "ANGLE_USE_OZONE" ]
       deps += [ "//third_party/minigbm" ]
