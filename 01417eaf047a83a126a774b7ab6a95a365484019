@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5d36dec8_c9dc5123",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-07T09:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_548860d1",
+      "range": {
+        "startLine": 173,
+        "startChar": 3,
+        "endLine": 173,
+        "endChar": 34
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_b420cca2",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5d36dec8_e9e115d6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-07T09:13:09Z",
+      "side": 1,
+      "message": "Right, also there\u0027s a bug here. I obviously want to use the input.mappedName for the variable name that gets passed to the next level.",
+      "parentUuid": "1dd9c63e_b420cca2",
+      "range": {
+        "startLine": 486,
+        "startChar": 16,
+        "endLine": 514,
+        "endChar": 17
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_54114051",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2016-07-06T18:11:59Z",
       "side": 1,
       "message": "Can this be validated higher up?",
+      "range": {
+        "startLine": 552,
+        "startChar": 12,
+        "endLine": 553,
+        "endChar": 90
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_29c40d46",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-07T09:13:09Z",
+      "side": 1,
+      "message": "Hmm, I guess one way to do this would be to split the implementation into two functions. One that would do the binding match and return the information about the binding and one that would call the binding matching and then call the driver. The validation layer could also call that matcher function. Does that make sense?",
+      "parentUuid": "1dd9c63e_54114051",
       "range": {
         "startLine": 552,
         "startChar": 12,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "9d42162f_ebf83182",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1751,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-07T09:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_d417103a",
+      "range": {
+        "startLine": 1749,
+        "startChar": 0,
+        "endLine": 1751,
+        "endChar": 56
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_7443a434",
         "filename": "src/libANGLE/renderer/ProgramImpl.h",
         "patchSetId": 8
@@ -151,6 +247,30 @@
       "writtenOn": "2016-07-06T18:11:59Z",
       "side": 1,
       "message": "This doesn\u0027t look like an ES extension",
+      "range": {
+        "startLine": 1783,
+        "startChar": 7,
+        "endLine": 1783,
+        "endChar": 37
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_49d14103",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1783,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-07T09:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dd9c63e_d4a4701f",
       "range": {
         "startLine": 1783,
         "startChar": 7,
