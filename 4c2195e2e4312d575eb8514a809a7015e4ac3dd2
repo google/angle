@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d8f067e_e3801a12",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-07T01:26:19Z",
+      "side": 1,
+      "message": "Sorry about this -- this code is wrong. I misdiagnosed the failure of pragma_fragment in deqp/data/gles2/shaders/preprocessor.test. I\u0027ll post a revised patch.",
+      "range": {
+        "startLine": 256,
+        "startChar": 8,
+        "endLine": 256,
+        "endChar": 9
+      },
+      "revId": "4c2195e2e4312d575eb8514a809a7015e4ac3dd2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
