@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5d36dec8_895df968",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "current code uses following:\n if (identifier.compare(0, 3, \"gl_\") \u003d\u003d 0)",
+      "range": {
+        "startLine": 163,
+        "startChar": 21,
+        "endLine": 163,
+        "endChar": 22
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_548860d1",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 8
@@ -43,6 +66,23 @@
         "endLine": 173,
         "endChar": 34
       },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d4dfe58_919a7c2e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "extra newline",
       "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -276,6 +316,115 @@
         "startChar": 7,
         "endLine": 1783,
         "endChar": 37
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_e9d755c9",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "vector was already used, so at least that does not need to be included?",
+      "range": {
+        "startLine": 13,
+        "startChar": 16,
+        "endLine": 13,
+        "endChar": 17
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_a962bd21",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "EXT_dsa is not GLES extension.",
+      "range": {
+        "startLine": 697,
+        "startChar": 35,
+        "endLine": 697,
+        "endChar": 37
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_6949a5a5",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "add a comment that should pass at least with 364.12",
+      "range": {
+        "startLine": 1792,
+        "startChar": 13,
+        "endLine": 1792,
+        "endChar": 21
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_494ce1b6",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1847,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "bindProgram()",
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d36dec8_294fadad",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1108349
+      },
+      "writtenOn": "2016-07-07T11:43:26Z",
+      "side": 1,
+      "message": "need to assert that this succeeds.",
+      "range": {
+        "startLine": 1848,
+        "startChar": 4,
+        "endLine": 1848,
+        "endChar": 15
       },
       "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
