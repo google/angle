@@ -1420,6 +1420,7 @@ TextureStorage11_External::TextureStorage11_External(
     mTextureHeight  = desc.Height;
     mTextureDepth   = 1;
     mInternalFormat = glDesc.internalFormat;
+    mHasKeyedMutex = (desc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX) != 0;
 
     const d3d11::TextureFormat &formatInfo =
         d3d11::GetTextureFormatInfo(mInternalFormat, renderer->getRenderer11DeviceCaps());
@@ -1430,6 +1431,12 @@ TextureStorage11_External::TextureStorage11_External(
 TextureStorage11_External::~TextureStorage11_External()
 {
     SafeRelease(mTexture);
+    if (mHasKeyedMutex)
+    {
+        // If the keyed mutex is released that will unbind it and cause the state cache to become
+        // desynchronized.
+        mRenderer->getStateManager()->invalidateBoundViews();
+    }
 }
 
 gl::Error TextureStorage11_External::copyToStorage(TextureStorage *destStorage)
