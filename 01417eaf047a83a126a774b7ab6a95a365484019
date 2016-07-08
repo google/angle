@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "da4d7487_c590da5b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-08T08:15:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d4dfe58_919a7c2e",
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dd9c63e_b420cca2",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 8
@@ -369,6 +387,30 @@
     },
     {
       "key": {
+        "uuid": "5a6264ef_298aed2e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-08T08:15:35Z",
+      "side": 1,
+      "message": "Reformulated the condition.",
+      "parentUuid": "5d36dec8_a962bd21",
+      "range": {
+        "startLine": 697,
+        "startChar": 35,
+        "endLine": 697,
+        "endChar": 37
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d36dec8_6949a5a5",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 8
@@ -380,6 +422,30 @@
       "writtenOn": "2016-07-07T11:43:26Z",
       "side": 1,
       "message": "add a comment that should pass at least with 364.12",
+      "range": {
+        "startLine": 1792,
+        "startChar": 13,
+        "endLine": 1792,
+        "endChar": 21
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa295886_2ea307b1",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-08T08:15:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d36dec8_6949a5a5",
       "range": {
         "startLine": 1792,
         "startChar": 13,
@@ -409,6 +475,24 @@
     },
     {
       "key": {
+        "uuid": "da4d7487_a59dde71",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1847,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-08T08:15:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d36dec8_494ce1b6",
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d36dec8_294fadad",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 8
@@ -420,6 +504,30 @@
       "writtenOn": "2016-07-07T11:43:26Z",
       "side": 1,
       "message": "need to assert that this succeeds.",
+      "range": {
+        "startLine": 1848,
+        "startChar": 4,
+        "endLine": 1848,
+        "endChar": 15
+      },
+      "revId": "01417eaf047a83a126a774b7ab6a95a365484019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a593046_88b317f8",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1848,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-08T08:15:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d36dec8_294fadad",
       "range": {
         "startLine": 1848,
         "startChar": 4,
