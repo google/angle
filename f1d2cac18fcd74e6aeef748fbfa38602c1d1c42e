@@ -88,6 +88,24 @@
       "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "daf6544b_092a6c6f",
+        "filename": "extensions/CHROMIUM_copy_texture.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-08T17:07:56Z",
+      "side": 1,
+      "message": "Alright, I think the best approach is to land this and look into updating the function afterwards since it will likely require an update to Chrome too.  I know this extension needs some updates for the new ES3 formats so we can probably lump it in with that.",
+      "parentUuid": "1dd9c63e_daa2d2a9",
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
