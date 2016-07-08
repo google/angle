@@ -225,6 +225,7 @@ class TextureStorage11_External : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     int mSubresourceIndex;
+    bool mHasKeyedMutex;
 
     Image11 *mAssociatedImage;
 };
