@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da3e54ec_1d1273ae",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-08T20:11:03Z",
+      "side": 1,
+      "message": "nit: remove static and Capitalize... just noticed this",
+      "range": {
+        "startLine": 12,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 48
+      },
+      "revId": "0ba9b462191fa40c773cfd7b447b9912338a53f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da3e54ec_5d851bed",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-08T20:11:03Z",
+      "side": 1,
+      "message": "Now that you\u0027re adding HLSL, I think these might be better structured as some virtual methods with a HLSL and GLSL specific class.",
+      "range": {
+        "startLine": 12,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 48
+      },
+      "revId": "0ba9b462191fa40c773cfd7b447b9912338a53f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da3e54ec_3d0daf90",
+        "filename": "src/tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-08T20:11:03Z",
+      "side": 1,
+      "message": "nit: if defined(ANGLE_ENABLE_HLSL)",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 6
+      },
+      "revId": "0ba9b462191fa40c773cfd7b447b9912338a53f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
