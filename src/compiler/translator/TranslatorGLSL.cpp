@@ -37,10 +37,12 @@ void TranslatorGLSL::translate(TIntermNode *root, int compileOptions)
     // Write GLSL version.
     writeVersion(root);
 
-    writePragma();
-
     // Write extension behaviour as needed
     writeExtensionBehavior(root);
+
+    // Write pragmas after extensions because some drivers consider pragmas
+    // like non-preprocessor tokens.
+    writePragma();
 
     bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
 
