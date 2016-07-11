@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "fa295886_4e3d3380",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-11T12:39:32Z",
+      "side": 1,
+      "message": "Hmm, that\u0027s true. Done.",
+      "parentUuid": "da3e54ec_5d851bed",
+      "range": {
+        "startLine": 12,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 48
+      },
+      "revId": "0ba9b462191fa40c773cfd7b447b9912338a53f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da3e54ec_3d0daf90",
         "filename": "src/tests/compiler_tests/DebugShaderPrecision_test.cpp",
         "patchSetId": 5
@@ -59,6 +83,30 @@
       "writtenOn": "2016-07-08T20:11:03Z",
       "side": 1,
       "message": "nit: if defined(ANGLE_ENABLE_HLSL)",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 6
+      },
+      "revId": "0ba9b462191fa40c773cfd7b447b9912338a53f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa295886_91e57ed8",
+        "filename": "src/tests/compiler_tests/DebugShaderPrecision_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-11T12:39:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da3e54ec_3d0daf90",
       "range": {
         "startLine": 21,
         "startChar": 1,
