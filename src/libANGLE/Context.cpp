@@ -137,9 +137,14 @@ void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
 }
 
 // Attribute map queries.
-EGLint GetClientVersion(const egl::AttributeMap &attribs)
+EGLint GetClientMajorVersion(const egl::AttributeMap &attribs)
 {
     return static_cast<EGLint>(attribs.get(EGL_CONTEXT_CLIENT_VERSION, 1));
+}
+
+EGLint GetClientMinorVersion(const egl::AttributeMap &attribs)
+{
+    return static_cast<EGLint>(attribs.get(EGL_CONTEXT_MINOR_VERSION, 0));
 }
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
@@ -212,7 +217,9 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const egl::Config *config,
                  const Context *shareContext,
                  const egl::AttributeMap &attribs)
-    : ValidationContext(GetClientVersion(attribs),
+
+    : ValidationContext(GetClientMajorVersion(attribs),
+                        GetClientMinorVersion(attribs),
                         &mGLState,
                         mCaps,
                         mTextureCaps,
@@ -222,7 +229,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
                         GetNoError(attribs)),
       mImplementation(implFactory->createContext(mState)),
       mCompiler(nullptr),
-      mClientVersion(GetClientVersion(attribs)),
+      mClientMajorVersion(GetClientMajorVersion(attribs)),
+      mClientMinorVersion(GetClientMinorVersion(attribs)),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
       mHasBeenCurrent(false),
@@ -237,7 +245,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
     initCaps();
 
-    mGLState.initialize(mCaps, mExtensions, mClientVersion, GetDebug(attribs));
+    mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -265,7 +273,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     Texture *zeroTextureCube = new Texture(mImplementation.get(), 0, GL_TEXTURE_CUBE_MAP);
     mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
 
-    if (mClientVersion >= 3)
+    if (mClientMajorVersion >= 3)
     {
         // TODO: These could also be enabled via extension
         Texture *zeroTexture3D = new Texture(mImplementation.get(), 0, GL_TEXTURE_3D);
@@ -301,7 +309,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     bindPixelPackBuffer(0);
     bindPixelUnpackBuffer(0);
 
-    if (mClientVersion >= 3)
+    if (mClientMajorVersion >= 3)
     {
         // [OpenGL ES 3.0.2] section 2.14.1 pg 85:
         // In the initial state, a default transform feedback object is bound and treated as
@@ -1297,8 +1305,12 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_FRAGMENT_INPUT_COMPONENTS:            *params = mCaps.maxFragmentInputComponents;                     break;
       case GL_MIN_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.minProgramTexelOffset;                          break;
       case GL_MAX_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.maxProgramTexelOffset;                          break;
-      case GL_MAJOR_VERSION:                            *params = mClientVersion;                                       break;
-      case GL_MINOR_VERSION:                            *params = 0;                                                    break;
+      case GL_MAJOR_VERSION:
+          *params = mClientMajorVersion;
+          break;
+      case GL_MINOR_VERSION:
+          *params = mClientMinorVersion;
+          break;
       case GL_MAX_ELEMENTS_INDICES:                     *params = mCaps.maxElementsIndices;                             break;
       case GL_MAX_ELEMENTS_VERTICES:                    *params = mCaps.maxElementsVertices;                            break;
       case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mCaps.maxTransformFeedbackInterleavedComponents; break;
@@ -2144,7 +2156,7 @@ void Context::initCaps()
 
     mLimitations = mImplementation->getNativeLimitations();
 
-    if (mClientVersion < 3)
+    if (mClientMajorVersion < 3)
     {
         // Disable ES3+ extensions
         mExtensions.colorBufferFloat = false;
@@ -2152,7 +2164,7 @@ void Context::initCaps()
         mExtensions.textureNorm16         = false;
     }
 
-    if (mClientVersion > 2)
+    if (mClientMajorVersion > 2)
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
@@ -2193,11 +2205,11 @@ void Context::initCaps()
         // Caps are AND'd with the renderer caps because some core formats are still unsupported in
         // ES3.
         formatCaps.texturable =
-            formatCaps.texturable && formatInfo.textureSupport(mClientVersion, mExtensions);
+            formatCaps.texturable && formatInfo.textureSupport(mClientMajorVersion, mExtensions);
         formatCaps.renderable =
-            formatCaps.renderable && formatInfo.renderSupport(mClientVersion, mExtensions);
+            formatCaps.renderable && formatInfo.renderSupport(mClientMajorVersion, mExtensions);
         formatCaps.filterable =
-            formatCaps.filterable && formatInfo.filterSupport(mClientVersion, mExtensions);
+            formatCaps.filterable && formatInfo.filterSupport(mClientMajorVersion, mExtensions);
 
         // OpenGL ES does not support multisampling with integer formats
         if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)
@@ -2932,42 +2944,42 @@ void Context::pixelStorei(GLenum pname, GLint param)
             break;
 
         case GL_UNPACK_ROW_LENGTH:
-            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().unpackSubimage);
             mGLState.setUnpackRowLength(param);
             break;
 
         case GL_UNPACK_IMAGE_HEIGHT:
-            ASSERT(getClientVersion() >= 3);
+            ASSERT(getClientMajorVersion() >= 3);
             mGLState.setUnpackImageHeight(param);
             break;
 
         case GL_UNPACK_SKIP_IMAGES:
-            ASSERT(getClientVersion() >= 3);
+            ASSERT(getClientMajorVersion() >= 3);
             mGLState.setUnpackSkipImages(param);
             break;
 
         case GL_UNPACK_SKIP_ROWS:
-            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().unpackSubimage);
             mGLState.setUnpackSkipRows(param);
             break;
 
         case GL_UNPACK_SKIP_PIXELS:
-            ASSERT((getClientVersion() >= 3) || getExtensions().unpackSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().unpackSubimage);
             mGLState.setUnpackSkipPixels(param);
             break;
 
         case GL_PACK_ROW_LENGTH:
-            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().packSubimage);
             mGLState.setPackRowLength(param);
             break;
 
         case GL_PACK_SKIP_ROWS:
-            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().packSubimage);
             mGLState.setPackSkipRows(param);
             break;
 
         case GL_PACK_SKIP_PIXELS:
-            ASSERT((getClientVersion() >= 3) || getExtensions().packSubimage);
+            ASSERT((getClientMajorVersion() >= 3) || getExtensions().packSubimage);
             mGLState.setPackSkipPixels(param);
             break;
 

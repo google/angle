@@ -172,13 +172,13 @@ class DrawBuffersTest : public ANGLETest
 
     void setupMRTProgram(bool bufferEnabled[8], GLuint *programOut)
     {
-        if (getClientVersion() == 3)
+        if (getClientMajorVersion() == 3)
         {
             setupMRTProgramESSL3(bufferEnabled, programOut);
         }
         else
         {
-            ASSERT_EQ(getClientVersion(), 2);
+            ASSERT_EQ(getClientMajorVersion(), 2);
             setupMRTProgramESSL1(bufferEnabled, programOut);
         }
     }
@@ -232,7 +232,7 @@ TEST_P(DrawBuffersTest, VerifyD3DLimits)
 
 TEST_P(DrawBuffersTest, Gaps)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
     {
         std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
                   << std::endl;
@@ -263,7 +263,7 @@ TEST_P(DrawBuffersTest, Gaps)
 
 TEST_P(DrawBuffersTest, FirstAndLast)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
     {
         std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
                   << std::endl;
@@ -303,7 +303,7 @@ TEST_P(DrawBuffersTest, FirstAndLast)
 
 TEST_P(DrawBuffersTest, FirstHalfNULL)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
     {
         std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
                   << std::endl;
@@ -342,7 +342,7 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
 
 TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_draw_buffers"))
     {
         std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
                   << std::endl;

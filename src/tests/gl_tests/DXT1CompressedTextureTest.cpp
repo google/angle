@@ -124,7 +124,8 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
         return;
     }
 
-    if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
+    if (getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
         std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage or GL_OES_rgb8_rgba8" << std::endl;
         return;
@@ -138,7 +139,7 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    if (getClientVersion() < 3)
+    if (getClientMajorVersion() < 3)
     {
         glTexStorage2DEXT(GL_TEXTURE_2D, pixel_levels, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height);
     }
@@ -239,12 +240,13 @@ TEST_P(DXT1CompressedTextureTestES3, PBOCompressedTexImage)
 
 TEST_P(DXT1CompressedTextureTestD3D11, PBOCompressedTexStorage)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_compression_dxt1"))
     {
         return;
     }
 
-    if (getClientVersion() < 3 && (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
+    if (getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8")))
     {
         return;
     }
@@ -257,7 +259,7 @@ TEST_P(DXT1CompressedTextureTestD3D11, PBOCompressedTexStorage)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    if (getClientVersion() < 3)
+    if (getClientMajorVersion() < 3)
     {
         glTexStorage2DEXT(GL_TEXTURE_2D, pixel_levels, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width, pixel_0_height);
     }

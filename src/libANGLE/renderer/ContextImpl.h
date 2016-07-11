@@ -139,7 +139,8 @@ class ContextImpl : public GLImplFactory
     virtual const gl::Limitations &getNativeLimitations() const = 0;
 
     const gl::ContextState &getContextState() { return mState; }
-    int getClientVersion() const { return mState.getClientVersion(); }
+    int getClientMajorVersion() const { return mState.getClientMajorVersion(); }
+    int getClientMinorVersion() const { return mState.getClientMinorVersion(); }
     const gl::State &getGLState() const { return mState.getState(); }
     const gl::Caps &getCaps() const { return mState.getCaps(); }
     const gl::TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }

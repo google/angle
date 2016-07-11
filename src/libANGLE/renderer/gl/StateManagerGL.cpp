@@ -784,7 +784,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
     framebufferGL->syncDrawState();
 
     // Seamless cubemaps are required for ES3 and higher contexts.
-    setTextureCubemapSeamlessEnabled(data.getClientVersion() >= 3);
+    setTextureCubemapSeamlessEnabled(data.getClientMajorVersion() >= 3);
 
     // Set the current transform feedback state
     gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();

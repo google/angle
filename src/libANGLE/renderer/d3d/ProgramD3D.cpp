@@ -399,7 +399,7 @@ int ProgramD3DMetadata::getRendererMajorShaderModel() const
 
 bool ProgramD3DMetadata::usesBroadcast(const gl::ContextState &data) const
 {
-    return (mFragmentShader->usesFragColor() && data.getClientVersion() < 3);
+    return (mFragmentShader->usesFragColor() && data.getClientMajorVersion() < 3);
 }
 
 bool ProgramD3DMetadata::usesFragDepth() const

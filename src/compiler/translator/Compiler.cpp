@@ -34,9 +34,8 @@
 
 bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
-    return (spec == SH_WEBGL_SPEC ||
-            spec == SH_CSS_SHADERS_SPEC ||
-            spec == SH_WEBGL2_SPEC);
+    return (spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC || spec == SH_WEBGL2_SPEC ||
+            spec == SH_WEBGL3_SPEC);
 }
 
 bool IsGLSL130OrNewer(ShShaderOutput output)
@@ -116,6 +115,9 @@ int MapSpecToShaderVersion(ShShaderSpec spec)
       case SH_GLES3_SPEC:
       case SH_WEBGL2_SPEC:
         return 300;
+      case SH_GLES3_1_SPEC:
+      case SH_WEBGL3_SPEC:
+          return 310;
       default:
         UNREACHABLE();
         return 0;

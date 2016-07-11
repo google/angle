@@ -102,28 +102,42 @@ int main(int argc, char *argv[])
                 {
                     switch (argv[0][3])
                     {
-                      case 'e':
-                        if (argv[0][4] == '3')
-                        {
-                            spec = SH_GLES3_SPEC;
-                        }
-                        else
-                        {
-                            spec = SH_GLES2_SPEC;
-                        }
-                        break;
-                      case 'w':
-                        if (argv[0][4] == '2')
-                        {
-                            spec = SH_WEBGL2_SPEC;
-                        }
-                        else
-                        {
-                            spec = SH_WEBGL_SPEC;
-                        }
-                        break;
-                      case 'c': spec = SH_CSS_SHADERS_SPEC; break;
-                      default: failCode = EFailUsage;
+                        case 'e':
+                            if (argv[0][4] == '3')
+                            {
+                                if (argv[0][5] == '1')
+                                {
+                                    spec = SH_GLES3_1_SPEC;
+                                }
+                                else
+                                {
+                                    spec = SH_GLES3_SPEC;
+                                }
+                            }
+                            else
+                            {
+                                spec = SH_GLES2_SPEC;
+                            }
+                            break;
+                        case 'w':
+                            if (argv[0][4] == '3')
+                            {
+                                spec = SH_WEBGL3_SPEC;
+                            }
+                            else if (argv[0][4] == '2')
+                            {
+                                spec = SH_WEBGL2_SPEC;
+                            }
+                            else
+                            {
+                                spec = SH_WEBGL_SPEC;
+                            }
+                            break;
+                        case 'c':
+                            spec = SH_CSS_SHADERS_SPEC;
+                            break;
+                        default:
+                            failCode = EFailUsage;
                     }
                 }
                 else

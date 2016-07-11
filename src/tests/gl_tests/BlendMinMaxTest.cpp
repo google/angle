@@ -38,7 +38,7 @@ class BlendMinMaxTest : public ANGLETest
 
     void runTest(GLenum colorFormat)
     {
-        if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"))
+        if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_blend_minmax"))
         {
             std::cout << "Test skipped because ES3 or GL_EXT_blend_minmax is not available." << std::endl;
             return;
@@ -166,7 +166,7 @@ TEST_P(BlendMinMaxTest, RGBA8)
 
 TEST_P(BlendMinMaxTest, RGBA32f)
 {
-    if (getClientVersion() < 3 || !extensionEnabled("GL_EXT_color_buffer_float"))
+    if (getClientMajorVersion() < 3 || !extensionEnabled("GL_EXT_color_buffer_float"))
     {
         std::cout << "Test skipped because ES3 and GL_EXT_color_buffer_float are not available."
                   << std::endl;
@@ -192,7 +192,7 @@ TEST_P(BlendMinMaxTest, RGBA32f)
 
 TEST_P(BlendMinMaxTest, RGBA16F)
 {
-    if (getClientVersion() < 3 && !extensionEnabled("GL_EXT_color_buffer_half_float"))
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_color_buffer_half_float"))
     {
         std::cout << "Test skipped because ES3 or GL_EXT_color_buffer_half_float is not available."
                   << std::endl;

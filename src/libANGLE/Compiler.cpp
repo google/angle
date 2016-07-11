@@ -23,17 +23,33 @@ namespace
 // ShFinalize.
 size_t activeCompilerHandles = 0;
 
+ShShaderSpec SelectShaderSpec(GLint majorVersion, GLint minorVersion)
+{
+    if (majorVersion >= 3)
+    {
+        if (minorVersion == 1)
+        {
+            return SH_GLES3_1_SPEC;
+        }
+        else
+        {
+            return SH_GLES3_SPEC;
+        }
+    }
+    return SH_GLES2_SPEC;
+}
+
 }  // anonymous namespace
 
 Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     : mImplementation(implFactory->createCompiler()),
-      mSpec(state.getClientVersion() > 2 ? SH_GLES3_SPEC : SH_GLES2_SPEC),
+      mSpec(SelectShaderSpec(state.getClientMajorVersion(), state.getClientMinorVersion())),
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources(),
       mFragmentCompiler(nullptr),
       mVertexCompiler(nullptr)
 {
-    ASSERT(state.getClientVersion() == 2 || state.getClientVersion() == 3);
+    ASSERT(state.getClientMajorVersion() == 2 || state.getClientMajorVersion() == 3);
 
     const gl::Caps &caps             = state.getCaps();
     const gl::Extensions &extensions = state.getExtensions();

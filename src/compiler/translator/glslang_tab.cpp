@@ -377,9 +377,16 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 }
 
-#define ES3_ONLY(TOKEN, LINE, REASON) {  \
-    if (context->getShaderVersion() != 300) {  \
-        context->error(LINE, REASON " supported in GLSL ES 3.00 only ", TOKEN);  \
+#define ES3_OR_NEWER(TOKEN, LINE, REASON) {  \
+    if (context->getShaderVersion() < 300) {  \
+        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only ", TOKEN);  \
+        context->recover();  \
+    }  \
+}
+
+#define ES3_1_ONLY(TOKEN, LINE, REASON) {  \
+    if (context->getShaderVersion() != 310) {  \
+        context->error(LINE, REASON " supported in GLSL ES 3.10 only ", TOKEN);  \
         context->recover();  \
     }  \
 }
@@ -696,34 +703,34 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   214,   214,   215,   218,   228,   231,   236,   241,   246,
-     251,   257,   260,   263,   266,   269,   272,   278,   286,   297,
-     301,   309,   312,   318,   322,   329,   335,   344,   352,   358,
-     365,   375,   378,   381,   384,   394,   395,   396,   397,   405,
-     406,   409,   412,   419,   420,   423,   429,   430,   434,   441,
-     442,   445,   448,   451,   457,   458,   461,   467,   468,   475,
-     476,   483,   484,   491,   492,   498,   499,   505,   506,   512,
-     513,   519,   520,   528,   529,   530,   531,   535,   536,   537,
-     541,   545,   549,   553,   560,   563,   569,   577,   585,   588,
-     594,   605,   609,   613,   617,   624,   630,   633,   640,   648,
-     669,   678,   688,   716,   721,   731,   736,   746,   749,   752,
-     755,   761,   768,   771,   775,   779,   784,   789,   796,   800,
-     804,   808,   813,   818,   822,   829,   839,   845,   848,   854,
-     860,   867,   876,   886,   894,   897,   904,   908,   912,   917,
-     925,   928,   932,   936,   945,   954,   962,   972,   984,   987,
-     990,   996,  1003,  1006,  1012,  1015,  1018,  1024,  1027,  1032,
-    1047,  1051,  1055,  1059,  1063,  1067,  1072,  1077,  1082,  1087,
-    1092,  1097,  1102,  1107,  1112,  1117,  1122,  1127,  1132,  1137,
-    1142,  1147,  1152,  1157,  1162,  1167,  1172,  1176,  1180,  1184,
-    1188,  1192,  1196,  1200,  1204,  1208,  1212,  1216,  1220,  1224,
-    1228,  1232,  1241,  1249,  1253,  1266,  1266,  1269,  1269,  1275,
-    1278,  1294,  1297,  1306,  1310,  1316,  1323,  1338,  1342,  1346,
-    1347,  1353,  1354,  1355,  1356,  1357,  1358,  1359,  1363,  1364,
-    1364,  1364,  1374,  1375,  1379,  1379,  1380,  1380,  1385,  1388,
-    1398,  1401,  1407,  1408,  1412,  1420,  1424,  1431,  1431,  1438,
-    1441,  1448,  1453,  1468,  1468,  1473,  1473,  1480,  1480,  1488,
-    1491,  1497,  1500,  1506,  1510,  1517,  1520,  1523,  1526,  1529,
-    1538,  1542,  1549,  1552,  1558,  1558
+       0,   221,   221,   222,   225,   235,   238,   243,   248,   253,
+     258,   264,   267,   270,   273,   276,   279,   285,   293,   304,
+     308,   316,   319,   325,   329,   336,   342,   351,   359,   365,
+     372,   382,   385,   388,   391,   401,   402,   403,   404,   412,
+     413,   416,   419,   426,   427,   430,   436,   437,   441,   448,
+     449,   452,   455,   458,   464,   465,   468,   474,   475,   482,
+     483,   490,   491,   498,   499,   505,   506,   512,   513,   519,
+     520,   526,   527,   535,   536,   537,   538,   542,   543,   544,
+     548,   552,   556,   560,   567,   570,   576,   584,   592,   595,
+     601,   612,   616,   620,   624,   631,   637,   640,   647,   655,
+     676,   685,   695,   723,   728,   738,   743,   753,   756,   759,
+     762,   768,   775,   778,   782,   786,   791,   796,   803,   807,
+     811,   815,   820,   825,   829,   836,   846,   852,   855,   861,
+     867,   874,   883,   893,   901,   904,   911,   915,   919,   924,
+     932,   935,   946,   950,   959,   968,   976,   986,   998,  1001,
+    1004,  1010,  1017,  1020,  1026,  1029,  1032,  1038,  1041,  1046,
+    1061,  1065,  1069,  1073,  1077,  1081,  1086,  1091,  1096,  1101,
+    1106,  1111,  1116,  1121,  1126,  1131,  1136,  1141,  1146,  1151,
+    1156,  1161,  1166,  1171,  1176,  1181,  1186,  1190,  1194,  1198,
+    1202,  1206,  1210,  1214,  1218,  1222,  1226,  1230,  1234,  1238,
+    1242,  1246,  1255,  1263,  1267,  1280,  1280,  1283,  1283,  1289,
+    1292,  1308,  1311,  1320,  1324,  1330,  1337,  1352,  1356,  1360,
+    1361,  1367,  1368,  1369,  1370,  1371,  1372,  1373,  1377,  1378,
+    1378,  1378,  1388,  1389,  1393,  1393,  1394,  1394,  1399,  1402,
+    1412,  1415,  1421,  1422,  1426,  1434,  1438,  1445,  1445,  1452,
+    1455,  1462,  1467,  1482,  1482,  1487,  1487,  1494,  1494,  1502,
+    1505,  1511,  1514,  1520,  1524,  1531,  1534,  1537,  1540,  1543,
+    1552,  1556,  1563,  1566,  1572,  1572
 };
 #endif
 
@@ -2505,7 +2512,7 @@ yyreduce:
   case 20:
 
     {
-        ES3_ONLY("", (yylsp[0]), "methods");
+        ES3_OR_NEWER("", (yylsp[0]), "methods");
         (yyval.interm) = (yyvsp[0].interm);
         (yyval.interm).nodePair.node2 = (yyvsp[-2].interm.intermTypedNode);
     }
@@ -2580,7 +2587,7 @@ yyreduce:
 
     {
         if ((yyvsp[0].interm.type).array) {
-            ES3_ONLY("[]", (yylsp[0]), "array constructor");
+            ES3_OR_NEWER("[]", (yylsp[0]), "array constructor");
         }
         (yyval.interm.function) = context->addConstructorFunc((yyvsp[0].interm.type));
     }
@@ -2667,7 +2674,7 @@ yyreduce:
   case 38:
 
     {
-        ES3_ONLY("~", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER("~", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitwiseNot;
     }
 
@@ -2698,7 +2705,7 @@ yyreduce:
   case 42:
 
     {
-        ES3_ONLY("%", (yylsp[-1]), "integer modulus operator");
+        ES3_OR_NEWER("%", (yylsp[-1]), "integer modulus operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpIMod, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2735,7 +2742,7 @@ yyreduce:
   case 47:
 
     {
-        ES3_ONLY("<<", (yylsp[-1]), "bit-wise operator");
+        ES3_OR_NEWER("<<", (yylsp[-1]), "bit-wise operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpBitShiftLeft, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2744,7 +2751,7 @@ yyreduce:
   case 48:
 
     {
-        ES3_ONLY(">>", (yylsp[-1]), "bit-wise operator");
+        ES3_OR_NEWER(">>", (yylsp[-1]), "bit-wise operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpBitShiftRight, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2819,7 +2826,7 @@ yyreduce:
   case 58:
 
     {
-        ES3_ONLY("&", (yylsp[-1]), "bit-wise operator");
+        ES3_OR_NEWER("&", (yylsp[-1]), "bit-wise operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpBitwiseAnd, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2834,7 +2841,7 @@ yyreduce:
   case 60:
 
     {
-        ES3_ONLY("^", (yylsp[-1]), "bit-wise operator");
+        ES3_OR_NEWER("^", (yylsp[-1]), "bit-wise operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpBitwiseXor, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2849,7 +2856,7 @@ yyreduce:
   case 62:
 
     {
-        ES3_ONLY("|", (yylsp[-1]), "bit-wise operator");
+        ES3_OR_NEWER("|", (yylsp[-1]), "bit-wise operator");
         (yyval.interm.intermTypedNode) = context->addBinaryMath(EOpBitwiseOr, (yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
     }
 
@@ -2948,7 +2955,7 @@ yyreduce:
   case 76:
 
     {
-        ES3_ONLY("%=", (yyloc), "integer modulus operator");
+        ES3_OR_NEWER("%=", (yyloc), "integer modulus operator");
         (yyval.interm).op = EOpIModAssign;
     }
 
@@ -2969,7 +2976,7 @@ yyreduce:
   case 79:
 
     {
-        ES3_ONLY("<<=", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER("<<=", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitShiftLeftAssign;
     }
 
@@ -2978,7 +2985,7 @@ yyreduce:
   case 80:
 
     {
-        ES3_ONLY(">>=", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER(">>=", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitShiftRightAssign;
     }
 
@@ -2987,7 +2994,7 @@ yyreduce:
   case 81:
 
     {
-        ES3_ONLY("&=", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER("&=", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitwiseAndAssign;
     }
 
@@ -2996,7 +3003,7 @@ yyreduce:
   case 82:
 
     {
-        ES3_ONLY("^=", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER("^=", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitwiseXorAssign;
     }
 
@@ -3005,7 +3012,7 @@ yyreduce:
   case 83:
 
     {
-        ES3_ONLY("|=", (yyloc), "bit-wise operator");
+        ES3_OR_NEWER("|=", (yyloc), "bit-wise operator");
         (yyval.interm).op = EOpBitwiseOrAssign;
     }
 
@@ -3085,7 +3092,7 @@ yyreduce:
   case 91:
 
     {
-        ES3_ONLY(getQualifierString((yyvsp[-4].interm.type).qualifier), (yylsp[-4]), "interface blocks");
+        ES3_OR_NEWER(getQualifierString((yyvsp[-4].interm.type).qualifier), (yylsp[-4]), "interface blocks");
         (yyval.interm.intermNode) = context->addInterfaceBlock((yyvsp[-4].interm.type), (yylsp[-3]), *(yyvsp[-3].lex).string, (yyvsp[-2].interm.fieldList), NULL, (yyloc), NULL, (yyloc));
     }
 
@@ -3094,7 +3101,7 @@ yyreduce:
   case 92:
 
     {
-        ES3_ONLY(getQualifierString((yyvsp[-5].interm.type).qualifier), (yylsp[-5]), "interface blocks");
+        ES3_OR_NEWER(getQualifierString((yyvsp[-5].interm.type).qualifier), (yylsp[-5]), "interface blocks");
         (yyval.interm.intermNode) = context->addInterfaceBlock((yyvsp[-5].interm.type), (yylsp[-4]), *(yyvsp[-4].lex).string, (yyvsp[-3].interm.fieldList), (yyvsp[-1].lex).string, (yylsp[-1]), NULL, (yyloc));
     }
 
@@ -3103,7 +3110,7 @@ yyreduce:
   case 93:
 
     {
-        ES3_ONLY(getQualifierString((yyvsp[-8].interm.type).qualifier), (yylsp[-8]), "interface blocks");
+        ES3_OR_NEWER(getQualifierString((yyvsp[-8].interm.type).qualifier), (yylsp[-8]), "interface blocks");
         (yyval.interm.intermNode) = context->addInterfaceBlock((yyvsp[-8].interm.type), (yylsp[-7]), *(yyvsp[-7].lex).string, (yyvsp[-6].interm.fieldList), (yyvsp[-4].lex).string, (yylsp[-4]), (yyvsp[-2].interm.intermTypedNode), (yylsp[-3]));
     }
 
@@ -3339,7 +3346,7 @@ yyreduce:
   case 115:
 
     {
-        ES3_ONLY("[]", (yylsp[-4]), "implicitly sized array");
+        ES3_OR_NEWER("[]", (yylsp[-4]), "implicitly sized array");
         (yyval.interm) = (yyvsp[-6].interm);
         (yyval.interm).intermAggregate = context->parseArrayInitDeclarator((yyval.interm).type, (yyvsp[-6].interm).intermAggregate, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
@@ -3349,7 +3356,7 @@ yyreduce:
   case 116:
 
     {
-        ES3_ONLY("=", (yylsp[-1]), "first-class arrays (array initializer)");
+        ES3_OR_NEWER("=", (yylsp[-1]), "first-class arrays (array initializer)");
         (yyval.interm) = (yyvsp[-7].interm);
         (yyval.interm).intermAggregate = context->parseArrayInitDeclarator((yyval.interm).type, (yyvsp[-7].interm).intermAggregate, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
@@ -3395,7 +3402,7 @@ yyreduce:
   case 121:
 
     {
-        ES3_ONLY("[]", (yylsp[-3]), "implicitly sized array");
+        ES3_OR_NEWER("[]", (yylsp[-3]), "implicitly sized array");
         (yyval.interm).type = (yyvsp[-5].interm.type);
         (yyval.interm).intermAggregate = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
@@ -3405,7 +3412,7 @@ yyreduce:
   case 122:
 
     {
-        ES3_ONLY("=", (yylsp[-1]), "first-class arrays (array initializer)");
+        ES3_OR_NEWER("=", (yylsp[-1]), "first-class arrays (array initializer)");
         (yyval.interm).type = (yyvsp[-6].interm.type);
         (yyval.interm).intermAggregate = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
@@ -3436,7 +3443,7 @@ yyreduce:
         (yyval.interm.type) = (yyvsp[0].interm.type);
 
         if ((yyvsp[0].interm.type).array) {
-            ES3_ONLY("[]", (yylsp[0]), "first-class-array");
+            ES3_OR_NEWER("[]", (yylsp[0]), "first-class-array");
             if (context->getShaderVersion() != 300) {
                 (yyvsp[0].interm.type).clearArrayness();
             }
@@ -3544,7 +3551,7 @@ yyreduce:
     {
         context->error((yylsp[0]), "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString((yyvsp[0].interm.type).qualifier));
         context->recover();
-        
+
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtVoid, qual, (yylsp[0]));
     }
@@ -3600,8 +3607,15 @@ yyreduce:
   case 141:
 
     {
-        ES3_ONLY("in", (yylsp[0]), "storage qualifier");
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
+        ES3_OR_NEWER("in", (yylsp[0]), "storage qualifier");
+        if (context->getShaderType() == GL_FRAGMENT_SHADER)
+        {
+            (yyval.interm.type).qualifier = EvqFragmentIn;
+        }
+        else
+        {
+            (yyval.interm.type).qualifier = EvqVertexIn;
+        }
     }
 
     break;
@@ -3609,7 +3623,7 @@ yyreduce:
   case 142:
 
     {
-        ES3_ONLY("out", (yylsp[0]), "storage qualifier");
+        ES3_OR_NEWER("out", (yylsp[0]), "storage qualifier");
         (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
 
@@ -3618,7 +3632,7 @@ yyreduce:
   case 143:
 
     {
-        ES3_ONLY("centroid in", (yylsp[-1]), "storage qualifier");
+        ES3_OR_NEWER("centroid in", (yylsp[-1]), "storage qualifier");
         if (context->getShaderType() == GL_VERTEX_SHADER)
         {
             context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
@@ -3632,7 +3646,7 @@ yyreduce:
   case 144:
 
     {
-        ES3_ONLY("centroid out", (yylsp[-1]), "storage qualifier");
+        ES3_OR_NEWER("centroid out", (yylsp[-1]), "storage qualifier");
         if (context->getShaderType() == GL_FRAGMENT_SHADER)
         {
             context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
@@ -3709,7 +3723,7 @@ yyreduce:
   case 151:
 
     {
-        ES3_ONLY("layout", (yylsp[-3]), "qualifier");
+        ES3_OR_NEWER("layout", (yylsp[-3]), "qualifier");
         (yyval.interm.layoutQualifier) = (yyvsp[-1].interm.layoutQualifier);
     }
 
@@ -3766,7 +3780,7 @@ yyreduce:
   case 158:
 
     {
-        ES3_ONLY("[]", (yylsp[-1]), "implicitly sized array");
+        ES3_OR_NEWER("[]", (yylsp[-1]), "implicitly sized array");
         (yyval.interm.type) = (yyvsp[-2].interm.type);
         (yyval.interm.type).setArraySize(0);
     }

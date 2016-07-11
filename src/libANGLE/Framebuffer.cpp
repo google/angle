@@ -520,7 +520,7 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
 
                 // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
                 // in GLES 3.0, there is no such restriction
-                if (state.getClientVersion() < 3)
+                if (state.getClientMajorVersion() < 3)
                 {
                     if (formatInfo.pixelBytes != colorbufferSize)
                     {
@@ -654,7 +654,7 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
         }
 
         // Starting from ES 3.0 stencil and depth, if present, should be the same image
-        if (state.getClientVersion() >= 3 && depthAttachment.isAttached() &&
+        if (state.getClientMajorVersion() >= 3 && depthAttachment.isAttached() &&
             stencilAttachment != depthAttachment)
         {
             return GL_FRAMEBUFFER_UNSUPPORTED;
@@ -669,7 +669,7 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
 
     // In ES 2.0, all color attachments must have the same width and height.
     // In ES 3.0, there is no such restriction.
-    if (state.getClientVersion() < 3 && !mState.attachmentsHaveSameDimensions())
+    if (state.getClientMajorVersion() < 3 && !mState.attachmentsHaveSameDimensions())
     {
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
     }

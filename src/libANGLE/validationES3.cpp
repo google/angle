@@ -220,7 +220,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
     // error instead of a GL_INVALID_ENUM error. As this validation function is only called in
     // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    if (!formatInfo.textureSupport(context->getClientMajorVersion(), context->getExtensions()))
     {
         context->handleError(Error(GL_INVALID_VALUE));
         return false;
@@ -236,7 +236,8 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
         if (i->format == format || i->type == type)
         {
             const gl::InternalFormat &info = gl::GetInternalFormatInfo(i->internalFormat);
-            bool supported = info.textureSupport(context->getClientVersion(), context->getExtensions());
+            bool supported =
+                info.textureSupport(context->getClientMajorVersion(), context->getExtensions());
             if (supported && i->type == type)
             {
                 typeSupported = true;
@@ -403,7 +404,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
         }
 
-        if (!actualFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+        if (!actualFormatInfo.textureSupport(context->getClientMajorVersion(),
+                                             context->getExtensions()))
         {
             context->handleError(Error(GL_INVALID_ENUM));
             return false;
@@ -1109,7 +1111,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
     }
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    if (!formatInfo.textureSupport(context->getClientMajorVersion(), context->getExtensions()))
     {
         context->handleError(Error(GL_INVALID_ENUM));
         return false;
@@ -1162,7 +1164,7 @@ bool ValidateES3TexStorage3DParameters(Context *context,
 
 bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
         return false;
@@ -1173,7 +1175,7 @@ bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
 
 bool ValidateEndQuery(gl::Context *context, GLenum target)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
         return false;
@@ -1184,7 +1186,7 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
 
 bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *params)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
         return false;
@@ -1195,7 +1197,7 @@ bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *pa
 
 bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "GLES version < 3.0"));
         return false;
@@ -1207,7 +1209,7 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1406,7 +1408,7 @@ bool ValidateES3RenderbufferStorageParameters(gl::Context *context, GLenum targe
 bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
                                    const GLenum *attachments)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Operation only supported on ES 3.0 and above"));
@@ -1434,7 +1436,7 @@ bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numA
 
 bool ValidateClearBuffer(ValidationContext *context)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1459,7 +1461,7 @@ bool ValidateDrawRangeElements(Context *context,
                                const GLvoid *indices,
                                IndexRange *indexRange)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -1488,7 +1490,7 @@ bool ValidateDrawRangeElements(Context *context,
 
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1499,7 +1501,7 @@ bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLu
 
 bool ValidateReadBuffer(Context *context, GLenum src)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1559,7 +1561,7 @@ bool ValidateCompressedTexImage3D(Context *context,
                                   GLsizei imageSize,
                                   const GLvoid *data)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1618,7 +1620,7 @@ bool ValidateCompressedTexImage3D(Context *context,
 
 bool ValidateBindVertexArray(Context *context, GLuint array)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1629,7 +1631,7 @@ bool ValidateBindVertexArray(Context *context, GLuint array)
 
 bool ValidateIsVertexArray(Context *context)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1644,7 +1646,7 @@ bool ValidateProgramBinary(Context *context,
                            const void *binary,
                            GLint length)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1660,7 +1662,7 @@ bool ValidateGetProgramBinary(Context *context,
                               GLenum *binaryFormat,
                               void *binary)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1671,7 +1673,7 @@ bool ValidateGetProgramBinary(Context *context,
 
 bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, GLint value)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -1713,7 +1715,7 @@ bool ValidateBlitFramebuffer(Context *context,
                              GLbitfield mask,
                              GLenum filter)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1837,7 +1839,7 @@ bool ValidateClearBufferfi(ValidationContext *context,
 
 bool ValidateDrawBuffers(ValidationContext *context, GLsizei n, const GLenum *bufs)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -1857,7 +1859,7 @@ bool ValidateCopyTexSubImage3D(Context *context,
                                GLsizei width,
                                GLsizei height)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1879,7 +1881,7 @@ bool ValidateTexImage3D(Context *context,
                         GLenum type,
                         const GLvoid *pixels)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1903,7 +1905,7 @@ bool ValidateTexSubImage3D(Context *context,
                            GLenum type,
                            const GLvoid *pixels)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1927,7 +1929,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
                                      GLsizei imageSize,
                                      const GLvoid *data)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -2014,7 +2016,7 @@ bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *)
 
 bool ValidateGenOrDeleteES3(Context *context, GLint n)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2024,7 +2026,7 @@ bool ValidateGenOrDeleteES3(Context *context, GLint n)
 
 bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2039,7 +2041,7 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
 
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2069,7 +2071,7 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
 
 bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2102,7 +2104,7 @@ bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, G
 
 bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2113,7 +2115,7 @@ bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GL
 
 bool ValidateUnmapBuffer(Context *context, GLenum target)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -2128,7 +2130,7 @@ bool ValidateMapBufferRange(Context *context,
                             GLsizeiptr length,
                             GLbitfield access)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
@@ -2142,7 +2144,7 @@ bool ValidateFlushMappedBufferRange(Context *context,
                                     GLintptr offset,
                                     GLsizeiptr length)
 {
-    if (context->getClientVersion() < 3)
+    if (context->getClientMajorVersion() < 3)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;

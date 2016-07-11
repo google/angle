@@ -326,14 +326,27 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
         }
     }
 
-    if ((clientMajorVersion != 2 && clientMajorVersion != 3) || clientMinorVersion != 0)
+    switch (clientMajorVersion)
     {
-        return Error(EGL_BAD_CONFIG);
-    }
-
-    if (clientMajorVersion == 3 && !(configuration->conformant & EGL_OPENGL_ES3_BIT_KHR))
-    {
-        return Error(EGL_BAD_CONFIG);
+        case 2:
+            if (clientMinorVersion != 0)
+            {
+                return Error(EGL_BAD_CONFIG);
+            }
+            break;
+        case 3:
+            if (clientMinorVersion != 0 && clientMinorVersion != 1)
+            {
+                return Error(EGL_BAD_CONFIG);
+            }
+            if (!(configuration->conformant & EGL_OPENGL_ES3_BIT_KHR))
+            {
+                return Error(EGL_BAD_CONFIG);
+            }
+            break;
+        default:
+            return Error(EGL_BAD_CONFIG);
+            break;
     }
 
     // Note: EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR does not apply to ES
@@ -368,7 +381,7 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             return Error(EGL_BAD_MATCH);
         }
 
-        if (shareContext->getClientVersion() != clientMajorVersion)
+        if (shareContext->getClientMajorVersion() != clientMajorVersion)
         {
             return Error(EGL_BAD_CONTEXT);
         }

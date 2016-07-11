@@ -211,7 +211,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setDebugEnabled(bool enabled);
     void setNoErrorEnabled(bool enabled);
 
-    int getClientVersion() const;
+    int getClientMajorVersion() const;
     int getClientMinorVersion() const;
 
     EGLWindow *getEGLWindow() const;

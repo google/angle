@@ -188,7 +188,7 @@ class Texture2DTest : public TexCoordDrawTest
 
         setUpProgram();
 
-        if (getClientVersion() < 3)
+        if (getClientMajorVersion() < 3)
         {
             if (!extensionEnabled("GL_OES_texture_float"))
             {

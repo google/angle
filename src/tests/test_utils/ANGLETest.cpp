@@ -642,7 +642,7 @@ void ANGLETest::setNoErrorEnabled(bool enabled)
     mEGLWindow->setNoErrorEnabled(enabled);
 }
 
-int ANGLETest::getClientVersion() const
+int ANGLETest::getClientMajorVersion() const
 {
     return mEGLWindow->getClientMajorVersion();
 }

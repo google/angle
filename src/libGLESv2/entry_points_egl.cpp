@@ -728,8 +728,8 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
         *value = context->getClientType();
         break;
       case EGL_CONTEXT_CLIENT_VERSION:
-        *value = context->getClientVersion();
-        break;
+          *value = context->getClientMajorVersion();
+          break;
       case EGL_RENDER_BUFFER:
         *value = context->getRenderBuffer();
         break;

@@ -48,36 +48,39 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 148
+#define ANGLE_SH_VERSION 149
 
 typedef enum {
-  SH_GLES2_SPEC = 0x8B40,
-  SH_WEBGL_SPEC = 0x8B41,
+    SH_GLES2_SPEC,
+    SH_WEBGL_SPEC,
 
-  SH_GLES3_SPEC = 0x8B86,
-  SH_WEBGL2_SPEC = 0x8B87,
+    SH_GLES3_SPEC,
+    SH_WEBGL2_SPEC,
 
-  // The CSS Shaders spec is a subset of the WebGL spec.
-  //
-  // In both CSS vertex and fragment shaders, ANGLE:
-  // (1) Reserves the "css_" prefix.
-  // (2) Renames the main function to css_main.
-  // (3) Disables the gl_MaxDrawBuffers built-in.
-  //
-  // In CSS fragment shaders, ANGLE:
-  // (1) Disables the gl_FragColor built-in.
-  // (2) Disables the gl_FragData built-in.
-  // (3) Enables the css_MixColor built-in.
-  // (4) Enables the css_ColorMatrix built-in.
-  //
-  // After passing a CSS shader through ANGLE, the browser is expected to append
-  // a new main function to it.
-  // This new main function will call the css_main function.
-  // It may also perform additional operations like varying assignment, texture
-  // access, and gl_FragColor assignment in order to implement the CSS Shaders
-  // blend modes.
-  //
-  SH_CSS_SHADERS_SPEC = 0x8B42
+    SH_GLES3_1_SPEC,
+    SH_WEBGL3_SPEC,
+
+    // The CSS Shaders spec is a subset of the WebGL spec.
+    //
+    // In both CSS vertex and fragment shaders, ANGLE:
+    // (1) Reserves the "css_" prefix.
+    // (2) Renames the main function to css_main.
+    // (3) Disables the gl_MaxDrawBuffers built-in.
+    //
+    // In CSS fragment shaders, ANGLE:
+    // (1) Disables the gl_FragColor built-in.
+    // (2) Disables the gl_FragData built-in.
+    // (3) Enables the css_MixColor built-in.
+    // (4) Enables the css_ColorMatrix built-in.
+    //
+    // After passing a CSS shader through ANGLE, the browser is expected to append
+    // a new main function to it.
+    // This new main function will call the css_main function.
+    // It may also perform additional operations like varying assignment, texture
+    // access, and gl_FragColor assignment in order to implement the CSS Shaders
+    // blend modes.
+    //
+    SH_CSS_SHADERS_SPEC
 } ShShaderSpec;
 
 typedef enum
