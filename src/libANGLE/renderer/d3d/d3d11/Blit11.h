@@ -242,6 +242,7 @@ class Blit11 : angle::NonCopyable
 
     void clearShaderMap();
     void releaseResolveDepthStencilResources();
+    gl::Error initResolveDepthStencil(const gl::Extents &extents);
 
     Renderer11 *mRenderer;
 
@@ -269,6 +270,7 @@ class Blit11 : angle::NonCopyable
     ID3D11Buffer *mSwizzleCB;
 
     d3d11::LazyShader<ID3D11VertexShader> mResolveDepthStencilVS;
+    d3d11::LazyShader<ID3D11PixelShader> mResolveDepthPS;
     d3d11::LazyShader<ID3D11PixelShader> mResolveDepthStencilPS;
     d3d11::LazyShader<ID3D11PixelShader> mResolveStencilPS;
     ID3D11ShaderResourceView *mStencilSRV;

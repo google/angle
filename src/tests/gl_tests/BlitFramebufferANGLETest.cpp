@@ -909,6 +909,74 @@ class BlitFramebufferTest : public ANGLETest
     }
 };
 
+// Tests resolving a multisample depth buffer.
+TEST_P(BlitFramebufferTest, MultisampleDepth)
+{
+    GLRenderbuffer renderbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuf.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 256, 256);
+
+    const std::string &vertex =
+        "#version 300 es\n"
+        "in vec2 position;\n"
+        "void main() {\n"
+        "  gl_Position = vec4(position, 0.0, 0.5);\n"
+        "}";
+    const std::string &fragment =
+        "#version 300 es\n"
+        "out mediump vec4 red;\n"
+        "void main() {\n"
+        "   red = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "   gl_FragDepth = 0.5;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(drawRed, vertex, fragment);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuf.get());
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glClearDepthf(0.5f);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    GLRenderbuffer destRenderbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, destRenderbuf.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 256, 256);
+
+    GLFramebuffer resolved;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolved.get());
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                              destRenderbuf.get());
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.get());
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, resolved.get());
+
+    GLTexture colorbuf;
+    glBindTexture(GL_TEXTURE_2D, colorbuf.get());
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuf.get(), 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Draw with 0.5f test and the test should pass.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(drawRed.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test resolving a multisampled stencil buffer.
 TEST_P(BlitFramebufferTest, MultisampleStencil)
 {

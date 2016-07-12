@@ -52,6 +52,7 @@
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughlum3d11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughlumalpha3d11ps.h"
 
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvedepth11_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvedepthstencil11_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvedepthstencil11_vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvestencil11_ps.h"
@@ -258,8 +259,8 @@ void CopyDepthStencil(const gl::Box &sourceArea,
     {
         for (int column = 0; column < destArea.width; ++column)
         {
-            const float *sourcePixel = reinterpret_cast<const float *>(
-                sourceData + row * sourceRowPitch + column * srcPixelStride);
+            ptrdiff_t offset         = row * sourceRowPitch + column * srcPixelStride;
+            const float *sourcePixel = reinterpret_cast<const float *>(sourceData + offset);
 
             uint8_t *destPixel = destData + row * destRowPitch + column * destPixelStride;
 
@@ -483,6 +484,7 @@ Blit11::Blit11(Renderer11 *renderer)
       mResolveDepthStencilVS(g_VS_ResolveDepthStencil,
                              ArraySize(g_VS_ResolveDepthStencil),
                              "Blit11::mResolveDepthStencilVS"),
+      mResolveDepthPS(g_PS_ResolveDepth, ArraySize(g_PS_ResolveDepth), "Blit11::mResolveDepthPS"),
       mResolveDepthStencilPS(g_PS_ResolveDepthStencil,
                              ArraySize(g_PS_ResolveDepthStencil),
                              "Blit11::mResolveDepthStencilPS"),
@@ -1829,62 +1831,131 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
 
 gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 {
-    // TODO(jmadill)
-    return gl::Error(GL_INVALID_OPERATION, "Multisample depth stencil not implemented yet");
+    const auto &extents          = depth->getExtents();
+    ID3D11Device *device         = mRenderer->getDevice();
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    ANGLE_TRY(initResolveDepthStencil(extents));
+
+    // Notify the Renderer that all state should be invalidated.
+    mRenderer->markAllStateDirty();
+
+    // Apply the necessary state changes to the D3D11 immediate device context.
+    context->IASetInputLayout(nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->VSSetShader(mResolveDepthStencilVS.resolve(device), nullptr, 0);
+    context->GSSetShader(nullptr, nullptr, 0);
+    context->RSSetState(nullptr);
+    context->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    context->OMSetRenderTargets(1, &mResolvedDepthStencilRTView, nullptr);
+    context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+
+    ID3D11ShaderResourceView *pixelViews[] = {depth->getShaderResourceView()};
+
+    context->PSSetShaderResources(0, 1, pixelViews);
+
+    context->PSSetShader(mResolveDepthPS.resolve(device), nullptr, 0);
+
+    // Trigger the blit on the GPU.
+    context->Draw(6, 0);
+
+    gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
+
+    auto copyFunction = GetCopyDepthStencilFunction(depth->getInternalFormat());
+    auto dsFormatSet  = d3d11::GetANGLEFormatSet(depth->getANGLEFormat());
+    auto dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
+
+    ID3D11Texture2D *destTex = nullptr;
+
+    D3D11_TEXTURE2D_DESC destDesc;
+    destDesc.Width              = extents.width;
+    destDesc.Height             = extents.height;
+    destDesc.MipLevels          = 1;
+    destDesc.ArraySize          = 1;
+    destDesc.Format             = dsFormatSet.texFormat;
+    destDesc.SampleDesc.Count   = 1;
+    destDesc.SampleDesc.Quality = 0;
+    destDesc.Usage              = D3D11_USAGE_DEFAULT;
+    destDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
+    destDesc.CPUAccessFlags     = 0;
+    destDesc.MiscFlags          = 0;
+
+    HRESULT hr = device->CreateTexture2D(&destDesc, nullptr, &destTex);
+    if (FAILED(hr))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Error creating depth resolve dest texture.");
+    }
+    d3d11::SetDebugName(destTex, "resolveDepthDest");
+
+    TextureHelper11 dest = TextureHelper11::MakeAndPossess2D(destTex, depth->getANGLEFormat());
+    ANGLE_TRY(copyAndConvert(mResolvedDepthStencil, 0, copyBox, extents, dest, 0, copyBox, extents,
+                             nullptr, 0, 0, 0, 8, dsDxgiInfo.pixelBytes, copyFunction));
+    return dest;
+}
+
+gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
+{
+    // Check if we need to recreate depth stencil view
+    if (mResolvedDepthStencil.valid() && extents == mResolvedDepthStencil.getExtents())
+    {
+        return gl::NoError();
+    }
+
+    if (mResolvedDepthStencil.valid())
+    {
+        releaseResolveDepthStencilResources();
+    }
+
+    auto resolvedFormat = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
+    auto formatSet      = d3d11::GetANGLEFormatSet(resolvedFormat);
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+    textureDesc.Width              = extents.width;
+    textureDesc.Height             = extents.height;
+    textureDesc.MipLevels          = 1;
+    textureDesc.ArraySize          = 1;
+    textureDesc.Format             = formatSet.texFormat;
+    textureDesc.SampleDesc.Count   = 1;
+    textureDesc.SampleDesc.Quality = 0;
+    textureDesc.Usage              = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags          = D3D11_BIND_RENDER_TARGET;
+    textureDesc.CPUAccessFlags     = 0;
+    textureDesc.MiscFlags          = 0;
+
+    ID3D11Device *device = mRenderer->getDevice();
+
+    ID3D11Texture2D *resolvedDepthStencil = nullptr;
+    HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &resolvedDepthStencil);
+    if (FAILED(hr))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate resolved depth stencil texture");
+    }
+    d3d11::SetDebugName(resolvedDepthStencil, "Blit11::mResolvedDepthStencil");
+
+    ASSERT(mResolvedDepthStencilRTView == nullptr);
+    hr =
+        device->CreateRenderTargetView(resolvedDepthStencil, nullptr, &mResolvedDepthStencilRTView);
+    if (FAILED(hr))
+    {
+        return gl::Error(GL_OUT_OF_MEMORY,
+                         "Failed to allocate Blit11::mResolvedDepthStencilRTView");
+    }
+    d3d11::SetDebugName(mResolvedDepthStencilRTView, "Blit11::mResolvedDepthStencilRTView");
+
+    mResolvedDepthStencil = TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, resolvedFormat);
+
+    return gl::NoError();
 }
 
 gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthStencil,
                                                           bool alsoDepth)
 {
+    const auto &extents = depthStencil->getExtents();
+
+    ANGLE_TRY(initResolveDepthStencil(extents));
+
     ID3D11Device *device         = mRenderer->getDevice();
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
-    auto resolvedFormat = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
-    auto formatSet      = d3d11::GetANGLEFormatSet(resolvedFormat);
-    auto extents        = depthStencil->getExtents();
-
-    // Check if we need to recreate depth stencil view
-    if (mResolvedDepthStencil.valid() && extents != mResolvedDepthStencil.getExtents())
-    {
-        releaseResolveDepthStencilResources();
-    }
-
-    if (!mResolvedDepthStencil.valid())
-    {
-        D3D11_TEXTURE2D_DESC textureDesc;
-        textureDesc.Width              = extents.width;
-        textureDesc.Height             = extents.height;
-        textureDesc.MipLevels          = 1;
-        textureDesc.ArraySize          = 1;
-        textureDesc.Format             = formatSet.texFormat;
-        textureDesc.SampleDesc.Count   = 1;
-        textureDesc.SampleDesc.Quality = 0;
-        textureDesc.Usage              = D3D11_USAGE_DEFAULT;
-        textureDesc.BindFlags          = D3D11_BIND_RENDER_TARGET;
-        textureDesc.CPUAccessFlags     = 0;
-        textureDesc.MiscFlags          = 0;
-
-        ID3D11Texture2D *resolvedDepthStencil = nullptr;
-        HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &resolvedDepthStencil);
-        if (FAILED(hr))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate resolved depth stencil texture");
-        }
-        d3d11::SetDebugName(resolvedDepthStencil, "Blit11::mResolvedDepthStencil");
-
-        ASSERT(mResolvedDepthStencilRTView == nullptr);
-        hr = device->CreateRenderTargetView(resolvedDepthStencil, nullptr,
-                                            &mResolvedDepthStencilRTView);
-        if (FAILED(hr))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to allocate Blit11::mResolvedDepthStencilRTView");
-        }
-        d3d11::SetDebugName(mResolvedDepthStencilRTView, "Blit11::mResolvedDepthStencilRTView");
-
-        mResolvedDepthStencil =
-            TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, resolvedFormat);
-    }
 
     ID3D11Resource *stencilResource = depthStencil->getTexture();
 

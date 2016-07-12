@@ -20,6 +20,17 @@ void VS_ResolveDepthStencil(in uint id : SV_VertexID,
 Texture2DMS<float> Depth   : register(t0);
 Texture2DMS<uint2> Stencil : register(t1);
 
+void PS_ResolveDepth(in float4 position : SV_Position,
+                     in float2 texCoord : TEXCOORD0,
+                     out float depth : SV_Target0)
+{
+    // MS samplers must use Load
+    uint width, height, samples;
+    Depth.GetDimensions(width, height, samples);
+    uint2 coord = uint2(texCoord.x * float(width), texCoord.y * float(height));
+    depth = Depth.Load(coord, 0).r;
+}
+
 void PS_ResolveDepthStencil(in float4 position : SV_Position,
                             in float2 texCoord : TEXCOORD0,
                             out float2 depthStencil : SV_Target0)
