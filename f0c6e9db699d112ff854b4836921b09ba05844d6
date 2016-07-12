@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_a78070df",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-12T20:12:51Z",
+      "side": 1,
+      "message": "nit: can make this comment one line",
+      "range": {
+        "startLine": 206,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 17
+      },
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_47f53c21",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-12T20:12:51Z",
+      "side": 1,
+      "message": "nit: use InterpolationTypesMatch",
+      "range": {
+        "startLine": 358,
+        "startChar": 12,
+        "endLine": 359,
+        "endChar": 69
+      },
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_47437c54",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-12T20:12:51Z",
+      "side": 1,
+      "message": "I believe certain dEQP tests validate that instance names can differ in ES3. The ESSL spec is notably omits saying instance names must match: \n\n\"Matched block names within an interface (as defined above) must match in terms of having the same number of declarations with the same sequence of types, precisions and the same sequence of member names, as well as having the same member-wise layout qualification (see next section). Furthermore, if a matching block is declared as an array, then the array sizes must also match.\"\n\nThe ESSL 3.10 spec explicitly allows mismatch:\n\n\"When instance names are present on matched block names, it is allowed for the instance names to differ; they need not match for the blocks to match.\"\n\nAll said, we should allow mismatching instance names at link time.",
+      "range": {
+        "startLine": 405,
+        "startChar": 30,
+        "endLine": 405,
+        "endChar": 42
+      },
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
