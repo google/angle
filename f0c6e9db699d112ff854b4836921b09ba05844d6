@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "da157484_c7faccbc",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-12T20:27:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_a78070df",
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_47f53c21",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 1
@@ -48,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "da157484_e7fd48b7",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-12T20:27:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_47f53c21",
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_47437c54",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 1
@@ -65,6 +101,24 @@
         "endLine": 405,
         "endChar": 42
       },
+      "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_8719f428",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-12T20:27:22Z",
+      "side": 1,
+      "message": "Thanks for the clarification! I agree that we allow them to mismatch in ESSL 3.0 if it is explicitly allowed in ESSL 3.10.\n\nThanks!\n\nDone",
+      "parentUuid": "da157484_47437c54",
       "revId": "f0c6e9db699d112ff854b4836921b09ba05844d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
