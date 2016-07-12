@@ -40,6 +40,24 @@
       "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_872614bd",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1872,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-12T20:13:17Z",
+      "side": 1,
+      "message": "Ah, sorry, just read my own comment on InvariantAllBoth and realized that your original version was correct, and what I suggested is wrong. You can\u0027t actually use the pragma in fragment shader, and have to mark all the varyings as invariant individually, but since you have no varyings, your original shaders were fine.",
+      "parentUuid": "da157484_87a9f446",
+      "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
