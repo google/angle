@@ -58,6 +58,24 @@
       "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_67e67853",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1872,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-12T20:22:42Z",
+      "side": 1,
+      "message": "Put back to the previous version, kept the comment though :)",
+      "parentUuid": "da157484_872614bd",
+      "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
