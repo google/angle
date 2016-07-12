@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_e790a8b4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-12T20:24:42Z",
+      "side": 1,
+      "message": "Should this (and the other loop) be clippedDestArea.y + clippedDestArea.height?",
+      "range": {
+        "startLine": 256,
+        "startChar": 44,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_a7c990bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-12T20:24:42Z",
+      "side": 1,
+      "message": "I wonder if you could set this to FALSE.  I\u0027m not sure if RenderTargetWriteMask obeys the blend enable flag.",
+      "range": {
+        "startLine": 431,
+        "startChar": 49,
+        "endLine": 431,
+        "endChar": 53
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
