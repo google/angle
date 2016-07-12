@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_ffc2ec3a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-07-12T22:20:59Z",
+      "side": 1,
+      "message": "I\u0027m still worried this will hang unless we try to flush more often (either every time, or once every 10 milliseconds or something).",
+      "revId": "64b78ae04e5562fa6fc9d3309209c96e5d76e731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
