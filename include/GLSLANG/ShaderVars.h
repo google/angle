@@ -203,6 +203,9 @@ struct COMPILER_EXPORT InterfaceBlock
     // Fields from blocks with non-empty instance names are prefixed with the block name.
     std::string fieldPrefix() const;
 
+    // Decide whether two interface blocks are the same at shader link time.
+    bool isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const;
+
     std::string name;
     std::string mappedName;
     std::string instanceName;

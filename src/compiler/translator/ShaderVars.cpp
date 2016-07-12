@@ -355,7 +355,7 @@ bool Varying::isSameVaryingAtLinkTime(const Varying &other) const
 bool Varying::isSameVaryingAtLinkTime(const Varying &other, int shaderVersion) const
 {
     return (ShaderVariable::isSameVariableAtLinkTime(other, false) &&
-            interpolation == other.interpolation &&
+            InterpolationTypesMatch(interpolation, other.interpolation) &&
             (shaderVersion >= 300 || isInvariant == other.isInvariant));
 }
 
@@ -396,6 +396,26 @@ InterfaceBlock &InterfaceBlock::operator=(const InterfaceBlock &other)
 std::string InterfaceBlock::fieldPrefix() const
 {
     return instanceName.empty() ? "" : name;
+}
+
+bool InterfaceBlock::isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const
+{
+    if (name != other.name || mappedName != other.mappedName || arraySize != other.arraySize ||
+        layout != other.layout || isRowMajorLayout != other.isRowMajorLayout ||
+        fields.size() != other.fields.size())
+    {
+        return false;
+    }
+
+    for (size_t fieldIndex = 0; fieldIndex < fields.size(); ++fieldIndex)
+    {
+        if (!fields[fieldIndex].isSameInterfaceBlockFieldAtLinkTime(other.fields[fieldIndex]))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }  // namespace sh
