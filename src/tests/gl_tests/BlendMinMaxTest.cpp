@@ -23,6 +23,8 @@ class BlendMinMaxTest : public ANGLETest
 
         mProgram = 0;
         mColorLocation = -1;
+        mFramebuffer = 0;
+        mColorRenderbuffer = 0;
     }
 
     struct Color
