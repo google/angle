@@ -3828,6 +3828,19 @@ TIntermTyped *TParseContext::addComma(TIntermTyped *left,
                                       TIntermTyped *right,
                                       const TSourceLoc &loc)
 {
+    // WebGL2 section 5.26, the following results in an error:
+    // "Sequence operator applied to void, arrays, or structs containing arrays"
+    if (mShaderSpec == SH_WEBGL2_SPEC && (left->isArray() || left->getBasicType() == EbtVoid ||
+                                          left->getType().isStructureContainingArrays() ||
+                                          right->isArray() || right->getBasicType() == EbtVoid ||
+                                          right->getType().isStructureContainingArrays()))
+    {
+        error(loc,
+              "sequence operator is not allowed for void, arrays, or structs containing arrays",
+              ",");
+        recover();
+    }
+
     return intermediate.addComma(left, right, loc, mShaderVersion);
 }
 
@@ -4151,6 +4164,15 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         recover();
         return falseBlock;
     }
+    // WebGL2 section 5.26, the following results in an error:
+    // "Ternary operator applied to void, arrays, or structs containing arrays"
+    if (mShaderSpec == SH_WEBGL2_SPEC && trueBlock->getBasicType() == EbtVoid)
+    {
+        error(loc, "ternary operator is not allowed for void", ":");
+        recover();
+        return falseBlock;
+    }
+
     return intermediate.addSelection(cond, trueBlock, falseBlock, loc);
 }
 
