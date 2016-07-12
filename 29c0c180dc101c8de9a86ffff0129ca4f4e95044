@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_c8177949",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-12T21:44:28Z",
+      "side": 1,
+      "message": "tiny grammar nit: \"..have added restrictions\" or \"..have added a restriction\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 37
+      },
+      "revId": "29c0c180dc101c8de9a86ffff0129ca4f4e95044",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_08aeb141",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-12T21:44:28Z",
+      "side": 1,
+      "message": "nit: should this be \",\"?",
+      "range": {
+        "startLine": 3858,
+        "startChar": 15,
+        "endLine": 3858,
+        "endChar": 16
+      },
+      "revId": "29c0c180dc101c8de9a86ffff0129ca4f4e95044",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
