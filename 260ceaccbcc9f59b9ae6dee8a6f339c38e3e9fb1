@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_7c0a8fd1",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1872,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-12T19:50:22Z",
+      "side": 1,
+      "message": "Doesn\u0027t GLSLTest::InvariantAllBoth cover what you want to test? I\u0027m not sure having the pragma only in vertex shader is legal - this may pass just because you don\u0027t have any varyings, but I\u0027m not sure if all drivers will like this.",
+      "range": {
+        "startLine": 1872,
+        "startChar": 0,
+        "endLine": 1872,
+        "endChar": 40
+      },
+      "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
