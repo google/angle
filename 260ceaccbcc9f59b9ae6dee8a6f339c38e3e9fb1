@@ -22,6 +22,24 @@
       "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_87a9f446",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1872,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-12T20:06:09Z",
+      "side": 1,
+      "message": "It should, except that it is skipped on all Desktop OpenGL platforms. Added the pragma to the fragment shader and made the comment above the test more explicit.",
+      "parentUuid": "da157484_7c0a8fd1",
+      "revId": "260ceaccbcc9f59b9ae6dee8a6f339c38e3e9fb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
