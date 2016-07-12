@@ -1102,11 +1102,15 @@ gl::Error Renderer11::finish()
     }
 
     mDeviceContext->End(mSyncQuery);
-    mDeviceContext->Flush();
 
+    unsigned int attempt = 0;
     do
     {
-        result = mDeviceContext->GetData(mSyncQuery, NULL, 0, D3D11_ASYNC_GETDATA_DONOTFLUSH);
+        unsigned int flushFrequency = 100;
+        UINT flags = (attempt % flushFrequency == 0) ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH;
+        attempt++;
+
+        result = mDeviceContext->GetData(mSyncQuery, NULL, 0, flags);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
