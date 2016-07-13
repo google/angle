@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bace00a2_34b2b05e",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T07:50:28Z",
+      "side": 1,
+      "message": "This list should be in alphabetical order.",
+      "range": {
+        "startLine": 612,
+        "startChar": 11,
+        "endLine": 612,
+        "endChar": 59
+      },
+      "revId": "cb4a135cf74185ba2079b1c93bb676c06f159134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_14afb4f6",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 1877,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T07:50:28Z",
+      "side": 1,
+      "message": "Would be good to have angle_deqp_gtest_gles31_tests target here too. These angle_deqp_gtest* executables are an alternative way to run the dEQP tests that integrates better with other Google\u0027s test infrastructure.",
+      "revId": "cb4a135cf74185ba2079b1c93bb676c06f159134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_94a2a411",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T07:50:28Z",
+      "side": 1,
+      "message": "Would be nice to have a wildcard rule here that says that all the tests are currently failing.",
+      "revId": "cb4a135cf74185ba2079b1c93bb676c06f159134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
