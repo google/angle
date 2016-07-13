@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_fd5e6b5e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-13T12:57:40Z",
+      "side": 1,
+      "message": "nit: please open a bug for this and tag it with\n\nBUG\u003dangleproject:####",
+      "revId": "76e894751eb4348428fb120e4ff8eb132f171a82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_5d533f57",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-13T12:57:40Z",
+      "side": 1,
+      "message": "you\u0027ll need to add this to api_names as well (gles31)",
+      "range": {
+        "startLine": 262,
+        "startChar": 2,
+        "endLine": 262,
+        "endChar": 11
+      },
+      "revId": "76e894751eb4348428fb120e4ff8eb132f171a82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
