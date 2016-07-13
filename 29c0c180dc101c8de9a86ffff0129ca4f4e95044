@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "7ac1e86b_bd2c6b3e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3853,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:09:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bace00a2_d4813c6d",
+      "revId": "29c0c180dc101c8de9a86ffff0129ca4f4e95044",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_08aeb141",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -53,6 +71,30 @@
       "writtenOn": "2016-07-12T21:44:28Z",
       "side": 1,
       "message": "nit: should this be \",\"?",
+      "range": {
+        "startLine": 3858,
+        "startChar": 15,
+        "endLine": 3858,
+        "endChar": 16
+      },
+      "revId": "29c0c180dc101c8de9a86ffff0129ca4f4e95044",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_9d31a796",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3858,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:09:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_08aeb141",
       "range": {
         "startLine": 3858,
         "startChar": 15,
