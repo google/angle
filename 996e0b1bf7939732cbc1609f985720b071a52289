@@ -22,6 +22,30 @@
       "revId": "996e0b1bf7939732cbc1609f985720b071a52289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_1cd6e026",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-13T21:27:33Z",
+      "side": 1,
+      "message": "This is a different bug, patch coming soon.",
+      "parentUuid": "da157484_61564de6",
+      "range": {
+        "startLine": 112,
+        "startChar": 76,
+        "endLine": 112,
+        "endChar": 93
+      },
+      "revId": "996e0b1bf7939732cbc1609f985720b071a52289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
