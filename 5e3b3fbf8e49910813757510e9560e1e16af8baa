@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da157484_1d7707bb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-13T13:50:35Z",
+      "side": 1,
+      "message": "The ASSERTs above guarantee they\u0027re the same, but changed to be just \u0027destArea\u0027 for consistency.",
+      "parentUuid": "da157484_e790a8b4",
+      "range": {
+        "startLine": 256,
+        "startChar": 44,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_a7c990bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-12T20:24:42Z",
       "side": 1,
       "message": "I wonder if you could set this to FALSE.  I\u0027m not sure if RenderTargetWriteMask obeys the blend enable flag.",
+      "range": {
+        "startLine": 431,
+        "startChar": 49,
+        "endLine": 431,
+        "endChar": 53
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_5d805fac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-13T13:50:35Z",
+      "side": 1,
+      "message": "this block was actually dead code, removed.",
+      "parentUuid": "da157484_a7c990bb",
       "range": {
         "startLine": 431,
         "startChar": 49,
