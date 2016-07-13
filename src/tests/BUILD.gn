@@ -25,7 +25,6 @@ test("angle_unittests") {
   if (angle_enable_hlsl) {
     sources +=
         rebase_path(unittests_gypi.angle_unittests_hlsl_sources, ".", "../..")
-    defines = [ "ANGLE_ENABLE_HLSL" ]
   }
 
   sources += [ "//gpu/angle_unittest_main.cc" ]

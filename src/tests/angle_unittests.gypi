@@ -136,10 +136,6 @@
         ['OS=="win"',
         {
             # TODO(cwallez): make this angle_enable_hlsl instead (requires gyp file refactoring)
-            'defines':
-            [
-                'ANGLE_ENABLE_HLSL',
-            ],
             'sources':
             [
                 '<@(angle_unittests_hlsl_sources)',

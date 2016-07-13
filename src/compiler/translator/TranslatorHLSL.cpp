@@ -7,7 +7,6 @@
 #include "compiler/translator/TranslatorHLSL.h"
 
 #include "compiler/translator/ArrayReturnValueToOutParameter.h"
-#include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
 #include "compiler/translator/RewriteElseBlocks.h"
@@ -51,18 +50,6 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
     if (getOutputType() == SH_HLSL_3_0_OUTPUT && getShaderType() == GL_VERTEX_SHADER)
     {
         sh::RewriteElseBlocks(root, getTemporaryIndex());
-    }
-
-    bool precisionEmulation =
-        getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
-
-    if (precisionEmulation)
-    {
-        EmulatePrecision emulatePrecision(getSymbolTable(), getShaderVersion());
-        root->traverse(&emulatePrecision);
-        emulatePrecision.updateTree();
-        emulatePrecision.writeEmulationHelpers(getInfoSink().obj, getShaderVersion(),
-                                               getOutputType());
     }
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
