@@ -712,21 +712,11 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
         return computeCompressedImageSize(formatType, gl::Extents(width, 1, 1));
     }
 
-    CheckedNumeric<GLuint> checkedRowBytes(0);
-    if (rowLength > 0)
-    {
-        CheckedNumeric<GLuint> checkePixelBytes(pixelBytes);
-        checkedRowBytes = checkePixelBytes * rowLength;
-    }
-    else
-    {
-        CheckedNumeric<GLuint> checkedWidth(width);
-        const auto &typeInfo = GetTypeInfo(formatType);
-        CheckedNumeric<GLuint> checkedComponents(typeInfo.specialInterpretation ? 1u
-                                                                                : componentCount);
-        CheckedNumeric<GLuint> checkedTypeBytes(typeInfo.bytes);
-        checkedRowBytes = checkedWidth * checkedComponents * checkedTypeBytes;
-    }
+    const auto &typeInfo = GetTypeInfo(formatType);
+    CheckedNumeric<GLuint> checkedComponents(typeInfo.specialInterpretation ? 1u : componentCount);
+    CheckedNumeric<GLuint> checkedTypeBytes(typeInfo.bytes);
+    CheckedNumeric<GLuint> checkedWidth(rowLength > 0 ? rowLength : width);
+    CheckedNumeric<GLuint> checkedRowBytes = checkedWidth * checkedComponents * checkedTypeBytes;
 
     ASSERT(alignment > 0 && isPow2(alignment));
     CheckedNumeric<GLuint> checkedAlignment(alignment);
