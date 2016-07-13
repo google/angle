@@ -553,7 +553,7 @@
   "GL_DEPTH_COMPONENT32F": {
     "GL_FLOAT": [
       {
-        "loadFunction": "LoadToNative<GLfloat,1>",
+        "loadFunction": "LoadD32FToD32F",
         "dxgiFormat": "DXGI_FORMAT_R32_TYPELESS",
         "requiresConversion": "false"
       },
@@ -635,7 +635,7 @@
   "GL_DEPTH32F_STENCIL8": {
     "GL_FLOAT_32_UNSIGNED_INT_24_8_REV": [
       {
-        "loadFunction": "LoadToNative<GLuint,2>",
+        "loadFunction": "LoadD32FS8X24ToD32FS8X24",
         "dxgiFormat": "DXGI_FORMAT_R32G8X24_TYPELESS",
         "requiresConversion": "false"
       },

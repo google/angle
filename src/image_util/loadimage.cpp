@@ -1180,6 +1180,64 @@ void LoadG8R24ToR24G8(size_t width,
     }
 }
 
+void LoadD32FToD32F(size_t width,
+                    size_t height,
+                    size_t depth,
+                    const uint8_t *input,
+                    size_t inputRowPitch,
+                    size_t inputDepthPitch,
+                    uint8_t *output,
+                    size_t outputRowPitch,
+                    size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const float *source =
+                priv::OffsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            float *dest =
+                priv::OffsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (size_t x = 0; x < width; x++)
+            {
+                dest[x] = gl::clamp01(source[x]);
+            }
+        }
+    }
+}
+
+void LoadD32FS8X24ToD32FS8X24(size_t width,
+                              size_t height,
+                              size_t depth,
+                              const uint8_t *input,
+                              size_t inputRowPitch,
+                              size_t inputDepthPitch,
+                              uint8_t *output,
+                              size_t outputRowPitch,
+                              size_t outputDepthPitch)
+{
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const float *sourceDepth =
+                priv::OffsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            const uint32_t *sourceStencil =
+                priv::OffsetDataPointer<uint32_t>(input, y, z, inputRowPitch, inputDepthPitch) + 1;
+            float *destDepth =
+                priv::OffsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
+            uint32_t *destStencil =
+                priv::OffsetDataPointer<uint32_t>(output, y, z, outputRowPitch, outputDepthPitch) +
+                1;
+            for (size_t x = 0; x < width; x++)
+            {
+                destDepth[x * 2]   = gl::clamp01(sourceDepth[x * 2]);
+                destStencil[x * 2] = sourceStencil[x * 2] & 0xFF000000;
+            }
+        }
+    }
+}
+
 void LoadRGB32FToRGBA16F(size_t width,
                          size_t height,
                          size_t depth,
