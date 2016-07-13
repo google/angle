@@ -16,6 +16,24 @@
       "revId": "64b78ae04e5562fa6fc9d3309209c96e5d76e731",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_832436a3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-13T17:07:12Z",
+      "side": 1,
+      "message": "I updated to flush every 100 attempts, if you have a better frequency I\u0027ll update it.  Measuring the time is a bit more complicated.",
+      "parentUuid": "da157484_ffc2ec3a",
+      "revId": "64b78ae04e5562fa6fc9d3309209c96e5d76e731",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
