@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_3d2f6399",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-13T14:00:59Z",
+      "side": 1,
+      "message": "nit: probably can just call this pauseTransformFeedback at this point, also a comment as to why you need to do this before the surface wouldn\u0027t hurt",
+      "range": {
+        "startLine": 82,
+        "startChar": 34,
+        "endLine": 82,
+        "endChar": 48
+      },
+      "revId": "f55b6c4ebfb14d5fc78ab3fc497896e6ab2b5a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
