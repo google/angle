@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "da157484_3d180378",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1141994
+      },
+      "writtenOn": "2016-07-13T14:12:39Z",
+      "side": 1,
+      "message": "Sorry, what I mean is, isn\u0027t destArea.height the size of the rectangle, not the top of it? I would think this should iterate to destArea.y + destArea.height instead.",
+      "parentUuid": "da157484_1d7707bb",
+      "range": {
+        "startLine": 256,
+        "startChar": 44,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_a7c990bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
         "patchSetId": 1
