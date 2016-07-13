@@ -22,6 +22,30 @@
       "revId": "f55b6c4ebfb14d5fc78ab3fc497896e6ab2b5a4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_9db2d75b",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-13T15:00:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_3d2f6399",
+      "range": {
+        "startLine": 82,
+        "startChar": 34,
+        "endLine": 82,
+        "endChar": 48
+      },
+      "revId": "f55b6c4ebfb14d5fc78ab3fc497896e6ab2b5a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
