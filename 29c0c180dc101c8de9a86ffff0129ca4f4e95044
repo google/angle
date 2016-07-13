@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_d4813c6d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3853,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T07:54:28Z",
+      "side": 1,
+      "message": "I think these checks should be done for \"left\" as well. Sequence operator allows its operands to be different types.",
+      "revId": "29c0c180dc101c8de9a86ffff0129ca4f4e95044",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_08aeb141",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
