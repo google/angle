@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bace00a2_14f7b4c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "Please format the commit message according to the project conventions. There should be an empty line between paragraphs, and lines inside paragraphs should be uniform length. You can configure the editor for git so that it breaks lines automatically, here\u0027s an example .gitconfig line if you\u0027re using nano:\n\neditor \u003d nano -r 70 --tabstospaces",
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ae6482a_b2900066",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "Commit messages should also include a bug number, like this if it\u0027s an ANGLE bug:\n\nBUG\u003dangleproject:1442\n\nThat way your commits will appear automatically on the bug as well.\n\nCommit messages should also include a free-form TEST line to specify how the commit was tested, possible examples:\n\nTEST\u003ddEQP-GLES31.functional.some_test.*\n\nTEST\u003dRan compute shader sample",
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_d4b25c12",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "I\u0027m not sure what these enums are based on and couldn\u0027t find by googling, maybe Jamie knows?",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 60,
+        "endChar": 5
+      },
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_b4b7e000",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "Clean up any instances of accidental whitespace changes like this. There are a couple of others in this patch as well.",
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_74a268c3",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "I\u0027d keep \"only\" in this message, like \u0027...ES 3.00 and above only\u0027",
+      "range": {
+        "startLine": 138,
+        "startChar": 73,
+        "endLine": 138,
+        "endChar": 74
+      },
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ae6482a_728bb839",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-13T13:04:28Z",
+      "side": 1,
+      "message": "This part might be neater now if rewritten as \"switch (clientMajorVersion)\" and then if statements to check valid minor versions, but this current alternative is not bad either.",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 4
+      },
+      "revId": "3f310b4bc5523eb2e87447f3d7293532e76d9775",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
