@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ac1e86b_3d217b43",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "Since both sstrings are NULL terminated this can be replaced with strcmp to avoid doing the strlen.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_1d1eb703",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_fddb0359",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "This could be replaced with a memcmp which is faster because it doesn\u0027t check for \\0.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_5d242f53",
+        "filename": "src/common/string_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "nit: NUL -\u003e NULL\n\nDitto for both comments below. (4 occurrences total)",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_dde03f06",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "nit: double empty line.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_9deac7e0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1787,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "Didn\u0027t know std::end was a thing, nice!",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_7df013cf",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "nit: extra whitespace",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_5ded4ff5",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "nit: added _ before here",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_fdc42376",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "queryResults[1] is unused.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_bdbeabe2",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "nit: successful",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_9dc3e76a",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1293,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "Ohter potential tests would be binding to the NULL name, and binding a stupidly large location.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_5dd66f27",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-13T14:43:46Z",
+      "side": 1,
+      "message": "The Linux bots should be running the 367.27 driver, if you want to enable the test there.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
