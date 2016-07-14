@@ -17,6 +17,7 @@
 #include "compiler/translator/SeparateArrayInitialization.h"
 #include "compiler/translator/SeparateDeclarations.h"
 #include "compiler/translator/SeparateExpressionsReturningArrays.h"
+#include "compiler/translator/SimplifyLoopConditions.h"
 #include "compiler/translator/SplitSequenceOperator.h"
 #include "compiler/translator/UnfoldShortCircuitToIf.h"
 
@@ -34,9 +35,14 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 
     SeparateDeclarations(root);
 
-    // TODO (oetuaho): Sequence operators should also be split in case there is dynamic indexing of
-    // a vector or matrix as an l-value inside (RemoveDynamicIndexing transformation step generates
-    // statements in this case).
+    // Note that SimplifyLoopConditions needs to be run before any other AST transformations that
+    // may need to generate new statements from loop conditions or loop expressions.
+    SimplifyLoopConditions(root,
+                           IntermNodePatternMatcher::kExpressionReturningArray |
+                               IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
+                               IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue,
+                           getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+
     SplitSequenceOperator(root,
                           IntermNodePatternMatcher::kExpressionReturningArray |
                               IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |

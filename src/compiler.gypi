@@ -188,6 +188,8 @@
             'compiler/translator/SeparateDeclarations.h',
             'compiler/translator/SeparateExpressionsReturningArrays.cpp',
             'compiler/translator/SeparateExpressionsReturningArrays.h',
+            'compiler/translator/SimplifyLoopConditions.cpp',
+            'compiler/translator/SimplifyLoopConditions.h',
             'compiler/translator/SplitSequenceOperator.cpp',
             'compiler/translator/SplitSequenceOperator.h',
             'compiler/translator/StructureHLSL.cpp',

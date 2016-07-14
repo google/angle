@@ -197,6 +197,7 @@ void TIntermTyped::setTypePreservePrecision(const TType &t)
 bool TIntermLoop::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
+    ASSERT(original != nullptr);  // This risks replacing multiple children.
     REPLACE_IF_IS(mInit, TIntermNode, original, replacement);
     REPLACE_IF_IS(mCond, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mExpr, TIntermTyped, original, replacement);

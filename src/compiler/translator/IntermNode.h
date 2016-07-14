@@ -195,6 +195,10 @@ class TIntermLoop : public TIntermNode
     TIntermTyped *getExpression() { return mExpr; }
     TIntermAggregate *getBody() { return mBody; }
 
+    void setCondition(TIntermTyped *condition) { mCond = condition; }
+    void setExpression(TIntermTyped *expression) { mExpr = expression; }
+    void setBody(TIntermAggregate *body) { mBody = body; }
+
     void setUnrollFlag(bool flag) { mUnrollFlag = flag; }
     bool getUnrollFlag() const { return mUnrollFlag; }
 
@@ -912,9 +916,9 @@ class TLValueTrackingTraverser : public TIntermTraverser
     }
     virtual ~TLValueTrackingTraverser() {}
 
-    void traverseBinary(TIntermBinary *node) override;
-    void traverseUnary(TIntermUnary *node) override;
-    void traverseAggregate(TIntermAggregate *node) override;
+    void traverseBinary(TIntermBinary *node) final;
+    void traverseUnary(TIntermUnary *node) final;
+    void traverseAggregate(TIntermAggregate *node) final;
 
   protected:
     bool isLValueRequiredHere() const
