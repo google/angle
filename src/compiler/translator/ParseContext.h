@@ -253,18 +253,7 @@ class TParseContext : angle::NonCopyable
                                  TOperator op,
                                  TFunction *fnCall,
                                  const TSourceLoc &line);
-    TIntermTyped *addConstVectorNode(TVectorFields &fields,
-                                     TIntermConstantUnion *node,
-                                     const TSourceLoc &line,
-                                     bool outOfRangeIndexIsError);
-    TIntermTyped *addConstMatrixNode(int index,
-                                     TIntermConstantUnion *node,
-                                     const TSourceLoc &line,
-                                     bool outOfRangeIndexIsError);
-    TIntermTyped *addConstArrayNode(int index,
-                                    TIntermConstantUnion *node,
-                                    const TSourceLoc &line,
-                                    bool outOfRangeIndexIsError);
+
     TIntermTyped *addConstStruct(
         const TString &identifier, TIntermTyped *node, const TSourceLoc& line);
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
@@ -342,6 +331,26 @@ class TParseContext : angle::NonCopyable
     TSymbolTable &symbolTable;   // symbol table that goes with the language currently being parsed
 
   private:
+    // Returns a clamped index.
+    int checkIndexOutOfRange(bool outOfRangeIndexIsError,
+                             const TSourceLoc &location,
+                             int index,
+                             int arraySize,
+                             const char *reason,
+                             const char *token);
+
+    // Constant folding for element access. Note that the returned node does not have the correct
+    // type - it is expected to be fixed later.
+    TIntermConstantUnion *foldVectorSwizzle(TVectorFields &fields,
+                                            TIntermConstantUnion *baseNode,
+                                            const TSourceLoc &location);
+    TIntermConstantUnion *foldMatrixSubscript(int index,
+                                              TIntermConstantUnion *baseNode,
+                                              const TSourceLoc &location);
+    TIntermConstantUnion *foldArraySubscript(int index,
+                                             TIntermConstantUnion *baseNode,
+                                             const TSourceLoc &location);
+
     bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
 
     bool nonInitErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);

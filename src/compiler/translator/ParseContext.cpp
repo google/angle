@@ -2459,94 +2459,51 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
     return constructor;
 }
 
-//
-// This function returns the tree representation for the vector field(s) being accessed from contant
-// vector.
-// If only one component of vector is accessed (v.x or v[0] where v is a contant vector), then a
-// contant node is returned, else an aggregate node is returned (for v.xy). The input to this
-// function could either be the symbol node or it could be the intermediate tree representation of
-// accessing fields in a constant structure or column of a constant matrix.
-//
-TIntermTyped *TParseContext::addConstVectorNode(TVectorFields &fields,
-                                                TIntermConstantUnion *node,
-                                                const TSourceLoc &line,
-                                                bool outOfRangeIndexIsError)
+// This function returns vector field(s) being accessed from a constant vector.
+TIntermConstantUnion *TParseContext::foldVectorSwizzle(TVectorFields &fields,
+                                                       TIntermConstantUnion *baseNode,
+                                                       const TSourceLoc &location)
 {
-    const TConstantUnion *unionArray = node->getUnionArrayPointer();
+    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
     ASSERT(unionArray);
 
     TConstantUnion *constArray = new TConstantUnion[fields.num];
-    const auto &type           = node->getType();
+    const auto &type           = baseNode->getType();
 
     for (int i = 0; i < fields.num; i++)
     {
-        if (fields.offsets[i] >= type.getNominalSize())
-        {
-            std::stringstream extraInfoStream;
-            extraInfoStream << "vector field selection out of range '" << fields.offsets[i] << "'";
-            std::string extraInfo = extraInfoStream.str();
-            outOfRangeError(outOfRangeIndexIsError, line, "", "[", extraInfo.c_str());
-            fields.offsets[i] = type.getNominalSize() - 1;
-        }
-
+        // Out-of-range indices should already be checked.
+        ASSERT(fields.offsets[i] < type.getNominalSize());
         constArray[i] = unionArray[fields.offsets[i]];
     }
-    return intermediate.addConstantUnion(constArray, type, line);
+    return intermediate.addConstantUnion(constArray, type, location);
 }
 
-//
-// This function returns the column being accessed from a constant matrix. The values are retrieved
-// from the symbol table and parse-tree is built for a vector (each column of a matrix is a vector).
-// The input to the function could either be a symbol node (m[0] where m is a constant matrix)that
-// represents a constant matrix or it could be the tree representation of the constant matrix
-// (s.m1[0] where s is a constant structure)
-//
-TIntermTyped *TParseContext::addConstMatrixNode(int index,
-                                                TIntermConstantUnion *node,
-                                                const TSourceLoc &line,
-                                                bool outOfRangeIndexIsError)
+// This function returns the column vector being accessed from a constant matrix.
+TIntermConstantUnion *TParseContext::foldMatrixSubscript(int index,
+                                                         TIntermConstantUnion *baseNode,
+                                                         const TSourceLoc &location)
 {
-    if (index >= node->getType().getCols())
-    {
-        std::stringstream extraInfoStream;
-        extraInfoStream << "matrix field selection out of range '" << index << "'";
-        std::string extraInfo = extraInfoStream.str();
-        outOfRangeError(outOfRangeIndexIsError, line, "", "[", extraInfo.c_str());
-        index = node->getType().getCols() - 1;
-    }
+    ASSERT(index < baseNode->getType().getCols());
 
-    const TConstantUnion *unionArray = node->getUnionArrayPointer();
-    int size = node->getType().getCols();
-    return intermediate.addConstantUnion(&unionArray[size * index], node->getType(), line);
+    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
+    int size                         = baseNode->getType().getRows();
+    return intermediate.addConstantUnion(&unionArray[size * index], baseNode->getType(), location);
 }
 
-//
-// This function returns an element of an array accessed from a constant array. The values are
-// retrieved from the symbol table and parse-tree is built for the type of the element. The input
-// to the function could either be a symbol node (a[0] where a is a constant array)that represents a
-// constant array or it could be the tree representation of the constant array (s.a1[0] where s is a
-// constant structure)
-//
-TIntermTyped *TParseContext::addConstArrayNode(int index,
-                                               TIntermConstantUnion *node,
-                                               const TSourceLoc &line,
-                                               bool outOfRangeIndexIsError)
+// This function returns an element of an array accessed from a constant array.
+TIntermConstantUnion *TParseContext::foldArraySubscript(int index,
+                                                        TIntermConstantUnion *baseNode,
+                                                        const TSourceLoc &location)
 {
-    TType arrayElementType = node->getType();
+    ASSERT(index < baseNode->getArraySize());
+
+    TType arrayElementType = baseNode->getType();
     arrayElementType.clearArrayness();
-
-    if (index >= node->getType().getArraySize())
-    {
-        std::stringstream extraInfoStream;
-        extraInfoStream << "array field selection out of range '" << index << "'";
-        std::string extraInfo = extraInfoStream.str();
-        outOfRangeError(outOfRangeIndexIsError, line, "", "[", extraInfo.c_str());
-        index = node->getType().getArraySize() - 1;
-    }
     size_t arrayElementSize          = arrayElementType.getObjectSize();
-    const TConstantUnion *unionArray = node->getUnionArrayPointer();
-    return intermediate.addConstantUnion(&unionArray[arrayElementSize * index], node->getType(),
-                                         line);
+    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
+    return intermediate.addConstantUnion(&unionArray[arrayElementSize * index], baseNode->getType(),
+                                         location);
 }
 
 //
@@ -2875,38 +2832,47 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         // correct range.
         bool outOfRangeIndexIsError = indexExpression->getQualifier() == EvqConst;
         int index = indexConstantUnion->getIConst(0);
-        if (index < 0)
+        if (!baseExpression->isArray())
         {
-            std::stringstream infoStream;
-            infoStream << index;
-            std::string info = infoStream.str();
-            outOfRangeError(outOfRangeIndexIsError, location, "negative index", info.c_str());
-            index = 0;
+            // Array checks are done later because a different error message might be generated
+            // based on the index in some cases.
+            if (baseExpression->isVector())
+            {
+                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                             baseExpression->getType().getNominalSize(),
+                                             "vector field selection out of range", "[]");
+            }
+            else if (baseExpression->isMatrix())
+            {
+                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                             baseExpression->getType().getCols(),
+                                             "matrix field selection out of range", "[]");
+            }
         }
+
         TIntermConstantUnion *baseConstantUnion = baseExpression->getAsConstantUnion();
         if (baseConstantUnion)
         {
             if (baseExpression->isArray())
             {
-                // constant folding for array indexing
-                indexedExpression =
-                    addConstArrayNode(index, baseConstantUnion, location, outOfRangeIndexIsError);
+                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                             baseExpression->getArraySize(),
+                                             "array index out of range", "[]");
+                // Constant folding for array indexing.
+                indexedExpression = foldArraySubscript(index, baseConstantUnion, location);
             }
             else if (baseExpression->isVector())
             {
-                // constant folding for vector indexing
+                // Constant folding for vector indexing - reusing vector swizzle folding.
                 TVectorFields fields;
                 fields.num = 1;
-                fields.offsets[0] =
-                    index;  // need to do it this way because v.xy sends fields integer array
-                indexedExpression =
-                    addConstVectorNode(fields, baseConstantUnion, location, outOfRangeIndexIsError);
+                fields.offsets[0] = index;
+                indexedExpression = foldVectorSwizzle(fields, baseConstantUnion, location);
             }
             else if (baseExpression->isMatrix())
             {
-                // constant folding for matrix indexing
-                indexedExpression =
-                    addConstMatrixNode(index, baseConstantUnion, location, outOfRangeIndexIsError);
+                // Constant folding for matrix indexing.
+                indexedExpression = foldMatrixSubscript(index, baseConstantUnion, location);
             }
         }
         else
@@ -2937,23 +2903,12 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                     }
                 }
                 // Only do generic out-of-range check if similar error hasn't already been reported.
-                if (safeIndex < 0 && index >= baseExpression->getType().getArraySize())
+                if (safeIndex < 0)
                 {
-                    std::stringstream extraInfoStream;
-                    extraInfoStream << "array index out of range '" << index << "'";
-                    std::string extraInfo = extraInfoStream.str();
-                    outOfRangeError(outOfRangeIndexIsError, location, "", "[", extraInfo.c_str());
-                    safeIndex = baseExpression->getType().getArraySize() - 1;
+                    safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                                     baseExpression->getArraySize(),
+                                                     "array index out of range", "[]");
                 }
-            }
-            else if ((baseExpression->isVector() || baseExpression->isMatrix()) &&
-                     baseExpression->getType().getNominalSize() <= index)
-            {
-                std::stringstream extraInfoStream;
-                extraInfoStream << "field selection out of range '" << index << "'";
-                std::string extraInfo = extraInfoStream.str();
-                outOfRangeError(outOfRangeIndexIsError, location, "", "[", extraInfo.c_str());
-                safeIndex = baseExpression->getType().getNominalSize() - 1;
             }
 
             // Data of constant unions can't be changed, because it may be shared with other
@@ -3018,6 +2973,31 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     return indexedExpression;
 }
 
+int TParseContext::checkIndexOutOfRange(bool outOfRangeIndexIsError,
+                                        const TSourceLoc &location,
+                                        int index,
+                                        int arraySize,
+                                        const char *reason,
+                                        const char *token)
+{
+    if (index >= arraySize || index < 0)
+    {
+        std::stringstream extraInfoStream;
+        extraInfoStream << "'" << index << "'";
+        std::string extraInfo = extraInfoStream.str();
+        outOfRangeError(outOfRangeIndexIsError, location, reason, token, extraInfo.c_str());
+        if (index < 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return arraySize - 1;
+        }
+    }
+    return index;
+}
+
 TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpression,
                                                          const TSourceLoc &dotLocation,
                                                          const TString &fieldString,
@@ -3045,8 +3025,8 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
         if (baseExpression->getAsConstantUnion())
         {
             // constant folding for vector fields
-            indexedExpression = addConstVectorNode(fields, baseExpression->getAsConstantUnion(),
-                                                   fieldLocation, true);
+            indexedExpression =
+                foldVectorSwizzle(fields, baseExpression->getAsConstantUnion(), fieldLocation);
         }
         else
         {

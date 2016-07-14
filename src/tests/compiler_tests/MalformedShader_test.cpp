@@ -1611,12 +1611,12 @@ TEST_F(MalformedShaderTest, CompoundMultiplyMatrixValidNonSquareDimensions)
     }
 }
 
-// Covers a bug where we would set the incorrect result size on an out-of-bounds vector sizzle.
+// Covers a bug where we would set the incorrect result size on an out-of-bounds vector swizzle.
 TEST_F(MalformedShaderTest, OutOfBoundsVectorSwizzle)
 {
     const std::string &shaderString =
         "void main() {\n"
-        "   vec2(0).qq * a(b);\n"
+        "   vec2(0).qq;\n"
         "}\n";
     if (compile(shaderString))
     {

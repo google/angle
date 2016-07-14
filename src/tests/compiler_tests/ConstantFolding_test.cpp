@@ -744,3 +744,20 @@ TEST_F(ConstantFoldingTest, FoldNestedIdenticalStructEqualityComparison)
     compile(shaderString);
     ASSERT_TRUE(constantFoundInAST(1.0f));
 }
+
+// Test that right elements are chosen from non-square matrix
+TEST_F(ConstantFoldingTest, FoldNonSquareMatrixIndexing)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = mat3x4(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)[1];\n"
+        "}\n";
+    compile(shaderString);
+    float outputElements[] = {4.0f, 5.0f, 6.0f, 7.0f};
+    std::vector<float> result(outputElements, outputElements + 4);
+    ASSERT_TRUE(constantVectorFoundInAST(result));
+}
