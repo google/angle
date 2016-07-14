@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_170b361f",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "But strcmp(\"foobar\", \"foo\") !\u003d strncmp(\"foobar\", \"foo\", 3) or am I missing something...?\n\nThe former call returns 1, the latter returns 0.",
+      "parentUuid": "7ac1e86b_3d217b43",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_1d1eb703",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 10
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_f718ba6f",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_fddb0359",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_5d242f53",
         "filename": "src/common/string_utils.h",
         "patchSetId": 10
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_d71dbe5d",
+        "filename": "src/common/string_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Actually the character is called NUL in ASCII, but I guess NULL is more appropriate since the string doesn\u0027t have to be ASCII necessarily.",
+      "parentUuid": "7ac1e86b_5d242f53",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_dde03f06",
         "filename": "src/common/string_utils_unittest.cpp",
         "patchSetId": 10
@@ -81,6 +135,24 @@
       "writtenOn": "2016-07-13T14:43:46Z",
       "side": 1,
       "message": "nit: double empty line.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_b712424c",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_dde03f06",
       "revId": "4773a53bd5832c05430849ed847f6554dad77013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +193,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_9717463c",
+        "filename": "src/libANGLE/renderer/ProgramImpl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_7df013cf",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_5ded4ff5",
         "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
         "patchSetId": 10
@@ -132,6 +222,24 @@
       "writtenOn": "2016-07-13T14:43:46Z",
       "side": 1,
       "message": "nit: added _ before here",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_772dca86",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_5ded4ff5",
       "revId": "4773a53bd5832c05430849ed847f6554dad77013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -155,6 +263,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_372752a9",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_fdc42376",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_bdbeabe2",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -166,6 +292,24 @@
       "writtenOn": "2016-07-13T14:43:46Z",
       "side": 1,
       "message": "nit: successful",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_172456a0",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_bdbeabe2",
       "revId": "4773a53bd5832c05430849ed847f6554dad77013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +333,24 @@
     },
     {
       "key": {
+        "uuid": "bace00a2_f741da2d",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1293,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ac1e86b_9dc3e76a",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_5dd66f27",
         "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
         "patchSetId": 10
@@ -200,6 +362,24 @@
       "writtenOn": "2016-07-13T14:43:46Z",
       "side": 1,
       "message": "The Linux bots should be running the 367.27 driver, if you want to enable the test there.",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_37407222",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-14T10:59:43Z",
+      "side": 1,
+      "message": "I think enabling it only for Linux is a bit icky because then the test will run on *any* Linux even if the driver isn\u0027t new enough and then produce unexpected and mundane failures in test runs.",
+      "parentUuid": "7ac1e86b_5dd66f27",
       "revId": "4773a53bd5832c05430849ed847f6554dad77013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
