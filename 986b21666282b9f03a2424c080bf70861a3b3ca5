@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da157484_961e2302",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-14T14:00:44Z",
+      "side": 1,
+      "message": "Sorry for the delayed response.  I\u0027d still prefer to keep all the validation in the validation layer.  I think we can do that by splitting this code into two functions, one that is something like...\n\n   BindingLocation Program::getBindingLocation(GLint index)\n\nwhere BindingLocation contains the binding name string and the binding type.  This function could then call getBindingLocation internally before passing to the impl.",
+      "range": {
+        "startLine": 448,
+        "startChar": 15,
+        "endLine": 448,
+        "endChar": 35
+      },
+      "revId": "986b21666282b9f03a2424c080bf70861a3b3ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da157484_d6e1bb08",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-14T14:00:44Z",
+      "side": 1,
+      "message": "What about storing this as a map from name-\u003elocation?",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 73
+      },
+      "revId": "986b21666282b9f03a2424c080bf70861a3b3ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
