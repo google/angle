@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7ac1e86b_83ef04b8",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-14T13:28:49Z",
+      "side": 1,
+      "message": "You\u0027re not missing anything, I was just being stupid. Sorry about that.",
+      "parentUuid": "bace00a2_170b361f",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ac1e86b_1d1eb703",
         "filename": "src/common/string_utils.cpp",
         "patchSetId": 10
@@ -380,6 +398,24 @@
       "side": 1,
       "message": "I think enabling it only for Linux is a bit icky because then the test will run on *any* Linux even if the driver isn\u0027t new enough and then produce unexpected and mundane failures in test runs.",
       "parentUuid": "7ac1e86b_5dd66f27",
+      "revId": "4773a53bd5832c05430849ed847f6554dad77013",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac1e86b_63ecf0c2",
+        "filename": "src/tests/gl_tests/PathRenderingTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-14T13:28:49Z",
+      "side": 1,
+      "message": "Sounds good, thanks",
+      "parentUuid": "bace00a2_37407222",
       "revId": "4773a53bd5832c05430849ed847f6554dad77013",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
