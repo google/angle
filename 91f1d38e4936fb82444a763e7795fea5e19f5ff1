@@ -22,6 +22,30 @@
       "revId": "91f1d38e4936fb82444a763e7795fea5e19f5ff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bace00a2_37bd1214",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-14T14:26:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_d666dba7",
+      "range": {
+        "startLine": 14,
+        "startChar": 6,
+        "endLine": 14,
+        "endChar": 26
+      },
+      "revId": "91f1d38e4936fb82444a763e7795fea5e19f5ff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
