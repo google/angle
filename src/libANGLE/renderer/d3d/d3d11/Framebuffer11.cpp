@@ -262,13 +262,6 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
     gl::Buffer *packBuffer = pack.pixelBuffer.get();
     if (packBuffer != nullptr)
     {
-        if (pack.rowLength != 0 || pack.skipRows != 0 || pack.skipPixels != 0)
-        {
-            UNIMPLEMENTED();
-            return gl::Error(GL_INVALID_OPERATION,
-                             "Unimplemented pixel store parameters in readPixelsImpl");
-        }
-
         Buffer11 *packBufferStorage = GetImplAs<Buffer11>(packBuffer);
         PackPixelsParams packParams(area, format, type, static_cast<GLuint>(outputPitch), pack,
                                     reinterpret_cast<ptrdiff_t>(pixels));

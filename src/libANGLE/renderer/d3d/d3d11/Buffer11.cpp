@@ -1267,9 +1267,16 @@ gl::ErrorOrResult<CopyResult> Buffer11::PackStorage::copyFromStorage(BufferStora
                                                                      size_t size,
                                                                      size_t destOffset)
 {
-    // We copy through a staging buffer when drawing with a pack buffer,
-    // or for other cases where we access the pack buffer
-    UNREACHABLE();
+    ANGLE_TRY(flushQueuedPackCommand());
+
+    // We copy through a staging buffer when drawing with a pack buffer, or for other cases where we
+    // access the pack buffer
+    ASSERT(source->isMappable() && source->getUsage() == BUFFER_USAGE_STAGING);
+    uint8_t *sourceData = nullptr;
+    ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourceData));
+    ASSERT(destOffset + size <= mMemoryBuffer.size());
+    memcpy(mMemoryBuffer.data() + destOffset, sourceData, size);
+    source->unmap();
     return CopyResult::NOT_RECREATED;
 }
 
