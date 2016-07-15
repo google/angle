@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8aff2b22_5b84c304",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Formatting looks a bit odd here - the condition should be on the same line as the \"else if\".\n\nUnfortunately the auto-format doesn\u0027t process this file since it\u0027s not technically C++.",
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_3b89f71c",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Still an unrelated whitespace change here.",
+      "range": {
+        "startLine": 248,
+        "startChar": 54,
+        "endLine": 248,
+        "endChar": 54
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_1b8e3b25",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Auto-formatting seems to have messed up here in a pretty distracting way, I\u0027d correct the indentation on at least these two lines.",
+      "range": {
+        "startLine": 489,
+        "startChar": 0,
+        "endLine": 490,
+        "endChar": 18
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_fb926f47",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Same auto-formatting issue here.",
+      "range": {
+        "startLine": 842,
+        "startChar": 0,
+        "endLine": 843,
+        "endChar": 20
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_db8fb31d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 870,
+        "startChar": 8,
+        "endLine": 878,
+        "endChar": 14
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_bb9ce75b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1993,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Here.",
+      "range": {
+        "startLine": 1992,
+        "startChar": 8,
+        "endLine": 1993,
+        "endChar": 14
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_9b992b6c",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "The auto-indentation saga continues.",
+      "range": {
+        "startLine": 334,
+        "startChar": 12,
+        "endLine": 335,
+        "endChar": 18
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_7ba65fac",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2261,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "In this case I\u0027d re-format the entire switch statement. To fix these it\u0027s enough to do a manual white-space change on each line and then let git cl format do the rest.",
+      "range": {
+        "startLine": 2259,
+        "startChar": 12,
+        "endLine": 2261,
+        "endChar": 18
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_5baba372",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T08:41:43Z",
+      "side": 1,
+      "message": "Also this entire switch statement.",
+      "range": {
+        "startLine": 2416,
+        "startChar": 12,
+        "endLine": 2418,
+        "endChar": 18
+      },
+      "revId": "ab695f09bb507ee8232dd59ea279367307a3801d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
