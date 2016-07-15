@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8aff2b22_3bee97ba",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-15T09:33:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da157484_961e2302",
+      "range": {
+        "startLine": 448,
+        "startChar": 15,
+        "endLine": 448,
+        "endChar": 35
+      },
+      "revId": "986b21666282b9f03a2424c080bf70861a3b3ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_d6e1bb08",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-14T14:00:44Z",
       "side": 1,
       "message": "What about storing this as a map from name-\u003elocation?",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 73
+      },
+      "revId": "986b21666282b9f03a2424c080bf70861a3b3ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_1bf3dba2",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1153236
+      },
+      "writtenOn": "2016-07-15T09:33:45Z",
+      "side": 1,
+      "message": "I can change it but TBH I don\u0027t think it makes much of a difference. Let me know.",
+      "parentUuid": "da157484_d6e1bb08",
       "range": {
         "startLine": 104,
         "startChar": 4,
