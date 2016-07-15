@@ -173,6 +173,36 @@ bool GetNoError(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, EGL_FALSE) == EGL_TRUE);
 }
 
+std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
+{
+    std::string labelName;
+    if (label != nullptr)
+    {
+        size_t labelLength = length < 0 ? strlen(label) : length;
+        labelName          = std::string(label, labelLength);
+    }
+    return labelName;
+}
+
+void GetObjectLabelBase(const std::string &objectLabel,
+                        GLsizei bufSize,
+                        GLsizei *length,
+                        GLchar *label)
+{
+    size_t writeLength = objectLabel.length();
+    if (label != nullptr && bufSize > 0)
+    {
+        writeLength = std::min(static_cast<size_t>(bufSize) - 1, objectLabel.length());
+        std::copy(objectLabel.begin(), objectLabel.begin() + writeLength, label);
+        label[writeLength] = '\0';
+    }
+
+    if (length != nullptr)
+    {
+        *length = static_cast<GLsizei>(writeLength);
+    }
+}
+
 }  // anonymous namespace
 
 namespace gl
@@ -855,6 +885,49 @@ LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) const
 LabeledObject *Context::getLabeledObjectFromPtr(const void *ptr) const
 {
     return getFenceSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr)));
+}
+
+void Context::objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
+{
+    LabeledObject *object = getLabeledObject(identifier, name);
+    ASSERT(object != nullptr);
+
+    std::string labelName = GetObjectLabelFromPointer(length, label);
+    object->setLabel(labelName);
+}
+
+void Context::objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label)
+{
+    LabeledObject *object = getLabeledObjectFromPtr(ptr);
+    ASSERT(object != nullptr);
+
+    std::string labelName = GetObjectLabelFromPointer(length, label);
+    object->setLabel(labelName);
+}
+
+void Context::getObjectLabel(GLenum identifier,
+                             GLuint name,
+                             GLsizei bufSize,
+                             GLsizei *length,
+                             GLchar *label) const
+{
+    LabeledObject *object = getLabeledObject(identifier, name);
+    ASSERT(object != nullptr);
+
+    const std::string &objectLabel = object->getLabel();
+    GetObjectLabelBase(objectLabel, bufSize, length, label);
+}
+
+void Context::getObjectPtrLabel(const void *ptr,
+                                GLsizei bufSize,
+                                GLsizei *length,
+                                GLchar *label) const
+{
+    LabeledObject *object = getLabeledObjectFromPtr(ptr);
+    ASSERT(object != nullptr);
+
+    const std::string &objectLabel = object->getLabel();
+    GetObjectLabelBase(objectLabel, bufSize, length, label);
 }
 
 bool Context::isSampler(GLuint samplerName) const

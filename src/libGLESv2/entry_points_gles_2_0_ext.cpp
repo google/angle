@@ -1266,11 +1266,7 @@ void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, 
             return;
         }
 
-        LabeledObject *object = context->getLabeledObject(identifier, name);
-        ASSERT(object != nullptr);
-
-        std::string lbl(label, (length > 0) ? static_cast<size_t>(length) : strlen(label));
-        object->setLabel(lbl);
+        context->objectLabel(identifier, name, length, label);
     }
 }
 
@@ -1290,14 +1286,7 @@ GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
             return;
         }
 
-        LabeledObject *object = context->getLabeledObject(identifier, name);
-        ASSERT(object != nullptr);
-
-        const std::string &objectLabel = object->getLabel();
-        size_t writeLength = std::min(static_cast<size_t>(bufSize) - 1, objectLabel.length());
-        std::copy(objectLabel.begin(), objectLabel.begin() + writeLength, label);
-        label[writeLength] = '\0';
-        *length            = static_cast<GLsizei>(writeLength);
+        context->getObjectLabel(identifier, name, bufSize, length, label);
     }
 }
 
@@ -1314,11 +1303,7 @@ void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar
             return;
         }
 
-        LabeledObject *object = context->getLabeledObjectFromPtr(ptr);
-        ASSERT(object != nullptr);
-
-        std::string lbl(label, (length > 0) ? static_cast<size_t>(length) : strlen(label));
-        object->setLabel(lbl);
+        context->objectPtrLabel(ptr, length, label);
     }
 }
 
@@ -1340,14 +1325,7 @@ void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
             return;
         }
 
-        LabeledObject *object = context->getLabeledObjectFromPtr(ptr);
-        ASSERT(object != nullptr);
-
-        const std::string &objectLabel = object->getLabel();
-        size_t writeLength = std::min(static_cast<size_t>(bufSize) - 1, objectLabel.length());
-        std::copy(objectLabel.begin(), objectLabel.begin() + writeLength, label);
-        label[writeLength] = '\0';
-        *length            = static_cast<GLsizei>(writeLength);
+        context->getObjectPtrLabel(ptr, bufSize, length, label);
     }
 }
 
