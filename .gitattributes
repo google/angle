@@ -6,3 +6,4 @@
 *.rc               eol=crlf
 **/compiled/*.h    eol=crlf
 *.sh               eol=lf
+*.gn               eol=lf
