@@ -12,8 +12,10 @@
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "third_party/trace_event/trace_event.h"
 
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthrough2d11vs.h"
@@ -49,6 +51,10 @@
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughr3di11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughlum3d11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughlumalpha3d11ps.h"
+
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvedepthstencil11_ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvedepthstencil11_vs.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/resolvestencil11_ps.h"
 
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/swizzlef2dps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/swizzlei2dps.h"
@@ -179,6 +185,111 @@ void StretchedBlitNearest(const gl::Box &sourceArea,
     }
 }
 
+using DepthStencilLoader = void(const float *, uint8_t *);
+
+void LoadDepth16(const float *source, uint8_t *dest)
+{
+    uint32_t convertedDepth = gl::floatToNormalized<16, uint32_t>(source[0]);
+    memcpy(dest, &convertedDepth, 2u);
+}
+
+void LoadDepth24(const float *source, uint8_t *dest)
+{
+    uint32_t convertedDepth = gl::floatToNormalized<24, uint32_t>(source[0]);
+    memcpy(dest, &convertedDepth, 3u);
+}
+
+void LoadStencilHelper(const float *source, uint8_t *dest)
+{
+    uint32_t convertedStencil = gl::getShiftedData<8, 0>(static_cast<uint32_t>(source[1]));
+    memcpy(dest, &convertedStencil, 1u);
+}
+
+void LoadStencil8(const float *source, uint8_t *dest)
+{
+    // STENCIL_INDEX8 is implemented with D24S8, with the depth bits unused. Writes zero for safety.
+    float zero = 0.0f;
+    LoadDepth24(&zero, &dest[0]);
+    LoadStencilHelper(source, &dest[3]);
+}
+
+void LoadDepth24Stencil8(const float *source, uint8_t *dest)
+{
+    LoadDepth24(source, &dest[0]);
+    LoadStencilHelper(source, &dest[3]);
+}
+
+void LoadDepth32F(const float *source, uint8_t *dest)
+{
+    memcpy(dest, source, sizeof(float));
+}
+
+void LoadDepth32FStencil8(const float *source, uint8_t *dest)
+{
+    LoadDepth32F(source, &dest[0]);
+    LoadStencilHelper(source, &dest[4]);
+}
+
+template <DepthStencilLoader loader>
+void CopyDepthStencil(const gl::Box &sourceArea,
+                      const gl::Box &destArea,
+                      const gl::Rectangle &clippedDestArea,
+                      const gl::Extents &sourceSize,
+                      unsigned int sourceRowPitch,
+                      unsigned int destRowPitch,
+                      ptrdiff_t readOffset,
+                      ptrdiff_t writeOffset,
+                      size_t copySize,
+                      size_t srcPixelStride,
+                      size_t destPixelStride,
+                      const uint8_t *sourceData,
+                      uint8_t *destData)
+{
+    // No stretching or subregions are supported, only full blits.
+    ASSERT(sourceArea == destArea);
+    ASSERT(sourceSize.width == sourceArea.width && sourceSize.height == sourceArea.height &&
+           sourceSize.depth == 1);
+    ASSERT(clippedDestArea.width == sourceSize.width &&
+           clippedDestArea.height == sourceSize.height);
+    ASSERT(readOffset == 0 && writeOffset == 0);
+    ASSERT(destArea.x == 0 && destArea.y == 0);
+
+    for (int row = 0; row < destArea.height; ++row)
+    {
+        for (int column = 0; column < destArea.width; ++column)
+        {
+            const float *sourcePixel = reinterpret_cast<const float *>(
+                sourceData + row * sourceRowPitch + column * srcPixelStride);
+
+            uint8_t *destPixel = destData + row * destRowPitch + column * destPixelStride;
+
+            loader(sourcePixel, destPixel);
+        }
+    }
+}
+
+Blit11::BlitConvertFunction *GetCopyDepthStencilFunction(GLenum internalFormat)
+{
+    switch (internalFormat)
+    {
+        case GL_DEPTH_COMPONENT16:
+            return &CopyDepthStencil<LoadDepth16>;
+        case GL_DEPTH_COMPONENT24:
+            return &CopyDepthStencil<LoadDepth24>;
+        case GL_DEPTH_COMPONENT32F:
+            return &CopyDepthStencil<LoadDepth32F>;
+        case GL_STENCIL_INDEX8:
+            return &CopyDepthStencil<LoadStencil8>;
+        case GL_DEPTH24_STENCIL8:
+            return &CopyDepthStencil<LoadDepth24Stencil8>;
+        case GL_DEPTH32F_STENCIL8:
+            return &CopyDepthStencil<LoadDepth32FStencil8>;
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
+}
+
 inline void GenerateVertexCoords(const gl::Box &sourceArea,
                                  const gl::Extents &sourceSize,
                                  const gl::Box &destArea,
@@ -265,7 +376,7 @@ void Write3DVertices(const gl::Box &sourceArea,
     *outTopology    = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 }
 
-inline unsigned int GetSwizzleIndex(GLenum swizzle)
+unsigned int GetSwizzleIndex(GLenum swizzle)
 {
     unsigned int colorIndex = 0;
 
@@ -325,6 +436,21 @@ D3D11_INPUT_ELEMENT_DESC quad3DLayout[] = {
     {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 };
 
+DXGI_FORMAT GetStencilSRVFormat(d3d11::ANGLEFormat angleFormat)
+{
+    auto formatSet = d3d11::GetANGLEFormatSet(angleFormat);
+    switch (formatSet.texFormat)
+    {
+        case DXGI_FORMAT_R32G8X24_TYPELESS:
+            return DXGI_FORMAT_X32_TYPELESS_G8X24_UINT;
+        case DXGI_FORMAT_R24G8_TYPELESS:
+            return DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+        default:
+            UNREACHABLE();
+            return DXGI_FORMAT_UNKNOWN;
+    }
+}
+
 }  // namespace
 
 Blit11::Blit11(Renderer11 *renderer)
@@ -353,7 +479,18 @@ Blit11::Blit11(Renderer11 *renderer)
       mQuad3DVS(g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), "Blit11 3D vertex shader"),
       mQuad3DGS(g_GS_Passthrough3D, ArraySize(g_GS_Passthrough3D), "Blit11 3D geometry shader"),
       mAlphaMaskBlendState(GetAlphaMaskBlendStateDesc(), "Blit11 Alpha Mask Blend"),
-      mSwizzleCB(nullptr)
+      mSwizzleCB(nullptr),
+      mResolveDepthStencilVS(g_VS_ResolveDepthStencil,
+                             ArraySize(g_VS_ResolveDepthStencil),
+                             "Blit11::mResolveDepthStencilVS"),
+      mResolveDepthStencilPS(g_PS_ResolveDepthStencil,
+                             ArraySize(g_PS_ResolveDepthStencil),
+                             "Blit11::mResolveDepthStencilPS"),
+      mResolveStencilPS(g_PS_ResolveStencil,
+                        ArraySize(g_PS_ResolveStencil),
+                        "Blit11::mResolveStencilPS"),
+      mStencilSRV(nullptr),
+      mResolvedDepthStencilRTView(nullptr)
 {
 }
 
@@ -370,6 +507,7 @@ Blit11::~Blit11()
     mQuad3DGS.release();
 
     clearShaderMap();
+    releaseResolveDepthStencilResources();
 }
 
 gl::Error Blit11::initResources()
@@ -1197,22 +1335,26 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
                                        const gl::Rectangle *scissor,
                                        bool stencilOnly)
 {
-    ASSERT(source.getANGLEFormat() == dest.getANGLEFormat());
-
-    auto format             = source.getFormat();
-    const auto &sizeInfo    = d3d11::GetDXGIFormatSizeInfo(format);
-    unsigned int pixelSize  = sizeInfo.pixelBytes;
+    auto srcFormat             = source.getFormat();
+    const auto &srcSizeInfo    = d3d11::GetDXGIFormatSizeInfo(srcFormat);
+    unsigned int srcPixelSize  = srcSizeInfo.pixelBytes;
     unsigned int copyOffset = 0;
-    unsigned int copySize   = pixelSize;
+    unsigned int copySize      = srcPixelSize;
+    auto destFormat            = dest.getFormat();
+    const auto &destSizeInfo   = d3d11::GetDXGIFormatSizeInfo(destFormat);
+    unsigned int destPixelSize = destSizeInfo.pixelBytes;
+
+    ASSERT(srcFormat == destFormat);
+
     if (stencilOnly)
     {
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
+        const d3d11::DXGIFormat &srcDXGIFormat = d3d11::GetDXGIFormatInfo(srcFormat);
 
         // Stencil channel should be right after the depth channel. Some views to depth/stencil
         // resources have red channel for depth, in which case the depth channel bit width is in
         // redBits.
-        ASSERT((dxgiFormatInfo.redBits != 0) != (dxgiFormatInfo.depthBits != 0));
-        GLuint depthBits = dxgiFormatInfo.redBits + dxgiFormatInfo.depthBits;
+        ASSERT((srcDXGIFormat.redBits != 0) != (srcDXGIFormat.depthBits != 0));
+        GLuint depthBits = srcDXGIFormat.redBits + srcDXGIFormat.depthBits;
         // Known formats have either 24 or 32 bits of depth.
         ASSERT(depthBits == 24 || depthBits == 32);
         copyOffset = depthBits / 8;
@@ -1222,25 +1364,24 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
     }
 
     return copyAndConvert(source, sourceSubresource, sourceArea, sourceSize, dest, destSubresource,
-                          destArea, destSize, scissor, copyOffset, copyOffset, copySize, pixelSize,
-                          pixelSize, StretchedBlitNearest);
+                          destArea, destSize, scissor, copyOffset, copyOffset, copySize,
+                          srcPixelSize, destPixelSize, StretchedBlitNearest);
 }
 
-gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
-                                 unsigned int sourceSubresource,
-                                 const gl::Box &sourceArea,
-                                 const gl::Extents &sourceSize,
-                                 const TextureHelper11 &dest,
-                                 unsigned int destSubresource,
-                                 const gl::Box &destArea,
-                                 const gl::Extents &destSize,
-                                 const gl::Rectangle *scissor,
-                                 size_t readOffset,
-                                 size_t writeOffset,
-                                 size_t copySize,
-                                 size_t srcPixelStride,
-                                 size_t destPixelStride,
-                                 BlitConvertFunction *convertFunction)
+gl::Error Blit11::copyAndConvertImpl(const TextureHelper11 &source,
+                                     unsigned int sourceSubresource,
+                                     const gl::Box &sourceArea,
+                                     const gl::Extents &sourceSize,
+                                     const TextureHelper11 &destStaging,
+                                     const gl::Box &destArea,
+                                     const gl::Extents &destSize,
+                                     const gl::Rectangle *scissor,
+                                     size_t readOffset,
+                                     size_t writeOffset,
+                                     size_t copySize,
+                                     size_t srcPixelStride,
+                                     size_t destPixelStride,
+                                     BlitConvertFunction *convertFunction)
 {
     ANGLE_TRY(initResources());
 
@@ -1254,17 +1395,6 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
 
     deviceContext->CopySubresourceRegion(sourceStaging.getResource(), 0, 0, 0, 0,
                                          source.getResource(), sourceSubresource, nullptr);
-
-    // HACK: Create the destination staging buffer as a read/write texture so
-    // ID3D11DevicContext::UpdateSubresource can be called
-    //       using it's mapped data as a source
-    TextureHelper11 destStaging;
-    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, dest.getANGLEFormat(), destSize,
-                                          StagingAccess::READ_WRITE, device),
-                     destStaging);
-
-    deviceContext->CopySubresourceRegion(destStaging.getResource(), 0, 0, 0, 0, dest.getResource(),
-                                         destSubresource, nullptr);
 
     D3D11_MAPPED_SUBRESOURCE sourceMapping;
     HRESULT result =
@@ -1302,21 +1432,62 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
                     destPixelStride, static_cast<const uint8_t *>(sourceMapping.pData),
                     static_cast<uint8_t *>(destMapping.pData));
 
-    // HACK: Use ID3D11DevicContext::UpdateSubresource which causes an extra copy compared to
-    // ID3D11DevicContext::CopySubresourceRegion
-    //       according to MSDN.
-    deviceContext->UpdateSubresource(dest.getResource(), destSubresource, nullptr,
-                                     destMapping.pData, destMapping.RowPitch,
-                                     destMapping.DepthPitch);
-
     deviceContext->Unmap(sourceStaging.getResource(), 0);
     deviceContext->Unmap(destStaging.getResource(), 0);
 
-    // TODO: Determine why this call to ID3D11DevicContext::CopySubresourceRegion causes a TDR
-    // timeout on some
-    //       systems when called repeatedly.
-    // deviceContext->CopySubresourceRegion(dest, destSubresource, 0, 0, 0, destStaging, 0,
-    // nullptr);
+    return gl::NoError();
+}
+
+gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
+                                 unsigned int sourceSubresource,
+                                 const gl::Box &sourceArea,
+                                 const gl::Extents &sourceSize,
+                                 const TextureHelper11 &dest,
+                                 unsigned int destSubresource,
+                                 const gl::Box &destArea,
+                                 const gl::Extents &destSize,
+                                 const gl::Rectangle *scissor,
+                                 size_t readOffset,
+                                 size_t writeOffset,
+                                 size_t copySize,
+                                 size_t srcPixelStride,
+                                 size_t destPixelStride,
+                                 BlitConvertFunction *convertFunction)
+{
+    ANGLE_TRY(initResources());
+
+    ID3D11Device *device               = mRenderer->getDevice();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    // HACK: Create the destination staging buffer as a read/write texture so
+    // ID3D11DevicContext::UpdateSubresource can be called
+    //       using it's mapped data as a source
+    TextureHelper11 destStaging;
+    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, dest.getANGLEFormat(), destSize,
+                                          StagingAccess::READ_WRITE, device),
+                     destStaging);
+
+    deviceContext->CopySubresourceRegion(destStaging.getResource(), 0, 0, 0, 0, dest.getResource(),
+                                         destSubresource, nullptr);
+
+    copyAndConvertImpl(source, sourceSubresource, sourceArea, sourceSize, destStaging, destArea,
+                       destSize, scissor, readOffset, writeOffset, copySize, srcPixelStride,
+                       destPixelStride, convertFunction);
+
+    // Work around timeouts/TDRs in older NVIDIA drivers.
+    if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy)
+    {
+        D3D11_MAPPED_SUBRESOURCE mapped;
+        deviceContext->Map(destStaging.getResource(), 0, D3D11_MAP_READ, 0, &mapped);
+        deviceContext->UpdateSubresource(dest.getResource(), destSubresource, nullptr, mapped.pData,
+                                         mapped.RowPitch, mapped.DepthPitch);
+        deviceContext->Unmap(destStaging.getResource(), 0);
+    }
+    else
+    {
+        deviceContext->CopySubresourceRegion(dest.getResource(), destSubresource, 0, 0, 0,
+                                             destStaging.getResource(), 0, nullptr);
+    }
 
     return gl::NoError();
 }
@@ -1656,13 +1827,149 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepthStencil(RenderTarget11 *dsRenderTarget,
-                                                               bool resolveDepth,
-                                                               bool resolveStencil)
+gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 {
-    ASSERT(resolveDepth || resolveStencil);
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION,
-                     "Multisample depth stencil resolve not implemented yet.");
+    // TODO(jmadill)
+    return gl::Error(GL_INVALID_OPERATION, "Multisample depth stencil not implemented yet");
 }
+
+gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthStencil,
+                                                          bool alsoDepth)
+{
+    ID3D11Device *device         = mRenderer->getDevice();
+    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+    auto resolvedFormat = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
+    auto formatSet      = d3d11::GetANGLEFormatSet(resolvedFormat);
+    auto extents        = depthStencil->getExtents();
+
+    // Check if we need to recreate depth stencil view
+    if (mResolvedDepthStencil.valid() && extents != mResolvedDepthStencil.getExtents())
+    {
+        releaseResolveDepthStencilResources();
+    }
+
+    if (!mResolvedDepthStencil.valid())
+    {
+        D3D11_TEXTURE2D_DESC textureDesc;
+        textureDesc.Width              = extents.width;
+        textureDesc.Height             = extents.height;
+        textureDesc.MipLevels          = 1;
+        textureDesc.ArraySize          = 1;
+        textureDesc.Format             = formatSet.texFormat;
+        textureDesc.SampleDesc.Count   = 1;
+        textureDesc.SampleDesc.Quality = 0;
+        textureDesc.Usage              = D3D11_USAGE_DEFAULT;
+        textureDesc.BindFlags          = D3D11_BIND_RENDER_TARGET;
+        textureDesc.CPUAccessFlags     = 0;
+        textureDesc.MiscFlags          = 0;
+
+        ID3D11Texture2D *resolvedDepthStencil = nullptr;
+        HRESULT hr = device->CreateTexture2D(&textureDesc, nullptr, &resolvedDepthStencil);
+        if (FAILED(hr))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate resolved depth stencil texture");
+        }
+        d3d11::SetDebugName(resolvedDepthStencil, "Blit11::mResolvedDepthStencil");
+
+        ASSERT(mResolvedDepthStencilRTView == nullptr);
+        hr = device->CreateRenderTargetView(resolvedDepthStencil, nullptr,
+                                            &mResolvedDepthStencilRTView);
+        if (FAILED(hr))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY,
+                             "Failed to allocate Blit11::mResolvedDepthStencilRTView");
+        }
+        d3d11::SetDebugName(mResolvedDepthStencilRTView, "Blit11::mResolvedDepthStencilRTView");
+
+        mResolvedDepthStencil =
+            TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, resolvedFormat);
+    }
+
+    ID3D11Resource *stencilResource = depthStencil->getTexture();
+
+    // Check if we need to re-create the stencil SRV.
+    if (mStencilSRV)
+    {
+        ID3D11Resource *priorResource = nullptr;
+        mStencilSRV->GetResource(&priorResource);
+
+        if (stencilResource != priorResource)
+        {
+            SafeRelease(mStencilSRV);
+        }
+    }
+
+    if (!mStencilSRV)
+    {
+        D3D11_SHADER_RESOURCE_VIEW_DESC srViewDesc;
+        srViewDesc.Format        = GetStencilSRVFormat(depthStencil->getANGLEFormat());
+        srViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+
+        HRESULT hr = device->CreateShaderResourceView(stencilResource, &srViewDesc, &mStencilSRV);
+        if (FAILED(hr))
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Error creating Blit11 stencil SRV");
+        }
+        d3d11::SetDebugName(mStencilSRV, "Blit11::mStencilSRV");
+    }
+
+    // Notify the Renderer that all state should be invalidated.
+    mRenderer->markAllStateDirty();
+
+    // Apply the necessary state changes to the D3D11 immediate device context.
+    context->IASetInputLayout(nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->VSSetShader(mResolveDepthStencilVS.resolve(device), nullptr, 0);
+    context->GSSetShader(nullptr, nullptr, 0);
+    context->RSSetState(nullptr);
+    context->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    context->OMSetRenderTargets(1, &mResolvedDepthStencilRTView, nullptr);
+    context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+
+    ID3D11ShaderResourceView *pixelViews[] = {
+        depthStencil->getShaderResourceView(), mStencilSRV,
+    };
+
+    context->PSSetShaderResources(0, 2, pixelViews);
+
+    // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
+    // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
+    // because SV_StencilRef isn't supported until HLSL 5.1/D3D11.3.
+    if (alsoDepth)
+    {
+        context->PSSetShader(mResolveDepthStencilPS.resolve(device), nullptr, 0);
+    }
+    else
+    {
+        context->PSSetShader(mResolveStencilPS.resolve(device), nullptr, 0);
+    }
+
+    // Trigger the blit on the GPU.
+    context->Draw(6, 0);
+
+    gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
+
+    TextureHelper11 dest;
+    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, depthStencil->getANGLEFormat(), extents,
+                                          StagingAccess::READ_WRITE, device),
+                     dest);
+
+    auto copyFunction = GetCopyDepthStencilFunction(depthStencil->getInternalFormat());
+    auto dsFormatSet  = d3d11::GetANGLEFormatSet(depthStencil->getANGLEFormat());
+    auto dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
+
+    ANGLE_TRY(copyAndConvertImpl(mResolvedDepthStencil, 0, copyBox, extents, dest, copyBox, extents,
+                                 nullptr, 0, 0, 0, 8u, dsDxgiInfo.pixelBytes, copyFunction));
+
+    // Return the resolved depth texture, which the caller must Release.
+    return dest;
+}
+
+void Blit11::releaseResolveDepthStencilResources()
+{
+    SafeRelease(mStencilSRV);
+    SafeRelease(mResolvedDepthStencilRTView);
+}
+
 }  // namespace rx

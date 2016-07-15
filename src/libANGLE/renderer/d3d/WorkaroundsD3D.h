@@ -17,35 +17,22 @@ namespace rx
 {
 struct D3DCompilerWorkarounds
 {
-    D3DCompilerWorkarounds()
-        : skipOptimization(false), useMaxOptimization(false), enableIEEEStrictness(false)
-    {
-    }
-
-    bool skipOptimization;
-    bool useMaxOptimization;
+    bool skipOptimization   = false;
+    bool useMaxOptimization = false;
 
     // IEEE strictness needs to be enabled for NANs to work.
-    bool enableIEEEStrictness;
+    bool enableIEEEStrictness = false;
 };
 
 struct WorkaroundsD3D
 {
-    WorkaroundsD3D()
-        : mrtPerfWorkaround(false),
-          setDataFasterThanImageUpload(false),
-          zeroMaxLodWorkaround(false),
-          useInstancedPointSpriteEmulation(false)
-    {
-    }
-
     // On some systems, having extra rendertargets than necessary slows down the shader.
     // We can fix this by optimizing those out of the shader. At the same time, we can
     // work around a bug on some nVidia drivers that they ignore "null" render targets
     // in D3D11, by compacting the active color attachments list to omit null entries.
-    bool mrtPerfWorkaround;
+    bool mrtPerfWorkaround = false;
 
-    bool setDataFasterThanImageUpload;
+    bool setDataFasterThanImageUpload = false;
 
     // Some renderers can't disable mipmaps on a mipmapped texture (i.e. solely sample from level
     // zero, and ignore the other levels). D3D11 Feature Level 10+ does this by setting MaxLOD to
@@ -54,13 +41,19 @@ struct WorkaroundsD3D
     // application creates a mipmapped texture2D, but sets GL_TEXTURE_MIN_FILTER to GL_NEAREST
     // (i.e disables mipmaps). To work around this, D3D11 FL9_3 has to create two copies of the
     // texture. The textures' level zeros are identical, but only one texture has mips.
-    bool zeroMaxLodWorkaround;
+    bool zeroMaxLodWorkaround = false;
 
     // Some renderers do not support Geometry Shaders so the Geometry Shader-based PointSprite
     // emulation will not work. To work around this, D3D11 FL9_3 has to use a different pointsprite
     // emulation that is implemented using instanced quads.
-    bool useInstancedPointSpriteEmulation;
+    bool useInstancedPointSpriteEmulation = false;
+
+    // NVIDIA driver versions 347.88 <= x < 368.69 have a bug where using CopySubresourceRegion
+    // from a staging texture to a depth/stencil texture triggers a timeout/TDR. The workaround
+    // is to use UpdateSubresource to trigger an extra copy.
+    bool depthStencilBlitExtraCopy = false;
 };
-}
+
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_WORKAROUNDSD3D_H_

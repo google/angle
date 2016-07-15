@@ -3084,14 +3084,7 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
         bool bindRTV = false, bindDSV = false, bindSRV = false;
         bindRTV = (formatInfo.formatSet->rtvFormat != DXGI_FORMAT_UNKNOWN);
         bindDSV = (formatInfo.formatSet->dsvFormat != DXGI_FORMAT_UNKNOWN);
-        if (formatInfo.formatSet->srvFormat != DXGI_FORMAT_UNKNOWN)
-        {
-            // Multisample targets flagged for binding as depth stencil cannot also be
-            // flagged for binding as SRV, so make certain not to add the SRV flag for
-            // these targets.
-            bindSRV = !(formatInfo.formatSet->dsvFormat != DXGI_FORMAT_UNKNOWN &&
-                        desc.SampleDesc.Count > 1);
-        }
+        bindSRV = (formatInfo.formatSet->srvFormat != DXGI_FORMAT_UNKNOWN);
 
         desc.BindFlags = (bindRTV ? D3D11_BIND_RENDER_TARGET   : 0) |
                          (bindDSV ? D3D11_BIND_DEPTH_STENCIL   : 0) |
@@ -3785,20 +3778,24 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         auto readRT11 = GetAs<RenderTarget11>(readRenderTarget);
         ANGLE_TRY_RESULT(resolveMultisampledTexture(readRT11, depthBlit, stencilBlit), readTexture);
 
-        const auto &formatSet = d3d11::GetANGLEFormatSet(readTexture.getANGLEFormat());
-
-        D3D11_SHADER_RESOURCE_VIEW_DESC srViewDesc;
-        srViewDesc.Format                    = formatSet.srvFormat;
-        srViewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srViewDesc.Texture2D.MipLevels       = 1;
-        srViewDesc.Texture2D.MostDetailedMip = 0;
-
-        HRESULT hresult =
-            mDevice->CreateShaderResourceView(readTexture.getResource(), &srViewDesc, &readSRV);
-        if (FAILED(hresult))
+        if (!stencilBlit)
         {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Renderer11::blitRenderbufferRect: Failed to create temporary SRV.");
+            const auto &readFormatSet = d3d11::GetANGLEFormatSet(readTexture.getANGLEFormat());
+
+            D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+            viewDesc.Format                    = readFormatSet.srvFormat;
+            viewDesc.ViewDimension             = D3D11_SRV_DIMENSION_TEXTURE2D;
+            viewDesc.Texture2D.MipLevels       = 1;
+            viewDesc.Texture2D.MostDetailedMip = 0;
+
+            HRESULT hresult =
+                mDevice->CreateShaderResourceView(readTexture.getResource(), &viewDesc, &readSRV);
+            if (FAILED(hresult))
+            {
+                return gl::Error(
+                    GL_OUT_OF_MEMORY,
+                    "Renderer11::blitRenderbufferRect: Failed to create temporary SRV.");
+            }
         }
     }
     else
@@ -3817,10 +3814,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         readSRV->AddRef();
     }
 
-    if (!readSRV)
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to retrieve the internal read render target view from the read render target.");
-    }
+    // Stencil blits don't use shaders.
+    ASSERT(readSRV || stencilBlit);
 
     const gl::Extents readSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
     const gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
@@ -3988,6 +3983,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         }
         else if (depthBlit)
         {
+            ASSERT(readSRV);
             ANGLE_TRY(mBlit->copyDepth(readSRV, readArea, readSize, drawDSV, drawArea, drawSize,
                                        scissor));
         }
@@ -4001,6 +3997,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         {
             // We don't currently support masking off any other channel than alpha
             bool maskOffAlpha = colorMaskingNeeded && colorMask.alpha;
+            ASSERT(readSRV);
             ANGLE_TRY(mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize,
                                          scissor, destFormatInfo.format, filter, maskOffAlpha));
         }
@@ -4059,9 +4056,14 @@ void Renderer11::onBufferDelete(const Buffer11 *deleted)
 gl::ErrorOrResult<TextureHelper11>
 Renderer11::resolveMultisampledTexture(RenderTarget11 *renderTarget, bool depth, bool stencil)
 {
-    if (depth || stencil)
+    if (depth && !stencil)
     {
-        return mBlit->resolveDepthStencil(renderTarget, depth, stencil);
+        return mBlit->resolveDepth(renderTarget);
+    }
+
+    if (stencil)
+    {
+        return mBlit->resolveStencil(renderTarget, depth);
     }
 
     const auto &formatSet = d3d11::GetANGLEFormatSet(renderTarget->getANGLEFormat());
@@ -4169,7 +4171,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
 
 WorkaroundsD3D Renderer11::generateWorkarounds() const
 {
-    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps.featureLevel);
+    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
 }
 
 gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)

@@ -62,7 +62,7 @@ void SafeRelease(T& resource)
 }
 
 template <typename T>
-void SafeDelete(T*& resource)
+void SafeDelete(T *&resource)
 {
     delete resource;
     resource = NULL;

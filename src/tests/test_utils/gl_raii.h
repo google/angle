@@ -6,6 +6,9 @@
 // gl_raii:
 //   Helper methods for containing GL objects like buffers and textures.
 
+#ifndef ANGLE_TESTS_GL_RAII_H_
+#define ANGLE_TESTS_GL_RAII_H_
+
 #include <functional>
 
 #include "angle_gl.h"
@@ -44,4 +47,35 @@ using GLTexture      = GLWrapper<glGenTextures, glDeleteTextures>;
 using GLFramebuffer  = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;
 using GLRenderbuffer = GLWrapper<glGenRenderbuffers, glDeleteRenderbuffers>;
 
+class GLProgram
+{
+  public:
+    GLProgram(const std::string &vertexShader, const std::string &fragmentShader)
+        : mHandle(0), mVertexShader(vertexShader), mFragmentShader(fragmentShader)
+    {
+    }
+
+    ~GLProgram() { glDeleteProgram(mHandle); }
+
+    GLuint get()
+    {
+        if (mHandle == 0)
+        {
+            mHandle = CompileProgram(mVertexShader, mFragmentShader);
+        }
+        return mHandle;
+    }
+
+  private:
+    GLuint mHandle;
+    const std::string mVertexShader;
+    const std::string mFragmentShader;
+};
+
+#define ANGLE_GL_PROGRAM(name, vertex, fragment) \
+    GLProgram name(vertex, fragment);            \
+    ASSERT_NE(0u, name.get());
+
 }  // namespace angle
+
+#endif  // ANGLE_TESTS_GL_RAII_H_

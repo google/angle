@@ -346,7 +346,8 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
     }
 }
 
-WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel);
+WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
+                                   const DXGI_ADAPTER_DESC &adapterDesc);
 
 enum ReservedConstantBufferSlot
 {
@@ -383,6 +384,7 @@ class TextureHelper11 : angle::NonCopyable
     ID3D11Texture2D *getTexture2D() const { return mTexture2D; }
     ID3D11Texture3D *getTexture3D() const { return mTexture3D; }
     ID3D11Resource *getResource() const;
+    bool valid() const;
 
   private:
     void reset();

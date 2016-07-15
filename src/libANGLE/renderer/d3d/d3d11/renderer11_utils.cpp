@@ -1506,13 +1506,20 @@ ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
     return mResource;
 }
 
-WorkaroundsD3D GenerateWorkarounds(D3D_FEATURE_LEVEL featureLevel)
+WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
+                                   const DXGI_ADAPTER_DESC &adapterDesc)
 {
+    bool is9_3 = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
+
     WorkaroundsD3D workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = true;
-    workarounds.zeroMaxLodWorkaround = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
-    workarounds.useInstancedPointSpriteEmulation = (featureLevel <= D3D_FEATURE_LEVEL_9_3);
+    workarounds.zeroMaxLodWorkaround             = is9_3;
+    workarounds.useInstancedPointSpriteEmulation = is9_3;
+
+    // TODO(jmadill): Narrow problematic driver range.
+    workarounds.depthStencilBlitExtraCopy = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
+
     return workarounds;
 }
 
@@ -1652,6 +1659,11 @@ void TextureHelper11::reset()
     mSampleCount = 0;
     mTexture2D   = nullptr;
     mTexture3D   = nullptr;
+}
+
+bool TextureHelper11::valid() const
+{
+    return (mTextureType != GL_NONE);
 }
 
 gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
