@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8aff2b22_1b1e3b67",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T14:01:46Z",
+      "side": 1,
+      "message": "Jamie, do you know what would be the correct enum value here?",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 6
+      },
+      "revId": "5d6ab3040fb812c31ebd35525b059df818fff057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da21f486_65e386ab",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T14:01:46Z",
+      "side": 1,
+      "message": "Indentation is weird here too",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 30
+      },
+      "revId": "5d6ab3040fb812c31ebd35525b059df818fff057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa26b89b_46b132a0",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T14:01:46Z",
+      "side": 1,
+      "message": "Still indentation issue here.",
+      "range": {
+        "startLine": 334,
+        "startChar": 0,
+        "endLine": 335,
+        "endChar": 18
+      },
+      "revId": "5d6ab3040fb812c31ebd35525b059df818fff057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caf9233e_1d4f53c2",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3897,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T14:01:46Z",
+      "side": 1,
+      "message": "And here",
+      "range": {
+        "startLine": 3896,
+        "startChar": 0,
+        "endLine": 3897,
+        "endChar": 18
+      },
+      "revId": "5d6ab3040fb812c31ebd35525b059df818fff057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
