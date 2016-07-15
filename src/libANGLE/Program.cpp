@@ -465,7 +465,7 @@ BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
         ret.valid = true;
 
         std::string originalName = binding.first;
-        unsigned int index = ParseAndStripArrayIndex(&originalName);
+        unsigned int arrayIndex  = ParseAndStripArrayIndex(&originalName);
 
         for (const auto &in : inputs)
         {
@@ -478,10 +478,10 @@ BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
                     // "if the string identifies the base name of an active array, where the
                     // string would exactly match the name of the variable if the suffix "[0]"
                     // were appended to the string".
-                    if (index == GL_INVALID_INDEX)
-                        index = 0;
+                    if (arrayIndex == GL_INVALID_INDEX)
+                        arrayIndex = 0;
 
-                    ret.name = in.mappedName + "[" + std::to_string(index) + "]";
+                    ret.name = in.mappedName + "[" + std::to_string(arrayIndex) + "]";
                 }
                 else
                 {

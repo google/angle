@@ -1186,14 +1186,15 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
                 if (j % 2 == 0)
                 {
                     glDisable(GL_STENCIL_TEST);
-                    glUniform2f(kModelTranslateLocation, i * kShapeWidth, j * kShapeHeight);
+                    glUniform2f(kModelTranslateLocation, static_cast<GLfloat>(i * kShapeWidth),
+                                static_cast<GLfloat>(j * kShapeHeight));
                     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
                 }
                 else
                 {
                     glEnable(GL_STENCIL_TEST);
-                    path_model_translate[12] = i * kShapeWidth;
-                    path_model_translate[13] = j * kShapeHeight;
+                    path_model_translate[12] = static_cast<GLfloat>(i * kShapeWidth);
+                    path_model_translate[13] = static_cast<GLfloat>(j * kShapeHeight);
                     glMatrixLoadfCHROMIUM(GL_PATH_MODELVIEW_CHROMIUM, path_model_translate);
                     glStencilThenCoverFillPathCHROMIUM(path, GL_COUNT_UP_CHROMIUM, 0x7F,
                                                        GL_BOUNDING_BOX_CHROMIUM);
@@ -1374,15 +1375,16 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenCH
             {
                 const float fx = kFillCoords[k];
                 const float fy = kFillCoords[k + 1];
-                const float px = i * kShapeWidth;
-                const float py = j * kShapeHeight;
+                const float px = static_cast<float>(i * kShapeWidth);
+                const float py = static_cast<float>(j * kShapeHeight);
 
                 angle::GLColor color;
-                color.R = std::roundf((px + fx) / kResolution * 255.0f);
-                color.G = std::roundf((py + fy) / kResolution * 255.0f);
+                color.R = static_cast<GLubyte>(std::roundf((px + fx) / kResolution * 255.0f));
+                color.G = static_cast<GLubyte>(std::roundf((py + fy) / kResolution * 255.0f));
                 color.B = 0;
                 color.A = 255;
-                CheckPixels(px + fx, py + fy, 1, 1, 2, color);
+                CheckPixels(static_cast<GLint>(px + fx), static_cast<GLint>(py + fy), 1, 1, 2,
+                            color);
             }
         }
     }
@@ -1449,15 +1451,16 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, TestProgramPathFragmentInputGenCH
             {
                 const float fx = kFillCoords[k];
                 const float fy = kFillCoords[k + 1];
-                const float px = i * kShapeWidth;
-                const float py = j * kShapeHeight;
+                const float px = static_cast<float>(i * kShapeWidth);
+                const float py = static_cast<float>(j * kShapeHeight);
 
                 angle::GLColor color;
-                color.R = std::roundf(fx / kShapeWidth * 255.0f);
-                color.G = std::roundf(fy / kShapeHeight * 255.0f);
+                color.R = static_cast<GLubyte>(std::roundf(fx / kShapeWidth * 255.0f));
+                color.G = static_cast<GLubyte>(std::roundf(fy / kShapeHeight * 255.0f));
                 color.B = 0;
                 color.A = 255;
-                CheckPixels(px + fx, py + fy, 1, 1, 2, color);
+                CheckPixels(static_cast<GLint>(px + fx), static_cast<GLint>(py + fy), 1, 1, 2,
+                            color);
             }
         }
     }
@@ -1779,15 +1782,16 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest, BindFragmentInputArray)
                 {
                     const float fx = kFillCoords[k];
                     const float fy = kFillCoords[k + 1];
-                    const float px = i * kShapeWidth;
-                    const float py = j * kShapeHeight;
+                    const float px = static_cast<float>(i * kShapeWidth);
+                    const float py = static_cast<float>(j * kShapeHeight);
 
                     angle::GLColor color;
                     color.R = 0;
                     color.G = 255;
                     color.B = 0;
                     color.A = 255;
-                    CheckPixels(px + fx, py + fy, 1, 1, 2, color);
+                    CheckPixels(static_cast<GLint>(px + fx), static_cast<GLint>(py + fy), 1, 1, 2,
+                                color);
                 }
             }
         }
@@ -1875,15 +1879,16 @@ TEST_P(CHROMIUMPathRenderingWithTexturingTest,
             {
                 const float fx = kFillCoords[k];
                 const float fy = kFillCoords[k + 1];
-                const float px = i * kShapeWidth;
-                const float py = j * kShapeHeight;
+                const float px = static_cast<float>(i * kShapeWidth);
+                const float py = static_cast<float>(j * kShapeHeight);
 
                 angle::GLColor color;
                 color.R = 0;
                 color.G = 255;
                 color.B = 0;
                 color.A = 255;
-                CheckPixels(px + fx, py + fy, 1, 1, 2, color);
+                CheckPixels(static_cast<GLint>(px + fx), static_cast<GLint>(py + fy), 1, 1, 2,
+                            color);
             }
         }
     }

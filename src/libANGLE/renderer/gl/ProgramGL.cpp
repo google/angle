@@ -537,16 +537,17 @@ void ProgramGL::postLink()
         GLint queryResults[ArraySize(kQueryProperties)];
         GLsizei queryLength = 0;
 
-        mFunctions->getProgramResourceiv(mProgramID, GL_FRAGMENT_INPUT_NV, i,
-                                         ArraySize(kQueryProperties), kQueryProperties,
-                                         ArraySize(queryResults), &queryLength, queryResults);
+        mFunctions->getProgramResourceiv(
+            mProgramID, GL_FRAGMENT_INPUT_NV, i, static_cast<GLsizei>(ArraySize(kQueryProperties)),
+            kQueryProperties, static_cast<GLsizei>(ArraySize(queryResults)), &queryLength,
+            queryResults);
 
         ASSERT(queryLength == ArraySize(kQueryProperties));
 
-        PathRenderingFragmentInput input;
-        input.name     = name;
-        input.location = queryResults[0];
-        mPathRenderingFragmentInputs.push_back(std::move(input));
+        PathRenderingFragmentInput baseElementInput;
+        baseElementInput.name     = name;
+        baseElementInput.location = queryResults[0];
+        mPathRenderingFragmentInputs.push_back(std::move(baseElementInput));
 
         // If the input is an array it's denoted by [0] suffix on the variable
         // name. We'll then create an entry per each array index where index > 0
@@ -558,12 +559,12 @@ void ProgramGL::postLink()
             const auto arraySize    = queryResults[1];
             const auto baseLocation = queryResults[0];
 
-            for (GLint i = 1; i < arraySize; ++i)
+            for (GLint arrayIndex = 1; arrayIndex < arraySize; ++arrayIndex)
             {
-                PathRenderingFragmentInput input;
-                input.name     = name + "[" + std::to_string(i) + "]";
-                input.location = baseLocation + i;
-                mPathRenderingFragmentInputs.push_back(std::move(input));
+                PathRenderingFragmentInput arrayElementInput;
+                arrayElementInput.name     = name + "[" + std::to_string(arrayIndex) + "]";
+                arrayElementInput.location = baseLocation + arrayIndex;
+                mPathRenderingFragmentInputs.push_back(std::move(arrayElementInput));
             }
         }
     }
