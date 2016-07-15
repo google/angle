@@ -427,11 +427,11 @@ inline const char* getQualifierString(TQualifier q)
     case EvqLastFragColor:          return "LastFragColor";
     case EvqLastFragData:           return "LastFragData";
     case EvqSmoothOut:              return "smooth out";
-    case EvqCentroidOut:            return "centroid out";
+    case EvqCentroidOut:            return "smooth centroid out";
     case EvqFlatOut:                return "flat out";
     case EvqSmoothIn:               return "smooth in";
     case EvqFlatIn:                 return "flat in";
-    case EvqCentroidIn:             return "centroid in";
+    case EvqCentroidIn:             return "smooth centroid in";
     default: UNREACHABLE();         return "unknown qualifier";
     }
     // clang-format on
@@ -465,10 +465,10 @@ inline const char* getInterpolationString(TQualifier q)
     switch(q)
     {
     case EvqSmoothOut:      return "smooth";   break;
-    case EvqCentroidOut:    return "centroid"; break;
+    case EvqCentroidOut:    return "smooth centroid"; break;
     case EvqFlatOut:        return "flat";     break;
     case EvqSmoothIn:       return "smooth";   break;
-    case EvqCentroidIn:     return "centroid"; break;
+    case EvqCentroidIn:     return "smooth centroid"; break;
     case EvqFlatIn:         return "flat";     break;
     default: UNREACHABLE(); return "unknown interpolation";
     }
