@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faa1580d_bc63e3f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-15T19:24:25Z",
+      "side": 1,
+      "message": "nit: add space before comment :p",
+      "revId": "40b10dc71995ea9d8a48b7052d25e1096c2887b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faa1580d_1c54b70e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1273,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-15T19:24:25Z",
+      "side": 1,
+      "message": "can you try: ASSERT(source-\u003eisMappable() \u0026\u0026 source-\u003egetUsage() \u003d\u003d BUFFER_USAGE_STAGING);",
+      "range": {
+        "startLine": 1273,
+        "startChar": 4,
+        "endLine": 1273,
+        "endChar": 33
+      },
+      "revId": "40b10dc71995ea9d8a48b7052d25e1096c2887b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
