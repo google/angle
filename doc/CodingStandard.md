@@ -10,6 +10,9 @@ below.
 Items marked {DEV} indicate a deviation from the Google guidelines. Items marked
 {DO} are reiterating points from the Google guidelines.
 
+Before you upload code to Gerrit, use `git cl format` to auto-format your code.
+This will catch most of the trivial formatting errors and save you time.
+
 ### [Header Files](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Header_Files)
 
 *   We will use **`.h`** for C++ headers.
@@ -23,27 +26,21 @@ Items marked {DEV} indicate a deviation from the Google guidelines. Items marked
 
 ### [Classes](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Classes)
 
-*   {DO} disable Copy and Assignment constructors using the
-    DISALLOW\_COPY\_AND\_ASSIGN macro (defined in common/angleutils.h) in the
-    **private** section of a class: ``` class Foo { public: Foo(int f); ~Foo();
-
-    private: DISALLOW_COPY_AND_ASSIGN(Foo); }; ```
+*   {DEV} Inherit (privately) from angle::NonCopyable helper class (defined in
+    common/angleutils.h) to disable default copy and assignment operators.
 
 ### [Other C++ Features](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Other_C++_Features)
 
 *   {DEV} all parameters passed by reference, except for STL containers (e.g.
     std::vector, std::list), must be labeled `const`. For return parameters
     other than STL containers, use a pointer.
-*   {DO} avoid use of default arguments. exception: for functions emulating
-    variadic arguments, they are allowed.
+*   {DO} avoid use of default arguments.
 *   {DONT} use C++ exceptions, they are disabled in the builds and not caught.
 *   {DO} use nullptr (instead of 0 or NULL) for pointers.
 *   {DO} use size\_t for loop iterators and size values.
 *   {DO} use uint8\_t pointers instead of void pointers to denote binary data.
 *   {DO} use C++11 according to the [Chromium guide on C++11]
     (http://chromium-cpp.appspot.com/).
-*   {DEV} we permit C++11 STL classes inside the D3D Renderers, since D3D is
-    only supported on MSVS.
 
 ### [Naming ](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Naming)
 
@@ -53,14 +50,16 @@ Items marked {DEV} indicate a deviation from the Google guidelines. Items marked
     If the file is an implementation of a class, the filename may be capitalized
     the same as the major class.
 *   {DEV} We use .cpp (instead of .cc), .h and .inl (inlined files) for C++
-    files and headers. #### Directory Names
+    files and headers.
+
+#### Directory Names
 *   Directory names should be all lowercase, unless following an externally
     imposed capitalization (eg include/EGL, or src/libGLESv2, etc)
 
 #### Variable Names
 
 Use the following guidelines, they do deviate somewhat from the Google
-guidelines. 
+guidelines.
 
 * class and type names: start with capital letter and use CamelCase.
 * {DEV} class member variables: use an **`m`** prefix instead of trailing
@@ -71,7 +70,7 @@ underscore and use CamelCase.
 use CamelCase (chosen for consistency)
 * Constants: start with a **`k`** and use CamelCase
 * namespaces: use all lower case
-* Enumerator Names - follow constants
+* Enum Names - use class enums, and the values should be uppercase with underscores.
 * macros: all uppercase with underscores
 * exceptions to naming: use common sense!
 
@@ -82,7 +81,7 @@ use CamelCase (chosen for consistency)
 
 ```
 //
-//  Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+//  Copyright (c) 2016 The ANGLE Project Authors. All rights reserved.
 //  Use of this source code is governed by a BSD-style license that can be
 //  found in the LICENSE file.
 //
@@ -90,16 +89,14 @@ use CamelCase (chosen for consistency)
 
 ### [Formatting](http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml#Formatting)
 
-*   {DEV} Avoid excessively long lines. Please keep lines under 120 columns
+*   {DEV} Avoid excessively long lines. Please keep lines under 100 columns
     long.
 *   Use unix-style newlines.
 *   {DO} use only spaces. No tab characters. Configure your editor to emit
     spaces when you hit the TAB-key.
 *   {DEV} indent 4 spaces at a time.
 *   conditionals: place space outside the parenthesis. No spaces inside.
-*   switch statements: indent the case statements by 2 spaces. The body of the
-    case statements should be intended another 2 spaces so that they are a full
-    4-space indent from the switch.
+*   switch statements: use the output of `git cl format`.
 *   class format(eg private, public, protected): indent by 2 spaces. Regular
     4-space indent from the outer scope for declarations/definitions.
 *   pointers and references: **`*`** and **`&`** tight against the variable
@@ -156,8 +153,3 @@ const string &str;
 
 *   If modifying pre-existing code that does not match the standard, the altered
     portions of the code should be changed to match the standard.
-*   For changes which fix bugs, we do not require that pre-existing style issues
-    be addressed in the change itself, but reviewers may request a follow-on CL
-    to address style inconsistencies. This exception does not apply to changes
-    which implement new features, perform refactoring, or introduce a style
-    issue or inconsistency themselves.
