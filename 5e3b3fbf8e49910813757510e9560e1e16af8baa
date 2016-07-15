@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "da157484_bcf18c70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-15T15:24:18Z",
+      "side": 1,
+      "message": "Right, OK. Changed to enforce 0,0 for x,y.",
+      "parentUuid": "da157484_3d180378",
+      "range": {
+        "startLine": 256,
+        "startChar": 44,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "5e3b3fbf8e49910813757510e9560e1e16af8baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da157484_a7c990bb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
         "patchSetId": 1
