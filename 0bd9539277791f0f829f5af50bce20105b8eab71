@@ -1,0 +1,175 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8aff2b22_dbee9386",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "Proper GL jargon here is \"generate\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 44,
+        "endLine": 9,
+        "endChar": 49
+      },
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_bbebc774",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "\"as READ_BUFFER\" would be much clearer here.",
+      "range": {
+        "startLine": 10,
+        "startChar": 47,
+        "endLine": 11,
+        "endChar": 21
+      },
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafc272d_7e53f148",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "Short comment needed here as well.",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba20c083_e4d69acf",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "Prefer using EXPECT_GL_ERROR",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_dbc7b30c",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "There should be a short comment before each test explaining what is being tested. It\u0027s even better if you can include a reference to the GLES spec section concerning the thing being tested. For example: \"GLES 3.0.4 section 4.3 Obtaining Pixels from the Framebuffer\"",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa26b89b_a67ae6cf",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "This test is not related to PBOs, so I\u0027d change this to either use ReadPixelsTextureTest or add an entirely new test class that only has exactly what you need.",
+      "range": {
+        "startLine": 645,
+        "startChar": 7,
+        "endLine": 645,
+        "endChar": 28
+      },
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caf9233e_dde44bd7",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "Not needed here. This kind of initial state safety checks should be in the test class SetUp() method if anywhere.",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8aff2b22_fbf14f68",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "Prefer EXPECT_GL_ERROR",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eafc272d_de9c4506",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-15T11:14:44Z",
+      "side": 1,
+      "message": "The graphics context is created separately for each test, so in general resetting state is not necessary. Deleting resources at the end of a test is still a good idea, as it may free memory earlier or avoid leaks on badly behaved drivers, but other state cleanup is not needed.",
+      "revId": "0bd9539277791f0f829f5af50bce20105b8eab71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
