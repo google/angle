@@ -102,10 +102,9 @@ FenceSyncImpl *ContextGL::createFenceSync()
     return new FenceSyncGL(getFunctions());
 }
 
-TransformFeedbackImpl *ContextGL::createTransformFeedback()
+TransformFeedbackImpl *ContextGL::createTransformFeedback(const gl::TransformFeedbackState &state)
 {
-    return new TransformFeedbackGL(getFunctions(), getStateManager(),
-                                   getNativeCaps().maxTransformFeedbackSeparateComponents);
+    return new TransformFeedbackGL(state, getFunctions(), getStateManager());
 }
 
 SamplerImpl *ContextGL::createSampler()

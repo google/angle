@@ -152,7 +152,7 @@ class Renderer11 : public RendererD3D
                                GLenum mode,
                                GLenum type,
                                TranslatedIndexData *indexInfo);
-    gl::Error applyTransformFeedbackBuffers(const gl::State &state);
+    gl::Error applyTransformFeedbackBuffers(const gl::ContextState &data);
 
     // lost device
     bool testDeviceLost() override;
@@ -470,15 +470,7 @@ class Renderer11 : public RendererD3D
     bool mAppliedIBChanged;
 
     // Currently applied transform feedback buffers
-    size_t mAppliedNumXFBBindings;
-    ID3D11Buffer *mAppliedTFBuffers[gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS]; // Tracks the current D3D buffers
-                                                                                        // in use for streamout
-    GLintptr mAppliedTFOffsets[gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS]; // Tracks the current GL-specified
-                                                                                   // buffer offsets to transform feedback
-                                                                                   // buffers
-    UINT mCurrentD3DOffsets[gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];  // Tracks the D3D buffer offsets,
-                                                                                 // which may differ from GLs, due
-                                                                                 // to different append behavior
+    uintptr_t mAppliedTFObject;
 
     // Currently applied shaders
     uintptr_t mAppliedVertexShader;

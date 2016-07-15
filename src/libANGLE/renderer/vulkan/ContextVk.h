@@ -111,7 +111,8 @@ class ContextVk : public ContextImpl
     FenceSyncImpl *createFenceSync() override;
 
     // Transform Feedback creation
-    TransformFeedbackImpl *createTransformFeedback() override;
+    TransformFeedbackImpl *createTransformFeedback(
+        const gl::TransformFeedbackState &state) override;
 
     // Sampler object creation
     SamplerImpl *createSampler() override;

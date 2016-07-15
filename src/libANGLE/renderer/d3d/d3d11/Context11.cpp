@@ -16,12 +16,12 @@
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Fence11.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
+#include "libANGLE/renderer/d3d/d3d11/TransformFeedback11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 
 namespace rx
@@ -121,9 +121,9 @@ FenceSyncImpl *Context11::createFenceSync()
     return new FenceSync11(mRenderer);
 }
 
-TransformFeedbackImpl *Context11::createTransformFeedback()
+TransformFeedbackImpl *Context11::createTransformFeedback(const gl::TransformFeedbackState &state)
 {
-    return new TransformFeedbackD3D();
+    return new TransformFeedback11(state);
 }
 
 SamplerImpl *Context11::createSampler()

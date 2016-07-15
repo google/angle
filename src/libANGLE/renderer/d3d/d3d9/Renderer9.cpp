@@ -47,7 +47,6 @@
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/TransformFeedbackD3D.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"

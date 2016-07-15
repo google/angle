@@ -253,9 +253,9 @@ FenceSyncImpl *ContextVk::createFenceSync()
     return new FenceSyncVk();
 }
 
-TransformFeedbackImpl *ContextVk::createTransformFeedback()
+TransformFeedbackImpl *ContextVk::createTransformFeedback(const gl::TransformFeedbackState &state)
 {
-    return new TransformFeedbackVk();
+    return new TransformFeedbackVk(state);
 }
 
 SamplerImpl *ContextVk::createSampler()
