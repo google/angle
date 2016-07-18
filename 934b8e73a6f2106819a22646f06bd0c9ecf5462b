@@ -22,6 +22,24 @@
       "revId": "934b8e73a6f2106819a22646f06bd0c9ecf5462b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faa1580d_41cda03d",
+        "filename": "src/tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-18T21:56:42Z",
+      "side": 1,
+      "message": "It is allowed, modified the test.\nDone",
+      "parentUuid": "faa1580d_81fae875",
+      "revId": "934b8e73a6f2106819a22646f06bd0c9ecf5462b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
