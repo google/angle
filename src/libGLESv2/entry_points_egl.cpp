@@ -11,6 +11,7 @@
 #include "libGLESv2/entry_points_gles_2_0.h"
 #include "libGLESv2/entry_points_gles_2_0_ext.h"
 #include "libGLESv2/entry_points_gles_3_0.h"
+#include "libGLESv2/entry_points_gles_3_1.h"
 #include "libGLESv2/global_state.h"
 
 #include "libANGLE/Context.h"
@@ -1582,6 +1583,76 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, TexStorage2D);
         INSERT_PROC_ADDRESS(gl, TexStorage3D);
         INSERT_PROC_ADDRESS(gl, GetInternalformativ);
+
+        // GLES31 core
+        INSERT_PROC_ADDRESS(gl, DispatchCompute);
+        INSERT_PROC_ADDRESS(gl, DispatchComputeIndirect);
+        INSERT_PROC_ADDRESS(gl, DrawArraysIndirect);
+        INSERT_PROC_ADDRESS(gl, DrawElementsIndirect);
+        INSERT_PROC_ADDRESS(gl, FramebufferParameteri);
+        INSERT_PROC_ADDRESS(gl, GetFramebufferParameteriv);
+        INSERT_PROC_ADDRESS(gl, GetProgramInterfaceiv);
+        INSERT_PROC_ADDRESS(gl, GetProgramResourceIndex);
+        INSERT_PROC_ADDRESS(gl, GetProgramResourceName);
+        INSERT_PROC_ADDRESS(gl, GetProgramResourceiv);
+        INSERT_PROC_ADDRESS(gl, GetProgramResourceLocation);
+        INSERT_PROC_ADDRESS(gl, UseProgramStages);
+        INSERT_PROC_ADDRESS(gl, ActiveShaderProgram);
+        INSERT_PROC_ADDRESS(gl, CreateShaderProgramv);
+        INSERT_PROC_ADDRESS(gl, BindProgramPipeline);
+        INSERT_PROC_ADDRESS(gl, DeleteProgramPipelines);
+        INSERT_PROC_ADDRESS(gl, GenProgramPipelines);
+        INSERT_PROC_ADDRESS(gl, IsProgramPipeline);
+        INSERT_PROC_ADDRESS(gl, GetProgramPipelineiv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1i);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2i);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3i);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4i);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1ui);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2ui);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3ui);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4ui);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1f);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2f);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3f);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4f);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1iv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2iv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3iv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4iv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1uiv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2uiv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3uiv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4uiv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform1fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform2fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform3fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniform4fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix2fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix3fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix4fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix2x3fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix3x2fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix2x4fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix4x2fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix3x4fv);
+        INSERT_PROC_ADDRESS(gl, ProgramUniformMatrix4x3fv);
+        INSERT_PROC_ADDRESS(gl, ValidateProgramPipeline);
+        INSERT_PROC_ADDRESS(gl, GetProgramPipelineInfoLog);
+        INSERT_PROC_ADDRESS(gl, BindImageTexture);
+        INSERT_PROC_ADDRESS(gl, GetBooleani_v);
+        INSERT_PROC_ADDRESS(gl, MemoryBarrier);
+        INSERT_PROC_ADDRESS(gl, MemoryBarrierByRegion);
+        INSERT_PROC_ADDRESS(gl, TexStorage2DMultisample);
+        INSERT_PROC_ADDRESS(gl, GetMultisamplefv);
+        INSERT_PROC_ADDRESS(gl, SampleMaski);
+        INSERT_PROC_ADDRESS(gl, GetTexLevelParameteriv);
+        INSERT_PROC_ADDRESS(gl, GetTexLevelParameterfv);
+        INSERT_PROC_ADDRESS(gl, BindVertexBuffer);
+        INSERT_PROC_ADDRESS(gl, VertexAttribFormat);
+        INSERT_PROC_ADDRESS(gl, VertexAttribIFormat);
+        INSERT_PROC_ADDRESS(gl, VertexAttribBinding);
+        INSERT_PROC_ADDRESS(gl, VertexBindingDivisor);
 
         // EGL 1.0
         INSERT_PROC_ADDRESS(egl, ChooseConfig);

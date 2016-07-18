@@ -85,4 +85,8 @@
 #define ANGLE_USE_SSE
 #endif
 
+// The MemoryBarrier function name collides with a macro under Windows
+// We will undef the macro so that the function name does not get replaced
+#undef MemoryBarrier
+
 #endif // COMMON_PLATFORM_H_
