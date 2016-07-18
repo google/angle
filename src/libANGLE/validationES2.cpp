@@ -1599,6 +1599,8 @@ static bool ValidateObjectIdentifierAndName(Context *context, GLenum identifier,
             context->handleError(Error(GL_INVALID_ENUM, "Invalid identifier."));
             return false;
     }
+
+    return true;
 }
 
 bool ValidateObjectLabelKHR(Context *context,

@@ -59,7 +59,10 @@ if (is_win) {
   }
 }
 
-angle_undefine_configs = [ "//build/config/compiler:default_include_dirs" ]
+angle_undefine_configs = [
+  "//build/config/compiler:chromium_code",
+  "//build/config/compiler:default_include_dirs",
+]
 
 component("translator") {
   sources = [
@@ -70,7 +73,10 @@ component("translator") {
   defines = [ "ANGLE_TRANSLATOR_IMPLEMENTATION" ]
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    "//build/config/compiler:no_chromium_code",
+  ]
 
   public_deps = [
     ":translator_lib",
@@ -99,7 +105,10 @@ static_library("preprocessor") {
   sources = rebase_path(compiler_gypi.angle_preprocessor_sources, ".", "src")
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    "//build/config/compiler:no_chromium_code",
+  ]
 }
 
 config("translator_static_config") {
@@ -130,6 +139,7 @@ static_library("angle_common") {
     ":angle_common_config",
     ":debug_annotations_config",
     ":internal_config",
+    "//build/config/compiler:no_chromium_code",
   ]
 
   public_deps = [
@@ -152,7 +162,10 @@ static_library("angle_image_util") {
   sources = rebase_path(gles_gypi.libangle_image_util_sources, ".", "src")
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    "//build/config/compiler:no_chromium_code",
+  ]
 
   public_configs = [ ":angle_image_util_config" ]
 
@@ -186,6 +199,7 @@ static_library("translator_lib") {
   configs += [
     ":internal_config",
     ":translator_static_config",
+    "//build/config/compiler:no_chromium_code",
   ]
   public_configs = [ ":external_config" ]
 
@@ -197,12 +211,6 @@ static_library("translator_lib") {
   public_deps = [
     ":angle_common",
   ]
-
-  if (is_win) {
-    # Necessary to suppress some system header xtree warnigns in Release.
-    # For some reason this warning doesn't get triggered in Chromium
-    cflags = [ "/wd4718" ]
-  }
 }
 
 static_library("translator_static") {
@@ -216,7 +224,10 @@ static_library("translator_static") {
   }
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    "//build/config/compiler:no_chromium_code",
+  ]
   public_configs = [ ":translator_static_config" ]
 
   public_deps = [
@@ -383,12 +394,12 @@ static_library("libANGLE") {
   }
 
   configs -= angle_undefine_configs
-
   configs += [
     ":commit_id_config",
     ":debug_annotations_config",
     ":libANGLE_config",
     ":internal_config",
+    "//build/config/compiler:no_chromium_code",
   ]
 
   if (is_win) {
@@ -402,10 +413,7 @@ config("shared_library_public_config") {
   if (is_mac && !is_component_build) {
     # Executable targets that depend on the shared libraries below need to have
     # the rpath setup in non-component build configurations.
-    ldflags = [
-      "-rpath",
-      "@executable_path/",
-    ]
+    ldflags = [ "-rpath", "@executable_path/" ]
   }
 }
 
@@ -418,10 +426,7 @@ shared_library("libGLESv2") {
   }
 
   if (is_mac && !is_component_build) {
-    ldflags = [
-      "-install_name",
-      "@rpath/${target_name}.dylib",
-    ]
+    ldflags = [ "-install_name", "@rpath/${target_name}.dylib" ]
     public_configs = [ ":shared_library_public_config" ]
   }
 
@@ -431,6 +436,7 @@ shared_library("libGLESv2") {
     ":commit_id_config",
     ":debug_annotations_config",
     ":libANGLE_config",
+    "//build/config/compiler:no_chromium_code",
   ]
 
   defines = [ "LIBGLESV2_IMPLEMENTATION" ]
@@ -449,10 +455,7 @@ shared_library("libEGL") {
   }
 
   if (is_mac && !is_component_build) {
-    ldflags = [
-      "-install_name",
-      "@rpath/${target_name}.dylib",
-    ]
+    ldflags = [ "-install_name", "@rpath/${target_name}.dylib" ]
     public_configs = [ ":shared_library_public_config" ]
   }
 
@@ -462,6 +465,7 @@ shared_library("libEGL") {
     ":commit_id_config",
     ":debug_annotations_config",
     ":libANGLE_config",
+    "//build/config/compiler:no_chromium_code",
   ]
 
   defines = [ "LIBEGL_IMPLEMENTATION" ]

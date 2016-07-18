@@ -503,4 +503,6 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate)
             // Constant folding not supported for the built-in.
             return nullptr;
     }
+
+    return nullptr;
 }
