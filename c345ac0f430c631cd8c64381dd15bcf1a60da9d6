@@ -22,6 +22,24 @@
       "revId": "c345ac0f430c631cd8c64381dd15bcf1a60da9d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faa1580d_663392a0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-18T21:39:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faa1580d_c6a52619",
+      "revId": "c345ac0f430c631cd8c64381dd15bcf1a60da9d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
