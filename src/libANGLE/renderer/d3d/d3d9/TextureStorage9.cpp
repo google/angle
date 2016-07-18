@@ -434,7 +434,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer, GLenum internalf
     : TextureStorage9(renderer, GetTextureUsage(internalformat, renderTarget))
 {
     mTexture = NULL;
-    for (int i = 0; i < CUBE_FACE_COUNT; ++i)
+    for (size_t i = 0; i < CUBE_FACE_COUNT; ++i)
     {
         mRenderTarget[i] = NULL;
     }
@@ -455,7 +455,7 @@ TextureStorage9_Cube::~TextureStorage9_Cube()
 {
     SafeRelease(mTexture);
 
-    for (int i = 0; i < CUBE_FACE_COUNT; ++i)
+    for (size_t i = 0; i < CUBE_FACE_COUNT; ++i)
     {
         SafeDelete(mRenderTarget[i]);
     }
@@ -499,7 +499,7 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
 {
     ASSERT(outRT);
     ASSERT(index.mipIndex == 0);
-    ASSERT(index.layerIndex >= 0 && index.layerIndex < CUBE_FACE_COUNT);
+    ASSERT(index.layerIndex >= 0 && static_cast<size_t>(index.layerIndex) < CUBE_FACE_COUNT);
 
     if (mRenderTarget[index.layerIndex] == NULL && isRenderTarget())
     {
@@ -586,7 +586,7 @@ gl::Error TextureStorage9_Cube::copyToStorage(TextureStorage *destStorage)
     TextureStorage9_Cube *dest9 = GetAs<TextureStorage9_Cube>(destStorage);
 
     int levels = getLevelCount();
-    for (int f = 0; f < CUBE_FACE_COUNT; f++)
+    for (int f = 0; f < static_cast<int>(CUBE_FACE_COUNT); f++)
     {
         for (int i = 0; i < levels; i++)
         {

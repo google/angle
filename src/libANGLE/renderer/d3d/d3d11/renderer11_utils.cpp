@@ -797,7 +797,7 @@ static size_t GetMaximumVertexUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
 
 static size_t GetReservedVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
 {
-    // According to The OpenGL ES Shading Language specifications 
+    // According to The OpenGL ES Shading Language specifications
     // (Language Version 1.00 section 10.16, Language Version 3.10 section 12.21)
     // built-in special variables (e.g. gl_FragCoord, or gl_PointCoord)
     // which are statically used in the shader should be included in the variable packing algorithm.
@@ -820,8 +820,6 @@ static size_t GetReservedVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)
 
       default: UNREACHABLE();      return 0;
     }
-
-    return 1;
 }
 
 static size_t GetMaximumVertexOutputVectors(D3D_FEATURE_LEVEL featureLevel)

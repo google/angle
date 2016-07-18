@@ -2091,11 +2091,11 @@ void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex 
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
-        if (0 <= layerTarget && layerTarget < CUBE_FACE_COUNT)
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
         {
             mAssociatedImages[layerTarget][level] = image;
         }
@@ -2110,7 +2110,7 @@ bool TextureStorage11_Cube::isAssociatedImageValid(const gl::ImageIndex &index,
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
-        if (0 <= layerTarget && layerTarget < CUBE_FACE_COUNT)
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
         {
             // This validation check should never return false. It means the Image/TextureStorage
             // association is broken.
@@ -2130,11 +2130,11 @@ void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
-        if (0 <= layerTarget && layerTarget < CUBE_FACE_COUNT)
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
         {
             ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
 
@@ -2155,11 +2155,11 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::ImageIndex &in
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < CUBE_FACE_COUNT);
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
 
     if ((0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS))
     {
-        if (0 <= layerTarget && layerTarget < CUBE_FACE_COUNT)
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
         {
             // No need to let the old Image recover its data, if it is also the incoming Image.
             if (mAssociatedImages[layerTarget][level] != nullptr &&
@@ -2324,7 +2324,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
     const int level     = index.mipIndex;
 
     ASSERT(level >= 0 && level < getLevelCount());
-    ASSERT(faceIndex >= 0 && faceIndex < CUBE_FACE_COUNT);
+    ASSERT(faceIndex >= 0 && faceIndex < static_cast<GLint>(CUBE_FACE_COUNT));
 
     if (!mRenderTarget[faceIndex][level])
     {
