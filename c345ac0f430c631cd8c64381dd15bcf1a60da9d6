@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faa1580d_c6a52619",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-18T21:33:11Z",
+      "side": 1,
+      "message": "Please add a TODO about removing this old version as soon as Chromium has rolled ANGLE forward past this revision.",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 443,
+        "endChar": 15
+      },
+      "revId": "c345ac0f430c631cd8c64381dd15bcf1a60da9d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
