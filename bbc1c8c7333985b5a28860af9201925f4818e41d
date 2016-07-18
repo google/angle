@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a12f748_5afef5d5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1141499
+      },
+      "writtenOn": "2016-07-18T17:03:30Z",
+      "side": 1,
+      "message": "add below lines to avoid wasting your bots, this isn\u0027t testable anyway.\n\nNOTRY\u003dTrue\nNOPRESUBMIT\u003dTrue",
+      "revId": "bbc1c8c7333985b5a28860af9201925f4818e41d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
