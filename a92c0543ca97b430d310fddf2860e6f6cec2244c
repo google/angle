@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a08ff1a_d8bb2d27",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1641,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "This common part would fit better in a helper function, \"ValidateLabelLength\" or similar.",
+      "range": {
+        "startLine": 1623,
+        "startChar": 0,
+        "endLine": 1641,
+        "endChar": 5
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0af41b40_82509c64",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1273,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "Nit: Should be nullptr.",
+      "range": {
+        "startLine": 1273,
+        "startChar": 21,
+        "endLine": 1273,
+        "endChar": 25
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_18bac526",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1275,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "Having type int here results in an unnecessary back-and-forth cast in case labelLength \u003c 0. It would be better to make it size_t.",
+      "range": {
+        "startLine": 1275,
+        "startChar": 12,
+        "endLine": 1275,
+        "endChar": 15
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_98c5b5a5",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1282,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "This whole part should be in Context::objectLabel(), following similar pattern as other functions. This also applies for the other functions you have edited.",
+      "range": {
+        "startLine": 1269,
+        "startChar": 0,
+        "endLine": 1282,
+        "endChar": 30
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_7892e1a5",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "Bunch of this code is the same between GetObjectLabel and GetObjectPtrLabel, it would be better to have the common parts in a private helper function in Context.",
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_f8bef118",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1307,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 1307,
+        "startChar": 21,
+        "endLine": 1307,
+        "endChar": 25
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da21f486_084ca72e",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T12:39:53Z",
+      "side": 1,
+      "message": "etc",
+      "range": {
+        "startLine": 1318,
+        "startChar": 22,
+        "endLine": 1318,
+        "endChar": 26
+      },
+      "revId": "a92c0543ca97b430d310fddf2860e6f6cec2244c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
