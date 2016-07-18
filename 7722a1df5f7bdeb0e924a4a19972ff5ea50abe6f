@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da3e54ec_1c40ac21",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-18T14:38:12Z",
+      "side": 1,
+      "message": "nit: Extra space",
+      "range": {
+        "startLine": 1024,
+        "startChar": 0,
+        "endLine": 1024,
+        "endChar": 0
+      },
+      "revId": "7722a1df5f7bdeb0e924a4a19972ff5ea50abe6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
