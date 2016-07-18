@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a08ff1a_98f25538",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "The SetUp/TearDown is just extra code at this point - don\u0027t add it until it\u0027s proven that it is actually necessary.",
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca22039a_d5c77c0c",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this say \"read buffer\"",
+      "range": {
+        "startLine": 325,
+        "startChar": 13,
+        "endLine": 325,
+        "endChar": 29
+      },
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_780f8134",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "Specify the minor revision too, I assume 3.0.4 in this case.",
+      "range": {
+        "startLine": 326,
+        "startChar": 21,
+        "endLine": 326,
+        "endChar": 24
+      },
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_5814bd46",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "This variable is not used.",
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa022ff5_9c57e5fd",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "0 suffix not needed here nor above - the test has only one fbo and color.",
+      "range": {
+        "startLine": 335,
+        "startChar": 14,
+        "endLine": 335,
+        "endChar": 15
+      },
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_f82271a9",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "It would make sense to run this category of tests also on D3D11, though it doesn\u0027t really matter much for the test added here.",
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a08ff1a_d81fad5f",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-18T10:59:19Z",
+      "side": 1,
+      "message": "read buffer",
+      "range": {
+        "startLine": 681,
+        "startChar": 13,
+        "endLine": 681,
+        "endChar": 29
+      },
+      "revId": "49f3edcbf72505a2759088bd14feb750f93b4ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
