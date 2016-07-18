@@ -542,7 +542,7 @@ void ProgramGL::postLink()
             kQueryProperties, static_cast<GLsizei>(ArraySize(queryResults)), &queryLength,
             queryResults);
 
-        ASSERT(queryLength == ArraySize(kQueryProperties));
+        ASSERT(queryLength == static_cast<GLsizei>(ArraySize(kQueryProperties)));
 
         PathRenderingFragmentInput baseElementInput;
         baseElementInput.name     = name;
