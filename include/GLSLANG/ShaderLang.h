@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 147
+#define ANGLE_SH_VERSION 148
 
 typedef enum {
   SH_GLES2_SPEC = 0x8B40,
@@ -438,12 +438,16 @@ typedef struct
 // flag above.
 // Parameters:
 // maxVectors: the available rows of registers.
-// varInfoArray: an array of variable info (types and sizes).
+// varInfoArray / variables: an array of variables.
 // varInfoArraySize: the size of the variable array.
+// TODO(cwallez) remove the first overload once the second is rolled in Chromium
 COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
     int maxVectors,
     ShVariableInfo *varInfoArray,
     size_t varInfoArraySize);
+COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
+    int maxVectors,
+    const std::vector<sh::ShaderVariable> &variables);
 
 // Gives the compiler-assigned register for an interface block.
 // The method writes the value to the output variable "indexOut".

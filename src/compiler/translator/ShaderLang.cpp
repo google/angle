@@ -339,6 +339,11 @@ bool ShCheckVariablesWithinPackingLimits(
         sh::ShaderVariable var(varInfoArray[ii].type, varInfoArray[ii].size);
         variables.push_back(var);
     }
+    return ShCheckVariablesWithinPackingLimits(maxVectors, variables);
+}
+bool ShCheckVariablesWithinPackingLimits(int maxVectors,
+                                         const std::vector<sh::ShaderVariable> &variables)
+{
     VariablePacker packer;
     return packer.CheckVariablesWithinPackingLimits(maxVectors, variables);
 }

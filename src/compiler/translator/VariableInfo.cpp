@@ -31,58 +31,6 @@ void ExpandUserDefinedVariable(const ShaderVariable &variable,
                                const std::string &name,
                                const std::string &mappedName,
                                bool markStaticUse,
-                               std::vector<ShaderVariable> *expanded);
-
-void ExpandVariable(const ShaderVariable &variable,
-                    const std::string &name,
-                    const std::string &mappedName,
-                    bool markStaticUse,
-                    std::vector<ShaderVariable> *expanded)
-{
-    if (variable.isStruct())
-    {
-        if (variable.isArray())
-        {
-            for (unsigned int elementIndex = 0; elementIndex < variable.elementCount();
-                 elementIndex++)
-            {
-                std::string lname = name + ::ArrayString(elementIndex);
-                std::string lmappedName = mappedName + ::ArrayString(elementIndex);
-                ExpandUserDefinedVariable(variable, lname, lmappedName, markStaticUse, expanded);
-            }
-        }
-        else
-        {
-            ExpandUserDefinedVariable(variable, name, mappedName, markStaticUse, expanded);
-        }
-    }
-    else
-    {
-        ShaderVariable expandedVar = variable;
-
-        expandedVar.name = name;
-        expandedVar.mappedName = mappedName;
-
-        // Mark all expanded fields as used if the parent is used
-        if (markStaticUse)
-        {
-            expandedVar.staticUse = true;
-        }
-
-        if (expandedVar.isArray())
-        {
-            expandedVar.name += "[0]";
-            expandedVar.mappedName += "[0]";
-        }
-
-        expanded->push_back(expandedVar);
-    }
-}
-
-void ExpandUserDefinedVariable(const ShaderVariable &variable,
-                               const std::string &name,
-                               const std::string &mappedName,
-                               bool markStaticUse,
                                std::vector<ShaderVariable> *expanded)
 {
     ASSERT(variable.isStruct());
@@ -675,6 +623,52 @@ bool CollectVariables::visitBinary(Visit, TIntermBinary *binaryNode)
     }
 
     return true;
+}
+
+void ExpandVariable(const ShaderVariable &variable,
+                    const std::string &name,
+                    const std::string &mappedName,
+                    bool markStaticUse,
+                    std::vector<ShaderVariable> *expanded)
+{
+    if (variable.isStruct())
+    {
+        if (variable.isArray())
+        {
+            for (unsigned int elementIndex = 0; elementIndex < variable.elementCount();
+                 elementIndex++)
+            {
+                std::string lname       = name + ::ArrayString(elementIndex);
+                std::string lmappedName = mappedName + ::ArrayString(elementIndex);
+                ExpandUserDefinedVariable(variable, lname, lmappedName, markStaticUse, expanded);
+            }
+        }
+        else
+        {
+            ExpandUserDefinedVariable(variable, name, mappedName, markStaticUse, expanded);
+        }
+    }
+    else
+    {
+        ShaderVariable expandedVar = variable;
+
+        expandedVar.name       = name;
+        expandedVar.mappedName = mappedName;
+
+        // Mark all expanded fields as used if the parent is used
+        if (markStaticUse)
+        {
+            expandedVar.staticUse = true;
+        }
+
+        if (expandedVar.isArray())
+        {
+            expandedVar.name += "[0]";
+            expandedVar.mappedName += "[0]";
+        }
+
+        expanded->push_back(expandedVar);
+    }
 }
 
 void ExpandUniforms(const std::vector<Uniform> &compact,
