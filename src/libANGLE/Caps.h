@@ -465,7 +465,7 @@ struct Caps
     GLuint maxImageUnits;
     GLuint maxCombinedImageUniforms;
     GLuint maxShaderStorageBufferBindings;
-    GLuint maxShaderStorageBlockSize;
+    GLuint64 maxShaderStorageBlockSize;
     GLuint maxCombinedShaderStorageBlocks;
     GLuint shaderStorageBufferOffsetAlignment;
 

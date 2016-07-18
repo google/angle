@@ -78,8 +78,8 @@ class UnpackRowLengthTest : public ANGLETest
             for (int y = 0; y < texSize; y++)
             {
                 std::vector<GLubyte>::iterator rowIter = buf.begin() + y * rowLength * 4;
-                std::fill(rowIter, rowIter + texSize * 4, 255);
-                std::fill(rowIter + texSize * 4, rowIter + rowLength * 4, 0);
+                std::fill(rowIter, rowIter + texSize * 4, static_cast<GLubyte>(255u));
+                std::fill(rowIter + texSize * 4, rowIter + rowLength * 4, static_cast<GLubyte>(0u));
             }
 
             GLuint tex;

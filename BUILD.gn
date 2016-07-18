@@ -48,6 +48,16 @@ config("internal_config") {
   ]
 }
 
+config("extra_warnings") {
+  # Enable more default warnings on Windows.
+  if (is_win) {
+    cflags = [
+      "/we4244",  # Conversion: possible loss of data.
+      "/we4456",  # Variable shadowing.
+    ]
+  }
+}
+
 if (is_win) {
   copy("copy_compiler_dll") {
     sources = [
@@ -129,6 +139,7 @@ static_library("angle_common") {
   configs += [
     ":angle_common_config",
     ":debug_annotations_config",
+    ":extra_warnings",
     ":internal_config",
   ]
 
@@ -391,6 +402,7 @@ static_library("libANGLE") {
   configs += [
     ":commit_id_config",
     ":debug_annotations_config",
+    ":extra_warnings",
     ":libANGLE_config",
     ":internal_config",
   ]
@@ -462,9 +474,10 @@ shared_library("libEGL") {
 
   configs -= angle_undefine_configs
   configs += [
-    ":internal_config",
     ":commit_id_config",
     ":debug_annotations_config",
+    ":extra_warnings",
+    ":internal_config",
     ":libANGLE_config",
   ]
 
@@ -531,7 +544,10 @@ static_library("angle_util") {
     "EGL_EGLEXT_PROTOTYPES",
   ]
 
-  configs += [ ":debug_annotations_config" ]
+  configs += [
+    ":debug_annotations_config",
+    ":extra_warnings",
+  ]
 
   public_configs = [
     ":angle_util_config",
