@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faa1580d_fb71dff0",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-18T20:52:17Z",
+      "side": 0,
+      "message": "This function was moved out of the anonymous namespace without being modified.",
+      "revId": "ae41faf569e22261ed97d382a2c237d7502dc1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faa1580d_3b64072f",
+        "filename": "src/compiler/translator/VariablePacker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-18T20:52:17Z",
+      "side": 0,
+      "message": "This declaration is the only functional change, the rest is git cl format going ham.",
+      "revId": "ae41faf569e22261ed97d382a2c237d7502dc1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "faa1580d_db534356",
+        "filename": "src/tests/compiler_tests/VariablePacker_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-18T20:52:17Z",
+      "side": 0,
+      "message": "This test was only formatted, no functional changes were made.",
+      "revId": "ae41faf569e22261ed97d382a2c237d7502dc1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
