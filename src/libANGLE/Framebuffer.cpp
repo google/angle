@@ -218,6 +218,37 @@ size_t FramebufferState::getDrawBufferCount() const
     return mDrawBufferStates.size();
 }
 
+bool FramebufferState::colorAttachmentsAreUniqueImages() const
+{
+    for (size_t firstAttachmentIdx = 0; firstAttachmentIdx < mColorAttachments.size();
+         firstAttachmentIdx++)
+    {
+        const gl::FramebufferAttachment &firstAttachment = mColorAttachments[firstAttachmentIdx];
+        if (!firstAttachment.isAttached())
+        {
+            continue;
+        }
+
+        for (size_t secondAttachmentIdx = firstAttachmentIdx + 1;
+             secondAttachmentIdx < mColorAttachments.size(); secondAttachmentIdx++)
+        {
+            const gl::FramebufferAttachment &secondAttachment =
+                mColorAttachments[secondAttachmentIdx];
+            if (!secondAttachment.isAttached())
+            {
+                continue;
+            }
+
+            if (firstAttachment == secondAttachment)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
     : mState(caps),
       mImpl(factory->createFramebuffer(mState)),

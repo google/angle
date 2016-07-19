@@ -309,33 +309,10 @@ bool FramebufferD3D::checkStatus() const
         return false;
     }
 
-    // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness by checking the
-    // enabled draw buffers
-    for (size_t firstDrawBufferIdx = 0; firstDrawBufferIdx < mState.getDrawBufferCount();
-         firstDrawBufferIdx++)
+    // D3D11 does not allow for overlapping RenderTargetViews
+    if (!mState.colorAttachmentsAreUniqueImages())
     {
-        const gl::FramebufferAttachment *firstAttachment = mState.getDrawBuffer(firstDrawBufferIdx);
-        if (firstAttachment == nullptr)
-        {
-            continue;
-        }
-
-        for (size_t secondDrawBufferIdx = firstDrawBufferIdx + 1;
-             secondDrawBufferIdx < mState.getDrawBufferCount(); secondDrawBufferIdx++)
-        {
-            const gl::FramebufferAttachment *secondAttachment =
-                mState.getDrawBuffer(secondDrawBufferIdx);
-            if (secondAttachment == nullptr)
-            {
-                continue;
-            }
-
-            if (firstAttachment->id() == secondAttachment->id() &&
-                firstAttachment->type() == secondAttachment->type())
-            {
-                return false;
-            }
-        }
+        return false;
     }
 
     // D3D requires all render targets to have the same dimensions.

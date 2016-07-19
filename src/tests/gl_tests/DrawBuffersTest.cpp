@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -183,21 +184,37 @@ class DrawBuffersTest : public ANGLETest
         }
     }
 
-    void verifyAttachment(unsigned int index, GLuint textureName)
+    static GLColor getColorForIndex(unsigned int index)
+    {
+        GLubyte r = (((index + 1) & 1) > 0) ? 255 : 0;
+        GLubyte g = (((index + 1) & 2) > 0) ? 255 : 0;
+        GLubyte b = (((index + 1) & 4) > 0) ? 255 : 0;
+        return GLColor(r, g, b, 255u);
+    }
+
+    void verifyAttachment2D(unsigned int index, GLuint textureName, GLenum target, GLint level)
     {
         for (GLint colorAttachment = 0; colorAttachment < mMaxDrawBuffers; colorAttachment++)
         {
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment, GL_TEXTURE_2D, 0, 0);
         }
 
-        glBindTexture(GL_TEXTURE_2D, textureName);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureName, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, textureName, level);
 
-        unsigned int r = (((index + 1) & 1) > 0) ? 255 : 0;
-        unsigned int g = (((index + 1) & 2) > 0) ? 255 : 0;
-        unsigned int b = (((index + 1) & 4) > 0) ? 255 : 0;
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, getColorForIndex(index));
+    }
 
-        EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, r, g, b, 255);
+    void verifyAttachmentLayer(unsigned int index, GLuint texture, GLint level, GLint layer)
+    {
+        for (GLint colorAttachment = 0; colorAttachment < mMaxDrawBuffers; colorAttachment++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + colorAttachment,
+                                   GL_TEXTURE_2D, 0, 0);
+        }
+
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, layer);
+
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, getColorForIndex(index));
     }
 
     GLuint mFBO;
@@ -256,7 +273,7 @@ TEST_P(DrawBuffersTest, Gaps)
     glDrawBuffersEXT(2, bufs);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    verifyAttachment(1, mTextures[0]);
+    verifyAttachment2D(1, mTextures[0], GL_TEXTURE_2D, 0);
 
     glDeleteProgram(program);
 }
@@ -293,8 +310,8 @@ TEST_P(DrawBuffersTest, FirstAndLast)
     glDrawBuffersEXT(4, bufs);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    verifyAttachment(0, mTextures[0]);
-    verifyAttachment(3, mTextures[1]);
+    verifyAttachment2D(0, mTextures[0], GL_TEXTURE_2D, 0);
+    verifyAttachment2D(3, mTextures[1], GL_TEXTURE_2D, 0);
 
     EXPECT_GL_NO_ERROR();
 
@@ -332,7 +349,7 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
 
     for (GLuint texIndex = 0; texIndex < halfMaxDrawBuffers; texIndex++)
     {
-        verifyAttachment(texIndex + halfMaxDrawBuffers, mTextures[texIndex]);
+        verifyAttachment2D(texIndex + halfMaxDrawBuffers, mTextures[texIndex], GL_TEXTURE_2D, 0);
     }
 
     EXPECT_GL_NO_ERROR();
@@ -375,7 +392,93 @@ TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
     // This call should not crash when we dynamically generate the HLSL code.
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    verifyAttachment(0, mTextures[0]);
+    verifyAttachment2D(0, mTextures[0], GL_TEXTURE_2D, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
+// Test that binding multiple layers of a 3D texture works correctly
+TEST_P(DrawBuffersTest, 3DTextures)
+{
+    if (getClientMajorVersion() < 3)
+    {
+        std::cout << "Test skipped because ES3 is not available." << std::endl;
+        return;
+    }
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture.get());
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), getWindowWidth(),
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.get(), 0, 0);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture.get(), 0, 1);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, texture.get(), 0, 2);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, texture.get(), 0, 3);
+
+    bool flags[8] = {true, true, true, true, false};
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] = {
+        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+    };
+
+    glUseProgram(program);
+    glDrawBuffersEXT(4, bufs);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    verifyAttachmentLayer(0, texture.get(), 0, 0);
+    verifyAttachmentLayer(1, texture.get(), 0, 1);
+    verifyAttachmentLayer(2, texture.get(), 0, 2);
+    verifyAttachmentLayer(3, texture.get(), 0, 3);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
+// Test that binding multiple layers of a 2D array texture works correctly
+TEST_P(DrawBuffersTest, 2DArrayTextures)
+{
+    if (getClientMajorVersion() < 3)
+    {
+        std::cout << "Test skipped because ES3 is not available." << std::endl;
+        return;
+    }
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture.get());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, getWindowWidth(), getWindowHeight(),
+                 getWindowWidth(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.get(), 0, 0);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture.get(), 0, 1);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, texture.get(), 0, 2);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, texture.get(), 0, 3);
+
+    bool flags[8] = {true, true, true, true, false};
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] = {
+        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+    };
+
+    glUseProgram(program);
+    glDrawBuffersEXT(4, bufs);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    verifyAttachmentLayer(0, texture.get(), 0, 0);
+    verifyAttachmentLayer(1, texture.get(), 0, 1);
+    verifyAttachmentLayer(2, texture.get(), 0, 2);
+    verifyAttachmentLayer(3, texture.get(), 0, 3);
 
     EXPECT_GL_NO_ERROR();
 
