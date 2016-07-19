@@ -22,6 +22,30 @@
       "revId": "78a9c73398152bf4417c8d0aa8f6637dbf417567",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_fbd7ed14",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 0,
+      "message": "We shouldn\u0027t have to since the state is tracked within the objects.  The new approach is much faster than using these arrays.",
+      "parentUuid": "6a6037e5_3bdd88da",
+      "range": {
+        "startLine": 473,
+        "startChar": 0,
+        "endLine": 481,
+        "endChar": 112
+      },
+      "revId": "78a9c73398152bf4417c8d0aa8f6637dbf417567",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

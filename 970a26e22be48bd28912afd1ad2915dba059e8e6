@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a6037e5_bbb175fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_60c46b64",
+      "range": {
+        "startLine": 126,
+        "startChar": 35,
+        "endLine": 126,
+        "endChar": 48
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_1b1644a5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-19T17:07:43Z",
       "side": 1,
       "message": "nit: you can use std::vector::assign or std::fill here.",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 76
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_b60ced90",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 1,
+      "message": "It\u0027s calling a method on each, not doing an assignment.",
+      "parentUuid": "6a6037e5_1b1644a5",
       "range": {
         "startLine": 27,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6a6037e5_9bb6b1f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_9b023461",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 1
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_dbb30ce5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.h",
         "patchSetId": 7
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "6a6037e5_7bbbfddb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_dbb30ce5",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 60
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_db9c2c5d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.h",
         "patchSetId": 7
@@ -105,6 +201,30 @@
       "writtenOn": "2016-07-19T17:07:43Z",
       "side": 1,
       "message": "nit: namespace comment",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 1
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_1ba2c1a9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T19:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_db9c2c5d",
       "range": {
         "startLine": 50,
         "startChar": 0,
