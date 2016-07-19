@@ -436,6 +436,18 @@ class GLSLTest : public ANGLETest
 
 class GLSLTest_ES3 : public GLSLTest
 {
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        mSimpleVSSource =
+            "#version 300 es\n"
+            "in vec4 inputAttribute;"
+            "void main()"
+            "{"
+            "    gl_Position = inputAttribute;"
+            "}";
+    }
 };
 
 TEST_P(GLSLTest, NamelessScopedStructs)
@@ -1886,6 +1898,59 @@ TEST_P(GLSLTest, PragmaDirective)
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
+}
+
+// Sequence operator evaluates operands from left to right (ESSL 3.00 section 5.9).
+// The function call that returns the array needs to be evaluated after ++j for the expression to
+// return the correct value (true).
+TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderArray)
+{
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor; \n"
+        "int[2] func(int param) {\n"
+        "    return int[2](param, param);\n"
+        "}\n"
+        "void main() {\n"
+        "    int a[2]; \n"
+        "    for (int i = 0; i < 2; ++i) {\n"
+        "        a[i] = 1;\n"
+        "    }\n"
+        "    int j = 0; \n"
+        "    bool result = ((++j), (a == func(j)));\n"
+        "    my_FragColor = vec4(0.0, (result ? 1.0 : 0.0), 0.0, 1.0);\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
+    ASSERT_NE(0u, program);
+
+    drawQuad(program, "inputAttribute", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Sequence operator evaluates operands from left to right (ESSL 3.00 section 5.9).
+// The short-circuiting expression needs to be evaluated after ++j for the expression to return the
+// correct value (true).
+TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderShortCircuit)
+{
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor; \n"
+        "void main() {\n"
+        "    int j = 0; \n"
+        "    bool result = ((++j), (j == 1 ? true : (++j == 3)));\n"
+        "    my_FragColor = vec4(0.0, ((result && j == 1) ? 1.0 : 0.0), 0.0, 1.0);\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
+    ASSERT_NE(0u, program);
+
+    drawQuad(program, "inputAttribute", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

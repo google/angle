@@ -184,6 +184,8 @@
             'compiler/translator/SeparateDeclarations.h',
             'compiler/translator/SeparateExpressionsReturningArrays.cpp',
             'compiler/translator/SeparateExpressionsReturningArrays.h',
+            'compiler/translator/SplitSequenceOperator.cpp',
+            'compiler/translator/SplitSequenceOperator.h',
             'compiler/translator/StructureHLSL.cpp',
             'compiler/translator/StructureHLSL.h',
             'compiler/translator/TextureFunctionHLSL.cpp',
