@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "4a361311_41509263",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:39:50Z",
+      "side": 1,
+      "message": "Sounds good, though I\u0027d do this step-by-step - still keep the old entry points at first to get this patch done faster, then refactor usage of getClientMajorVersion() later.",
+      "parentUuid": "faa1580d_2e721c5f",
+      "range": {
+        "startLine": 50,
+        "startChar": 3,
+        "endLine": 51,
+        "endChar": 29
+      },
+      "revId": "5d6ab3040fb812c31ebd35525b059df818fff057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa26b89b_46b132a0",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 11
