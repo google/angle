@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_766e7534",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "numColors is always going to be 8, so we could make it a constant shared by all the functions.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_564a51b2",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "Unnecessary with the numColor constant.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_f640258e",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "Usage of the constant here.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_16a05938",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "Likewise the 16 could be made a global constant and shared.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_bbd4d811",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "nit: pixelIndicesCounts",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_96f4498d",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "It is unclear why this value is used, INT_MAX would be clearer.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_1b09a4da",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-19T17:45:04Z",
+      "side": 1,
+      "message": "Can you explain why modifierIdx \u003d 2 implies the color is black? I see that this is what decodePunchThroughAlphaBlock did but I can\u0027t find the relevant part of the ETC specification.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
