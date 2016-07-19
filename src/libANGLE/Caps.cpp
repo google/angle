@@ -164,9 +164,7 @@ Extensions::Extensions()
       multisampleCompatibility(false),
       framebufferMixedSamples(false),
       textureNorm16(false),
-      pathRendering(false),
-      blendFuncExtended(false),
-      maxDualSourceDrawBuffers(0)
+      pathRendering(false)
 {
 }
 
@@ -244,7 +242,6 @@ std::vector<std::string> Extensions::getStrings() const
     InsertExtensionString("GL_CHROMIUM_framebuffer_mixed_samples", framebufferMixedSamples,   &extensionStrings);
     InsertExtensionString("GL_EXT_texture_norm16",                 textureNorm16,             &extensionStrings);
     InsertExtensionString("GL_CHROMIUM_path_rendering",            pathRendering,             &extensionStrings);
-    InsertExtensionString("GL_EXT_blend_func_extended",            blendFuncExtended,         &extensionStrings);
     // clang-format on
 
     return extensionStrings;

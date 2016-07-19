@@ -1023,9 +1023,6 @@ void FunctionsGL::initializeProcsDesktopGL()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramBinary"), &programBinary);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_get_program_binary", loadProcAddress("glProgramParameteri"), &programParameteri);
 
-    // GL_ARB_blend_func_extended (loading only functions relevant to supporting EXT_blend_func_extended)
-    AssignGLExtensionEntryPoint(extensions, "GL_ARB_blend_func_extended", loadProcAddress("glBindFragDataLocationIndexed"), &bindFragDataLocationIndexed);
-
     // 1.0
     if (isAtLeastGL(gl::Version(1, 0)))
     {
@@ -1887,9 +1884,6 @@ void FunctionsGL::initializeProcsGLES()
     // GL_OES_get_program_binary
     AssignGLExtensionEntryPoint(extensions, "GL_OES_get_program_binary", loadProcAddress("glGetProgramBinaryOES"), &getProgramBinary);
     AssignGLExtensionEntryPoint(extensions, "GL_OES_get_program_binary", loadProcAddress("glProgramBinaryOES"), &programBinary);
-
-    // EXT_blend_func_extended (loading only functions relevant to supporting EXT_blend_func_extenteded)
-    AssignGLExtensionEntryPoint(extensions, "GL_EXT_blend_func_extended", loadProcAddress("glBindFragLocationIndexedEXT"), &bindFragDataLocationIndexed);
 
     // 2.0
     if (isAtLeastGLES(gl::Version(2, 0)))

@@ -27,8 +27,6 @@ class Program;
 class Shader;
 class ValidationContext;
 
-bool ValidSrcBlendEnum(const Context *context, GLenum val);
-bool ValidDstBlendEnum(const Context *context, GLenum val);
 bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
