@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a361311_c1666226",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1313,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T12:10:16Z",
+      "side": 1,
+      "message": "This should be in a Context member too.",
+      "range": {
+        "startLine": 1309,
+        "startChar": 8,
+        "endLine": 1313,
+        "endChar": 64
+      },
+      "revId": "45278bdf428201db825c69bf4f78589d4a3082ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a361311_6162f614",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1330,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T12:10:16Z",
+      "side": 1,
+      "message": "Should be objectPtrLabel",
+      "range": {
+        "startLine": 1330,
+        "startChar": 17,
+        "endLine": 1330,
+        "endChar": 31
+      },
+      "revId": "45278bdf428201db825c69bf4f78589d4a3082ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
