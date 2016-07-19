@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_00a24fa9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-19T16:55:29Z",
+      "side": 1,
+      "message": "Can you add an error message to this? We\u0027re trying to get into the habit of doing it for all new errors.\n\n\"Read buffer is GL_NONE\" would be fine.",
+      "revId": "45259cb7b78d53f245be0817cb24fad5159a669a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
