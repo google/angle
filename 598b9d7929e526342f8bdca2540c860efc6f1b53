@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_65891d1c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "I think there may be a conflict here with a change cwallez is landing - you\u0027ll have to rebase after and make a new number here",
+      "range": {
+        "startLine": 51,
+        "startChar": 25,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_a57f1511",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 60,
+        "startChar": 2,
+        "endLine": 64,
+        "endChar": 6
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_2593254e",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 17
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "seems like this can go outside the if",
+      "range": {
+        "startLine": 938,
+        "startChar": 11,
+        "endLine": 938,
+        "endChar": 56
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_e59ced5c",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "theres no need for inline in a cpp file",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 6
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_c599e96a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "I think this should default to zero",
+      "range": {
+        "startLine": 147,
+        "startChar": 70,
+        "endLine": 147,
+        "endChar": 71
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_a5a6f5a8",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "nit: also final",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 15
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_65a0fd8b",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T14:05:32Z",
+      "side": 1,
+      "message": "just remove this. I don\u0027t think the compiler will autogenerate it if you specify a non-default constructor.",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 25
+      },
+      "revId": "598b9d7929e526342f8bdca2540c860efc6f1b53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
