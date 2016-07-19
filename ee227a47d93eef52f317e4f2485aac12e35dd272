@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a361311_61ddd6d9",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:59:52Z",
+      "side": 1,
+      "message": "Static local helpers should go into an anonymous namespace in the top of the file and the name should start with an uppercase character. In this case the new helpers should also be moved into Context.cpp once the entry points are refactored to be Context member functions.\n\nI\u0027d maybe rename this function to ObjectLabelFromPointer, there\u0027s not any actual parsing going on.",
+      "revId": "ee227a47d93eef52f317e4f2485aac12e35dd272",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
