@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_5ec6e714",
+        "filename": "src/libANGLE/renderer/GLImplFactory.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T19:33:15Z",
+      "side": 1,
+      "message": "you might need to include the header here - we did for the other objects",
+      "range": {
+        "startLine": 19,
+        "startChar": 19,
+        "endLine": 19,
+        "endChar": 30
+      },
+      "revId": "4d0f4776606b9366392a78d403d5c4b24e220c47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
