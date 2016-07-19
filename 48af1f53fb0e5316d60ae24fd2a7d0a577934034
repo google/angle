@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a361311_c15ca287",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:39:50Z",
+      "side": 1,
+      "message": "Nit: Should start with uppercase letter",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 13
+      },
+      "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a361311_0167aa51",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:39:50Z",
+      "side": 1,
+      "message": "Could inherit angle::NonCopyable",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 15
+      },
+      "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a361311_a1599e95",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:39:50Z",
+      "side": 1,
+      "message": "Is the default constructor needed somewhere? If not, just add \"GLVersion() \u003d delete;\"",
+      "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a361311_e163a641",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-19T10:39:50Z",
+      "side": 1,
+      "message": "I don\u0027t think these friends are needed.",
+      "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
