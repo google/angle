@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "6a6037e5_feeb5b73",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-19T19:33:15Z",
+      "side": 1,
+      "message": "Ah yes, whoops.",
+      "parentUuid": "6a6037e5_b60ced90",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 76
+      },
+      "revId": "970a26e22be48bd28912afd1ad2915dba059e8e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_9b023461",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TransformFeedback11.cpp",
         "patchSetId": 7
