@@ -1572,7 +1572,6 @@ void GL_APIENTRY glCoverageModulationCHROMIUM(GLenum components)
 {
     return gl::CoverageModulationCHROMIUM(components);
 }
-}
 
 // CHROMIUM_path_rendendering
 void GL_APIENTRY glMatrixLoadfCHROMIUM(GLenum matrixMode, const GLfloat *matrix)
@@ -1764,4 +1763,5 @@ void GL_APIENTRY glProgramPathFragmentInputGenCHROMIUM(GLuint program,
                                                        const GLfloat *coeffs)
 {
     gl::ProgramPathFragmentInputGenCHROMIUM(program, location, genMode, components, coeffs);
+}
 }
