@@ -42,6 +42,7 @@ class TParseContext : angle::NonCopyable
           mDeferredSingleDeclarationErrorCheck(false),
           mShaderType(type),
           mShaderSpec(spec),
+          mCompileOptions(options),
           mShaderVersion(100),
           mTreeRoot(nullptr),
           mLoopNestingLevel(0),
@@ -406,6 +407,7 @@ class TParseContext : angle::NonCopyable
 
     sh::GLenum mShaderType;              // vertex or fragment language (future: pack or unpack)
     ShShaderSpec mShaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
+    int mCompileOptions;                   // Options passed to TCompiler
     int mShaderVersion;
     TIntermNode *mTreeRoot;       // root of parse tree being created
     int mLoopNestingLevel;       // 0 if outside all loops

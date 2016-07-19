@@ -140,7 +140,8 @@ TShHandleBase::~TShHandleBase()
 }
 
 TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
-    : shaderType(type),
+    : variablesCollected(false),
+      shaderType(type),
       shaderSpec(spec),
       outputType(output),
       maxUniformVectors(0),
@@ -408,11 +409,19 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     return NULL;
 }
 
-bool TCompiler::compile(const char* const shaderStrings[],
-    size_t numStrings, int compileOptions)
+bool TCompiler::compile(const char *const shaderStrings[], size_t numStrings, int compileOptionsIn)
 {
     if (numStrings == 0)
         return true;
+
+    int compileOptions = compileOptionsIn;
+
+    // Apply key workarounds.
+    if (shouldFlattenPragmaStdglInvariantAll())
+    {
+        // This should be harmless to do in all cases, but for the moment, do it only conditionally.
+        compileOptions |= SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL;
+    }
 
     TScopedPoolAllocator scopedAlloc(&allocator);
     TIntermNode *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
@@ -577,6 +586,7 @@ void TCompiler::clearResults()
     expandedUniforms.clear();
     varyings.clear();
     interfaceBlocks.clear();
+    variablesCollected = false;
 
     builtInFunctionEmulator.Cleanup();
 
@@ -833,12 +843,16 @@ bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
 
 void TCompiler::collectVariables(TIntermNode* root)
 {
-    sh::CollectVariables collect(&attributes, &outputVariables, &uniforms, &varyings,
-                                 &interfaceBlocks, hashFunction, symbolTable, extensionBehavior);
-    root->traverse(&collect);
+    if (!variablesCollected)
+    {
+        sh::CollectVariables collect(&attributes, &outputVariables, &uniforms, &varyings,
+                                     &interfaceBlocks, hashFunction, symbolTable, extensionBehavior);
+        root->traverse(&collect);
 
-    // This is for enforcePackingRestriction().
-    sh::ExpandUniforms(uniforms, &expandedUniforms);
+        // This is for enforcePackingRestriction().
+        sh::ExpandUniforms(uniforms, &expandedUniforms);
+        variablesCollected = true;
+    }
 }
 
 bool TCompiler::enforcePackingRestrictions()
@@ -907,9 +921,26 @@ const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
     return builtInFunctionEmulator;
 }
 
-void TCompiler::writePragma()
+void TCompiler::writePragma(int compileOptions)
 {
-    TInfoSinkBase &sink = infoSink.obj;
-    if (mPragma.stdgl.invariantAll)
-        sink << "#pragma STDGL invariant(all)\n";
+    if (!(compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL))
+    {
+        TInfoSinkBase &sink = infoSink.obj;
+        if (mPragma.stdgl.invariantAll)
+            sink << "#pragma STDGL invariant(all)\n";
+    }
+}
+
+bool TCompiler::isVaryingDefined(const char *varyingName)
+{
+    ASSERT(variablesCollected);
+    for (size_t ii = 0; ii < varyings.size(); ++ii)
+    {
+        if (varyings[ii].name == varyingName)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

@@ -99,6 +99,12 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
     mUniformRegisterMap = outputHLSL.getUniformRegisterMap();
 }
 
+bool TranslatorHLSL::shouldFlattenPragmaStdglInvariantAll()
+{
+    // Not necessary when translating to HLSL.
+    return false;
+}
+
 bool TranslatorHLSL::hasInterfaceBlock(const std::string &interfaceBlockName) const
 {
     return (mInterfaceBlockRegisterMap.count(interfaceBlockName) > 0);

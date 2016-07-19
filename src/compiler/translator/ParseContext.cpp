@@ -1517,8 +1517,35 @@ TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
                                                         const TSourceLoc &identifierOrTypeLocation,
                                                         const TString &identifier)
 {
-    TIntermSymbol *symbol =
-        intermediate.addSymbol(0, identifier, TType(publicType), identifierOrTypeLocation);
+    TType type(publicType);
+    if ((mCompileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) &&
+        mDirectiveHandler.pragma().stdgl.invariantAll)
+    {
+        TQualifier qualifier = type.getQualifier();
+
+        // The directive handler has already taken care of rejecting invalid uses of this pragma
+        // (for example, in ESSL 3.00 fragment shaders), so at this point, flatten it into all
+        // affected variable declarations:
+        //
+        // 1. Built-in special variables which are inputs to the fragment shader. (These are handled
+        // elsewhere, in TranslatorGLSL.)
+        //
+        // 2. Outputs from vertex shaders in ESSL 1.00 and 3.00 (EvqVaryingOut and EvqVertexOut). It
+        // is actually less likely that there will be bugs in the handling of ESSL 3.00 shaders, but
+        // the way this is currently implemented we have to enable this compiler option before
+        // parsing the shader and determining the shading language version it uses. If this were
+        // implemented as a post-pass, the workaround could be more targeted.
+        //
+        // 3. Inputs in ESSL 1.00 fragment shaders (EvqVaryingIn). This is somewhat in violation of
+        // the specification, but there are desktop OpenGL drivers that expect that this is the
+        // behavior of the #pragma when specified in ESSL 1.00 fragment shaders.
+        if (qualifier == EvqVaryingOut || qualifier == EvqVertexOut || qualifier == EvqVaryingIn)
+        {
+            type.setInvariant(true);
+        }
+    }
+
+    TIntermSymbol *symbol = intermediate.addSymbol(0, identifier, type, identifierOrTypeLocation);
 
     bool emptyDeclaration = (identifier == "");
 
@@ -1541,7 +1568,7 @@ TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, &publicType);
 
         TVariable *variable = nullptr;
-        declareVariable(identifierOrTypeLocation, identifier, TType(publicType), &variable);
+        declareVariable(identifierOrTypeLocation, identifier, type, &variable);
 
         if (variable && symbol)
             symbol->setId(variable->getUniqueId());

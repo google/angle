@@ -217,6 +217,11 @@ typedef enum {
     // constant pow expressions incorrectly. Only applies to the HLSL back-end. It works
     // by expanding the integer pow expressions into a series of multiplies.
     SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS = 0x800000,
+
+    // Flatten "#pragma STDGL invariant(all)" into the declarations of
+    // varying variables and built-in GLSL variables. This compiler
+    // option is enabled automatically when needed.
+    SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = 0x1000000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

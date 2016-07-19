@@ -25,7 +25,8 @@ void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, i
     }
 }
 
-void TranslatorESSL::translate(TIntermNode *root, int) {
+void TranslatorESSL::translate(TIntermNode *root, int compileOptions)
+{
     TInfoSinkBase& sink = getInfoSink().obj;
 
     int shaderVer = getShaderVersion();
@@ -39,7 +40,7 @@ void TranslatorESSL::translate(TIntermNode *root, int) {
 
     // Write pragmas after extensions because some drivers consider pragmas
     // like non-preprocessor tokens.
-    writePragma();
+    writePragma(compileOptions);
 
     bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
 
@@ -88,6 +89,12 @@ void TranslatorESSL::translate(TIntermNode *root, int) {
     TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
                            getSymbolTable(), shaderVer, precisionEmulation);
     root->traverse(&outputESSL);
+}
+
+bool TranslatorESSL::shouldFlattenPragmaStdglInvariantAll()
+{
+    // Not necessary when translating to ESSL.
+    return false;
 }
 
 void TranslatorESSL::writeExtensionBehavior() {
