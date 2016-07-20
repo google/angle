@@ -22,6 +22,30 @@
       "revId": "e56cd0c97e77713822d82dd209fcb2fe5e4e1bb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_4cb4efcd",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-20T16:51:28Z",
+      "side": 1,
+      "message": "This does check, the quality operator compares image indices which take into account layers.",
+      "parentUuid": "6a6037e5_0916e900",
+      "range": {
+        "startLine": 242,
+        "startChar": 16,
+        "endLine": 242,
+        "endChar": 51
+      },
+      "revId": "e56cd0c97e77713822d82dd209fcb2fe5e4e1bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
