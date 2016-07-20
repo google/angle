@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_4901819e",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T16:40:41Z",
+      "side": 1,
+      "message": "nit: for these ifs, convert them to boolean explicitly. (eg if ((mMask \u0026 kExp) !\u003d 0)",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 42
+      },
+      "revId": "e22a9f9f94ee52c337e9d7d7bc40a2d83a16bd50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
