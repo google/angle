@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_c6d8beec",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T12:12:44Z",
+      "side": 1,
+      "message": "nit: run git cl format before uploading",
+      "range": {
+        "startLine": 403,
+        "startChar": 48,
+        "endLine": 403,
+        "endChar": 49
+      },
+      "revId": "8157b5af06f074221c74f3d5f48e554317428027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_e6e3c29f",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T12:12:44Z",
+      "side": 1,
+      "message": "nit: angle\u0027s wrap is 100 characters fyi",
+      "range": {
+        "startLine": 404,
+        "startChar": 8,
+        "endLine": 405,
+        "endChar": 46
+      },
+      "revId": "8157b5af06f074221c74f3d5f48e554317428027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_a6ddcadb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T12:12:44Z",
+      "side": 1,
+      "message": "nit: wrap to 100 characters",
+      "range": {
+        "startLine": 1519,
+        "startChar": 8,
+        "endLine": 1524,
+        "endChar": 53
+      },
+      "revId": "8157b5af06f074221c74f3d5f48e554317428027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
