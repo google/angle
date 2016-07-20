@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a6037e5_49d86146",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T16:41:57Z",
+      "side": 1,
+      "message": "use GLColor::green and above",
+      "range": {
+        "startLine": 1953,
+        "startChar": 32,
+        "endLine": 1953,
+        "endChar": 55
+      },
+      "revId": "6abdca15e4a9b1324088e4ef825d07b3025ca7dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
