@@ -168,6 +168,8 @@
             'compiler/translator/blocklayoutHLSL.h',
             'compiler/translator/BuiltInFunctionEmulatorHLSL.cpp',
             'compiler/translator/BuiltInFunctionEmulatorHLSL.h',
+            'compiler/translator/IntermNodePatternMatcher.cpp',
+            'compiler/translator/IntermNodePatternMatcher.h',
             'compiler/translator/OutputHLSL.cpp',
             'compiler/translator/OutputHLSL.h',
             'compiler/translator/RemoveDynamicIndexing.cpp',

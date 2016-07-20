@@ -11,6 +11,7 @@
 #include "compiler/translator/UnfoldShortCircuitToIf.h"
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNodePatternMatcher.h"
 
 namespace
 {
@@ -48,6 +49,8 @@ class UnfoldShortCircuitTraverser : public TIntermTraverser
 
     bool mInLoopCondition;
     bool mInLoopExpression;
+
+    IntermNodePatternMatcher mPatternToUnfoldMatcher;
 };
 
 UnfoldShortCircuitTraverser::UnfoldShortCircuitTraverser()
@@ -56,7 +59,8 @@ UnfoldShortCircuitTraverser::UnfoldShortCircuitTraverser()
       mParentLoop(nullptr),
       mLoopParent(nullptr),
       mInLoopCondition(false),
-      mInLoopExpression(false)
+      mInLoopExpression(false),
+      mPatternToUnfoldMatcher(IntermNodePatternMatcher::kUnfoldedShortCircuitExpression)
 {
 }
 
@@ -64,18 +68,23 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 {
     if (mFoundShortCircuit)
         return false;
+
+    if (visit != PreVisit)
+        return true;
+
+    if (!mPatternToUnfoldMatcher.match(node, getParentNode()))
+        return true;
+
     // If our right node doesn't have side effects, we know we don't need to unfold this
     // expression: there will be no short-circuiting side effects to avoid
     // (note: unfolding doesn't depend on the left node -- it will always be evaluated)
-    if (!node->getRight()->hasSideEffects())
-    {
-        return true;
-    }
+    ASSERT(node->getRight()->hasSideEffects());
+
+    mFoundShortCircuit = true;
 
     switch (node->getOp())
     {
       case EOpLogicalOr:
-        mFoundShortCircuit = true;
         if (!copyLoopConditionOrExpression(getParentNode(), node))
         {
             // "x || y" is equivalent to "x ? true : y", which unfolds to "bool s; if(x) s = true;
@@ -104,7 +113,6 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
         }
         return false;
       case EOpLogicalAnd:
-        mFoundShortCircuit = true;
         if (!copyLoopConditionOrExpression(getParentNode(), node))
         {
             // "x && y" is equivalent to "x ? y : false", which unfolds to "bool s; if(x) s = y;
@@ -130,7 +138,8 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
         }
         return false;
       default:
-        return true;
+          UNREACHABLE();
+          return true;
     }
 }
 
@@ -139,43 +148,46 @@ bool UnfoldShortCircuitTraverser::visitSelection(Visit visit, TIntermSelection *
     if (mFoundShortCircuit)
         return false;
 
+    if (visit != PreVisit)
+        return true;
+
+    if (!mPatternToUnfoldMatcher.match(node))
+        return true;
+
+    mFoundShortCircuit = true;
+
+    ASSERT(node->usesTernaryOperator());
+
     // Unfold "b ? x : y" into "type s; if(b) s = x; else s = y;"
-    if (visit == PreVisit && node->usesTernaryOperator())
+    if (!copyLoopConditionOrExpression(getParentNode(), node))
     {
-        mFoundShortCircuit = true;
-        if (!copyLoopConditionOrExpression(getParentNode(), node))
-        {
-            TIntermSequence insertions;
+        TIntermSequence insertions;
 
-            TIntermSymbol *tempSymbol         = createTempSymbol(node->getType());
-            TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
-            tempDeclaration->getSequence()->push_back(tempSymbol);
-            insertions.push_back(tempDeclaration);
+        TIntermSymbol *tempSymbol         = createTempSymbol(node->getType());
+        TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
+        tempDeclaration->getSequence()->push_back(tempSymbol);
+        insertions.push_back(tempDeclaration);
 
-            TIntermAggregate *trueBlock = new TIntermAggregate(EOpSequence);
-            TIntermBinary *trueAssignment =
-                createTempAssignment(node->getTrueBlock()->getAsTyped());
-            trueBlock->getSequence()->push_back(trueAssignment);
+        TIntermAggregate *trueBlock   = new TIntermAggregate(EOpSequence);
+        TIntermBinary *trueAssignment = createTempAssignment(node->getTrueBlock()->getAsTyped());
+        trueBlock->getSequence()->push_back(trueAssignment);
 
-            TIntermAggregate *falseBlock = new TIntermAggregate(EOpSequence);
-            TIntermBinary *falseAssignment =
-                createTempAssignment(node->getFalseBlock()->getAsTyped());
-            falseBlock->getSequence()->push_back(falseAssignment);
+        TIntermAggregate *falseBlock   = new TIntermAggregate(EOpSequence);
+        TIntermBinary *falseAssignment = createTempAssignment(node->getFalseBlock()->getAsTyped());
+        falseBlock->getSequence()->push_back(falseAssignment);
 
-            TIntermSelection *ifNode =
-                new TIntermSelection(node->getCondition()->getAsTyped(), trueBlock, falseBlock);
-            insertions.push_back(ifNode);
+        TIntermSelection *ifNode =
+            new TIntermSelection(node->getCondition()->getAsTyped(), trueBlock, falseBlock);
+        insertions.push_back(ifNode);
 
-            insertStatementsInParentBlock(insertions);
+        insertStatementsInParentBlock(insertions);
 
-            TIntermSymbol *ternaryResult = createTempSymbol(node->getType());
-            NodeUpdateEntry replaceVariable(getParentNode(), node, ternaryResult, false);
-            mReplacements.push_back(replaceVariable);
-        }
-        return false;
+        TIntermSymbol *ternaryResult = createTempSymbol(node->getType());
+        NodeUpdateEntry replaceVariable(getParentNode(), node, ternaryResult, false);
+        mReplacements.push_back(replaceVariable);
     }
 
-    return true;
+    return false;
 }
 
 bool UnfoldShortCircuitTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
