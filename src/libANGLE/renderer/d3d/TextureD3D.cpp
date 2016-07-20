@@ -410,6 +410,7 @@ gl::Error TextureD3D::generateMipmap()
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel = mState.getMipmapMaxLevel();
     ASSERT(maxLevel > baseLevel);  // Should be checked before calling this.
+    UNUSED_ASSERTION_VARIABLE(baseLevel);
 
     if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
