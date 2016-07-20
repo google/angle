@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaf86f8a_2062b2e5",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1642,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2016-07-20T19:57:50Z",
+      "side": 1,
+      "message": "What would happen with a literal value \"#line x \u003c\u003c -1\" ?",
+      "revId": "d52f030756f6b320ca012ce781f2135c505eee33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
