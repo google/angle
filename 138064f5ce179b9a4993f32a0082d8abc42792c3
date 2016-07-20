@@ -22,6 +22,29 @@
       "revId": "138064f5ce179b9a4993f32a0082d8abc42792c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a6037e5_66891221",
+        "filename": "src/tests/gl_tests/ReadPixelsTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-20T15:49:58Z",
+      "side": 1,
+      "message": "always call ANGLETest::TearDown after you free resources- this will delete the GL context",
+      "range": {
+        "startLine": 669,
+        "startChar": 7,
+        "endLine": 669,
+        "endChar": 30
+      },
+      "revId": "138064f5ce179b9a4993f32a0082d8abc42792c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
