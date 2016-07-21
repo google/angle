@@ -65,14 +65,6 @@
                                 '<(DEPTH)/testing/gmock.gyp:gmock',
                                 '<(DEPTH)/testing/gtest.gyp:gtest',
                             ],
-                            'all_dependent_settings':
-                            {
-                                'include_dirs':
-                                [
-                                    '<(DEPTH)/testing/gmock/include',
-                                    '<(DEPTH)/testing/gtest/include',
-                                ],
-                            },
                         }],
                     ],
                 },
