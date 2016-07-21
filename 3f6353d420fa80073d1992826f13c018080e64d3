@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8a91eb63_b21e0465",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-07-21T21:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a91eb63_e0ca7e16",
+      "range": {
+        "startLine": 812,
+        "startChar": 0,
+        "endLine": 842,
+        "endChar": 1
+      },
+      "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8abc8bcf_33894886",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 1
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "+1.. also should be Capitalized",
       "parentUuid": "8abc8bcf_33894886",
+      "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_f2116c63",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-07-21T21:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a91eb63_00c86a1c",
       "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -119,6 +161,24 @@
     },
     {
       "key": {
+        "uuid": "8a91eb63_52088032",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-07-21T21:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a91eb63_60de8edb",
+      "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_a2931efd",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 1
@@ -148,6 +208,24 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "6a991793_a2931efd",
+      "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_b207e41e",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-07-21T21:13:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a91eb63_a0d876eb",
       "revId": "3f6353d420fa80073d1992826f13c018080e64d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
