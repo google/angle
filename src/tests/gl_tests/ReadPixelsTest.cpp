@@ -102,11 +102,11 @@ class ReadPixelsPBOTest : public ReadPixelsTest
 
     void TearDown() override
     {
-        ANGLETest::TearDown();
-
         glDeleteBuffers(1, &mPBO);
         glDeleteTextures(1, &mTexture);
         glDeleteFramebuffers(1, &mFBO);
+
+        ANGLETest::TearDown();
     }
 
     GLuint mPBO;
@@ -676,11 +676,9 @@ class ReadPixelsErrorTest : public ReadPixelsTest
     GLuint mFBO;
 };
 
-/*
-    The test verifies that glReadPixels generates a GL_INVALID_OPERATION error
-    when the read buffer is GL_NONE.
-    Reference: GLES 3.0.4, Section 4.3.2 Reading Pixels
-*/
+//  The test verifies that glReadPixels generates a GL_INVALID_OPERATION error
+//  when the read buffer is GL_NONE.
+//  Reference: GLES 3.0.4, Section 4.3.2 Reading Pixels
 TEST_P(ReadPixelsErrorTest, ReadBufferIsNone)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFBO);

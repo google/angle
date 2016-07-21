@@ -304,11 +304,9 @@ class CopyTexImageTestES3 : public CopyTexImageTest
 {
 };
 
-/*
-    The test verifies that glCopyTexSubImage2D generates a GL_INVALID_OPERATION error
-    when the read buffer is GL_NONE.
-    Reference: GLES 3.0.4, Section 3.8.5 Alternate Texture Image Specification Commands
-*/
+//  The test verifies that glCopyTexSubImage2D generates a GL_INVALID_OPERATION error
+//  when the read buffer is GL_NONE.
+//  Reference: GLES 3.0.4, Section 3.8.5 Alternate Texture Image Specification Commands
 TEST_P(CopyTexImageTestES3, ReadBufferIsNone)
 {
     GLfloat color[] = {
