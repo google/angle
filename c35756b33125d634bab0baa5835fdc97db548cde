@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_0253ea49",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-21T17:48:27Z",
+      "side": 1,
+      "message": "Please keep the consistent formatting.",
+      "revId": "c35756b33125d634bab0baa5835fdc97db548cde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
