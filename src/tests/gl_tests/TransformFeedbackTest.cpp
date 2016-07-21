@@ -145,6 +145,13 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 // old position)
 TEST_P(TransformFeedbackTest, BufferRebinding)
 {
+    if (IsWindows() && IsD3D11() && IsNVIDIA())
+    {
+        // TODO(geofflang): Diagnose driver bug in latest nvidia driver
+        std::cout << "Test skipped on NVIDIA due to driver bug.";
+        return;
+    }
+
     glDisable(GL_DEPTH_TEST);
 
     // Set the program's transform feedback varyings (just gl_Position)
