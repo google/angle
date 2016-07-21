@@ -36,6 +36,8 @@ bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
+// Handles only basic output variable types.
+TType ConvertShaderVariableTypeToTType(sh::GLenum type);
 
 class GetVariableTraverser : angle::NonCopyable
 {

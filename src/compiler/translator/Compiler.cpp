@@ -362,9 +362,10 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                     infoSink.info << "too many uniforms";
                 }
             }
-            if (success && shaderType == GL_VERTEX_SHADER &&
-                (compileOptions & SH_INIT_VARYINGS_WITHOUT_STATIC_USE))
-                initializeVaryingsWithoutStaticUse(root);
+            if (success && (compileOptions & SH_INIT_OUTPUT_VARIABLES))
+            {
+                initializeOutputVariables(root, shaderType);
+            }
         }
 
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
@@ -810,37 +811,32 @@ bool TCompiler::enforcePackingRestrictions()
 
 void TCompiler::initializeGLPosition(TIntermNode* root)
 {
-    InitializeVariables::InitVariableInfoList variables;
-    InitializeVariables::InitVariableInfo var(
-        "gl_Position", TType(EbtFloat, EbpUndefined, EvqPosition, 4));
-    variables.push_back(var);
-    InitializeVariables initializer(variables);
-    root->traverse(&initializer);
+    InitVariableList list;
+    sh::ShaderVariable var(GL_FLOAT_VEC4, 0);
+    var.name = "gl_Position";
+    list.push_back(var);
+    InitializeVariables(root, list);
 }
 
-void TCompiler::initializeVaryingsWithoutStaticUse(TIntermNode* root)
+void TCompiler::initializeOutputVariables(TIntermNode *root, sh::GLenum shaderType)
 {
-    InitializeVariables::InitVariableInfoList variables;
-    for (size_t ii = 0; ii < varyings.size(); ++ii)
+    InitVariableList list;
+    if (shaderType == GL_VERTEX_SHADER)
     {
-        const sh::Varying& varying = varyings[ii];
-        if (varying.staticUse)
-            continue;
-        unsigned char primarySize = static_cast<unsigned char>(gl::VariableColumnCount(varying.type));
-        unsigned char secondarySize = static_cast<unsigned char>(gl::VariableRowCount(varying.type));
-        TType type(EbtFloat, EbpUndefined, EvqVaryingOut, primarySize, secondarySize, varying.isArray());
-        TString name = varying.name.c_str();
-        if (varying.isArray())
+        for (auto var : varyings)
         {
-            type.setArraySize(varying.arraySize);
-            name = name.substr(0, name.find_first_of('['));
+            sh::ExpandVariable(var, var.name, var.mappedName, false, &list);
         }
-
-        InitializeVariables::InitVariableInfo var(name, type);
-        variables.push_back(var);
     }
-    InitializeVariables initializer(variables);
-    root->traverse(&initializer);
+    else
+    {
+        ASSERT(shaderType == GL_FRAGMENT_SHADER);
+        for (auto var : outputVariables)
+        {
+            list.push_back(var);
+        }
+    }
+    InitializeVariables(root, list);
 }
 
 const TExtensionBehavior& TCompiler::getExtensionBehavior() const

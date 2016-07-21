@@ -48,7 +48,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 149
+#define ANGLE_SH_VERSION 150
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -116,101 +116,101 @@ typedef enum
 
 // Compile options.
 typedef enum {
-  SH_VALIDATE                = 0,
-  SH_VALIDATE_LOOP_INDEXING  = 0x0001,
-  SH_INTERMEDIATE_TREE       = 0x0002,
-  SH_OBJECT_CODE             = 0x0004,
-  SH_VARIABLES               = 0x0008,
-  SH_LINE_DIRECTIVES         = 0x0010,
-  SH_SOURCE_PATH             = 0x0020,
-  SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0040,
-  // If a sampler array index happens to be a loop index,
-  //   1) if its type is integer, unroll the loop.
-  //   2) if its type is float, fail the shader compile.
-  // This is to work around a mac driver bug.
-  SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = 0x0080,
+    SH_VALIDATE                           = 0,
+    SH_VALIDATE_LOOP_INDEXING             = 0x0001,
+    SH_INTERMEDIATE_TREE                  = 0x0002,
+    SH_OBJECT_CODE                        = 0x0004,
+    SH_VARIABLES                          = 0x0008,
+    SH_LINE_DIRECTIVES                    = 0x0010,
+    SH_SOURCE_PATH                        = 0x0020,
+    SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0040,
+    // If a sampler array index happens to be a loop index,
+    //   1) if its type is integer, unroll the loop.
+    //   2) if its type is float, fail the shader compile.
+    // This is to work around a mac driver bug.
+    SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = 0x0080,
 
-  // This is needed only as a workaround for certain OpenGL driver bugs.
-  SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100,
+    // This is needed only as a workaround for certain OpenGL driver bugs.
+    SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100,
 
-  // This is an experimental flag to enforce restrictions that aim to prevent
-  // timing attacks.
-  // It generates compilation errors for shaders that could expose sensitive
-  // texture information via the timing channel.
-  // To use this flag, you must compile the shader under the WebGL spec
-  // (using the SH_WEBGL_SPEC flag).
-  SH_TIMING_RESTRICTIONS = 0x0200,
+    // This is an experimental flag to enforce restrictions that aim to prevent
+    // timing attacks.
+    // It generates compilation errors for shaders that could expose sensitive
+    // texture information via the timing channel.
+    // To use this flag, you must compile the shader under the WebGL spec
+    // (using the SH_WEBGL_SPEC flag).
+    SH_TIMING_RESTRICTIONS = 0x0200,
 
-  // This flag prints the dependency graph that is used to enforce timing
-  // restrictions on fragment shaders.
-  // This flag only has an effect if all of the following are true:
-  // - The shader spec is SH_WEBGL_SPEC.
-  // - The compile options contain the SH_TIMING_RESTRICTIONS flag.
-  // - The shader type is GL_FRAGMENT_SHADER.
-  SH_DEPENDENCY_GRAPH = 0x0400,
+    // This flag prints the dependency graph that is used to enforce timing
+    // restrictions on fragment shaders.
+    // This flag only has an effect if all of the following are true:
+    // - The shader spec is SH_WEBGL_SPEC.
+    // - The compile options contain the SH_TIMING_RESTRICTIONS flag.
+    // - The shader type is GL_FRAGMENT_SHADER.
+    SH_DEPENDENCY_GRAPH = 0x0400,
 
-  // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
-  // This flag only enforces (and can only enforce) the packing
-  // restrictions for uniform variables in both vertex and fragment
-  // shaders. ShCheckVariablesWithinPackingLimits() lets embedders
-  // enforce the packing restrictions for varying variables during
-  // program link time.
-  SH_ENFORCE_PACKING_RESTRICTIONS = 0x0800,
+    // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
+    // This flag only enforces (and can only enforce) the packing
+    // restrictions for uniform variables in both vertex and fragment
+    // shaders. ShCheckVariablesWithinPackingLimits() lets embedders
+    // enforce the packing restrictions for varying variables during
+    // program link time.
+    SH_ENFORCE_PACKING_RESTRICTIONS = 0x0800,
 
-  // This flag ensures all indirect (expression-based) array indexing
-  // is clamped to the bounds of the array. This ensures, for example,
-  // that you cannot read off the end of a uniform, whether an array
-  // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
-  // specified in the ShBuiltInResources when constructing the
-  // compiler, selects the strategy for the clamping implementation.
-  SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x1000,
+    // This flag ensures all indirect (expression-based) array indexing
+    // is clamped to the bounds of the array. This ensures, for example,
+    // that you cannot read off the end of a uniform, whether an array
+    // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
+    // specified in the ShBuiltInResources when constructing the
+    // compiler, selects the strategy for the clamping implementation.
+    SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x1000,
 
-  // This flag limits the complexity of an expression.
-  SH_LIMIT_EXPRESSION_COMPLEXITY = 0x2000,
+    // This flag limits the complexity of an expression.
+    SH_LIMIT_EXPRESSION_COMPLEXITY = 0x2000,
 
-  // This flag limits the depth of the call stack.
-  SH_LIMIT_CALL_STACK_DEPTH = 0x4000,
+    // This flag limits the depth of the call stack.
+    SH_LIMIT_CALL_STACK_DEPTH = 0x4000,
 
-  // This flag initializes gl_Position to vec4(0,0,0,0) at the
-  // beginning of the vertex shader's main(), and has no effect in the
-  // fragment shader. It is intended as a workaround for drivers which
-  // incorrectly fail to link programs if gl_Position is not written.
-  SH_INIT_GL_POSITION = 0x8000,
+    // This flag initializes gl_Position to vec4(0,0,0,0) at the
+    // beginning of the vertex shader's main(), and has no effect in the
+    // fragment shader. It is intended as a workaround for drivers which
+    // incorrectly fail to link programs if gl_Position is not written.
+    SH_INIT_GL_POSITION = 0x8000,
 
-  // This flag replaces
-  //   "a && b" with "a ? b : false",
-  //   "a || b" with "a ? true : b".
-  // This is to work around a MacOSX driver bug that |b| is executed
-  // independent of |a|'s value.
-  SH_UNFOLD_SHORT_CIRCUIT = 0x10000,
+    // This flag replaces
+    //   "a && b" with "a ? b : false",
+    //   "a || b" with "a ? true : b".
+    // This is to work around a MacOSX driver bug that |b| is executed
+    // independent of |a|'s value.
+    SH_UNFOLD_SHORT_CIRCUIT = 0x10000,
 
-  // This flag initializes varyings without static use in vertex shader
-  // at the beginning of main(), and has no effects in the fragment shader.
-  // It is intended as a workaround for drivers which incorrectly optimize
-  // out such varyings and cause a link failure.
-  SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x20000,
+    // This flag initializes output variables to 0 at the beginning of main().
+    // It is to avoid undefined behaviors.
+    SH_INIT_OUTPUT_VARIABLES = 0x20000,
+    // TODO(zmo): obsolete, remove after ANGLE roll into Chromium.
+    SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x20000,
 
-  // This flag scalarizes vec/ivec/bvec/mat constructor args.
-  // It is intended as a workaround for Linux/Mac driver bugs.
-  SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = 0x40000,
+    // This flag scalarizes vec/ivec/bvec/mat constructor args.
+    // It is intended as a workaround for Linux/Mac driver bugs.
+    SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = 0x40000,
 
-  // This flag overwrites a struct name with a unique prefix.
-  // It is intended as a workaround for drivers that do not handle
-  // struct scopes correctly, including all Mac drivers and Linux AMD.
-  SH_REGENERATE_STRUCT_NAMES = 0x80000,
+    // This flag overwrites a struct name with a unique prefix.
+    // It is intended as a workaround for drivers that do not handle
+    // struct scopes correctly, including all Mac drivers and Linux AMD.
+    SH_REGENERATE_STRUCT_NAMES = 0x80000,
 
-  // This flag makes the compiler not prune unused function early in the
-  // compilation process. Pruning coupled with SH_LIMIT_CALL_STACK_DEPTH
-  // helps avoid bad shaders causing stack overflows.
-  SH_DONT_PRUNE_UNUSED_FUNCTIONS = 0x100000,
+    // This flag makes the compiler not prune unused function early in the
+    // compilation process. Pruning coupled with SH_LIMIT_CALL_STACK_DEPTH
+    // helps avoid bad shaders causing stack overflows.
+    SH_DONT_PRUNE_UNUSED_FUNCTIONS = 0x100000,
 
-  // This flag works around a bug in NVIDIA 331 series drivers related
-  // to pow(x, y) where y is a constant vector.
-  SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = 0x200000,
+    // This flag works around a bug in NVIDIA 331 series drivers related
+    // to pow(x, y) where y is a constant vector.
+    SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = 0x200000,
 
-  // This flag works around bugs in Mac drivers related to do-while by
-  // transforming them into an other construct.
-  SH_REWRITE_DO_WHILE_LOOPS = 0x400000,
+    // This flag works around bugs in Mac drivers related to do-while by
+    // transforming them into an other construct.
+    SH_REWRITE_DO_WHILE_LOOPS = 0x400000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

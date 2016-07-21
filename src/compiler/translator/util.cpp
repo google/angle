@@ -278,6 +278,58 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
     }
 }
 
+TType ConvertShaderVariableTypeToTType(sh::GLenum type)
+{
+    switch (type)
+    {
+        case GL_FLOAT:
+            return TType(EbtFloat);
+        case GL_FLOAT_VEC2:
+            return TType(EbtFloat, 2);
+        case GL_FLOAT_VEC3:
+            return TType(EbtFloat, 3);
+        case GL_FLOAT_VEC4:
+            return TType(EbtFloat, 4);
+        case GL_FLOAT_MAT2:
+            return TType(EbtFloat, 2, 2);
+        case GL_FLOAT_MAT3:
+            return TType(EbtFloat, 3, 3);
+        case GL_FLOAT_MAT4:
+            return TType(EbtFloat, 4, 4);
+        case GL_FLOAT_MAT2x3:
+            return TType(EbtFloat, 2, 3);
+        case GL_FLOAT_MAT2x4:
+            return TType(EbtFloat, 2, 4);
+        case GL_FLOAT_MAT3x2:
+            return TType(EbtFloat, 3, 2);
+        case GL_FLOAT_MAT3x4:
+            return TType(EbtFloat, 3, 4);
+        case GL_FLOAT_MAT4x2:
+            return TType(EbtFloat, 4, 2);
+        case GL_FLOAT_MAT4x3:
+            return TType(EbtFloat, 4, 3);
+        case GL_INT:
+            return TType(EbtInt);
+        case GL_INT_VEC2:
+            return TType(EbtInt, 2);
+        case GL_INT_VEC3:
+            return TType(EbtInt, 3);
+        case GL_INT_VEC4:
+            return TType(EbtInt, 4);
+        case GL_UNSIGNED_INT:
+            return TType(EbtUInt);
+        case GL_UNSIGNED_INT_VEC2:
+            return TType(EbtUInt, 2);
+        case GL_UNSIGNED_INT_VEC3:
+            return TType(EbtUInt, 3);
+        case GL_UNSIGNED_INT_VEC4:
+            return TType(EbtUInt, 4);
+        default:
+            UNREACHABLE();
+            return TType();
+    }
+}
+
 GetVariableTraverser::GetVariableTraverser(const TSymbolTable &symbolTable)
     : mSymbolTable(symbolTable)
 {

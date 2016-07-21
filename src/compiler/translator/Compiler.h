@@ -130,11 +130,9 @@ class TCompiler : public TShHandleBase
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
     // Appendix A, section 7, the shader does not use too many uniforms.
     bool enforcePackingRestrictions();
-    // Insert statements to initialize varyings without static use in the beginning
-    // of main(). It is to work around a Mac driver where such varyings in a vertex
-    // shader may be optimized out incorrectly at compile time, causing a link failure.
-    // This function should only be applied to vertex shaders.
-    void initializeVaryingsWithoutStaticUse(TIntermNode* root);
+    // Insert statements to initialize output variables in the beginning of main().
+    // This is to avoid undefined behaviors.
+    void initializeOutputVariables(TIntermNode *root, sh::GLenum shaderType);
     // Insert gl_Position = vec4(0,0,0,0) to the beginning of main().
     // It is to work around a Linux driver bug where missing this causes compile failure
     // while spec says it is allowed.
