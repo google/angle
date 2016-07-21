@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a91eb63_f447a972",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-21T13:27:56Z",
+      "side": 1,
+      "message": "can you tag this with BUG\u003dchromium:###### so we know where to look for follow-up?",
+      "revId": "04192f75aa4020c162d668636678885d65cc5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
