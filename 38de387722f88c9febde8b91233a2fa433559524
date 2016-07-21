@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a91eb63_80553a55",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-21T17:45:40Z",
+      "side": 1,
+      "message": "nit: prefix with // static comment on previous line",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 4
+      },
+      "revId": "38de387722f88c9febde8b91233a2fa433559524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_c04f42bf",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-21T17:45:40Z",
+      "side": 1,
+      "message": "nit: use comparison style (!\u003d 0)",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 56
+      },
+      "revId": "38de387722f88c9febde8b91233a2fa433559524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_4064324b",
+        "filename": "src/compiler/translator/IntermNodePatternMatcher.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-21T17:45:40Z",
+      "side": 1,
+      "message": "nit: static methods can be Caps",
+      "range": {
+        "startLine": 22,
+        "startChar": 16,
+        "endLine": 22,
+        "endChar": 49
+      },
+      "revId": "38de387722f88c9febde8b91233a2fa433559524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
