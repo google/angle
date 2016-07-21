@@ -906,6 +906,159 @@ TEST_P(GLSLTest, InvariantAllBoth)
     EXPECT_NE(0u, program);
 }
 
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnFloat)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "float f() { if (v_varying > 0.0) return 1.0; }\n"
+        "void main() { gl_Position = vec4(f(), 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnVec2)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "vec2 f() { if (v_varying > 0.0) return vec2(1.0, 1.0); }\n"
+        "void main() { gl_Position = vec4(f().x, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnVec3)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "vec3 f() { if (v_varying > 0.0) return vec3(1.0, 1.0, 1.0); }\n"
+        "void main() { gl_Position = vec4(f().x, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnVec4)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "vec4 f() { if (v_varying > 0.0) return vec4(1.0, 1.0, 1.0, 1.0); }\n"
+        "void main() { gl_Position = vec4(f().x, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnIVec4)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "ivec4 f() { if (v_varying > 0.0) return ivec4(1, 1, 1, 1); }\n"
+        "void main() { gl_Position = vec4(f().x, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnMat4)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "mat4 f() { if (v_varying > 0.0) return mat4(1.0); }\n"
+        "void main() { gl_Position = vec4(f()[0][0], 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest, MissingReturnStruct)
+{
+    const std::string vertexShaderSource =
+        "varying float v_varying;\n"
+        "struct s { float a; int b; vec2 c; };\n"
+        "s f() { if (v_varying > 0.0) return s(1.0, 1, vec2(1.0, 1.0)); }\n"
+        "void main() { gl_Position = vec4(f().a, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "precision mediump float;\n"
+        "void main() { gl_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest_ES3, MissingReturnArray)
+{
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "in float v_varying;\n"
+        "vec2[2] f() { if (v_varying > 0.0) { return vec2[2](vec2(1.0, 1.0), vec2(1.0, 1.0)); } }\n"
+        "void main() { gl_Position = vec4(f()[0].x, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() { my_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
+// Verify that functions without return statements still compile
+TEST_P(GLSLTest_ES3, MissingReturnArrayOfStructs)
+{
+    const std::string vertexShaderSource =
+        "#version 300 es\n"
+        "in float v_varying;\n"
+        "struct s { float a; int b; vec2 c; };\n"
+        "s[2] f() { if (v_varying > 0.0) { return s[2](s(1.0, 1, vec2(1.0, 1.0)), s(1.0, 1, "
+        "vec2(1.0, 1.0))); } }\n"
+        "void main() { gl_Position = vec4(f()[0].a, 0, 0, 1); }\n";
+
+    const std::string fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() { my_FragColor = vec4(0, 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
+    EXPECT_NE(0u, program);
+}
+
 // Verify that using invariant(all) in both shaders fails in ESSL 3.00.
 TEST_P(GLSLTest_ES3, InvariantAllBoth)
 {

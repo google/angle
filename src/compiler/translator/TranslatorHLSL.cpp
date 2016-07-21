@@ -6,6 +6,7 @@
 
 #include "compiler/translator/TranslatorHLSL.h"
 
+#include "compiler/translator/AddDefaultReturnStatements.h"
 #include "compiler/translator/ArrayReturnValueToOutParameter.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
@@ -27,6 +28,8 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 {
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
+
+    sh::AddDefaultReturnStatements(root);
 
     SeparateDeclarations(root);
 

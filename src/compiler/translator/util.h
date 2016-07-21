@@ -12,6 +12,7 @@
 #include "angle_gl.h"
 #include <GLSLANG/ShaderLang.h>
 
+#include "compiler/translator/Operator.h"
 #include "compiler/translator/Types.h"
 
 // strtof_clamp is like strtof but
@@ -38,6 +39,8 @@ InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
 // Handles only basic output variable types.
 TType ConvertShaderVariableTypeToTType(sh::GLenum type);
+
+TOperator TypeToConstructorOperator(const TType &type);
 
 class GetVariableTraverser : angle::NonCopyable
 {
