@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_2245ce6a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-21T19:10:53Z",
+      "side": 1,
+      "message": "The reference card is not really an authoritative document - it\u0027s convenient, but the spec has a final say on things. Can you double-check these against the spec? I can do that too later.",
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_624bd683",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-21T19:10:53Z",
+      "side": 1,
+      "message": "Remember to update this.",
+      "range": {
+        "startLine": 51,
+        "startChar": 25,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_0221aab9",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-21T19:10:53Z",
+      "side": 1,
+      "message": "How much did you look into what\u0027s the minimum version of desktop GL where GLES 3.1 can be supported? Documenting what necessary features earlier versions don\u0027t have in the commit message would be great.\n\nIt may also be possible to support it with some earlier version with extensions, though going into that should be left for later.",
+      "range": {
+        "startLine": 602,
+        "startChar": 31,
+        "endLine": 602,
+        "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
