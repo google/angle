@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_82c13a2c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-21T09:06:48Z",
+      "side": 1,
+      "message": "Add the same bug number here as for the previous readpixels patch. Could also have TEST\u003dangle_end2end_tests, even though it\u0027s obviously implied in the description.",
+      "revId": "c653873e7e31ebb51bb4db44fa5cae1be23a650d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
