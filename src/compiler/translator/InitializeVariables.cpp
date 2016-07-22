@@ -123,11 +123,10 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
     for (size_t ii = 0; ii < mVariables.size(); ++ii)
     {
         const sh::ShaderVariable &var = mVariables[ii];
-        ASSERT(!var.isStruct());
-        TType type   = sh::ConvertShaderVariableTypeToTType(var.type);
         TString name = TString(var.name.c_str());
         if (var.isArray())
         {
+            TType type = sh::ConvertShaderVariableTypeToTType(var.type);
             size_t pos = name.find_last_of('[');
             if (pos != TString::npos)
                 name = name.substr(0, pos);
@@ -148,8 +147,38 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
                 assign->setRight(zeroConst);
             }
         }
+        else if (var.isStruct())
+        {
+            TFieldList *fields = new TFieldList;
+            TSourceLoc loc;
+            for (auto field : var.fields)
+            {
+                fields->push_back(new TField(nullptr, new TString(field.name.c_str()), loc));
+            }
+            TStructure *structure = new TStructure(new TString(var.structName.c_str()), fields);
+            TType type;
+            type.setStruct(structure);
+            for (int ii = 0; ii < static_cast<int>(var.fields.size()); ++ii)
+            {
+                TIntermBinary *assign = new TIntermBinary(EOpAssign);
+                sequence->insert(sequence->begin(), assign);
+
+                TIntermBinary *indexDirectStruct = new TIntermBinary(EOpIndexDirectStruct);
+                TIntermSymbol *symbol            = new TIntermSymbol(0, name, type);
+                indexDirectStruct->setLeft(symbol);
+                TIntermConstantUnion *indexNode = constructIndexNode(ii);
+                indexDirectStruct->setRight(indexNode);
+                assign->setLeft(indexDirectStruct);
+
+                const sh::ShaderVariable &field = var.fields[ii];
+                TType fieldType                 = sh::ConvertShaderVariableTypeToTType(field.type);
+                TIntermConstantUnion *zeroConst = constructConstUnionNode(fieldType);
+                assign->setRight(zeroConst);
+            }
+        }
         else
         {
+            TType type            = sh::ConvertShaderVariableTypeToTType(var.type);
             TIntermBinary *assign = new TIntermBinary(EOpAssign);
             sequence->insert(sequence->begin(), assign);
             TIntermSymbol *symbol = new TIntermSymbol(0, name, type);

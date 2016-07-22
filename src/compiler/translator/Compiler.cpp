@@ -825,7 +825,7 @@ void TCompiler::initializeOutputVariables(TIntermNode *root)
     {
         for (auto var : varyings)
         {
-            sh::ExpandVariable(var, var.name, var.mappedName, false, &list);
+            list.push_back(var);
         }
     }
     else
