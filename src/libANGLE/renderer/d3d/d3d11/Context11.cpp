@@ -123,7 +123,7 @@ FenceSyncImpl *Context11::createFenceSync()
 
 TransformFeedbackImpl *Context11::createTransformFeedback(const gl::TransformFeedbackState &state)
 {
-    return new TransformFeedback11(state);
+    return new TransformFeedback11(state, mRenderer);
 }
 
 SamplerImpl *Context11::createSampler()

@@ -10,12 +10,15 @@
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 namespace rx
 {
 
-TransformFeedback11::TransformFeedback11(const gl::TransformFeedbackState &state)
+TransformFeedback11::TransformFeedback11(const gl::TransformFeedbackState &state,
+                                         Renderer11 *renderer)
     : TransformFeedbackImpl(state),
+      mRenderer(renderer),
       mIsDirty(true),
       mBuffers(state.getIndexedBuffers().size(), nullptr),
       mBufferOffsets(state.getIndexedBuffers().size(), 0)
@@ -32,6 +35,10 @@ void TransformFeedback11::begin(GLenum primitiveMode)
 
 void TransformFeedback11::end()
 {
+    if (mRenderer->getWorkarounds().flushAfterEndingTransformFeedback)
+    {
+        mRenderer->getDeviceContext()->Flush();
+    }
 }
 
 void TransformFeedback11::pause()

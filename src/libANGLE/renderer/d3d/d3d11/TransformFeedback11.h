@@ -18,10 +18,12 @@
 namespace rx
 {
 
+class Renderer11;
+
 class TransformFeedback11 : public TransformFeedbackImpl
 {
   public:
-    TransformFeedback11(const gl::TransformFeedbackState &state);
+    TransformFeedback11(const gl::TransformFeedbackState &state, Renderer11 *renderer);
     ~TransformFeedback11() override;
 
     void begin(GLenum primitiveMode) override;
@@ -41,6 +43,8 @@ class TransformFeedback11 : public TransformFeedbackImpl
     const std::vector<UINT> &getSOBufferOffsets() const;
 
   private:
+    Renderer11 *mRenderer;
+
     bool mIsDirty;
     std::vector<ID3D11Buffer *> mBuffers;
     std::vector<UINT> mBufferOffsets;

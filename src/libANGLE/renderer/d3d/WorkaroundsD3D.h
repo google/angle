@@ -59,6 +59,10 @@ struct WorkaroundsD3D
     // We can work around this by expanding the pow into a series of multiplies if we're running
     // under the affected compiler.
     bool expandIntegerPowExpressions = false;
+
+    // NVIDIA drivers sometimes write out-of-order results to StreamOut buffers when transform
+    // feedback is used to repeatedly write to the same buffer positions.
+    bool flushAfterEndingTransformFeedback = false;
 };
 
 }  // namespace rx

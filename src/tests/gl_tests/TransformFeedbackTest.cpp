@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "random_utils.h"
 #include "Vector.h"
 
 using namespace angle;
@@ -145,13 +146,6 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 // old position)
 TEST_P(TransformFeedbackTest, BufferRebinding)
 {
-    if (IsWindows() && IsD3D11() && IsNVIDIA())
-    {
-        // TODO(geofflang): Diagnose driver bug in latest nvidia driver
-        std::cout << "Test skipped on NVIDIA due to driver bug.";
-        return;
-    }
-
     glDisable(GL_DEPTH_TEST);
 
     // Set the program's transform feedback varyings (just gl_Position)
@@ -167,29 +161,31 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, data.data(),
                  GL_STATIC_DRAW);
 
-    // Bind the buffer for transform feedback output and start transform feedback
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
-    glBeginTransformFeedback(GL_TRIANGLES);
 
     // Create a query to check how many primitives were written
     GLuint primitivesWrittenQuery = 0;
     glGenQueries(1, &primitivesWrittenQuery);
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
-    float originalZ = 0.5f;
-    drawQuad(mProgram, "position", originalZ);
+    const float finalZ = 0.95f;
 
-    // stop, reset the buffer and resume
-    glEndTransformFeedback();
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
-    glBeginTransformFeedback(GL_TRIANGLES);
+    RNG rng;
 
-    float updatedZ = 0.75f;
-    drawQuad(mProgram, "position", updatedZ);
+    const size_t loopCount = 64;
+    for (size_t loopIdx = 0; loopIdx < loopCount; loopIdx++)
+    {
+        // Bind the buffer for transform feedback output and start transform feedback
+        glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+        glBeginTransformFeedback(GL_TRIANGLES);
+
+        float z = (loopIdx + 1 == loopCount) ? finalZ : rng.randomFloatBetween(0.1f, 0.5f);
+        drawQuad(mProgram, "position", z);
+
+        glEndTransformFeedback();
+    }
 
     // End the query and transform feedback
     glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
-    glEndTransformFeedback();
 
     glUseProgram(0);
 
@@ -199,7 +195,7 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
     glGetQueryObjectuiv(primitivesWrittenQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
     EXPECT_GL_NO_ERROR();
 
-    EXPECT_EQ(4u, primitivesWritten);
+    EXPECT_EQ(loopCount * 2, primitivesWritten);
 
     // Check the buffer data
     const float *bufferData = static_cast<float *>(glMapBufferRange(
@@ -207,9 +203,9 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
 
     for (size_t vertexIdx = 0; vertexIdx < 6; vertexIdx++)
     {
-        // Check the third (Z) component of each vertex written and make sure it has the updated
+        // Check the third (Z) component of each vertex written and make sure it has the final
         // value
-        EXPECT_NEAR(updatedZ, bufferData[vertexIdx * 4 + 2], 0.0001);
+        EXPECT_NEAR(finalZ, bufferData[vertexIdx * 4 + 2], 0.0001);
     }
 
     for (size_t dataIdx = 24; dataIdx < mTransformFeedbackBufferSize / sizeof(float); dataIdx++)

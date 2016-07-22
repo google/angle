@@ -1537,6 +1537,8 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
     workarounds.expandIntegerPowExpressions = true;
 
+    workarounds.flushAfterEndingTransformFeedback = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
+
     return workarounds;
 }
 
