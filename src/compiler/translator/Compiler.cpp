@@ -364,7 +364,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             }
             if (success && (compileOptions & SH_INIT_OUTPUT_VARIABLES))
             {
-                initializeOutputVariables(root, shaderType);
+                initializeOutputVariables(root);
             }
         }
 
@@ -818,7 +818,7 @@ void TCompiler::initializeGLPosition(TIntermNode* root)
     InitializeVariables(root, list);
 }
 
-void TCompiler::initializeOutputVariables(TIntermNode *root, sh::GLenum shaderType)
+void TCompiler::initializeOutputVariables(TIntermNode *root)
 {
     InitVariableList list;
     if (shaderType == GL_VERTEX_SHADER)

@@ -132,7 +132,7 @@ class TCompiler : public TShHandleBase
     bool enforcePackingRestrictions();
     // Insert statements to initialize output variables in the beginning of main().
     // This is to avoid undefined behaviors.
-    void initializeOutputVariables(TIntermNode *root, sh::GLenum shaderType);
+    void initializeOutputVariables(TIntermNode *root);
     // Insert gl_Position = vec4(0,0,0,0) to the beginning of main().
     // It is to work around a Linux driver bug where missing this causes compile failure
     // while spec says it is allowed.
