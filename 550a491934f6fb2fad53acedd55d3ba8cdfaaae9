@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a91eb63_5e76bde8",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:05:03Z",
+      "side": 1,
+      "message": "remove semicolon, add \"// namespace gl\" closing comment.",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 672,
+        "endChar": 2
+      },
+      "revId": "550a491934f6fb2fad53acedd55d3ba8cdfaaae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_7e8379a8",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:05:03Z",
+      "side": 1,
+      "message": "nit: add // extern \"C\" comment",
+      "range": {
+        "startLine": 2231,
+        "startChar": 0,
+        "endLine": 2231,
+        "endChar": 1
+      },
+      "revId": "550a491934f6fb2fad53acedd55d3ba8cdfaaae9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
