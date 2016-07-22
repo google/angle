@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "6a991793_427c524e",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:47:19Z",
+      "side": 1,
+      "message": "Wrong arguments made the windows build to fail.\nNow, they are correct.",
+      "range": {
+        "startLine": 242,
+        "startChar": 87,
+        "endLine": 243,
+        "endChar": 19
+      },
+      "revId": "995c4ef8f70940a78c4ee92620d9353e1e7f4afe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_9eedfdbe",
         "filename": "src/libGLESv2/libGLESv2.cpp",
         "patchSetId": 6
