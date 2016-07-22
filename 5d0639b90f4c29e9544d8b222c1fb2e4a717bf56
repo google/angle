@@ -94,6 +94,29 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_fb8448b7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1510,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-22T21:08:09Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with TParseContext, does this cover all varying declarations? I.e. arrays and lists of varyings.",
+      "range": {
+        "startLine": 1510,
+        "startChar": 33,
+        "endLine": 1510,
+        "endChar": 55
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_457239ac",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -140,6 +163,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_dec5ba07",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-22T21:08:09Z",
+      "side": 1,
+      "message": "Oh, looks like it\u0027s also mandatory in GLSL 1.20 and 1.30. I wonder what happens when ESSL 3.00 is translated into these.",
+      "parentUuid": "ea48a7ff_c89f404a",
+      "range": {
+        "startLine": 58,
+        "startChar": 35,
+        "endLine": 58,
+        "endChar": 46
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_68df0cff",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
@@ -151,6 +198,30 @@
       "writtenOn": "2016-07-22T20:12:21Z",
       "side": 1,
       "message": "So, gl_FragCoord and gl_PointCoord are non-conformant workarounds, as I\u0027ve mentioned.\nWhat about the variables which invariant(all) should really affect, gl_FragColor and gl_FragData?\nAlso seems gl_FrontFacing should be part of the workaround?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_9b898424",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-22T21:08:09Z",
+      "side": 1,
+      "message": "I\u0027m sorry, but looks I mislead you here.\nGLSL 1.20.8 chapter 10:\n34. We need to support basic invariance.\nRESOLUTION: Duplicate the OpenGL ES invariant keyword, but only allow its use on user varyings, built-in varyings output from the vertex shader, and the special variables gl_Position and gl_PointSize.\n\nSo, case GL_FRAGMENT_SHADER should be removed.",
+      "parentUuid": "ea48a7ff_68df0cff",
       "range": {
         "startLine": 68,
         "startChar": 0,
