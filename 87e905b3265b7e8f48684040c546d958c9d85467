@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6a991793_82a6da04",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "The GLES 3.1 API spec has a table at the end starting from page 353. Unfortunately it is not really optimized for PDF readers. In some readers you may be able to search it by replacing underscores in the constant name with spaces.",
+      "parentUuid": "6a991793_22414e3f",
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_624bd683",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -106,6 +124,30 @@
     },
     {
       "key": {
+        "uuid": "6a1037cf_2d39593f",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "It doesn\u0027t matter too much what the initial value is, since as you say they\u0027re updated later.",
+      "parentUuid": "6a991793_4244524f",
+      "range": {
+        "startLine": 139,
+        "startChar": 15,
+        "endLine": 139,
+        "endChar": 36
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_c2fbc26a",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
@@ -117,6 +159,30 @@
       "writtenOn": "2016-07-22T12:02:59Z",
       "side": 1,
       "message": "Giving the possibility to set the precision explicitly might be pointless. I added it so that I can set the precision to medium for some of the newly added builtins. However, ANGLE might be setting it to medium somewhere else in the code already.",
+      "range": {
+        "startLine": 386,
+        "startChar": 47,
+        "endLine": 386,
+        "endChar": 59
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_42f7b2f2",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "I don\u0027t think that there\u0027s any magic elsewhere that would set the precision for the built-ins specifically. It\u0027s good to have the precision explicitly specified in the cases that the spec does document it. Precision is a bit of a hairy area in general though, and making them all highp might be helpful in some ways, but let\u0027s see if we run into any concrete issues first.",
+      "parentUuid": "6a991793_c2fbc26a",
       "range": {
         "startLine": 386,
         "startChar": 47,
@@ -187,6 +253,30 @@
       "side": 1,
       "message": "I used the version in which compute shaders got officially included in OpenGL.\nImages and atomic operations were included in 4.2. They do not require support for compute shaders since they can also be used in a vertex/fragment shader.\nSSBOs were included in 4.3.\nWould it make sense to separate them?",
       "parentUuid": "6a991793_0221aab9",
+      "range": {
+        "startLine": 602,
+        "startChar": 31,
+        "endLine": 602,
+        "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_a290be99",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "I think the code is fine as it is, just add a comment here with this information.",
+      "parentUuid": "6a991793_e26126e2",
       "range": {
         "startLine": 602,
         "startChar": 31,
