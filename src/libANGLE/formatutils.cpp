@@ -48,6 +48,7 @@ FormatMap BuildFormatMap()
 {
     FormatMap map;
 
+    // clang-format off
     //                       | Format               | Type                             | Internal format          |
     InsertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  GL_RGBA8);
     InsertFormatMapping(&map, GL_RGBA,               GL_BYTE,                           GL_RGBA8_SNORM);
@@ -141,6 +142,17 @@ FormatMap BuildFormatMap()
 
     InsertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              GL_DEPTH24_STENCIL8);
     InsertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_DEPTH32F_STENCIL8);
+
+    // From GL_EXT_texture_norm16
+    InsertFormatMapping(&map, GL_RED,                GL_UNSIGNED_SHORT,                 GL_R16_EXT);
+    InsertFormatMapping(&map, GL_RED,                GL_SHORT,                          GL_R16_SNORM_EXT);
+    InsertFormatMapping(&map, GL_RG,                 GL_UNSIGNED_SHORT,                 GL_RG16_EXT);
+    InsertFormatMapping(&map, GL_RG,                 GL_SHORT,                          GL_RG16_SNORM_EXT);
+    InsertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_SHORT,                 GL_RGB16_EXT);
+    InsertFormatMapping(&map, GL_RGB,                GL_SHORT,                          GL_RGB16_SNORM_EXT);
+    InsertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT,                 GL_RGBA16_EXT);
+    InsertFormatMapping(&map, GL_RGBA,               GL_SHORT,                          GL_RGBA16_SNORM_EXT);
+    // clang-format on
 
     return map;
 }
