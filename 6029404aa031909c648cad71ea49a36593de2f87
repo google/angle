@@ -16,6 +16,24 @@
       "revId": "6029404aa031909c648cad71ea49a36593de2f87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_7ebef1a9",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:43:49Z",
+      "side": 1,
+      "message": "Thanks, can fix this later, but I just wanted to get rid of the undefined negative shift.",
+      "parentUuid": "8abc8bcf_36585663",
+      "revId": "6029404aa031909c648cad71ea49a36593de2f87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
