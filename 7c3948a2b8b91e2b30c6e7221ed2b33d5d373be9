@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_42e212ca",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "I could not find anything about the precision of those builtins.",
+      "range": {
+        "startLine": 659,
+        "startChar": 58,
+        "endLine": 659,
+        "endChar": 70
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_c2ed02be",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Is there a better way to create an uvec3 built-in?",
+      "range": {
+        "startLine": 680,
+        "startChar": 10,
+        "endLine": 680,
+        "endChar": 24
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_e2f80682",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Will this cause a memory leak?\nI saw that the new operator has been overridden and that a custom allocator has been used. I guess the pool allocator is per context and once the context is destroyed, the allocator frees all of the memory. Correct?",
+      "range": {
+        "startLine": 684,
+        "startChar": 72,
+        "endLine": 684,
+        "endChar": 74
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_22df0e00",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "I am not sure whether this is the right constant.",
+      "range": {
+        "startLine": 653,
+        "startChar": 40,
+        "endLine": 653,
+        "endChar": 77
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
