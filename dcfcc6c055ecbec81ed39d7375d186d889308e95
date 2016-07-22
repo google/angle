@@ -34,6 +34,24 @@
       "revId": "dcfcc6c055ecbec81ed39d7375d186d889308e95",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_6ce2b9ca",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T23:17:01Z",
+      "side": 1,
+      "message": "Yes, I agree with Ken. This is fine for a quick fix but if you add a TODO to replace it later on, that would be good.",
+      "parentUuid": "ea48a7ff_aff436bf",
+      "revId": "dcfcc6c055ecbec81ed39d7375d186d889308e95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
