@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea48a7ff_aff436bf",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-22T22:39:16Z",
+      "side": 1,
+      "message": "It seems a little strange to have to build up a new TType that represents the structure. Per offline discussion, it looks like the reason this is needed is that we\u0027re going through the public sh::ShaderVariable API, so the TTypes are all being lost. In a future iteration of this code, perhaps it should be recoded to only use internal APIs of the shader translator, so the inserted initialization nodes can just reference preexisting nodes and types in the graph.",
+      "revId": "dcfcc6c055ecbec81ed39d7375d186d889308e95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
