@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea48a7ff_61cbb01c",
+        "filename": "src/compiler/translator/AddDefaultReturnStatements.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T16:25:00Z",
+      "side": 1,
+      "message": "nit: Apply",
+      "range": {
+        "startLine": 20,
+        "startChar": 16,
+        "endLine": 20,
+        "endChar": 21
+      },
+      "revId": "a8bf30d4812f7f3010cd8557980e9a427dffb945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_41d234cf",
+        "filename": "src/compiler/translator/AddDefaultReturnStatements.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T16:25:00Z",
+      "side": 1,
+      "message": "nit: Is",
+      "range": {
+        "startLine": 30,
+        "startChar": 16,
+        "endLine": 30,
+        "endChar": 48
+      },
+      "revId": "a8bf30d4812f7f3010cd8557980e9a427dffb945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_e1dd80dd",
+        "filename": "src/compiler/translator/AddDefaultReturnStatements.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T16:25:00Z",
+      "side": 1,
+      "message": "nit: Get",
+      "range": {
+        "startLine": 53,
+        "startChar": 21,
+        "endLine": 53,
+        "endChar": 43
+      },
+      "revId": "a8bf30d4812f7f3010cd8557980e9a427dffb945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_21ecc88b",
+        "filename": "src/compiler/translator/AddDefaultReturnStatements.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T16:25:00Z",
+      "side": 1,
+      "message": "this seems to share a lot with the switch in TParseContext::addConstructorFunc. Can you abstract and share these in the util.cpp file?",
+      "range": {
+        "startLine": 53,
+        "startChar": 21,
+        "endLine": 53,
+        "endChar": 43
+      },
+      "revId": "a8bf30d4812f7f3010cd8557980e9a427dffb945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_018aecc2",
+        "filename": "src/compiler/translator/AddDefaultReturnStatements.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T16:25:00Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 222,
+        "endChar": 1
+      },
+      "revId": "a8bf30d4812f7f3010cd8557980e9a427dffb945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
