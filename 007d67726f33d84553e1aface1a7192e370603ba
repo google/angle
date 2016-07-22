@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea48a7ff_5827855f",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-07-22T18:48:01Z",
+      "side": 1,
+      "message": "nit: worth using the optional type?",
+      "range": {
+        "startLine": 254,
+        "startChar": 0,
+        "endLine": 254,
+        "endChar": 4
+      },
+      "revId": "007d67726f33d84553e1aface1a7192e370603ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
