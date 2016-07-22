@@ -22,6 +22,30 @@
       "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_429d7255",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1575,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:47:19Z",
+      "side": 0,
+      "message": "All methods are in the C extern block.",
+      "parentUuid": "4a361311_c1430299",
+      "range": {
+        "startLine": 1575,
+        "startChar": 0,
+        "endLine": 1575,
+        "endChar": 1
+      },
+      "revId": "48af1f53fb0e5316d60ae24fd2a7d0a577934034",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

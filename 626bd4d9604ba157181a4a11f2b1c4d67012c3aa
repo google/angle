@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a991793_a28d5e29",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:47:19Z",
+      "side": 1,
+      "message": "Added UNIMPLEMENTED() to all function bodies.",
+      "parentUuid": "4a361311_01d5eab5",
+      "revId": "626bd4d9604ba157181a4a11f2b1c4d67012c3aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a361311_e13a8619",
         "filename": "src/libGLESv2/libGLESv2.def",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2016-07-19T10:50:19Z",
       "side": 1,
       "message": "I suppose the ordinals should be unique - 343 and 344 are already in use.",
+      "range": {
+        "startLine": 341,
+        "startChar": 37,
+        "endLine": 341,
+        "endChar": 40
+      },
+      "revId": "626bd4d9604ba157181a4a11f2b1c4d67012c3aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_229a6e5f",
+        "filename": "src/libGLESv2/libGLESv2.def",
+        "patchSetId": 2
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:47:19Z",
+      "side": 1,
+      "message": "Initially they were unique, but after a rebase I didn\u0027t notice that some new entry points were added the ordinals for which were the same as mine. Updated it to start from a bigger number.",
+      "parentUuid": "4a361311_e13a8619",
       "range": {
         "startLine": 341,
         "startChar": 37,
