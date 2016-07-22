@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a91eb63_7eec598d",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:00:50Z",
+      "side": 1,
+      "message": "nit: this doesn\u0027t check the staticUse field, which is probably fine, but the method would be more like \u0027varyingDefined\u0027 or \u0027varyingCollected\u0027",
+      "range": {
+        "startLine": 891,
+        "startChar": 16,
+        "endLine": 891,
+        "endChar": 41
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_3ef2d16c",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:00:50Z",
+      "side": 1,
+      "message": "nit: we should put these methods above the member variable declarations to be consistent with the style guide.. can you fix this?",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 176,
+        "endChar": 60
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a91eb63_fe8f69cf",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-22T14:00:50Z",
+      "side": 1,
+      "message": "looking at this now, seems fine, but I think would have been possibly cleaner as a tree traversal/rewriting step.",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 20
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
