@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a991793_02152af3",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:57:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_5ee8d5aa",
+      "range": {
+        "startLine": 31,
+        "startChar": 39,
+        "endLine": 31,
+        "endChar": 59
+      },
+      "revId": "995c4ef8f70940a78c4ee92620d9353e1e7f4afe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_427c524e",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 6
@@ -59,6 +83,30 @@
       "writtenOn": "2016-07-22T14:45:47Z",
       "side": 1,
       "message": "nit: if you run git cl format this should fix the spacing on these comments",
+      "range": {
+        "startLine": 2231,
+        "startChar": 2,
+        "endLine": 2231,
+        "endChar": 15
+      },
+      "revId": "995c4ef8f70940a78c4ee92620d9353e1e7f4afe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_c21e2217",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2231,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T14:57:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_9eedfdbe",
       "range": {
         "startLine": 2231,
         "startChar": 2,
