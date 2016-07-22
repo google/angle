@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6a991793_c202a2d8",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "Hard to say what\u0027s actually the best option here - but leaving it EbpUndefined is fine for now I think. You could file a bug against ANGLE to look into this more, maybe the spec could be clarified.",
+      "parentUuid": "6a991793_42e212ca",
+      "range": {
+        "startLine": 659,
+        "startChar": 58,
+        "endLine": 659,
+        "endChar": 70
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_c2ed02be",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-22T12:02:59Z",
       "side": 1,
       "message": "Is there a better way to create an uvec3 built-in?",
+      "range": {
+        "startLine": 680,
+        "startChar": 10,
+        "endLine": 680,
+        "endChar": 24
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_229dcead",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "It\u0027s ivec3. You could add a helper function insertConstIvec3 to do this that would be similar to the pre-existing insertConstInt.",
+      "parentUuid": "6a991793_c2ed02be",
       "range": {
         "startLine": 680,
         "startChar": 10,
@@ -71,6 +119,53 @@
     },
     {
       "key": {
+        "uuid": "6a991793_42a0d2e7",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "Yep, that\u0027s right. All the pool allocator objects are freed once compilation is done.",
+      "parentUuid": "6a991793_e2f80682",
+      "range": {
+        "startLine": 684,
+        "startChar": 72,
+        "endLine": 684,
+        "endChar": 74
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_a2079ee6",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "Should be named maxAtomicCounterBufferBindings here, even if it is maxAtomicCounterBindings on the shader translator side.",
+      "range": {
+        "startLine": 652,
+        "startChar": 14,
+        "endLine": 652,
+        "endChar": 38
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_22df0e00",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -82,6 +177,30 @@
       "writtenOn": "2016-07-22T12:02:59Z",
       "side": 1,
       "message": "I am not sure whether this is the right constant.",
+      "range": {
+        "startLine": 653,
+        "startChar": 40,
+        "endLine": 653,
+        "endChar": 77
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca74c30d_c5cd9ab6",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 1,
+      "message": "It seems like it is, though the spec could be clearer about this.",
+      "parentUuid": "6a991793_22df0e00",
       "range": {
         "startLine": 653,
         "startChar": 40,

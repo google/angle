@@ -22,6 +22,30 @@
       "revId": "b21e20dae8aed33745f7836b296100f67ab6b248",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca74c30d_85d3a25b",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-22T12:35:59Z",
+      "side": 0,
+      "message": "You should configure your editor to leave in trailing whitespaces, and rely on git cl format to do that when it is necessary. Pure style changes are usually discouraged because they make it harder to see the history of the code.",
+      "parentUuid": "6a991793_42cb324a",
+      "range": {
+        "startLine": 21,
+        "startChar": 73,
+        "endLine": 21,
+        "endChar": 74
+      },
+      "revId": "b21e20dae8aed33745f7836b296100f67ab6b248",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
