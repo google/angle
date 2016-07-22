@@ -213,6 +213,12 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
 {
     if (!mChecksPrecisionErrors)
         return;
+
+    if (precision != EbpUndefined && !SupportsPrecision(type))
+    {
+        error(line, "illegal type for precision qualifier", getBasicString(type));
+    }
+
     if (precision == EbpUndefined)
     {
         switch (type)
@@ -923,27 +929,24 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     return true;
 }
 
-void TParseContext::checkIsParameterQualifierValid(const TSourceLoc &line,
-                                                   TQualifier qualifier,
-                                                   TQualifier paramQualifier,
-                                                   TType *type)
+void TParseContext::checkIsParameterQualifierValid(
+    const TSourceLoc &line,
+    const TTypeQualifierBuilder &typeQualifierBuilder,
+    TType *type)
 {
-    if (qualifier != EvqConst && qualifier != EvqTemporary)
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getParameterTypeQualifier(&mDiagnostics);
+
+    if (typeQualifier.qualifier == EvqOut || typeQualifier.qualifier == EvqInOut)
     {
-        error(line, "qualifier not allowed on function parameter", getQualifierString(qualifier));
-        return;
-    }
-    if (qualifier == EvqConst && paramQualifier != EvqIn)
-    {
-        error(line, "qualifier not allowed with ", getQualifierString(qualifier),
-              getQualifierString(paramQualifier));
-        return;
+        checkOutParameterIsNotSampler(line, typeQualifier.qualifier, *type);
     }
 
-    if (qualifier == EvqConst)
-        type->setQualifier(EvqConstReadOnly);
-    else
-        type->setQualifier(paramQualifier);
+    type->setQualifier(typeQualifier.qualifier);
+
+    if (typeQualifier.precision != EbpUndefined)
+    {
+        type->setPrecision(typeQualifier.precision);
+    }
 }
 
 bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &extension)
@@ -1072,12 +1075,27 @@ void TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate,
     }
 }
 
-void TParseContext::checkInvariantIsOutVariableES3(const TQualifier qualifier,
-                                                   const TSourceLoc &invariantLocation)
+void TParseContext::checkInvariantVariableQualifier(bool invariant,
+                                                    const TQualifier qualifier,
+                                                    const TSourceLoc &invariantLocation)
 {
-    if (!sh::IsVaryingOut(qualifier) && qualifier != EvqFragmentOut)
+    if (!invariant)
+        return;
+
+    if (mShaderVersion < 300)
     {
-        error(invariantLocation, "Only out variables can be invariant.", "invariant");
+        // input variables in the fragment shader can be also qualified as invariant
+        if (!sh::CanBeInvariantESSL1(qualifier))
+        {
+            error(invariantLocation, "Cannot be qualified as invariant.", "invariant");
+        }
+    }
+    else
+    {
+        if (!sh::CanBeInvariantESSL3OrGreater(qualifier))
+        {
+            error(invariantLocation, "Cannot be qualified as invariant.", "invariant");
+        }
     }
 }
 
@@ -1380,17 +1398,27 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     return false;
 }
 
-TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
-                                                 bool invariant,
-                                                 TLayoutQualifier layoutQualifier,
+TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &typeQualifierBuilder,
                                                  const TPublicType &typeSpecifier)
 {
-    TPublicType returnType     = typeSpecifier;
-    returnType.qualifier       = qualifier;
-    returnType.invariant       = invariant;
-    returnType.layoutQualifier = layoutQualifier;
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
 
-    checkWorkGroupSizeIsNotSpecified(typeSpecifier.line, layoutQualifier);
+    TPublicType returnType     = typeSpecifier;
+    returnType.qualifier       = typeQualifier.qualifier;
+    returnType.invariant       = typeQualifier.invariant;
+    returnType.layoutQualifier = typeQualifier.layoutQualifier;
+    returnType.precision       = typeSpecifier.precision;
+
+    if (typeQualifier.precision != EbpUndefined)
+    {
+        returnType.precision = typeQualifier.precision;
+    }
+
+    checkPrecisionSpecified(typeSpecifier.line, returnType.precision, typeSpecifier.type);
+
+    checkInvariantVariableQualifier(returnType.invariant, returnType.qualifier, typeSpecifier.line);
+
+    checkWorkGroupSizeIsNotSpecified(typeSpecifier.line, returnType.layoutQualifier);
 
     if (mShaderVersion < 300)
     {
@@ -1400,29 +1428,32 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
             returnType.clearArrayness();
         }
 
-        if (qualifier == EvqAttribute &&
+        if (returnType.qualifier == EvqAttribute &&
             (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
         {
-            error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+            error(typeSpecifier.line, "cannot be bool or int",
+                  getQualifierString(returnType.qualifier));
         }
 
-        if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) &&
+        if ((returnType.qualifier == EvqVaryingIn || returnType.qualifier == EvqVaryingOut) &&
             (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
         {
-            error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+            error(typeSpecifier.line, "cannot be bool or int",
+                  getQualifierString(returnType.qualifier));
         }
     }
     else
     {
-        if (!layoutQualifier.isEmpty())
+        if (!returnType.layoutQualifier.isEmpty())
         {
             checkIsAtGlobalLevel(typeSpecifier.line, "layout");
         }
-        if (sh::IsVarying(qualifier) || qualifier == EvqVertexIn || qualifier == EvqFragmentOut)
+        if (sh::IsVarying(returnType.qualifier) || returnType.qualifier == EvqVertexIn ||
+            returnType.qualifier == EvqFragmentOut)
         {
-            checkInputOutputTypeIsValidES3(qualifier, typeSpecifier, typeSpecifier.line);
+            checkInputOutputTypeIsValidES3(returnType.qualifier, typeSpecifier, typeSpecifier.line);
         }
-        if (qualifier == EvqComputeIn)
+        if (returnType.qualifier == EvqComputeIn)
         {
             error(typeSpecifier.line, "'in' can be only used to specify the local group size",
                   "in");
@@ -1663,40 +1694,58 @@ TIntermAggregate *TParseContext::parseSingleArrayInitDeclaration(
     }
 }
 
-TIntermAggregate *TParseContext::parseInvariantDeclaration(const TSourceLoc &invariantLoc,
-                                                           const TSourceLoc &identifierLoc,
-                                                           const TString *identifier,
-                                                           const TSymbol *symbol)
+TIntermAggregate *TParseContext::parseInvariantDeclaration(
+    const TTypeQualifierBuilder &typeQualifierBuilder,
+    const TSourceLoc &identifierLoc,
+    const TString *identifier,
+    const TSymbol *symbol)
 {
-    // invariant declaration
-    if (!checkIsAtGlobalLevel(invariantLoc, "invariant varying"))
-        return nullptr;
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
 
+    if (!typeQualifier.invariant)
+    {
+        error(identifierLoc, "Expected invariant", identifier->c_str());
+        return nullptr;
+    }
+    if (!checkIsAtGlobalLevel(identifierLoc, "invariant varying"))
+    {
+        return nullptr;
+    }
     if (!symbol)
     {
         error(identifierLoc, "undeclared identifier declared as invariant", identifier->c_str());
         return nullptr;
     }
-    else
+    if (!IsQualifierUnspecified(typeQualifier.qualifier))
     {
-        const TString kGlFrontFacing("gl_FrontFacing");
-        if (*identifier == kGlFrontFacing)
-        {
-            error(identifierLoc, "identifier should not be declared as invariant",
-                  identifier->c_str());
-            return nullptr;
-        }
-        symbolTable.addInvariantVarying(std::string(identifier->c_str()));
-        const TVariable *variable = getNamedVariable(identifierLoc, identifier, symbol);
-        ASSERT(variable);
-        const TType &type = variable->getType();
-        TIntermSymbol *intermSymbol =
-            intermediate.addSymbol(variable->getUniqueId(), *identifier, type, identifierLoc);
-
-        TIntermAggregate *aggregate = intermediate.makeAggregate(intermSymbol, identifierLoc);
-        aggregate->setOp(EOpInvariantDeclaration);
-        return aggregate;
+        error(identifierLoc, "invariant declaration specifies qualifier",
+              getQualifierString(typeQualifier.qualifier));
     }
+    if (typeQualifier.precision != EbpUndefined)
+    {
+        error(identifierLoc, "invariant declaration specifies precision",
+              getPrecisionString(typeQualifier.precision));
+    }
+    if (!typeQualifier.layoutQualifier.isEmpty())
+    {
+        error(identifierLoc, "invariant declaration specifies layout", "'layout'");
+    }
+
+    const TVariable *variable = getNamedVariable(identifierLoc, identifier, symbol);
+    ASSERT(variable);
+    const TType &type = variable->getType();
+
+    checkInvariantVariableQualifier(typeQualifier.invariant, type.getQualifier(),
+                                    typeQualifier.line);
+
+    symbolTable.addInvariantVarying(std::string(identifier->c_str()));
+
+    TIntermSymbol *intermSymbol =
+        intermediate.addSymbol(variable->getUniqueId(), *identifier, type, identifierLoc);
+
+    TIntermAggregate *aggregate = intermediate.makeAggregate(intermSymbol, identifierLoc);
+    aggregate->setOp(EOpInvariantDeclaration);
+    return aggregate;
 }
 
 TIntermAggregate *TParseContext::parseDeclarator(TPublicType &publicType,
@@ -1857,9 +1906,13 @@ TIntermAggregate *TParseContext::parseArrayInitDeclarator(const TPublicType &pub
     }
 }
 
-void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
+void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder)
 {
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
     const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
+
+    checkInvariantVariableQualifier(typeQualifier.invariant, typeQualifier.qualifier,
+                                    typeQualifier.line);
 
     // It should never be the case, but some strange parser errors can send us here.
     if (layoutQualifier.isEmpty())
@@ -2421,21 +2474,29 @@ TIntermTyped *TParseContext::addConstStruct(const TString &identifier,
 //
 // Interface/uniform blocks
 //
-TIntermAggregate *TParseContext::addInterfaceBlock(const TPublicType &typeQualifier,
-                                                   const TSourceLoc &nameLine,
-                                                   const TString &blockName,
-                                                   TFieldList *fieldList,
-                                                   const TString *instanceName,
-                                                   const TSourceLoc &instanceLine,
-                                                   TIntermTyped *arrayIndex,
-                                                   const TSourceLoc &arrayIndexLine)
+TIntermAggregate *TParseContext::addInterfaceBlock(
+    const TTypeQualifierBuilder &typeQualifierBuilder,
+    const TSourceLoc &nameLine,
+    const TString &blockName,
+    TFieldList *fieldList,
+    const TString *instanceName,
+    const TSourceLoc &instanceLine,
+    TIntermTyped *arrayIndex,
+    const TSourceLoc &arrayIndexLine)
 {
     checkIsNotReserved(nameLine, blockName);
+
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
 
     if (typeQualifier.qualifier != EvqUniform)
     {
         error(typeQualifier.line, "invalid qualifier:", getQualifierString(typeQualifier.qualifier),
               "interface blocks must be uniform");
+    }
+
+    if (typeQualifier.invariant)
+    {
+        error(typeQualifier.line, "invalid qualifier on interface block member", "invariant");
     }
 
     TLayoutQualifier blockLayoutQualifier = typeQualifier.layoutQualifier;
@@ -2480,6 +2541,11 @@ TIntermAggregate *TParseContext::addInterfaceBlock(const TPublicType &typeQualif
                 error(field->line(), "invalid qualifier on interface block member",
                       getQualifierString(qualifier));
                 break;
+        }
+
+        if (fieldType->isInvariant())
+        {
+            error(field->line(), "invalid qualifier on interface block member", "invariant");
         }
 
         // check layout qualifiers
@@ -3140,66 +3206,28 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
     return joinedQualifier;
 }
 
-TPublicType TParseContext::joinInterpolationQualifiers(const TSourceLoc &interpolationLoc,
-                                                       TQualifier interpolationQualifier,
-                                                       const TSourceLoc &storageLoc,
-                                                       TQualifier storageQualifier)
+TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
+    const TTypeQualifierBuilder &typeQualifierBuilder,
+    TPublicType *typeSpecifier,
+    TFieldList *fieldList)
 {
-    TQualifier mergedQualifier = EvqSmoothIn;
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
 
-    if (storageQualifier == EvqFragmentIn)
+    typeSpecifier->qualifier       = typeQualifier.qualifier;
+    typeSpecifier->layoutQualifier = typeQualifier.layoutQualifier;
+    typeSpecifier->invariant       = typeQualifier.invariant;
+    if (typeQualifier.precision != EbpUndefined)
     {
-        if (interpolationQualifier == EvqSmooth)
-            mergedQualifier = EvqSmoothIn;
-        else if (interpolationQualifier == EvqFlat)
-            mergedQualifier = EvqFlatIn;
-        else
-            UNREACHABLE();
+        typeSpecifier->precision = typeQualifier.precision;
     }
-    else if (storageQualifier == EvqCentroidIn)
-    {
-        if (interpolationQualifier == EvqSmooth)
-            mergedQualifier = EvqCentroidIn;
-        else if (interpolationQualifier == EvqFlat)
-            mergedQualifier = EvqFlatIn;
-        else
-            UNREACHABLE();
-    }
-    else if (storageQualifier == EvqVertexOut)
-    {
-        if (interpolationQualifier == EvqSmooth)
-            mergedQualifier = EvqSmoothOut;
-        else if (interpolationQualifier == EvqFlat)
-            mergedQualifier = EvqFlatOut;
-        else
-            UNREACHABLE();
-    }
-    else if (storageQualifier == EvqCentroidOut)
-    {
-        if (interpolationQualifier == EvqSmooth)
-            mergedQualifier = EvqCentroidOut;
-        else if (interpolationQualifier == EvqFlat)
-            mergedQualifier = EvqFlatOut;
-        else
-            UNREACHABLE();
-    }
-    else
-    {
-        error(interpolationLoc,
-              "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier",
-              getInterpolationString(interpolationQualifier));
-
-        mergedQualifier = storageQualifier;
-    }
-
-    TPublicType type;
-    type.setBasic(EbtVoid, mergedQualifier, storageLoc);
-    return type;
+    return addStructDeclaratorList(*typeSpecifier, fieldList);
 }
 
 TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecifier,
                                                    TFieldList *fieldList)
 {
+    checkPrecisionSpecified(typeSpecifier.line, typeSpecifier.precision, typeSpecifier.type);
+
     checkIsNonVoid(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier.type);
 
     checkWorkGroupSizeIsNotSpecified(typeSpecifier.line, typeSpecifier.layoutQualifier);
@@ -3216,6 +3244,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         type->setPrecision(typeSpecifier.precision);
         type->setQualifier(typeSpecifier.qualifier);
         type->setLayoutQualifier(typeSpecifier.layoutQualifier);
+        type->setInvariant(typeSpecifier.invariant);
 
         // don't allow arrays of arrays
         if (type->isArray())
@@ -3273,6 +3302,12 @@ TPublicType TParseContext::addStructure(const TSourceLoc &structLine,
                       getQualifierString(qualifier));
                 break;
         }
+        if (field.type()->isInvariant())
+        {
+            error(field.line(), "invalid qualifier on struct member", "invariant");
+        }
+
+        checkLocationIsNotSpecified(field.line(), field.type()->getLayoutQualifier());
     }
 
     TPublicType publicType;

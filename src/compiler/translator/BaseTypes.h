@@ -341,10 +341,11 @@ enum TQualifier
     EvqLastFragData,
 
     // GLSL ES 3.0 vertex output and fragment input
-    EvqSmooth,  // Incomplete qualifier, smooth is the default
-    EvqFlat,    // Incomplete qualifier
-    EvqSmoothOut = EvqSmooth,
-    EvqFlatOut   = EvqFlat,
+    EvqSmooth,    // Incomplete qualifier, smooth is the default
+    EvqFlat,      // Incomplete qualifier
+    EvqCentroid,  // Incomplete qualifier
+    EvqSmoothOut,
+    EvqFlatOut,
     EvqCentroidOut,  // Implies smooth
     EvqSmoothIn,
     EvqFlatIn,
@@ -362,6 +363,11 @@ enum TQualifier
     // end of list
     EvqLast
 };
+
+inline bool IsQualifierUnspecified(TQualifier qualifier)
+{
+    return (qualifier == EvqTemporary || qualifier == EvqGlobal);
+}
 
 enum TLayoutMatrixPacking
 {
@@ -482,6 +488,9 @@ inline const char* getQualifierString(TQualifier q)
     case EvqSmoothIn:               return "smooth in";
     case EvqFlatIn:                 return "flat in";
     case EvqCentroidIn:             return "smooth centroid in";
+    case EvqCentroid:               return "centroid";
+    case EvqFlat:                   return "flat";
+    case EvqSmooth:                 return "smooth";
     case EvqComputeIn:              return "in";
     case EvqNumWorkGroups:          return "NumWorkGroups";
     case EvqWorkGroupSize:          return "WorkGroupSize";

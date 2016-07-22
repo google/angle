@@ -216,6 +216,8 @@ union YYSTYPE
             TParameter param;
             TField* field;
             TFieldList* fieldList;
+            TQualifierWrapperBase *qualifierWrapper;
+            TTypeQualifierBuilder *typeQualifierBuilder;
         };
     } interm;
 

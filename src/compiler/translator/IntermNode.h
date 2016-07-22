@@ -532,6 +532,7 @@ class TIntermAggregate : public TIntermOperator
     TIntermTyped *fold(TInfoSink &infoSink);
 
     TIntermSequence *getSequence() { return &mSequence; }
+    const TIntermSequence *getSequence() const { return &mSequence; }
 
     void setNameObj(const TName &name) { mName = name; }
     const TName &getNameObj() const { return mName; }

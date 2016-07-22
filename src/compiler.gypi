@@ -81,6 +81,8 @@
             'compiler/translator/Pragma.h',
             'compiler/translator/PruneEmptyDeclarations.cpp',
             'compiler/translator/PruneEmptyDeclarations.h',
+            'compiler/translator/QualifierTypes.h',
+            'compiler/translator/QualifierTypes.cpp',
             'compiler/translator/RecordConstantPrecision.cpp',
             'compiler/translator/RecordConstantPrecision.h',
             'compiler/translator/RegenerateStructNames.cpp',
