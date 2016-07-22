@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a991793_22414e3f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Did so. I wasn\u0027t able to find the minimum values for some constants, so I just used the ones in the dEQP tests.",
+      "parentUuid": "6a991793_2245ce6a",
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_624bd683",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -42,6 +60,98 @@
     },
     {
       "key": {
+        "uuid": "6a991793_0202ca62",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Is there a better way to add an uvec3 builtin?",
+      "range": {
+        "startLine": 680,
+        "startChar": 26,
+        "endLine": 680,
+        "endChar": 49
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_4244524f",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "I noticed that this minimum value has changed in ES3 and newer.\nIn ES3.0 it is 16. Does this have any significance?\nAt a later stage, we do query for the maximum value supported by the hardware.",
+      "range": {
+        "startLine": 139,
+        "startChar": 15,
+        "endLine": 139,
+        "endChar": 36
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_c2fbc26a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Giving the possibility to set the precision explicitly might be pointless. I added it so that I can set the precision to medium for some of the newly added builtins. However, ANGLE might be setting it to medium somewhere else in the code already.",
+      "range": {
+        "startLine": 386,
+        "startChar": 47,
+        "endLine": 386,
+        "endChar": 59
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_2236ee4d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1422,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Not sure whether this is the correct constant.",
+      "range": {
+        "startLine": 1422,
+        "startChar": 11,
+        "endLine": 1422,
+        "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_0221aab9",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 2
@@ -58,6 +168,53 @@
         "startChar": 31,
         "endLine": 602,
         "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_e26126e2",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "I used the version in which compute shaders got officially included in OpenGL.\nImages and atomic operations were included in 4.2. They do not require support for compute shaders since they can also be used in a vertex/fragment shader.\nSSBOs were included in 4.3.\nWould it make sense to separate them?",
+      "parentUuid": "6a991793_0221aab9",
+      "range": {
+        "startLine": 602,
+        "startChar": 31,
+        "endLine": 602,
+        "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a991793_4239f23d",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-22T12:02:59Z",
+      "side": 1,
+      "message": "Not sure whether this is the correct constant.",
+      "range": {
+        "startLine": 653,
+        "startChar": 40,
+        "endLine": 653,
+        "endChar": 77
       },
       "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
