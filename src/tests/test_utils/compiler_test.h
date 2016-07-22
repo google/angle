@@ -11,8 +11,10 @@
 
 #include <map>
 
-#include "angle_gl.h"
 #include "gtest/gtest.h"
+
+#include "angle_gl.h"
+#include "compiler/translator/TranslatorESSL.h"
 #include "GLSLANG/ShaderLang.h"
 
 bool compileTestShader(GLenum type,
@@ -83,6 +85,34 @@ class MatchOutputCodeTest : public testing::Test
     ShBuiltInResources mResources;
 
     std::map<ShShaderOutput, std::string> mOutputCode;
+};
+
+class ShaderVariableFinder : public TIntermTraverser
+{
+  public:
+    ShaderVariableFinder(const TString &variableName, TBasicType basicType)
+        : TIntermTraverser(true, false, false),
+          mVariableName(variableName),
+          mNodeFound(nullptr),
+          mBasicType(basicType)
+    {
+    }
+
+    void visitSymbol(TIntermSymbol *node)
+    {
+        if (node->getBasicType() == mBasicType && node->getSymbol() == mVariableName)
+        {
+            mNodeFound = node;
+        }
+    }
+
+    bool isFound() const { return mNodeFound != nullptr; }
+    const TIntermSymbol *getNode() const { return mNodeFound; }
+
+  private:
+    TString mVariableName;
+    TIntermSymbol *mNodeFound;
+    TBasicType mBasicType;
 };
 
 #endif // TESTS_TEST_UTILS_COMPILER_TEST_H_

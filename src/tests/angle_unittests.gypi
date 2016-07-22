@@ -56,6 +56,7 @@
             '<(angle_path)/src/tests/compiler_tests/Pack_Unpack_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneEmptyDeclarations_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/PruneUnusedFunctions_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/QualificationOrderESSL31_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/QualificationOrder_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RecordConstantPrecision_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RemovePow_test.cpp',
