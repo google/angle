@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_cf897f23",
+        "filename": "src/libANGLE/Image.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-23T00:10:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_ccd18d54",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "ca07f5714793ae1b47c70b8000cd4bcb6ffeff74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_acde8133",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_f2d6a2f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-23T00:10:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_acde8133",
+      "range": {
+        "startLine": 284,
+        "startChar": 12,
+        "endLine": 284,
+        "endChar": 62
+      },
+      "revId": "ca07f5714793ae1b47c70b8000cd4bcb6ffeff74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_6cd87947",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2016-07-22T23:40:16Z",
       "side": 1,
       "message": "Same nit.",
+      "range": {
+        "startLine": 1792,
+        "startChar": 8,
+        "endLine": 1792,
+        "endChar": 72
+      },
+      "revId": "ca07f5714793ae1b47c70b8000cd4bcb6ffeff74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_72cb724a",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-23T00:10:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_6cd87947",
       "range": {
         "startLine": 1792,
         "startChar": 8,
