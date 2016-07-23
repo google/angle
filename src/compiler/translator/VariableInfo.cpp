@@ -70,7 +70,8 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
                                    std::vector<sh::Varying> *varyings,
                                    std::vector<sh::InterfaceBlock> *interfaceBlocks,
                                    ShHashFunction64 hashFunction,
-                                   const TSymbolTable &symbolTable)
+                                   const TSymbolTable &symbolTable,
+                                   const TExtensionBehavior &extensionBehavior)
     : TIntermTraverser(true, false, false),
       mAttribs(attribs),
       mOutputVariables(outputVariables),
@@ -93,7 +94,8 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
       mHashFunction(hashFunction),
-      mSymbolTable(symbolTable)
+      mSymbolTable(symbolTable),
+      mExtensionBehavior(extensionBehavior)
 {
 }
 
@@ -349,10 +351,17 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
                   info.name          = kName;
                   info.mappedName    = kName;
                   info.type          = GL_FLOAT_VEC4;
-                  info.arraySize = static_cast<const TVariable *>(
-                                       mSymbolTable.findBuiltIn("gl_MaxDrawBuffers", 100))
-                                       ->getConstPointer()
-                                       ->getIConst();
+                  if (::IsExtensionEnabled(mExtensionBehavior, "GL_EXT_draw_buffers"))
+                  {
+                      info.arraySize = static_cast<const TVariable *>(
+                                           mSymbolTable.findBuiltIn("gl_MaxDrawBuffers", 100))
+                                           ->getConstPointer()
+                                           ->getIConst();
+                  }
+                  else
+                  {
+                      info.arraySize = 1;
+                  }
                   info.precision = GL_MEDIUM_FLOAT;  // Defined by spec.
                   info.staticUse = true;
                   mOutputVariables->push_back(info);
