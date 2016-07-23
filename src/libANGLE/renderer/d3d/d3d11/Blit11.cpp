@@ -1998,6 +1998,16 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     context->OMSetRenderTargets(1, &mResolvedDepthStencilRTView, nullptr);
     context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
+    // Set the viewport
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width    = static_cast<FLOAT>(extents.width);
+    viewport.Height   = static_cast<FLOAT>(extents.height);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    context->RSSetViewports(1, &viewport);
+
     ID3D11ShaderResourceView *pixelViews[] = {
         depthStencil->getShaderResourceView(), mStencilSRV,
     };
