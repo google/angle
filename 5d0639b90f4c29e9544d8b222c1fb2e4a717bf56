@@ -450,6 +450,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_60cb984a",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T01:37:35Z",
+      "side": 1,
+      "message": "\u003e Did you mean \"#version 300 es\"? Input varyings invariance is\n \u003e implicit there.\n\nI meant both \"#version 300\" and \"#version 300 es\". In the upgrade of the base shading language from version 1.00 to 3.00, when input variables\u0027 invariance became implicit, I think the rules were clarified better than in version 1.00.\n\n \u003e Generally, in GLSL:\n \u003e Only variables output from a shader (including those that are then\n \u003e input to a subsequent shader) can be candidates for invariance.\n \u003e This includes user-defined output variables and the built-in output\n \u003e variables.\n \u003e GLSL 1.20.8 is more explicit:\n \u003e This includes user-defined varying variables, the built-in\n \u003e vertex-side varying variables, and the special vertex variables\n \u003e gl_Position and gl_PointSize.\n \nThe spec text is confusing. While the output variables from the vertex shader are the candidates for invariance, the input variables in the fragment shader have to be marked invariant in versions 1.x of the shading language (both GLSL and ESSL) for linkage to succeed.\n\n \u003e I think since gl_FragColor and gl_FragData are built-in input\n \u003e variables, they do not fall into that category. Though, I have been\n \u003e mistaken before :)\n \nThese are actually built-in output variables.\n\n \u003e ESSL 1.00.17 paragraph 4.6.4 \"Invariance and Linkage\" says:\n \u003e The invariance of varyings that are declared in both the vertex and\n \u003e fragment shaders must match.\n \u003e For the built-in special variables, gl_FragCoord can only be\n \u003e declared invariant if and only if gl_Position is declared\n \u003e invariant. Similarly gl_PointCoord can only be declared invariant\n \u003e if and only if gl_PointSize is declared invariant. It is an error\n \u003e to declare gl_FrontFacing as invariant. The invariance of\n \u003e gl_FrontFacing is the same as the invariance of gl_Position.\n \u003e \n \u003e Do you think all desktop GL drivers implement that?\n\nYes, it looks to me like the invariance requirements between gl_Position and gl_FragCoord, and between gl_PointSize and gl_PointCoord, are enforced well by drivers for version 1.x shaders (both desktop GL and ES). At least, the tests verify this to a certain degree (though I\u0027m not sure they test the effects of the #pragma with these built-ins), and the positive and negative tests both work properly.",
+      "parentUuid": "ea48a7ff_b5cb241b",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91eb63_fe8f69cf",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
