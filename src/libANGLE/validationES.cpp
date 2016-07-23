@@ -708,8 +708,7 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
 
         if (readColorBuffer && drawColorBuffer)
         {
-            GLenum readInternalFormat = readColorBuffer->getInternalFormat();
-            const InternalFormat &readFormatInfo = GetInternalFormatInfo(readInternalFormat);
+            const Format &readFormat = readColorBuffer->getFormat();
 
             for (size_t drawbufferIdx = 0;
                  drawbufferIdx < drawFramebuffer->getDrawbufferStateCount(); ++drawbufferIdx)
@@ -718,8 +717,7 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                     drawFramebuffer->getDrawBuffer(drawbufferIdx);
                 if (attachment)
                 {
-                    GLenum drawInternalFormat            = attachment->getInternalFormat();
-                    const InternalFormat &drawFormatInfo = GetInternalFormatInfo(drawInternalFormat);
+                    const Format &drawFormat = attachment->getFormat();
 
                     // The GL ES 3.0.2 spec (pg 193) states that:
                     // 1) If the read buffer is fixed point format, the draw buffer must be as well
@@ -727,8 +725,8 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                     // 3) If the read buffer is a signed integer format, the draw buffer must be as well
                     // Changes with EXT_color_buffer_float:
                     // Case 1) is changed to fixed point OR floating point
-                    GLenum readComponentType = readFormatInfo.componentType;
-                    GLenum drawComponentType = drawFormatInfo.componentType;
+                    GLenum readComponentType = readFormat.info->componentType;
+                    GLenum drawComponentType = drawFormat.info->componentType;
                     bool readFixedPoint = (readComponentType == GL_UNSIGNED_NORMALIZED ||
                                            readComponentType == GL_SIGNED_NORMALIZED);
                     bool drawFixedPoint = (drawComponentType == GL_UNSIGNED_NORMALIZED ||
@@ -769,7 +767,8 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                         return false;
                     }
 
-                    if (readColorBuffer->getSamples() > 0 && (readInternalFormat != drawInternalFormat || !sameBounds))
+                    if (readColorBuffer->getSamples() > 0 &&
+                        (!Format::SameSized(readFormat, drawFormat) || !sameBounds))
                     {
                         context->handleError(Error(GL_INVALID_OPERATION));
                         return false;
@@ -777,7 +776,9 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                 }
             }
 
-            if ((readFormatInfo.componentType == GL_INT || readFormatInfo.componentType == GL_UNSIGNED_INT) && filter == GL_LINEAR)
+            if ((readFormat.info->componentType == GL_INT ||
+                 readFormat.info->componentType == GL_UNSIGNED_INT) &&
+                filter == GL_LINEAR)
             {
                 context->handleError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -796,7 +797,7 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
 
             if (readBuffer && drawBuffer)
             {
-                if (readBuffer->getInternalFormat() != drawBuffer->getInternalFormat())
+                if (!Format::SameSized(readBuffer->getFormat(), drawBuffer->getFormat()))
                 {
                     context->handleError(Error(GL_INVALID_OPERATION));
                     return false;
@@ -1119,7 +1120,7 @@ bool ValidateReadPixels(ValidationContext *context,
 
     GLenum currentFormat = framebuffer->getImplementationColorReadFormat();
     GLenum currentType = framebuffer->getImplementationColorReadType();
-    GLenum currentInternalFormat = readBuffer->getInternalFormat();
+    GLenum currentInternalFormat = readBuffer->getFormat().asSized();
     GLuint clientVersion         = context->getClientMajorVersion();
 
     bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(context, format, type) :
@@ -1785,7 +1786,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
         }
     }
 
-    *textureFormatOut = texture->getInternalFormat(target, level);
+    *textureFormatOut = texture->getFormat(target, level).asSized();
     return true;
 }
 
@@ -2262,8 +2263,8 @@ bool ValidateFramebufferTexture2D(Context *context, GLenum target, GLenum attach
             return false;
         }
 
-        const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(tex->getInternalFormat(textarget, level));
-        if (internalFormatInfo.compressed)
+        const Format &format = tex->getFormat(textarget, level);
+        if (format.info->compressed)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;
@@ -2490,7 +2491,7 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
         return false;
     }
 
-    const TextureCaps &textureCaps = context->getTextureCaps().get(image->getInternalFormat());
+    const TextureCaps &textureCaps = context->getTextureCaps().get(image->getFormat().asSized());
     if (!textureCaps.texturable)
     {
         context->handleError(Error(GL_INVALID_OPERATION,
@@ -2528,7 +2529,7 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
         return false;
     }
 
-    const TextureCaps &textureCaps = context->getTextureCaps().get(image->getInternalFormat());
+    const TextureCaps &textureCaps = context->getTextureCaps().get(image->getFormat().asSized());
     if (!textureCaps.renderable)
     {
         context->handleError(Error(
@@ -2999,10 +3000,9 @@ bool ValidateGenerateMipmap(Context *context, GLenum target)
         return false;
     }
 
-    GLenum baseTarget                = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
-    GLenum internalFormat            = texture->getInternalFormat(baseTarget, effectiveBaseLevel);
-    const TextureCaps &formatCaps    = context->getTextureCaps().get(internalFormat);
-    const InternalFormat &formatInfo = GetInternalFormatInfo(internalFormat);
+    GLenum baseTarget  = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
+    const auto &format = texture->getFormat(baseTarget, effectiveBaseLevel);
+    const TextureCaps &formatCaps = context->getTextureCaps().get(format.asSized());
 
     // GenerateMipmap should not generate an INVALID_OPERATION for textures created with
     // unsized formats or that are color renderable and filterable.  Since we do not track if
@@ -3012,18 +3012,15 @@ bool ValidateGenerateMipmap(Context *context, GLenum target)
     // textures since they're the only texture format that can be created with unsized formats
     // that is not color renderable.  New unsized formats are unlikely to be added, since ES2
     // was the last version to use add them.
-    bool isLUMA = internalFormat == GL_LUMINANCE8_EXT ||
-                  internalFormat == GL_LUMINANCE8_ALPHA8_EXT || internalFormat == GL_ALPHA8_EXT;
-
-    if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0 || !formatCaps.filterable ||
-        (!formatCaps.renderable && !isLUMA) || formatInfo.compressed)
+    if (format.info->depthBits > 0 || format.info->stencilBits > 0 || !formatCaps.filterable ||
+        (!formatCaps.renderable && !format.info->isLUMA()) || format.info->compressed)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
     // GL_EXT_sRGB does not support mipmap generation on sRGB textures
-    if (context->getClientMajorVersion() == 2 && formatInfo.colorEncoding == GL_SRGB)
+    if (context->getClientMajorVersion() == 2 && format.info->colorEncoding == GL_SRGB)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;

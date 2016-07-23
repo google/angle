@@ -387,7 +387,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
     }
 
     // Validate texture formats
-    GLenum actualInternalFormat = isSubImage ? texture->getInternalFormat(target, level) : internalformat;
+    GLenum actualInternalFormat =
+        isSubImage ? texture->getFormat(target, level).asSized() : internalformat;
     const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualInternalFormat);
     if (isCompressed)
     {
@@ -911,13 +912,14 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
                                            GLsizei height,
                                            GLint border)
 {
-    GLenum textureInternalFormat;
+    GLenum textureInternalFormat = GL_NONE;
     if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
                                             xoffset, yoffset, zoffset, x, y, width, height,
                                             border, &textureInternalFormat))
     {
         return false;
     }
+    ASSERT(textureInternalFormat != GL_NONE || !isSubImage);
 
     const auto &state            = context->getGLState();
     gl::Framebuffer *framebuffer = state.getReadFramebuffer();
@@ -936,7 +938,7 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
     }
 
     const gl::FramebufferAttachment *source = framebuffer->getReadColorbuffer();
-    GLenum colorbufferInternalFormat = source->getInternalFormat();
+    GLenum colorbufferInternalFormat        = source->getFormat().asSized();
 
     if (isSubImage)
     {
@@ -1271,8 +1273,8 @@ bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum att
             return false;
         }
 
-        const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(tex->getInternalFormat(tex->getTarget(), level));
-        if (internalFormatInfo.compressed)
+        const auto &format = tex->getFormat(tex->getTarget(), level);
+        if (format.info->compressed)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;

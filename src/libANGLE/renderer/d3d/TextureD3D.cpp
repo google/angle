@@ -991,9 +991,9 @@ gl::Error TextureD3D_2D::setEGLImageTarget(GLenum target, egl::Image *image)
     EGLImageD3D *eglImaged3d = GetImplAs<EGLImageD3D>(image);
 
     // Set the properties of the base mip level from the EGL image
-    GLenum internalformat = image->getInternalFormat();
+    const auto &format = image->getFormat();
     gl::Extents size(static_cast<int>(image->getWidth()), static_cast<int>(image->getHeight()), 1);
-    redefineImage(0, internalformat, size, true);
+    redefineImage(0, format.asSized(), size, true);
 
     // Clear all other images.
     for (size_t level = 1; level < ArraySize(mImageArray); level++)

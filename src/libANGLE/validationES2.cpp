@@ -280,7 +280,8 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
     {
         if (format != GL_NONE)
         {
-            if (gl::GetSizedInternalFormat(format, type) != texture->getInternalFormat(target, level))
+            if (gl::GetSizedInternalFormat(format, type) !=
+                texture->getFormat(target, level).asSized())
             {
                 context->handleError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -313,7 +314,7 @@ bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level,
     if (isCompressed)
     {
         GLenum actualInternalFormat =
-            isSubImage ? texture->getInternalFormat(target, level) : internalformat;
+            isSubImage ? texture->getFormat(target, level).asSized() : internalformat;
         switch (actualInternalFormat)
         {
           case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
@@ -644,7 +645,7 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
     }
 
     const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
-    GLenum colorbufferFormat = framebuffer->getReadColorbuffer()->getInternalFormat();
+    GLenum colorbufferFormat           = framebuffer->getReadColorbuffer()->getFormat().asSized();
     const auto &internalFormatInfo = gl::GetInternalFormatInfo(textureInternalFormat);
     GLenum textureFormat = internalFormatInfo.format;
 
@@ -1832,7 +1833,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                     }
 
                     // Return an error if the destination formats do not match
-                    if (attachment->getInternalFormat() != readColorAttachment->getInternalFormat())
+                    if (!Format::SameSized(attachment->getFormat(),
+                                           readColorAttachment->getFormat()))
                     {
                         context->handleError(Error(GL_INVALID_OPERATION));
                         return false;

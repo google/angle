@@ -17,6 +17,7 @@
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
 
 #include <EGL/eglext.h>
 
@@ -58,7 +59,7 @@ bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::T
             for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget;
                  face++)
             {
-                if (texture->getInternalFormat(face, level) != GL_NONE)
+                if (texture->getFormat(face, level).valid())
                 {
                     return true;
                 }
@@ -66,7 +67,7 @@ bool TextureHasNonZeroMipLevelsSpecified(const gl::Context *context, const gl::T
         }
         else
         {
-            if (texture->getInternalFormat(texture->getTarget(), level) != GL_NONE)
+            if (texture->getFormat(texture->getTarget(), level).valid())
             {
                 return true;
             }
@@ -81,7 +82,7 @@ bool CubeTextureHasUnspecifiedLevel0Face(const gl::Texture *texture)
     ASSERT(texture->getTarget() == GL_TEXTURE_CUBE_MAP);
     for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget; face++)
     {
-        if (texture->getInternalFormat(face, 0) == GL_NONE)
+        if (!texture->getFormat(face, 0).valid())
         {
             return true;
         }

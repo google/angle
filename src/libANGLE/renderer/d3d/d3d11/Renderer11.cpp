@@ -2365,7 +2365,7 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
 void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
 {
     unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
-    GLenum internalFormat = texture.getInternalFormat(texture.getTarget(), baseLevel);
+    GLenum sizedFormat     = texture.getFormat(texture.getTarget(), baseLevel).asSized();
     if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
     {
         mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
@@ -2378,7 +2378,7 @@ void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const g
     bool needIntegerTextureMetadata = false;
     // internalFormatBits == 0 means a 32-bit texture in the case of integer textures.
     int internalFormatBits = 0;
-    switch (internalFormat)
+    switch (sizedFormat)
     {
         case GL_RGBA32I:
         case GL_RGBA32UI:

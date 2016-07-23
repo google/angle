@@ -356,7 +356,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const gl::FramebufferAttachment *srcAttachment = sourceFBO->getReadColorbuffer();
     ASSERT(srcAttachment);
 
-    GLenum sourceInternalFormat = srcAttachment->getInternalFormat();
+    GLenum sourceInternalFormat = srcAttachment->getFormat().asSized();
     const auto &d3d11Format =
         d3d11::GetTextureFormatInfo(sourceInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
