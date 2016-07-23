@@ -426,6 +426,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_b5cb241b",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-23T01:07:56Z",
+      "side": 1,
+      "message": "Did you mean \"#version 300 es\"? Input varyings invariance is implicit there.\n\nGenerally, in GLSL:\nOnly variables output from a shader (including those that are then input to a subsequent shader) can be candidates for invariance. This includes user-defined output variables and the built-in output variables.\nGLSL 1.20.8 is more explicit:\nThis includes user-defined varying variables, the built-in vertex-side varying variables, and the special vertex variables gl_Position and gl_PointSize.\n\nI think since gl_FragColor and gl_FragData are built-in input variables, they do not fall into that category. Though, I have been mistaken before :)\n\nESSL 1.00.17 paragraph 4.6.4 \"Invariance and Linkage\" says:\nThe invariance of varyings that are declared in both the vertex and fragment shaders must match.\nFor the built-in special variables, gl_FragCoord can only be declared invariant if and only if gl_Position is declared invariant. Similarly gl_PointCoord can only be declared invariant if and only if gl_PointSize is declared invariant. It is an error to declare gl_FrontFacing as invariant. The invariance of gl_FrontFacing is the same as the invariance of gl_Position.\n\nDo you think all desktop GL drivers implement that?",
+      "parentUuid": "ea48a7ff_0f1e8766",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91eb63_fe8f69cf",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
