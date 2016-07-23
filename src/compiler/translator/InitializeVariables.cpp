@@ -158,7 +158,7 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
             TStructure *structure = new TStructure(new TString(var.structName.c_str()), fields);
             TType type;
             type.setStruct(structure);
-            for (int ii = 0; ii < static_cast<int>(var.fields.size()); ++ii)
+            for (int fieldIndex = 0; fieldIndex < static_cast<int>(var.fields.size()); ++fieldIndex)
             {
                 TIntermBinary *assign = new TIntermBinary(EOpAssign);
                 sequence->insert(sequence->begin(), assign);
@@ -166,11 +166,11 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
                 TIntermBinary *indexDirectStruct = new TIntermBinary(EOpIndexDirectStruct);
                 TIntermSymbol *symbol            = new TIntermSymbol(0, name, type);
                 indexDirectStruct->setLeft(symbol);
-                TIntermConstantUnion *indexNode = constructIndexNode(ii);
+                TIntermConstantUnion *indexNode = constructIndexNode(fieldIndex);
                 indexDirectStruct->setRight(indexNode);
                 assign->setLeft(indexDirectStruct);
 
-                const sh::ShaderVariable &field = var.fields[ii];
+                const sh::ShaderVariable &field = var.fields[fieldIndex];
                 TType fieldType                 = sh::ConvertShaderVariableTypeToTType(field.type);
                 TIntermConstantUnion *zeroConst = constructConstUnionNode(fieldType);
                 assign->setRight(zeroConst);
