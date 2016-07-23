@@ -122,14 +122,6 @@
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_float_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_fixed_fragment = FAIL
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureprojoffset.sampler3d_float_fragment = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_rgba = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_alpha = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_luminance_alpha = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.2d_rgb = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_rgba = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_alpha = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_luminance_alpha = FAIL
-1095 WIN : dEQP-GLES3.functional.texture.specification.basic_copytexsubimage2d.cube_rgb = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
 1096 WIN : dEQP-GLES3.functional.fragment_ops.depth_stencil.write_mask.* = FAIL

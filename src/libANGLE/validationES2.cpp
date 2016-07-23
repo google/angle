@@ -630,29 +630,28 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
                                        GLsizei height,
                                        GLint border)
 {
-    GLenum textureInternalFormat = GL_NONE;
-
     if (!ValidTexture2DDestinationTarget(context, target))
     {
         context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
         return false;
     }
 
+    Format textureFormat = Format::Invalid();
     if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
-                                            xoffset, yoffset, 0, x, y, width, height, border, &textureInternalFormat))
+                                            xoffset, yoffset, 0, x, y, width, height, border,
+                                            &textureFormat))
     {
         return false;
     }
 
     const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
     GLenum colorbufferFormat           = framebuffer->getReadColorbuffer()->getFormat().asSized();
-    const auto &internalFormatInfo = gl::GetInternalFormatInfo(textureInternalFormat);
-    GLenum textureFormat = internalFormatInfo.format;
+    const auto &formatInfo             = *textureFormat.info;
 
     // [OpenGL ES 2.0.24] table 3.9
     if (isSubImage)
     {
-        switch (textureFormat)
+        switch (formatInfo.format)
         {
           case GL_ALPHA:
             if (colorbufferFormat != GL_ALPHA8_EXT &&
@@ -750,8 +749,7 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
             return false;
         }
 
-        if (internalFormatInfo.type == GL_FLOAT &&
-            !context->getExtensions().textureFloat)
+        if (formatInfo.type == GL_FLOAT && !context->getExtensions().textureFloat)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;

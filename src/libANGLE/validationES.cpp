@@ -1649,7 +1649,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
                                         GLsizei width,
                                         GLsizei height,
                                         GLint border,
-                                        GLenum *textureFormatOut)
+                                        Format *textureFormatOut)
 {
     if (level < 0 || xoffset < 0 || yoffset < 0 || zoffset < 0 || width < 0 || height < 0)
     {
@@ -1786,7 +1786,10 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
         }
     }
 
-    *textureFormatOut = texture->getFormat(target, level).asSized();
+    if (textureFormatOut)
+    {
+        *textureFormatOut = texture->getFormat(target, level);
+    }
     return true;
 }
 

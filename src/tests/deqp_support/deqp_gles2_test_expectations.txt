@@ -80,7 +80,6 @@
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_nearest = FAIL
 1020 WIN : dEQP-GLES2.functional.texture.mipmap.cube.bias.linear_linear = FAIL
-1021 WIN : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.depth_stencil.write_mask.* = FAIL

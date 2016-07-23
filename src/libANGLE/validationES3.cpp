@@ -770,36 +770,42 @@ static bool EqualOrFirstZero(GLuint first, GLuint second)
     return first == 0 || first == second;
 }
 
-static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint readBufferHandle)
+static bool IsValidES3CopyTexImageCombination(const Format &textureFormat,
+                                              const Format &framebufferFormat,
+                                              GLuint readBufferHandle)
 {
-    const InternalFormat &textureInternalFormatInfo = GetInternalFormatInfo(textureInternalFormat);
-    const InternalFormat &framebufferInternalFormatInfo = GetInternalFormatInfo(frameBufferInternalFormat);
+    const auto &textureFormatInfo     = *textureFormat.info;
+    const auto &framebufferFormatInfo = *framebufferFormat.info;
 
     static const CopyConversionSet conversionSet = BuildValidES3CopyTexImageCombinations();
-    if (conversionSet.find(CopyConversion(textureInternalFormatInfo.format, framebufferInternalFormatInfo.format)) != conversionSet.end())
+    if (conversionSet.find(CopyConversion(textureFormatInfo.format,
+                                          framebufferFormatInfo.format)) != conversionSet.end())
     {
         // Section 3.8.5 of the GLES 3.0.3 spec states that source and destination formats
         // must both be signed, unsigned, or fixed point and both source and destinations
         // must be either both SRGB or both not SRGB. EXT_color_buffer_float adds allowed
         // conversion between fixed and floating point.
 
-        if ((textureInternalFormatInfo.colorEncoding == GL_SRGB) != (framebufferInternalFormatInfo.colorEncoding == GL_SRGB))
+        if ((textureFormatInfo.colorEncoding == GL_SRGB) !=
+            (framebufferFormatInfo.colorEncoding == GL_SRGB))
         {
             return false;
         }
 
-        if (((textureInternalFormatInfo.componentType == GL_INT)          != (framebufferInternalFormatInfo.componentType == GL_INT         )) ||
-            ((textureInternalFormatInfo.componentType == GL_UNSIGNED_INT) != (framebufferInternalFormatInfo.componentType == GL_UNSIGNED_INT)))
+        if (((textureFormatInfo.componentType == GL_INT) !=
+             (framebufferFormatInfo.componentType == GL_INT)) ||
+            ((textureFormatInfo.componentType == GL_UNSIGNED_INT) !=
+             (framebufferFormatInfo.componentType == GL_UNSIGNED_INT)))
         {
             return false;
         }
 
-        if ((textureInternalFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
-             textureInternalFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
-             textureInternalFormatInfo.componentType == GL_FLOAT) &&
-            !(framebufferInternalFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
-              framebufferInternalFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
-              framebufferInternalFormatInfo.componentType == GL_FLOAT))
+        if ((textureFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
+             textureFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
+             textureFormatInfo.componentType == GL_FLOAT) &&
+            !(framebufferFormatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
+              framebufferFormatInfo.componentType == GL_SIGNED_NORMALIZED ||
+              framebufferFormatInfo.componentType == GL_FLOAT))
         {
             return false;
         }
@@ -821,15 +827,16 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
         if (readBufferHandle != 0)
         {
             // Not the default framebuffer, therefore the read buffer must be a user-created texture or renderbuffer
-            if (framebufferInternalFormatInfo.pixelBytes > 0)
+            if (framebufferFormat.sized)
             {
-                sourceEffectiveFormat = &framebufferInternalFormatInfo;
+                sourceEffectiveFormat = &framebufferFormatInfo;
             }
             else
             {
                 // Renderbuffers cannot be created with an unsized internal format, so this must be an unsized-format
                 // texture. We can use the same table we use when creating textures to get its effective sized format.
-                GLenum sizedInternalFormat = GetSizedInternalFormat(framebufferInternalFormatInfo.format, framebufferInternalFormatInfo.type);
+                GLenum sizedInternalFormat = GetSizedInternalFormat(framebufferFormatInfo.format,
+                                                                    framebufferFormatInfo.type);
                 sourceEffectiveFormat = &GetInternalFormatInfo(sizedInternalFormat);
             }
         }
@@ -837,10 +844,11 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
         {
             // The effective internal format must be derived from the source framebuffer's channel sizes.
             // This is done in GetEffectiveInternalFormat for linear buffers (table 3.17)
-            if (framebufferInternalFormatInfo.colorEncoding == GL_LINEAR)
+            if (framebufferFormatInfo.colorEncoding == GL_LINEAR)
             {
                 GLenum effectiveFormat;
-                if (GetEffectiveInternalFormat(framebufferInternalFormatInfo, textureInternalFormatInfo, &effectiveFormat))
+                if (GetEffectiveInternalFormat(framebufferFormatInfo, textureFormatInfo,
+                                               &effectiveFormat))
                 {
                     sourceEffectiveFormat = &GetInternalFormatInfo(effectiveFormat);
                 }
@@ -849,14 +857,15 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
                     return false;
                 }
             }
-            else if (framebufferInternalFormatInfo.colorEncoding == GL_SRGB)
+            else if (framebufferFormatInfo.colorEncoding == GL_SRGB)
             {
                 // SRGB buffers can only be copied to sized format destinations according to table 3.18
-                if ((textureInternalFormatInfo.pixelBytes > 0) &&
-                    (framebufferInternalFormatInfo.redBits   >= 1 && framebufferInternalFormatInfo.redBits   <= 8) &&
-                    (framebufferInternalFormatInfo.greenBits >= 1 && framebufferInternalFormatInfo.greenBits <= 8) &&
-                    (framebufferInternalFormatInfo.blueBits  >= 1 && framebufferInternalFormatInfo.blueBits  <= 8) &&
-                    (framebufferInternalFormatInfo.alphaBits >= 1 && framebufferInternalFormatInfo.alphaBits <= 8))
+                if (textureFormat.sized &&
+                    (framebufferFormatInfo.redBits >= 1 && framebufferFormatInfo.redBits <= 8) &&
+                    (framebufferFormatInfo.greenBits >= 1 &&
+                     framebufferFormatInfo.greenBits <= 8) &&
+                    (framebufferFormatInfo.blueBits >= 1 && framebufferFormatInfo.blueBits <= 8) &&
+                    (framebufferFormatInfo.alphaBits >= 1 && framebufferFormatInfo.alphaBits <= 8))
                 {
                     sourceEffectiveFormat = &GetInternalFormatInfo(GL_SRGB8_ALPHA8);
                 }
@@ -872,24 +881,19 @@ static bool IsValidES3CopyTexImageCombination(GLenum textureInternalFormat, GLen
             }
         }
 
-        if (textureInternalFormatInfo.pixelBytes > 0)
+        if (textureFormat.sized)
         {
             // Section 3.8.5 of the GLES 3.0.3 spec, pg 139, requires that, if the destination
             // format is sized, component sizes of the source and destination formats must exactly
             // match if the destination format exists.
-            if (!EqualOrFirstZero(textureInternalFormatInfo.redBits,
-                                  sourceEffectiveFormat->redBits) ||
-                !EqualOrFirstZero(textureInternalFormatInfo.greenBits,
-                                  sourceEffectiveFormat->greenBits) ||
-                !EqualOrFirstZero(textureInternalFormatInfo.blueBits,
-                                  sourceEffectiveFormat->blueBits) ||
-                !EqualOrFirstZero(textureInternalFormatInfo.alphaBits,
-                                  sourceEffectiveFormat->alphaBits))
+            if (!EqualOrFirstZero(textureFormatInfo.redBits, sourceEffectiveFormat->redBits) ||
+                !EqualOrFirstZero(textureFormatInfo.greenBits, sourceEffectiveFormat->greenBits) ||
+                !EqualOrFirstZero(textureFormatInfo.blueBits, sourceEffectiveFormat->blueBits) ||
+                !EqualOrFirstZero(textureFormatInfo.alphaBits, sourceEffectiveFormat->alphaBits))
             {
                 return false;
             }
         }
-
 
         return true; // A conversion function exists, and no rule in the specification has precluded conversion
                      // between these formats.
@@ -912,14 +916,14 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
                                            GLsizei height,
                                            GLint border)
 {
-    GLenum textureInternalFormat = GL_NONE;
+    Format textureFormat = Format::Invalid();
     if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
-                                            xoffset, yoffset, zoffset, x, y, width, height,
-                                            border, &textureInternalFormat))
+                                            xoffset, yoffset, zoffset, x, y, width, height, border,
+                                            &textureFormat))
     {
         return false;
     }
-    ASSERT(textureInternalFormat != GL_NONE || !isSubImage);
+    ASSERT(textureFormat.valid() || !isSubImage);
 
     const auto &state            = context->getGLState();
     gl::Framebuffer *framebuffer = state.getReadFramebuffer();
@@ -937,12 +941,11 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
         return false;
     }
 
-    const gl::FramebufferAttachment *source = framebuffer->getReadColorbuffer();
-    GLenum colorbufferInternalFormat        = source->getFormat().asSized();
+    const FramebufferAttachment *source = framebuffer->getReadColorbuffer();
 
     if (isSubImage)
     {
-        if (!IsValidES3CopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
+        if (!IsValidES3CopyTexImageCombination(textureFormat, source->getFormat(),
                                                readFramebufferID))
         {
             context->handleError(Error(GL_INVALID_OPERATION));
@@ -951,8 +954,10 @@ bool ValidateES3CopyTexImageParametersBase(ValidationContext *context,
     }
     else
     {
-        if (!gl::IsValidES3CopyTexImageCombination(internalformat, colorbufferInternalFormat,
-                                                   readFramebufferID))
+        // Use format/type from the source FBO. (Might not be perfect for all cases?)
+        const auto framebufferFormat = source->getFormat();
+        Format copyFormat(internalformat, framebufferFormat.format, framebufferFormat.type);
+        if (!IsValidES3CopyTexImageCombination(copyFormat, framebufferFormat, readFramebufferID))
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;
