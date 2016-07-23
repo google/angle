@@ -474,6 +474,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_c05aac88",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-07-23T01:59:17Z",
+      "side": 1,
+      "message": "\u003e \u003e Did you mean \"#version 300 es\"? Input varyings invariance is\n \u003e \u003e implicit there.\n \u003e \n \u003e I meant both \"#version 300\" and \"#version 300 es\". In the upgrade\n \u003e of the base shading language from version 1.00 to 3.00, when input\n \u003e variables\u0027 invariance became implicit, I think the rules were\n \u003e clarified better than in version 1.00.\nI don\u0027t know about \"#version 300\". I think GLSL jumped from 150 to 330. The input invariance became implicit in 420.\n \u003e \n \u003e \u003e Generally, in GLSL:\n \u003e \u003e Only variables output from a shader (including those that are\n \u003e then\n \u003e \u003e input to a subsequent shader) can be candidates for invariance.\n \u003e \u003e This includes user-defined output variables and the built-in\n \u003e output\n \u003e \u003e variables.\n \u003e \u003e GLSL 1.20.8 is more explicit:\n \u003e \u003e This includes user-defined varying variables, the built-in\n \u003e \u003e vertex-side varying variables, and the special vertex variables\n \u003e \u003e gl_Position and gl_PointSize.\n \u003e \n \u003e The spec text is confusing. While the output variables from the\n \u003e vertex shader are the candidates for invariance, the input\n \u003e variables in the fragment shader have to be marked invariant in\n \u003e versions 1.x of the shading language (both GLSL and ESSL) for\n \u003e linkage to succeed.\n \u003e \n \u003e \u003e I think since gl_FragColor and gl_FragData are built-in input\n \u003e \u003e variables, they do not fall into that category. Though, I have\n \u003e been\n \u003e \u003e mistaken before :)\n \u003e \n \u003e These are actually built-in output variables.\nSorry, I meant gl_FragCoord and gl_PointCoord.\n \u003e \n \u003e \u003e ESSL 1.00.17 paragraph 4.6.4 \"Invariance and Linkage\" says:\n \u003e \u003e The invariance of varyings that are declared in both the vertex\n \u003e and\n \u003e \u003e fragment shaders must match.\n \u003e \u003e For the built-in special variables, gl_FragCoord can only be\n \u003e \u003e declared invariant if and only if gl_Position is declared\n \u003e \u003e invariant. Similarly gl_PointCoord can only be declared invariant\n \u003e \u003e if and only if gl_PointSize is declared invariant. It is an error\n \u003e \u003e to declare gl_FrontFacing as invariant. The invariance of\n \u003e \u003e gl_FrontFacing is the same as the invariance of gl_Position.\n \u003e \u003e\n \u003e \u003e Do you think all desktop GL drivers implement that?\n \u003e \n \u003e Yes, it looks to me like the invariance requirements between\n \u003e gl_Position and gl_FragCoord, and between gl_PointSize and\n \u003e gl_PointCoord, are enforced well by drivers for version 1.x shaders\n \u003e (both desktop GL and ES). At least, the tests verify this to a\n \u003e certain degree (though I\u0027m not sure they test the effects of the\n \u003e #pragma with these built-ins), and the positive and negative tests\n \u003e both work properly.\n\nOK then, let\u0027s try this and see what happens.",
+      "parentUuid": "ea48a7ff_60cb984a",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91eb63_fe8f69cf",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
