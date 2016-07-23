@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_4f732f84",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea48a7ff_6845cc69",
+      "range": {
+        "startLine": 11,
+        "startChar": 28,
+        "endLine": 11,
+        "endChar": 44
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_934e4e69",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-22T20:12:21Z",
       "side": 1,
       "message": "As I understood, the reason to flatten is threefold:\n1. GLSL doesn\u0027t support the pragma in fragment shader\n2. Some GLSL implementations have bugs in pragma support in vertex shader\n3. Some GLSL implementations support the pragma in fragment shader in a non-conformant way, applying it to shader inputs, and you want to emulate that behavior\n\nI\u0027m not sure mentioning version 130 is necessary. It confuses me because:\n1. The pragma is supported in versions \u003e\u003d 120\n2. You can\u0027t use invariant in version 110, so you must output to version \u003e\u003d 120, so essentially the condition to use this option is if \"invariant(all)\" is used",
+      "range": {
+        "startLine": 217,
+        "startChar": 44,
+        "endLine": 219,
+        "endChar": 54
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_4fb6cff4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "OK, I\u0027ll remove the comment about version 130 (it refers to the SH_GLSL_130_OUTPUT enum in ShaderLang.h). You\u0027re correct on the reasons for enabling it, but I don\u0027t think it\u0027s necessary to document them all here; people can read the bug report and comments on this CL.",
+      "parentUuid": "ea48a7ff_934e4e69",
       "range": {
         "startLine": 217,
         "startChar": 44,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_7239323e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "Thanks, good point. I was only using this for the built-ins, for which staticUse is implicitly set to true, but it\u0027s better I think to make it \"isVaryingDefined\". Done.",
+      "parentUuid": "8a91eb63_7eec598d",
+      "range": {
+        "startLine": 891,
+        "startChar": 16,
+        "endLine": 891,
+        "endChar": 41
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91eb63_3ef2d16c",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2016-07-22T14:00:50Z",
       "side": 1,
       "message": "nit: we should put these methods above the member variable declarations to be consistent with the style guide.. can you fix this?",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 176,
+        "endChar": 60
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_6faf0b92",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a91eb63_3ef2d16c",
       "range": {
         "startLine": 171,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_52551651",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1510,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "I\u0027m also not very familiar with it, but I think this covers all the cases. At least it covers the ones in the tests. If more tests are written and they fail, then we can fix it.",
+      "parentUuid": "ea48a7ff_fb8448b7",
+      "range": {
+        "startLine": 1510,
+        "startChar": 33,
+        "endLine": 1510,
+        "endChar": 55
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_457239ac",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -128,6 +248,30 @@
       "writtenOn": "2016-07-22T20:12:21Z",
       "side": 1,
       "message": "This is very confusing.\n1. For ESSL 1.00 fragment shader we must flatten \"Built-in special variables output from the fragment shader\", which are gl_FragColor and gl_FragData. So, the really mandatory flattening is taken care of in some other place.\n2. To workaround GLSL driver bugs for pragma in vertex shader we should flatten vertex shader outputs in ESSL 1.00 and 3.00. I believe those correspond to EvqVaryingOut and EvqVertexOut.\n3. Flattening input variables of ESSL 1.00 fragment shaders is a violation of the spec, but apparently some drivers implemented the pragma in that way. If we do want to be non conformant and have EvqVaryingIn here, I think it deserves a special comment.",
+      "range": {
+        "startLine": 1522,
+        "startChar": 43,
+        "endLine": 1524,
+        "endChar": 97
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_126c6ed6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "Thanks for pointing these out. I\u0027ve expanded the comment.",
+      "parentUuid": "ea48a7ff_457239ac",
       "range": {
         "startLine": 1522,
         "startChar": 43,
@@ -187,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_6f44eb4f",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "We don\u0027t translate ESSL 3.00 to those versions. We require desktop GLSL versions 300 and above (I think) in order to handle those shader versions.",
+      "parentUuid": "ea48a7ff_dec5ba07",
+      "range": {
+        "startLine": 58,
+        "startChar": 35,
+        "endLine": 58,
+        "endChar": 46
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_68df0cff",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
@@ -234,6 +402,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_0f1e8766",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "I\u0027m really not sure about that. The rules are better declared for #version 300 shaders and above. For all #version 1x0 shaders the rules seem muddy, and it seems that the desktop GL drivers implement the ESSL invariance and linkage rules, modulo bugs in handling of the #pragma.",
+      "parentUuid": "ea48a7ff_9b898424",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 73
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a91eb63_fe8f69cf",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
@@ -257,6 +449,30 @@
     },
     {
       "key": {
+        "uuid": "ea48a7ff_8f6e17fb",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "Yes, agree with your point -- let\u0027s do this as a revision though. The TranslatorGLSL was already responsible for outputting the #pragma, which is one reason why I took this approach.",
+      "parentUuid": "8a91eb63_fe8f69cf",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 20
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_28b10493",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 7
@@ -268,6 +484,30 @@
       "writtenOn": "2016-07-22T20:12:21Z",
       "side": 1,
       "message": "Are you sure about that? I think I\u0027ve seen ANGLE outputting 120 on my Linux workstation.",
+      "range": {
+        "startLine": 181,
+        "startChar": 75,
+        "endLine": 182,
+        "endChar": 32
+      },
+      "revId": "5d0639b90f4c29e9544d8b222c1fb2e4a717bf56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea48a7ff_ef023bd8",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-07-23T00:26:10Z",
+      "side": 1,
+      "message": "It\u0027s pretty awful -- VersionGLSL.cpp can determine to \"auto-upgrade\" SH_GLSL_COMPATIBILITY_OUTPUT to #version 120, but we can\u0027t determine up front whether that\u0027s going to happen. The shader needs to be parsed first. This situation will be much improved when we use the Core Profile on desktop everywhere, and target those shading language versions.",
+      "parentUuid": "ea48a7ff_28b10493",
       "range": {
         "startLine": 181,
         "startChar": 75,
