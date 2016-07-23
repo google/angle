@@ -94,6 +94,13 @@ void TIntermTraverser::insertStatementsInParentBlock(const TIntermSequence &inse
     mInsertions.push_back(insert);
 }
 
+void TIntermTraverser::insertStatementInParentBlock(TIntermNode *statement)
+{
+    TIntermSequence insertions;
+    insertions.push_back(statement);
+    insertStatementsInParentBlock(insertions);
+}
+
 TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier qualifier)
 {
     // Each traversal uses at most one temporary variable, so the index stays the same within a single traversal.

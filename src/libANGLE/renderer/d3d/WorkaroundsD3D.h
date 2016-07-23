@@ -52,6 +52,11 @@ struct WorkaroundsD3D
     // from a staging texture to a depth/stencil texture triggers a timeout/TDR. The workaround
     // is to use UpdateSubresource to trigger an extra copy.
     bool depthStencilBlitExtraCopy = false;
+
+    // The HLSL optimizer has a bug with optimizing "pow" in certain integer-valued expressions.
+    // We can work around this by expanding the pow into a series of multiplies if we're running
+    // under the affected compiler.
+    bool expandIntegerPowExpressions = false;
 };
 
 }  // namespace rx

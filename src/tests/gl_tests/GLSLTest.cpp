@@ -8,6 +8,7 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -1607,9 +1608,8 @@ TEST_P(GLSLTest, DepthRangeUniforms)
 }
 
 // Covers the WebGL test 'glsl/bugs/pow-of-small-constant-in-user-defined-function'
-// See https://code.google.com/p/angleproject/issues/detail?id=851
-// TODO(jmadill): ANGLE constant folding can fix this
-TEST_P(GLSLTest, DISABLED_PowOfSmallConstant)
+// See http://anglebug.com/851
+TEST_P(GLSLTest, PowOfSmallConstant)
 {
     const std::string &fragmentShaderSource = SHADER_SOURCE
     (
@@ -1639,11 +1639,10 @@ TEST_P(GLSLTest, DISABLED_PowOfSmallConstant)
         }
     );
 
-    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
 
-    drawQuad(program, "inputAttribute", 0.5f);
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     EXPECT_GL_NO_ERROR();
 }
 

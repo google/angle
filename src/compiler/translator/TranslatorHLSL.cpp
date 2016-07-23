@@ -9,6 +9,7 @@
 #include "compiler/translator/AddDefaultReturnStatements.h"
 #include "compiler/translator/ArrayReturnValueToOutParameter.h"
 #include "compiler/translator/EmulatePrecision.h"
+#include "compiler/translator/ExpandIntegerPowExpressions.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
@@ -77,6 +78,11 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
         emulatePrecision.updateTree();
         emulatePrecision.writeEmulationHelpers(getInfoSink().obj, getShaderVersion(),
                                                getOutputType());
+    }
+
+    if ((compileOptions & SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS) != 0)
+    {
+        sh::ExpandIntegerPowExpressions(root, getTemporaryIndex());
     }
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),

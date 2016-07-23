@@ -48,7 +48,7 @@ CompilerImpl *Context9::createCompiler()
 
 ShaderImpl *Context9::createShader(const gl::ShaderState &data)
 {
-    return new ShaderD3D(data);
+    return new ShaderD3D(data, mRenderer->getWorkarounds());
 }
 
 ProgramImpl *Context9::createProgram(const gl::ProgramState &data)

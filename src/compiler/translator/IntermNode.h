@@ -763,18 +763,6 @@ class TIntermTraverser : angle::NonCopyable
         return !mParentBlockStack.empty() && getParentNode() == mParentBlockStack.back().node;
     }
 
-    const bool preVisit;
-    const bool inVisit;
-    const bool postVisit;
-
-    int mDepth;
-    int mMaxDepth;
-
-    // All the nodes from root to the current node's parent during traversing.
-    TVector<TIntermNode *> mPath;
-
-    bool mInGlobalScope;
-
     // To replace a single node with another on the parent node
     struct NodeUpdateEntry
     {
@@ -828,13 +816,6 @@ class TIntermTraverser : angle::NonCopyable
         TIntermSequence insertionsAfter;
     };
 
-    // During traversing, save all the changes that need to happen into
-    // mReplacements/mMultiReplacements, then do them by calling updateTree().
-    // Multi replacements are processed after single replacements.
-    std::vector<NodeUpdateEntry> mReplacements;
-    std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
-    std::vector<NodeInsertMultipleEntry> mInsertions;
-
     // Helper to insert statements in the parent block (sequence) of the node currently being traversed.
     // The statements will be inserted before the node being traversed once updateTree is called.
     // Should only be called during PreVisit or PostVisit from sequence nodes.
@@ -846,6 +827,9 @@ class TIntermTraverser : angle::NonCopyable
     // currently being traversed.
     void insertStatementsInParentBlock(const TIntermSequence &insertionsBefore,
                                        const TIntermSequence &insertionsAfter);
+
+    // Helper to insert a single statement.
+    void insertStatementInParentBlock(TIntermNode *statement);
 
     // Helper to create a temporary symbol node with the given qualifier.
     TIntermSymbol *createTempSymbol(const TType &type, TQualifier qualifier);
@@ -861,6 +845,28 @@ class TIntermTraverser : angle::NonCopyable
     TIntermBinary *createTempAssignment(TIntermTyped *rightNode);
     // Increment temporary symbol index.
     void nextTemporaryIndex();
+
+    void replace(TIntermNode *original, TIntermNode *replacement);
+    void replaceWithParent(TIntermNode *parent, TIntermNode *original, TIntermNode *replacement);
+
+    const bool preVisit;
+    const bool inVisit;
+    const bool postVisit;
+
+    int mDepth;
+    int mMaxDepth;
+
+    // All the nodes from root to the current node's parent during traversing.
+    TVector<TIntermNode *> mPath;
+
+    bool mInGlobalScope;
+
+    // During traversing, save all the changes that need to happen into
+    // mReplacements/mMultiReplacements, then do them by calling updateTree().
+    // Multi replacements are processed after single replacements.
+    std::vector<NodeUpdateEntry> mReplacements;
+    std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
+    std::vector<NodeInsertMultipleEntry> mInsertions;
 
   private:
     struct ParentBlock

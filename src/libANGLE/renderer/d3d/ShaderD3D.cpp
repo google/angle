@@ -40,9 +40,15 @@ const char *GetShaderTypeString(GLenum type)
 namespace rx
 {
 
-ShaderD3D::ShaderD3D(const gl::ShaderState &data) : ShaderImpl(data)
+ShaderD3D::ShaderD3D(const gl::ShaderState &data, const WorkaroundsD3D &workarounds)
+    : ShaderImpl(data), mAdditionalOptions(0)
 {
     uncompile();
+
+    if (workarounds.expandIntegerPowExpressions)
+    {
+        mAdditionalOptions |= SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS;
+    }
 }
 
 ShaderD3D::~ShaderD3D()
@@ -134,6 +140,8 @@ int ShaderD3D::prepareSourceAndReturnOptions(std::stringstream *shaderSourceStre
         additionalOptions |= SH_LINE_DIRECTIVES | SH_SOURCE_PATH;
     }
 #endif
+
+    additionalOptions |= mAdditionalOptions;
 
     *shaderSourceStream << source;
     return additionalOptions;

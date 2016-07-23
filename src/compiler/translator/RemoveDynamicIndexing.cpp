@@ -399,9 +399,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
 
             // Init the temp variable holding the index
             TIntermAggregate *initIndex = createTempInitDeclaration(node->getRight());
-            TIntermSequence insertions;
-            insertions.push_back(initIndex);
-            insertStatementsInParentBlock(insertions);
+            insertStatementInParentBlock(initIndex);
             mUsedTreeInsertion = true;
 
             // Replace the index with the temp variable

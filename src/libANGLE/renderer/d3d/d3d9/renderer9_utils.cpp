@@ -646,9 +646,13 @@ WorkaroundsD3D GenerateWorkarounds()
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = false;
     workarounds.useInstancedPointSpriteEmulation = false;
+
+    // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
+    workarounds.expandIntegerPowExpressions = true;
+
     return workarounds;
 }
 
-}
+}  // namespace d3d9
 
-}
+}  // namespace rx

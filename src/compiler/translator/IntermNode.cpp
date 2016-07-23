@@ -2679,3 +2679,15 @@ void TIntermTraverser::updateTree()
     mReplacements.clear();
     mMultiReplacements.clear();
 }
+
+void TIntermTraverser::replace(TIntermNode *original, TIntermNode *replacement)
+{
+    replaceWithParent(getParentNode(), original, replacement);
+}
+
+void TIntermTraverser::replaceWithParent(TIntermNode *parent,
+                                         TIntermNode *original,
+                                         TIntermNode *replacement)
+{
+    mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, false));
+}
