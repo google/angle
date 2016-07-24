@@ -70,6 +70,8 @@ class DisplayD3D : public DisplayImpl
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
+    egl::Error getDriverVersion(const std::string &deviceId, std::string *resultOut);
+
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;

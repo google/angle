@@ -797,16 +797,20 @@
                                     {
                                         'AdditionalDependencies':
                                         [
+                                            'Cfgmgr32.lib',
                                             'dxguid.lib',
+                                            'setupapi.lib',
                                         ],
                                     }],
                                     ['angle_build_winrt==1',
                                     {
                                         'AdditionalDependencies':
                                         [
+                                            'Cfgmgr32.lib',
                                             'dxguid.lib',
                                             'd3d11.lib',
                                             'd3dcompiler.lib',
+                                            'setupapi.lib',
                                         ],
                                     }],
                                 ],

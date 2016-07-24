@@ -48,9 +48,11 @@ struct WorkaroundsD3D
     // emulation that is implemented using instanced quads.
     bool useInstancedPointSpriteEmulation = false;
 
-    // NVIDIA driver versions 347.88 <= x < 368.69 have a bug where using CopySubresourceRegion
-    // from a staging texture to a depth/stencil texture triggers a timeout/TDR. The workaround
-    // is to use UpdateSubresource to trigger an extra copy.
+    // A bug fixed in NVIDIA driver version 347.88 < x <= 368.81 triggers a TDR when using
+    // CopySubresourceRegion from a staging texture to a depth/stencil in D3D11. The workaround
+    // is to use UpdateSubresource to trigger an extra copy. We disable this workaround on newer
+    // NVIDIA driver versions because of a second driver bug present with the workaround enabled.
+    // (See: http://anglebug.com/1452)
     bool depthStencilBlitExtraCopy = false;
 
     // The HLSL optimizer has a bug with optimizing "pow" in certain integer-valued expressions.

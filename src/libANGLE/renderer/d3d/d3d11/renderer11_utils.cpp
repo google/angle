@@ -1507,7 +1507,8 @@ ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
 }
 
 WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                   const DXGI_ADAPTER_DESC &adapterDesc)
+                                   const DXGI_ADAPTER_DESC &adapterDesc,
+                                   const std::string &driverVersion)
 {
     bool is9_3 = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
@@ -1518,7 +1519,29 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     workarounds.useInstancedPointSpriteEmulation = is9_3;
 
     // TODO(jmadill): Narrow problematic driver range.
-    workarounds.depthStencilBlitExtraCopy = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
+    if (adapterDesc.VendorId == VENDOR_ID_NVIDIA)
+    {
+        if (!driverVersion.empty())
+        {
+            // parse the major and minor version numbers
+            uint32_t x, y, z, w;
+            std::stringstream parser(driverVersion);
+            parser >> x;
+            parser.ignore(1);
+            parser >> y;
+            parser.ignore(1);
+            parser >> z;
+            parser.ignore(1);
+            parser >> w;
+
+            // Disable the workaround to fix a second driver bug on newer NVIDIA.
+            workarounds.depthStencilBlitExtraCopy = (z <= 13u && w < 6881);
+        }
+        else
+        {
+            workarounds.depthStencilBlitExtraCopy = true;
+        }
+    }
 
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
     workarounds.expandIntegerPowExpressions = true;

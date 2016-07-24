@@ -326,7 +326,11 @@ static_library("libANGLE") {
   if (angle_enable_d3d11) {
     sources += rebase_path(gles_gypi.libangle_d3d11_sources, ".", "src")
     sources += rebase_path(gles_gypi.libangle_d3d11_win32_sources, ".", "src")
-    libs += [ "dxguid.lib" ]
+    libs += [
+      "dxguid.lib",
+      "Cfgmgr32.lib",
+      "setupapi.lib",
+    ]
   }
 
   if (angle_enable_gl) {

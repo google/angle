@@ -6,7 +6,16 @@
 
 // DisplayD3D.cpp: D3D implementation of egl::Display
 
+// These headers annoyingly have to be the first lines in the file.
+#include <Windows.h>
+#include <cfgmgr32.h>
+#include <strsafe.h>
+#include <setupapi.h>
+#include <VersionHelpers.h>
+
 #include "libANGLE/renderer/d3d/DisplayD3D.h"
+
+#include <EGL/eglext.h>
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Config.h"
@@ -18,8 +27,6 @@
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
-
-#include <EGL/eglext.h>
 
 #if defined (ANGLE_ENABLE_D3D9)
 #   include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
@@ -350,4 +357,101 @@ egl::Error DisplayD3D::waitNative(EGLint engine,
 
     return egl::Error(EGL_SUCCESS);
 }
+
+// TODO(jmadill): Do more complete GPU info collection.
+egl::Error DisplayD3D::getDriverVersion(const std::string &deviceId, std::string *resultOut)
+{
+#if defined(ANGLE_ENABLE_WINDOWS_STORE)
+    // TODO(jmadill): Figure out what to return for Windows Store.
+    *resultOut = "";
+    return gl::NoError();
+#else
+    // Display adapter class GUID from
+    // https://msdn.microsoft.com/en-us/library/windows/hardware/ff553426%28v=vs.85%29.aspx
+    GUID displayClass = {
+        0x4d36e968, 0xe325, 0x11ce, {0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18}};
+
+    // create device info for the display device
+    HDEVINFO deviceInfo;
+    if (!IsWindowsVistaOrGreater())
+    {
+        // Collection of information on all adapters is much slower on XP (almost
+        // 100ms), and not very useful (as it's not going to use the GPU anyway), so
+        // just collect information on the current device. http://crbug.com/456178
+        deviceInfo = SetupDiGetClassDevsA(nullptr, deviceId.c_str(), nullptr,
+                                          DIGCF_PRESENT | DIGCF_PROFILE | DIGCF_ALLCLASSES);
+    }
+    else
+    {
+        deviceInfo = SetupDiGetClassDevsA(&displayClass, nullptr, nullptr, DIGCF_PRESENT);
+    }
+    if (deviceInfo == INVALID_HANDLE_VALUE)
+    {
+        return egl::Error(EGL_BAD_MATCH, "Creating device info failed");
+    }
+
+    bool found = false;
+
+    DWORD index = 0;
+    SP_DEVINFO_DATA deviceInfoData;
+    deviceInfoData.cbSize = sizeof(deviceInfoData);
+    while (SetupDiEnumDeviceInfo(deviceInfo, index++, &deviceInfoData))
+    {
+        CHAR value[255];
+        if (SetupDiGetDeviceRegistryPropertyA(deviceInfo, &deviceInfoData, SPDRP_DRIVER, nullptr,
+                                              reinterpret_cast<PBYTE>(value), sizeof(value),
+                                              nullptr))
+        {
+            HKEY key;
+            std::string driverKey = "System\\CurrentControlSet\\Control\\Class\\";
+            driverKey += value;
+            LONG result =
+                RegOpenKeyExA(HKEY_LOCAL_MACHINE, driverKey.c_str(), 0, KEY_QUERY_VALUE, &key);
+            if (result == ERROR_SUCCESS)
+            {
+                DWORD dwcbData = sizeof(value);
+                std::string driverVersion;
+                result = RegQueryValueExA(key, "DriverVersion", nullptr, nullptr,
+                                          reinterpret_cast<LPBYTE>(value), &dwcbData);
+                if (result == ERROR_SUCCESS)
+                    driverVersion = value;
+
+                std::string driverDate;
+                dwcbData = sizeof(value);
+                result   = RegQueryValueExA(key, "DriverDate", nullptr, nullptr,
+                                          reinterpret_cast<LPBYTE>(value), &dwcbData);
+                if (result == ERROR_SUCCESS)
+                    driverDate = value;
+
+                std::string driverVendor;
+                dwcbData = sizeof(value);
+                result   = RegQueryValueExA(key, "ProviderName", nullptr, nullptr,
+                                          reinterpret_cast<LPBYTE>(value), &dwcbData);
+                if (result == ERROR_SUCCESS)
+                    driverVendor = value;
+
+                char newDeviceID[MAX_DEVICE_ID_LEN];
+                CONFIGRET status =
+                    CM_Get_Device_IDA(deviceInfoData.DevInst, newDeviceID, MAX_DEVICE_ID_LEN, 0);
+
+                if (status == CR_SUCCESS)
+                {
+                    std::string id = newDeviceID;
+
+                    if (id.compare(0, deviceId.size(), deviceId) == 0)
+                    {
+                        *resultOut = driverVersion;
+                        found      = true;
+                    }
+                }
+
+                RegCloseKey(key);
+            }
+        }
+    }
+
+    return found ? egl::Error(EGL_SUCCESS) : egl::Error(EGL_BAD_MATCH, "No driver version found");
+#endif  // defined(ANGLE_ENABLE_WINDOWS_STORE)
+}
+
 }  // namespace rx

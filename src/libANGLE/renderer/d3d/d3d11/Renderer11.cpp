@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 #include <EGL/eglext.h>
+#include <iomanip>
 #include <sstream>
 #include <versionhelpers.h>
 
@@ -23,6 +24,7 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
+#include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Blit11.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
@@ -4133,7 +4135,22 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
 
 WorkaroundsD3D Renderer11::generateWorkarounds() const
 {
-    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
+    auto displayD3D = GetImplAs<DisplayD3D>(mDisplay);
+    std::string driverVersion;
+    std::stringstream deviceStr;
+    deviceStr << std::uppercase << std::hex;
+    deviceStr << "PCI\\VEN_" << std::setfill('0') << std::setw(4) << mAdapterDescription.VendorId;
+    deviceStr << "&DEV_" << std::setfill('0') << std::setw(4) << mAdapterDescription.DeviceId;
+    deviceStr << "&SUBSYS_" << std::setfill('0') << std::setw(8) << mAdapterDescription.SubSysId;
+    deviceStr << "&REV_" << std::setfill('0') << std::setw(2) << mAdapterDescription.Revision;
+
+    auto err = displayD3D->getDriverVersion(deviceStr.str(), &driverVersion);
+    if (err.isError())
+    {
+        ERR("error getting driver version: ", err.getMessage().c_str());
+    }
+
+    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription, driverVersion);
 }
 
 gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
