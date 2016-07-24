@@ -2134,6 +2134,30 @@ TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderDynamicVectorIndexingInLValu
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that using gl_PointCoord with GL_TRIANGLES doesn't produce a link error.
+// From WebGL test conformance/rendering/point-specific-shader-variables.html
+// See http://anglebug.com/1380
+TEST_P(GLSLTest, RenderTrisWithPointCoord)
+{
+    const std::string &vert =
+        "attribute vec2 aPosition;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(aPosition, 0, 1);\n"
+        "    gl_PointSize = 1.0;\n"
+        "}";
+    const std::string &frag =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(gl_PointCoord.xy, 0, 1);\n"
+        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+    drawQuad(prog.get(), "aPosition", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

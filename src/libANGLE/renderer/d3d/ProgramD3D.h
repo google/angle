@@ -97,13 +97,10 @@ struct D3DVarying final
     unsigned int outputSlot;
 };
 
-class ProgramD3DMetadata : angle::NonCopyable
+class ProgramD3DMetadata final : angle::NonCopyable
 {
   public:
-    ProgramD3DMetadata(int rendererMajorShaderModel,
-                       const std::string &shaderModelSuffix,
-                       bool usesInstancedPointSpriteEmulation,
-                       bool usesViewScale,
+    ProgramD3DMetadata(RendererD3D *renderer,
                        const ShaderD3D *vertexShader,
                        const ShaderD3D *fragmentShader);
 
