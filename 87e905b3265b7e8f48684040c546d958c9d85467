@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "ea76e749_eee23f9d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T08:50:56Z",
+      "side": 1,
+      "message": "That was helpful when I had to fill in the query functions for the new constants.",
+      "parentUuid": "6a991793_82a6da04",
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_624bd683",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -277,6 +295,30 @@
       "side": 1,
       "message": "I think the code is fine as it is, just add a comment here with this information.",
       "parentUuid": "6a991793_e26126e2",
+      "range": {
+        "startLine": 602,
+        "startChar": 31,
+        "endLine": 602,
+        "endChar": 48
+      },
+      "revId": "87e905b3265b7e8f48684040c546d958c9d85467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_4c44bfa1",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T08:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a991793_a290be99",
       "range": {
         "startLine": 602,
         "startChar": 31,
