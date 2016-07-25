@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "2a89df77_d084bcb7",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T08:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a991793_229dcead",
+      "range": {
+        "startLine": 680,
+        "startChar": 10,
+        "endLine": 680,
+        "endChar": 24
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a991793_e2f80682",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 1
@@ -154,6 +178,30 @@
       "writtenOn": "2016-07-22T12:35:59Z",
       "side": 1,
       "message": "Should be named maxAtomicCounterBufferBindings here, even if it is maxAtomicCounterBindings on the shader translator side.",
+      "range": {
+        "startLine": 652,
+        "startChar": 14,
+        "endLine": 652,
+        "endChar": 38
+      },
+      "revId": "7c3948a2b8b91e2b30c6e7221ed2b33d5d373be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a89df77_f089c0ce",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T08:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a991793_a2079ee6",
       "range": {
         "startLine": 652,
         "startChar": 14,
