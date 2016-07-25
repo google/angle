@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0a617bbb_20916b9d",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "This is reserved for future. A ETC1 block, ETC2 individual block, or ETC2 differential block has 8 colors. But a ETC2 T-mode, or H-mode block has 4 colors, and a planar block has 16 colors. So I\u0027d like to keep it as a variable here. It would be easier for reuse the code here.",
+      "parentUuid": "6a6037e5_766e7534",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_564a51b2",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "0a617bbb_405d7f7f",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_f640258e",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_16a05938",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2016-07-19T17:45:04Z",
       "side": 1,
       "message": "Likewise the 16 could be made a global constant and shared.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a617bbb_0073871b",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_16a05938",
       "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "0a617bbb_e0069374",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_bbd4d811",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_96f4498d",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 1
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "0a617bbb_60e523d0",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a6037e5_96f4498d",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a6037e5_1b09a4da",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 1
@@ -115,6 +205,24 @@
       "writtenOn": "2016-07-19T17:45:04Z",
       "side": 1,
       "message": "Can you explain why modifierIdx \u003d 2 implies the color is black? I see that this is what decodePunchThroughAlphaBlock did but I can\u0027t find the relevant part of the ETC specification.",
+      "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a617bbb_c0842fb8",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-07-25T23:39:30Z",
+      "side": 1,
+      "message": "I\u0027ll add a comment about it. It\u0027s in ETC2\u0027s opaque punch through format.",
+      "parentUuid": "6a6037e5_1b09a4da",
       "revId": "289489e4afabb9054bd40950c0dd8b9db10e6a99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
