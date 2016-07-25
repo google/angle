@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a617bbb_83f6c12c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-07-25T23:51:47Z",
+      "side": 1,
+      "message": "I\u0027m not very familiar with nVidia\u0027s driver version scheme, but I see the  latest full version number is 10.18.13.6881 Should we also be checking the other parts of the version number too?\n\nWhat if nVidia release a new driver in the future with version, say, 10.19.0.0? Wouldn\u0027t this check pass unexpectedly?",
+      "range": {
+        "startLine": 1529,
+        "startChar": 52,
+        "endLine": 1529,
+        "endChar": 83
+      },
+      "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
