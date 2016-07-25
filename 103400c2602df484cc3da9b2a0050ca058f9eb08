@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa7cef2d_acc52308",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "Removed the EvqSmoothOut \u003d EvqSmooth, since this was creating issues when joining qualifiers. Would this cause a problem somewhere else?",
+      "range": {
+        "startLine": 343,
+        "startChar": 4,
+        "endLine": 344,
+        "endChar": 64
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a83d755_123ecc0f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "I think there might have been a bug in the earlier version. According to the spec (GLSL ES 1.0.17 4.6.1), varying variables input to the fragment shader can be declared as invariant as well.\nIn GLSL ES 3 and above, one cannot do that.",
+      "range": {
+        "startLine": 1188,
+        "startChar": 4,
+        "endLine": 1205,
+        "endChar": 5
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_8cd707ba",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3496,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "This checks whether the order of qualifiers is correct.",
+      "range": {
+        "startLine": 3480,
+        "startChar": 4,
+        "endLine": 3496,
+        "endChar": 5
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a8edb80_0f3ea50f",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "When parsing function headers, there can be storage qualifiers meaning that we should be able to decide whether IN_QUAL is EvqIn or EvqVertexIn for example.\nWhen a function header starts to be declared, this member variable gets set to true. When parsing the storage qualifiers we check whether we are in a function header and based on that we pick the proper enum member.",
+      "range": {
+        "startLine": 73,
+        "startChar": 10,
+        "endLine": 73,
+        "endChar": 35
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_4ccb5f1c",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "Joins the qualifiers - storage, precision, invariant, etc. I am not sure whether the name is suitable.",
+      "range": {
+        "startLine": 323,
+        "startChar": 4,
+        "endLine": 325,
+        "endChar": 67
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_acdc43de",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:14:00Z",
+      "side": 1,
+      "message": "Not about this assertion. It seems it can be unset in some cases which means that there might be some bug.",
+      "range": {
+        "startLine": 811,
+        "startChar": 8,
+        "endLine": 811,
+        "endChar": 44
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
