@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca73e35a_6d64151d",
+        "filename": "src/compiler/translator/ExpandIntegerPowExpressions.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-25T07:47:28Z",
+      "side": 1,
+      "message": "I\u0027d like to see more descriptive variable names throughout:\n\nconstantNode \u003d\u003e constantExponentNode\nconstant \u003d\u003e constantExponent\nvalue \u003d\u003e exponentValue",
+      "revId": "1048e43f4a9704e25b41decec4ec76a29a2bf1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca73e35a_4d67d922",
+        "filename": "src/compiler/translator/ExpandIntegerPowExpressions.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-25T07:47:28Z",
+      "side": 1,
+      "message": "Is this correct? Doesn\u0027t the bug repro when abs(exponent) is just slightly below an integer?",
+      "revId": "1048e43f4a9704e25b41decec4ec76a29a2bf1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_cc68af29",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-25T07:47:28Z",
+      "side": 1,
+      "message": "I\u0027m not a big fan of leaving the originalBecomesChildOfReplacement parameter out of these new entry points - not being reminded to think about it can easily lead to bugs. I think these entry points should also come with a comment explaining that they just add things to the lists that get processed when updateTree() is called - or maybe it\u0027s better not to have them at all.",
+      "revId": "1048e43f4a9704e25b41decec4ec76a29a2bf1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
