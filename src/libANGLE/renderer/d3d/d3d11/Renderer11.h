@@ -52,6 +52,7 @@ struct Renderer11DeviceCaps
     UINT B5G6R5support;                 // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
     UINT B4G4R4A4support;               // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
     UINT B5G5R5A1support;               // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G5R5A1_UNORM
+    Optional<LARGE_INTEGER> driverVersion;  // Four-part driver version number.
 };
 
 enum
@@ -541,5 +542,5 @@ class Renderer11 : public RendererD3D
     mutable Optional<bool> mSupportsShareHandles;
 };
 
-}
+}  // namespace rx
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_

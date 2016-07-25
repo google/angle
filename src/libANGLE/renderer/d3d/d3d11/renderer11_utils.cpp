@@ -1507,8 +1507,7 @@ ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
 }
 
 WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                   const DXGI_ADAPTER_DESC &adapterDesc,
-                                   const std::string &driverVersion)
+                                   const DXGI_ADAPTER_DESC &adapterDesc)
 {
     bool is9_3 = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
@@ -1521,21 +1520,13 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     // TODO(jmadill): Narrow problematic driver range.
     if (adapterDesc.VendorId == VENDOR_ID_NVIDIA)
     {
-        if (!driverVersion.empty())
+        if (deviceCaps.driverVersion.valid())
         {
-            // parse the major and minor version numbers
-            uint32_t x, y, z, w;
-            std::stringstream parser(driverVersion);
-            parser >> x;
-            parser.ignore(1);
-            parser >> y;
-            parser.ignore(1);
-            parser >> z;
-            parser.ignore(1);
-            parser >> w;
+            WORD part1 = HIWORD(deviceCaps.driverVersion.value().LowPart);
+            WORD part2 = LOWORD(deviceCaps.driverVersion.value().LowPart);
 
             // Disable the workaround to fix a second driver bug on newer NVIDIA.
-            workarounds.depthStencilBlitExtraCopy = (z <= 13u && w < 6881);
+            workarounds.depthStencilBlitExtraCopy = (part1 <= 13u && part2 < 6881);
         }
         else
         {

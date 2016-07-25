@@ -347,8 +347,7 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
 }
 
 WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                   const DXGI_ADAPTER_DESC &adapterDesc,
-                                   const std::string &driverVersion);
+                                   const DXGI_ADAPTER_DESC &adapterDesc);
 
 enum ReservedConstantBufferSlot
 {

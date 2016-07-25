@@ -917,6 +917,18 @@ void Renderer11::populateRenderer11DeviceCaps()
     IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
     mRenderer11DeviceCaps.supportsDXGI1_2 = (dxgiAdapter2 != nullptr);
     SafeRelease(dxgiAdapter2);
+
+    LARGE_INTEGER version;
+    hr = mDxgiAdapter->CheckInterfaceSupport(__uuidof(IDXGIDevice), &version);
+    if (FAILED(hr))
+    {
+        mRenderer11DeviceCaps.driverVersion.reset();
+        ERR("Error querying driver version from DXGI Adapter.");
+    }
+    else
+    {
+        mRenderer11DeviceCaps.driverVersion = version;
+    }
 }
 
 egl::ConfigSet Renderer11::generateConfigs()
@@ -4135,22 +4147,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap *outTextureC
 
 WorkaroundsD3D Renderer11::generateWorkarounds() const
 {
-    auto displayD3D = GetImplAs<DisplayD3D>(mDisplay);
-    std::string driverVersion;
-    std::stringstream deviceStr;
-    deviceStr << std::uppercase << std::hex;
-    deviceStr << "PCI\\VEN_" << std::setfill('0') << std::setw(4) << mAdapterDescription.VendorId;
-    deviceStr << "&DEV_" << std::setfill('0') << std::setw(4) << mAdapterDescription.DeviceId;
-    deviceStr << "&SUBSYS_" << std::setfill('0') << std::setw(8) << mAdapterDescription.SubSysId;
-    deviceStr << "&REV_" << std::setfill('0') << std::setw(2) << mAdapterDescription.Revision;
-
-    auto err = displayD3D->getDriverVersion(deviceStr.str(), &driverVersion);
-    if (err.isError())
-    {
-        ERR("error getting driver version: ", err.getMessage().c_str());
-    }
-
-    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription, driverVersion);
+    return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
 }
 
 gl::Error Renderer11::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
