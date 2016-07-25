@@ -137,6 +137,30 @@
       "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa7cef2d_0cec778b",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 811,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-25T09:22:39Z",
+      "side": 1,
+      "message": "Actually, it shouldn\u0027t be there. There are other qualifiers which are not handled like EvqCentroid and the assertion will fail for them.",
+      "parentUuid": "aa7cef2d_acdc43de",
+      "range": {
+        "startLine": 811,
+        "startChar": 8,
+        "endLine": 811,
+        "endChar": 44
+      },
+      "revId": "103400c2602df484cc3da9b2a0050ca058f9eb08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
