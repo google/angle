@@ -22,6 +22,30 @@
       "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af9ec11f_1c8df57f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-26T15:21:37Z",
+      "side": 1,
+      "message": "The last five digits determine the NVIDIA driver version, in this case 368.81. It might be more clear to parse the version from the two words, but I think it has correct behaviour as it is now.",
+      "parentUuid": "0a617bbb_83f6c12c",
+      "range": {
+        "startLine": 1529,
+        "startChar": 52,
+        "endLine": 1529,
+        "endChar": 83
+      },
+      "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
