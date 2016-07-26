@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fe92969_2229ceee",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-07-26T01:09:36Z",
+      "side": 1,
+      "message": "typo: computational -\u003e computations",
+      "revId": "6ed74c0ee740d2a27a241aab76ceaaf9985a1434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
