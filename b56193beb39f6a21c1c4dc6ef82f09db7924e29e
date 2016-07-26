@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f473d8f_1b839bff",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1772,
+      "author": {
+        "id": 1144184
+      },
+      "writtenOn": "2016-07-26T06:49:15Z",
+      "side": 1,
+      "message": "The void functions should not have return inside.",
+      "range": {
+        "startLine": 1772,
+        "startChar": 4,
+        "endLine": 1772,
+        "endChar": 11
+      },
+      "revId": "b56193beb39f6a21c1c4dc6ef82f09db7924e29e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f473d8f_7b88df17",
+        "filename": "src/libGLESv2/libGLESv2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2158,
+      "author": {
+        "id": 1144184
+      },
+      "writtenOn": "2016-07-26T06:49:15Z",
+      "side": 1,
+      "message": "It looks like MemoryBarrier is treated as a compiler macro. Maybe we need to call this something else, like MemoryBarrierGL. \"#undef MemoryBarrier\" might work as well (not sure about this), but that seems like an even hackier option.",
+      "range": {
+        "startLine": 2158,
+        "startChar": 15,
+        "endLine": 2158,
+        "endChar": 28
+      },
+      "revId": "b56193beb39f6a21c1c4dc6ef82f09db7924e29e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
