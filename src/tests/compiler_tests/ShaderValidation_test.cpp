@@ -3285,3 +3285,74 @@ TEST_F(VertexShaderValidationTest, InvalidNumViews)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// memoryBarrierShared is only available in a compute shader.
+// GLSL ES 3.10 Revision 4, 8.15 Shader Memory Control Functions
+TEST_F(FragmentShaderValidationTest, InvalidUseOfMemoryBarrierShared)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "    memoryBarrierShared();\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// groupMemoryBarrier is only available in a compute shader.
+// GLSL ES 3.10 Revision 4, 8.15 Shader Memory Control Functions
+TEST_F(FragmentShaderValidationTest, InvalidUseOfGroupMemoryBarrier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "    groupMemoryBarrier();\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// barrier can be used in a compute shader.
+// GLSL ES 3.10 Revision 4, 8.14 Shader Invocation Control Functions
+TEST_F(ComputeShaderValidationTest, ValidUseOfBarrier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 15) in;\n"
+        "void main() {\n"
+        "   barrier();\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// memoryBarrierImage() can be used in all GLSL ES 3.10 shaders.
+// GLSL ES 3.10 Revision 4, 8.15 Shader Memory Control Functions
+TEST_F(FragmentShaderValidationTest, ValidUseOfMemoryBarrierImageInFragmentShader)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision highp image2D;\n"
+        "layout(r32f) uniform image2D myImage;\n"
+        "void main() {\n"
+        "    imageStore(myImage, ivec2(0), vec4(1.0));\n"
+        "    memoryBarrierImage();\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}

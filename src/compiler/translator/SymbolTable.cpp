@@ -382,6 +382,15 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
     }
 }
 
+void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
+                                                     TOperator op,
+                                                     const TType *rvalue,
+                                                     const char *name)
+{
+    insertUnmangledBuiltInName(name, level);
+    insert(level, new TFunction(NewPoolTString(name), rvalue, op));
+}
+
 TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
 {
     if (!SupportsPrecision(type))

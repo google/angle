@@ -216,7 +216,16 @@ enum TOperator
     EOpBitShiftRightAssign,
     EOpBitwiseAndAssign,
     EOpBitwiseXorAssign,
-    EOpBitwiseOrAssign
+    EOpBitwiseOrAssign,
+
+    //  barriers
+    EOpBarrier,
+    EOpMemoryBarrier,
+    EOpMemoryBarrierAtomicCounter,
+    EOpMemoryBarrierBuffer,
+    EOpMemoryBarrierImage,
+    EOpMemoryBarrierShared,
+    EOpGroupMemoryBarrier
 };
 
 // Returns the string corresponding to the operator in GLSL

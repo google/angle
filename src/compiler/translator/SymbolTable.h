@@ -405,6 +405,11 @@ class TSymbolTable : angle::NonCopyable
         insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
+    void insertBuiltInFunctionNoParameters(ESymbolLevel level,
+                                           TOperator op,
+                                           const TType *rvalue,
+                                           const char *name);
+
     TSymbol *find(const TString &name,
                   int shaderVersion,
                   bool *builtIn   = NULL,

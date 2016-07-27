@@ -1113,7 +1113,27 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpMul:
             writeBuiltInFunctionTriplet(visit, "matrixCompMult(", useEmulatedFunction);
             break;
-
+        case EOpBarrier:
+            writeBuiltInFunctionTriplet(visit, "barrier(", useEmulatedFunction);
+            break;
+        case EOpMemoryBarrier:
+            writeBuiltInFunctionTriplet(visit, "memoryBarrier(", useEmulatedFunction);
+            break;
+        case EOpMemoryBarrierAtomicCounter:
+            writeBuiltInFunctionTriplet(visit, "memoryBarrierAtomicCounter(", useEmulatedFunction);
+            break;
+        case EOpMemoryBarrierBuffer:
+            writeBuiltInFunctionTriplet(visit, "memoryBarrierBuffer(", useEmulatedFunction);
+            break;
+        case EOpMemoryBarrierImage:
+            writeBuiltInFunctionTriplet(visit, "memoryBarrierImage(", useEmulatedFunction);
+            break;
+        case EOpMemoryBarrierShared:
+            writeBuiltInFunctionTriplet(visit, "memoryBarrierShared(", useEmulatedFunction);
+            break;
+        case EOpGroupMemoryBarrier:
+            writeBuiltInFunctionTriplet(visit, "groupMemoryBarrier(", useEmulatedFunction);
+            break;
         default:
             UNREACHABLE();
     }

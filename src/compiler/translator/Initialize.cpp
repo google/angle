@@ -589,6 +589,25 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int3, "imageSize", gimage2DArray);
     symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, int2, "imageSize", gimageCube);
 
+    symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpMemoryBarrier, voidType,
+                                                  "memoryBarrier");
+    symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpMemoryBarrierAtomicCounter,
+                                                  voidType, "memoryBarrierAtomicCounter");
+    symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpMemoryBarrierBuffer,
+                                                  voidType, "memoryBarrierBuffer");
+    symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpMemoryBarrierImage, voidType,
+                                                  "memoryBarrierImage");
+
+    if (type == GL_COMPUTE_SHADER)
+    {
+        symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpBarrier, voidType,
+                                                      "barrier");
+        symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpMemoryBarrierShared,
+                                                      voidType, "memoryBarrierShared");
+        symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpGroupMemoryBarrier,
+                                                      voidType, "groupMemoryBarrier");
+    }
+
     //
     // Depth range in window coordinates
     //
