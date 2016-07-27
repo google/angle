@@ -75,8 +75,7 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         exp->setLine(node->getLine());
         exp->setType(node->getType());
 
-        NodeUpdateEntry replacePow(getParentNode(), node, exp, false);
-        mReplacements.push_back(replacePow);
+        queueReplacement(node, exp, OriginalNode::IS_DROPPED);
 
         // If the x parameter also needs to be replaced, we need to do that in another traversal,
         // since it's parent node will change in a way that's not handled correctly by updateTree().

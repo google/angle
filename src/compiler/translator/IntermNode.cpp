@@ -2675,19 +2675,28 @@ void TIntermTraverser::updateTree()
         UNUSED_ASSERTION_VARIABLE(replaced);
     }
 
-    mInsertions.clear();
+    clearReplacementQueue();
+}
+
+void TIntermTraverser::clearReplacementQueue()
+{
     mReplacements.clear();
     mMultiReplacements.clear();
+    mInsertions.clear();
 }
 
-void TIntermTraverser::replace(TIntermNode *original, TIntermNode *replacement)
+void TIntermTraverser::queueReplacement(TIntermNode *original,
+                                        TIntermNode *replacement,
+                                        OriginalNode originalStatus)
 {
-    replaceWithParent(getParentNode(), original, replacement);
+    queueReplacementWithParent(getParentNode(), original, replacement, originalStatus);
 }
 
-void TIntermTraverser::replaceWithParent(TIntermNode *parent,
-                                         TIntermNode *original,
-                                         TIntermNode *replacement)
+void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
+                                                  TIntermNode *original,
+                                                  TIntermNode *replacement,
+                                                  OriginalNode originalStatus)
 {
-    mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, false));
+    bool originalBecomesChild = (originalStatus == OriginalNode::BECOMES_CHILD);
+    mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, originalBecomesChild));
 }

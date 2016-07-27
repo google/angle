@@ -108,8 +108,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
             insertStatementsInParentBlock(insertions);
 
-            NodeUpdateEntry replaceVariable(getParentNode(), node, createTempSymbol(boolType), false);
-            mReplacements.push_back(replaceVariable);
+            queueReplacement(node, createTempSymbol(boolType), OriginalNode::IS_DROPPED);
         }
         return false;
       case EOpLogicalAnd:
@@ -133,8 +132,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
             insertStatementsInParentBlock(insertions);
 
-            NodeUpdateEntry replaceVariable(getParentNode(), node, createTempSymbol(boolType), false);
-            mReplacements.push_back(replaceVariable);
+            queueReplacement(node, createTempSymbol(boolType), OriginalNode::IS_DROPPED);
         }
         return false;
       default:
@@ -183,8 +181,7 @@ bool UnfoldShortCircuitTraverser::visitSelection(Visit visit, TIntermSelection *
         insertStatementsInParentBlock(insertions);
 
         TIntermSymbol *ternaryResult = createTempSymbol(node->getType());
-        NodeUpdateEntry replaceVariable(getParentNode(), node, ternaryResult, false);
-        mReplacements.push_back(replaceVariable);
+        queueReplacement(node, ternaryResult, OriginalNode::IS_DROPPED);
     }
 
     return false;
@@ -207,9 +204,7 @@ bool UnfoldShortCircuitTraverser::visitAggregate(Visit visit, TIntermAggregate *
             // We need to unfold the sequence (comma) operator, otherwise the evaluation order of
             // statements would be messed up by unfolded operations inside.
             // Don't do any other unfolding on this round of traversal.
-            mReplacements.clear();
-            mMultiReplacements.clear();
-            mInsertions.clear();
+            clearReplacementQueue();
 
             if (!copyLoopConditionOrExpression(getParentNode(), node))
             {
@@ -227,8 +222,7 @@ bool UnfoldShortCircuitTraverser::visitAggregate(Visit visit, TIntermAggregate *
 
                 insertStatementsInParentBlock(insertions);
 
-                NodeUpdateEntry replaceVariable(getParentNode(), node, (*seq)[i], false);
-                mReplacements.push_back(replaceVariable);
+                queueReplacement(node, (*seq)[i], OriginalNode::IS_DROPPED);
             }
         }
     }
@@ -295,8 +289,8 @@ bool UnfoldShortCircuitTraverser::copyLoopConditionOrExpression(TIntermNode *par
 {
     if (mInLoopCondition)
     {
-        mReplacements.push_back(
-            NodeUpdateEntry(parent, node, createTempSymbol(node->getType()), false));
+        queueReplacementWithParent(parent, node, createTempSymbol(node->getType()),
+                                   OriginalNode::IS_DROPPED);
         TIntermAggregate *body = mParentLoop->getBody();
         TIntermSequence empty;
         if (mParentLoop->getType() == ELoopDoWhile)
@@ -323,13 +317,15 @@ bool UnfoldShortCircuitTraverser::copyLoopConditionOrExpression(TIntermNode *par
             {
                 // Move the initializer to the newly created outer scope, so that condition can
                 // depend on it.
-                mReplacements.push_back(NodeUpdateEntry(mParentLoop, initializer, nullptr, false));
+                queueReplacementWithParent(mParentLoop, initializer, nullptr,
+                                           OriginalNode::IS_DROPPED);
                 loopScope->getSequence()->push_back(initializer);
             }
 
             loopScope->getSequence()->push_back(createTempInitDeclaration(node));
             loopScope->getSequence()->push_back(mParentLoop);
-            mReplacements.push_back(NodeUpdateEntry(mLoopParent, mParentLoop, loopScope, true));
+            queueReplacementWithParent(mLoopParent, mParentLoop, loopScope,
+                                       OriginalNode::BECOMES_CHILD);
 
             // The second copy of the part of the loop condition is executed inside the loop.
             TIntermSequence insertionsInLoop;
@@ -343,7 +339,7 @@ bool UnfoldShortCircuitTraverser::copyLoopConditionOrExpression(TIntermNode *par
     if (mInLoopExpression)
     {
         TIntermTyped *movedExpression = mParentLoop->getExpression();
-        mReplacements.push_back(NodeUpdateEntry(mParentLoop, movedExpression, nullptr, false));
+        queueReplacementWithParent(mParentLoop, movedExpression, nullptr, OriginalNode::IS_DROPPED);
         TIntermAggregate *body = mParentLoop->getBody();
         TIntermSequence empty;
         TIntermSequence insertions;

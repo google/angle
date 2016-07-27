@@ -93,9 +93,7 @@ bool SeparateExpressionsTraverser::visitBinary(Visit visit, TIntermBinary *node)
     insertions.push_back(createTempInitDeclaration(node->getLeft()));
     insertStatementsInParentBlock(insertions);
 
-    NodeUpdateEntry replaceVariable(getParentNode(), node, createTempSymbol(node->getType()),
-                                    false);
-    mReplacements.push_back(replaceVariable);
+    queueReplacement(node, createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);
 
     return false;
 }
@@ -116,9 +114,7 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
     insertions.push_back(createTempInitDeclaration(CopyAggregateNode(node)));
     insertStatementsInParentBlock(insertions);
 
-    NodeUpdateEntry replaceVariable(getParentNode(), node, createTempSymbol(node->getType()),
-                                    false);
-    mReplacements.push_back(replaceVariable);
+    queueReplacement(node, createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);
 
     return false;
 }

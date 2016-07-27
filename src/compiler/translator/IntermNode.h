@@ -672,17 +672,8 @@ class TIntermTraverser : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TIntermTraverser(bool preVisit, bool inVisit, bool postVisit)
-        : preVisit(preVisit),
-          inVisit(inVisit),
-          postVisit(postVisit),
-          mDepth(0),
-          mMaxDepth(0),
-          mInGlobalScope(true),
-          mTemporaryIndex(nullptr)
-    {
-    }
-    virtual ~TIntermTraverser() {}
+    TIntermTraverser(bool preVisit, bool inVisit, bool postVisit);
+    virtual ~TIntermTraverser();
 
     virtual void visitSymbol(TIntermSymbol *node) {}
     virtual void visitRaw(TIntermRaw *node) {}
@@ -763,24 +754,6 @@ class TIntermTraverser : angle::NonCopyable
         return !mParentBlockStack.empty() && getParentNode() == mParentBlockStack.back().node;
     }
 
-    // To replace a single node with another on the parent node
-    struct NodeUpdateEntry
-    {
-        NodeUpdateEntry(TIntermNode *_parent,
-                        TIntermNode *_original,
-                        TIntermNode *_replacement,
-                        bool _originalBecomesChildOfReplacement)
-            : parent(_parent),
-              original(_original),
-              replacement(_replacement),
-              originalBecomesChildOfReplacement(_originalBecomesChildOfReplacement) {}
-
-        TIntermNode *parent;
-        TIntermNode *original;
-        TIntermNode *replacement;
-        bool originalBecomesChildOfReplacement;
-    };
-
     // To replace a single node with multiple nodes on the parent aggregate node
     struct NodeReplaceWithMultipleEntry
     {
@@ -846,8 +819,20 @@ class TIntermTraverser : angle::NonCopyable
     // Increment temporary symbol index.
     void nextTemporaryIndex();
 
-    void replace(TIntermNode *original, TIntermNode *replacement);
-    void replaceWithParent(TIntermNode *parent, TIntermNode *original, TIntermNode *replacement);
+    enum class OriginalNode
+    {
+        BECOMES_CHILD,
+        IS_DROPPED
+    };
+
+    void clearReplacementQueue();
+    void queueReplacement(TIntermNode *original,
+                          TIntermNode *replacement,
+                          OriginalNode originalStatus);
+    void queueReplacementWithParent(TIntermNode *parent,
+                                    TIntermNode *original,
+                                    TIntermNode *replacement,
+                                    OriginalNode originalStatus);
 
     const bool preVisit;
     const bool inVisit;
@@ -864,11 +849,30 @@ class TIntermTraverser : angle::NonCopyable
     // During traversing, save all the changes that need to happen into
     // mReplacements/mMultiReplacements, then do them by calling updateTree().
     // Multi replacements are processed after single replacements.
-    std::vector<NodeUpdateEntry> mReplacements;
     std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
     std::vector<NodeInsertMultipleEntry> mInsertions;
 
   private:
+    // To replace a single node with another on the parent node
+    struct NodeUpdateEntry
+    {
+        NodeUpdateEntry(TIntermNode *_parent,
+                        TIntermNode *_original,
+                        TIntermNode *_replacement,
+                        bool _originalBecomesChildOfReplacement)
+            : parent(_parent),
+              original(_original),
+              replacement(_replacement),
+              originalBecomesChildOfReplacement(_originalBecomesChildOfReplacement)
+        {
+        }
+
+        TIntermNode *parent;
+        TIntermNode *original;
+        TIntermNode *replacement;
+        bool originalBecomesChildOfReplacement;
+    };
+
     struct ParentBlock
     {
         ParentBlock(TIntermAggregate *nodeIn, TIntermSequence::size_type posIn)
@@ -880,6 +884,9 @@ class TIntermTraverser : angle::NonCopyable
         TIntermAggregate *node;
         TIntermSequence::size_type pos;
     };
+
+    std::vector<NodeUpdateEntry> mReplacements;
+
     // All the code blocks from the root to the current node's parent during traversal.
     std::vector<ParentBlock> mParentBlockStack;
 

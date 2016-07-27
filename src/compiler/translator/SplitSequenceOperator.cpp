@@ -101,9 +101,7 @@ bool SplitSequenceOperatorTraverser::visitAggregate(Visit visit, TIntermAggregat
                 }
                 insertStatementsInParentBlock(insertions);
                 // Replace the sequence with its last operand
-                NodeUpdateEntry replaceSequence(getParentNode(), node, node->getSequence()->back(),
-                                                false);
-                mReplacements.push_back(replaceSequence);
+                queueReplacement(node, node->getSequence()->back(), OriginalNode::IS_DROPPED);
             }
             mInsideSequenceOperator--;
         }
