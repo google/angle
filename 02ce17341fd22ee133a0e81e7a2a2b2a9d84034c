@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fd8ad39_9f4e9391",
+        "filename": "src/third_party/khronos/GL/wglext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-27T14:59:30Z",
+      "side": 1,
+      "message": "I am not sure whether I should change the header also for third-party libraries.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 33
+      },
+      "revId": "02ce17341fd22ee133a0e81e7a2a2b2a9d84034c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
