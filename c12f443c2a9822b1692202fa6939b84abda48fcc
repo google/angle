@@ -46,6 +46,30 @@
       "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ff26de6_0eb67ea5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-07-27T23:31:03Z",
+      "side": 1,
+      "message": "Just realized here you use the internal driver version whereas in chrome we use the the external dll version. Just want to point out this discrepancy.",
+      "parentUuid": "af9ec11f_1c8df57f",
+      "range": {
+        "startLine": 1529,
+        "startChar": 52,
+        "endLine": 1529,
+        "endChar": 83
+      },
+      "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
