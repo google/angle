@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fd8ad39_1fdfe3d5",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-27T11:53:52Z",
+      "side": 1,
+      "message": "You should look these up from the spec and organize them by table like the preexisting ones. Otherwise this is very hard to review.\n\nYou can reorganize the old caps according to how they are listed in the GLES 3.1 spec, and make it clear in the comments that you\u0027re referring to the GLES 3.1 spec.",
+      "revId": "f99d1c8ff703931b0db417aaa328b11e5fe89b15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fd8ad39_9ff2136c",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-27T11:53:52Z",
+      "side": 1,
+      "message": "These newly implemented entry points should follow the correct pattern with a separate validation function, respecting the skipValidation flag, and have their implementation in a member of Context.",
+      "revId": "f99d1c8ff703931b0db417aaa328b11e5fe89b15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
