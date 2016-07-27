@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f234ded_67d972ed",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-27T09:17:38Z",
+      "side": 1,
+      "message": "A comment explaining this is needed. Also the #ifdef should not be needed.\n\nIt would also be nicer to have this in a common header or in build config if that\u0027s possible, but for now I think placing the undef here is okay.",
+      "revId": "62f095be330988c6ca35752bcb84cf8fff577df7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
