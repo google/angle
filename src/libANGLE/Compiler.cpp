@@ -78,6 +78,35 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;
     mResources.MinProgramTexelOffset   = caps.minProgramTexelOffset;
     mResources.MaxProgramTexelOffset   = caps.maxProgramTexelOffset;
+
+    // GLSL ES 3.1 compute shader constants
+    mResources.MaxImageUnits                    = caps.maxImageUnits;
+    mResources.MaxVertexImageUniforms           = caps.maxVertexImageUniforms;
+    mResources.MaxFragmentImageUniforms         = caps.maxFragmentImageUniforms;
+    mResources.MaxComputeImageUniforms          = caps.maxComputeImageUniforms;
+    mResources.MaxCombinedImageUniforms         = caps.maxCombinedImageUniforms;
+    mResources.MaxCombinedShaderOutputResources = caps.maxCombinedShaderOutputResources;
+
+    for (size_t index = 0u; index < 3u; ++index)
+    {
+        mResources.MaxComputeWorkGroupCount[index] = caps.maxComputeWorkGroupCount[index];
+        mResources.MaxComputeWorkGroupSize[index]  = caps.maxComputeWorkGroupSize[index];
+    }
+
+    mResources.MaxComputeUniformComponents = caps.maxComputeUniformComponents;
+    mResources.MaxComputeTextureImageUnits = caps.maxComputeTextureImageUnits;
+
+    mResources.MaxComputeAtomicCounters       = caps.maxComputeAtomicCounters;
+    mResources.MaxComputeAtomicCounterBuffers = caps.maxComputeAtomicCounterBuffers;
+
+    mResources.MaxVertexAtomicCounters         = caps.maxVertexAtomicCounters;
+    mResources.MaxFragmentAtomicCounters       = caps.maxFragmentAtomicCounters;
+    mResources.MaxCombinedAtomicCounters       = caps.maxCombinedAtomicCounters;
+    mResources.MaxAtomicCounterBindings        = caps.maxAtomicCounterBufferBindings;
+    mResources.MaxVertexAtomicCounterBuffers   = caps.maxVertexAtomicCounterBuffers;
+    mResources.MaxFragmentAtomicCounterBuffers = caps.maxFragmentAtomicCounterBuffers;
+    mResources.MaxCombinedAtomicCounterBuffers = caps.maxCombinedAtomicCounterBuffers;
+    mResources.MaxAtomicCounterBufferSize      = caps.maxAtomicCounterBufferSize;
 }
 
 Compiler::~Compiler()

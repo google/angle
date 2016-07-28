@@ -427,6 +427,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     symbolTable.push();   // COMMON_BUILTINS
     symbolTable.push();   // ESSL1_BUILTINS
     symbolTable.push();   // ESSL3_BUILTINS
+    symbolTable.push();   // ESSL3_1_BUILTINS
 
     TPublicType integer;
     integer.type = EbtInt;
@@ -515,7 +516,31 @@ void TCompiler::setResourceString()
               << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset
               << ":MaxDualSourceDrawBuffers:" << compileResources.MaxDualSourceDrawBuffers
               << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
-              << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision;
+              << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision
+              << ":MaxImageUnits:" << compileResources.MaxImageUnits
+              << ":MaxVertexImageUniforms:" << compileResources.MaxVertexImageUniforms
+              << ":MaxFragmentImageUniforms:" << compileResources.MaxFragmentImageUniforms
+              << ":MaxComputeImageUniforms:" << compileResources.MaxComputeImageUniforms
+              << ":MaxCombinedImageUniforms:" << compileResources.MaxCombinedImageUniforms
+              << ":MaxCombinedShaderOutputResources:" << compileResources.MaxCombinedShaderOutputResources
+              << ":MaxComputeWorkGroupCountX:" << compileResources.MaxComputeWorkGroupCount[0]
+              << ":MaxComputeWorkGroupCountY:" << compileResources.MaxComputeWorkGroupCount[1]
+              << ":MaxComputeWorkGroupCountZ:" << compileResources.MaxComputeWorkGroupCount[2]
+              << ":MaxComputeWorkGroupSizeX:" << compileResources.MaxComputeWorkGroupSize[0]
+              << ":MaxComputeWorkGroupSizeY:" << compileResources.MaxComputeWorkGroupSize[1]
+              << ":MaxComputeWorkGroupSizeZ:" << compileResources.MaxComputeWorkGroupSize[2]
+              << ":MaxComputeUniformComponents:" << compileResources.MaxComputeUniformComponents
+              << ":MaxComputeTextureImageUnits:" << compileResources.MaxComputeTextureImageUnits
+              << ":MaxComputeAtomicCounters:" << compileResources.MaxComputeAtomicCounters
+              << ":MaxComputeAtomicCounterBuffers:" << compileResources.MaxComputeAtomicCounterBuffers
+              << ":MaxVertexAtomicCounters:" << compileResources.MaxVertexAtomicCounters
+              << ":MaxFragmentAtomicCounters:" << compileResources.MaxFragmentAtomicCounters
+              << ":MaxCombinedAtomicCounters:" << compileResources.MaxCombinedAtomicCounters
+              << ":MaxAtomicCounterBindings:" << compileResources.MaxAtomicCounterBindings
+              << ":MaxVertexAtomicCounterBuffers:" << compileResources.MaxVertexAtomicCounterBuffers
+              << ":MaxFragmentAtomicCounterBuffers:" << compileResources.MaxFragmentAtomicCounterBuffers
+              << ":MaxCombinedAtomicCounterBuffers:" << compileResources.MaxCombinedAtomicCounterBuffers
+              << ":MaxAtomicCounterBufferSize:" << compileResources.MaxAtomicCounterBufferSize;
     // clang-format on
 
     builtInResourcesString = strstream.str();

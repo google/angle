@@ -1655,3 +1655,20 @@ TEST_F(MalformedShaderTest, LineDirectiveNegativeShift)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// gl_MaxImageUnits is only available in ES 3.1 shaders
+TEST_F(MalformedShaderTest, MaxImageUnitsInES3Shader)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 myOutput;"
+        "void main() {\n"
+        "   float ff = float(gl_MaxImageUnits);\n"
+        "   myOutput = vec4(ff);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

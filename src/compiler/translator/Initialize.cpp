@@ -495,18 +495,26 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
     //
     // Implementation dependent built-in constants.
     //
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexAttribs", resources.MaxVertexAttribs);
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexUniformVectors", resources.MaxVertexUniformVectors);
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexTextureImageUnits", resources.MaxVertexTextureImageUnits);
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxCombinedTextureImageUnits", resources.MaxCombinedTextureImageUnits);
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxTextureImageUnits", resources.MaxTextureImageUnits);
-    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxFragmentUniformVectors", resources.MaxFragmentUniformVectors);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexAttribs", resources.MaxVertexAttribs,
+                               EbpMedium);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexUniformVectors",
+                               resources.MaxVertexUniformVectors, EbpMedium);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxVertexTextureImageUnits",
+                               resources.MaxVertexTextureImageUnits, EbpMedium);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxCombinedTextureImageUnits",
+                               resources.MaxCombinedTextureImageUnits, EbpMedium);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxTextureImageUnits",
+                               resources.MaxTextureImageUnits, EbpMedium);
+    symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxFragmentUniformVectors",
+                               resources.MaxFragmentUniformVectors, EbpMedium);
 
-    symbolTable.insertConstInt(ESSL1_BUILTINS, "gl_MaxVaryingVectors", resources.MaxVaryingVectors);
+    symbolTable.insertConstInt(ESSL1_BUILTINS, "gl_MaxVaryingVectors", resources.MaxVaryingVectors,
+                               EbpMedium);
 
     if (spec != SH_CSS_SHADERS_SPEC)
     {
-        symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxDrawBuffers", resources.MaxDrawBuffers);
+        symbolTable.insertConstInt(COMMON_BUILTINS, "gl_MaxDrawBuffers", resources.MaxDrawBuffers,
+                                   EbpMedium);
         if (resources.EXT_blend_func_extended)
         {
             symbolTable.insertConstIntExt(COMMON_BUILTINS, "GL_EXT_blend_func_extended",
@@ -515,10 +523,60 @@ void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInR
         }
     }
 
-    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxVertexOutputVectors", resources.MaxVertexOutputVectors);
-    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxFragmentInputVectors", resources.MaxFragmentInputVectors);
-    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MinProgramTexelOffset", resources.MinProgramTexelOffset);
-    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxProgramTexelOffset", resources.MaxProgramTexelOffset);
+    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxVertexOutputVectors",
+                               resources.MaxVertexOutputVectors, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxFragmentInputVectors",
+                               resources.MaxFragmentInputVectors, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MinProgramTexelOffset",
+                               resources.MinProgramTexelOffset, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxProgramTexelOffset",
+                               resources.MaxProgramTexelOffset, EbpMedium);
+
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxImageUnits", resources.MaxImageUnits,
+                               EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxVertexImageUniforms",
+                               resources.MaxVertexImageUniforms, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxFragmentImageUniforms",
+                               resources.MaxFragmentImageUniforms, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxComputeImageUniforms",
+                               resources.MaxComputeImageUniforms, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxCombinedImageUniforms",
+                               resources.MaxCombinedImageUniforms, EbpMedium);
+
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxCombinedShaderOutputResources",
+                               resources.MaxCombinedShaderOutputResources, EbpMedium);
+
+    symbolTable.insertConstIvec3(ESSL3_1_BUILTINS, "gl_MaxComputeWorkGroupCount",
+                                 resources.MaxComputeWorkGroupCount, EbpHigh);
+    symbolTable.insertConstIvec3(ESSL3_1_BUILTINS, "gl_MaxComputeWorkGroupSize",
+                                 resources.MaxComputeWorkGroupSize, EbpHigh);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxComputeUniformComponents",
+                               resources.MaxComputeUniformComponents, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxComputeTextureImageUnits",
+                               resources.MaxComputeTextureImageUnits, EbpMedium);
+
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxComputeAtomicCounters",
+                               resources.MaxComputeAtomicCounters, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxComputeAtomicCounterBuffers",
+                               resources.MaxComputeAtomicCounterBuffers, EbpMedium);
+
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxVertexAtomicCounters",
+                               resources.MaxVertexAtomicCounters, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxFragmentAtomicCounters",
+                               resources.MaxFragmentAtomicCounters, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxCombinedAtomicCounters",
+                               resources.MaxCombinedAtomicCounters, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxAtomicCounterBindings",
+                               resources.MaxAtomicCounterBindings, EbpMedium);
+
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxVertexAtomicCounterBuffers",
+                               resources.MaxVertexAtomicCounterBuffers, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxFragmentAtomicCounterBuffers",
+                               resources.MaxFragmentAtomicCounterBuffers, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxCombinedAtomicCounterBuffers",
+                               resources.MaxCombinedAtomicCounterBuffers, EbpMedium);
+    symbolTable.insertConstInt(ESSL3_1_BUILTINS, "gl_MaxAtomicCounterBufferSize",
+                               resources.MaxAtomicCounterBufferSize, EbpMedium);
 }
 
 void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
