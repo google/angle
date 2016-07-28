@@ -70,6 +70,30 @@
       "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0ff26de6_ccf07ed0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1529,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T00:45:54Z",
+      "side": 1,
+      "message": "Yup, Chrome does it differently. If I had to pick one I think using the DXGI information as closely as possibly might be a good bet.",
+      "parentUuid": "0ff26de6_0eb67ea5",
+      "range": {
+        "startLine": 1529,
+        "startChar": 52,
+        "endLine": 1529,
+        "endChar": 83
+      },
+      "revId": "c12f443c2a9822b1692202fa6939b84abda48fcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
