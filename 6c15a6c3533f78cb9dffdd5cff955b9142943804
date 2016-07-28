@@ -16,6 +16,24 @@
       "revId": "6c15a6c3533f78cb9dffdd5cff955b9142943804",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f89c53d_4c038f15",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T16:25:13Z",
+      "side": 1,
+      "message": "Well, it\u0027s up to us, but it\u0027s something that might be less of a hassle if we used Martin\u0027s first solution of the #undef in the entry points files. Sorry to go back and forth, these things are annoying, but I think I liked it the way he had before if it didn\u0027t require this undef. Feel free to land it like that.",
+      "parentUuid": "cf45b5e6_9d8d03da",
+      "revId": "6c15a6c3533f78cb9dffdd5cff955b9142943804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
