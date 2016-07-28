@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf45b5e6_9d8d03da",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-28T12:28:57Z",
+      "side": 1,
+      "message": "Jamie, do you think that it\u0027s okay to modify this header? We\u0027ll need to reapply this change every time the header is updated to latest version from Khronos.",
+      "revId": "6c15a6c3533f78cb9dffdd5cff955b9142943804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
