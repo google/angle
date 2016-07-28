@@ -2573,6 +2573,11 @@ bool Renderer11::testDeviceLost()
 {
     bool isLost = false;
 
+    if (!mDevice)
+    {
+        return true;
+    }
+
     // GetRemovedReason is used to test if the device is removed
     HRESULT result = mDevice->GetDeviceRemovedReason();
     isLost = d3d11::isDeviceLostError(result);
