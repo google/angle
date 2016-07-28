@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f6cc981_d30d9e3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T20:11:25Z",
+      "side": 1,
+      "message": "nit: wrap to 71 chars",
+      "range": {
+        "startLine": 9,
+        "startChar": 70,
+        "endLine": 9,
+        "endChar": 73
+      },
+      "revId": "d5a8fd6c9307edb7d7aac3de5d7c40030b42b6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f6cc981_53fd2e0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T20:11:25Z",
+      "side": 1,
+      "message": "nit: angleproject",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 9
+      },
+      "revId": "d5a8fd6c9307edb7d7aac3de5d7c40030b42b6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f6cc981_b307ca1f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T20:11:25Z",
+      "side": 1,
+      "message": "nit: run git cl format to fix the formatting",
+      "range": {
+        "startLine": 2583,
+        "startChar": 18,
+        "endLine": 2583,
+        "endChar": 19
+      },
+      "revId": "d5a8fd6c9307edb7d7aac3de5d7c40030b42b6b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
