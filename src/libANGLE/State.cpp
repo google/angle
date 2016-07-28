@@ -1797,7 +1797,7 @@ void State::getPointerv(GLenum pname, void **params) const
     }
 }
 
-bool State::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
+void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
 {
     switch (target)
     {
@@ -1814,13 +1814,12 @@ bool State::getIndexedIntegerv(GLenum target, GLuint index, GLint *data)
         }
         break;
       default:
-        return false;
+          UNREACHABLE();
+          break;
     }
-
-    return true;
 }
 
-bool State::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
+void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
 {
     switch (target)
     {
@@ -1849,10 +1848,14 @@ bool State::getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data)
         }
         break;
       default:
-        return false;
+          UNREACHABLE();
+          break;
     }
+}
 
-    return true;
+void State::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
+{
+    UNREACHABLE();
 }
 
 bool State::hasMappedBuffer(GLenum target) const

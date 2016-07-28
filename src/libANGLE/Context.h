@@ -202,9 +202,9 @@ class Context final : public ValidationContext
     void getIntegerv(GLenum pname, GLint *params);
     void getInteger64v(GLenum pname, GLint64 *params);
     void getPointerv(GLenum pname, void **params) const;
-
-    bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
-    bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
+    void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
+    void getIntegeri_v(GLenum target, GLuint index, GLint *data);
+    void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
 
     void activeTexture(GLenum texture);
     void blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);

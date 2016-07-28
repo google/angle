@@ -120,6 +120,13 @@ static GLint QuerySingleGLInt(const FunctionsGL *functions, GLenum name)
     return result;
 }
 
+static GLint QuerySingleIndexGLInt(const FunctionsGL *functions, GLenum name, GLuint index)
+{
+    GLint result;
+    functions->getIntegeri_v(name, index, &result);
+    return result;
+}
+
 static GLint QueryGLIntRange(const FunctionsGL *functions, GLenum name, size_t index)
 {
     GLint result[2] = {};
@@ -590,6 +597,164 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         !functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_texture_multisample"))
+    {
+        caps->maxFramebufferWidth   = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_WIDTH);
+        caps->maxFramebufferHeight  = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_HEIGHT);
+        caps->maxFramebufferSamples = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_SAMPLES);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_texture_multisample"))
+    {
+        caps->maxSampleMaskWords     = QuerySingleGLInt(functions, GL_MAX_SAMPLE_MASK_WORDS);
+        caps->maxColorTextureSamples = QuerySingleGLInt(functions, GL_MAX_COLOR_TEXTURE_SAMPLES);
+        caps->maxDepthTextureSamples = QuerySingleGLInt(functions, GL_MAX_DEPTH_TEXTURE_SAMPLES);
+        caps->maxIntegerSamples      = QuerySingleGLInt(functions, GL_MAX_INTEGER_SAMPLES);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_vertex_attrib_binding"))
+    {
+        caps->maxVertexAttribRelativeOffset =
+            QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET);
+        caps->maxVertexAttribBindings = QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIB_BINDINGS);
+        caps->maxVertexAttribStride   = QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIB_STRIDE);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_shader_storage_buffer_object"))
+    {
+        caps->maxCombinedShaderOutputResources =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES);
+        caps->maxFragmentShaderStorageBlocks =
+            QuerySingleGLInt(functions, GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS);
+        caps->maxVertexShaderStorageBlocks =
+            QuerySingleGLInt(functions, GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS);
+        caps->maxShaderStorageBufferBindings =
+            QuerySingleGLInt(functions, GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
+        caps->maxShaderStorageBlockSize =
+            QuerySingleGLInt64(functions, GL_MAX_SHADER_STORAGE_BLOCK_SIZE);
+        caps->maxCombinedShaderStorageBlocks =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS);
+        caps->shaderStorageBufferOffsetAlignment =
+            QuerySingleGLInt(functions, GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_compute_shader"))
+    {
+        for (GLuint index = 0u; index < 3u; ++index)
+        {
+            caps->maxComputeWorkGroupCount[index] =
+                QuerySingleIndexGLInt(functions, GL_MAX_COMPUTE_WORK_GROUP_COUNT, index);
+
+            caps->maxComputeWorkGroupSize[index] =
+                QuerySingleIndexGLInt(functions, GL_MAX_COMPUTE_WORK_GROUP_SIZE, index);
+        }
+        caps->maxComputeWorkGroupInvocations =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
+        caps->maxComputeUniformBlocks = QuerySingleGLInt(functions, GL_MAX_COMPUTE_UNIFORM_BLOCKS);
+        caps->maxComputeTextureImageUnits =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS);
+        caps->maxComputeSharedMemorySize =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_SHARED_MEMORY_SIZE);
+        caps->maxComputeUniformComponents =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_UNIFORM_COMPONENTS);
+        caps->maxComputeAtomicCounterBuffers =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS);
+        caps->maxComputeAtomicCounters =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_ATOMIC_COUNTERS);
+        caps->maxComputeImageUniforms = QuerySingleGLInt(functions, GL_MAX_COMPUTE_IMAGE_UNIFORMS);
+        caps->maxCombinedComputeUniformComponents =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS);
+        caps->maxComputeShaderStorageBlocks =
+            QuerySingleGLInt(functions, GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_explicit_uniform_location"))
+    {
+        caps->maxUniformLocations = QuerySingleGLInt(functions, GL_MAX_UNIFORM_LOCATIONS);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 0)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_texture_gather"))
+    {
+        caps->minProgramTextureGatherOffset =
+            QuerySingleGLInt(functions, GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET);
+        caps->maxProgramTextureGatherOffset =
+            QuerySingleGLInt(functions, GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_shader_image_load_store"))
+    {
+        caps->maxVertexImageUniforms = QuerySingleGLInt(functions, GL_MAX_VERTEX_IMAGE_UNIFORMS);
+        caps->maxFragmentImageUniforms =
+            QuerySingleGLInt(functions, GL_MAX_FRAGMENT_IMAGE_UNIFORMS);
+        caps->maxImageUnits = QuerySingleGLInt(functions, GL_MAX_IMAGE_UNITS);
+        caps->maxCombinedImageUniforms =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_IMAGE_UNIFORMS);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
+    if (functions->isAtLeastGL(gl::Version(4, 2)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_shader_atomic_counters"))
+    {
+        caps->maxVertexAtomicCounterBuffers =
+            QuerySingleGLInt(functions, GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS);
+        caps->maxVertexAtomicCounters = QuerySingleGLInt(functions, GL_MAX_VERTEX_ATOMIC_COUNTERS);
+        caps->maxFragmentAtomicCounterBuffers =
+            QuerySingleGLInt(functions, GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS);
+        caps->maxFragmentAtomicCounters =
+            QuerySingleGLInt(functions, GL_MAX_FRAGMENT_ATOMIC_COUNTERS);
+        caps->maxAtomicCounterBufferBindings =
+            QuerySingleGLInt(functions, GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
+        caps->maxAtomicCounterBufferSize =
+            QuerySingleGLInt(functions, GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE);
+        caps->maxCombinedAtomicCounterBuffers =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS);
+        caps->maxCombinedAtomicCounters =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_ATOMIC_COUNTERS);
+    }
+    else
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
     }
 
     // TODO(geofflang): The gl-uniform-arrays WebGL conformance test struggles to complete on time

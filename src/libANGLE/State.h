@@ -291,8 +291,9 @@ class State : angle::NonCopyable
     void getFloatv(GLenum pname, GLfloat *params);
     void getIntegerv(const ContextState &data, GLenum pname, GLint *params);
     void getPointerv(GLenum pname, void **params) const;
-    bool getIndexedIntegerv(GLenum target, GLuint index, GLint *data);
-    bool getIndexedInteger64v(GLenum target, GLuint index, GLint64 *data);
+    void getIntegeri_v(GLenum target, GLuint index, GLint *data);
+    void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
+    void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
 
     bool hasMappedBuffer(GLenum target) const;
 
@@ -479,4 +480,3 @@ class State : angle::NonCopyable
 }  // namespace gl
 
 #endif // LIBANGLE_STATE_H_
-

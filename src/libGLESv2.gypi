@@ -197,6 +197,8 @@
             'libANGLE/validationES2.h',
             'libANGLE/validationES3.cpp',
             'libANGLE/validationES3.h',
+            'libANGLE/validationES31.cpp',
+            'libANGLE/validationES31.h',
             'third_party/murmurhash/MurmurHash3.cpp',
             'third_party/murmurhash/MurmurHash3.h',
         ],
