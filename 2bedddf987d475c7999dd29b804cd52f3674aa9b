@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f3aa556_a1877e08",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-28T07:39:12Z",
+      "side": 1,
+      "message": "Nit: Typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 26,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "2bedddf987d475c7999dd29b804cd52f3674aa9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
