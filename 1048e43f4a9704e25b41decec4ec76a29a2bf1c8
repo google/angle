@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "6f6cc981_3ef40125",
+        "filename": "src/compiler/translator/ExpandIntegerPowExpressions.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-07-28T20:46:45Z",
+      "side": 1,
+      "message": "Good catch. I couldn\u0027t actually repro the compiler bug with 1.0 - 1.0e-x with various values of x. Maybe I have the fix slightly wrong.",
+      "parentUuid": "ca73e35a_4d67d922",
+      "revId": "1048e43f4a9704e25b41decec4ec76a29a2bf1c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa7cef2d_cc68af29",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 7
