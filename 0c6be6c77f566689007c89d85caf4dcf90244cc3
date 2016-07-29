@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf45b5e6_bd60ff0c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T09:21:59Z",
+      "side": 1,
+      "message": "You can just remove this line from the commit message and maybe make the commit header \"Add ES 3.1 API constants\".",
+      "revId": "0c6be6c77f566689007c89d85caf4dcf90244cc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf45b5e6_5d669b28",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T09:21:59Z",
+      "side": 1,
+      "message": "I think \"Caps\" is actually short of \"Capabilities\".",
+      "range": {
+        "startLine": 11,
+        "startChar": 16,
+        "endLine": 11,
+        "endChar": 24
+      },
+      "revId": "0c6be6c77f566689007c89d85caf4dcf90244cc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
