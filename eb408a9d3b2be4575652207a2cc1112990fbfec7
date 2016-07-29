@@ -1,0 +1,209 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3456aa15_481e3fc8",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "This is a pre-existing issue, but I wonder why subpixelBits is not included here?",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f1add55_e3c4d20d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "Great, this is much easier to review now!",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "746022e5_aa0daf90",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 458,
+        "startChar": 37,
+        "endLine": 458,
+        "endChar": 39
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f1add55_c3bfd674",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "These should be under 20.41.",
+      "range": {
+        "startLine": 468,
+        "startChar": 4,
+        "endLine": 479,
+        "endChar": 34
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "746022e5_4a70730c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1587,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "This comment is not valid anymore.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4f9ce3d_3d232f14",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1602,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "Same comment here.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3456aa15_a836db4a",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "There should be a context version check here as well, the indexed queries should be implemented essentially the same way as the non-indexed ones.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f1add55_23c7ca0f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "nit: I\u0027d remove newlines in between here, it\u0027s better to use them just to separate the values in different tables from each other.",
+      "range": {
+        "startLine": 654,
+        "startChar": 8,
+        "endLine": 680,
+        "endChar": 78
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4f9ce3d_5d1efbc7",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2168,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "\"Context does not support GLES3.1\" error message would be more in line with existing error messages.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "746022e5_8a0aeb74",
+        "filename": "src/libANGLE/validationES3.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "This should go into a new file, validationES31.h",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14f44640_3fbfa777",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T11:58:15Z",
+      "side": 1,
+      "message": "Usually all of the state values are queriable through any of the Get* functions, like GetInteger or GetBoolean can be used to query any variable, the query result is just casted to the type that is being asked. So what should be done here is adding a new ValidateIndexedStateQuery function that would validate the indexed queries similarly to how ValidateStateQuery is now validating the non-indexed ones, and calling that from both GetBooleani_v, GetIntegeri_v and GetInteger64i_v.\n\nSee GLES 3.1 spec section 2.2.2.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
