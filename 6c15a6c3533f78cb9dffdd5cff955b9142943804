@@ -34,6 +34,24 @@
       "revId": "6c15a6c3533f78cb9dffdd5cff955b9142943804",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4f9ce3d_3d87af0c",
+        "filename": "include/EGL/eglplatform.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-07-29T07:34:39Z",
+      "side": 1,
+      "message": "Actually, that doesn\u0027t work. I submitted the patch because I thought it would work. I am working on Linux and I didn\u0027t have a fast way to test the code on windows.\nThe reason it doesn\u0027t work is that the entry points header does not include windows.h. So, if we have something like\n\n#include \"entry_points_gles_3_1.h\"\n#include \"eglplatform.h\"\n\nthe macro will be defined again.",
+      "parentUuid": "4f89c53d_4c038f15",
+      "revId": "6c15a6c3533f78cb9dffdd5cff955b9142943804",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
