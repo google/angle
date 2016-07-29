@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "145b6640_67cff25e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T09:21:59Z",
+      "side": 1,
+      "message": "You can just remove this line and make the commit header \"Add ES 3.1 API constants\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 41
+      },
+      "revId": "b966bfde973be3b433f423e1bfccff864fcb8852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4029af5_bce3c1cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T09:21:59Z",
+      "side": 1,
+      "message": "I think \"caps\" is actually shortened from \"capabilities\" here.",
+      "range": {
+        "startLine": 11,
+        "startChar": 16,
+        "endLine": 11,
+        "endChar": 24
+      },
+      "revId": "b966bfde973be3b433f423e1bfccff864fcb8852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_ac0dc390",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-07-29T09:21:59Z",
+      "side": 1,
+      "message": "This is better, but still tricky to review - to check if a value is missing, anyone reading the code would have to first look for it here, and then also in the GLES 3.0 constants that are specified above with references to GLES 3.0 spec. It would be better to reorganize the whole thing according to the GLES 3.1 spec.",
+      "revId": "b966bfde973be3b433f423e1bfccff864fcb8852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
