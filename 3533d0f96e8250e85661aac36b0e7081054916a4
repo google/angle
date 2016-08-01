@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4533225_c67c6250",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2235,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T14:08:48Z",
+      "side": 1,
+      "message": "Those two have the same function bodies. I wonder whether I should combine them. The data parameter gets passed since I guess that once the entry points and validation functions start getting generated automatically, all parameters would get passed regardless whether they would be used.",
+      "range": {
+        "startLine": 2217,
+        "startChar": 0,
+        "endLine": 2235,
+        "endChar": 1
+      },
+      "revId": "3533d0f96e8250e85661aac36b0e7081054916a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
