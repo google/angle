@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "942d9696_6b17c1fb",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "I have not added any changes in the last patch in regards to this. It seems that the value is hardcoded to be 4.",
+      "parentUuid": "3456aa15_481e3fc8",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f1add55_e3c4d20d",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 8
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "14f44640_5f002bd2",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "746022e5_aa0daf90",
+      "range": {
+        "startLine": 458,
+        "startChar": 37,
+        "endLine": 458,
+        "endChar": 39
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f1add55_c3bfd674",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 8
@@ -70,6 +112,30 @@
       "writtenOn": "2016-07-29T11:58:15Z",
       "side": 1,
       "message": "These should be under 20.41.",
+      "range": {
+        "startLine": 468,
+        "startChar": 4,
+        "endLine": 479,
+        "endChar": 34
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "746022e5_edb741d1",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f1add55_c3bfd674",
       "range": {
         "startLine": 468,
         "startChar": 4,
@@ -99,6 +165,24 @@
     },
     {
       "key": {
+        "uuid": "b4029af5_9c76c56a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1587,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "You are talking about\n\"// Indexed integer queries all refer to current state, so this function is a\n// mere passthrough.\"\nright? I removed it.",
+      "parentUuid": "746022e5_4a70730c",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4f9ce3d_3d232f14",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 8
@@ -116,6 +200,24 @@
     },
     {
       "key": {
+        "uuid": "b430dae9_2ff0a592",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1602,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "I removed the function call here and the comment should remain. There was no point in changing this function.",
+      "parentUuid": "d4f9ce3d_3d232f14",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3456aa15_a836db4a",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 8
@@ -127,6 +229,24 @@
       "writtenOn": "2016-07-29T11:58:15Z",
       "side": 1,
       "message": "There should be a context version check here as well, the indexed queries should be implemented essentially the same way as the non-indexed ones.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4533225_6686ce7a",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Yes, I reimplemented the function in similar fashion to getQueryParameterInfo",
+      "parentUuid": "3456aa15_a836db4a",
       "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -156,6 +276,30 @@
     },
     {
       "key": {
+        "uuid": "746022e5_ea5e077b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "I removed the new lines.\nThe values are not really ordered by tables. I thought it might not really make a difference when following since here they are organized by version anyway meaning there would be gaps when following the order from Caps.h.\nwhen checking one can just search for the member variable from Caps.h.",
+      "parentUuid": "8f1add55_23c7ca0f",
+      "range": {
+        "startLine": 654,
+        "startChar": 8,
+        "endLine": 680,
+        "endChar": 78
+      },
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4f9ce3d_5d1efbc7",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 8
@@ -167,6 +311,24 @@
       "writtenOn": "2016-07-29T11:58:15Z",
       "side": 1,
       "message": "\"Context does not support GLES3.1\" error message would be more in line with existing error messages.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4533225_468bd280",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2168,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4f9ce3d_5d1efbc7",
       "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -190,6 +352,24 @@
     },
     {
       "key": {
+        "uuid": "746022e5_adb149dd",
+        "filename": "src/libANGLE/validationES3.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "746022e5_8a0aeb74",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14f44640_3fbfa777",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 8
@@ -201,6 +381,24 @@
       "writtenOn": "2016-07-29T11:58:15Z",
       "side": 1,
       "message": "Usually all of the state values are queriable through any of the Get* functions, like GetInteger or GetBoolean can be used to query any variable, the query result is just casted to the type that is being asked. So what should be done here is adding a new ValidateIndexedStateQuery function that would validate the indexed queries similarly to how ValidateStateQuery is now validating the non-indexed ones, and calling that from both GetBooleani_v, GetIntegeri_v and GetInteger64i_v.\n\nSee GLES 3.1 spec section 2.2.2.",
+      "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f1add55_635702ff",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T08:11:37Z",
+      "side": 1,
+      "message": "Ok.\nI addressed this issue. I added a function stub getIndexedBooleanv in Context.cpp as well. Right now it does not really do anything since the only enum which has boolean as a return value is IMAGE_BINDING_LAYERED. This has to do with the state and not the capability constants. I thought I would add it anyway since it would have to be added at some point anyway.",
+      "parentUuid": "14f44640_3fbfa777",
       "revId": "eb408a9d3b2be4575652207a2cc1112990fbfec7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
