@@ -446,13 +446,7 @@ typedef struct
 // flag above.
 // Parameters:
 // maxVectors: the available rows of registers.
-// varInfoArray / variables: an array of variables.
-// varInfoArraySize: the size of the variable array.
-// TODO(cwallez) remove the first overload once the second is rolled in Chromium
-COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
-    int maxVectors,
-    ShVariableInfo *varInfoArray,
-    size_t varInfoArraySize);
+// variables: an array of variables.
 COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
     int maxVectors,
     const std::vector<sh::ShaderVariable> &variables);
