@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f1add55_4373e6af",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-01T09:59:52Z",
+      "side": 1,
+      "message": "nit: CastIndexedStateValues could be a clearer name for this function.",
+      "range": {
+        "startLine": 158,
+        "startChar": 5,
+        "endLine": 158,
+        "endChar": 20
+      },
+      "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_8f33195b",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-01T09:59:52Z",
+      "side": 1,
+      "message": "This is looking much better and I think the functionality is correct, but since these functions are being rewritten now, they could easily be changed to be completely in line with the new pattern. That brings the project one step closer to autogenerating the entry_points* files. So there should be a ValidateGetIntegeri_v function for validation that just calls ValidateIndexedStateQuery, and the implementation should be in Context::getIntegeri_v.\n\nSame changes are needed in GetInteger64i_v and GetBooleani_v.",
+      "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4029af5_1cf075c9",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-01T09:59:52Z",
+      "side": 1,
+      "message": "This is the part that should be in Context::getIntegeri_v.",
+      "range": {
+        "startLine": 676,
+        "startChar": 8,
+        "endLine": 682,
+        "endChar": 81
+      },
+      "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
