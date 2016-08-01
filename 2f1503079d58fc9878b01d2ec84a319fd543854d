@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d4f9ce3d_7d45371b",
+        "filename": "src/libANGLE/queryconversions.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T14:08:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f1add55_4373e6af",
+      "range": {
+        "startLine": 158,
+        "startChar": 5,
+        "endLine": 158,
+        "endChar": 20
+      },
+      "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b430dae9_8f33195b",
         "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
         "patchSetId": 9
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-01T09:59:52Z",
       "side": 1,
       "message": "This is looking much better and I think the functionality is correct, but since these functions are being rewritten now, they could easily be changed to be completely in line with the new pattern. That brings the project one step closer to autogenerating the entry_points* files. So there should be a ValidateGetIntegeri_v function for validation that just calls ValidateIndexedStateQuery, and the implementation should be in Context::getIntegeri_v.\n\nSame changes are needed in GetInteger64i_v and GetBooleani_v.",
+      "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_6f38edf6",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-01T14:08:48Z",
+      "side": 1,
+      "message": "Did it for all indexed queries. Unfortunately, getIndexedQueryParameterInfo can get called multiple times as it is like now.\nI.e. if we call getBooleani_v with enum GL_MAX_COMPUTE_WORK_GROUP_SIZE, then it will get called at most 3 times:\n- once in the validation\n- once when Context::getBooleani_v gets called so as to check whether a cast should be done or whether the return parameter is of type GL_BOOL\n- then when it will get casted, a call to Context::getIntegeri_v is made where another check of the type is made.\n\nWe can reduce the calls to 2, if Context::getIntegeri_v (and the other ones) accept a as a parameter the type of the value we are querying.\n\nThen, of course in the entry points bodies, we have to first query for the type and then call Context::getIntegeri_v.\n\nIs it worth it?",
+      "parentUuid": "b430dae9_8f33195b",
       "revId": "2f1503079d58fc9878b01d2ec84a319fd543854d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
