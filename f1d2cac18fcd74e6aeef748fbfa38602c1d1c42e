@@ -132,6 +132,30 @@
     },
     {
       "key": {
+        "uuid": "2f2ad160_57ae3695",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaf86f8a_151a5624",
+      "range": {
+        "startLine": 68,
+        "startChar": 12,
+        "endLine": 68,
+        "endChar": 13
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf86f8a_75363a9c",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 15
@@ -143,6 +167,30 @@
       "writtenOn": "2016-07-20T19:40:09Z",
       "side": 1,
       "message": "nit: you can probably s/EXPECT_GL_NO_ERROR/ASSERT_GL_NO_ERROR/g. If we error we should just stop.",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 22
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2ad160_b7b4d2ec",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "There were no loops of tests so I skipped this nit, there shouldn\u0027t be too much error spew.",
+      "parentUuid": "aaf86f8a_75363a9c",
       "range": {
         "startLine": 171,
         "startChar": 4,
@@ -178,6 +226,30 @@
     },
     {
       "key": {
+        "uuid": "2f2ad160_f7c9ea7b",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaf86f8a_952c8647",
+      "range": {
+        "startLine": 174,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 13
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf86f8a_b5f6e2c6",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 15
@@ -189,6 +261,30 @@
       "writtenOn": "2016-07-20T19:40:09Z",
       "side": 1,
       "message": "dit",
+      "range": {
+        "startLine": 324,
+        "startChar": 4,
+        "endLine": 324,
+        "endChar": 13
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2ad160_37dc623a",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaf86f8a_b5f6e2c6",
       "range": {
         "startLine": 324,
         "startChar": 4,
@@ -224,6 +320,30 @@
     },
     {
       "key": {
+        "uuid": "2f2ad160_77d6da1b",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaf86f8a_f5006a9d",
+      "range": {
+        "startLine": 474,
+        "startChar": 4,
+        "endLine": 474,
+        "endChar": 13
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf86f8a_b581c22b",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 15
@@ -235,6 +355,30 @@
       "writtenOn": "2016-07-20T19:40:09Z",
       "side": 1,
       "message": "nit: transparentBlack (ie 1, 1, 1, 0 is transparentWhite, etc)",
+      "range": {
+        "startLine": 29,
+        "startChar": 23,
+        "endLine": 29,
+        "endChar": 34
+      },
+      "revId": "f1d2cac18fcd74e6aeef748fbfa38602c1d1c42e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2ad160_37a1c2a6",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-01T18:50:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aaf86f8a_b581c22b",
       "range": {
         "startLine": 29,
         "startChar": 23,
