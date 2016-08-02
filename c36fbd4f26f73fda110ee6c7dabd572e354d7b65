@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_a2779e04",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-02T15:02:38Z",
+      "side": 1,
+      "message": "It may not be required, but I decided to add this enum so that we can distinguish between compute and \"render\" programs. Of course, it would be possible just to check what shaders we have attached.",
+      "range": {
+        "startLine": 158,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 2
+      },
+      "revId": "c36fbd4f26f73fda110ee6c7dabd572e354d7b65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
