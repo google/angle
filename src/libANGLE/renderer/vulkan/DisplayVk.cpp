@@ -48,12 +48,6 @@ egl::ConfigSet DisplayVk::generateConfigs()
     return egl::ConfigSet();
 }
 
-bool DisplayVk::isDeviceLost() const
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
 bool DisplayVk::testDeviceLost()
 {
     UNIMPLEMENTED();

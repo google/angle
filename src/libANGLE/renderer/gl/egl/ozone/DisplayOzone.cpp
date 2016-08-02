@@ -900,11 +900,6 @@ egl::ConfigSet DisplayOzone::generateConfigs()
     return configs;
 }
 
-bool DisplayOzone::isDeviceLost() const
-{
-    return false;
-}
-
 bool DisplayOzone::testDeviceLost()
 {
     return false;

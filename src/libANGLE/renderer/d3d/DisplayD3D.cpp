@@ -254,12 +254,6 @@ egl::ConfigSet DisplayD3D::generateConfigs()
     return mRenderer->generateConfigs();
 }
 
-bool DisplayD3D::isDeviceLost() const
-{
-    ASSERT(mRenderer != nullptr);
-    return mRenderer->isDeviceLost();
-}
-
 bool DisplayD3D::testDeviceLost()
 {
     ASSERT(mRenderer != nullptr);

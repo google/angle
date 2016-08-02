@@ -55,7 +55,6 @@ class DisplayD3D : public DisplayImpl
 
     egl::ConfigSet generateConfigs() override;
 
-    bool isDeviceLost() const override;
     bool testDeviceLost() override;
     egl::Error restoreLostDevice() override;
 

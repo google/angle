@@ -334,11 +334,6 @@ egl::ConfigSet DisplayAndroid::generateConfigs()
     return configSet;
 }
 
-bool DisplayAndroid::isDeviceLost() const
-{
-    return false;
-}
-
 bool DisplayAndroid::testDeviceLost()
 {
     return false;

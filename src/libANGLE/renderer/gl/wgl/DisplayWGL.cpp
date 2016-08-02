@@ -541,12 +541,6 @@ egl::ConfigSet DisplayWGL::generateConfigs()
     return configs;
 }
 
-bool DisplayWGL::isDeviceLost() const
-{
-    //UNIMPLEMENTED();
-    return false;
-}
-
 bool DisplayWGL::testDeviceLost()
 {
     //UNIMPLEMENTED();

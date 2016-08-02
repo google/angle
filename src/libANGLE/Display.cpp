@@ -321,6 +321,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mContextSet(),
       mStreamSet(),
       mInitialized(false),
+      mDeviceLost(false),
       mCaps(),
       mDisplayExtensions(),
       mDisplayExtensionString(),
@@ -773,21 +774,31 @@ void Display::destroyContext(gl::Context *context)
 bool Display::isDeviceLost() const
 {
     ASSERT(isInitialized());
-    return mImplementation->isDeviceLost();
+    return mDeviceLost;
 }
 
 bool Display::testDeviceLost()
 {
     ASSERT(isInitialized());
-    return mImplementation->testDeviceLost();
+
+    if (!mDeviceLost && mImplementation->testDeviceLost())
+    {
+        notifyDeviceLost();
+    }
+
+    return mDeviceLost;
 }
 
 void Display::notifyDeviceLost()
 {
+    ASSERT(!mDeviceLost);
+
     for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
     {
         (*context)->markContextLost();
     }
+
+    mDeviceLost = true;
 }
 
 Error Display::waitClient() const

@@ -174,6 +174,11 @@ Error ValidateDisplay(const Display *display)
         return Error(EGL_NOT_INITIALIZED, "display is not initialized.");
     }
 
+    if (display->isDeviceLost())
+    {
+        return Error(EGL_CONTEXT_LOST, "display had a context loss");
+    }
+
     return Error(EGL_SUCCESS);
 }
 
@@ -1453,6 +1458,8 @@ Error ValidateCreateStreamProducerD3DTextureNV12ANGLE(const Display *display,
                                                       const Stream *stream,
                                                       const AttributeMap &attribs)
 {
+    ANGLE_TRY(ValidateDisplay(display));
+
     const DisplayExtensions &displayExtensions = display->getExtensions();
     if (!displayExtensions.streamProducerD3DTextureNV12)
     {

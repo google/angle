@@ -138,6 +138,7 @@ class Display final : angle::NonCopyable
     StreamSet mStreamSet;
 
     bool mInitialized;
+    bool mDeviceLost;
 
     Caps mCaps;
 

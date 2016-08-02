@@ -68,7 +68,7 @@ class Context final : public ValidationContext
     void makeCurrent(egl::Surface *surface);
     void releaseSurface();
 
-    virtual void markContextLost();
+    void markContextLost();
     bool isContextLost();
 
     // These create  and destroy methods are merely pass-throughs to
@@ -556,7 +556,7 @@ class Context final : public ValidationContext
 
     GLenum getError();
     GLenum getResetStatus();
-    virtual bool isResetNotificationEnabled();
+    bool isResetNotificationEnabled();
 
     const egl::Config *getConfig() const;
     EGLenum getClientType() const;

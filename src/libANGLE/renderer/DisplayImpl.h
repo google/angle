@@ -54,7 +54,6 @@ class DisplayImpl : public EGLImplFactory
 
     virtual egl::ConfigSet generateConfigs() = 0;
 
-    virtual bool isDeviceLost() const = 0;
     virtual bool testDeviceLost() = 0;
     virtual egl::Error restoreLostDevice() = 0;
 

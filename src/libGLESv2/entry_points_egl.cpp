@@ -583,19 +583,10 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         }
     }
 
-    if (display->isInitialized())
+    if (display->isInitialized() && display->testDeviceLost())
     {
-        if (display->testDeviceLost())
-        {
-            display->notifyDeviceLost();
-            return EGL_FALSE;
-        }
-
-        if (display->isDeviceLost())
-        {
-            SetGlobalError(Error(EGL_CONTEXT_LOST));
-            return EGL_FALSE;
-        }
+        SetGlobalError(Error(EGL_CONTEXT_LOST));
+        return EGL_FALSE;
     }
 
     Surface *drawSurface = static_cast<Surface*>(draw);
@@ -813,7 +804,7 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
         return EGL_FALSE;
     }
 
-    if (display->isDeviceLost())
+    if (display->testDeviceLost())
     {
         SetGlobalError(Error(EGL_CONTEXT_LOST));
         return EGL_FALSE;
@@ -850,7 +841,7 @@ EGLBoolean EGLAPIENTRY CopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNative
         return EGL_FALSE;
     }
 
-    if (display->isDeviceLost())
+    if (display->testDeviceLost())
     {
         SetGlobalError(Error(EGL_CONTEXT_LOST));
         return EGL_FALSE;
