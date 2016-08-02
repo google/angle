@@ -327,9 +327,9 @@ gl::Error TextureStorage11::getSRVLevels(GLint baseLevel,
     return gl::NoError();
 }
 
-d3d11::ANGLEFormat TextureStorage11::getANGLEFormat() const
+const d3d11::ANGLEFormatSet &TextureStorage11::getFormatSet() const
 {
-    return mTextureFormatSet->format;
+    return *mTextureFormatSet;
 }
 
 gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarget)
@@ -430,8 +430,8 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
         Blit11 *blitter = mRenderer->getBlitter();
-        TextureHelper11 source = TextureHelper11::MakeAndReference(srcTexture, getANGLEFormat());
-        TextureHelper11 dest   = TextureHelper11::MakeAndReference(dstTexture, getANGLEFormat());
+        TextureHelper11 source = TextureHelper11::MakeAndReference(srcTexture, getFormatSet());
+        TextureHelper11 dest   = TextureHelper11::MakeAndReference(dstTexture, getFormatSet());
         return blitter->copyDepthStencil(source, sourceSubresource, copyArea, texSize, dest,
                                          dstSubresource, copyArea, texSize, nullptr);
     }
@@ -1203,8 +1203,8 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
             ASSERT(SUCCEEDED(result));
 
             mLevelZeroRenderTarget = new TextureRenderTarget11(
-                rtv, mLevelZeroTexture, nullptr, nullptr, mInternalFormat,
-                mTextureFormatSet->format, getLevelWidth(level), getLevelHeight(level), 1, 0);
+                rtv, mLevelZeroTexture, nullptr, nullptr, mInternalFormat, getFormatSet(),
+                getLevelWidth(level), getLevelHeight(level), 1, 0);
 
             // RenderTarget will take ownership of these resources
             SafeRelease(rtv);
@@ -1233,9 +1233,9 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
                 result);
         }
 
-        mRenderTarget[level] = new TextureRenderTarget11(
-            rtv, texture, srv, blitSRV, mInternalFormat, mTextureFormatSet->format,
-            getLevelWidth(level), getLevelHeight(level), 1, 0);
+        mRenderTarget[level] =
+            new TextureRenderTarget11(rtv, texture, srv, blitSRV, mInternalFormat, getFormatSet(),
+                                      getLevelWidth(level), getLevelHeight(level), 1, 0);
 
         // RenderTarget will take ownership of these resources
         SafeRelease(rtv);
@@ -1265,7 +1265,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     }
 
     mRenderTarget[level] =
-        new TextureRenderTarget11(dsv, texture, srv, mInternalFormat, mTextureFormatSet->format,
+        new TextureRenderTarget11(dsv, texture, srv, mInternalFormat, getFormatSet(),
                                   getLevelWidth(level), getLevelHeight(level), 1, 0);
 
     // RenderTarget will take ownership of these resources
@@ -1567,7 +1567,7 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer, EGLIm
     mCurrentRenderTarget           = reinterpret_cast<uintptr_t>(renderTarget11);
 
     mMipLevels      = 1;
-    mTextureFormatSet = &d3d11::GetANGLEFormatSet(renderTarget11->getANGLEFormat());
+    mTextureFormatSet = &renderTarget11->getFormatSet();
     mSwizzleFormatSet = &d3d11::GetANGLEFormatSet(mTextureFormatSet->swizzleFormat);
     mTextureWidth   = renderTarget11->getWidth();
     mTextureHeight  = renderTarget11->getHeight();
@@ -2362,8 +2362,8 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
                 ASSERT(SUCCEEDED(result));
 
                 mLevelZeroRenderTarget[faceIndex] = new TextureRenderTarget11(
-                    rtv, mLevelZeroTexture, nullptr, nullptr, mInternalFormat,
-                    mTextureFormatSet->format, getLevelWidth(level), getLevelHeight(level), 1, 0);
+                    rtv, mLevelZeroTexture, nullptr, nullptr, mInternalFormat, getFormatSet(),
+                    getLevelWidth(level), getLevelHeight(level), 1, 0);
 
                 // RenderTarget will take ownership of these resources
                 SafeRelease(rtv);
@@ -2425,8 +2425,8 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             d3d11::SetDebugName(rtv, "TexStorageCube.RenderTargetRTV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
-                rtv, texture, srv, blitSRV, mInternalFormat, mTextureFormatSet->format,
-                getLevelWidth(level), getLevelHeight(level), 1, 0);
+                rtv, texture, srv, blitSRV, mInternalFormat, getFormatSet(), getLevelWidth(level),
+                getLevelHeight(level), 1, 0);
 
             // RenderTarget will take ownership of these resources
             SafeRelease(rtv);
@@ -2459,9 +2459,9 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 
             d3d11::SetDebugName(dsv, "TexStorageCube.RenderTargetDSV");
 
-            mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
-                dsv, texture, srv, mInternalFormat, mTextureFormatSet->format, getLevelWidth(level),
-                getLevelHeight(level), 1, 0);
+            mRenderTarget[faceIndex][level] =
+                new TextureRenderTarget11(dsv, texture, srv, mInternalFormat, getFormatSet(),
+                                          getLevelWidth(level), getLevelHeight(level), 1, 0);
 
             // RenderTarget will take ownership of these resources
             SafeRelease(dsv);
@@ -2912,7 +2912,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             d3d11::SetDebugName(rtv, "TexStorage3D.RTV");
 
             mLevelRenderTargets[mipLevel] = new TextureRenderTarget11(
-                rtv, texture, srv, blitSRV, mInternalFormat, mTextureFormatSet->format,
+                rtv, texture, srv, blitSRV, mInternalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), getLevelDepth(mipLevel), 0);
 
             // RenderTarget will take ownership of these resources
@@ -2969,7 +2969,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             d3d11::SetDebugName(rtv, "TexStorage3D.LayerRTV");
 
             mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
-                rtv, texture, srv, blitSRV, mInternalFormat, mTextureFormatSet->format,
+                rtv, texture, srv, blitSRV, mInternalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
 
             // RenderTarget will take ownership of these resources
@@ -3391,7 +3391,7 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             d3d11::SetDebugName(rtv, "TexStorage2DArray.RenderTargetRTV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
-                rtv, texture, srv, blitSRV, mInternalFormat, mTextureFormatSet->format,
+                rtv, texture, srv, blitSRV, mInternalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
 
             // RenderTarget will take ownership of these resources
@@ -3425,9 +3425,9 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
 
             d3d11::SetDebugName(dsv, "TexStorage2DArray.RenderTargetDSV");
 
-            mRenderTargets[key] = new TextureRenderTarget11(
-                dsv, texture, srv, mInternalFormat, mTextureFormatSet->format,
-                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+            mRenderTargets[key] =
+                new TextureRenderTarget11(dsv, texture, srv, mInternalFormat, getFormatSet(),
+                                          getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
 
             // RenderTarget will take ownership of these resources
             SafeRelease(dsv);

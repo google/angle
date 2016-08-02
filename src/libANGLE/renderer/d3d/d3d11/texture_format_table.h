@@ -38,7 +38,7 @@ struct LoadImageFunctionInfo
     bool requiresConversion;
 };
 
-struct ANGLEFormatSet
+struct ANGLEFormatSet final : angle::NonCopyable
 {
     ANGLEFormatSet();
     ANGLEFormatSet(ANGLEFormat format,
@@ -52,8 +52,6 @@ struct ANGLEFormatSet
                    ANGLEFormat swizzleFormat,
                    MipGenerationFunction mipGenerationFunction,
                    ColorReadFunction colorReadFunction);
-    ANGLEFormatSet(const ANGLEFormatSet &) = default;
-    ANGLEFormatSet &operator=(const ANGLEFormatSet &) = default;
 
     ANGLEFormat format;
 

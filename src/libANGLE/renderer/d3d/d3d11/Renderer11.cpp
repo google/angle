@@ -3143,9 +3143,8 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target depth stencil view, result: 0x%X.", result);
             }
 
-            *outRT =
-                new TextureRenderTarget11(dsv, texture, srv, format, formatInfo.formatSet->format,
-                                          width, height, 1, supportedSamples);
+            *outRT = new TextureRenderTarget11(dsv, texture, srv, format, *formatInfo.formatSet,
+                                               width, height, 1, supportedSamples);
 
             SafeRelease(dsv);
         }
@@ -3173,9 +3172,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 mDeviceContext->ClearRenderTargetView(rtv, clearValues);
             }
 
-            *outRT = new TextureRenderTarget11(rtv, texture, srv, blitSRV, format,
-                                               formatInfo.formatSet->format, width, height, 1,
-                                               supportedSamples);
+            *outRT =
+                new TextureRenderTarget11(rtv, texture, srv, blitSRV, format, *formatInfo.formatSet,
+                                          width, height, 1, supportedSamples);
 
             SafeRelease(rtv);
         }
@@ -3190,9 +3189,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     }
     else
     {
-        *outRT = new TextureRenderTarget11(static_cast<ID3D11RenderTargetView *>(nullptr), nullptr,
-                                           nullptr, nullptr, format, d3d11::ANGLE_FORMAT_NONE,
-                                           width, height, 1, supportedSamples);
+        *outRT = new TextureRenderTarget11(
+            static_cast<ID3D11RenderTargetView *>(nullptr), nullptr, nullptr, nullptr, format,
+            d3d11::GetANGLEFormatSet(d3d11::ANGLE_FORMAT_NONE), width, height, 1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -3562,7 +3561,7 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     ASSERT(rt11->getTexture());
 
     TextureHelper11 textureHelper =
-        TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getANGLEFormat());
+        TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getFormatSet());
     unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
     const gl::Extents &texSize = textureHelper.getExtents();
@@ -3596,8 +3595,8 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     gl::Extents safeSize(safeArea.width, safeArea.height, 1);
     TextureHelper11 stagingHelper;
     ANGLE_TRY_RESULT(
-        CreateStagingTexture(textureHelper.getTextureType(), textureHelper.getANGLEFormat(),
-                             safeSize, StagingAccess::READ, mDevice),
+        CreateStagingTexture(textureHelper.getTextureType(), textureHelper.getFormatSet(), safeSize,
+                             StagingAccess::READ, mDevice),
         stagingHelper);
 
     TextureHelper11 resolvedTextureHelper;
@@ -3634,7 +3633,7 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
         mDeviceContext->ResolveSubresource(resolveTex2D, 0, textureHelper.getTexture2D(),
                                            sourceSubResource, textureHelper.getFormat());
         resolvedTextureHelper =
-            TextureHelper11::MakeAndReference(resolveTex2D, textureHelper.getANGLEFormat());
+            TextureHelper11::MakeAndReference(resolveTex2D, textureHelper.getFormatSet());
 
         sourceSubResource = 0;
         srcTexture        = &resolvedTextureHelper;
@@ -3697,7 +3696,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     uint8_t *source = static_cast<uint8_t *>(mapping.pData);
     int inputPitch  = static_cast<int>(mapping.RowPitch);
 
-    const auto &angleFormatInfo = d3d11::GetANGLEFormatSet(textureHelper.getANGLEFormat());
+    const auto &angleFormatInfo = textureHelper.getFormatSet();
     ASSERT(angleFormatInfo.glInternalFormat != GL_NONE);
     const gl::InternalFormat &sourceFormatInfo =
         gl::GetInternalFormatInfo(angleFormatInfo.glInternalFormat);
@@ -3734,7 +3733,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     }
 
     TextureHelper11 drawTexture = TextureHelper11::MakeAndReference(
-        drawRenderTarget11->getTexture(), drawRenderTarget11->getANGLEFormat());
+        drawRenderTarget11->getTexture(), drawRenderTarget11->getFormatSet());
     unsigned int drawSubresource = drawRenderTarget11->getSubresourceIndex();
     ID3D11RenderTargetView *drawRTV = drawRenderTarget11->getRenderTargetView();
     ID3D11DepthStencilView *drawDSV = drawRenderTarget11->getDepthStencilView();
@@ -3756,7 +3755,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
         if (!stencilBlit)
         {
-            const auto &readFormatSet = d3d11::GetANGLEFormatSet(readTexture.getANGLEFormat());
+            const auto &readFormatSet = readTexture.getFormatSet();
 
             D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
             viewDesc.Format                    = readFormatSet.srvFormat;
@@ -3778,7 +3777,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     {
         ASSERT(readRenderTarget11);
         readTexture = TextureHelper11::MakeAndReference(readRenderTarget11->getTexture(),
-                                                        readRenderTarget11->getANGLEFormat());
+                                                        readRenderTarget11->getFormatSet());
         readSubresource = readRenderTarget11->getSubresourceIndex();
         readSRV = readRenderTarget11->getBlitShaderResourceView();
         if (readSRV == nullptr)
@@ -3860,7 +3859,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
     const auto &destFormatInfo = gl::GetInternalFormatInfo(drawRenderTarget->getInternalFormat());
     const auto &srcFormatInfo  = gl::GetInternalFormatInfo(readRenderTarget->getInternalFormat());
-    const auto &formatSet            = d3d11::GetANGLEFormatSet(drawRenderTarget11->getANGLEFormat());
+    const auto &formatSet      = drawRenderTarget11->getFormatSet();
     const DXGI_FORMAT drawDXGIFormat = colorBlit ? formatSet.rtvFormat : formatSet.dsvFormat;
     const auto &dxgiFormatInfo       = d3d11::GetDXGIFormatInfo(drawDXGIFormat);
 
@@ -3898,7 +3897,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
     bool partialDSBlit = (dxgiFormatInfo.depthBits > 0 && depthBlit) != (dxgiFormatInfo.stencilBits > 0 && stencilBlit);
 
-    if (readRenderTarget11->getANGLEFormat() == drawRenderTarget11->getANGLEFormat() &&
+    if (readRenderTarget11->getFormatSet().format == drawRenderTarget11->getFormatSet().format &&
         !stretchRequired && !outOfBounds && !flipRequired && !partialDSBlit &&
         !colorMaskingNeeded && (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {
@@ -4042,7 +4041,7 @@ Renderer11::resolveMultisampledTexture(RenderTarget11 *renderTarget, bool depth,
         return mBlit->resolveStencil(renderTarget, depth);
     }
 
-    const auto &formatSet = d3d11::GetANGLEFormatSet(renderTarget->getANGLEFormat());
+    const auto &formatSet = renderTarget->getFormatSet();
 
     ASSERT(renderTarget->getSamples() > 1);
 
@@ -4069,7 +4068,7 @@ Renderer11::resolveMultisampledTexture(RenderTarget11 *renderTarget, bool depth,
 
     mDeviceContext->ResolveSubresource(resolveTexture, 0, renderTarget->getTexture(),
                                        renderTarget->getSubresourceIndex(), formatSet.texFormat);
-    return TextureHelper11::MakeAndPossess2D(resolveTexture, renderTarget->getANGLEFormat());
+    return TextureHelper11::MakeAndPossess2D(resolveTexture, renderTarget->getFormatSet());
 }
 
 bool Renderer11::getLUID(LUID *adapterLuid) const

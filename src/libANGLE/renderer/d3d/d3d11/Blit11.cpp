@@ -437,9 +437,8 @@ D3D11_INPUT_ELEMENT_DESC quad3DLayout[] = {
     {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 };
 
-DXGI_FORMAT GetStencilSRVFormat(d3d11::ANGLEFormat angleFormat)
+DXGI_FORMAT GetStencilSRVFormat(const d3d11::ANGLEFormatSet &formatSet)
 {
-    auto formatSet = d3d11::GetANGLEFormatSet(angleFormat);
     switch (formatSet.texFormat)
     {
         case DXGI_FORMAT_R32G8X24_TYPELESS:
@@ -1391,7 +1390,7 @@ gl::Error Blit11::copyAndConvertImpl(const TextureHelper11 &source,
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     TextureHelper11 sourceStaging;
-    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, source.getANGLEFormat(), sourceSize,
+    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, source.getFormatSet(), sourceSize,
                                           StagingAccess::READ, device),
                      sourceStaging);
 
@@ -1465,7 +1464,7 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
     // ID3D11DevicContext::UpdateSubresource can be called
     //       using it's mapped data as a source
     TextureHelper11 destStaging;
-    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, dest.getANGLEFormat(), destSize,
+    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, dest.getFormatSet(), destSize,
                                           StagingAccess::READ_WRITE, device),
                      destStaging);
 
@@ -1871,9 +1870,9 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 
     gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
 
-    auto copyFunction = GetCopyDepthStencilFunction(depth->getInternalFormat());
-    auto dsFormatSet  = d3d11::GetANGLEFormatSet(depth->getANGLEFormat());
-    auto dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
+    const auto &copyFunction = GetCopyDepthStencilFunction(depth->getInternalFormat());
+    const auto &dsFormatSet  = depth->getFormatSet();
+    const auto &dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
 
     ID3D11Texture2D *destTex = nullptr;
 
@@ -1897,7 +1896,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     }
     d3d11::SetDebugName(destTex, "resolveDepthDest");
 
-    TextureHelper11 dest = TextureHelper11::MakeAndPossess2D(destTex, depth->getANGLEFormat());
+    TextureHelper11 dest = TextureHelper11::MakeAndPossess2D(destTex, depth->getFormatSet());
     ANGLE_TRY(copyAndConvert(mResolvedDepthStencil, 0, copyBox, extents, dest, 0, copyBox, extents,
                              nullptr, 0, 0, 0, 8, dsDxgiInfo.pixelBytes, copyFunction));
     return dest;
@@ -1916,8 +1915,8 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
         releaseResolveDepthStencilResources();
     }
 
-    auto resolvedFormat = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
-    auto formatSet      = d3d11::GetANGLEFormatSet(resolvedFormat);
+    auto resolvedFormat   = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
+    const auto &formatSet = d3d11::GetANGLEFormatSet(resolvedFormat);
 
     D3D11_TEXTURE2D_DESC textureDesc;
     textureDesc.Width              = extents.width;
@@ -1952,7 +1951,7 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
     }
     d3d11::SetDebugName(mResolvedDepthStencilRTView, "Blit11::mResolvedDepthStencilRTView");
 
-    mResolvedDepthStencil = TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, resolvedFormat);
+    mResolvedDepthStencil = TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, formatSet);
 
     return gl::NoError();
 }
@@ -1984,7 +1983,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     if (!mStencilSRV)
     {
         D3D11_SHADER_RESOURCE_VIEW_DESC srViewDesc;
-        srViewDesc.Format        = GetStencilSRVFormat(depthStencil->getANGLEFormat());
+        srViewDesc.Format        = GetStencilSRVFormat(depthStencil->getFormatSet());
         srViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 
         HRESULT hr = device->CreateShaderResourceView(stencilResource, &srViewDesc, &mStencilSRV);
@@ -2042,13 +2041,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
 
     TextureHelper11 dest;
-    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, depthStencil->getANGLEFormat(), extents,
+    ANGLE_TRY_RESULT(CreateStagingTexture(GL_TEXTURE_2D, depthStencil->getFormatSet(), extents,
                                           StagingAccess::READ_WRITE, device),
                      dest);
 
-    auto copyFunction = GetCopyDepthStencilFunction(depthStencil->getInternalFormat());
-    auto dsFormatSet  = d3d11::GetANGLEFormatSet(depthStencil->getANGLEFormat());
-    auto dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
+    const auto &copyFunction = GetCopyDepthStencilFunction(depthStencil->getInternalFormat());
+    const auto &dsFormatSet  = depthStencil->getFormatSet();
+    const auto &dsDxgiInfo   = d3d11::GetDXGIFormatSizeInfo(dsFormatSet.texFormat);
 
     ANGLE_TRY(copyAndConvertImpl(mResolvedDepthStencil, 0, copyBox, extents, dest, copyBox, extents,
                                  nullptr, 0, 0, 0, 8u, dsDxgiInfo.pixelBytes, copyFunction));

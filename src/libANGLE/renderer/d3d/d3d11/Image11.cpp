@@ -343,7 +343,7 @@ gl::Error Image11::copyFromTexStorage(const gl::ImageIndex &imageIndex, TextureS
 
     UINT subresourceIndex         = storage11->getSubresourceIndex(imageIndex);
     TextureHelper11 textureHelper =
-        TextureHelper11::MakeAndReference(resource, storage11->getANGLEFormat());
+        TextureHelper11::MakeAndReference(resource, storage11->getFormatSet());
 
     gl::Box sourceBox(0, 0, 0, mWidth, mHeight, mDepth);
     return copyWithoutConversion(gl::Offset(), sourceBox, textureHelper, subresourceIndex);
@@ -373,7 +373,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
         ASSERT(rt11->getTexture());
 
         TextureHelper11 textureHelper =
-            TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getANGLEFormat());
+            TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getFormatSet());
         unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
         gl::Box sourceBox(sourceArea.x, sourceArea.y, 0, sourceArea.width, sourceArea.height, 1);

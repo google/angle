@@ -331,8 +331,8 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                     return gl::Error(GL_OUT_OF_MEMORY, "Internal render target view pointer unexpectedly null.");
                 }
 
-                const auto &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(
-                    d3d11::GetANGLEFormatSet(renderTarget->getANGLEFormat()).rtvFormat);
+                const auto &dxgiFormatInfo =
+                    d3d11::GetDXGIFormatInfo(renderTarget->getFormatSet().rtvFormat);
 
                 // Check if the actual format has a channel that the internal format does not and set them to the
                 // default values
@@ -392,8 +392,8 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             return error;
         }
 
-        const auto &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(
-            d3d11::GetANGLEFormatSet(renderTarget->getANGLEFormat()).dsvFormat);
+        const auto &dxgiFormatInfo =
+            d3d11::GetDXGIFormatInfo(renderTarget->getFormatSet().dsvFormat);
 
         unsigned int stencilUnmasked = (stencilAttachment != nullptr) ? (1 << dxgiFormatInfo.stencilBits) - 1 : 0;
         bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
