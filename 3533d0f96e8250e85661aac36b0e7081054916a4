@@ -22,6 +22,30 @@
       "revId": "3533d0f96e8250e85661aac36b0e7081054916a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "746022e5_6d6c71a5",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2235,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T06:44:53Z",
+      "side": 1,
+      "message": "I think this is a reasonable implementation. You\u0027re right that the data parameter is needed for future auto-generation.",
+      "parentUuid": "f4533225_c67c6250",
+      "range": {
+        "startLine": 2217,
+        "startChar": 0,
+        "endLine": 2235,
+        "endChar": 1
+      },
+      "revId": "3533d0f96e8250e85661aac36b0e7081054916a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
