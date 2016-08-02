@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f48172c9_bd5c0022",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 18
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-02T21:49:41Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this return float4(color.rgb * color.a, 1.0f) ?",
+      "revId": "c2dff965844f3d5c5af398db94d0024314b1067f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f48172c9_3db31052",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 18
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-02T21:49:41Z",
+      "side": 1,
+      "message": "ditto, shouldn\u0027t alpha be 1.0f?",
+      "revId": "c2dff965844f3d5c5af398db94d0024314b1067f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
