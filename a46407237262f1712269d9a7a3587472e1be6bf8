@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4533225_896b1dee",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-02T15:02:38Z",
+      "side": 1,
+      "message": "Actually, I wonder whether this should be moved somewhere else - i.e. in Program or ProgramGL.\nAccording to the spec (ES 4.4.1), it is a link time error not to have the local group size specified.\n\nIf so, then in Shader.cpp I should retrieve from the compiler what\u0027s the local size. Since the input variable does not get stored in the AST, we cannot retrieve it with ShGetAttributes. I would somehow have to retrieve it from TCompiler.\nThere\u0027s a static function GetCompilerFromHandle in ShaderLang.cpp which I can use, but I guess it would be a bad idea to expose it. Should I add a function, i.e. ShIsComputeInputDeclared() ? I guess that wouldn\u0027t be a good idea as well.\n\nEventually, I could save it into the AST and retrieve it with ShGetAttributes.\n\nWhat do you think? Is there a better way?",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 5
+      },
+      "revId": "a46407237262f1712269d9a7a3587472e1be6bf8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
