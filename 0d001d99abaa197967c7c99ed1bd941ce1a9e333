@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4533225_89331d5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Are these tests relevant to the shader built-ins?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 64
+      },
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_efbcdd20",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Can you put these in the same order as in ShaderLang.cpp where they are initialized, as that\u0027s the same as in the language spec? Unless this ordering is based on something else.",
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4f9ce3d_40d97023",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "I think the spec says that these \"built-in constants are provided to all shaders\". So they\u0027re not specific to vertex, fragment or compute shaders.",
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_8fc319a1",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Is the GLSL shader output for these built-ins working? If not, that should be fixed and it might be cleaner to put that too in a separate patch (so only built-in _constants_ in this patch, other new built-ins in a different patch).",
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4533225_c92915f1",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Isn\u0027t this part of the condition unnecessary?",
+      "range": {
+        "startLine": 93,
+        "startChar": 37,
+        "endLine": 93,
+        "endChar": 65
+      },
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4533225_a936d94a",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Same thing here.",
+      "range": {
+        "startLine": 117,
+        "startChar": 37,
+        "endLine": 117,
+        "endChar": 65
+      },
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f1add55_a6abc870",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "ANGLE code style suggests avoiding default arguments - overloads are preferred so you could just add an overload that calls this variant with EbpUndefined.",
+      "range": {
+        "startLine": 386,
+        "startChar": 24,
+        "endLine": 386,
+        "endChar": 59
+      },
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b430dae9_cfb9212f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-02T07:43:15Z",
+      "side": 1,
+      "message": "Default arg here as well.",
+      "range": {
+        "startLine": 411,
+        "startChar": 26,
+        "endLine": 411,
+        "endChar": 61
+      },
+      "revId": "0d001d99abaa197967c7c99ed1bd941ce1a9e333",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
