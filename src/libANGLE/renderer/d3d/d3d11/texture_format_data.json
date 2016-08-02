@@ -447,14 +447,6 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_SRGB8_ALPHA8"
   },
-  "ANGLE_FORMAT_X24_TYPELESS_G8_UINT": {
-    "texFormat": "DXGI_FORMAT_R24G8_TYPELESS",
-    "srvFormat": "DXGI_FORMAT_X24_TYPELESS_G8_UINT",
-    "dsvFormat": "DXGI_FORMAT_D24_UNORM_S8_UINT",
-    "channels": "ds",
-    "bits": { "depth": 24, "stencil": 8 },
-    "glInternalFormat": "GL_DEPTH24_STENCIL8_OES"
-  },
   "ANGLE_FORMAT_R16_UNORM": {
     "texFormat": "DXGI_FORMAT_R16_UNORM",
     "srvFormat": "DXGI_FORMAT_R16_UNORM",

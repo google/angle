@@ -1005,21 +1005,6 @@ const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat)
                                                    ReadColor<R9G9B9E5, GLfloat>);
             return formatInfo;
         }
-        case ANGLE_FORMAT_X24_TYPELESS_G8_UINT:
-        {
-            static const ANGLEFormatSet formatInfo(ANGLE_FORMAT_X24_TYPELESS_G8_UINT,
-                                                   GL_DEPTH24_STENCIL8_OES,
-                                                   GL_DEPTH24_STENCIL8_OES,
-                                                   DXGI_FORMAT_R24G8_TYPELESS,
-                                                   DXGI_FORMAT_X24_TYPELESS_G8_UINT,
-                                                   DXGI_FORMAT_UNKNOWN,
-                                                   DXGI_FORMAT_D24_UNORM_S8_UINT,
-                                                   DXGI_FORMAT_X24_TYPELESS_G8_UINT,
-                                                   ANGLE_FORMAT_R32G32B32A32_FLOAT,
-                                                   nullptr,
-                                                   nullptr);
-            return formatInfo;
-        }
 
         default:
             break;
@@ -2148,7 +2133,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             if (OnlyFL10Plus(renderer11DeviceCaps))
             {
                 static const TextureFormat textureFormat(internalFormat,
-                                                         ANGLE_FORMAT_X24_TYPELESS_G8_UINT,
+                                                         ANGLE_FORMAT_D24_UNORM_S8_UINT_FL10,
                                                          nullptr);
                 return textureFormat;
             }
