@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14f44640_c20d8490",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-02T09:04:03Z",
+      "side": 1,
+      "message": "Not the correct limit was used. It is the same for both getIntegeri_v and getInteger64i_v.\nAlso, the earlier version of ANGLE had that bug for getIntegeri_v, but it seems there wasn\u0027t a dEQP test for that.\nIt just happened that I used the switch statement from getIntegeri_v when creating the ValidateIndexedStateQuery function.",
+      "range": {
+        "startLine": 2189,
+        "startChar": 30,
+        "endLine": 2189,
+        "endChar": 54
+      },
+      "revId": "e6f2040f71f679b70ba337858379e108a22df85c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
