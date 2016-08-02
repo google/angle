@@ -2158,6 +2158,33 @@ TEST_P(GLSLTest, RenderTrisWithPointCoord)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Convers a bug with the integer pow statement workaround.
+TEST_P(GLSLTest, NestedPowStatements)
+{
+    const std::string &vert =
+        "attribute vec2 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "}";
+    const std::string &frag =
+        "precision mediump float;\n"
+        "float func(float v)\n"
+        "{\n"
+        "   float f1 = pow(v, 2.0);\n"
+        "   return pow(f1 + v, 2.0);\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    float v = func(2.0);\n"
+        "    gl_FragColor = abs(v - 36.0) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+    drawQuad(prog.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

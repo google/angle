@@ -27,6 +27,9 @@ class Traverser : public TIntermTraverser
   private:
     Traverser();
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    void nextIteration();
+
+    bool mFound = false;
 };
 
 // static
@@ -34,16 +37,34 @@ void Traverser::Apply(TIntermNode *root, unsigned int *tempIndex)
 {
     Traverser traverser;
     traverser.useTemporaryIndex(tempIndex);
-    root->traverse(&traverser);
-    traverser.updateTree();
+    do
+    {
+        traverser.nextIteration();
+        root->traverse(&traverser);
+        if (traverser.mFound)
+        {
+            traverser.updateTree();
+        }
+    } while (traverser.mFound);
 }
 
 Traverser::Traverser() : TIntermTraverser(true, false, false)
 {
 }
 
+void Traverser::nextIteration()
+{
+    mFound = false;
+    nextTemporaryIndex();
+}
+
 bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
+    if (mFound)
+    {
+        return false;
+    }
+
     // Test 0: skip non-pow operators.
     if (node->getOp() != EOpPow)
     {
@@ -123,7 +144,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     queueReplacement(node, current, OriginalNode::IS_DROPPED);
-    return true;
+    mFound = true;
+    return false;
 }
 
 }  // anonymous namespace
