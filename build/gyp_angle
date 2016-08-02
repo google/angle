@@ -28,9 +28,6 @@ def appendCommonArgs(args):
     # Add common.gypi to the include path.
     args.append('-I' + os.path.join(script_dir, 'common.gypi'))
     args.append('--no-parallel')
-    # Indicate ANGLE is being built standalone (as opposed to within
-    # a Chromium workspace).
-    args.append('-Dangle_standalone=1')
 
 def generateProjects(generate_args):
     args = generate_args

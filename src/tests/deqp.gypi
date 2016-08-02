@@ -11,12 +11,10 @@
         'variables':
         {
             'angle_build_winrt%': 0,
-            'angle_standalone%': 0,
         },
 
         # Copy conditionally-set variables to the outer variables dict.
         'angle_build_winrt%': '<(angle_build_winrt)',
-        'angle_standalone%': '<(angle_standalone)',
 
         'deqp_path': '<(DEPTH)/third_party/deqp/src',
         'libpng_path': '<(DEPTH)/third_party/libpng',
@@ -1192,7 +1190,7 @@
                 # GoogleTest doesn't support WinRT
                 'angle_build_deqp_gtest_support%': 1,
             }],
-            ['((OS=="win" or OS=="linux" or OS=="mac") and angle_standalone==1 and angle_build_winrt==0)',
+            ['((OS=="win" or OS=="linux" or OS=="mac") and angle_build_winrt==0)',
             {
                 # Build the dEQP executables for all standalone Windows/Linux builds except WinRT
                 # GYP doesn't support generating standalone WinRT executables
@@ -1245,7 +1243,7 @@
     },
     'conditions':
     [
-        ['angle_build_deqp_libraries==1 and angle_standalone==1',
+        ['angle_build_deqp_libraries==1',
         {
             'targets':
             [
@@ -1368,7 +1366,7 @@
                     ],
                 },
             ], # targets
-        }], # angle_build_deqp_libraries==1 and angle_standalone==1
+        }], # angle_build_deqp_libraries==1
         ['angle_build_deqp_libraries==1',
         {
             'targets':
@@ -1518,6 +1516,7 @@
                     [
                         'angle_deqp_decpp',
                         'angle_deqp_support',
+                        'angle_libpng',
                         '<(angle_path)/src/angle.gyp:libEGL',
                         '<(angle_path)/util/util.gyp:angle_util',
                     ],
@@ -1557,13 +1556,6 @@
                     ],
                     'conditions':
                     [
-                        ['angle_standalone==1',
-                        {
-                            'dependencies': [ 'angle_libpng' ],
-                        },
-                        { # angle_standalone!=1
-                            'dependencies': [ '<(DEPTH)/third_party/libpng/libpng.gyp:libpng' ],
-                        }],
                         ['OS=="mac"',
                         {
                             'direct_dependent_settings':

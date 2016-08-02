@@ -5,8 +5,6 @@
 {
     'variables':
     {
-        'angle_standalone%': 0,
-
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [

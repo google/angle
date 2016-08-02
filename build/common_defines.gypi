@@ -8,8 +8,6 @@
         'component%': 'static_library',
         'use_libpci%': 1,
         'windows_sdk_path%': 'C:/Program Files (x86)/Windows Kits/10',
-        # build/gyp_angle sets this to 1.
-        'angle_standalone%': '0',
 
         'angle_build_winrt%': '0',
         'angle_build_winphone%': '0',
@@ -34,6 +32,10 @@
         # root of the OSX SDK for Chromium builds, the system root for standalone builds
         'SDKROOT%': "",
     },
+    'defines':
+    [
+        'ANGLE_STANDALONE_BUILD',
+    ],
     'msvs_disabled_warnings':
     [
         4100, # Unreferenced formal parameter. Not interesting.
@@ -62,13 +64,6 @@
             [
                 '<(windows_sdk_path)/Include/shared',
                 '<(windows_sdk_path)/Include/um',
-            ],
-        }],
-        ['angle_standalone==1',
-        {
-            'defines':
-            [
-                'ANGLE_STANDALONE_BUILD',
             ],
         }],
     ],
