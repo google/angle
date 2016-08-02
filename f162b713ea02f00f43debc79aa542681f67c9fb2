@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "348b0ae2_c098fe0d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Maybe we should store these as 3-element arrays?  The indexed get calls would be simpler too.",
+      "range": {
+        "startLine": 430,
+        "startChar": 4,
+        "endLine": 435,
+        "endChar": 36
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_e0642222",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "I must have missed the review where this was added.  Would you consider using the Version struct we defined in Version.h?  It\u0027s comparison operators make it fairly easy to do version checking.",
+      "range": {
+        "startLine": 372,
+        "startChar": 10,
+        "endLine": 372,
+        "endChar": 19
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_e04bc283",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "I think we should split this up a bit and not do such fixed limits without extension checks.  It helps us know exactly when a feature was increases the chance that we may support the feature through a combination of extensions instead of a core version.",
+      "range": {
+        "startLine": 604,
+        "startChar": 4,
+        "endLine": 604,
+        "endChar": 97
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_c0423e65",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in GL_ARB_texture_multisample",
+      "range": {
+        "startLine": 607,
+        "startChar": 8,
+        "endLine": 609,
+        "endChar": 95
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_0049068b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 3.2 or GL_ARB_texture_multisample",
+      "range": {
+        "startLine": 610,
+        "startChar": 8,
+        "endLine": 613,
+        "endChar": 91
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_602332c5",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in GL_ARB_vertex_attrib_binding",
+      "range": {
+        "startLine": 615,
+        "startChar": 8,
+        "endLine": 618,
+        "endChar": 97
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_8028b6a0",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.2 or GL_ARB_shader_storage_buffer_object.\n\nAlso includes GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS, GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES, GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS, GL_MAX_SHADER_STORAGE_BLOCK_SIZE, GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT",
+      "range": {
+        "startLine": 620,
+        "startChar": 8,
+        "endLine": 625,
+        "endChar": 77
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_e016625a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.2 or GL_ARB_shader_atomic_counters.\n\nAlso includes GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS, GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE, GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFER, GL_MAX_COMBINED_ATOMIC_COUNTERS",
+      "range": {
+        "startLine": 627,
+        "startChar": 8,
+        "endLine": 630,
+        "endChar": 73
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_600a522f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.2 or GL_ARB_shader_image_load_store\n\nAlso includes GL_MAX_IMAGE_UNITS, GL_MAX_COMBINED_IMAGE_UNIFORMS",
+      "range": {
+        "startLine": 631,
+        "startChar": 8,
+        "endLine": 632,
+        "endChar": 72
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_40094e34",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.0 or GL_ARB_texture_gather",
+      "range": {
+        "startLine": 635,
+        "startChar": 8,
+        "endLine": 638,
+        "endChar": 78
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_20176a4a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.3 or GL_ARB_compute_shader",
+      "range": {
+        "startLine": 640,
+        "startChar": 8,
+        "endLine": 669,
+        "endChar": 78
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "348b0ae2_603492e2",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-02T15:12:05Z",
+      "side": 1,
+      "message": "Added in desktop GL 4.3 or GL_ARB_explicit_uniform_location",
+      "range": {
+        "startLine": 673,
+        "startChar": 8,
+        "endLine": 673,
+        "endChar": 90
+      },
+      "revId": "f162b713ea02f00f43debc79aa542681f67c9fb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
