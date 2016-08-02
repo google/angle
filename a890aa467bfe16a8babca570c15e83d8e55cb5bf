@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a991793_625ab68a",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-02T15:02:38Z",
+      "side": 1,
+      "message": "Would it make sense to move it into the bodies of the vertex and fragment shader checks. Now, the check would be done for compute shaders as well, although they require es31.",
+      "range": {
+        "startLine": 950,
+        "startChar": 8,
+        "endLine": 950,
+        "endChar": 52
+      },
+      "revId": "a890aa467bfe16a8babca570c15e83d8e55cb5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
