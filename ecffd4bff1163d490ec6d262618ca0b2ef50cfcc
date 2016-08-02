@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f48172c9_536b5b8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-02T22:40:13Z",
+      "side": 1,
+      "message": "nit: angleproject:1462",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 8
+      },
+      "revId": "ecffd4bff1163d490ec6d262618ca0b2ef50cfcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f48172c9_3366dfc3",
+        "filename": "src/tests/tests.gyp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-02T22:40:13Z",
+      "side": 1,
+      "message": "nit: linke break before [",
+      "range": {
+        "startLine": 54,
+        "startChar": 36,
+        "endLine": 54,
+        "endChar": 37
+      },
+      "revId": "ecffd4bff1163d490ec6d262618ca0b2ef50cfcc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
