@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "54d23e19_619136f3",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T15:12:19Z",
+      "side": 1,
+      "message": "At one point this was banned, but it\u0027s now allowed under \"Uniform Initialization Syntax\"",
+      "parentUuid": "54d23e19_217d6e17",
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74ff426c_92e65cde",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 14
