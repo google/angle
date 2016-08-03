@@ -106,7 +106,7 @@ class Renderer11 : public RendererD3D
     virtual ~Renderer11();
 
     egl::Error initialize() override;
-    virtual bool resetDevice();
+    bool resetDevice() override;
 
     egl::ConfigSet generateConfigs() override;
     void generateDisplayExtensions(egl::DisplayExtensions *outExtensions) const override;
@@ -127,8 +127,11 @@ class Renderer11 : public RendererD3D
                                   GLenum depthBufferFormat,
                                   EGLint orientation) override;
 
-    virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler);
-    virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture);
+    gl::Error setSamplerState(gl::SamplerType type,
+                              int index,
+                              gl::Texture *texture,
+                              const gl::SamplerState &sampler) override;
+    gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) override;
 
     gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
@@ -171,7 +174,7 @@ class Renderer11 : public RendererD3D
 
     bool getNV12TextureSupport() const;
 
-    virtual int getMajorShaderModel() const;
+    int getMajorShaderModel() const override;
     int getMinorShaderModel() const override;
     std::string getShaderModelSuffix() const override;
 
@@ -293,9 +296,13 @@ class Renderer11 : public RendererD3D
     gl::DebugAnnotator *getAnnotator();
 
     // Buffer-to-texture and Texture-to-buffer copies
-    virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const;
-    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
-                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+    bool supportsFastCopyBufferToTexture(GLenum internalFormat) const override;
+    gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
+                                      unsigned int offset,
+                                      RenderTargetD3D *destRenderTarget,
+                                      GLenum destinationFormat,
+                                      GLenum sourcePixelsType,
+                                      const gl::Box &destArea) override;
 
     void markAllStateDirty();
     gl::Error packPixels(const TextureHelper11 &textureHelper,
