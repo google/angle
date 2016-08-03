@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "d4ef0ec1_ad45fda1",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T12:58:39Z",
+      "side": 1,
+      "message": "The style guide isn\u0027t very explicit about if this applies to member initializer lists. I think the syntax actually goes so that you\u0027d have to have maxComputeWorkGroupCount{0, 0, 0} in the constructor initializer list though. I\u0027m happy with the version with the for loop, but if you prefer using the {} syntax maybe Jamie or Geoff can verify whether it is okay.",
+      "parentUuid": "d4ef0ec1_ed68a524",
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74ff426c_92e65cde",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 14
