@@ -22,6 +22,30 @@
       "revId": "e73329d32ef6a8aff49f3742443bf525fd14138f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4ef0ec1_2d00ed5a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T11:22:38Z",
+      "side": 1,
+      "message": "Passing pointers to arrays is rarely ideal. You could use std::array instead. I do feel like making the value one parameter is cleaner than passing x, y, z separately, though. I\u0027d call it just \"value\" here too rather than \"elements\".",
+      "parentUuid": "f4f252a6_0ea9ab7b",
+      "range": {
+        "startLine": 405,
+        "startChar": 26,
+        "endLine": 405,
+        "endChar": 46
+      },
+      "revId": "e73329d32ef6a8aff49f3742443bf525fd14138f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
