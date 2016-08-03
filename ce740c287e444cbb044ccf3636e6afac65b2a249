@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "54d23e19_01986a62",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T14:25:19Z",
+      "side": 1,
+      "message": "Changing the precision from EbpUndefined to EbpMedium seems fine.",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_c18da229",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T14:25:19Z",
+      "side": 1,
+      "message": "ultra-nit: empty line here, or maybe I\u0027m missing the logic behind the grouping.",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4ef0ec1_adefbd84",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 6
