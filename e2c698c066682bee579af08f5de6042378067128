@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "54d23e19_217d6e17",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-03T14:25:03Z",
+      "side": 1,
+      "message": "I\u0027m fine with the array construction here, it keeps the initialization all together.  We\u0027ve used this syntax in a couple tests and the bots don\u0027t seem to have an issue with it.",
+      "parentUuid": "d4ef0ec1_ad45fda1",
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74ff426c_92e65cde",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 14
