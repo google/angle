@@ -22,6 +22,30 @@
       "revId": "a46407237262f1712269d9a7a3587472e1be6bf8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4ef0ec1_6d4cb5cf",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T12:46:17Z",
+      "side": 1,
+      "message": "Yep, I think a new entry point in ShaderLang.h is needed. I suppose it\u0027s an error to have local work group size 0, so maybe you could add an entry point that returns the size and use zero to indicate that the size is not specified. Getting the size from the shader translator is required either way since it can be queried through the API.\n\nShGetAttributes is definitely a wrong entry point to use for this, \"attributes\" in that context means vertex shader inputs, that used to be called attributes in ESSL 1.00.",
+      "parentUuid": "f4533225_896b1dee",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 5
+      },
+      "revId": "a46407237262f1712269d9a7a3587472e1be6bf8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
