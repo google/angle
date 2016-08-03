@@ -1984,8 +1984,9 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
         releaseResolveDepthStencilResources();
     }
 
-    auto resolvedFormat   = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
-    const auto &formatSet = d3d11::GetANGLEFormatSet(resolvedFormat);
+    auto resolvedFormat = d3d11::ANGLE_FORMAT_R32G32_FLOAT;
+    const auto &formatSet =
+        d3d11::GetANGLEFormatSet(resolvedFormat, mRenderer->getRenderer11DeviceCaps());
 
     D3D11_TEXTURE2D_DESC textureDesc;
     textureDesc.Width              = extents.width;

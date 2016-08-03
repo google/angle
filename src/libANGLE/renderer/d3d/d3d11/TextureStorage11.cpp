@@ -1569,7 +1569,8 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer, EGLIm
 
     mMipLevels      = 1;
     mTextureFormatSet = &renderTarget11->getFormatSet();
-    mSwizzleFormatSet = &d3d11::GetANGLEFormatSet(mTextureFormatSet->swizzleFormat);
+    mSwizzleFormatSet = &d3d11::GetANGLEFormatSet(mTextureFormatSet->swizzleFormat,
+                                                  renderer->getRenderer11DeviceCaps());
     mTextureWidth   = renderTarget11->getWidth();
     mTextureHeight  = renderTarget11->getHeight();
     mTextureDepth   = 1;

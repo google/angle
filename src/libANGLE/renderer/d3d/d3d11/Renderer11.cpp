@@ -3280,7 +3280,8 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     {
         *outRT = new TextureRenderTarget11(
             static_cast<ID3D11RenderTargetView *>(nullptr), nullptr, nullptr, nullptr, format,
-            d3d11::GetANGLEFormatSet(d3d11::ANGLE_FORMAT_NONE), width, height, 1, supportedSamples);
+            d3d11::GetANGLEFormatSet(d3d11::ANGLE_FORMAT_NONE, mRenderer11DeviceCaps), width,
+            height, 1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);

@@ -81,7 +81,8 @@ struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
                   const ANGLEFormat angleFormat,
-                  InitializeTextureDataFunction internalFormatInitializer);
+                  InitializeTextureDataFunction internalFormatInitializer,
+                  const Renderer11DeviceCaps &deviceCaps);
 
     const ANGLEFormatSet *formatSet;
     const ANGLEFormatSet *swizzleFormatSet;
@@ -92,7 +93,8 @@ struct TextureFormat : public angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
-const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat);
+const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat,
+                                        const Renderer11DeviceCaps &deviceCaps);
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalformat,
                                           const Renderer11DeviceCaps &renderer11DeviceCaps);
