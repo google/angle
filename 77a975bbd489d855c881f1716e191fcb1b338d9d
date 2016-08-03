@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d23e19_c19e82fa",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T15:29:52Z",
+      "side": 1,
+      "message": "nit: cl format messed with your comment.",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_e145466f",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T15:29:52Z",
+      "side": 1,
+      "message": "Could you comment on the fact that these visit* operate in three modes:\n - if the loop should be changed, they do nothing because it needs to be handled.\n - else if outside of loop condition or expression, they try to find a loop.\n - else if inside they try match nodes.",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_01430a6a",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T15:29:52Z",
+      "side": 1,
+      "message": "Nice comments, help a lot with understanding what is going on!",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
