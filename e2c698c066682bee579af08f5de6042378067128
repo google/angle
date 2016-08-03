@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d4ef0ec1_ed68a524",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-03T12:28:14Z",
+      "side": 1,
+      "message": "Well, there is actually this -\u003e https://google.github.io/styleguide/cppguide.html#Variable_and_Array_Initialization\nWould this mean that it is ok to initialize it in the member initializer-list .",
+      "parentUuid": "d4ef0ec1_6d75d5fb",
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74ff426c_92e65cde",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 14
