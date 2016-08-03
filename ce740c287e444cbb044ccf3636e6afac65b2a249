@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "54d23e19_817abaea",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T14:47:42Z",
+      "side": 1,
+      "message": "nit: i think it\u0027s more correct to say we generate an error when the shader binds to a unit \u003e\u003d MaxImageUnits.",
+      "range": {
+        "startLine": 324,
+        "startChar": 48,
+        "endLine": 325,
+        "endChar": 32
+      },
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_0166aa55",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T14:47:42Z",
+      "side": 1,
+      "message": "This use of std::array makes me a bit suspicious - can we guarantee using std::array never makes any heap allocations?",
+      "range": {
+        "startLine": 344,
+        "startChar": 9,
+        "endLine": 344,
+        "endChar": 14
+      },
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_01986a62",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 6
@@ -65,6 +111,29 @@
       "side": 1,
       "message": "As a clarification, grouping includes in standard libraries and project headers is still the convertion, but inside the groups includes should be alphabetically ordered.",
       "parentUuid": "d4ef0ec1_adefbd84",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_4170b20c",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T14:47:42Z",
+      "side": 1,
+      "message": "nit: always use \u0027unsigned int\u0027 for angle style",
+      "range": {
+        "startLine": 90,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 17
+      },
       "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
