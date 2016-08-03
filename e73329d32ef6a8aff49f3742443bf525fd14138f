@@ -46,6 +46,30 @@
       "revId": "e73329d32ef6a8aff49f3742443bf525fd14138f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4ef0ec1_0de1b19a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-03T13:23:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4ef0ec1_2d00ed5a",
+      "range": {
+        "startLine": 405,
+        "startChar": 26,
+        "endLine": 405,
+        "endChar": 46
+      },
+      "revId": "e73329d32ef6a8aff49f3742443bf525fd14138f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
