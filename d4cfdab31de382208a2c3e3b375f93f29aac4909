@@ -16,6 +16,24 @@
       "revId": "d4cfdab31de382208a2c3e3b375f93f29aac4909",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_bbe9a7b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T18:56:27Z",
+      "side": 1,
+      "message": "Good observation, but this is intentional, and hopefully will go away if I have a chance to merge the d3d11::TextureFormat and d3d11::ANGLEFormatSet classes. The reason is we need a different d3d11::TextureFormat to map to the two static d3d11::ANGLEFormatSets. I would like to clean up this design.",
+      "parentUuid": "54d23e19_3bcf575f",
+      "revId": "d4cfdab31de382208a2c3e3b375f93f29aac4909",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
