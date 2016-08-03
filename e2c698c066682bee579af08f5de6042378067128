@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4ef0ec1_8d2921f2",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T11:09:22Z",
+      "side": 1,
+      "message": "Can you double-check from the style guides whether this syntax is allowed? I have a feeling it might not be, in which case you\u0027d have to do the initialization in the constructor body.",
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "74ff426c_92e65cde",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T11:09:22Z",
+      "side": 1,
+      "message": "Nope, it is already in 4.3.",
+      "range": {
+        "startLine": 602,
+        "startChar": 43,
+        "endLine": 602,
+        "endChar": 47
+      },
+      "revId": "e2c698c066682bee579af08f5de6042378067128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
