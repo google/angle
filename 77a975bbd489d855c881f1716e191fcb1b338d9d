@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "54d23e19_41951288",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T16:00:36Z",
+      "side": 1,
+      "message": "consider rewording this sentence. \"the newly introduced separate AST traverser to process loops\" makes a really odd subject.",
+      "range": {
+        "startLine": 10,
+        "startChar": 29,
+        "endLine": 11,
+        "endChar": 26
+      },
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_614cd6cf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T16:00:36Z",
+      "side": 1,
+      "message": "nit: tag this with a bug to give context.",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_c19e82fa",
         "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
         "patchSetId": 4
@@ -47,6 +87,29 @@
       "writtenOn": "2016-08-03T15:29:52Z",
       "side": 1,
       "message": "Nice comments, help a lot with understanding what is going on!",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_c1ebe20e",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-03T16:00:36Z",
+      "side": 1,
+      "message": "it makes me wish we could write the traversers in this syntax!",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 22
+      },
       "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
