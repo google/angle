@@ -125,6 +125,7 @@ class DisplayGLX : public DisplayGL
     bool mHasMultisample;
     bool mHasARBCreateContext;
     bool mHasARBCreateContextProfile;
+    bool mHasARBCreateContextRobustness;
     bool mHasEXTCreateContextES2Profile;
 
     enum class SwapControl

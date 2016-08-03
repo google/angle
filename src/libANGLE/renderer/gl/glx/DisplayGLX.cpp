@@ -19,6 +19,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h"
 #include "libANGLE/renderer/gl/glx/WindowSurfaceGLX.h"
+#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "third_party/libXNVCtrl/NVCtrl.h"
 #include "third_party/libXNVCtrl/NVCtrlLib.h"
@@ -117,6 +118,7 @@ DisplayGLX::DisplayGLX()
       mHasMultisample(false),
       mHasARBCreateContext(false),
       mHasARBCreateContextProfile(false),
+      mHasARBCreateContextRobustness(false),
       mHasEXTCreateContextES2Profile(false),
       mSwapControl(SwapControl::Absent),
       mMinSwapInterval(0),
@@ -159,6 +161,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     mHasMultisample      = mGLX.minorVersion > 3 || mGLX.hasExtension("GLX_ARB_multisample");
     mHasARBCreateContext = mGLX.hasExtension("GLX_ARB_create_context");
     mHasARBCreateContextProfile    = mGLX.hasExtension("GLX_ARB_create_context_profile");
+    mHasARBCreateContextRobustness = mGLX.hasExtension("GLX_ARB_create_context_robustness");
     mHasEXTCreateContextES2Profile = mGLX.hasExtension("GLX_EXT_create_context_es2_profile");
 
     std::string clientVendor = mGLX.getClientString(GLX_VENDOR);
@@ -386,7 +389,7 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
     ASSERT(configIdToGLXConfig.count(configuration->configID) > 0);
     glx::FBConfig fbConfig = configIdToGLXConfig[configuration->configID];
 
-    return new WindowSurfaceGLX(state, mGLX, this, this->getRenderer(), window, mGLX.getDisplay(),
+    return new WindowSurfaceGLX(state, mGLX, this, getRenderer(), window, mGLX.getDisplay(),
                                 mContext, fbConfig);
 }
 
@@ -401,7 +404,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
     EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
-    return new PbufferSurfaceGLX(state, this->getRenderer(), width, height, largest, mGLX, mContext,
+    return new PbufferSurfaceGLX(state, getRenderer(), width, height, largest, mGLX, mContext,
                                  fbConfig);
 }
 
@@ -727,13 +730,16 @@ egl::ConfigSet DisplayGLX::generateConfigs()
 
 bool DisplayGLX::testDeviceLost()
 {
-    // UNIMPLEMENTED();
+    if (mHasARBCreateContextRobustness)
+    {
+        return getRenderer()->getResetStatus() != GL_NO_ERROR;
+    }
+
     return false;
 }
 
 egl::Error DisplayGLX::restoreLostDevice()
 {
-    UNIMPLEMENTED();
     return egl::Error(EGL_BAD_DISPLAY);
 }
 
@@ -885,11 +891,11 @@ const FunctionsGL *DisplayGLX::getFunctionsGL() const
 
 void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    outExtensions->createContextRobustness = mHasARBCreateContextRobustness;
 }
 
 void DisplayGLX::generateCaps(egl::Caps *outCaps) const
 {
-    // UNIMPLEMENTED();
     outCaps->textureNPOT = true;
 }
 
@@ -906,6 +912,12 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
                                             glx::Context *context) const
 {
     std::vector<int> attribs;
+
+    if (mHasARBCreateContextRobustness)
+    {
+        attribs.push_back(GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB);
+        attribs.push_back(GLX_LOSE_CONTEXT_ON_RESET_ARB);
+    }
 
     if (version.valid())
     {

@@ -78,6 +78,8 @@ class DisplayWGL : public DisplayGL
     FunctionsWGL *mFunctionsWGL;
     FunctionsGL *mFunctionsGL;
 
+    bool mHasARBCreateContextRobustness;
+
     ATOM mWindowClass;
     HWND mWindow;
     HDC mDeviceContext;

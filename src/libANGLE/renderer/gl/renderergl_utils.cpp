@@ -847,6 +847,12 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
         functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
 
+    extensions->robustness = functions->isAtLeastGL(gl::Version(4, 5)) ||
+                             functions->hasGLExtension("GL_KHR_robustness") ||
+                             functions->hasGLExtension("GL_ARB_robustness") ||
+                             functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                             functions->hasGLESExtension("GL_KHR_robustness") ||
+                             functions->hasGLESExtension("GL_EXT_robustness");
 
     // NV_path_rendering
     // We also need interface query which is available in

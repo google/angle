@@ -282,8 +282,7 @@ void ContextGL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *
 
 GLenum ContextGL::getResetStatus()
 {
-    UNIMPLEMENTED();
-    return GL_NO_ERROR;
+    return mRenderer->getResetStatus();
 }
 
 std::string ContextGL::getVendorString() const

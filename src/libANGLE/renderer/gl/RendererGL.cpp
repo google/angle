@@ -425,6 +425,11 @@ void RendererGL::stencilThenCoverStrokePathInstanced(const gl::ContextState &sta
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }
 
+GLenum RendererGL::getResetStatus()
+{
+    return mFunctions->getGraphicsResetStatus();
+}
+
 ContextImpl *RendererGL::createContext(const gl::ContextState &state)
 {
     return new ContextGL(state, this);
