@@ -82,7 +82,7 @@ class TextureStorage11 : public TextureStorage
     const d3d11::ANGLEFormatSet &getFormatSet() const;
 
   protected:
-    TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags);
+    TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags, GLenum internalFormat);
     int getLevelWidth(int mipLevel) const;
     int getLevelHeight(int mipLevel) const;
     int getLevelDepth(int mipLevel) const;
@@ -107,9 +107,7 @@ class TextureStorage11 : public TextureStorage
     int mTopLevel;
     unsigned int mMipLevels;
 
-    GLenum mInternalFormat;
-    const d3d11::ANGLEFormatSet *mTextureFormatSet;
-    const d3d11::ANGLEFormatSet *mSwizzleFormatSet;
+    const d3d11::TextureFormat &mFormatInfo;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;

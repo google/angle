@@ -182,17 +182,17 @@ unsigned int GetDSVSubresourceIndex(ID3D11Resource *resource, ID3D11DepthStencil
 
 GLenum GetSurfaceRTFormat(bool depth, SwapChain11 *swapChain)
 {
-    return (depth ? swapChain->GetDepthBufferInternalFormat()
-                  : swapChain->GetRenderTargetInternalFormat());
+    return (depth ? swapChain->getDepthBufferInternalFormat()
+                  : swapChain->getRenderTargetInternalFormat());
 }
 
 const d3d11::ANGLEFormatSet &GetSurfaceFormatSet(bool depth,
                                                  SwapChain11 *swapChain,
                                                  Renderer11 *renderer)
 {
-    return *d3d11::GetTextureFormatInfo(GetSurfaceRTFormat(depth, swapChain),
-                                        renderer->getRenderer11DeviceCaps())
-                .formatSet;
+    return d3d11::GetTextureFormatInfo(GetSurfaceRTFormat(depth, swapChain),
+                                       renderer->getRenderer11DeviceCaps())
+        .formatSet;
 }
 
 }  // anonymous namespace

@@ -68,7 +68,7 @@ gl::Error Image11::generateMipmap(Image11 *dest,
     uint8_t *destData = reinterpret_cast<uint8_t*>(destMapped.pData);
 
     auto mipGenerationFunction = d3d11::GetTextureFormatInfo(src->getInternalFormat(), rendererCaps)
-                                     .formatSet->mipGenerationFunction;
+                                     .formatSet.mipGenerationFunction;
     mipGenerationFunction(src->getWidth(), src->getHeight(), src->getDepth(), sourceData,
                           srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch,
                           destMapped.DepthPitch);
@@ -222,8 +222,8 @@ bool Image11::redefine(GLenum target, GLenum internalformat, const gl::Extents &
         // compute the d3d format that will be used
         const d3d11::TextureFormat &formatInfo =
             d3d11::GetTextureFormatInfo(internalformat, mRenderer->getRenderer11DeviceCaps());
-        mDXGIFormat = formatInfo.formatSet->texFormat;
-        mRenderable = (formatInfo.formatSet->rtvFormat != DXGI_FORMAT_UNKNOWN);
+        mDXGIFormat = formatInfo.formatSet.texFormat;
+        mRenderable = (formatInfo.formatSet.rtvFormat != DXGI_FORMAT_UNKNOWN);
 
         releaseStagingTexture();
         mDirty = (formatInfo.dataInitializerFunction != NULL);
@@ -360,7 +360,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const auto &d3d11Format =
         d3d11::GetTextureFormatInfo(sourceInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    if (d3d11Format.formatSet->texFormat == mDXGIFormat && sourceInternalFormat == mInternalFormat)
+    if (d3d11Format.formatSet.texFormat == mDXGIFormat && sourceInternalFormat == mInternalFormat)
     {
         RenderTargetD3D *renderTarget = nullptr;
         gl::Error error = srcAttachment->getRenderTarget(&renderTarget);

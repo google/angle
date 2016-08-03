@@ -63,15 +63,13 @@ TextureFormat::TextureFormat(GLenum internalFormat,
                              const ANGLEFormat angleFormat,
                              InitializeTextureDataFunction internalFormatInitializer,
                              const Renderer11DeviceCaps &deviceCaps)
-    : dataInitializerFunction(internalFormatInitializer)
+    : internalFormat(internalFormat),
+      formatSet(GetANGLEFormatSet(angleFormat, deviceCaps)),
+      swizzleFormatSet(GetANGLEFormatSet(formatSet.swizzleFormat, deviceCaps)),
+      dataInitializerFunction(internalFormatInitializer),
+      loadFunctions(GetLoadFunctionsMap(internalFormat, formatSet.texFormat))
 {
-    formatSet        = &GetANGLEFormatSet(angleFormat, deviceCaps);
-    swizzleFormatSet = &GetANGLEFormatSet(formatSet->swizzleFormat, deviceCaps);
-
-    // Gather all the load functions for this internal format
-    loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet->texFormat);
-
-    ASSERT(loadFunctions.size() != 0 || angleFormat == ANGLE_FORMAT_NONE);
+    ASSERT(!loadFunctions.empty() || angleFormat == ANGLE_FORMAT_NONE);
 }
 
 }  // namespace d3d11
