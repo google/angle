@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "54d23e19_81a39a98",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 18
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-03T14:27:56Z",
+      "side": 1,
+      "message": "I don\u0027t think so, the alpha still contains the information needed for blending or reconstructing the original unmultiplied color.",
+      "parentUuid": "f48172c9_bd5c0022",
+      "revId": "c2dff965844f3d5c5af398db94d0024314b1067f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f48172c9_3db31052",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
         "patchSetId": 18
