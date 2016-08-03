@@ -16,8 +16,8 @@
 #include "image_util/loadimage.h"
 
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/load_functions_table.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/texture_format_table_utils.h"
 
 using namespace angle;
 
@@ -26,140 +26,6 @@ namespace rx
 
 namespace d3d11
 {
-
-namespace
-{
-
-typedef bool (*FormatSupportFunction)(const Renderer11DeviceCaps &);
-
-bool OnlyFL10Plus(const Renderer11DeviceCaps &deviceCaps)
-{
-    return (deviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0);
-}
-
-bool OnlyFL9_3(const Renderer11DeviceCaps &deviceCaps)
-{
-    return (deviceCaps.featureLevel == D3D_FEATURE_LEVEL_9_3);
-}
-
-template <DXGI_FORMAT format, bool requireSupport>
-bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
-{
-    // Must support texture, SRV and RTV support
-    UINT mustSupport = D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_TEXTURECUBE |
-                       D3D11_FORMAT_SUPPORT_SHADER_SAMPLE | D3D11_FORMAT_SUPPORT_MIP |
-                       D3D11_FORMAT_SUPPORT_RENDER_TARGET;
-
-    if (d3d11_gl::GetMaximumClientVersion(deviceCaps.featureLevel) > 2)
-    {
-        mustSupport |= D3D11_FORMAT_SUPPORT_TEXTURE3D;
-    }
-
-    bool fullSupport = false;
-    if (format == DXGI_FORMAT_B5G6R5_UNORM)
-    {
-        // All hardware that supports DXGI_FORMAT_B5G6R5_UNORM should support autogen mipmaps, but
-        // check anyway.
-        mustSupport |= D3D11_FORMAT_SUPPORT_MIP_AUTOGEN;
-        fullSupport = ((deviceCaps.B5G6R5support & mustSupport) == mustSupport);
-    }
-    else if (format == DXGI_FORMAT_B4G4R4A4_UNORM)
-    {
-        fullSupport = ((deviceCaps.B4G4R4A4support & mustSupport) == mustSupport);
-    }
-    else if (format == DXGI_FORMAT_B5G5R5A1_UNORM)
-    {
-        fullSupport = ((deviceCaps.B5G5R5A1support & mustSupport) == mustSupport);
-    }
-    else
-    {
-        UNREACHABLE();
-        return false;
-    }
-
-    // This 'SupportsFormat' function is used by individual entries in the D3D11 Format Map below,
-    // which maps GL formats to DXGI formats.
-    if (requireSupport)
-    {
-        // This means that ANGLE would like to use the entry in the map if the inputted DXGI format
-        // *IS* supported.
-        // e.g. the entry might map GL_RGB5_A1 to DXGI_FORMAT_B5G5R5A1, which should only be used if
-        // DXGI_FORMAT_B5G5R5A1 is supported.
-        // In this case, we should only return 'true' if the format *IS* supported.
-        return fullSupport;
-    }
-    else
-    {
-        // This means that ANGLE would like to use the entry in the map if the inputted DXGI format
-        // *ISN'T* supported.
-        // This might be a fallback entry. e.g. for ANGLE to use DXGI_FORMAT_R8G8B8A8_UNORM if
-        // DXGI_FORMAT_B5G5R5A1 isn't supported.
-        // In this case, we should only return 'true' if the format *ISN'T* supported.
-        return !fullSupport;
-    }
-}
-
-// End Format Support Functions
-}  // namespace
-
-ANGLEFormatSet::ANGLEFormatSet()
-    : format(ANGLE_FORMAT_NONE),
-      glInternalFormat(GL_NONE),
-      fboImplementationInternalFormat(GL_NONE),
-      texFormat(DXGI_FORMAT_UNKNOWN),
-      srvFormat(DXGI_FORMAT_UNKNOWN),
-      rtvFormat(DXGI_FORMAT_UNKNOWN),
-      dsvFormat(DXGI_FORMAT_UNKNOWN),
-      blitSRVFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleFormat(ANGLE_FORMAT_NONE),
-      mipGenerationFunction(nullptr),
-      colorReadFunction(nullptr)
-{
-}
-
-// For sized GL internal formats, there are several possible corresponding D3D11 formats depending
-// on device capabilities.
-// This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
-// DSVs given a GL internal format.
-TextureFormat::TextureFormat(GLenum internalFormat,
-                             const ANGLEFormat angleFormat,
-                             InitializeTextureDataFunction internalFormatInitializer,
-                             const Renderer11DeviceCaps &deviceCaps)
-    : dataInitializerFunction(internalFormatInitializer)
-{
-    formatSet        = &GetANGLEFormatSet(angleFormat, deviceCaps);
-    swizzleFormatSet = &GetANGLEFormatSet(formatSet->swizzleFormat, deviceCaps);
-
-    // Gather all the load functions for this internal format
-    loadFunctions = GetLoadFunctionsMap(internalFormat, formatSet->texFormat);
-
-    ASSERT(loadFunctions.size() != 0 || angleFormat == ANGLE_FORMAT_NONE);
-}
-
-ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
-                               GLenum glInternalFormat,
-                               GLenum fboImplementationInternalFormat,
-                               DXGI_FORMAT texFormat,
-                               DXGI_FORMAT srvFormat,
-                               DXGI_FORMAT rtvFormat,
-                               DXGI_FORMAT dsvFormat,
-                               DXGI_FORMAT blitSRVFormat,
-                               ANGLEFormat swizzleFormat,
-                               MipGenerationFunction mipGenerationFunction,
-                               ColorReadFunction colorReadFunction)
-    : format(format),
-      glInternalFormat(glInternalFormat),
-      fboImplementationInternalFormat(fboImplementationInternalFormat),
-      texFormat(texFormat),
-      srvFormat(srvFormat),
-      rtvFormat(rtvFormat),
-      dsvFormat(dsvFormat),
-      blitSRVFormat(blitSRVFormat),
-      swizzleFormat(swizzleFormat),
-      mipGenerationFunction(mipGenerationFunction),
-      colorReadFunction(colorReadFunction)
-{
-}
 
 const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat,
                                         const Renderer11DeviceCaps &deviceCaps)

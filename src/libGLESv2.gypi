@@ -422,6 +422,8 @@
             'libANGLE/renderer/d3d/d3d11/Trim11.h',
             'libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp',
             'libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.h',
+            'libANGLE/renderer/d3d/d3d11/texture_format_table_utils.h',
+            'libANGLE/renderer/d3d/d3d11/texture_format_table.cpp',
             'libANGLE/renderer/d3d/d3d11/texture_format_table.h',
             'libANGLE/renderer/d3d/d3d11/VertexArray11.cpp',
             'libANGLE/renderer/d3d/d3d11/VertexArray11.h',
