@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4ef0ec1_6d87950b",
+        "filename": "src/compiler/translator/ExpandIntegerPowExpressions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T07:57:49Z",
+      "side": 1,
+      "message": "This nextTemporaryIndex() call is now redundant.",
+      "revId": "5655b849d8fe1e79d06f2ed0b5064533ab893a44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
