@@ -141,11 +141,8 @@ class ContextGL : public ContextImpl
                                              GLenum transformType,
                                              const GLfloat *transformValues) override;
 
-    // TODO(jmadill): Investigate proper impl methods for this.
-    void notifyDeviceLost() override;
-    bool isDeviceLost() const override;
-    bool testDeviceLost() override;
-    bool testDeviceResettable() override;
+    // Device loss
+    GLenum getResetStatus() override;
 
     // Vendor and description strings.
     std::string getVendorString() const override;

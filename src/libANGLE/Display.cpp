@@ -791,7 +791,10 @@ bool Display::testDeviceLost()
 
 void Display::notifyDeviceLost()
 {
-    ASSERT(!mDeviceLost);
+    if (mDeviceLost)
+    {
+        return;
+    }
 
     for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
     {

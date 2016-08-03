@@ -107,11 +107,8 @@ class ContextImpl : public GLImplFactory
                                                      GLenum transformType,
                                                      const GLfloat *transformValues);
 
-    // TODO(jmadill): Investigate proper impl methods for this.
-    virtual void notifyDeviceLost() = 0;
-    virtual bool isDeviceLost() const = 0;
-    virtual bool testDeviceLost() = 0;
-    virtual bool testDeviceResettable() = 0;
+    // Device loss
+    virtual GLenum getResetStatus() = 0;
 
     // Vendor and description strings.
     virtual std::string getVendorString() const = 0;

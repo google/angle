@@ -486,19 +486,6 @@ void Context::releaseSurface()
     mCurrentSurface = nullptr;
 }
 
-// NOTE: this function should not assume that this context is current!
-void Context::markContextLost()
-{
-    if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
-        mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
-    mContextLost = true;
-}
-
-bool Context::isContextLost()
-{
-    return mContextLost;
-}
-
 GLuint Context::createBuffer()
 {
     return mResourceManager->createBuffer();
@@ -1955,32 +1942,55 @@ GLenum Context::getError()
     }
 }
 
+// NOTE: this function should not assume that this context is current!
+void Context::markContextLost()
+{
+    if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
+        mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
+    mContextLost     = true;
+}
+
+bool Context::isContextLost()
+{
+    return mContextLost;
+}
+
 GLenum Context::getResetStatus()
 {
-    //TODO(jmadill): needs MANGLE reworking
-    if (mResetStatus == GL_NO_ERROR && !mContextLost)
+    // Even if the application doesn't want to know about resets, we want to know
+    // as it will allow us to skip all the calls.
+    if (mResetStrategy == GL_NO_RESET_NOTIFICATION_EXT)
     {
-        // mResetStatus will be set by the markContextLost callback
-        // in the case a notification is sent
-        if (mImplementation->testDeviceLost())
+        if (!mContextLost && mImplementation->getResetStatus() != GL_NO_ERROR)
         {
-            mImplementation->notifyDeviceLost();
+            mContextLost = true;
         }
+
+        // EXT_robustness, section 2.6: If the reset notification behavior is
+        // NO_RESET_NOTIFICATION_EXT, then the implementation will never deliver notification of
+        // reset events, and GetGraphicsResetStatusEXT will always return NO_ERROR.
+        return GL_NO_ERROR;
     }
 
-    GLenum status = mResetStatus;
-
-    if (mResetStatus != GL_NO_ERROR)
+    // The GL_EXT_robustness spec says that if a reset is encountered, a reset
+    // status should be returned at least once, and GL_NO_ERROR should be returned
+    // once the device has finished resetting.
+    if (!mContextLost)
     {
-        ASSERT(mContextLost);
+        ASSERT(mResetStatus == GL_NO_ERROR);
+        mResetStatus = mImplementation->getResetStatus();
 
-        if (mImplementation->testDeviceResettable())
+        if (mResetStatus != GL_NO_ERROR)
         {
-            mResetStatus = GL_NO_ERROR;
+            mContextLost = true;
         }
     }
+    else if (mResetStatus != GL_NO_ERROR)
+    {
+        mResetStatus = mImplementation->getResetStatus();
+    }
 
-    return status;
+    return mResetStatus;
 }
 
 bool Context::isResetNotificationEnabled()

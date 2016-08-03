@@ -2560,18 +2560,7 @@ bool Renderer11::testDeviceLost()
 
     if (isLost)
     {
-        // Log error if this is a new device lost event
-        if (mDeviceLost == false)
-        {
-            ERR("The D3D11 device was removed: 0x%08X", result);
-        }
-
-        // ensure we note the device loss --
-        // we'll probably get this done again by notifyDeviceLost
-        // but best to remember it!
-        // Note that we don't want to clear the device loss status here
-        // -- this needs to be done by resetDevice
-        mDeviceLost = true;
+        ERR("The D3D11 device was removed: 0x%08X", result);
     }
 
     return isLost;
@@ -2683,8 +2672,6 @@ bool Renderer11::resetDevice()
         ERR("Could not reinitialize D3D11 device: %08X", result.getCode());
         return false;
     }
-
-    mDeviceLost = false;
 
     return true;
 }

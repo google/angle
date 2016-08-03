@@ -2045,19 +2045,7 @@ void Renderer9::releaseDeviceResources()
 bool Renderer9::testDeviceLost()
 {
     HRESULT status = getDeviceStatusCode();
-    bool isLost = FAILED(status);
-
-    if (isLost)
-    {
-        // ensure we note the device loss --
-        // we'll probably get this done again by notifyDeviceLost
-        // but best to remember it!
-        // Note that we don't want to clear the device loss status here
-        // -- this needs to be done by resetDevice
-        mDeviceLost = true;
-    }
-
-    return isLost;
+    return FAILED(status);
 }
 
 HRESULT Renderer9::getDeviceStatusCode()
@@ -2159,8 +2147,6 @@ bool Renderer9::resetDevice()
         // reset device defaults
         initializeDevice();
     }
-
-    mDeviceLost = false;
 
     return true;
 }

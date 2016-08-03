@@ -160,7 +160,7 @@ class Renderer11 : public RendererD3D
 
     // lost device
     bool testDeviceLost() override;
-    bool testDeviceResettable();
+    bool testDeviceResettable() override;
 
     std::string getRendererDescription() const;
     DeviceIdentifier getAdapterIdentifier() const override;

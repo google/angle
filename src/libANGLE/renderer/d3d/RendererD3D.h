@@ -112,8 +112,6 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual ContextImpl *createContext(const gl::ContextState &state) = 0;
 
-    bool isDeviceLost() const;
-    virtual bool testDeviceLost() = 0;
     std::string getVendorString() const;
 
     virtual int getMinorShaderModel() const = 0;
@@ -214,8 +212,12 @@ class RendererD3D : public BufferFactoryD3D
                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
 
     // Device lost
+    GLenum getResetStatus();
     void notifyDeviceLost();
     virtual bool resetDevice() = 0;
+    virtual bool testDeviceLost()       = 0;
+    virtual bool testDeviceResettable() = 0;
+
     virtual RendererClass getRendererClass() const = 0;
     virtual void *getD3DDevice() = 0;
 
@@ -263,7 +265,6 @@ class RendererD3D : public BufferFactoryD3D
     gl::Error markTransformFeedbackUsage(const gl::ContextState &data);
 
     egl::Display *mDisplay;
-    bool mDeviceLost;
 
     bool mPresentPathFastEnabled;
 
@@ -296,6 +297,7 @@ class RendererD3D : public BufferFactoryD3D
     mutable WorkaroundsD3D mWorkarounds;
 
     bool mDisjoint;
+    bool mDeviceLost;
 };
 
 }  // namespace rx

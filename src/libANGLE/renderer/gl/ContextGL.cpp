@@ -280,24 +280,10 @@ void ContextGL::stencilThenCoverStrokePathInstanced(const std::vector<gl::Path *
                                                    transformType, transformValues);
 }
 
-void ContextGL::notifyDeviceLost()
+GLenum ContextGL::getResetStatus()
 {
-    mRenderer->notifyDeviceLost();
-}
-
-bool ContextGL::isDeviceLost() const
-{
-    return mRenderer->isDeviceLost();
-}
-
-bool ContextGL::testDeviceLost()
-{
-    return mRenderer->testDeviceLost();
-}
-
-bool ContextGL::testDeviceResettable()
-{
-    return mRenderer->testDeviceResettable();
+    UNIMPLEMENTED();
+    return GL_NO_ERROR;
 }
 
 std::string ContextGL::getVendorString() const

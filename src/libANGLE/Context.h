@@ -68,9 +68,6 @@ class Context final : public ValidationContext
     void makeCurrent(egl::Surface *surface);
     void releaseSurface();
 
-    void markContextLost();
-    bool isContextLost();
-
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types
     GLuint createBuffer();
@@ -573,6 +570,8 @@ class Context final : public ValidationContext
     void handleError(const Error &error) override;
 
     GLenum getError();
+    void markContextLost();
+    bool isContextLost();
     GLenum getResetStatus();
     bool isResetNotificationEnabled();
 

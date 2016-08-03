@@ -446,29 +446,6 @@ void RendererGL::popGroupMarker()
     mFunctions->popDebugGroup();
 }
 
-void RendererGL::notifyDeviceLost()
-{
-    UNIMPLEMENTED();
-}
-
-bool RendererGL::isDeviceLost() const
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
-bool RendererGL::testDeviceLost()
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
-bool RendererGL::testDeviceResettable()
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
 std::string RendererGL::getVendorString() const
 {
     return std::string(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));

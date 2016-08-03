@@ -178,24 +178,9 @@ gl::Error Context9::drawRangeElements(GLenum mode,
     return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
 }
 
-void Context9::notifyDeviceLost()
+GLenum Context9::getResetStatus()
 {
-    mRenderer->notifyDeviceLost();
-}
-
-bool Context9::isDeviceLost() const
-{
-    return mRenderer->isDeviceLost();
-}
-
-bool Context9::testDeviceLost()
-{
-    return mRenderer->testDeviceLost();
-}
-
-bool Context9::testDeviceResettable()
-{
-    return mRenderer->testDeviceResettable();
+    return mRenderer->getResetStatus();
 }
 
 std::string Context9::getVendorString() const

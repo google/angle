@@ -142,12 +142,6 @@ class RendererGL : angle::NonCopyable
     void pushGroupMarker(GLsizei length, const char *marker);
     void popGroupMarker();
 
-    // lost device
-    void notifyDeviceLost();
-    bool isDeviceLost() const;
-    bool testDeviceLost();
-    bool testDeviceResettable();
-
     std::string getVendorString() const;
     std::string getRendererDescription() const;
 

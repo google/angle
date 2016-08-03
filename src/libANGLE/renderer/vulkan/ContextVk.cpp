@@ -106,27 +106,10 @@ gl::Error ContextVk::drawRangeElements(GLenum mode,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-void ContextVk::notifyDeviceLost()
+GLenum ContextVk::getResetStatus()
 {
     UNIMPLEMENTED();
-}
-
-bool ContextVk::isDeviceLost() const
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
-bool ContextVk::testDeviceLost()
-{
-    UNIMPLEMENTED();
-    return bool();
-}
-
-bool ContextVk::testDeviceResettable()
-{
-    UNIMPLEMENTED();
-    return bool();
+    return GL_NO_ERROR;
 }
 
 std::string ContextVk::getVendorString() const
