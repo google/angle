@@ -16,6 +16,24 @@
       "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4ef0ec1_cde689ad",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T13:47:02Z",
+      "side": 1,
+      "message": "As a clarification, grouping includes in standard libraries and project headers is still the convertion, but inside the groups includes should be alphabetically ordered.",
+      "parentUuid": "d4ef0ec1_adefbd84",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
