@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4f252a6_0ea9ab7b",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-03T08:56:09Z",
+      "side": 1,
+      "message": "Is this better than passing 3 arguments (x,y,z)?\nAlso, I checked the ANGLE coding standards, but I could not find whether the array should be passed like that.",
+      "range": {
+        "startLine": 405,
+        "startChar": 26,
+        "endLine": 405,
+        "endChar": 46
+      },
+      "revId": "e73329d32ef6a8aff49f3742443bf525fd14138f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
