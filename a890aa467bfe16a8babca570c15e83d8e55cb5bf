@@ -22,6 +22,30 @@
       "revId": "a890aa467bfe16a8babca570c15e83d8e55cb5bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4ef0ec1_ad133db1",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-03T12:46:17Z",
+      "side": 1,
+      "message": "Yep, having this inside the if and else if would be better.",
+      "parentUuid": "6a991793_625ab68a",
+      "range": {
+        "startLine": 950,
+        "startChar": 8,
+        "endLine": 950,
+        "endChar": 52
+      },
+      "revId": "a890aa467bfe16a8babca570c15e83d8e55cb5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
