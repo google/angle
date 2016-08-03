@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "54d23e19_21872ebe",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T15:07:30Z",
+      "side": 1,
+      "message": "All the spec mentions is that std::array is an aggregate, so it can\u0027t have user-defined constructors, and cannot do allocations when the default constructor is used. Implementations could do lazy allocation, but the whole point of std::array is that it does no allocations.",
+      "parentUuid": "54d23e19_0166aa55",
+      "range": {
+        "startLine": 344,
+        "startChar": 9,
+        "endLine": 344,
+        "endChar": 14
+      },
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_01986a62",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 6
