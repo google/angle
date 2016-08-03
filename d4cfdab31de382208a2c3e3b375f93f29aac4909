@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d23e19_3bcf575f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T18:53:24Z",
+      "side": 1,
+      "message": "Could this become GL_DEPTH24_STENCIL8: ANGLE_FORMAT_D24_UNORM_S8_UINT?\n\nSame below.",
+      "revId": "d4cfdab31de382208a2c3e3b375f93f29aac4909",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
