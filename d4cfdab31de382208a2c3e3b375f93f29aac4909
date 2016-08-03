@@ -34,6 +34,24 @@
       "revId": "d4cfdab31de382208a2c3e3b375f93f29aac4909",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d23e19_7b5b9f5d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T19:08:46Z",
+      "side": 1,
+      "message": "Thanks, sounds good.",
+      "parentUuid": "54d23e19_bbe9a7b2",
+      "revId": "d4cfdab31de382208a2c3e3b375f93f29aac4909",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
