@@ -209,6 +209,15 @@ class dEQPTest : public testing::TestWithParam<size_t>
         return sCaseList;
     }
 
+    static void SetUpTestCase()
+    {
+        sPasses           = 0;
+        sFails            = 0;
+        sUnexpectedPasses = 0;
+    }
+
+    static void TearDownTestCase();
+
   protected:
     void runTest()
     {
@@ -220,54 +229,78 @@ class dEQPTest : public testing::TestWithParam<size_t>
         if (caseInfo.mExpectation == gpu::GPUTestExpectationsParser::kGpuTestPass)
         {
             EXPECT_TRUE(result);
+            sPasses += (result ? 1u : 0u);
+            sFails += (!result ? 1u : 0u);
         }
         else if (result)
         {
             std::cout << "Test expected to fail but passed!" << std::endl;
+            sUnexpectedPasses++;
+        }
+        else
+        {
+            sFails++;
         }
     }
+
+    static unsigned int sPasses;
+    static unsigned int sFails;
+    static unsigned int sUnexpectedPasses;
 };
 
-class dEQP_GLES2 : public dEQPTest<0>
-{
-};
+template <size_t TestModuleIndex>
+unsigned int dEQPTest<TestModuleIndex>::sPasses           = 0;
+template <size_t TestModuleIndex>
+unsigned int dEQPTest<TestModuleIndex>::sFails            = 0;
+template <size_t TestModuleIndex>
+unsigned int dEQPTest<TestModuleIndex>::sUnexpectedPasses = 0;
 
-class dEQP_GLES3 : public dEQPTest<1>
+// static
+template <size_t TestModuleIndex>
+void dEQPTest<TestModuleIndex>::TearDownTestCase()
 {
-};
-
-class dEQP_GLES31 : public dEQPTest<2>
-{
-};
-
-class dEQP_EGL : public dEQPTest<3>
-{
-};
+    unsigned int total = sPasses + sFails;
+    float passFrac     = static_cast<float>(sPasses) / static_cast<float>(total) * 100.0f;
+    float failFrac     = static_cast<float>(sFails) / static_cast<float>(total) * 100.0f;
+    std::cout << "Passed: " << sPasses << "/" << total << " tests. (" << passFrac << "%)"
+              << std::endl;
+    if (sFails > 0)
+    {
+        std::cout << "Failed: " << sFails << "/" << total << " tests. (" << failFrac << "%)"
+                  << std::endl;
+    }
+    if (sUnexpectedPasses > 0)
+    {
+        std::cout << sUnexpectedPasses << " tests unexpectedly passed." << std::endl;
+    }
+}
 
 // TODO(jmadill): add different platform configs, or ability to choose platform
-#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(DEQP_TEST)                             \
+#define ANGLE_INSTANTIATE_DEQP_TEST_CASE(DEQP_TEST, N)                          \
+    class DEQP_TEST : public dEQPTest<N>                                        \
+    {                                                                           \
+    };                                                                          \
     TEST_P(DEQP_TEST, Default) { runTest(); }                                   \
                                                                                 \
     INSTANTIATE_TEST_CASE_P(, DEQP_TEST, DEQP_TEST::GetTestingRange(),          \
-                            [](const testing::TestParamInfo<size_t> &info)      \
-                            {                                                   \
+                            [](const testing::TestParamInfo<size_t> &info) {    \
                                 return DEQP_TEST::GetCaseGTestName(info.param); \
                             })
 
 #ifdef ANGLE_DEQP_GLES2_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES2);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES2, 0);
 #endif
 
 #ifdef ANGLE_DEQP_GLES3_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES3);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES3, 1);
 #endif
 
 #ifdef ANGLE_DEQP_GLES31_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES31);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES31, 2);
 #endif
 
 #ifdef ANGLE_DEQP_EGL_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_EGL);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_EGL, 3);
 #endif
 
 } // anonymous namespace
