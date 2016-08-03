@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54d23e19_3b23d7c5",
+        "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-03T19:10:26Z",
+      "side": 1,
+      "message": "nit: you could add tests checking for the \"both GL_TEXTURE_2D\" part as well as the non-immutable destination part.",
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
