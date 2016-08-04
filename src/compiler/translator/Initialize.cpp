@@ -682,7 +682,9 @@ void IdentifyBuiltIns(sh::GLenum type, ShShaderSpec spec,
         symbolTable.insert(ESSL3_BUILTINS, new TVariable(NewPoolTString("gl_VertexID"),
                                                          TType(EbtInt, EbpHigh, EvqVertexID, 1)));
         break;
-
+      case GL_COMPUTE_SHADER:
+          // TODO (mradev): add compute shader built-ins
+          break;
       default:
         assert(false && "Language not supported");
     }

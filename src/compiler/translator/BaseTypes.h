@@ -7,6 +7,9 @@
 #ifndef COMPILER_TRANSLATOR_BASETYPES_H_
 #define COMPILER_TRANSLATOR_BASETYPES_H_
 
+#include <algorithm>
+#include <array>
+
 #include "common/debug.h"
 
 //
@@ -346,6 +349,9 @@ enum TQualifier
     EvqFlatIn,
     EvqCentroidIn,  // Implies smooth
 
+    // GLSL ES 3.1 compute shader special variables
+    EvqComputeIn,
+
     // end of list
     EvqLast
 };
@@ -365,11 +371,17 @@ enum TLayoutBlockStorage
     EbsStd140
 };
 
+using TLocalSize = std::array<int, 3>;
+
 struct TLayoutQualifier
 {
     int location;
     TLayoutMatrixPacking matrixPacking;
     TLayoutBlockStorage blockStorage;
+
+    // Compute shader layout qualifiers.
+    // -1 means unspecified.
+    TLocalSize localSize;
 
     static TLayoutQualifier create()
     {
@@ -379,14 +391,65 @@ struct TLayoutQualifier
         layoutQualifier.matrixPacking = EmpUnspecified;
         layoutQualifier.blockStorage = EbsUnspecified;
 
+        layoutQualifier.localSize.fill(-1);
+
         return layoutQualifier;
     }
 
     bool isEmpty() const
     {
-        return location == -1 && matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified;
+        return location == -1 && matrixPacking == EmpUnspecified &&
+               blockStorage == EbsUnspecified && localSize[0] == -1 && localSize[1] == -1 &&
+               localSize[2] == -1;
+    }
+
+    bool isGroupSizeSpecified() const
+    {
+        return std::any_of(localSize.begin(), localSize.end(),
+                           [](int value) { return value != -1; });
+    }
+
+    bool isCombinationValid() const
+    {
+        bool workSizeSpecified = isGroupSizeSpecified();
+        bool otherLayoutQualifiersSpecified =
+            (location != -1 || matrixPacking != EmpUnspecified || blockStorage != EbsUnspecified);
+
+        // we can have either the work group size specified, or the other layout qualifiers
+        return !(workSizeSpecified && otherLayoutQualifiersSpecified);
+    }
+
+    bool isLocalSizeEqual(const TLocalSize &localSizeIn) const
+    {
+        for (size_t i = 0u; i < localSize.size(); ++i)
+        {
+            bool result =
+                (localSize[i] == localSizeIn[i] || (localSize[i] == 1 && localSizeIn[i] == -1) ||
+                 (localSize[i] == -1 && localSizeIn[i] == 1));
+            if (!result)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 };
+
+inline const char *getLocalSizeString(size_t dimension)
+{
+    switch (dimension)
+    {
+        case 0u:
+            return "local_size_x";
+        case 1u:
+            return "local_size_y";
+        case 2u:
+            return "local_size_z";
+        default:
+            UNREACHABLE();
+            return "dimension out of bounds";
+    }
+}
 
 //
 // This is just for debug print out, carried along with the definitions above.
@@ -432,6 +495,7 @@ inline const char* getQualifierString(TQualifier q)
     case EvqSmoothIn:               return "smooth in";
     case EvqFlatIn:                 return "flat in";
     case EvqCentroidIn:             return "smooth centroid in";
+    case EvqComputeIn:              return "in";
     default: UNREACHABLE();         return "unknown qualifier";
     }
     // clang-format on

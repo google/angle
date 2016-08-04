@@ -150,8 +150,10 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(),
       mSourcePath(NULL),
+      mComputeShaderLocalSizeDeclared(false),
       mTemporaryIndex(0)
 {
+    mComputeShaderLocalSize.fill(1);
 }
 
 TCompiler::~TCompiler()
@@ -249,6 +251,9 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     {
         mPragma = parseContext.pragma();
         symbolTable.setGlobalInvariant(mPragma.stdgl.invariantAll);
+
+        mComputeShaderLocalSizeDeclared = parseContext.isComputeShaderLocalSizeDeclared();
+        mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
         root = parseContext.getTreeRoot();
         root = intermediate.postProcess(root);
@@ -450,6 +455,10 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
         symbolTable.setDefaultPrecision(integer, EbpHigh);
         symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
         break;
+      case GL_COMPUTE_SHADER:
+          symbolTable.setDefaultPrecision(integer, EbpHigh);
+          symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+          break;
       default:
         assert(false && "Language not supported");
     }

@@ -126,6 +126,20 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 }
 
+#define COMPUTE_ONLY(S, L) {  \
+    if (context->getShaderType() != GL_COMPUTE_SHADER) {  \
+        context->error(L, " supported in compute shaders only ", S);  \
+        context->recover();  \
+    }  \
+}
+
+#define NON_COMPUTE_ONLY(S, L) {  \
+    if (context->getShaderType() != GL_VERTEX_SHADER && context->getShaderType() != GL_FRAGMENT_SHADER) {  \
+        context->error(L, " supported in vertex and fragment shaders only ", S);  \
+        context->recover();  \
+    }  \
+}
+
 #define ES2_ONLY(S, L) {  \
     if (context->getShaderVersion() != 100) {  \
         context->error(L, " supported in GLSL ES 1.00 only ", S);  \
@@ -933,37 +947,35 @@ storage_qualifier
         $$.qualifier = EvqConst;
     }
     | IN_QUAL {
-        ES3_OR_NEWER("in", @1, "storage qualifier");
         if (context->getShaderType() == GL_FRAGMENT_SHADER)
         {
+            ES3_OR_NEWER("in", @1, "storage qualifier");
             $$.qualifier = EvqFragmentIn;
+        }
+        else if (context->getShaderType() == GL_VERTEX_SHADER)
+        {
+            ES3_OR_NEWER("in", @1, "storage qualifier");
+            $$.qualifier = EvqVertexIn;
         }
         else
         {
-            $$.qualifier = EvqVertexIn;
+            $$.qualifier = EvqComputeIn;
         }
     }
     | OUT_QUAL {
         ES3_OR_NEWER("out", @1, "storage qualifier");
+        NON_COMPUTE_ONLY("out", @1);
         $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
     | CENTROID IN_QUAL {
         ES3_OR_NEWER("centroid in", @1, "storage qualifier");
-        if (context->getShaderType() == GL_VERTEX_SHADER)
-        {
-            context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
-            context->recover();
-        }
-        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
+        FRAG_ONLY("centroid in", @1);
+        $$.qualifier = EvqCentroidIn;
     }
     | CENTROID OUT_QUAL {
         ES3_OR_NEWER("centroid out", @1, "storage qualifier");
-        if (context->getShaderType() == GL_FRAGMENT_SHADER)
-        {
-            context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
-            context->recover();
-        }
-        $$.qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
+        VERTEX_ONLY("centroid out", @1);
+        $$.qualifier = EvqCentroidOut;
     }
     | UNIFORM {
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform"))
@@ -1018,7 +1030,7 @@ layout_qualifier_id_list
         $$ = $1;
     }
     | layout_qualifier_id_list COMMA layout_qualifier_id {
-        $$ = context->joinLayoutQualifiers($1, $3);
+        $$ = context->joinLayoutQualifiers($1, $3, @3);
     }
     ;
 
@@ -1027,10 +1039,10 @@ layout_qualifier_id
         $$ = context->parseLayoutQualifier(*$1.string, @1);
     }
     | IDENTIFIER EQUAL INTCONSTANT {
-        $$ = context->parseLayoutQualifier(*$1.string, @1, *$3.string, $3.i, @3);
+        $$ = context->parseLayoutQualifier(*$1.string, @1, $3.i, @3);
     }
     | IDENTIFIER EQUAL UINTCONSTANT {
-        $$ = context->parseLayoutQualifier(*$1.string, @1, *$3.string, $3.i, @3);
+        $$ = context->parseLayoutQualifier(*$1.string, @1, $3.i, @3);
     }
     ;
 

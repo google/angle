@@ -340,6 +340,9 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc &line, const char *op, TIn
         case EvqPointCoord:
             message = "can't modify gl_PointCoord";
             break;
+        case EvqComputeIn:
+            message = "can't modify work group size variable";
+            break;
         default:
             //
             // Type that can't be written to?
@@ -1010,6 +1013,7 @@ bool TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
         case EvqAttribute:
         case EvqVertexIn:
         case EvqFragmentOut:
+        case EvqComputeIn:
             if (publicType.type == EbtStruct)
             {
                 error(identifierLocation, "cannot be used with a structure",
@@ -1063,6 +1067,35 @@ bool TParseContext::layoutLocationErrorCheck(const TSourceLoc &location,
         error(location, "invalid layout qualifier:", "location",
               "only valid on program inputs and outputs");
         return true;
+    }
+
+    return false;
+}
+
+void TParseContext::layoutSupportedErrorCheck(const TSourceLoc &location,
+                                              const TString &layoutQualifierName,
+                                              int versionRequired)
+{
+
+    if (mShaderVersion < versionRequired)
+    {
+        error(location, "invalid layout qualifier:", layoutQualifierName.c_str(), "not supported");
+        recover();
+    }
+}
+
+bool TParseContext::layoutWorkGroupSizeErrorCheck(const TSourceLoc &location,
+                                                  const TLayoutQualifier &layoutQualifier)
+{
+    const TLocalSize &localSize = layoutQualifier.localSize;
+    for (size_t i = 0u; i < localSize.size(); ++i)
+    {
+        if (localSize[i] != -1)
+        {
+            error(location, "invalid layout qualifier:", getLocalSizeString(i),
+                  "only valid when used with 'in' in a compute shader global layout declaration");
+            return true;
+        }
     }
 
     return false;
@@ -1130,6 +1163,23 @@ void TParseContext::handlePragmaDirective(const TSourceLoc &loc,
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
     mDirectiveHandler.handlePragma(srcLoc, name, value, stdgl);
+}
+
+TLocalSize TParseContext::getComputeShaderLocalSize() const
+{
+    TLocalSize result;
+    for (size_t i = 0u; i < result.size(); ++i)
+    {
+        if (mComputeShaderLocalSizeDeclared && mComputeShaderLocalSize[i] == -1)
+        {
+            result[i] = 1;
+        }
+        else
+        {
+            result[i] = mComputeShaderLocalSize[i];
+        }
+    }
+    return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1386,6 +1436,11 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
     returnType.invariant       = invariant;
     returnType.layoutQualifier = layoutQualifier;
 
+    if (layoutWorkGroupSizeErrorCheck(typeSpecifier.line, layoutQualifier))
+    {
+        recover();
+    }
+
     if (mShaderVersion < 300)
     {
         if (typeSpecifier.array)
@@ -1421,6 +1476,12 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier,
         if (sh::IsVarying(qualifier) || qualifier == EvqVertexIn || qualifier == EvqFragmentOut)
         {
             es3InputOutputTypeCheck(qualifier, typeSpecifier, typeSpecifier.line);
+        }
+        if (qualifier == EvqComputeIn)
+        {
+            error(typeSpecifier.line, "'in' can be only used to specify the local group size",
+                  "in");
+            recover();
         }
     }
 
@@ -1890,13 +1951,6 @@ TIntermAggregate *TParseContext::parseArrayInitDeclarator(const TPublicType &pub
 
 void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
 {
-    if (typeQualifier.qualifier != EvqUniform)
-    {
-        error(typeQualifier.line, "invalid qualifier:", getQualifierString(typeQualifier.qualifier),
-              "global layout must be uniform");
-        recover();
-        return;
-    }
 
     const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
 
@@ -1908,27 +1962,108 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
         return;
     }
 
-    if (mShaderVersion < 300)
+    if (!layoutQualifier.isCombinationValid())
     {
-        error(typeQualifier.line, "layout qualifiers supported in GLSL ES 3.00 only", "layout");
+        error(typeQualifier.line, "invalid combination:", "layout");
         recover();
         return;
     }
 
-    if (layoutLocationErrorCheck(typeQualifier.line, typeQualifier.layoutQualifier))
+    if (typeQualifier.qualifier == EvqComputeIn)
     {
-        recover();
-        return;
-    }
+        if (mComputeShaderLocalSizeDeclared &&
+            !layoutQualifier.isLocalSizeEqual(mComputeShaderLocalSize))
+        {
+            error(typeQualifier.line, "Work group size does not match the previous declaration",
+                  "layout");
+            recover();
+            return;
+        }
 
-    if (layoutQualifier.matrixPacking != EmpUnspecified)
-    {
-        mDefaultMatrixPacking = layoutQualifier.matrixPacking;
-    }
+        if (mShaderVersion < 310)
+        {
+            error(typeQualifier.line, "in type qualifier supported in GLSL ES 3.10 only", "layout");
+            recover();
+            return;
+        }
 
-    if (layoutQualifier.blockStorage != EbsUnspecified)
+        if (!layoutQualifier.isGroupSizeSpecified())
+        {
+            error(typeQualifier.line, "No local work group size specified", "layout");
+            recover();
+            return;
+        }
+
+        const TVariable *maxComputeWorkGroupSize = static_cast<const TVariable *>(
+            symbolTable.findBuiltIn("gl_MaxComputeWorkGroupSize", mShaderVersion));
+
+        const TConstantUnion *maxComputeWorkGroupSizeData =
+            maxComputeWorkGroupSize->getConstPointer();
+
+        for (size_t i = 0u; i < layoutQualifier.localSize.size(); ++i)
+        {
+            if (layoutQualifier.localSize[i] != -1)
+            {
+                mComputeShaderLocalSize[i]             = layoutQualifier.localSize[i];
+                const int maxComputeWorkGroupSizeValue = maxComputeWorkGroupSizeData[i].getIConst();
+                if (mComputeShaderLocalSize[i] < 1 ||
+                    mComputeShaderLocalSize[i] > maxComputeWorkGroupSizeValue)
+                {
+                    std::stringstream errorMessageStream;
+                    errorMessageStream << "Value must be at least 1 and no greater than "
+                                       << maxComputeWorkGroupSizeValue;
+                    const std::string &errorMessage = errorMessageStream.str();
+
+                    error(typeQualifier.line, "invalid value:", getLocalSizeString(i),
+                          errorMessage.c_str());
+                    recover();
+                    return;
+                }
+            }
+        }
+
+        mComputeShaderLocalSizeDeclared = true;
+    }
+    else
     {
-        mDefaultBlockStorage = layoutQualifier.blockStorage;
+
+        if (layoutWorkGroupSizeErrorCheck(typeQualifier.line, typeQualifier.layoutQualifier))
+        {
+            recover();
+            return;
+        }
+
+        if (typeQualifier.qualifier != EvqUniform)
+        {
+            error(typeQualifier.line, "invalid qualifier:",
+                  getQualifierString(typeQualifier.qualifier), "global layout must be uniform");
+            recover();
+            return;
+        }
+
+        if (mShaderVersion < 300)
+        {
+            error(typeQualifier.line, "layout qualifiers supported in GLSL ES 3.00 and above",
+                  "layout");
+            recover();
+            return;
+        }
+
+        if (layoutLocationErrorCheck(typeQualifier.line, typeQualifier.layoutQualifier))
+        {
+            recover();
+            return;
+        }
+
+        if (layoutQualifier.matrixPacking != EmpUnspecified)
+        {
+            mDefaultMatrixPacking = layoutQualifier.matrixPacking;
+        }
+
+        if (layoutQualifier.blockStorage != EbsUnspecified)
+        {
+            mDefaultBlockStorage = layoutQualifier.blockStorage;
+        }
     }
 }
 
@@ -2461,6 +2596,11 @@ TIntermAggregate *TParseContext::addInterfaceBlock(const TPublicType &typeQualif
     if (blockLayoutQualifier.blockStorage == EbsUnspecified)
     {
         blockLayoutQualifier.blockStorage = mDefaultBlockStorage;
+    }
+
+    if (layoutWorkGroupSizeErrorCheck(nameLine, blockLayoutQualifier))
+    {
+        recover();
     }
 
     TSymbol *blockNameSymbol = new TInterfaceBlockName(&blockName);
@@ -3046,11 +3186,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,
                                                      const TSourceLoc &qualifierTypeLine)
 {
-    TLayoutQualifier qualifier;
-
-    qualifier.location      = -1;
-    qualifier.matrixPacking = EmpUnspecified;
-    qualifier.blockStorage  = EbsUnspecified;
+    TLayoutQualifier qualifier = TLayoutQualifier::create();
 
     if (qualifierType == "shared")
     {
@@ -3087,25 +3223,34 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     return qualifier;
 }
 
+void TParseContext::parseLocalSize(const TString &qualifierType,
+                                   const TSourceLoc &qualifierTypeLine,
+                                   int intValue,
+                                   const TSourceLoc &intValueLine,
+                                   const std::string &intValueString,
+                                   size_t index,
+                                   TLocalSize *localSize)
+{
+    layoutSupportedErrorCheck(qualifierTypeLine, qualifierType, 310);
+    if (intValue < 1)
+    {
+        std::string errorMessage = std::string(getLocalSizeString(index)) + " must be positive";
+        error(intValueLine, "out of range:", intValueString.c_str(), errorMessage.c_str());
+        recover();
+    }
+    (*localSize)[index] = intValue;
+}
+
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,
                                                      const TSourceLoc &qualifierTypeLine,
-                                                     const TString &intValueString,
                                                      int intValue,
                                                      const TSourceLoc &intValueLine)
 {
-    TLayoutQualifier qualifier;
+    TLayoutQualifier qualifier = TLayoutQualifier::create();
 
-    qualifier.location      = -1;
-    qualifier.matrixPacking = EmpUnspecified;
-    qualifier.blockStorage  = EbsUnspecified;
+    std::string intValueString = Str(intValue);
 
-    if (qualifierType != "location")
-    {
-        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str(),
-              "only location may have arguments");
-        recover();
-    }
-    else
+    if (qualifierType == "location")
     {
         // must check that location is non-negative
         if (intValue < 0)
@@ -3119,12 +3264,33 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
             qualifier.location = intValue;
         }
     }
+    else if (qualifierType == "local_size_x")
+    {
+        parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 0u,
+                       &qualifier.localSize);
+    }
+    else if (qualifierType == "local_size_y")
+    {
+        parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 1u,
+                       &qualifier.localSize);
+    }
+    else if (qualifierType == "local_size_z")
+    {
+        parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 2u,
+                       &qualifier.localSize);
+    }
+    else
+    {
+        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str());
+        recover();
+    }
 
     return qualifier;
 }
 
 TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualifier,
-                                                     TLayoutQualifier rightQualifier)
+                                                     TLayoutQualifier rightQualifier,
+                                                     const TSourceLoc &rightQualifierLocation)
 {
     TLayoutQualifier joinedQualifier = leftQualifier;
 
@@ -3139,6 +3305,22 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
     if (rightQualifier.blockStorage != EbsUnspecified)
     {
         joinedQualifier.blockStorage = rightQualifier.blockStorage;
+    }
+
+    for (size_t i = 0u; i < rightQualifier.localSize.size(); ++i)
+    {
+        if (rightQualifier.localSize[i] != -1)
+        {
+            if (joinedQualifier.localSize[i] != -1 &&
+                joinedQualifier.localSize[i] != rightQualifier.localSize[i])
+            {
+                error(rightQualifierLocation,
+                      "Cannot have multiple different work group size specifiers",
+                      getLocalSizeString(i));
+                recover();
+            }
+            joinedQualifier.localSize[i] = rightQualifier.localSize[i];
+        }
     }
 
     return joinedQualifier;
@@ -3206,6 +3388,11 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
                                                    TFieldList *fieldList)
 {
     if (voidErrorCheck(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier.type))
+    {
+        recover();
+    }
+
+    if (layoutWorkGroupSizeErrorCheck(typeSpecifier.line, typeSpecifier.layoutQualifier))
     {
         recover();
     }

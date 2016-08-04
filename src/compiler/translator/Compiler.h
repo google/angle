@@ -85,6 +85,9 @@ class TCompiler : public TShHandleBase
     int getShaderVersion() const { return shaderVersion; }
     TInfoSink& getInfoSink() { return infoSink; }
 
+    bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
+    const TLocalSize &getComputeShaderLocalSize() { return mComputeShaderLocalSize; }
+
     // Clears the results from the previous compilation.
     void clearResults();
 
@@ -226,6 +229,10 @@ class TCompiler : public TShHandleBase
     int shaderVersion;
     TInfoSink infoSink;  // Output sink.
     const char *mSourcePath; // Path of source file or NULL
+
+    // compute shader local group size
+    bool mComputeShaderLocalSizeDeclared;
+    TLocalSize mComputeShaderLocalSize;
 
     // name hashing.
     ShHashFunction64 hashFunction;

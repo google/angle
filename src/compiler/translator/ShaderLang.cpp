@@ -358,6 +358,17 @@ const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handl
     return GetShaderVariables<sh::InterfaceBlock>(handle);
 }
 
+std::array<int, 3> ShGetComputeShaderLocalGroupSize(const ShHandle handle)
+{
+    ASSERT(handle);
+
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getComputeShaderLocalSize();
+}
+
 bool ShCheckVariablesWithinPackingLimits(int maxVectors,
                                          const std::vector<sh::ShaderVariable> &variables)
 {

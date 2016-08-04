@@ -370,6 +370,20 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 }
 
+#define COMPUTE_ONLY(S, L) {  \
+    if (context->getShaderType() != GL_COMPUTE_SHADER) {  \
+        context->error(L, " supported in compute shaders only ", S);  \
+        context->recover();  \
+    }  \
+}
+
+#define DRAW_ONLY(S, L) {  \
+    if (context->getShaderType() != GL_VERTEX_SHADER && context->getShaderType() != GL_FRAGMENT_SHADER) {  \
+        context->error(L, " supported in vertex and fragment shaders only ", S);  \
+        context->recover();  \
+    }  \
+}
+
 #define ES2_ONLY(S, L) {  \
     if (context->getShaderVersion() != 100) {  \
         context->error(L, " supported in GLSL ES 1.00 only ", S);  \
@@ -703,34 +717,34 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   221,   221,   222,   225,   235,   238,   243,   248,   253,
-     258,   264,   267,   270,   273,   276,   279,   285,   293,   304,
-     308,   316,   319,   325,   329,   336,   342,   351,   359,   365,
-     372,   382,   385,   388,   391,   401,   402,   403,   404,   412,
-     413,   416,   419,   426,   427,   430,   436,   437,   441,   448,
-     449,   452,   455,   458,   464,   465,   468,   474,   475,   482,
-     483,   490,   491,   498,   499,   505,   506,   512,   513,   519,
-     520,   526,   527,   535,   536,   537,   538,   542,   543,   544,
-     548,   552,   556,   560,   567,   570,   576,   584,   592,   595,
-     601,   612,   616,   620,   624,   631,   637,   640,   647,   655,
-     676,   685,   695,   723,   728,   738,   743,   753,   756,   759,
-     762,   768,   775,   778,   782,   786,   791,   796,   803,   807,
-     811,   815,   820,   825,   829,   836,   846,   852,   855,   861,
-     867,   874,   883,   893,   901,   904,   911,   915,   919,   924,
-     932,   935,   946,   950,   959,   968,   976,   986,   998,  1001,
-    1004,  1010,  1017,  1020,  1026,  1029,  1032,  1038,  1041,  1046,
-    1061,  1065,  1069,  1073,  1077,  1081,  1086,  1091,  1096,  1101,
-    1106,  1111,  1116,  1121,  1126,  1131,  1136,  1141,  1146,  1151,
-    1156,  1161,  1166,  1171,  1176,  1181,  1186,  1190,  1194,  1198,
-    1202,  1206,  1210,  1214,  1218,  1222,  1226,  1230,  1234,  1238,
-    1242,  1246,  1255,  1263,  1267,  1280,  1280,  1283,  1283,  1289,
-    1292,  1308,  1311,  1320,  1324,  1330,  1337,  1352,  1356,  1360,
-    1361,  1367,  1368,  1369,  1370,  1371,  1372,  1373,  1377,  1378,
-    1378,  1378,  1388,  1389,  1393,  1393,  1394,  1394,  1399,  1402,
-    1412,  1415,  1421,  1422,  1426,  1434,  1438,  1445,  1445,  1452,
-    1455,  1462,  1467,  1482,  1482,  1487,  1487,  1494,  1494,  1502,
-    1505,  1511,  1514,  1520,  1524,  1531,  1534,  1537,  1540,  1543,
-    1552,  1556,  1563,  1566,  1572,  1572
+       0,   235,   235,   236,   239,   249,   252,   257,   262,   267,
+     272,   278,   281,   284,   287,   290,   293,   299,   307,   318,
+     322,   330,   333,   339,   343,   350,   356,   365,   373,   379,
+     386,   396,   399,   402,   405,   415,   416,   417,   418,   426,
+     427,   430,   433,   440,   441,   444,   450,   451,   455,   462,
+     463,   466,   469,   472,   478,   479,   482,   488,   489,   496,
+     497,   504,   505,   512,   513,   519,   520,   526,   527,   533,
+     534,   540,   541,   549,   550,   551,   552,   556,   557,   558,
+     562,   566,   570,   574,   581,   584,   590,   598,   606,   609,
+     615,   626,   630,   634,   638,   645,   651,   654,   661,   669,
+     690,   699,   709,   737,   742,   752,   757,   767,   770,   773,
+     776,   782,   789,   792,   796,   800,   805,   810,   817,   821,
+     825,   829,   834,   839,   843,   850,   860,   866,   869,   875,
+     881,   888,   897,   907,   915,   918,   925,   929,   933,   938,
+     946,   949,   965,   970,   975,   980,   988,   998,  1010,  1013,
+    1016,  1022,  1029,  1032,  1038,  1041,  1044,  1050,  1053,  1058,
+    1073,  1077,  1081,  1085,  1089,  1093,  1098,  1103,  1108,  1113,
+    1118,  1123,  1128,  1133,  1138,  1143,  1148,  1153,  1158,  1163,
+    1168,  1173,  1178,  1183,  1188,  1193,  1198,  1202,  1206,  1210,
+    1214,  1218,  1222,  1226,  1230,  1234,  1238,  1242,  1246,  1250,
+    1254,  1258,  1267,  1275,  1279,  1292,  1292,  1295,  1295,  1301,
+    1304,  1320,  1323,  1332,  1336,  1342,  1349,  1364,  1368,  1372,
+    1373,  1379,  1380,  1381,  1382,  1383,  1384,  1385,  1389,  1390,
+    1390,  1390,  1400,  1401,  1405,  1405,  1406,  1406,  1411,  1414,
+    1424,  1427,  1433,  1434,  1438,  1446,  1450,  1457,  1457,  1464,
+    1467,  1474,  1479,  1494,  1494,  1499,  1499,  1506,  1506,  1514,
+    1517,  1523,  1526,  1532,  1536,  1543,  1546,  1549,  1552,  1555,
+    1564,  1568,  1575,  1578,  1584,  1584
 };
 #endif
 
@@ -3607,14 +3621,19 @@ yyreduce:
   case 141:
 
     {
-        ES3_OR_NEWER("in", (yylsp[0]), "storage qualifier");
         if (context->getShaderType() == GL_FRAGMENT_SHADER)
         {
+            ES3_OR_NEWER("in", (yylsp[0]), "storage qualifier");
             (yyval.interm.type).qualifier = EvqFragmentIn;
+        }
+        else if (context->getShaderType() == GL_VERTEX_SHADER)
+        {
+            ES3_OR_NEWER("in", (yylsp[0]), "storage qualifier");
+            (yyval.interm.type).qualifier = EvqVertexIn;
         }
         else
         {
-            (yyval.interm.type).qualifier = EvqVertexIn;
+            (yyval.interm.type).qualifier = EvqComputeIn;
         }
     }
 
@@ -3624,6 +3643,7 @@ yyreduce:
 
     {
         ES3_OR_NEWER("out", (yylsp[0]), "storage qualifier");
+        DRAW_ONLY("out", (yylsp[0]));
         (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
 
@@ -3633,12 +3653,8 @@ yyreduce:
 
     {
         ES3_OR_NEWER("centroid in", (yylsp[-1]), "storage qualifier");
-        if (context->getShaderType() == GL_VERTEX_SHADER)
-        {
-            context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
-            context->recover();
-        }
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
+        FRAG_ONLY("centroid in", (yylsp[-1]));
+        (yyval.interm.type).qualifier = EvqCentroidIn;
     }
 
     break;
@@ -3647,12 +3663,8 @@ yyreduce:
 
     {
         ES3_OR_NEWER("centroid out", (yylsp[-1]), "storage qualifier");
-        if (context->getShaderType() == GL_FRAGMENT_SHADER)
-        {
-            context->error((yylsp[-1]), "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
-            context->recover();
-        }
-        (yyval.interm.type).qualifier = (context->getShaderType() == GL_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
+        VERTEX_ONLY("centroid out", (yylsp[-1]));
+        (yyval.interm.type).qualifier = EvqCentroidOut;
     }
 
     break;
@@ -3740,7 +3752,7 @@ yyreduce:
   case 153:
 
     {
-        (yyval.interm.layoutQualifier) = context->joinLayoutQualifiers((yyvsp[-2].interm.layoutQualifier), (yyvsp[0].interm.layoutQualifier));
+        (yyval.interm.layoutQualifier) = context->joinLayoutQualifiers((yyvsp[-2].interm.layoutQualifier), (yyvsp[0].interm.layoutQualifier), (yylsp[0]));
     }
 
     break;
@@ -3756,7 +3768,7 @@ yyreduce:
   case 155:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), *(yyvsp[0].lex).string, (yyvsp[0].lex).i, (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
     }
 
     break;
@@ -3764,7 +3776,7 @@ yyreduce:
   case 156:
 
     {
-        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), *(yyvsp[0].lex).string, (yyvsp[0].lex).i, (yylsp[0]));
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[-2].lex).string, (yylsp[-2]), (yyvsp[0].lex).i, (yylsp[0]));
     }
 
     break;
