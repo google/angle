@@ -46,6 +46,30 @@
       "revId": "a46407237262f1712269d9a7a3587472e1be6bf8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_8304de6f",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T11:55:49Z",
+      "side": 1,
+      "message": "Added the new entry point. It returns an array\u003cint,3\u003e containing the local size values.\n-1 would be undeclared.",
+      "parentUuid": "d4ef0ec1_6d4cb5cf",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 5
+      },
+      "revId": "a46407237262f1712269d9a7a3587472e1be6bf8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
