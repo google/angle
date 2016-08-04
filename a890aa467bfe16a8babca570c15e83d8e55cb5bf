@@ -46,6 +46,30 @@
       "revId": "a890aa467bfe16a8babca570c15e83d8e55cb5bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_c3fed657",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T11:55:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4ef0ec1_ad133db1",
+      "range": {
+        "startLine": 950,
+        "startChar": 8,
+        "endLine": 950,
+        "endChar": 52
+      },
+      "revId": "a890aa467bfe16a8babca570c15e83d8e55cb5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
