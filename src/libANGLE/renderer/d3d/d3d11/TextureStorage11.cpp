@@ -1555,16 +1555,15 @@ gl::Error TextureStorage11_External::getSwizzleRenderTarget(int mipLevel,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer, EGLImageD3D *eglImage)
+TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
+                                                     EGLImageD3D *eglImage,
+                                                     RenderTarget11 *renderTarget11)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE, 0),
       mImage(eglImage),
       mCurrentRenderTarget(0),
       mSwizzleTexture(nullptr),
       mSwizzleRenderTargets(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS, nullptr)
 {
-    RenderTargetD3D *renderTargetD3D = nullptr;
-    mImage->getRenderTarget(&renderTargetD3D);
-    RenderTarget11 *renderTarget11 = GetAs<RenderTarget11>(renderTargetD3D);
     mCurrentRenderTarget           = reinterpret_cast<uintptr_t>(renderTarget11);
 
     mMipLevels      = 1;

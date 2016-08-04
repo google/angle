@@ -1061,7 +1061,11 @@ gl::Error TextureD3D_2D::setEGLImageTarget(GLenum target, egl::Image *image)
     SafeDelete(mTexStorage);
     mImageArray[0]->markClean();
 
-    mTexStorage     = mRenderer->createTextureStorageEGLImage(eglImaged3d);
+    // Pass in the RenderTargetD3D here: createTextureStorage can't generate an error.
+    RenderTargetD3D *renderTargetD3D = nullptr;
+    ANGLE_TRY(eglImaged3d->getRenderTarget(&renderTargetD3D));
+
+    mTexStorage     = mRenderer->createTextureStorageEGLImage(eglImaged3d, renderTargetD3D);
     mEGLImageTarget = true;
 
     return gl::Error(GL_NO_ERROR);
@@ -3323,8 +3327,12 @@ gl::Error TextureD3D_External::setEGLImageTarget(GLenum target, egl::Image *imag
 {
     EGLImageD3D *eglImaged3d = GetImplAs<EGLImageD3D>(image);
 
+    // Pass in the RenderTargetD3D here: createTextureStorage can't generate an error.
+    RenderTargetD3D *renderTargetD3D = nullptr;
+    ANGLE_TRY(eglImaged3d->getRenderTarget(&renderTargetD3D));
+
     SafeDelete(mTexStorage);
-    mTexStorage = mRenderer->createTextureStorageEGLImage(eglImaged3d);
+    mTexStorage = mRenderer->createTextureStorageEGLImage(eglImaged3d, renderTargetD3D);
 
     return gl::NoError();
 }

@@ -233,7 +233,9 @@ class TextureStorage11_External : public TextureStorage11
 class TextureStorage11_EGLImage final : public TextureStorage11
 {
   public:
-    TextureStorage11_EGLImage(Renderer11 *renderer, EGLImageD3D *eglImage);
+    TextureStorage11_EGLImage(Renderer11 *renderer,
+                              EGLImageD3D *eglImage,
+                              RenderTarget11 *renderTarget11);
     ~TextureStorage11_EGLImage() override;
 
     gl::Error getResource(ID3D11Resource **outResource) override;

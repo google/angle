@@ -305,14 +305,11 @@ gl::Error TextureStorage9_2D::copyToStorage(TextureStorage *destStorage)
     return gl::Error(GL_NO_ERROR);
 }
 
-TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer, EGLImageD3D *image)
+TextureStorage9_EGLImage::TextureStorage9_EGLImage(Renderer9 *renderer,
+                                                   EGLImageD3D *image,
+                                                   RenderTarget9 *renderTarget9)
     : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET), mImage(image)
 {
-    RenderTargetD3D *renderTargetD3D = nullptr;
-    mImage->getRenderTarget(&renderTargetD3D);
-
-    RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTargetD3D);
-
     mInternalFormat = renderTarget9->getInternalFormat();
     mTextureFormat  = renderTarget9->getD3DFormat();
     mTextureWidth   = renderTarget9->getWidth();

@@ -2665,9 +2665,10 @@ TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
     return new TextureStorage9_2D(this, swapChain9);
 }
 
-TextureStorage *Renderer9::createTextureStorageEGLImage(EGLImageD3D *eglImage)
+TextureStorage *Renderer9::createTextureStorageEGLImage(EGLImageD3D *eglImage,
+                                                        RenderTargetD3D *renderTargetD3D)
 {
-    return new TextureStorage9_EGLImage(this, eglImage);
+    return new TextureStorage9_EGLImage(this, eglImage, GetAs<RenderTarget9>(renderTargetD3D));
 }
 
 TextureStorage *Renderer9::createTextureStorageExternal(
