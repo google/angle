@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94be7635_43af867a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T09:51:13Z",
+      "side": 1,
+      "message": "Yep, the language was clunky. I rewrote the commit message.",
+      "parentUuid": "54d23e19_41951288",
+      "range": {
+        "startLine": 10,
+        "startChar": 29,
+        "endLine": 11,
+        "endChar": 26
+      },
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_614cd6cf",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-03T16:00:36Z",
       "side": 1,
       "message": "nit: tag this with a bug to give context.",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_83d33e05",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T09:51:13Z",
+      "side": 1,
+      "message": "Done, I left the patch waiting for a while and forgot to do this when cleaning it up.",
+      "parentUuid": "54d23e19_614cd6cf",
       "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -76,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "94be7635_23b88ac2",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T09:51:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_e145466f",
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_01430a6a",
         "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
         "patchSetId": 4
@@ -104,6 +164,30 @@
       "writtenOn": "2016-08-03T16:00:36Z",
       "side": 1,
       "message": "it makes me wish we could write the traversers in this syntax!",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 22
+      },
+      "revId": "77a975bbd489d855c881f1716e191fcb1b338d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_63b282e2",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T09:51:13Z",
+      "side": 1,
+      "message": "Yep, it would be nice. I don\u0027t think we can fit implementing that in our short- or even medium-term goals though. Some smaller refactoring of the AST classes is more feasible and would already help.",
+      "parentUuid": "54d23e19_c1ebe20e",
       "range": {
         "startLine": 188,
         "startChar": 0,
