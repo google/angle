@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94be7635_03e74edc",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T10:57:58Z",
+      "side": 1,
+      "message": "I removed the explanation as it might not make sense to have it here at all. That\u0027s the purpose of the spec.",
+      "parentUuid": "54d23e19_817abaea",
+      "range": {
+        "startLine": 324,
+        "startChar": 48,
+        "endLine": 325,
+        "endChar": 32
+      },
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_0166aa55",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 6
@@ -106,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "74af42f6_32145099",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T10:57:58Z",
+      "side": 1,
+      "message": "Removed some new lines. Grouping is now done according to the glsl es 3.1 spec -\u003e 7.2 Built-in constants",
+      "parentUuid": "54d23e19_c18da229",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4ef0ec1_adefbd84",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 6
@@ -152,6 +194,30 @@
       "writtenOn": "2016-08-03T14:47:42Z",
       "side": 1,
       "message": "nit: always use \u0027unsigned int\u0027 for angle style",
+      "range": {
+        "startLine": 90,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 17
+      },
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_63e442d6",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T10:57:58Z",
+      "side": 1,
+      "message": "changed it to size_t. According to the angle guide:\n{DO} use size_t for loop iterators and size values.",
+      "parentUuid": "54d23e19_4170b20c",
       "range": {
         "startLine": 90,
         "startChar": 9,
