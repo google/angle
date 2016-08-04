@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "94be7635_831dfecb",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T11:59:07Z",
+      "side": 1,
+      "message": "The precision of these constants is actually already defined to be mediump in ESSL 1.00.",
+      "parentUuid": "54d23e19_01986a62",
+      "revId": "ce740c287e444cbb044ccf3636e6afac65b2a249",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_c18da229",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 6
