@@ -2243,3 +2243,138 @@ TEST_F(MalformedFragmentShaderGLES31Test, InvalidUseOfLocalSizeX)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// It is a compile time error to use the gl_WorkGroupSize constant if
+// the local size has not been declared yet.
+// GLSL ES 3.10 Revision 4, 7.1.3 Compute Shader Special Variables
+TEST_F(MalformedComputeShaderTest, InvalidUsageOfWorkGroupSize)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "   uvec3 WorkGroupSize = gl_WorkGroupSize;\n"
+        "}\n"
+        "layout(local_size_x = 12) in;\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// The test covers the compute shader built-in variables and constants.
+TEST_F(MalformedComputeShaderTest, CorrectUsageOfComputeBuiltins)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   uvec3 NumWorkGroups = gl_NumWorkGroups;\n"
+        "   uvec3 WorkGroupSize = gl_WorkGroupSize;\n"
+        "   uvec3 WorkGroupID = gl_WorkGroupID;\n"
+        "   uvec3 GlobalInvocationID = gl_GlobalInvocationID;\n"
+        "   uvec3 LocalInvocationID = gl_LocalInvocationID;\n"
+        "   uint LocalInvocationIndex = gl_LocalInvocationIndex;\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableNumWorkGroups)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_NumWorkGroups = uvec3(1); \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableWorkGroupID)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_WorkGroupID = uvec3(1); \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableLocalInvocationID)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_LocalInvocationID = uvec3(1); \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableGlobalInvocationID)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_GlobalInvocationID = uvec3(1); \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableLocalInvocationIndex)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_LocalInvocationIndex = 1; \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// It is illegal to write to a special variable
+TEST_F(MalformedComputeShaderTest, SpecialVariableWorkGroupSize)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 12) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_WorkGroupSize = uvec3(1); \n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

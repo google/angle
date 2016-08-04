@@ -340,6 +340,24 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc &line, const char *op, TIn
         case EvqPointCoord:
             message = "can't modify gl_PointCoord";
             break;
+        case EvqNumWorkGroups:
+            message = "can't modify gl_NumWorkGroups";
+            break;
+        case EvqWorkGroupSize:
+            message = "can't modify gl_WorkGroupSize";
+            break;
+        case EvqWorkGroupID:
+            message = "can't modify gl_WorkGroupID";
+            break;
+        case EvqLocalInvocationID:
+            message = "can't modify gl_LocalInvocationID";
+            break;
+        case EvqGlobalInvocationID:
+            message = "can't modify gl_GlobalInvocationID";
+            break;
+        case EvqLocalInvocationIndex:
+            message = "can't modify gl_LocalInvocationIndex";
+            break;
         case EvqComputeIn:
             message = "can't modify work group size variable";
             break;
@@ -1245,6 +1263,15 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
             }
             error(location, errorMessage, name->c_str());
             recover();
+        }
+
+        // GLSL ES 3.1 Revision 4, 7.1.3 Compute Shader Special Variables
+        if (getShaderType() == GL_COMPUTE_SHADER && !mComputeShaderLocalSizeDeclared &&
+            qualifier == EvqWorkGroupSize)
+        {
+            error(location,
+                  "It is an error to use gl_WorkGroupSize before declaring the local group size",
+                  "gl_WorkGroupSize");
         }
     }
 
