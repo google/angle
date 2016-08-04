@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94be7635_43f5c61d",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Simpler to say: \"-1 means unspecified.\"",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_03fbce17",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "I\u0027d rather handle sanitizing these values inside ParseContext. Maybe it could have a single getLocalSize() function that would return the local sizes as an array, and that would be called here only if the local size has been declared.",
+      "range": {
+        "startLine": 259,
+        "startChar": 8,
+        "endLine": 268,
+        "endChar": 9
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_830e9e3e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1973,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Better error message: \"Work group size does not match previous declaration\"",
+      "range": {
+        "startLine": 1973,
+        "startChar": 39,
+        "endLine": 1973,
+        "endChar": 80
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_23feca07",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2010,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Would rather use \"greater\" here.",
+      "range": {
+        "startLine": 2010,
+        "startChar": 55,
+        "endLine": 2010,
+        "endChar": 61
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_63f8c219",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 8
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Actually this seems redundant since compute shader compilation should generally fail for versions \u003c 3.1.",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_2317ea57",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "nit: Should be 3.10.",
+      "range": {
+        "startLine": 1752,
+        "startChar": 11,
+        "endLine": 1752,
+        "endChar": 14
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_431e6671",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Could add a note here saying that the spec isn\u0027t actually very clear if the minimum is 0 or 1, and a TODO to verify.",
+      "range": {
+        "startLine": 1767,
+        "startChar": 0,
+        "endLine": 1767,
+        "endChar": 65
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_a3091a3b",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Would be nice to still actually add a test for other integer formats: layout(local_size_x \u003d 0xFF) for example should be valid.",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
