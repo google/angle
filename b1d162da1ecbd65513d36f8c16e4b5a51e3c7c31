@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "94be7635_c3089634",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1991,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "Right. One thing to consider is also how this works if there\u0027s one declaration with just x like:\n\nlayout(local_size_x \u003d 2)\n\nand then another with both x and y like:\n\nlayout(local_size_x \u003d 2, local_size_y \u003d 2)\n\nis this okay? I\u0027d guess this is probably an error.",
+      "parentUuid": "94be7635_43d026c3",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_2346caac",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 6
@@ -213,6 +231,30 @@
       "side": 1,
       "message": "True.\nThe spec is not clear enough of lower bounds for the local size values. One way to interpret that it should be at least 1 is:\n\"The constants values in gl_WorkGroupSize will match those specified in the required\nlocal_size_x, local_size_y, and local_size_z layout qualifiers for the current shader. This is a constant so\nthat it can be used to size arrays of memory that can be shared within the local work group.\".\n\nI have also missed a check for gl_WorkGroupSize. It seems it is a compile time error to use it, if the local size has not been declared yet.\n\nDone in the new patch.",
       "parentUuid": "94be7635_0343ce9c",
+      "range": {
+        "startLine": 3280,
+        "startChar": 21,
+        "endLine": 3280,
+        "endChar": 24
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_e3031215",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T19:27:14Z",
+      "side": 1,
+      "message": "This might actually be something to ask clarification on from Khronos GLES group. For now I think we can keep the stricter check - it\u0027s always easier to make checks less strict later than the other way around.",
+      "parentUuid": "94be7635_43e786a9",
       "range": {
         "startLine": 3280,
         "startChar": 21,
