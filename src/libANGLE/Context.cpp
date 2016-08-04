@@ -1545,6 +1545,7 @@ void Context::getIntegeri_v(GLenum target, GLuint index, GLint *data)
     GLenum nativeType;
     unsigned int numParams;
     bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    UNUSED_ASSERTION_VARIABLE(queryStatus);
     ASSERT(queryStatus);
 
     if (nativeType == GL_INT)
@@ -1577,6 +1578,7 @@ void Context::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
     GLenum nativeType;
     unsigned int numParams;
     bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    UNUSED_ASSERTION_VARIABLE(queryStatus);
     ASSERT(queryStatus);
 
     if (nativeType == GL_INT_64_ANGLEX)
@@ -1597,6 +1599,7 @@ void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     GLenum nativeType;
     unsigned int numParams;
     bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    UNUSED_ASSERTION_VARIABLE(queryStatus);
     ASSERT(queryStatus);
 
     if (nativeType == GL_BOOL)
