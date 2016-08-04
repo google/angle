@@ -1,0 +1,216 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94be7635_a3511a68",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "Is this file extension a common convention? I\u0027m not sure how the frag and vert extensions were decided though.",
+      "range": {
+        "startLine": 377,
+        "startChar": 26,
+        "endLine": 377,
+        "endChar": 29
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "540f9ee2_d9da53e0",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "\"Compute shader local group size.\" would be better. \"compute local group size\" is not quite clear, since \"compute\" can be a verb as well.\n\nAlternatively could just call the variables \"computeShaderLocalSize\", code that\u0027s more self-explaining is always nice.",
+      "range": {
+        "startLine": 233,
+        "startChar": 7,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_e34b12b6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1991,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "I don\u0027t think this is correct. The spec says \"if such a layout qualifier is declared more than once in the same shader, all those declarations must set the same set of local workgroup sizes and set them to the same values; otherwise a compile-time error results\"\n\nSo this suggests you can have multiple work group size declarations as long as they match.",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_2346caac",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3278,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "This might as well be inside layoutSupportedErrorCheck()",
+      "range": {
+        "startLine": 3278,
+        "startChar": 12,
+        "endLine": 3278,
+        "endChar": 19
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_0343ce9c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "Isn\u0027t 0 an invalid value as well?",
+      "range": {
+        "startLine": 3280,
+        "startChar": 21,
+        "endLine": 3280,
+        "endChar": 24
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_6369e226",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "nit: Should fix these to start with a capital letter and have a period in the end. Generally comments should be written as clearly as possible, including proper punctuation and grammar. The Google style guide mentions this as well.",
+      "range": {
+        "startLine": 1720,
+        "startChar": 3,
+        "endLine": 1720,
+        "endChar": 4
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_e374b201",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "You can leave \"ComputeShader\" out of the individual test names, that\u0027s clear already from the test class that they\u0027re using.",
+      "range": {
+        "startLine": 1721,
+        "startChar": 35,
+        "endLine": 1721,
+        "endChar": 48
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_836fbe2f",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1735,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "Version300 would be a more descriptive name.",
+      "range": {
+        "startLine": 1735,
+        "startChar": 48,
+        "endLine": 1735,
+        "endChar": 58
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_035c6e80",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "This test doesn\u0027t seem to have anything to do with compute shaders, so it doesn\u0027t belong in this patch. I have a feeling this case is also already covered by some other test, it\u0027s certainly being tested in WebGL conformance at least.",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_c379b6f9",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-04T12:32:09Z",
+      "side": 1,
+      "message": "Each test should have a comment describing it.",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
