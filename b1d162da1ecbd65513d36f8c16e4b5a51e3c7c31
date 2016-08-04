@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "94be7635_03c62e13",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "It should be .comp I guess. At least https://github.com/KhronosGroup/glslang mentions .comp for compute shaders.",
+      "parentUuid": "94be7635_a3511a68",
+      "range": {
+        "startLine": 377,
+        "startChar": 26,
+        "endLine": 377,
+        "endChar": 29
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "540f9ee2_d9da53e0",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-04T12:32:09Z",
       "side": 1,
       "message": "\"Compute shader local group size.\" would be better. \"compute local group size\" is not quite clear, since \"compute\" can be a verb as well.\n\nAlternatively could just call the variables \"computeShaderLocalSize\", code that\u0027s more self-explaining is always nice.",
+      "range": {
+        "startLine": 233,
+        "startChar": 7,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_63d3a2d1",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "540f9ee2_d9da53e0",
       "range": {
         "startLine": 233,
         "startChar": 7,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "94be7635_43d026c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1991,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Yes, initially I wasn\u0027t sure whether it should be as in the spec since it doesn\u0027t make much sense to declare it multiple times. It would not have any effect really.\nI changed it, but I still have to check whether the layouts\nlocal_size_x \u003d 5\nand\nlocal_size_x \u003d 5, local_size_y \u003d 1\nare the same.\nI guess they would be since the local size is 1 by default.",
+      "parentUuid": "94be7635_e34b12b6",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_2346caac",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 6
@@ -76,6 +142,30 @@
       "writtenOn": "2016-08-04T12:32:09Z",
       "side": 1,
       "message": "This might as well be inside layoutSupportedErrorCheck()",
+      "range": {
+        "startLine": 3278,
+        "startChar": 12,
+        "endLine": 3278,
+        "endChar": 19
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_03ed8e8b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3278,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done.\nChanged the function to void and removed the if statement.",
+      "parentUuid": "94be7635_2346caac",
       "range": {
         "startLine": 3278,
         "startChar": 12,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "94be7635_43e786a9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3280,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "True.\nThe spec is not clear enough of lower bounds for the local size values. One way to interpret that it should be at least 1 is:\n\"The constants values in gl_WorkGroupSize will match those specified in the required\nlocal_size_x, local_size_y, and local_size_z layout qualifiers for the current shader. This is a constant so\nthat it can be used to size arrays of memory that can be shared within the local work group.\".\n\nI have also missed a check for gl_WorkGroupSize. It seems it is a compile time error to use it, if the local size has not been declared yet.\n\nDone in the new patch.",
+      "parentUuid": "94be7635_0343ce9c",
+      "range": {
+        "startLine": 3280,
+        "startChar": 21,
+        "endLine": 3280,
+        "endChar": 24
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_6369e226",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 6
@@ -122,6 +236,30 @@
       "writtenOn": "2016-08-04T12:32:09Z",
       "side": 1,
       "message": "nit: Should fix these to start with a capital letter and have a period in the end. Generally comments should be written as clearly as possible, including proper punctuation and grammar. The Google style guide mentions this as well.",
+      "range": {
+        "startLine": 1720,
+        "startChar": 3,
+        "endLine": 1720,
+        "endChar": 4
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_a3dbdae6",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1720,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_6369e226",
       "range": {
         "startLine": 1720,
         "startChar": 3,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "94be7635_c3da56e0",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_e374b201",
+      "range": {
+        "startLine": 1721,
+        "startChar": 35,
+        "endLine": 1721,
+        "endChar": 48
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_836fbe2f",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 6
@@ -168,6 +330,30 @@
       "writtenOn": "2016-08-04T12:32:09Z",
       "side": 1,
       "message": "Version300 would be a more descriptive name.",
+      "range": {
+        "startLine": 1735,
+        "startChar": 48,
+        "endLine": 1735,
+        "endChar": 58
+      },
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94be7635_e3d5d2b0",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1735,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_836fbe2f",
       "range": {
         "startLine": 1735,
         "startChar": 48,
@@ -197,6 +383,24 @@
     },
     {
       "key": {
+        "uuid": "94be7635_23f08a61",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done.\nI think it is based on a previously failing dEQP test. I removed it.",
+      "parentUuid": "94be7635_035c6e80",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_c379b6f9",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 6
@@ -208,6 +412,24 @@
       "writtenOn": "2016-08-04T12:32:09Z",
       "side": 1,
       "message": "Each test should have a comment describing it.",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "540f9ee2_19620b14",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-04T15:27:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_c379b6f9",
       "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
