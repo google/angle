@@ -3309,4 +3309,23 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
     return true;
 }
 
+bool ValidateCreateShader(Context *context, GLenum type)
+{
+    switch (type)
+    {
+        case GL_VERTEX_SHADER:
+        case GL_FRAGMENT_SHADER:
+            break;
+        case GL_COMPUTE_SHADER:
+            if (context->getGLVersion().isES31())
+            {
+                break;
+            }
+        default:
+            context->handleError(Error(GL_INVALID_ENUM));
+            return false;
+    }
+    return true;
+}
+
 }  // namespace gl

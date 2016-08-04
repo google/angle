@@ -358,7 +358,7 @@ const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handl
     return GetShaderVariables<sh::InterfaceBlock>(handle);
 }
 
-std::array<int, 3> ShGetComputeShaderLocalGroupSize(const ShHandle handle)
+sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle)
 {
     ASSERT(handle);
 

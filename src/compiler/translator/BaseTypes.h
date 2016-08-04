@@ -11,6 +11,7 @@
 #include <array>
 
 #include "common/debug.h"
+#include "GLSLANG/ShaderLang.h"
 
 //
 // Precision qualifiers
@@ -377,8 +378,6 @@ enum TLayoutBlockStorage
     EbsStd140
 };
 
-using TLocalSize = std::array<int, 3>;
-
 struct TLayoutQualifier
 {
     int location;
@@ -386,8 +385,7 @@ struct TLayoutQualifier
     TLayoutBlockStorage blockStorage;
 
     // Compute shader layout qualifiers.
-    // -1 means unspecified.
-    TLocalSize localSize;
+    sh::WorkGroupSize localSize;
 
     static TLayoutQualifier create()
     {
@@ -405,19 +403,12 @@ struct TLayoutQualifier
     bool isEmpty() const
     {
         return location == -1 && matrixPacking == EmpUnspecified &&
-               blockStorage == EbsUnspecified && localSize[0] == -1 && localSize[1] == -1 &&
-               localSize[2] == -1;
-    }
-
-    bool isGroupSizeSpecified() const
-    {
-        return std::any_of(localSize.begin(), localSize.end(),
-                           [](int value) { return value != -1; });
+               blockStorage == EbsUnspecified && !localSize.isAnyValueSet();
     }
 
     bool isCombinationValid() const
     {
-        bool workSizeSpecified = isGroupSizeSpecified();
+        bool workSizeSpecified = localSize.isAnyValueSet();
         bool otherLayoutQualifiersSpecified =
             (location != -1 || matrixPacking != EmpUnspecified || blockStorage != EbsUnspecified);
 
@@ -425,23 +416,13 @@ struct TLayoutQualifier
         return !(workSizeSpecified && otherLayoutQualifiersSpecified);
     }
 
-    bool isLocalSizeEqual(const TLocalSize &localSizeIn) const
+    bool isLocalSizeEqual(const sh::WorkGroupSize &localSizeIn) const
     {
-        for (size_t i = 0u; i < localSize.size(); ++i)
-        {
-            bool result =
-                (localSize[i] == localSizeIn[i] || (localSize[i] == 1 && localSizeIn[i] == -1) ||
-                 (localSize[i] == -1 && localSizeIn[i] == 1));
-            if (!result)
-            {
-                return false;
-            }
-        }
-        return true;
+        return localSize.isWorkGroupSizeMatching(localSizeIn);
     }
 };
 
-inline const char *getLocalSizeString(size_t dimension)
+inline const char *getWorkGroupSizeString(size_t dimension)
 {
     switch (dimension)
     {

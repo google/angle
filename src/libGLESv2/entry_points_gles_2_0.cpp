@@ -748,18 +748,13 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        switch (type)
-        {
-          case GL_FRAGMENT_SHADER:
-          case GL_VERTEX_SHADER:
-            return context->createShader(type);
 
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
+        if (!context->skipValidation() && !ValidateCreateShader(context, type))
+        {
             return 0;
         }
+        return context->createShader(type);
     }
-
     return 0;
 }
 

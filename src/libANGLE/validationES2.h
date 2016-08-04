@@ -305,6 +305,8 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
                                     GLboolean unpackPremultiplyAlpha,
                                     GLboolean unpackUnmultiplyAlpha);
 
+bool ValidateCreateShader(Context *context, GLenum type);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

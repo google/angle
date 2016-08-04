@@ -117,7 +117,7 @@ class TParseContext : angle::NonCopyable
     void decrSwitchNestingLevel() { --mSwitchNestingLevel; }
 
     bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
-    TLocalSize getComputeShaderLocalSize() const;
+    sh::WorkGroupSize getComputeShaderLocalSize() const;
 
     // This method is guaranteed to succeed, even if no variable with 'name' exists.
     const TVariable *getNamedVariable(const TSourceLoc &location, const TString *name, const TSymbol *symbol);
@@ -308,7 +308,7 @@ class TParseContext : angle::NonCopyable
                         const TSourceLoc &intValueLine,
                         const std::string &intValueString,
                         size_t index,
-                        TLocalSize *localSize);
+                        sh::WorkGroupSize *localSize);
     TLayoutQualifier parseLayoutQualifier(
         const TString &qualifierType, const TSourceLoc &qualifierTypeLine);
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType,
@@ -437,7 +437,7 @@ class TParseContext : angle::NonCopyable
 
     // keep track of local group size declared in layout. It should be declared only once.
     bool mComputeShaderLocalSizeDeclared;
-    TLocalSize mComputeShaderLocalSize;
+    sh::WorkGroupSize mComputeShaderLocalSize;
 };
 
 int PaParseStrings(

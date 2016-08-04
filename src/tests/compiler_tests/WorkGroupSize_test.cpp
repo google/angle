@@ -56,7 +56,7 @@ TEST_F(WorkGroupSizeTest, OnlyLocalSizeXSpecified)
 
     compile(shaderString);
 
-    const TLocalSize &localSize = mTranslator->getComputeShaderLocalSize();
+    const sh::WorkGroupSize &localSize = mTranslator->getComputeShaderLocalSize();
     ASSERT_EQ(5, localSize[0]);
     ASSERT_EQ(1, localSize[1]);
     ASSERT_EQ(1, localSize[2]);
@@ -73,7 +73,7 @@ TEST_F(WorkGroupSizeTest, LocalSizeXandZ)
 
     compile(shaderString);
 
-    const TLocalSize &localSize = mTranslator->getComputeShaderLocalSize();
+    const sh::WorkGroupSize &localSize = mTranslator->getComputeShaderLocalSize();
     ASSERT_EQ(5, localSize[0]);
     ASSERT_EQ(1, localSize[1]);
     ASSERT_EQ(10, localSize[2]);
@@ -90,7 +90,7 @@ TEST_F(WorkGroupSizeTest, LocalSizeAll)
 
     compile(shaderString);
 
-    const TLocalSize &localSize = mTranslator->getComputeShaderLocalSize();
+    const sh::WorkGroupSize &localSize = mTranslator->getComputeShaderLocalSize();
     ASSERT_EQ(5, localSize[0]);
     ASSERT_EQ(15, localSize[1]);
     ASSERT_EQ(10, localSize[2]);

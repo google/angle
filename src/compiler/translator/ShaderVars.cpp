@@ -418,4 +418,71 @@ bool InterfaceBlock::isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other)
     return true;
 }
 
+void WorkGroupSize::fill(int fillValue)
+{
+    localSizeQualifiers[0] = fillValue;
+    localSizeQualifiers[1] = fillValue;
+    localSizeQualifiers[2] = fillValue;
+}
+
+void WorkGroupSize::setLocalSize(int localSizeX, int localSizeY, int localSizeZ)
+{
+    localSizeQualifiers[0] = localSizeX;
+    localSizeQualifiers[1] = localSizeY;
+    localSizeQualifiers[2] = localSizeZ;
+}
+
+// check that if one of them is less than 1, then all of them are.
+// Or if one is positive, then all of them are positive.
+bool WorkGroupSize::isLocalSizeValid() const
+{
+    return (
+        (localSizeQualifiers[0] < 1 && localSizeQualifiers[1] < 1 && localSizeQualifiers[2] < 1) ||
+        (localSizeQualifiers[0] > 0 && localSizeQualifiers[1] > 0 && localSizeQualifiers[2] > 0));
+}
+
+bool WorkGroupSize::isAnyValueSet() const
+{
+    return localSizeQualifiers[0] > 0 || localSizeQualifiers[1] > 0 || localSizeQualifiers[2] > 0;
+}
+
+bool WorkGroupSize::isDeclared() const
+{
+    bool localSizeDeclared = localSizeQualifiers[0] > 0;
+    ASSERT(isLocalSizeValid());
+    return localSizeDeclared;
+}
+
+bool WorkGroupSize::isWorkGroupSizeMatching(const WorkGroupSize &right) const
+{
+    for (size_t i = 0u; i < size(); ++i)
+    {
+        bool result = (localSizeQualifiers[i] == right.localSizeQualifiers[i] ||
+                       (localSizeQualifiers[i] == 1 && right.localSizeQualifiers[i] == -1) ||
+                       (localSizeQualifiers[i] == -1 && right.localSizeQualifiers[i] == 1));
+        if (!result)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int &WorkGroupSize::operator[](size_t index)
+{
+    ASSERT(index < size());
+    return localSizeQualifiers[index];
+}
+
+int WorkGroupSize::operator[](size_t index) const
+{
+    ASSERT(index < size());
+    return localSizeQualifiers[index];
+}
+
+size_t WorkGroupSize::size() const
+{
+    return 3u;
+}
+
 }  // namespace sh

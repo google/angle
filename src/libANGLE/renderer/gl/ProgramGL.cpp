@@ -101,53 +101,68 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 {
     preLink();
 
-    // Set the transform feedback state
-    std::vector<const GLchar *> transformFeedbackVaryings;
-    for (const auto &tfVarying : mState.getTransformFeedbackVaryingNames())
+    if (mState.getAttachedComputeShader())
     {
-        transformFeedbackVaryings.push_back(tfVarying.c_str());
-    }
+        const ShaderGL *computeShaderGL = GetImplAs<ShaderGL>(mState.getAttachedComputeShader());
 
-    if (transformFeedbackVaryings.empty())
-    {
-        if (mFunctions->transformFeedbackVaryings)
-        {
-            mFunctions->transformFeedbackVaryings(mProgramID, 0, nullptr,
-                                                  mState.getTransformFeedbackBufferMode());
-        }
+        mFunctions->attachShader(mProgramID, computeShaderGL->getShaderID());
+
+        // Link and verify
+        mFunctions->linkProgram(mProgramID);
+
+        // Detach the shaders
+        mFunctions->detachShader(mProgramID, computeShaderGL->getShaderID());
     }
     else
     {
-        ASSERT(mFunctions->transformFeedbackVaryings);
-        mFunctions->transformFeedbackVaryings(
-            mProgramID, static_cast<GLsizei>(transformFeedbackVaryings.size()),
-            &transformFeedbackVaryings[0], mState.getTransformFeedbackBufferMode());
-    }
-
-    const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mState.getAttachedVertexShader());
-    const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mState.getAttachedFragmentShader());
-
-    // Attach the shaders
-    mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
-    mFunctions->attachShader(mProgramID, fragmentShaderGL->getShaderID());
-
-    // Bind attribute locations to match the GL layer.
-    for (const sh::Attribute &attribute : mState.getAttributes())
-    {
-        if (!attribute.staticUse)
+        // Set the transform feedback state
+        std::vector<const GLchar *> transformFeedbackVaryings;
+        for (const auto &tfVarying : mState.getTransformFeedbackVaryingNames())
         {
-            continue;
+            transformFeedbackVaryings.push_back(tfVarying.c_str());
         }
 
-        mFunctions->bindAttribLocation(mProgramID, attribute.location, attribute.name.c_str());
+        if (transformFeedbackVaryings.empty())
+        {
+            if (mFunctions->transformFeedbackVaryings)
+            {
+                mFunctions->transformFeedbackVaryings(mProgramID, 0, nullptr,
+                                                      mState.getTransformFeedbackBufferMode());
+            }
+        }
+        else
+        {
+            ASSERT(mFunctions->transformFeedbackVaryings);
+            mFunctions->transformFeedbackVaryings(
+                mProgramID, static_cast<GLsizei>(transformFeedbackVaryings.size()),
+                &transformFeedbackVaryings[0], mState.getTransformFeedbackBufferMode());
+        }
+
+        const ShaderGL *vertexShaderGL   = GetImplAs<ShaderGL>(mState.getAttachedVertexShader());
+        const ShaderGL *fragmentShaderGL = GetImplAs<ShaderGL>(mState.getAttachedFragmentShader());
+
+        // Attach the shaders
+        mFunctions->attachShader(mProgramID, vertexShaderGL->getShaderID());
+        mFunctions->attachShader(mProgramID, fragmentShaderGL->getShaderID());
+
+        // Bind attribute locations to match the GL layer.
+        for (const sh::Attribute &attribute : mState.getAttributes())
+        {
+            if (!attribute.staticUse)
+            {
+                continue;
+            }
+
+            mFunctions->bindAttribLocation(mProgramID, attribute.location, attribute.name.c_str());
+        }
+
+        // Link and verify
+        mFunctions->linkProgram(mProgramID);
+
+        // Detach the shaders
+        mFunctions->detachShader(mProgramID, vertexShaderGL->getShaderID());
+        mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
     }
-
-    // Link and verify
-    mFunctions->linkProgram(mProgramID);
-
-    // Detach the shaders
-    mFunctions->detachShader(mProgramID, vertexShaderGL->getShaderID());
-    mFunctions->detachShader(mProgramID, fragmentShaderGL->getShaderID());
 
     // Verify the link
     if (!checkLinkStatus(infoLog))

@@ -7,6 +7,7 @@
 #ifndef SAMPLE_UTIL_SHADER_UTILS_H
 #define SAMPLE_UTIL_SHADER_UTILS_H
 
+#include <GLES3/gl31.h>
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -28,5 +29,5 @@ GLuint CompileProgramWithTransformFeedback(
     GLenum bufferMode);
 GLuint CompileProgram(const std::string &vsSource, const std::string &fsSource);
 GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath);
-
+GLuint CompileComputeProgram(const std::string &csSource, bool outputErrorMessages = true);
 #endif // SAMPLE_UTIL_SHADER_UTILS_H

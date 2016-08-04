@@ -47,7 +47,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources(),
       mFragmentCompiler(nullptr),
-      mVertexCompiler(nullptr)
+      mVertexCompiler(nullptr),
+      mComputeCompiler(nullptr)
 {
     ASSERT(state.getClientMajorVersion() == 2 || state.getClientMajorVersion() == 3);
 
@@ -135,6 +136,15 @@ Error Compiler::release()
         activeCompilerHandles--;
     }
 
+    if (mComputeCompiler)
+    {
+        ShDestruct(mComputeCompiler);
+        mComputeCompiler = nullptr;
+
+        ASSERT(activeCompilerHandles > 0);
+        activeCompilerHandles--;
+    }
+
     if (activeCompilerHandles == 0)
     {
         ShFinalize();
@@ -157,7 +167,9 @@ ShHandle Compiler::getCompilerHandle(GLenum type)
         case GL_FRAGMENT_SHADER:
             compiler = &mFragmentCompiler;
             break;
-
+        case GL_COMPUTE_SHADER:
+            compiler = &mComputeCompiler;
+            break;
         default:
             UNREACHABLE();
             return nullptr;

@@ -1044,12 +1044,12 @@ void TParseContext::checkLayoutQualifierSupported(const TSourceLoc &location,
 bool TParseContext::checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
                                                      const TLayoutQualifier &layoutQualifier)
 {
-    const TLocalSize &localSize = layoutQualifier.localSize;
+    const sh::WorkGroupSize &localSize = layoutQualifier.localSize;
     for (size_t i = 0u; i < localSize.size(); ++i)
     {
         if (localSize[i] != -1)
         {
-            error(location, "invalid layout qualifier:", getLocalSizeString(i),
+            error(location, "invalid layout qualifier:", getWorkGroupSizeString(i),
                   "only valid when used with 'in' in a compute shader global layout declaration");
             return false;
         }
@@ -1119,9 +1119,9 @@ void TParseContext::handlePragmaDirective(const TSourceLoc &loc,
     mDirectiveHandler.handlePragma(srcLoc, name, value, stdgl);
 }
 
-TLocalSize TParseContext::getComputeShaderLocalSize() const
+sh::WorkGroupSize TParseContext::getComputeShaderLocalSize() const
 {
-    TLocalSize result;
+    sh::WorkGroupSize result;
     for (size_t i = 0u; i < result.size(); ++i)
     {
         if (mComputeShaderLocalSizeDeclared && mComputeShaderLocalSize[i] == -1)
@@ -1895,7 +1895,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
             return;
         }
 
-        if (!layoutQualifier.isGroupSizeSpecified())
+        if (!layoutQualifier.localSize.isAnyValueSet())
         {
             error(typeQualifier.line, "No local work group size specified", "layout");
             return;
@@ -1921,7 +1921,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
                                        << maxComputeWorkGroupSizeValue;
                     const std::string &errorMessage = errorMessageStream.str();
 
-                    error(typeQualifier.line, "invalid value:", getLocalSizeString(i),
+                    error(typeQualifier.line, "invalid value:", getWorkGroupSizeString(i),
                           errorMessage.c_str());
                     return;
                 }
@@ -3052,12 +3052,12 @@ void TParseContext::parseLocalSize(const TString &qualifierType,
                                    const TSourceLoc &intValueLine,
                                    const std::string &intValueString,
                                    size_t index,
-                                   TLocalSize *localSize)
+                                   sh::WorkGroupSize *localSize)
 {
     checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
     if (intValue < 1)
     {
-        std::string errorMessage = std::string(getLocalSizeString(index)) + " must be positive";
+        std::string errorMessage = std::string(getWorkGroupSizeString(index)) + " must be positive";
         error(intValueLine, "out of range:", intValueString.c_str(), errorMessage.c_str());
     }
     (*localSize)[index] = intValue;
@@ -3136,7 +3136,7 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
             {
                 error(rightQualifierLocation,
                       "Cannot have multiple different work group size specifiers",
-                      getLocalSizeString(i));
+                      getWorkGroupSizeString(i));
             }
             joinedQualifier.localSize[i] = rightQualifier.localSize[i];
         }
