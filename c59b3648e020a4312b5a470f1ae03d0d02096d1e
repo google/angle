@@ -1,0 +1,550 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3964e309_58f7fd8f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "There\u0027s some argument to defining a struct for this custom size. That would also eliminate the need to return a pointer - the pointer return is simply to prevent cross-DLL allocations.",
+      "range": {
+        "startLine": 499,
+        "startChar": 22,
+        "endLine": 499,
+        "endChar": 40
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b8c8994d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "you should increment the version number b/c of this new API",
+      "range": {
+        "startLine": 499,
+        "startChar": 42,
+        "endLine": 499,
+        "endChar": 74
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_78fc4171",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "could we potentially use angle::Optional here? IE a custom type that uses Optional for the x,y,z.",
+      "range": {
+        "startLine": 381,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 33
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_18f18598",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "this seems odd.. it seems like having a totally unspecified layout qualifier is valid. Maybe rename this to \"isSpecifiedAndValid()\" (or isValidAndSpecified(), or just validAndSpecified())",
+      "range": {
+        "startLine": 410,
+        "startChar": 9,
+        "endLine": 410,
+        "endChar": 27
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_d8ea2da4",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "this seems odd.. it can flip false, true, false.. is that correct? maybe you\u0027re missing an early return.",
+      "range": {
+        "startLine": 425,
+        "startChar": 12,
+        "endLine": 425,
+        "endChar": 18
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_98e4b5d8",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: I think this can go in the init list using {} syntax.",
+      "range": {
+        "startLine": 158,
+        "startChar": 8,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_58185dd9",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "is there a TODO here for certain compute shader builtins? either add a TODO(ldap): blah or a quick note there are none.",
+      "range": {
+        "startLine": 686,
+        "startChar": 10,
+        "endLine": 686,
+        "endChar": 15
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_3827a920",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "after seeing this throughout I\u0027m leaning towards using some kind of custom struct for these.",
+      "range": {
+        "startLine": 1174,
+        "startChar": 0,
+        "endLine": 1174,
+        "endChar": 18
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_d82b0de7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1975,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_f82851ec",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1984,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "maybe this should go after some of the other error checks. not sure.",
+      "range": {
+        "startLine": 1984,
+        "startChar": 8,
+        "endLine": 1984,
+        "endChar": 39
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_98359543",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: you can make this a const std::string \u0026 to potentially avoid a copy (not always, necessary, but can\u0027t hurt)",
+      "range": {
+        "startLine": 2018,
+        "startChar": 32,
+        "endLine": 2018,
+        "endChar": 44
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_18fbc569",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "we have a method Str() in angleutils.h that does this exact code.",
+      "range": {
+        "startLine": 3223,
+        "startChar": 4,
+        "endLine": 3225,
+        "endChar": 54
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_38000959",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3272,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "can you make a small local helper function to share code? just wondering if it\u0027ll be cleaner.",
+      "range": {
+        "startLine": 3241,
+        "startChar": 3,
+        "endLine": 3272,
+        "endChar": 42
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_781d21c8",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "same comment about init list. Also can you put this in the CPP.",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 35
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_d8146d9d",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: prefer nullptr over NULL",
+      "range": {
+        "startLine": 365,
+        "startChar": 15,
+        "endLine": 365,
+        "endChar": 19
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b80bb978",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "Does the spec use the term \u0027draw shader\u0027? I\u0027d lean towards NON_COMPUTE_ONLY if not.",
+      "range": {
+        "startLine": 136,
+        "startChar": 8,
+        "endLine": 136,
+        "endChar": 17
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b864194f",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 13
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 54,
+        "startChar": 52,
+        "endLine": 54,
+        "endChar": 70
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_184d05ca",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "thanks for adding the tests.",
+      "range": {
+        "startLine": 2147,
+        "startChar": 7,
+        "endLine": 2147,
+        "endChar": 17
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b83df910",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: override instead of virtual",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 11
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_18be6579",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: override",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 11
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_d8c78d10",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "can you use SafeDelete here?",
+      "range": {
+        "startLine": 31,
+        "startChar": 30,
+        "endLine": 31,
+        "endChar": 36
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_78b9a18f",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: init this inline to nullptr",
+      "range": {
+        "startLine": 45,
+        "startChar": 20,
+        "endLine": 45,
+        "endChar": 31
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b8ce5928",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "comment before every test.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 6
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_98d115cb",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-05T14:47:55Z",
+      "side": 1,
+      "message": "nit: EQ has the form (expected, actual). So these arguments should be flipped, same for the ones below.",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 13
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
