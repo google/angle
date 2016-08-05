@@ -115,49 +115,42 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 #define VERTEX_ONLY(S, L) {  \
     if (context->getShaderType() != GL_VERTEX_SHADER) {  \
         context->error(L, " supported in vertex shaders only ", S);  \
-        context->recover();  \
     }  \
 }
 
 #define FRAG_ONLY(S, L) {  \
     if (context->getShaderType() != GL_FRAGMENT_SHADER) {  \
         context->error(L, " supported in fragment shaders only ", S);  \
-        context->recover();  \
     }  \
 }
 
 #define COMPUTE_ONLY(S, L) {  \
     if (context->getShaderType() != GL_COMPUTE_SHADER) {  \
         context->error(L, " supported in compute shaders only ", S);  \
-        context->recover();  \
     }  \
 }
 
 #define NON_COMPUTE_ONLY(S, L) {  \
     if (context->getShaderType() != GL_VERTEX_SHADER && context->getShaderType() != GL_FRAGMENT_SHADER) {  \
         context->error(L, " supported in vertex and fragment shaders only ", S);  \
-        context->recover();  \
     }  \
 }
 
 #define ES2_ONLY(S, L) {  \
     if (context->getShaderVersion() != 100) {  \
         context->error(L, " supported in GLSL ES 1.00 only ", S);  \
-        context->recover();  \
     }  \
 }
 
 #define ES3_OR_NEWER(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() < 300) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 and above only ", TOKEN);  \
-        context->recover();  \
     }  \
 }
 
 #define ES3_1_ONLY(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() != 310) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.10 only ", TOKEN);  \
-        context->recover();  \
     }  \
 }
 %}
@@ -297,8 +290,7 @@ postfix_expression
 
 integer_expression
     : expression {
-        if (context->integerErrorCheck($1, "[]"))
-            context->recover();
+        context->integerErrorCheck($1, "[]");
         $$ = $1;
     }
     ;
@@ -377,15 +369,13 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        if (context->reservedErrorCheck(@1, *$1.string))
-            context->recover();
+        context->reservedErrorCheck(@1, *$1.string);
         const TType *type = TCache::getType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
     }
     | FIELD_SELECTION {
-        if (context->reservedErrorCheck(@1, *$1.string))
-            context->recover();
+        context->reservedErrorCheck(@1, *$1.string);
         const TType *type = TCache::getType(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
         $$ = function;
@@ -539,8 +529,7 @@ conditional_expression
 assignment_expression
     : conditional_expression { $$ = $1; }
     | unary_expression assignment_operator assignment_expression {
-        if (context->lValueErrorCheck(@2, "assign", $1))
-            context->recover();
+        context->lValueErrorCheck(@2, "assign", $1);
         $$ = context->addAssign($2.op, $1, $3, @2);
     }
     ;
@@ -588,16 +577,14 @@ expression
 
 constant_expression
     : conditional_expression {
-        if (context->constErrorCheck($1))
-            context->recover();
+        context->constErrorCheck($1);
         $$ = $1;
     }
     ;
 
 enter_struct
     : IDENTIFIER LEFT_BRACE {
-        if (context->enterStructDeclaration(@1, *$1.string))
-            context->recover();
+        context->enterStructDeclaration(@1, *$1.string);
         $$ = $1;
     }
     ;
@@ -615,11 +602,9 @@ declaration
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
         if (($2 == EbpHigh) && (context->getShaderType() == GL_FRAGMENT_SHADER) && !context->getFragmentPrecisionHigh()) {
             context->error(@1, "precision is not supported in fragment shader", "highp");
-            context->recover();
         }
         if (!context->symbolTable.setDefaultPrecision( $3, $2 )) {
             context->error(@1, "illegal type argument for default precision qualifier", getBasicString($3.type));
-            context->recover();
         }
         $$ = 0;
     }
@@ -676,7 +661,6 @@ function_header_with_parameters
             // This parameter > first is void
             //
             context->error(@2, "cannot be an argument type except for '(void)'", "void");
-            context->recover();
             delete $3.param.type;
         } else {
             // Add the parameter
@@ -699,24 +683,20 @@ parameter_declarator
     : type_specifier identifier {
         if ($1.type == EbtVoid) {
             context->error(@2, "illegal use of type 'void'", $2.string->c_str());
-            context->recover();
         }
-        if (context->reservedErrorCheck(@2, *$2.string))
-            context->recover();
+        context->reservedErrorCheck(@2, *$2.string);
         TParameter param = {$2.string, new TType($1)};
         $$.param = param;
     }
     | type_specifier identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         // Check that we can make an array out of this type
-        if (context->arrayTypeErrorCheck(@3, $1))
-            context->recover();
+        context->arrayTypeErrorCheck(@3, $1);
 
-        if (context->reservedErrorCheck(@2, *$2.string))
-            context->recover();
+        context->reservedErrorCheck(@2, *$2.string);
 
         int size;
-        if (context->arraySizeErrorCheck(@3, $4, size))
-            context->recover();
+        context->arraySizeErrorCheck(@3, $4, size);
+
         $1.setArraySize(size);
 
         TType* type = new TType($1);
@@ -736,30 +716,24 @@ parameter_declaration
     //
     : parameter_type_qualifier parameter_qualifier parameter_declarator {
         $$ = $3;
-        if (context->paramErrorCheck(@3, $1, $2, $$.param.type))
-            context->recover();
+        context->paramErrorCheck(@3, $1, $2, $$.param.type);
     }
     | parameter_qualifier parameter_declarator {
         $$ = $2;
-        if (context->parameterSamplerErrorCheck(@2, $1, *$2.param.type))
-            context->recover();
-        if (context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type))
-            context->recover();
+        context->parameterSamplerErrorCheck(@2, $1, *$2.param.type);
+        context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type);
     }
     //
     // Only type
     //
     | parameter_type_qualifier parameter_qualifier parameter_type_specifier {
         $$ = $3;
-        if (context->paramErrorCheck(@3, $1, $2, $$.param.type))
-            context->recover();
+        context->paramErrorCheck(@3, $1, $2, $$.param.type);
     }
     | parameter_qualifier parameter_type_specifier {
         $$ = $2;
-        if (context->parameterSamplerErrorCheck(@2, $1, *$2.param.type))
-            context->recover();
-        if (context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type))
-            context->recover();
+        context->parameterSamplerErrorCheck(@2, $1, *$2.param.type);
+        context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type);
     }
     ;
 
@@ -881,14 +855,12 @@ type_qualifier
     : ATTRIBUTE {
         VERTEX_ONLY("attribute", @1);
         ES2_ONLY("attribute", @1);
-        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "attribute"))
-            context->recover();
+        context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "attribute");
         $$.setBasic(EbtVoid, EvqAttribute, @1);
     }
     | VARYING {
         ES2_ONLY("varying", @1);
-        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "varying"))
-            context->recover();
+        context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "varying");
         if (context->getShaderType() == GL_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
@@ -896,8 +868,7 @@ type_qualifier
     }
     | INVARIANT VARYING {
         ES2_ONLY("varying", @1);
-        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
-            context->recover();
+        context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying");
         if (context->getShaderType() == GL_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
@@ -908,7 +879,6 @@ type_qualifier
         if ($1.qualifier != EvqConst && !context->symbolTable.atGlobalLevel())
         {
             context->error(@1, "Local variables can only use the const storage qualifier.", getQualifierString($1.qualifier));
-            context->recover();
         }
         $$.setBasic(EbtVoid, $1.qualifier, @1);
     }
@@ -917,7 +887,6 @@ type_qualifier
     }
     | interpolation_qualifier {
         context->error(@1, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
-        context->recover();
 
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtVoid, qual, @1);
@@ -978,8 +947,7 @@ storage_qualifier
         $$.qualifier = EvqCentroidOut;
     }
     | UNIFORM {
-        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform"))
-            context->recover();
+        context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform");
         $$.qualifier = EvqUniform;
     }
     ;
@@ -990,9 +958,7 @@ type_specifier
 
         if ($$.precision == EbpUndefined) {
             $$.precision = context->symbolTable.getDefaultPrecision($1.type);
-            if (context->precisionErrorCheck(@1, $$.precision, $1.type)) {
-                context->recover();
-            }
+            context->precisionErrorCheck(@1, $$.precision, $1.type);
         }
     }
     | precision_qualifier type_specifier_no_prec {
@@ -1001,7 +967,6 @@ type_specifier
 
         if (!SupportsPrecision($2.type)) {
             context->error(@1, "illegal type for precision qualifier", getBasicString($2.type));
-            context->recover();
         }
     }
     ;
@@ -1058,12 +1023,10 @@ type_specifier_no_prec
     | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
 
-        if (context->arrayTypeErrorCheck(@2, $1))
-            context->recover();
-        else {
+        if (!context->arrayTypeErrorCheck(@2, $1))
+        {
             int size;
-            if (context->arraySizeErrorCheck(@2, $3, size))
-                context->recover();
+            context->arraySizeErrorCheck(@2, $3, size);
             $$.setArraySize(size);
         }
     }
@@ -1259,7 +1222,6 @@ type_specifier_nonarray
         if (!context->supportsExtension("GL_OES_EGL_image_external") &&
             !context->supportsExtension("GL_NV_EGL_stream_consumer_external")) {
             context->error(@1, "unsupported type", "samplerExternalOES");
-            context->recover();
         }
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSamplerExternalOES, qual, @1);
@@ -1267,7 +1229,6 @@ type_specifier_nonarray
     | SAMPLER2DRECT {
         if (!context->supportsExtension("GL_ARB_texture_rectangle")) {
             context->error(@1, "unsupported type", "sampler2DRect");
-            context->recover();
         }
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSampler2DRect, qual, @1);
@@ -1289,10 +1250,10 @@ type_specifier_nonarray
     ;
 
 struct_specifier
-    : STRUCT identifier LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
+    : STRUCT identifier LEFT_BRACE { context->enterStructDeclaration(@2, *$2.string); } struct_declaration_list RIGHT_BRACE {
         $$ = context->addStructure(@1, @2, $2.string, $5);
     }
-    | STRUCT LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
+    | STRUCT LEFT_BRACE { context->enterStructDeclaration(@2, *$2.string); } struct_declaration_list RIGHT_BRACE {
         $$ = context->addStructure(@1, @$, NewPoolTString(""), $4);
     }
     ;
@@ -1308,7 +1269,6 @@ struct_declaration_list
             for (size_t j = 0; j < $$->size(); ++j) {
                 if ((*$$)[j]->name() == field->name()) {
                     context->error(@2, "duplicate field name in structure:", "struct", field->name().c_str());
-                    context->recover();
                 }
             }
             $$->push_back(field);
@@ -1340,20 +1300,17 @@ struct_declarator_list
 
 struct_declarator
     : identifier {
-        if (context->reservedErrorCheck(@1, *$1.string))
-            context->recover();
+        context->reservedErrorCheck(@1, *$1.string);
 
         TType* type = new TType(EbtVoid, EbpUndefined);
         $$ = new TField(type, $1.string, @1);
     }
     | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        if (context->reservedErrorCheck(@1, *$1.string))
-            context->recover();
+        context->reservedErrorCheck(@1, *$1.string);
 
         TType* type = new TType(EbtVoid, EbpUndefined);
         int size;
-        if (context->arraySizeErrorCheck(@3, $3, size))
-            context->recover();
+        context->arraySizeErrorCheck(@3, $3, size);
         type->setArraySize(size);
 
         $$ = new TField(type, $1.string, @1);
@@ -1436,8 +1393,7 @@ expression_statement
 
 selection_statement
     : IF LEFT_PAREN expression RIGHT_PAREN selection_rest_statement {
-        if (context->boolErrorCheck(@1, $3))
-            context->recover();
+        context->boolErrorCheck(@1, $3);
         $$ = context->intermediate.addSelection($3, $5, @1);
     }
     ;
@@ -1473,18 +1429,15 @@ condition
     // In 1996 c++ draft, conditions can include single declarations
     : expression {
         $$ = $1;
-        if (context->boolErrorCheck($1->getLine(), $1))
-            context->recover();
+        context->boolErrorCheck($1->getLine(), $1);
     }
     | fully_specified_type identifier EQUAL initializer {
         TIntermNode *intermNode;
-        if (context->boolErrorCheck(@2, $1))
-            context->recover();
+        context->boolErrorCheck(@2, $1);
 
         if (!context->executeInitializer(@2, *$2.string, $1, $4, &intermNode))
             $$ = $4;
         else {
-            context->recover();
             $$ = 0;
         }
     }
@@ -1497,8 +1450,7 @@ iteration_statement
         context->decrLoopNestingLevel();
     }
     | DO { context->incrLoopNestingLevel(); } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
-        if (context->boolErrorCheck(@8, $6))
-            context->recover();
+        context->boolErrorCheck(@8, $6);
 
         $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
         context->decrLoopNestingLevel();

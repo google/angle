@@ -92,7 +92,6 @@ class TParseContext : angle::NonCopyable
                          const char *token,
                          const char *extraInfo = "");
 
-    void recover();
     TIntermNode *getTreeRoot() const { return mTreeRoot; }
     void setTreeRoot(TIntermNode *treeRoot) { mTreeRoot = treeRoot; }
 
@@ -131,35 +130,42 @@ class TParseContext : angle::NonCopyable
     void assignError(const TSourceLoc &line, const char *op, TString left, TString right);
     void unaryOpError(const TSourceLoc &line, const char *op, TString operand);
     void binaryOpError(const TSourceLoc &line, const char *op, TString left, TString right);
-    bool precisionErrorCheck(const TSourceLoc &line, TPrecision precision, TBasicType type);
+    void precisionErrorCheck(const TSourceLoc &line, TPrecision precision, TBasicType type);
     bool lValueErrorCheck(const TSourceLoc &line, const char *op, TIntermTyped*);
-    bool constErrorCheck(TIntermTyped *node);
-    bool integerErrorCheck(TIntermTyped *node, const char *token);
-    bool globalErrorCheck(const TSourceLoc &line, bool global, const char *token);
+    void constErrorCheck(TIntermTyped *node);
+    void integerErrorCheck(TIntermTyped *node, const char *token);
+    void globalErrorCheck(const TSourceLoc &line, bool global, const char *token);
     bool constructorErrorCheck(const TSourceLoc &line,
                                TIntermNode *argumentsNode,
                                TFunction &function,
                                TOperator op,
                                TType *type);
-    bool arraySizeErrorCheck(const TSourceLoc &line, TIntermTyped *expr, int &size);
+    void arraySizeErrorCheck(const TSourceLoc &line, TIntermTyped *expr, int &size);
     bool arrayQualifierErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool arrayTypeErrorCheck(const TSourceLoc &line, const TPublicType &type);
     bool voidErrorCheck(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
-    bool boolErrorCheck(const TSourceLoc&, const TIntermTyped*);
-    bool boolErrorCheck(const TSourceLoc&, const TPublicType&);
+    void boolErrorCheck(const TSourceLoc &, const TIntermTyped *);
+    void boolErrorCheck(const TSourceLoc &, const TPublicType &);
     bool samplerErrorCheck(const TSourceLoc &line, const TPublicType &pType, const char *reason);
-    bool locationDeclaratorListCheck(const TSourceLoc &line, const TPublicType &pType);
-    bool parameterSamplerErrorCheck(const TSourceLoc &line, TQualifier qualifier, const TType &type);
-    bool paramErrorCheck(const TSourceLoc &line, TQualifier qualifier, TQualifier paramQualifier, TType *type);
+    void locationDeclaratorListCheck(const TSourceLoc &line, const TPublicType &pType);
+    void parameterSamplerErrorCheck(const TSourceLoc &line,
+                                    TQualifier qualifier,
+                                    const TType &type);
+    void paramErrorCheck(const TSourceLoc &line,
+                         TQualifier qualifier,
+                         TQualifier paramQualifier,
+                         TType *type);
     bool extensionErrorCheck(const TSourceLoc &line, const TString&);
-    bool singleDeclarationErrorCheck(const TPublicType &publicType, const TSourceLoc &identifierLocation);
-    bool layoutLocationErrorCheck(const TSourceLoc &location, const TLayoutQualifier &layoutQualifier);
+    void singleDeclarationErrorCheck(const TPublicType &publicType,
+                                     const TSourceLoc &identifierLocation);
+    void layoutLocationErrorCheck(const TSourceLoc &location,
+                                  const TLayoutQualifier &layoutQualifier);
     void layoutSupportedErrorCheck(const TSourceLoc &location,
                                    const TString &layoutQualifierName,
                                    int versionRequired);
     bool layoutWorkGroupSizeErrorCheck(const TSourceLoc &location,
                                        const TLayoutQualifier &layoutQualifier);
-    bool functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *);
+    void functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *);
     void es3InvariantErrorCheck(const TQualifier qualifier, const TSourceLoc &invariantLocation);
     void es3InputOutputTypeCheck(const TQualifier qualifier,
                                  const TPublicType &type,
@@ -309,9 +315,7 @@ class TParseContext : angle::NonCopyable
                                             const TSourceLoc &storageLoc, TQualifier storageQualifier);
 
     // Performs an error check for embedded struct declarations.
-    // Returns true if an error was raised due to the declaration of
-    // this struct.
-    bool enterStructDeclaration(const TSourceLoc &line, const TString &identifier);
+    void enterStructDeclaration(const TSourceLoc &line, const TString &identifier);
     void exitStructDeclaration();
 
     bool structNestingErrorCheck(const TSourceLoc &line, const TField &field);
@@ -371,7 +375,7 @@ class TParseContext : angle::NonCopyable
 
     bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
 
-    bool nonInitErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
+    void nonInitErrorCheck(const TSourceLoc &line, const TString &identifier, TPublicType *type);
 
     TIntermTyped *addBinaryMathInternal(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
