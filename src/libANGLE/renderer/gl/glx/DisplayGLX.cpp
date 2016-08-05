@@ -927,6 +927,9 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
     // When creating a context with glXCreateContextAttribsARB, a variety of X11 errors can
     // be generated. To prevent these errors from crashing our process, we simply ignore
     // them and only look if GLXContext was created.
+    // Process all events before setting the error handler to avoid desynchronizing XCB instances
+    // (the error handler is NOT per-display).
+    XSync(mXDisplay, False);
     auto oldErrorHandler = XSetErrorHandler(IgnoreX11Errors);
     *context = mGLX.createContextAttribsARB(mContextConfig, nullptr, True, attribs.data());
     XSetErrorHandler(oldErrorHandler);
