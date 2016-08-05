@@ -247,7 +247,19 @@ int VariableRowCount(GLenum type)
       case GL_SAMPLER_2D_SHADOW:
       case GL_SAMPLER_CUBE_SHADOW:
       case GL_SAMPLER_2D_ARRAY_SHADOW:
-        return 1;
+      case GL_IMAGE_2D:
+      case GL_INT_IMAGE_2D:
+      case GL_UNSIGNED_INT_IMAGE_2D:
+      case GL_IMAGE_2D_ARRAY:
+      case GL_INT_IMAGE_2D_ARRAY:
+      case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+      case GL_IMAGE_3D:
+      case GL_INT_IMAGE_3D:
+      case GL_UNSIGNED_INT_IMAGE_3D:
+      case GL_IMAGE_CUBE:
+      case GL_INT_IMAGE_CUBE:
+      case GL_UNSIGNED_INT_IMAGE_CUBE:
+          return 1;
       case GL_FLOAT_MAT2:
       case GL_FLOAT_MAT3x2:
       case GL_FLOAT_MAT4x2:

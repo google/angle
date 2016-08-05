@@ -22,6 +22,49 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+
+const int kWebGLMaxStructNesting = 4;
+
+bool ContainsSampler(const TType &type)
+{
+    if (IsSampler(type.getBasicType()))
+        return true;
+
+    if (type.getBasicType() == EbtStruct || type.isInterfaceBlock())
+    {
+        const TFieldList &fields = type.getStruct()->fields();
+        for (unsigned int i = 0; i < fields.size(); ++i)
+        {
+            if (ContainsSampler(*fields[i]->type()))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+bool ContainsImage(const TType &type)
+{
+    if (IsImage(type.getBasicType()))
+        return true;
+
+    if (type.getBasicType() == EbtStruct || type.isInterfaceBlock())
+    {
+        const TFieldList &fields = type.getStruct()->fields();
+        for (unsigned int i = 0; i < fields.size(); ++i)
+        {
+            if (ContainsImage(*fields[i]->type()))
+                return true;
+        }
+    }
+
+    return false;
+}
+
+}  // namespace
+
 //
 // Look at a '.' field selector string and change it into offsets
 // for a vector.
@@ -237,6 +280,11 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
                     error(line, "No precision specified (sampler)", "");
                     return;
                 }
+                if (IsImage(type))
+                {
+                    error(line, "No precision specified (image)", "");
+                    return;
+                }
         }
     }
 }
@@ -345,6 +393,10 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             if (IsSampler(node->getBasicType()))
             {
                 message = "can't modify a sampler";
+            }
+            if (IsImage(node->getBasicType()))
+            {
+                message = "can't modify an image";
             }
     }
 
@@ -576,6 +628,11 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             error(line, "cannot convert a sampler", "constructor");
             return false;
         }
+        if (op != EOpConstructStruct && IsImage(argTyped->getBasicType()))
+        {
+            error(line, "cannot convert an image", "constructor");
+            return false;
+        }
         if (argTyped->getBasicType() == EbtVoid)
         {
             error(line, "cannot convert a void", "constructor");
@@ -662,7 +719,7 @@ bool TParseContext::checkIsNotSampler(const TSourceLoc &line,
 {
     if (pType.type == EbtStruct)
     {
-        if (containsSampler(*pType.userDef))
+        if (ContainsSampler(*pType.userDef))
         {
             error(line, reason, getBasicString(pType.type), "(structure contains a sampler)");
             return false;
@@ -673,6 +730,31 @@ bool TParseContext::checkIsNotSampler(const TSourceLoc &line,
     else if (IsSampler(pType.type))
     {
         error(line, reason, getBasicString(pType.type));
+        return false;
+    }
+
+    return true;
+}
+
+bool TParseContext::checkIsNotImage(const TSourceLoc &line,
+                                    const TTypeSpecifierNonArray &pType,
+                                    const char *reason)
+{
+    if (pType.type == EbtStruct)
+    {
+        if (ContainsImage(*pType.userDef))
+        {
+            error(line, reason, getBasicString(pType.type), "(structure contains an image)");
+
+            return false;
+        }
+
+        return true;
+    }
+    else if (IsImage(pType.type))
+    {
+        error(line, reason, getBasicString(pType.type));
+
         return false;
     }
 
@@ -699,33 +781,34 @@ void TParseContext::checkLocationIsNotSpecified(const TSourceLoc &location,
     }
 }
 
+void TParseContext::checkOutParameterIsNotOpaqueType(const TSourceLoc &line,
+                                                     TQualifier qualifier,
+                                                     const TType &type)
+{
+    checkOutParameterIsNotSampler(line, qualifier, type);
+    checkOutParameterIsNotImage(line, qualifier, type);
+}
+
 void TParseContext::checkOutParameterIsNotSampler(const TSourceLoc &line,
                                                   TQualifier qualifier,
                                                   const TType &type)
 {
-    if ((qualifier == EvqOut || qualifier == EvqInOut) && type.getBasicType() != EbtStruct &&
-        IsSampler(type.getBasicType()))
+    ASSERT(qualifier == EvqOut || qualifier == EvqInOut);
+    if (IsSampler(type.getBasicType()))
     {
         error(line, "samplers cannot be output parameters", type.getBasicString());
     }
 }
 
-bool TParseContext::containsSampler(const TType &type)
+void TParseContext::checkOutParameterIsNotImage(const TSourceLoc &line,
+                                                TQualifier qualifier,
+                                                const TType &type)
 {
-    if (IsSampler(type.getBasicType()))
-        return true;
-
-    if (type.getBasicType() == EbtStruct || type.isInterfaceBlock())
+    ASSERT(qualifier == EvqOut || qualifier == EvqInOut);
+    if (IsImage(type.getBasicType()))
     {
-        const TFieldList &fields = type.getStruct()->fields();
-        for (unsigned int i = 0; i < fields.size(); ++i)
-        {
-            if (containsSampler(*fields[i]->type()))
-                return true;
-        }
+        error(line, "images cannot be output parameters", type.getBasicString());
     }
-
-    return false;
 }
 
 // Do size checking for an array type's size.
@@ -926,7 +1009,16 @@ void TParseContext::checkIsParameterQualifierValid(
 
     if (typeQualifier.qualifier == EvqOut || typeQualifier.qualifier == EvqInOut)
     {
-        checkOutParameterIsNotSampler(line, typeQualifier.qualifier, *type);
+        checkOutParameterIsNotOpaqueType(line, typeQualifier.qualifier, *type);
+    }
+
+    if (!IsImage(type->getBasicType()))
+    {
+        checkIsMemoryQualifierNotSpecified(typeQualifier.memoryQualifier, line);
+    }
+    else
+    {
+        type->setMemoryQualifier(typeQualifier.memoryQualifier);
     }
 
     type->setQualifier(typeQualifier.qualifier);
@@ -991,6 +1083,12 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
     {
         return;
     }
+    if (publicType.qualifier != EvqUniform &&
+        !checkIsNotImage(identifierLocation, publicType.typeSpecifierNonArray,
+                         "images must be uniform"))
+    {
+        return;
+    }
 
     // check for layout qualifier issues
     const TLayoutQualifier layoutQualifier = publicType.layoutQualifier;
@@ -1014,6 +1112,89 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
     if (publicType.qualifier != EvqVertexIn && publicType.qualifier != EvqFragmentOut)
     {
         checkLocationIsNotSpecified(identifierLocation, publicType.layoutQualifier);
+    }
+
+    if (IsImage(publicType.getBasicType()))
+    {
+
+        switch (layoutQualifier.imageInternalFormat)
+        {
+            case EiifRGBA32F:
+            case EiifRGBA16F:
+            case EiifR32F:
+            case EiifRGBA8:
+            case EiifRGBA8_SNORM:
+                if (!IsFloatImage(publicType.getBasicType()))
+                {
+                    error(identifierLocation,
+                          "internal image format requires a floating image type",
+                          getBasicString(publicType.getBasicType()));
+                    return;
+                }
+                break;
+            case EiifRGBA32I:
+            case EiifRGBA16I:
+            case EiifRGBA8I:
+            case EiifR32I:
+                if (!IsIntegerImage(publicType.getBasicType()))
+                {
+                    error(identifierLocation,
+                          "internal image format requires an integer image type",
+                          getBasicString(publicType.getBasicType()));
+                    return;
+                }
+                break;
+            case EiifRGBA32UI:
+            case EiifRGBA16UI:
+            case EiifRGBA8UI:
+            case EiifR32UI:
+                if (!IsUnsignedImage(publicType.getBasicType()))
+                {
+                    error(identifierLocation,
+                          "internal image format requires an unsigned image type",
+                          getBasicString(publicType.getBasicType()));
+                    return;
+                }
+                break;
+            case EiifUnspecified:
+                error(identifierLocation, "layout qualifier", "No image internal format specified");
+                return;
+            default:
+                error(identifierLocation, "layout qualifier", "unrecognized token");
+                return;
+        }
+
+        // GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+        switch (layoutQualifier.imageInternalFormat)
+        {
+            case EiifR32F:
+            case EiifR32I:
+            case EiifR32UI:
+                break;
+            default:
+                if (!publicType.memoryQualifier.readonly && !publicType.memoryQualifier.writeonly)
+                {
+                    error(identifierLocation, "layout qualifier",
+                          "Except for images with the r32f, r32i and r32ui format qualifiers, "
+                          "image variables must be qualified readonly and/or writeonly");
+                    return;
+                }
+                break;
+        }
+    }
+    else
+    {
+
+        if (!checkInternalFormatIsNotSpecified(identifierLocation,
+                                               layoutQualifier.imageInternalFormat))
+        {
+            return;
+        }
+
+        if (!checkIsMemoryQualifierNotSpecified(publicType.memoryQualifier, identifierLocation))
+        {
+            return;
+        }
     }
 }
 
@@ -1042,6 +1223,18 @@ bool TParseContext::checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
         }
     }
 
+    return true;
+}
+
+bool TParseContext::checkInternalFormatIsNotSpecified(const TSourceLoc &location,
+                                                      TLayoutImageInternalFormat internalFormat)
+{
+    if (internalFormat != EiifUnspecified)
+    {
+        error(location, "invalid layout qualifier:", getImageInternalFormatString(internalFormat),
+              "only valid when used with images");
+        return false;
+    }
     return true;
 }
 
@@ -1396,6 +1589,7 @@ TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &ty
     returnType.qualifier       = typeQualifier.qualifier;
     returnType.invariant       = typeQualifier.invariant;
     returnType.layoutQualifier = typeQualifier.layoutQualifier;
+    returnType.memoryQualifier = typeQualifier.memoryQualifier;
     returnType.precision       = typeSpecifier.precision;
 
     if (typeQualifier.precision != EbpUndefined)
@@ -1525,6 +1719,38 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
                   getQualifierString(qualifier));
         }
     }
+}
+
+void TParseContext::checkLocalVariableConstStorageQualifier(const TQualifierWrapperBase &qualifier)
+{
+    if (qualifier.getType() == QtStorage)
+    {
+        const TStorageQualifierWrapper &storageQualifier =
+            static_cast<const TStorageQualifierWrapper &>(qualifier);
+        if (!declaringFunction() && storageQualifier.getQualifier() != EvqConst &&
+            !symbolTable.atGlobalLevel())
+        {
+            error(storageQualifier.getLine(),
+                  "Local variables can only use the const storage qualifier.",
+                  storageQualifier.getQualifierString().c_str());
+        }
+    }
+}
+
+bool TParseContext::checkIsMemoryQualifierNotSpecified(const TMemoryQualifier &memoryQualifier,
+                                                       const TSourceLoc &location)
+{
+    if (memoryQualifier.readonly)
+    {
+        error(location, "Only allowed with images.", "readonly");
+        return false;
+    }
+    if (memoryQualifier.writeonly)
+    {
+        error(location, "Only allowed with images.", "writeonly");
+        return false;
+    }
+    return true;
 }
 
 TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
@@ -1729,6 +1955,7 @@ TIntermAggregate *TParseContext::parseInvariantDeclaration(
 
     checkInvariantVariableQualifier(typeQualifier.invariant, type.getQualifier(),
                                     typeQualifier.line);
+    checkIsMemoryQualifierNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
 
     symbolTable.addInvariantVarying(std::string(identifier->c_str()));
 
@@ -1918,6 +2145,10 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
         error(typeQualifier.line, "invalid combination:", "layout");
         return;
     }
+
+    checkIsMemoryQualifierNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
+
+    checkInternalFormatIsNotSpecified(typeQualifier.line, layoutQualifier.imageInternalFormat);
 
     if (typeQualifier.qualifier == EvqComputeIn)
     {
@@ -2272,9 +2503,10 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     {
         error(location, "no qualifiers allowed for function return", "layout");
     }
-    // make sure a sampler is not involved as well...
+    // make sure a sampler or an image is not involved as well...
     checkIsNotSampler(location, type.typeSpecifierNonArray,
                       "samplers can't be function return values");
+    checkIsNotImage(location, type.typeSpecifierNonArray, "images can't be function return values");
     if (mShaderVersion < 300)
     {
         // Array return values are forbidden, but there's also no valid syntax for declaring array
@@ -2413,6 +2645,8 @@ TIntermAggregate *TParseContext::addInterfaceBlock(
         error(typeQualifier.line, "invalid qualifier on interface block member", "invariant");
     }
 
+    checkIsMemoryQualifierNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
+
     TLayoutQualifier blockLayoutQualifier = typeQualifier.layoutQualifier;
     checkLocationIsNotSpecified(typeQualifier.line, blockLayoutQualifier);
 
@@ -2427,6 +2661,8 @@ TIntermAggregate *TParseContext::addInterfaceBlock(
     }
 
     checkWorkGroupSizeIsNotSpecified(nameLine, blockLayoutQualifier);
+
+    checkInternalFormatIsNotSpecified(nameLine, blockLayoutQualifier.imageInternalFormat);
 
     TSymbol *blockNameSymbol = new TInterfaceBlockName(&blockName);
     if (!symbolTable.declare(blockNameSymbol))
@@ -2443,6 +2679,12 @@ TIntermAggregate *TParseContext::addInterfaceBlock(
         {
             error(field->line(), "unsupported type", fieldType->getBasicString(),
                   "sampler types are not allowed in interface blocks");
+        }
+
+        if (IsImage(fieldType->getBasicType()))
+        {
+            error(field->line(), "unsupported type", fieldType->getBasicString(),
+                  "image types are not allowed in interface blocks");
         }
 
         const TQualifier qualifier = fieldType->getQualifier();
@@ -2566,12 +2808,6 @@ void TParseContext::exitStructDeclaration()
 {
     --mStructNestingLevel;
 }
-
-namespace
-{
-const int kWebGLMaxStructNesting = 4;
-
-}  // namespace
 
 void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field)
 {
@@ -2896,6 +3132,72 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str(),
               "location requires an argument");
     }
+    else if (qualifierType == "rgba32f")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA32F;
+    }
+    else if (qualifierType == "rgba16f")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA16F;
+    }
+    else if (qualifierType == "r32f")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifR32F;
+    }
+    else if (qualifierType == "rgba8")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA8;
+    }
+    else if (qualifierType == "rgba8_snorm")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA8_SNORM;
+    }
+    else if (qualifierType == "rgba32i")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA32I;
+    }
+    else if (qualifierType == "rgba16i")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA16I;
+    }
+    else if (qualifierType == "rgba8i")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA8I;
+    }
+    else if (qualifierType == "r32i")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifR32I;
+    }
+    else if (qualifierType == "rgba32ui")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA32UI;
+    }
+    else if (qualifierType == "rgba16ui")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA16UI;
+    }
+    else if (qualifierType == "rgba8ui")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifRGBA8UI;
+    }
+    else if (qualifierType == "r32ui")
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.imageInternalFormat = EiifR32UI;
+    }
+
     else
     {
         error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str());
@@ -2991,6 +3293,7 @@ TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
 
     typeSpecifier->qualifier       = typeQualifier.qualifier;
     typeSpecifier->layoutQualifier = typeQualifier.layoutQualifier;
+    typeSpecifier->memoryQualifier = typeQualifier.memoryQualifier;
     typeSpecifier->invariant       = typeQualifier.invariant;
     if (typeQualifier.precision != EbpUndefined)
     {
@@ -3021,6 +3324,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         type->setPrecision(typeSpecifier.precision);
         type->setQualifier(typeSpecifier.qualifier);
         type->setLayoutQualifier(typeSpecifier.layoutQualifier);
+        type->setMemoryQualifier(typeSpecifier.memoryQualifier);
         type->setInvariant(typeSpecifier.invariant);
 
         // don't allow arrays of arrays
@@ -3082,6 +3386,12 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
         {
             error(field.line(), "invalid qualifier on struct member", "invariant");
         }
+        if (IsImage(field.type()->getBasicType()))
+        {
+            error(field.line(), "disallowed type in struct", field.type()->getBasicString());
+        }
+
+        checkIsMemoryQualifierNotSpecified(field.type()->getMemoryQualifier(), field.line());
 
         checkLocationIsNotSpecified(field.line(), field.type()->getLayoutQualifier());
     }
@@ -3208,7 +3518,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
         case EOpNegative:
         case EOpPositive:
             if (child->getBasicType() == EbtStruct || child->getBasicType() == EbtBool ||
-                child->isArray() || IsSampler(child->getBasicType()))
+                child->isArray() || IsOpaqueType(child->getBasicType()))
             {
                 return nullptr;
             }
@@ -3370,6 +3680,14 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 left->getType().isStructureContainingSamplers())
             {
                 error(loc, "undefined operation for structs containing samplers",
+                      GetOperatorString(op));
+                return false;
+            }
+
+            if ((op == EOpAssign || op == EOpInitialize) &&
+                left->getType().isStructureContainingImages())
+            {
+                error(loc, "undefined operation for structs containing images",
                       GetOperatorString(op));
                 return false;
             }
@@ -3738,6 +4056,83 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
     }
 }
 
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall)
+{
+    ASSERT(!functionCall->isUserDefined());
+    const TString &name = functionCall->getFunctionSymbolInfo()->getName();
+
+    if (name.compare(0, 5, "image") == 0)
+    {
+        TIntermSequence *arguments = functionCall->getSequence();
+        TIntermNode *imageNode     = (*arguments)[0];
+        TIntermSymbol *imageSymbol = imageNode->getAsSymbolNode();
+
+        const TMemoryQualifier &memoryQualifier = imageSymbol->getMemoryQualifier();
+
+        if (name.compare(5, 5, "Store") == 0)
+        {
+            if (memoryQualifier.readonly)
+            {
+                error(imageNode->getLine(),
+                      "'imageStore' cannot be used with images qualified as 'readonly'",
+                      imageSymbol->getSymbol().c_str());
+            }
+        }
+        else if (name.compare(5, 4, "Load") == 0)
+        {
+            if (memoryQualifier.writeonly)
+            {
+                error(imageNode->getLine(),
+                      "'imageLoad' cannot be used with images qualified as 'writeonly'",
+                      imageSymbol->getSymbol().c_str());
+            }
+        }
+    }
+}
+
+// GLSL ES 3.10 Revision 4, 13.51 Matching of Memory Qualifiers in Function Parameters
+void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
+    const TFunction *functionDefinition,
+    const TIntermAggregate *functionCall)
+{
+    ASSERT(functionCall->isUserDefined());
+
+    const TIntermSequence &arguments = *functionCall->getSequence();
+
+    ASSERT(functionDefinition->getParamCount() == arguments.size());
+
+    for (size_t i = 0; i < arguments.size(); ++i)
+    {
+        const TType &functionArgumentType  = arguments[i]->getAsTyped()->getType();
+        const TType &functionParameterType = *functionDefinition->getParam(i).type;
+        ASSERT(functionArgumentType.getBasicType() == functionParameterType.getBasicType());
+
+        if (IsImage(functionArgumentType.getBasicType()))
+        {
+            const TMemoryQualifier &functionArgumentMemoryQualifier =
+                functionArgumentType.getMemoryQualifier();
+            const TMemoryQualifier &functionParameterMemoryQualifier =
+                functionParameterType.getMemoryQualifier();
+            if (functionArgumentMemoryQualifier.readonly &&
+                !functionParameterMemoryQualifier.readonly)
+            {
+                error(functionCall->getLine(),
+                      "Function call discards the 'readonly' qualifier from image",
+                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+            }
+
+            if (functionArgumentMemoryQualifier.writeonly &&
+                !functionParameterMemoryQualifier.writeonly)
+            {
+                error(functionCall->getLine(),
+                      "Function call discards the 'writeonly' qualifier from image",
+                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+            }
+        }
+    }
+}
+
 TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                                                      TIntermNode *paramNode,
                                                      TIntermNode *thisNode,
@@ -3887,6 +4282,12 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                     aggregate->setBuiltInFunctionPrecision();
 
                     checkTextureOffsetConst(aggregate);
+
+                    checkImageMemoryAccessForBuiltinFunctions(aggregate);
+                }
+                else
+                {
+                    checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, aggregate);
                 }
 
                 callNode = aggregate;

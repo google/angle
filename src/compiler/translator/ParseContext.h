@@ -162,12 +162,12 @@ class TParseContext : angle::NonCopyable
     bool checkIsNotSampler(const TSourceLoc &line,
                            const TTypeSpecifierNonArray &pType,
                            const char *reason);
+    bool checkIsNotImage(const TSourceLoc &line,
+                         const TTypeSpecifierNonArray &pType,
+                         const char *reason);
     void checkDeclaratorLocationIsNotSpecified(const TSourceLoc &line, const TPublicType &pType);
     void checkLocationIsNotSpecified(const TSourceLoc &location,
                                      const TLayoutQualifier &layoutQualifier);
-    void checkOutParameterIsNotSampler(const TSourceLoc &line,
-                                       TQualifier qualifier,
-                                       const TType &type);
     void checkIsParameterQualifierValid(const TSourceLoc &line,
                                         const TTypeQualifierBuilder &typeQualifierBuilder,
                                         TType *type);
@@ -179,7 +179,8 @@ class TParseContext : angle::NonCopyable
                                        int versionRequired);
     bool checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
                                           const TLayoutQualifier &layoutQualifier);
-
+    bool checkInternalFormatIsNotSpecified(const TSourceLoc &location,
+                                           TLayoutImageInternalFormat internalFormat);
     void functionCallLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
     void checkInvariantVariableQualifier(bool invariant,
                                          const TQualifier qualifier,
@@ -187,7 +188,7 @@ class TParseContext : angle::NonCopyable
     void checkInputOutputTypeIsValidES3(const TQualifier qualifier,
                                         const TPublicType &type,
                                         const TSourceLoc &qualifierLocation);
-
+    void checkLocalVariableConstStorageQualifier(const TQualifierWrapperBase &qualifier);
     const TPragma &pragma() const { return mDirectiveHandler.pragma(); }
     const TExtensionBehavior &extensionBehavior() const { return mDirectiveHandler.extensionBehavior(); }
     bool supportsExtension(const char *extension);
@@ -195,7 +196,6 @@ class TParseContext : angle::NonCopyable
     void handleExtensionDirective(const TSourceLoc &loc, const char *extName, const char *behavior);
     void handlePragmaDirective(const TSourceLoc &loc, const char *name, const char *value, bool stdgl);
 
-    bool containsSampler(const TType &type);
     const TFunction* findFunction(
         const TSourceLoc &line, TFunction *pfnCall, int inputShaderVersion, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line,
@@ -356,6 +356,9 @@ class TParseContext : angle::NonCopyable
     TIntermBranch *addBranch(TOperator op, TIntermTyped *returnValue, const TSourceLoc &loc);
 
     void checkTextureOffsetConst(TIntermAggregate *functionCall);
+    void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
+    void checkImageMemoryAccessForUserDefinedFunctions(const TFunction *functionDefinition,
+                                                       const TIntermAggregate *functionCall);
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall,
                                           TIntermNode *paramNode,
                                           TIntermNode *thisNode,
@@ -391,6 +394,18 @@ class TParseContext : angle::NonCopyable
 
     // Assumes that multiplication op has already been set based on the types.
     bool isMultiplicationTypeCombinationValid(TOperator op, const TType &left, const TType &right);
+
+    bool checkIsMemoryQualifierNotSpecified(const TMemoryQualifier &memoryQualifier,
+                                            const TSourceLoc &location);
+    void checkOutParameterIsNotImage(const TSourceLoc &line,
+                                     TQualifier qualifier,
+                                     const TType &type);
+    void checkOutParameterIsNotOpaqueType(const TSourceLoc &line,
+                                          TQualifier qualifier,
+                                          const TType &type);
+    void checkOutParameterIsNotSampler(const TSourceLoc &line,
+                                       TQualifier qualifier,
+                                       const TType &type);
 
     TIntermTyped *addBinaryMathInternal(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);

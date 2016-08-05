@@ -44,6 +44,30 @@ const char* getBasicString(TBasicType t)
         case EbtSampler2DArrayShadow: return "sampler2DArrayShadow";
         case EbtStruct:               return "structure";
         case EbtInterfaceBlock:       return "interface block";
+        case EbtImage2D:
+            return "image2D";
+        case EbtIImage2D:
+            return "iimage2D";
+        case EbtUImage2D:
+            return "uimage2D";
+        case EbtImage3D:
+            return "image3D";
+        case EbtIImage3D:
+            return "iimage3D";
+        case EbtUImage3D:
+            return "uimage3D";
+        case EbtImage2DArray:
+            return "image2DArray";
+        case EbtIImage2DArray:
+            return "iimage2DArray";
+        case EbtUImage2DArray:
+            return "uimage2DArray";
+        case EbtImageCube:
+            return "imageCube";
+        case EbtIImageCube:
+            return "iimageCube";
+        case EbtUImageCube:
+            return "uimageCube";
         default: UNREACHABLE();       return "unknown type";
     }
 }
@@ -53,6 +77,7 @@ TType::TType(const TPublicType &p)
       precision(p.precision),
       qualifier(p.qualifier),
       invariant(p.invariant),
+      memoryQualifier(p.memoryQualifier),
       layoutQualifier(p.layoutQualifier),
       primarySize(p.getPrimarySize()),
       secondarySize(p.getSecondarySize()),
@@ -283,6 +308,42 @@ TString TType::buildMangledName() const
       case EbtSampler2DArrayShadow:
         mangledName += "s2as";
         break;
+      case EbtImage2D:
+          mangledName += "im2";
+          break;
+      case EbtIImage2D:
+          mangledName += "iim2";
+          break;
+      case EbtUImage2D:
+          mangledName += "uim2";
+          break;
+      case EbtImage3D:
+          mangledName += "im3";
+          break;
+      case EbtIImage3D:
+          mangledName += "iim3";
+          break;
+      case EbtUImage3D:
+          mangledName += "uim3";
+          break;
+      case EbtImage2DArray:
+          mangledName += "im2a";
+          break;
+      case EbtIImage2DArray:
+          mangledName += "iim2a";
+          break;
+      case EbtUImage2DArray:
+          mangledName += "uim2a";
+          break;
+      case EbtImageCube:
+          mangledName += "imc";
+          break;
+      case EbtIImageCube:
+          mangledName += "iimc";
+          break;
+      case EbtUImageCube:
+          mangledName += "uimc";
+          break;
       case EbtStruct:
         mangledName += structure->mangledName();
         break;
@@ -376,6 +437,17 @@ bool TStructure::containsSamplers() const
     {
         const TType *fieldType = (*mFields)[i]->type();
         if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
+            return true;
+    }
+    return false;
+}
+
+bool TStructure::containsImages() const
+{
+    for (size_t i = 0; i < mFields->size(); ++i)
+    {
+        const TType *fieldType = (*mFields)[i]->type();
+        if (IsImage(fieldType->getBasicType()) || fieldType->isStructureContainingImages())
             return true;
     }
     return false;

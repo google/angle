@@ -49,6 +49,32 @@ bool isSingleStatement(TIntermNode *node)
     return true;
 }
 
+// If SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS is enabled, layout qualifiers are spilled whenever
+// variables with specified layout qualifiers are copied. Additional checks are needed against the
+// type and storage qualifier of the variable to verify that layout qualifiers have to be outputted.
+// TODO (mradev): Fix layout qualifier spilling in ScalarizeVecAndMatConstructorArgs and remove
+// NeedsToWriteLayoutQualifier.
+bool NeedsToWriteLayoutQualifier(const TType &type)
+{
+    if (type.getBasicType() == EbtInterfaceBlock)
+    {
+        return false;
+    }
+
+    const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
+
+    if ((type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqVertexIn) &&
+        layoutQualifier.location >= 0)
+    {
+        return true;
+    }
+    if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
+    {
+        return true;
+    }
+    return false;
+}
+
 }  // namespace
 
 TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
@@ -92,15 +118,30 @@ void TOutputGLSLBase::writeBuiltInFunctionTriplet(
 
 void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
 {
+    if (!NeedsToWriteLayoutQualifier(type))
+    {
+        return;
+    }
+
+    TInfoSinkBase &out                      = objSink();
+    const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
+    out << "layout(";
+
     if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqVertexIn)
     {
-        const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
         if (layoutQualifier.location >= 0)
         {
-            TInfoSinkBase &out = objSink();
-            out << "layout(location = " << layoutQualifier.location << ") ";
+            out << "location = " << layoutQualifier.location;
         }
     }
+
+    if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
+    {
+        ASSERT(type.getQualifier() == EvqTemporary || type.getQualifier() == EvqUniform);
+        out << getImageInternalFormatString(layoutQualifier.imageInternalFormat);
+    }
+
+    out << ") ";
 }
 
 void TOutputGLSLBase::writeVariableType(const TType &type)
@@ -141,6 +182,20 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
             out << type.getQualifierString() << " ";
         }
     }
+
+    const TMemoryQualifier &memoryQualifier = type.getMemoryQualifier();
+    if (memoryQualifier.readonly)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "readonly ";
+    }
+
+    if (memoryQualifier.writeonly)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "writeonly ";
+    }
+
     // Declare the struct if we have not done so already.
     if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
     {

@@ -159,6 +159,30 @@ GLenum GLVariableType(const TType &type)
       case EbtSampler2DShadow:      return GL_SAMPLER_2D_SHADOW;
       case EbtSamplerCubeShadow:    return GL_SAMPLER_CUBE_SHADOW;
       case EbtSampler2DArrayShadow: return GL_SAMPLER_2D_ARRAY_SHADOW;
+      case EbtImage2D:
+          return GL_IMAGE_2D;
+      case EbtIImage2D:
+          return GL_INT_IMAGE_2D;
+      case EbtUImage2D:
+          return GL_UNSIGNED_INT_IMAGE_2D;
+      case EbtImage2DArray:
+          return GL_IMAGE_2D_ARRAY;
+      case EbtIImage2DArray:
+          return GL_INT_IMAGE_2D_ARRAY;
+      case EbtUImage2DArray:
+          return GL_UNSIGNED_INT_IMAGE_2D_ARRAY;
+      case EbtImage3D:
+          return GL_IMAGE_3D;
+      case EbtIImage3D:
+          return GL_INT_IMAGE_3D;
+      case EbtUImage3D:
+          return GL_UNSIGNED_INT_IMAGE_3D;
+      case EbtImageCube:
+          return GL_IMAGE_CUBE;
+      case EbtIImageCube:
+          return GL_INT_IMAGE_CUBE;
+      case EbtUImageCube:
+          return GL_UNSIGNED_INT_IMAGE_CUBE;
       default: UNREACHABLE();
     }
 

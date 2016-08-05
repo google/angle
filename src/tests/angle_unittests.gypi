@@ -61,6 +61,7 @@
             '<(angle_path)/src/tests/compiler_tests/RecordConstantPrecision_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/RemovePow_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderExtension_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/ShaderImage_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShaderVariable_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ShCompile_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',

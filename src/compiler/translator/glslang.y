@@ -166,11 +166,14 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
+%token <lex> READONLY WRITEONLY
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
 %token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE ISAMPLER2DARRAY
 %token <lex> USAMPLER2D USAMPLER3D USAMPLERCUBE USAMPLER2DARRAY
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW SAMPLERCUBESHADOW SAMPLER2DARRAYSHADOW
+%token <lex> IMAGE2D IIMAGE2D UIMAGE2D IMAGE3D IIMAGE3D UIMAGE3D IMAGE2DARRAY IIMAGE2DARRAY UIMAGE2DARRAY
+%token <lex> IMAGECUBE IIMAGECUBE UIMAGECUBE
 %token <lex> LAYOUT
 
 %token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT UINTCONSTANT BOOLCONSTANT
@@ -215,8 +218,8 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 
 %type <interm.precision> precision_qualifier
 %type <interm.layoutQualifier> layout_qualifier
-%type <interm.qualifier> storage_qualifier interpolation_qualifier
-%type <interm.qualifierWrapper> single_type_qualifier invariant_qualifier
+%type <interm.qualifier> interpolation_qualifier
+%type <interm.qualifierWrapper> storage_qualifier single_type_qualifier invariant_qualifier
 %type <interm.typeQualifierBuilder> type_qualifier
 
 %type <interm.typeSpecifierNonArray> type_specifier_nonarray struct_specifier
@@ -854,11 +857,8 @@ invariant_qualifier
 
 single_type_qualifier
     : storage_qualifier {
-        if (!context->declaringFunction() && $1 != EvqConst && !context->symbolTable.atGlobalLevel())
-        {
-            context->error(@1, "Local variables can only use the const storage qualifier.", getQualifierString($1));
-        }
-        $$ = new TStorageQualifierWrapper($1, @1);
+        context->checkLocalVariableConstStorageQualifier(*$1);
+        $$ = $1;
     }
     | layout_qualifier {
         context->checkIsAtGlobalLevel(@1, "layout");
@@ -883,43 +883,43 @@ storage_qualifier
         VERTEX_ONLY("attribute", @1);
         ES2_ONLY("attribute", @1);
         context->checkIsAtGlobalLevel(@1, "attribute");
-        $$ = EvqAttribute;
+        $$ = new TStorageQualifierWrapper(EvqAttribute, @1);
     }
     | VARYING {
         ES2_ONLY("varying", @1);
         context->checkIsAtGlobalLevel(@1, "varying");
         if (context->getShaderType() == GL_VERTEX_SHADER)
-            $$ = EvqVaryingOut;
+            $$ = new TStorageQualifierWrapper(EvqVaryingOut, @1);
         else
-            $$ = EvqVaryingIn;
+            $$ = new TStorageQualifierWrapper(EvqVaryingIn, @1);
     }
     | CONST_QUAL {
-        $$ = EvqConst;
+        $$ = new TStorageQualifierWrapper(EvqConst, @1);
     }
     | IN_QUAL {
         if (context->declaringFunction())
         {
-            $$ = EvqIn;
+            $$ = new TStorageQualifierWrapper(EvqIn, @1);
         }
         else if (context->getShaderType() == GL_FRAGMENT_SHADER)
         {
             ES3_OR_NEWER("in", @1, "storage qualifier");
-            $$ = EvqFragmentIn;
+            $$ = new TStorageQualifierWrapper(EvqFragmentIn, @1);
         }
         else if (context->getShaderType() == GL_VERTEX_SHADER)
         {
             ES3_OR_NEWER("in", @1, "storage qualifier");
-            $$ = EvqVertexIn;
+            $$ = new TStorageQualifierWrapper(EvqVertexIn, @1);
         }
         else
         {
-            $$ = EvqComputeIn;
+            $$ = new TStorageQualifierWrapper(EvqComputeIn, @1);
         }
     }
     | OUT_QUAL {
         if (context->declaringFunction())
         {
-            $$ = EvqOut;
+            $$ = new TStorageQualifierWrapper(EvqOut, @1);
         }
         else
         {
@@ -927,11 +927,11 @@ storage_qualifier
             NON_COMPUTE_ONLY("out", @1);
             if (context->getShaderType() == GL_FRAGMENT_SHADER)
             {
-                $$ = EvqFragmentOut;
+                $$ = new TStorageQualifierWrapper(EvqFragmentOut, @1);
             }
             else
             {
-                $$ = EvqVertexOut;
+                $$ = new TStorageQualifierWrapper(EvqVertexOut, @1);
             }
         }
     }
@@ -940,15 +940,21 @@ storage_qualifier
         {
             context->error(@1, "invalid inout qualifier", "'inout' can be only used with function parameters");
         }
-        $$ = EvqInOut;
+        $$ = new TStorageQualifierWrapper(EvqInOut, @1);
     }
     | CENTROID {
         ES3_OR_NEWER("centroid", @1, "storage qualifier");
-        $$ = EvqCentroid;
+        $$ = new TStorageQualifierWrapper(EvqCentroid, @1);
     }
     | UNIFORM {
         context->checkIsAtGlobalLevel(@1, "uniform");
-        $$ = EvqUniform;
+        $$ = new TStorageQualifierWrapper(EvqUniform, @1);
+    }
+    | READONLY {
+        $$ = new TMemoryQualifierWrapper(EvqReadOnly, @1);
+    }
+    | WRITEONLY {
+        $$ = new TMemoryQualifierWrapper(EvqWriteOnly, @1);
     }
     ;
 
@@ -1181,6 +1187,42 @@ type_specifier_nonarray
     }
     | struct_specifier {
         $$ = $1;
+    }
+    | IMAGE2D {
+        $$.initialize(EbtImage2D, @1);
+    }
+    | IIMAGE2D {
+        $$.initialize(EbtIImage2D, @1);
+    }
+    | UIMAGE2D {
+        $$.initialize(EbtUImage2D, @1);
+    }
+    | IMAGE3D {
+        $$.initialize(EbtImage3D, @1);
+    }
+    | IIMAGE3D {
+        $$.initialize(EbtIImage3D, @1);
+    }
+    | UIMAGE3D {
+        $$.initialize(EbtUImage3D, @1);
+    }
+    | IMAGE2DARRAY {
+        $$.initialize(EbtImage2DArray, @1);
+    }
+    | IIMAGE2DARRAY {
+        $$.initialize(EbtIImage2DArray, @1);
+    }
+    | UIMAGE2DARRAY {
+        $$.initialize(EbtUImage2DArray, @1);
+    }
+    | IMAGECUBE {
+        $$.initialize(EbtImageCube, @1);
+    }
+    | IIMAGECUBE {
+        $$.initialize(EbtIImageCube, @1);
+    }
+    | UIMAGECUBE {
+        $$.initialize(EbtUImageCube, @1);
     }
     | TYPE_NAME {
         //

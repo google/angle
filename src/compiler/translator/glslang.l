@@ -71,6 +71,7 @@ static int reserved_word(yyscan_t yyscanner);
 static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
+static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -187,11 +188,24 @@ O           [0-7]
 
 "layout"  { return ES2_ident_ES3_keyword(context, LAYOUT); }
 
+"image2D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
+"iimage2D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
+"uimage2D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2D); }
+"image2DArray" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2DARRAY); }
+"iimage2DArray" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2DARRAY); }
+"uimage2DArray" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2DARRAY); }
+"image3D"  { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE3D); }
+"uimage3D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE3D); }
+"iimage3D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
+"iimageCube" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
+"uimageCube" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
+"imageCube"	{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
+"readonly" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, READONLY); }
+"writeonly" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
+
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "coherent"          |
 "restrict"          |
-"readonly"          |
-"writeonly"         |
 "resource"          |
 "atomic_uint"       |
 "noperspective"     |
@@ -204,23 +218,11 @@ O           [0-7]
 
 "filter"            |
 "image1D"           |
-"image2D"           |
-"image3D"           |
-"imageCube"	        |
 "iimage1D"          |
-"iimage2D"          |
-"iimage3D"          |
-"iimageCube"        |
 "uimage1D"          |
-"uimage2D"          |
-"uimage3D"          |
-"uimageCube"        |
 "image1DArray"      |
-"image2DArray"      |
 "iimage1DArray"     |
-"iimage2DArray"     |
 "uimage1DArray"     |
-"uimage2DArray"     |
 "image1DShadow"     |
 "image2DShadow"     |
 "image1DArrayShadow" |
@@ -456,6 +458,24 @@ int ES2_keyword_ES3_reserved(TParseContext *context, int token)
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
     if (context->getShaderVersion() >= 300)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    return token;
+}
+
+int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    if (context->getShaderVersion() < 300)
+    {
+        yylval->lex.string = NewPoolTString(yytext);
+        return check_type(yyscanner);
+    }
+    else if (context->getShaderVersion() == 300)
     {
         return reserved_word(yyscanner);
     }

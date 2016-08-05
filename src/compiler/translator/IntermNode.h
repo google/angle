@@ -150,6 +150,7 @@ class TIntermTyped : public TIntermNode
     TBasicType getBasicType() const { return mType.getBasicType(); }
     TQualifier getQualifier() const { return mType.getQualifier(); }
     TPrecision getPrecision() const { return mType.getPrecision(); }
+    TMemoryQualifier getMemoryQualifier() const { return mType.getMemoryQualifier(); }
     int getCols() const { return mType.getCols(); }
     int getRows() const { return mType.getRows(); }
     int getNominalSize() const { return mType.getNominalSize(); }

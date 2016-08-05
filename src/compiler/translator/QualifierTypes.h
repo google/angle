@@ -27,7 +27,8 @@ enum TQualifierType
     QtInterpolation,
     QtLayout,
     QtStorage,
-    QtPrecision
+    QtPrecision,
+    QtMemory
 };
 
 class TQualifierWrapperBase : angle::NonCopyable
@@ -127,6 +128,24 @@ class TPrecisionQualifierWrapper final : public TQualifierWrapperBase
     TPrecision mPrecisionQualifier;
 };
 
+class TMemoryQualifierWrapper final : public TQualifierWrapperBase
+{
+  public:
+    TMemoryQualifierWrapper(TQualifier memoryQualifier, const TSourceLoc &line)
+        : TQualifierWrapperBase(line), mMemoryQualifier(memoryQualifier)
+    {
+    }
+    ~TMemoryQualifierWrapper() {}
+
+    TQualifierType getType() const { return QtMemory; }
+    TString getQualifierString() const { return ::getQualifierString(mMemoryQualifier); }
+    TQualifier getQualifier() const { return mMemoryQualifier; }
+    unsigned int getRank() const;
+
+  private:
+    TQualifier mMemoryQualifier;
+};
+
 // TTypeQualifier tightly covers type_qualifier from the grammar
 struct TTypeQualifier
 {
@@ -134,6 +153,7 @@ struct TTypeQualifier
     TTypeQualifier(TQualifier scope, const TSourceLoc &loc);
 
     TLayoutQualifier layoutQualifier;
+    TMemoryQualifier memoryQualifier;
     TPrecision precision;
     TQualifier qualifier;
     bool invariant;
