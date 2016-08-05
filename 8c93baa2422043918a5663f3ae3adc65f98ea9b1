@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_1ffba369",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T12:33:27Z",
+      "side": 1,
+      "message": "Done. \nI could fix the existing to_string usage in a separate patch in the future. It will be super easy to change the code and the patch should go through almost right away.",
+      "parentUuid": "1990ff08_df2bfbe6",
+      "range": {
+        "startLine": 2016,
+        "startChar": 47,
+        "endLine": 2016,
+        "endChar": 61
+      },
+      "revId": "8c93baa2422043918a5663f3ae3adc65f98ea9b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d99587fc_9dd103cb",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 10
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-05T11:20:35Z",
       "side": 1,
       "message": "Forgot to change the comment in some of these new tests.",
+      "revId": "8c93baa2422043918a5663f3ae3adc65f98ea9b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_df145b9d",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1849,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T12:33:27Z",
+      "side": 1,
+      "message": "Ok. Added dots at the end of the sentences. Changed some other comment as well to make it clearer.",
+      "parentUuid": "d99587fc_9dd103cb",
       "revId": "8c93baa2422043918a5663f3ae3adc65f98ea9b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
