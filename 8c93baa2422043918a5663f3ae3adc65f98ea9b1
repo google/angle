@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1990ff08_df2bfbe6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-05T11:20:35Z",
+      "side": 1,
+      "message": "Can use std::stringstream instead. ANGLE\u0027s existing usage of std::to_string is not valid according to the Chromium C++ style guide, and might need to be fixed - better not to replicate the error.",
+      "range": {
+        "startLine": 2016,
+        "startChar": 47,
+        "endLine": 2016,
+        "endChar": 61
+      },
+      "revId": "8c93baa2422043918a5663f3ae3adc65f98ea9b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d99587fc_9dd103cb",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1849,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-05T11:20:35Z",
+      "side": 1,
+      "message": "Forgot to change the comment in some of these new tests.",
+      "revId": "8c93baa2422043918a5663f3ae3adc65f98ea9b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
