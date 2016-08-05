@@ -71,6 +71,75 @@
     },
     {
       "key": {
+        "uuid": "3964e309_7858c188",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "It might be worth typedefing this, it\u0027s used all over the place.",
+      "range": {
+        "startLine": 381,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 22
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_b832d956",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: use std::array::fill",
+      "range": {
+        "startLine": 391,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 42
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_7806817a",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: use std::any_of or std::all_of",
+      "range": {
+        "startLine": 407,
+        "startChar": 15,
+        "endLine": 407,
+        "endChar": 80
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_18f18598",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 13
@@ -87,6 +156,29 @@
         "startChar": 9,
         "endLine": 410,
         "endChar": 27
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_980ef589",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: localSizeIn.size()",
+      "range": {
+        "startLine": 423,
+        "startChar": 32,
+        "endLine": 423,
+        "endChar": 34
       },
       "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -117,6 +209,29 @@
     },
     {
       "key": {
+        "uuid": "3964e309_f81131aa",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "This is re-assigning to result without using it in the expression.  It should probably be checking at each loop iterating and returning if they are not equal.",
+      "range": {
+        "startLine": 425,
+        "startChar": 12,
+        "endLine": 425,
+        "endChar": 20
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_98e4b5d8",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 13
@@ -133,6 +248,29 @@
         "startChar": 8,
         "endLine": 158,
         "endChar": 31
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_58b4dd9a",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: use mComputeShaderLocalSize.fill(1)",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 5
       },
       "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -163,6 +301,29 @@
     },
     {
       "key": {
+        "uuid": "3964e309_f8c4d10d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: layoutQualifier.size()",
+      "range": {
+        "startLine": 1097,
+        "startChar": 28,
+        "endLine": 1097,
+        "endChar": 30
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_3827a920",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -179,6 +340,29 @@
         "startChar": 0,
         "endLine": 1174,
         "endChar": 18
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_18d745bb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: use size()",
+      "range": {
+        "startLine": 1177,
+        "startChar": 28,
+        "endLine": 1177,
+        "endChar": 30
       },
       "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -203,6 +387,23 @@
     },
     {
       "key": {
+        "uuid": "3964e309_38dc89da",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1975,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "nit: empty newline",
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_f82851ec",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -219,6 +420,29 @@
         "startChar": 8,
         "endLine": 1984,
         "endChar": 39
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_788be1c7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "Same size nit",
+      "range": {
+        "startLine": 2006,
+        "startChar": 32,
+        "endLine": 2006,
+        "endChar": 34
       },
       "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -295,6 +519,29 @@
     },
     {
       "key": {
+        "uuid": "3964e309_389569e0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3302,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "Same nit",
+      "range": {
+        "startLine": 3302,
+        "startChar": 28,
+        "endLine": 3302,
+        "endChar": 30
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_781d21c8",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
@@ -311,6 +558,29 @@
         "startChar": 12,
         "endLine": 73,
         "endChar": 35
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_38c32908",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-05T14:52:15Z",
+      "side": 1,
+      "message": "Same nit about fill",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 9
       },
       "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
