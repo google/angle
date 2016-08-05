@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1990ff08_7f6f4f30",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 11
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T12:33:27Z",
+      "side": 0,
+      "message": "I removed this for a reason.\nANGLE crashes into a segfault whenever this string gets used (i.e. print it).\nPreviously, it was only used when parsing (location\u003dSOME_CONSTANT), but either there wasn\u0027t a test which would lead to using that string or the error condition would never be true.\n\nIt seems at the moment one might not be able to pass a negative value (-1 will not get parsed and 0xFFFFFFF8 might not be a negative integer at all).\n\nBut anyway, why could one not use this string? Also, would this actually mean that it gets converted to a string or that it gets interpreted as a string.",
+      "range": {
+        "startLine": 1030,
+        "startChar": 59,
+        "endLine": 1030,
+        "endChar": 69
+      },
+      "revId": "765962a838114a545150bc9258af9a3e39e7632c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
