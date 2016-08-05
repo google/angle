@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_7f1d0fc8",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-05T11:20:35Z",
+      "side": 1,
+      "message": "Looks good. The length of these names is completely fine.",
+      "parentUuid": "1990ff08_bfaf1779",
+      "range": {
+        "startLine": 259,
+        "startChar": 8,
+        "endLine": 268,
+        "endChar": 9
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_830e9e3e",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 8
