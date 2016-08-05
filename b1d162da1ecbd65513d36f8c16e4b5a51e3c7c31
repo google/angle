@@ -149,6 +149,24 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_1fd8831e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1991,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "I think that according to the spec it should be an error since all values are 1 by default.\nI added a function isLocalSizeEqual in BaseTypes.h which checks whether two local size layouts are equal. It should also handle cases as\nlayout(local_size_x \u003d 2)\nlayout(local_size_x \u003d 2, local_size_y \u003d 1)\nThis should be correct I think since local_size_y should be one be default.\nI think that we still need to keep the unspecified value as -1 instead of 1 since at some places we still have to check whether we have added a local size qualifier in a place it is not allowed to be. Of course, we could add some flag among the layout qualifiers, but that would increase the memory consumption unnecessarily.",
+      "parentUuid": "94be7635_c3089634",
+      "revId": "b1d162da1ecbd65513d36f8c16e4b5a51e3c7c31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_2346caac",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 6
