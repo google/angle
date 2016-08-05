@@ -479,6 +479,12 @@ class TSymbolTable : angle::NonCopyable
     {
         mInvariantVaryings.insert(originalName);
     }
+
+    void clearInvariantVaryings()
+    {
+        mInvariantVaryings.clear();
+    }
+
     // If this returns false, the varying could still be invariant
     // if it is set as invariant during the varying variable
     // declaration - this piece of information is stored in the
