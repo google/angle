@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_9fb253e0",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_43f5c61d",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_03fbce17",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 8
@@ -30,6 +48,30 @@
       "writtenOn": "2016-08-04T19:27:14Z",
       "side": 1,
       "message": "I\u0027d rather handle sanitizing these values inside ParseContext. Maybe it could have a single getLocalSize() function that would return the local sizes as an array, and that would be called here only if the local size has been declared.",
+      "range": {
+        "startLine": 259,
+        "startChar": 8,
+        "endLine": 268,
+        "endChar": 9
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_bfaf1779",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Changed to getComputeShaderLocalSize. It returns an array\u003cint,3\u003e by value since it modifies the elements.\nAlso isLocalSizeDeclared becomes isComputeShaderLocalSizeDeclared.\n\nHopefully, not too long but at least the names are descriptive.",
+      "parentUuid": "94be7635_03fbce17",
       "range": {
         "startLine": 259,
         "startChar": 8,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_3fdd470f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1973,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_830e9e3e",
+      "range": {
+        "startLine": 1973,
+        "startChar": 39,
+        "endLine": 1973,
+        "endChar": 80
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_23feca07",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 8
@@ -76,6 +142,30 @@
       "writtenOn": "2016-08-04T19:27:14Z",
       "side": 1,
       "message": "Would rather use \"greater\" here.",
+      "range": {
+        "startLine": 2010,
+        "startChar": 55,
+        "endLine": 2010,
+        "endChar": 61
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_dfc1bb2d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2010,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_23feca07",
       "range": {
         "startLine": 2010,
         "startChar": 55,
@@ -105,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_ffbeffa4",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 8
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_63f8c219",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_2317ea57",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 8
@@ -116,6 +224,30 @@
       "writtenOn": "2016-08-04T19:27:14Z",
       "side": 1,
       "message": "nit: Should be 3.10.",
+      "range": {
+        "startLine": 1752,
+        "startChar": 11,
+        "endLine": 1752,
+        "endChar": 14
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_9fcb334a",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_2317ea57",
       "range": {
         "startLine": 1752,
         "startChar": 11,
@@ -151,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_bfc8774d",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94be7635_431e6671",
+      "range": {
+        "startLine": 1767,
+        "startChar": 0,
+        "endLine": 1767,
+        "endChar": 65
+      },
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94be7635_a3091a3b",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 8
@@ -162,6 +318,24 @@
       "writtenOn": "2016-08-04T19:27:14Z",
       "side": 1,
       "message": "Would be nice to still actually add a test for other integer formats: layout(local_size_x \u003d 0xFF) for example should be valid.",
+      "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_7ffc2f71",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-05T10:36:47Z",
+      "side": 1,
+      "message": "Added a couple for hexadecimal, octal, unsigned integer and a macro expansion. I think that the latter two might be unnecessary.",
+      "parentUuid": "94be7635_a3091a3b",
       "revId": "c6d720ebd0a5f1420ebf6cdfe2a4c9f8960df542",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
