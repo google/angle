@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1990ff08_7fe2efa1",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-05T13:35:58Z",
+      "side": 1,
+      "message": "Leaving the precision to be undefined is fine.",
+      "parentUuid": "1990ff08_5f012b5f",
+      "range": {
+        "startLine": 688,
+        "startChar": 10,
+        "endLine": 706,
+        "endChar": 87
+      },
+      "revId": "719707cab426efab05db64bd5e17118af159ab98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1990ff08_bf32b756",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-05T13:16:41Z",
       "side": 1,
       "message": "I guess this should be here.\nAccording to the spec, one cannot use gl_WorkGroupSize without having local size declared before using the constant:\n\n\"It is a\ncompile-time error to use gl_WorkGroupSize in a shader that does not declare a fixed local group size, or\nbefore that shader has declared a fixed local group size, using local_size_x, local_size_y, and\nlocal_size_z.\"",
+      "range": {
+        "startLine": 1274,
+        "startChar": 8,
+        "endLine": 1280,
+        "endChar": 9
+      },
+      "revId": "719707cab426efab05db64bd5e17118af159ab98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1990ff08_3fdc67da",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-05T13:35:58Z",
+      "side": 1,
+      "message": "Yes, this should be the right place. Adding a reference to the spec section in the code could be nice of course.",
+      "parentUuid": "1990ff08_bf32b756",
       "range": {
         "startLine": 1274,
         "startChar": 8,
