@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3964e309_4e4e4c40",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-06T00:00:50Z",
+      "side": 1,
+      "message": "What\u0027s the opinion of other reviewers? I am new on ANGLE and cannot give you a proper answer. I will investigate it later.",
+      "parentUuid": "3964e309_72fa18e0",
+      "range": {
+        "startLine": 207,
+        "startChar": 16,
+        "endLine": 207,
+        "endChar": 37
+      },
+      "revId": "04dfb264090132aa47d21a6b4991386c8796474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_328b4070",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-05T19:04:46Z",
       "side": 1,
       "message": "I\u0027d suggest \"clearInvariantVaryings()\".",
+      "range": {
+        "startLine": 483,
+        "startChar": 9,
+        "endLine": 483,
+        "endChar": 30
+      },
+      "revId": "04dfb264090132aa47d21a6b4991386c8796474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3964e309_6e09d0fb",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-06T00:00:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_328b4070",
       "range": {
         "startLine": 483,
         "startChar": 9,
