@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3964e309_294af27f",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-06T00:31:53Z",
+      "side": 1,
+      "message": "If you look at TScopedSymbolTableLevel implementation and usage, it\u0027s clear if you push the invariance settings to the \"global\" table level instead of the table, then yes, it will be pushed and popped per compilation and won\u0027t affect the other compilation.  The same applies to mGlobalInvariant (maybe it\u0027s time to clean that up also).\n\nThis is based on the condition that all invariants have to be at \"global\" level, which I think is true.\n\nI would suggest to do that in a separate CL, cleaning up both mInvariantVaryings and mGlobalInvariant by pushing them to TSymbolTableLevel.",
+      "parentUuid": "3964e309_4e4e4c40",
+      "range": {
+        "startLine": 207,
+        "startChar": 16,
+        "endLine": 207,
+        "endChar": 37
+      },
+      "revId": "04dfb264090132aa47d21a6b4991386c8796474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_328b4070",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 2
