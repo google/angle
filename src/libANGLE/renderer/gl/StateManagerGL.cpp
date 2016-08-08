@@ -670,18 +670,41 @@ void StateManagerGL::pauseTransformFeedback()
     }
 }
 
-void StateManagerGL::pauseQueries()
+void StateManagerGL::pauseAllQueries()
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
         prevQuery->pause();
     }
 }
-void StateManagerGL::resumeQueries()
+
+void StateManagerGL::pauseQuery(GLenum type)
+{
+    for (QueryGL *prevQuery : mCurrentQueries)
+    {
+        if (prevQuery->getType() == type)
+        {
+            prevQuery->pause();
+        }
+    }
+}
+
+void StateManagerGL::resumeAllQueries()
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
         prevQuery->resume();
+    }
+}
+
+void StateManagerGL::resumeQuery(GLenum type)
+{
+    for (QueryGL *prevQuery : mCurrentQueries)
+    {
+        if (prevQuery->getType() == type)
+        {
+            prevQuery->resume();
+        }
     }
 }
 
@@ -692,7 +715,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
     // If the context has changed, pause the previous context's queries
     if (data.getContext() != mPrevDrawContext)
     {
-        pauseQueries();
+        pauseAllQueries();
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;

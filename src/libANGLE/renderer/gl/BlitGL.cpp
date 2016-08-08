@@ -84,13 +84,13 @@ class ScopedGLState : public angle::NonCopyable
         mStateManager->setRasterizerDiscardEnabled(false);
 
         mStateManager->pauseTransformFeedback();
-        mStateManager->pauseQueries();
+        mStateManager->pauseAllQueries();
     }
 
     ~ScopedGLState()
     {
         // XFB resuming will be done automatically
-        mStateManager->resumeQueries();
+        mStateManager->resumeAllQueries();
     }
 
     void willUseTextureUnit(int unit)
