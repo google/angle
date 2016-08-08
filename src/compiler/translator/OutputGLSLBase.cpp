@@ -357,7 +357,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                 if (left->isArray())
                 {
                     // The shader will fail validation if the array length is not > 0.
-                    maxSize = leftType.getArraySize() - 1;
+                    maxSize = static_cast<int>(leftType.getArraySize()) - 1;
                 }
                 else
                 {

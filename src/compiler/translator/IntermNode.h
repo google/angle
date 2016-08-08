@@ -153,7 +153,7 @@ class TIntermTyped : public TIntermNode
     const char *getBasicString() const { return mType.getBasicString(); }
     TString getCompleteString() const { return mType.getCompleteString(); }
 
-    int getArraySize() const { return mType.getArraySize(); }
+    unsigned int getArraySize() const { return mType.getArraySize(); }
 
     bool isConstructorWithOnlyConstantUnionParameters();
 

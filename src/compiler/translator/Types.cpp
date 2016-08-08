@@ -318,7 +318,6 @@ size_t TType::getObjectSize() const
 
     if (isArray())
     {
-        // TODO: getArraySize() returns an int, not a size_t
         size_t currentArraySize = getArraySize();
         if (currentArraySize > INT_MAX / totalSize)
             totalSize = INT_MAX;
@@ -364,7 +363,7 @@ bool TStructure::containsSamplers() const
 
 void TStructure::createSamplerSymbols(const TString &structName,
                                       const TString &structAPIName,
-                                      const int arrayOfStructsSize,
+                                      const unsigned int arrayOfStructsSize,
                                       TVector<TIntermSymbol *> *outputSymbols,
                                       TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const
 {
@@ -373,9 +372,9 @@ void TStructure::createSamplerSymbols(const TString &structName,
         const TType *fieldType = field->type();
         if (IsSampler(fieldType->getBasicType()))
         {
-            if (arrayOfStructsSize > 0)
+            if (arrayOfStructsSize > 0u)
             {
-                for (int arrayIndex = 0; arrayIndex < arrayOfStructsSize; ++arrayIndex)
+                for (unsigned int arrayIndex = 0u; arrayIndex < arrayOfStructsSize; ++arrayIndex)
                 {
                     TStringStream name;
                     name << structName << "_" << arrayIndex << "_" << field->name();
@@ -405,10 +404,11 @@ void TStructure::createSamplerSymbols(const TString &structName,
         }
         else if (fieldType->isStructureContainingSamplers())
         {
-            int nestedArrayOfStructsSize = fieldType->isArray() ? fieldType->getArraySize() : 0;
+            unsigned int nestedArrayOfStructsSize =
+                fieldType->isArray() ? fieldType->getArraySize() : 0u;
             if (arrayOfStructsSize > 0)
             {
-                for (int arrayIndex = 0; arrayIndex < arrayOfStructsSize; ++arrayIndex)
+                for (unsigned int arrayIndex = 0u; arrayIndex < arrayOfStructsSize; ++arrayIndex)
                 {
                     TStringStream fieldName;
                     fieldName << structName << "_" << arrayIndex << "_" << field->name();

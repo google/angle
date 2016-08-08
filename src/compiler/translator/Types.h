@@ -123,7 +123,7 @@ class TStructure : public TFieldListCollection
 
     void createSamplerSymbols(const TString &structName,
                               const TString &structAPIName,
-                              const int arrayOfStructsSize,
+                              const unsigned int arrayOfStructsSize,
                               TVector<TIntermSymbol *> *outputSymbols,
                               TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const;
 
@@ -387,13 +387,10 @@ class TType
     }
     bool isUnsizedArray() const
     {
-        return array && arraySize == 0;
+        return array && arraySize == 0u;
     }
-    int getArraySize() const
-    {
-        return arraySize;
-    }
-    void setArraySize(int s)
+    unsigned int getArraySize() const { return arraySize; }
+    void setArraySize(unsigned int s)
     {
         if (!array || arraySize != s)
         {
@@ -407,7 +404,7 @@ class TType
         if (array)
         {
             array     = false;
-            arraySize = 0;
+            arraySize = 0u;
             invalidateMangledName();
         }
     }
@@ -556,7 +553,7 @@ class TType
 
     void createSamplerSymbols(const TString &structName,
                               const TString &structAPIName,
-                              const int arrayOfStructsSize,
+                              const unsigned int arrayOfStructsSize,
                               TVector<TIntermSymbol *> *outputSymbols,
                               TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const
     {
@@ -584,7 +581,7 @@ class TType
     unsigned char primarySize; // size of vector or cols matrix
     unsigned char secondarySize; // rows of a matrix
     bool array;
-    int arraySize;
+    unsigned int arraySize;
 
     // 0 unless this is an interface block, or interface block member variable
     TInterfaceBlock *interfaceBlock;

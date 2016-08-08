@@ -477,7 +477,7 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
     attribute.type = GLVariableType(type);
     attribute.precision = GLVariablePrecision(type);
     attribute.name = variable->getSymbol().c_str();
-    attribute.arraySize = static_cast<unsigned int>(type.getArraySize());
+    attribute.arraySize  = type.getArraySize();
     attribute.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
     attribute.location = variable->getType().getLayoutQualifier().location;
 
@@ -497,7 +497,7 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
     attribute.type       = GLVariableType(type);
     attribute.precision  = GLVariablePrecision(type);
     attribute.name       = variable->getSymbol().c_str();
-    attribute.arraySize  = static_cast<unsigned int>(type.getArraySize());
+    attribute.arraySize  = type.getArraySize();
     attribute.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
     attribute.location   = variable->getType().getLayoutQualifier().location;
 

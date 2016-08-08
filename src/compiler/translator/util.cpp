@@ -504,7 +504,7 @@ void GetVariableTraverser::traverse(const TType &type,
 
     VarT variable;
     variable.name = name.c_str();
-    variable.arraySize = static_cast<unsigned int>(type.getArraySize());
+    variable.arraySize = type.getArraySize();
 
     if (!structure)
     {
