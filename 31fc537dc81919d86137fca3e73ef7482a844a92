@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d91827bf_e279bfd6",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-08T22:14:19Z",
+      "side": 1,
+      "message": "nit: prefer \"using\" c++11 syntax.",
+      "range": {
+        "startLine": 374,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 7
+      },
+      "revId": "31fc537dc81919d86137fca3e73ef7482a844a92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d91827bf_e2a25f44",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-08T22:14:19Z",
+      "side": 1,
+      "message": "nit: \u003d\u003d true is redundant",
+      "range": {
+        "startLine": 419,
+        "startChar": 35,
+        "endLine": 419,
+        "endChar": 42
+      },
+      "revId": "31fc537dc81919d86137fca3e73ef7482a844a92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
