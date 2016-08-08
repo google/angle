@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "b9a53384_240a322a",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_b8c8994d",
+      "range": {
+        "startLine": 499,
+        "startChar": 42,
+        "endLine": 499,
+        "endChar": 74
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "990eaf7b_e3355242",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "In the compiler part, I added a typedef for std::array\u003cint, 3\u003e. Do you think I would have to add it somewhere else. The same data will have to be used in the Shader and Program classes in a later patch.\nI could also make it as a struct, but then if I would like to use stl, I would have to implement more things in that struct/class.",
+      "parentUuid": "3964e309_58f7fd8f",
+      "range": {
+        "startLine": 499,
+        "startChar": 22,
+        "endLine": 499,
+        "endChar": 40
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_78fc4171",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 13
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_e1ce0629",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_7858c188",
+      "range": {
+        "startLine": 381,
+        "startChar": 4,
+        "endLine": 381,
+        "endChar": 22
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_b832d956",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 13
@@ -105,6 +177,30 @@
       "writtenOn": "2016-08-05T14:52:15Z",
       "side": 1,
       "message": "nit: use std::array::fill",
+      "range": {
+        "startLine": 391,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 42
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79bc9b97_aa3d8f10",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_b832d956",
       "range": {
         "startLine": 391,
         "startChar": 8,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "f9afab5f_46b4129b",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_7806817a",
+      "range": {
+        "startLine": 407,
+        "startChar": 15,
+        "endLine": 407,
+        "endChar": 80
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_18f18598",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 13
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_21e2aea0",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "The reason this is added is that when having local size qualifiers we cannot have any other ones.\nI actually had to change the check a bit since right now having neither defined would give an error.",
+      "parentUuid": "3964e309_18f18598",
+      "range": {
+        "startLine": 410,
+        "startChar": 9,
+        "endLine": 410,
+        "endChar": 27
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_980ef589",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 13
@@ -174,6 +318,30 @@
       "writtenOn": "2016-08-05T14:52:15Z",
       "side": 1,
       "message": "nit: localSizeIn.size()",
+      "range": {
+        "startLine": 423,
+        "startChar": 32,
+        "endLine": 423,
+        "endChar": 34
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_41dd32d9",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_980ef589",
       "range": {
         "startLine": 423,
         "startChar": 32,
@@ -232,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "39b223c6_a8cefb27",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "That\u0027s done in the loops head: i \u003c 3u \u0026\u0026 result\nIf it\u0027s false, then the loop will break and we return the result.\nI thought it\u0027s pretty neat, but I will rewrite it.",
+      "parentUuid": "3964e309_f81131aa",
+      "range": {
+        "startLine": 425,
+        "startChar": 12,
+        "endLine": 425,
+        "endChar": 20
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_98e4b5d8",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 13
@@ -243,6 +435,30 @@
       "writtenOn": "2016-08-05T14:47:55Z",
       "side": 1,
       "message": "nit: I think this can go in the init list using {} syntax.",
+      "range": {
+        "startLine": 158,
+        "startChar": 8,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_81d73ab9",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "The c++ style guide wasn\u0027t clear whether I am allowed to do that. I will use std::array fill as Geoff recommended.",
+      "parentUuid": "3964e309_98e4b5d8",
       "range": {
         "startLine": 158,
         "startChar": 8,
@@ -278,6 +494,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_61dcb6db",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_58b4dd9a",
+      "range": {
+        "startLine": 156,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 5
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_58185dd9",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 13
@@ -289,6 +529,30 @@
       "writtenOn": "2016-08-05T14:47:55Z",
       "side": 1,
       "message": "is there a TODO here for certain compute shader builtins? either add a TODO(ldap): blah or a quick note there are none.",
+      "range": {
+        "startLine": 686,
+        "startChar": 10,
+        "endLine": 686,
+        "endChar": 15
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_c1f02265",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Ok, I added a todo. You will be very soon added to the patch which adds those compute shader built-ins.",
+      "parentUuid": "3964e309_58185dd9",
       "range": {
         "startLine": 686,
         "startChar": 10,
@@ -324,6 +588,30 @@
     },
     {
       "key": {
+        "uuid": "19239fed_67ea12e0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_f8c4d10d",
+      "range": {
+        "startLine": 1097,
+        "startChar": 28,
+        "endLine": 1097,
+        "endChar": 30
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_3827a920",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -347,6 +635,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_a176bee4",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "We could do that, but using std::array makes using existing stl functionality really easy.\nWouldn\u0027t a typedef be just fine?",
+      "parentUuid": "3964e309_3827a920",
+      "range": {
+        "startLine": 1174,
+        "startChar": 0,
+        "endLine": 1174,
+        "endChar": 18
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_18d745bb",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -358,6 +670,30 @@
       "writtenOn": "2016-08-05T14:52:15Z",
       "side": 1,
       "message": "nit: use size()",
+      "range": {
+        "startLine": 1177,
+        "startChar": 28,
+        "endLine": 1177,
+        "endChar": 30
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_01eb2a77",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_18d745bb",
       "range": {
         "startLine": 1177,
         "startChar": 28,
@@ -404,6 +740,42 @@
     },
     {
       "key": {
+        "uuid": "5936f710_4186d2c2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1975,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_38dc89da",
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_e1e726a9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1975,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_d82b0de7",
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_f82851ec",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -415,6 +787,30 @@
       "writtenOn": "2016-08-05T14:47:55Z",
       "side": 1,
       "message": "maybe this should go after some of the other error checks. not sure.",
+      "range": {
+        "startLine": 1984,
+        "startChar": 8,
+        "endLine": 1984,
+        "endChar": 39
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9afab5f_c6f00265",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1984,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Moved it after all of the checks",
+      "parentUuid": "3964e309_f82851ec",
       "range": {
         "startLine": 1984,
         "startChar": 8,
@@ -450,6 +846,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_0184cab1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_788be1c7",
+      "range": {
+        "startLine": 2006,
+        "startChar": 32,
+        "endLine": 2006,
+        "endChar": 34
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_98359543",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -461,6 +881,30 @@
       "writtenOn": "2016-08-05T14:47:55Z",
       "side": 1,
       "message": "nit: you can make this a const std::string \u0026 to potentially avoid a copy (not always, necessary, but can\u0027t hurt)",
+      "range": {
+        "startLine": 2018,
+        "startChar": 32,
+        "endLine": 2018,
+        "endChar": 44
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_e180c69f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_98359543",
       "range": {
         "startLine": 2018,
         "startChar": 32,
@@ -496,6 +940,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_21b46e81",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3225,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_18fbc569",
+      "range": {
+        "startLine": 3223,
+        "startChar": 4,
+        "endLine": 3225,
+        "endChar": 54
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_38000959",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -507,6 +975,30 @@
       "writtenOn": "2016-08-05T14:47:55Z",
       "side": 1,
       "message": "can you make a small local helper function to share code? just wondering if it\u0027ll be cleaner.",
+      "range": {
+        "startLine": 3241,
+        "startChar": 3,
+        "endLine": 3272,
+        "endChar": 42
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_01204ab1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3272,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done.\nI wonder whether I pass a bit too many parameters.The function\u0027s name is parseLocalSize.",
+      "parentUuid": "3964e309_38000959",
       "range": {
         "startLine": 3241,
         "startChar": 3,
@@ -542,6 +1034,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_412252c2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3302,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_389569e0",
+      "range": {
+        "startLine": 3302,
+        "startChar": 28,
+        "endLine": 3302,
+        "endChar": 30
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_781d21c8",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
@@ -565,6 +1081,30 @@
     },
     {
       "key": {
+        "uuid": "5936f710_e11c4679",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "I\u0027ll follow Geoff\u0027s recommendation unless he would like me to move it to the constructor as well. Right now, I just use the fill method.",
+      "parentUuid": "3964e309_781d21c8",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 35
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3964e309_38c32908",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
@@ -576,6 +1116,30 @@
       "writtenOn": "2016-08-05T14:52:15Z",
       "side": 1,
       "message": "Same nit about fill",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 74,
+        "endChar": 9
+      },
+      "revId": "c59b3648e020a4312b5a470f1ae03d0d02096d1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5936f710_410b7230",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-08T10:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3964e309_38c32908",
       "range": {
         "startLine": 71,
         "startChar": 8,
