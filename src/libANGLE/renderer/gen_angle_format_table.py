@@ -93,6 +93,8 @@ def get_channel_struct(angle_format):
             struct_name += 'B{}'.format(bits['blue'])
         if channel == 'a':
             struct_name += 'A{}'.format(bits['alpha'])
+        if channel == 'l':
+            struct_name += 'L{}'.format(bits['luma'])
     if angle_format['componentType'] == 'float':
         struct_name += 'F'
     if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':

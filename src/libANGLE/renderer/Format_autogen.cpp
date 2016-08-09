@@ -68,6 +68,15 @@ const Format &Format::Get(ID id)
                                      ReadColor<B8G8R8A8, GLfloat>);
             return info;
         }
+        case ID::B8G8R8X8_UNORM:
+        {
+            static const Format info(ID::B8G8R8X8_UNORM,
+                                     GL_BGRA8_EXT,
+                                     GL_BGRA8_EXT,
+                                     GenerateMip<B8G8R8X8>,
+                                     ReadColor<B8G8R8X8, GLfloat>);
+            return info;
+        }
         case ID::BC1_UNORM:
         {
             static const Format info(ID::BC1_UNORM,
@@ -129,6 +138,33 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH32F_STENCIL8,
                                      nullptr,
                                      nullptr);
+            return info;
+        }
+        case ID::D32_UNORM:
+        {
+            static const Format info(ID::D32_UNORM,
+                                     GL_DEPTH_COMPONENT32_OES,
+                                     GL_DEPTH_COMPONENT32_OES,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::L8A8_LUMA:
+        {
+            static const Format info(ID::L8A8_LUMA,
+                                     GL_LUMINANCE8_ALPHA8_EXT,
+                                     GL_LUMINANCE8_ALPHA8_EXT,
+                                     GenerateMip<L8A8>,
+                                     ReadColor<L8A8, GLfloat>);
+            return info;
+        }
+        case ID::L8_LUMA:
+        {
+            static const Format info(ID::L8_LUMA,
+                                     GL_LUMINANCE8_EXT,
+                                     GL_LUMINANCE8_EXT,
+                                     GenerateMip<L8>,
+                                     ReadColor<L8, GLfloat>);
             return info;
         }
         case ID::NONE:
@@ -381,6 +417,15 @@ const Format &Format::Get(ID id)
                                      GL_R32UI,
                                      GenerateMip<R32>,
                                      ReadColor<R32, GLuint>);
+            return info;
+        }
+        case ID::R5G6B5_UNORM:
+        {
+            static const Format info(ID::R5G6B5_UNORM,
+                                     GL_RGB565,
+                                     GL_RGB565,
+                                     GenerateMip<R5G6B5>,
+                                     ReadColor<R5G6B5, GLfloat>);
             return info;
         }
         case ID::R8G8B8A8_SINT:

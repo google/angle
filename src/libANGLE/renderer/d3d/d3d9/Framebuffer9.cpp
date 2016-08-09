@@ -192,9 +192,10 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     int inputPitch  = lock.Pitch;
 
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-    const gl::InternalFormat &sourceFormatInfo = gl::GetInternalFormatInfo(d3dFormatInfo.internalFormat);
+    const gl::InternalFormat &sourceFormatInfo =
+        gl::GetInternalFormatInfo(d3dFormatInfo.info->glInternalFormat);
     gl::FormatType formatType(format, type);
-    ColorReadFunction colorReadFunction = d3dFormatInfo.colorReadFunction;
+    ColorReadFunction colorReadFunction = d3dFormatInfo.info->colorReadFunction;
 
     // TODO(jmadill): Maybe we can avoid a copy of pack parameters here?
     PackPixelsParams packParams;
@@ -407,7 +408,7 @@ GLenum Framebuffer9::getRenderTargetImplementationFormat(RenderTargetD3D *render
 {
     RenderTarget9 *renderTarget9 = GetAs<RenderTarget9>(renderTarget);
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(renderTarget9->getD3DFormat());
-    return d3dFormatInfo.internalFormat;
+    return d3dFormatInfo.info->glInternalFormat;
 }
 
 }  // namespace rx

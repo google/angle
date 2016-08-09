@@ -15,6 +15,7 @@
 #include "common/platform.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 
@@ -43,10 +44,7 @@ struct D3DFormat
     GLuint depthBits;
     GLuint stencilBits;
 
-    GLenum internalFormat;
-
-    MipGenerationFunction mipGenerationFunction;
-    ColorReadFunction colorReadFunction;
+    const angle::Format *info;
 
     FastCopyFunctionMap fastCopyFunctions;
 };

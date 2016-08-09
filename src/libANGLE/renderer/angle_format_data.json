@@ -77,6 +77,25 @@
     "bits": { "depth": 32 },
     "glInternalFormat": "GL_DEPTH_COMPONENT32F"
   },
+  "D32_UNORM": {
+    "channels": "d",
+    "componentType": "unorm",
+    "bits": { "depth": 32 },
+    "glInternalFormat": "GL_DEPTH_COMPONENT32_OES"
+  },
+  "L8_LUMA": {
+    "channels": "l",
+    "componentType": "unorm",
+    "bits": { "luma": 8 },
+    "glInternalFormat": "GL_LUMINANCE8_EXT"
+  },
+  "L8A8_LUMA": {
+    "channels": "la",
+    "componentType": "unorm",
+    "bits": { "luma": 8, "alpha": 8 },
+    "glInternalFormat": "GL_LUMINANCE8_ALPHA8_EXT",
+    "channelStruct": "L8A8"
+  },
   "R11G11B10_FLOAT": {
     "channels": "rgb",
     "componentType":  "float",
@@ -255,6 +274,12 @@
     "fboImplementationInternalFormat": "GL_RGB5_A1",
     "channelStruct": "A1R5G5B5"
   },
+  "R5G6B5_UNORM": {
+    "channels": "rgb",
+    "componentType":  "unorm",
+    "bits": { "red": 5, "green": 6, "blue": 5 },
+    "glInternalFormat": "GL_RGB565"
+  },
   "R8G8B8A8_SINT": {
     "channels": "rgba",
     "componentType": "int",
@@ -272,6 +297,13 @@
     "componentType": "snorm",
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_RGBA8_SNORM"
+  },
+  "B8G8R8X8_UNORM": {
+    "channels": "bgr",
+    "componentType": "unorm",
+    "bits": { "red": 8, "green": 8, "blue": 8 },
+    "glInternalFormat": "GL_BGRA8_EXT",
+    "channelStruct": "B8G8R8X8"
   },
   "R9G9B9E5_SHAREDEXP": {
     "channels": "rgb",
