@@ -16,6 +16,11 @@
 
 #include "libANGLE/angletypes.h"
 
+namespace angle
+{
+struct Format;
+}
+
 namespace gl
 {
 struct FormatType;
@@ -61,9 +66,8 @@ struct PackPixelsParams
 };
 
 void PackPixels(const PackPixelsParams &params,
-                const gl::InternalFormat &sourceFormatInfo,
+                const angle::Format &sourceFormat,
                 const FastCopyFunctionMap &fastCopyFunctionsMap,
-                ColorReadFunction colorReadFunction,
                 int inputPitch,
                 const uint8_t *source,
                 uint8_t *destination);
