@@ -22,6 +22,30 @@
       "revId": "026f7289349549e3135f2c8a80b49d8b73a90875",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a0b7a5_b18c602c",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-09T13:53:06Z",
+      "side": 1,
+      "message": "Ah, I see. there should be no ; on the end of these.",
+      "parentUuid": "59a0b7a5_718bd815",
+      "range": {
+        "startLine": 123,
+        "startChar": 34,
+        "endLine": 123,
+        "endChar": 42
+      },
+      "revId": "026f7289349549e3135f2c8a80b49d8b73a90875",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
