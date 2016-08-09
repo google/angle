@@ -28,8 +28,7 @@ namespace d3d11
 {
 
 // static
-const Format &Format::Get(GLenum internalFormat,
-                          const Renderer11DeviceCaps &deviceCaps)
+const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &deviceCaps)
 {
     // clang-format off
     switch (internalFormat)
@@ -155,20 +154,6 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_BGRA8_EXT:
         {
             static const Format info(GL_BGRA8_EXT,
-                                     angle::Format::ID::B8G8R8A8_UNORM,
-                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                     DXGI_FORMAT_UNKNOWN,
-                                     DXGI_FORMAT_B8G8R8A8_UNORM,
-                                     GL_BGRA8_EXT,
-                                     nullptr,
-                                     deviceCaps);
-            return info;
-        }
-        case GL_BGRA_EXT:
-        {
-            static const Format info(GL_BGRA_EXT,
                                      angle::Format::ID::B8G8R8A8_UNORM,
                                      DXGI_FORMAT_B8G8R8A8_UNORM,
                                      DXGI_FORMAT_B8G8R8A8_UNORM,
@@ -449,7 +434,7 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
         {
             static const Format info(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-                                     angle::Format::ID::BC1_UNORM,
+                                     angle::Format::ID::BC1_RGBA_UNORM_BLOCK,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_UNKNOWN,
@@ -463,7 +448,7 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
         {
             static const Format info(GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
-                                     angle::Format::ID::BC2_UNORM,
+                                     angle::Format::ID::BC2_RGBA_UNORM_BLOCK,
                                      DXGI_FORMAT_BC2_UNORM,
                                      DXGI_FORMAT_BC2_UNORM,
                                      DXGI_FORMAT_UNKNOWN,
@@ -477,7 +462,7 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
         {
             static const Format info(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
-                                     angle::Format::ID::BC3_UNORM,
+                                     angle::Format::ID::BC3_RGBA_UNORM_BLOCK,
                                      DXGI_FORMAT_BC3_UNORM,
                                      DXGI_FORMAT_BC3_UNORM,
                                      DXGI_FORMAT_UNKNOWN,
@@ -491,7 +476,7 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
         {
             static const Format info(GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-                                     angle::Format::ID::BC1_UNORM,
+                                     angle::Format::ID::BC1_RGB_UNORM_BLOCK,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_UNKNOWN,
@@ -923,7 +908,7 @@ const Format &Format::Get(GLenum internalFormat,
         case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
         {
             static const Format info(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE,
-                                     angle::Format::ID::BC1_UNORM,
+                                     angle::Format::ID::BC1_RGB_UNORM_BLOCK,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_BC1_UNORM,
                                      DXGI_FORMAT_UNKNOWN,

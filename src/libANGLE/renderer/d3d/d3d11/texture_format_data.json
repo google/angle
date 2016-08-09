@@ -56,7 +56,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_BGRA8_EXT"
   },
-  "BC1_UNORM": {
+  "BC1_RGBA_UNORM_BLOCK": {
     "texFormat": "DXGI_FORMAT_BC1_UNORM",
     "srvFormat": "DXGI_FORMAT_BC1_UNORM",
     "channels": "rgba",
@@ -64,7 +64,15 @@
     "swizzleFormat": "GL_RGBA8",
     "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT"
   },
-  "BC2_UNORM": {
+  "BC1_RGB_UNORM_BLOCK": {
+    "texFormat": "DXGI_FORMAT_BC1_UNORM",
+    "srvFormat": "DXGI_FORMAT_BC1_UNORM",
+    "channels": "rgba",
+    "componentType": "unorm",
+    "swizzleFormat": "GL_RGBA8",
+    "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT"
+  },
+  "BC2_RGBA_UNORM_BLOCK": {
     "texFormat": "DXGI_FORMAT_BC2_UNORM",
     "srvFormat": "DXGI_FORMAT_BC2_UNORM",
     "channels": "rgba",
@@ -72,7 +80,7 @@
     "swizzleFormat": "GL_RGBA8",
     "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE"
   },
-  "BC3_UNORM": {
+  "BC3_RGBA_UNORM_BLOCK": {
     "texFormat": "DXGI_FORMAT_BC3_UNORM",
     "srvFormat": "DXGI_FORMAT_BC3_UNORM",
     "channels": "rgba",

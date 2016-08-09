@@ -42,3 +42,5 @@ TestResults.qpa
 *.vsp
 *.nvuser
 buildtools/
+*.pyc
+

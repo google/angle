@@ -23,6 +23,24 @@ const Format &Format::Get(ID id)
     // clang-format off
     switch (id)
     {
+        case ID::A16_FLOAT:
+        {
+            static const Format info(ID::A16_FLOAT,
+                                     GL_ALPHA16F_EXT,
+                                     GL_ALPHA16F_EXT,
+                                     GenerateMip<A16F>,
+                                     ReadColor<A16F, GLfloat>);
+            return info;
+        }
+        case ID::A32_FLOAT:
+        {
+            static const Format info(ID::A32_FLOAT,
+                                     GL_ALPHA32F_EXT,
+                                     GL_ALPHA32F_EXT,
+                                     GenerateMip<A32F>,
+                                     ReadColor<A32F, GLfloat>);
+            return info;
+        }
         case ID::A8_UNORM:
         {
             static const Format info(ID::A8_UNORM,
@@ -30,6 +48,258 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA8_EXT,
                                      GenerateMip<A8>,
                                      ReadColor<A8, GLfloat>);
+            return info;
+        }
+        case ID::ASTC_10x10_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x10_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x10_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x10_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x5_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x5_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x5_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x5_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x6_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x6_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x6_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x6_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x8_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x8_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_10x8_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_10x8_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_12x10_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_12x10_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_12x10_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_12x10_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_12x12_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_12x12_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_12x12_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_12x12_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_4x4_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_4x4_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_4x4_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_4x4_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_5x4_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_5x4_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_5x4_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_5x4_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_5x5_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_5x5_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_5x5_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_5x5_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_6x5_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_6x5_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_6x5_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_6x5_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_6x6_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_6x6_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_6x6_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_6x6_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x5_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x5_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x5_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x5_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x6_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x6_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x6_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x6_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x8_SRGB_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x8_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ASTC_8x8_UNORM_BLOCK:
+        {
+            static const Format info(ID::ASTC_8x8_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
+                                     GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
+                                     nullptr,
+                                     nullptr);
             return info;
         }
         case ID::B4G4R4A4_UNORM:
@@ -77,27 +347,36 @@ const Format &Format::Get(ID id)
                                      ReadColor<B8G8R8X8, GLfloat>);
             return info;
         }
-        case ID::BC1_UNORM:
+        case ID::BC1_RGBA_UNORM_BLOCK:
         {
-            static const Format info(ID::BC1_UNORM,
+            static const Format info(ID::BC1_RGBA_UNORM_BLOCK,
                                      GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
                                      GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
                                      nullptr,
                                      nullptr);
             return info;
         }
-        case ID::BC2_UNORM:
+        case ID::BC1_RGB_UNORM_BLOCK:
         {
-            static const Format info(ID::BC2_UNORM,
+            static const Format info(ID::BC1_RGB_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                     GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::BC2_RGBA_UNORM_BLOCK:
+        {
+            static const Format info(ID::BC2_RGBA_UNORM_BLOCK,
                                      GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
                                      GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
                                      nullptr,
                                      nullptr);
             return info;
         }
-        case ID::BC3_UNORM:
+        case ID::BC3_RGBA_UNORM_BLOCK:
         {
-            static const Format info(ID::BC3_UNORM,
+            static const Format info(ID::BC3_RGBA_UNORM_BLOCK,
                                      GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
                                      GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
                                      nullptr,
@@ -113,11 +392,20 @@ const Format &Format::Get(ID id)
                                      nullptr);
             return info;
         }
+        case ID::D24_UNORM:
+        {
+            static const Format info(ID::D24_UNORM,
+                                     GL_DEPTH_COMPONENT24,
+                                     GL_DEPTH_COMPONENT24,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
         case ID::D24_UNORM_S8_UINT:
         {
             static const Format info(ID::D24_UNORM_S8_UINT,
-                                     GL_DEPTH24_STENCIL8_OES,
-                                     GL_DEPTH24_STENCIL8_OES,
+                                     GL_DEPTH24_STENCIL8,
+                                     GL_DEPTH24_STENCIL8,
                                      nullptr,
                                      nullptr);
             return info;
@@ -149,18 +437,144 @@ const Format &Format::Get(ID id)
                                      nullptr);
             return info;
         }
-        case ID::L8A8_LUMA:
+        case ID::EAC_R11G11_SNORM_BLOCK:
         {
-            static const Format info(ID::L8A8_LUMA,
+            static const Format info(ID::EAC_R11G11_SNORM_BLOCK,
+                                     GL_COMPRESSED_SIGNED_RG11_EAC,
+                                     GL_COMPRESSED_SIGNED_RG11_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::EAC_R11G11_UNORM_BLOCK:
+        {
+            static const Format info(ID::EAC_R11G11_UNORM_BLOCK,
+                                     GL_COMPRESSED_RG11_EAC,
+                                     GL_COMPRESSED_RG11_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::EAC_R11_SNORM_BLOCK:
+        {
+            static const Format info(ID::EAC_R11_SNORM_BLOCK,
+                                     GL_COMPRESSED_SIGNED_R11_EAC,
+                                     GL_COMPRESSED_SIGNED_R11_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::EAC_R11_UNORM_BLOCK:
+        {
+            static const Format info(ID::EAC_R11_UNORM_BLOCK,
+                                     GL_COMPRESSED_R11_EAC,
+                                     GL_COMPRESSED_R11_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8A1_SRGB_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8A1_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                     GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8A1_UNORM_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8A1_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                     GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8A8_SRGB_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8A8_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
+                                     GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8A8_UNORM_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8A8_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGBA8_ETC2_EAC,
+                                     GL_COMPRESSED_RGBA8_ETC2_EAC,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8_SRGB_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8_SRGB_BLOCK,
+                                     GL_COMPRESSED_SRGB8_ETC2,
+                                     GL_COMPRESSED_SRGB8_ETC2,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::ETC2_R8G8B8_UNORM_BLOCK:
+        {
+            static const Format info(ID::ETC2_R8G8B8_UNORM_BLOCK,
+                                     GL_COMPRESSED_RGB8_ETC2,
+                                     GL_COMPRESSED_RGB8_ETC2,
+                                     nullptr,
+                                     nullptr);
+            return info;
+        }
+        case ID::L16A16_FLOAT:
+        {
+            static const Format info(ID::L16A16_FLOAT,
+                                     GL_LUMINANCE_ALPHA16F_EXT,
+                                     GL_LUMINANCE_ALPHA16F_EXT,
+                                     GenerateMip<L16A16F>,
+                                     ReadColor<L16A16F, GLfloat>);
+            return info;
+        }
+        case ID::L16_FLOAT:
+        {
+            static const Format info(ID::L16_FLOAT,
+                                     GL_LUMINANCE16F_EXT,
+                                     GL_LUMINANCE16F_EXT,
+                                     GenerateMip<L16F>,
+                                     ReadColor<L16F, GLfloat>);
+            return info;
+        }
+        case ID::L32A32_FLOAT:
+        {
+            static const Format info(ID::L32A32_FLOAT,
+                                     GL_LUMINANCE_ALPHA32F_EXT,
+                                     GL_LUMINANCE_ALPHA32F_EXT,
+                                     GenerateMip<L32A32F>,
+                                     ReadColor<L32A32F, GLfloat>);
+            return info;
+        }
+        case ID::L32_FLOAT:
+        {
+            static const Format info(ID::L32_FLOAT,
+                                     GL_LUMINANCE32F_EXT,
+                                     GL_LUMINANCE32F_EXT,
+                                     GenerateMip<L32F>,
+                                     ReadColor<L32F, GLfloat>);
+            return info;
+        }
+        case ID::L8A8_UNORM:
+        {
+            static const Format info(ID::L8A8_UNORM,
                                      GL_LUMINANCE8_ALPHA8_EXT,
                                      GL_LUMINANCE8_ALPHA8_EXT,
                                      GenerateMip<L8A8>,
                                      ReadColor<L8A8, GLfloat>);
             return info;
         }
-        case ID::L8_LUMA:
+        case ID::L8_UNORM:
         {
-            static const Format info(ID::L8_LUMA,
+            static const Format info(ID::L8_UNORM,
                                      GL_LUMINANCE8_EXT,
                                      GL_LUMINANCE8_EXT,
                                      GenerateMip<L8>,
@@ -246,6 +660,51 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16_EXT,
                                      GenerateMip<R16G16B16A16>,
                                      ReadColor<R16G16B16A16, GLfloat>);
+            return info;
+        }
+        case ID::R16G16B16_FLOAT:
+        {
+            static const Format info(ID::R16G16B16_FLOAT,
+                                     GL_RGB16F,
+                                     GL_RGB16F,
+                                     GenerateMip<R16G16B16F>,
+                                     ReadColor<R16G16B16F, GLfloat>);
+            return info;
+        }
+        case ID::R16G16B16_SINT:
+        {
+            static const Format info(ID::R16G16B16_SINT,
+                                     GL_RGB16I,
+                                     GL_RGB16I,
+                                     GenerateMip<R16G16B16S>,
+                                     ReadColor<R16G16B16S, GLint>);
+            return info;
+        }
+        case ID::R16G16B16_SNORM:
+        {
+            static const Format info(ID::R16G16B16_SNORM,
+                                     GL_RGB16_SNORM_EXT,
+                                     GL_RGB16_SNORM_EXT,
+                                     GenerateMip<R16G16B16S>,
+                                     ReadColor<R16G16B16S, GLfloat>);
+            return info;
+        }
+        case ID::R16G16B16_UINT:
+        {
+            static const Format info(ID::R16G16B16_UINT,
+                                     GL_RGB16UI,
+                                     GL_RGB16UI,
+                                     GenerateMip<R16G16B16>,
+                                     ReadColor<R16G16B16, GLuint>);
+            return info;
+        }
+        case ID::R16G16B16_UNORM:
+        {
+            static const Format info(ID::R16G16B16_UNORM,
+                                     GL_RGB16_EXT,
+                                     GL_RGB16_EXT,
+                                     GenerateMip<R16G16B16>,
+                                     ReadColor<R16G16B16, GLfloat>);
             return info;
         }
         case ID::R16G16_FLOAT:
@@ -365,6 +824,33 @@ const Format &Format::Get(ID id)
                                      ReadColor<R32G32B32A32, GLuint>);
             return info;
         }
+        case ID::R32G32B32_FLOAT:
+        {
+            static const Format info(ID::R32G32B32_FLOAT,
+                                     GL_RGB32F,
+                                     GL_RGB32F,
+                                     GenerateMip<R32G32B32F>,
+                                     ReadColor<R32G32B32F, GLfloat>);
+            return info;
+        }
+        case ID::R32G32B32_SINT:
+        {
+            static const Format info(ID::R32G32B32_SINT,
+                                     GL_RGB32I,
+                                     GL_RGB32I,
+                                     GenerateMip<R32G32B32S>,
+                                     ReadColor<R32G32B32S, GLint>);
+            return info;
+        }
+        case ID::R32G32B32_UINT:
+        {
+            static const Format info(ID::R32G32B32_UINT,
+                                     GL_RGB32UI,
+                                     GL_RGB32UI,
+                                     GenerateMip<R32G32B32>,
+                                     ReadColor<R32G32B32, GLuint>);
+            return info;
+        }
         case ID::R32G32_FLOAT:
         {
             static const Format info(ID::R32G32_FLOAT,
@@ -419,6 +905,24 @@ const Format &Format::Get(ID id)
                                      ReadColor<R32, GLuint>);
             return info;
         }
+        case ID::R4G4B4A4_UNORM:
+        {
+            static const Format info(ID::R4G4B4A4_UNORM,
+                                     GL_RGBA4,
+                                     GL_RGBA4,
+                                     GenerateMip<R4G4B4A4>,
+                                     ReadColor<R4G4B4A4, GLfloat>);
+            return info;
+        }
+        case ID::R5G5B5A1_UNORM:
+        {
+            static const Format info(ID::R5G5B5A1_UNORM,
+                                     GL_RGB5_A1,
+                                     GL_RGB5_A1,
+                                     GenerateMip<R5G5B5A1>,
+                                     ReadColor<R5G5B5A1, GLfloat>);
+            return info;
+        }
         case ID::R5G6B5_UNORM:
         {
             static const Format info(ID::R5G6B5_UNORM,
@@ -471,6 +975,51 @@ const Format &Format::Get(ID id)
                                      GL_SRGB8_ALPHA8,
                                      GenerateMip<R8G8B8A8>,
                                      ReadColor<R8G8B8A8, GLfloat>);
+            return info;
+        }
+        case ID::R8G8B8_SINT:
+        {
+            static const Format info(ID::R8G8B8_SINT,
+                                     GL_RGB8I,
+                                     GL_RGB8I,
+                                     GenerateMip<R8G8B8S>,
+                                     ReadColor<R8G8B8S, GLint>);
+            return info;
+        }
+        case ID::R8G8B8_SNORM:
+        {
+            static const Format info(ID::R8G8B8_SNORM,
+                                     GL_RGB8_SNORM,
+                                     GL_RGB8_SNORM,
+                                     GenerateMip<R8G8B8S>,
+                                     ReadColor<R8G8B8S, GLfloat>);
+            return info;
+        }
+        case ID::R8G8B8_UINT:
+        {
+            static const Format info(ID::R8G8B8_UINT,
+                                     GL_RGB8UI,
+                                     GL_RGB8UI,
+                                     GenerateMip<R8G8B8>,
+                                     ReadColor<R8G8B8, GLuint>);
+            return info;
+        }
+        case ID::R8G8B8_UNORM:
+        {
+            static const Format info(ID::R8G8B8_UNORM,
+                                     GL_RGB8,
+                                     GL_RGB8,
+                                     GenerateMip<R8G8B8>,
+                                     ReadColor<R8G8B8, GLfloat>);
+            return info;
+        }
+        case ID::R8G8B8_UNORM_SRGB:
+        {
+            static const Format info(ID::R8G8B8_UNORM_SRGB,
+                                     GL_SRGB8,
+                                     GL_SRGB8,
+                                     GenerateMip<R8G8B8>,
+                                     ReadColor<R8G8B8, GLfloat>);
             return info;
         }
         case ID::R8G8_SINT:
@@ -552,6 +1101,15 @@ const Format &Format::Get(ID id)
                                      GL_RGB9_E5,
                                      GenerateMip<R9G9B9E5>,
                                      ReadColor<R9G9B9E5, GLfloat>);
+            return info;
+        }
+        case ID::S8_UINT:
+        {
+            static const Format info(ID::S8_UINT,
+                                     GL_STENCIL_INDEX8,
+                                     GL_STENCIL_INDEX8,
+                                     nullptr,
+                                     nullptr);
             return info;
         }
 

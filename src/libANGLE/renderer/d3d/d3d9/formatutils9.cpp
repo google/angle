@@ -86,9 +86,9 @@ static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
     InsertD3DFormatInfo(&map, D3DFMT_NULL,            0, 0, 0,  0,  0,  0,  0,  0,  0,  0, Format::ID::NONE                );
     InsertD3DFormatInfo(&map, D3DFMT_UNKNOWN,         0, 0, 0,  0,  0,  0,  0,  0,  0,  0, Format::ID::NONE                );
 
-    InsertD3DFormatInfo(&map, D3DFMT_L8,              8, 1, 1,  0,  0,  0,  0,  8,  0,  0, Format::ID::L8_LUMA             );
+    InsertD3DFormatInfo(&map, D3DFMT_L8,              8, 1, 1,  0,  0,  0,  0,  8,  0,  0, Format::ID::L8_UNORM            );
     InsertD3DFormatInfo(&map, D3DFMT_A8,              8, 1, 1,  0,  0,  0,  8,  0,  0,  0, Format::ID::A8_UNORM            );
-    InsertD3DFormatInfo(&map, D3DFMT_A8L8,           16, 1, 1,  0,  0,  0,  8,  8,  0,  0, Format::ID::L8A8_LUMA           );
+    InsertD3DFormatInfo(&map, D3DFMT_A8L8,           16, 1, 1,  0,  0,  0,  8,  8,  0,  0, Format::ID::L8A8_UNORM          );
     InsertD3DFormatInfo(&map, D3DFMT_A4R4G4B4,       16, 1, 1,  4,  4,  4,  4,  0,  0,  0, Format::ID::B4G4R4A4_UNORM      );
     InsertD3DFormatInfo(&map, D3DFMT_A1R5G5B5,       16, 1, 1,  5,  5,  5,  1,  0,  0,  0, Format::ID::B5G5R5A1_UNORM      );
     InsertD3DFormatInfo(&map, D3DFMT_R5G6B5,         16, 1, 1,  5,  6,  5,  0,  0,  0,  0, Format::ID::R5G6B5_UNORM        );
@@ -108,9 +108,9 @@ static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
 
     InsertD3DFormatInfo(&map, D3DFMT_INTZ,           32, 1, 1,  0,  0,  0,  0,  0, 24,  8, Format::ID::D24_UNORM_S8_UINT   );
 
-    InsertD3DFormatInfo(&map, D3DFMT_DXT1,           64, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC1_UNORM           );
-    InsertD3DFormatInfo(&map, D3DFMT_DXT3,          128, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC2_UNORM           );
-    InsertD3DFormatInfo(&map, D3DFMT_DXT5,          128, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC3_UNORM           );
+    InsertD3DFormatInfo(&map, D3DFMT_DXT1,           64, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC1_RGBA_UNORM_BLOCK);
+    InsertD3DFormatInfo(&map, D3DFMT_DXT3,          128, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC2_RGBA_UNORM_BLOCK);
+    InsertD3DFormatInfo(&map, D3DFMT_DXT5,          128, 4, 4,  0,  0,  0,  0,  0,  0,  0, Format::ID::BC3_RGBA_UNORM_BLOCK);
     // clang-format on
 
     return map;
