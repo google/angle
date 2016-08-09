@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "79b65be8_7a8b9915",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T08:33:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d91827bf_e279bfd6",
+      "range": {
+        "startLine": 374,
+        "startChar": 0,
+        "endLine": 374,
+        "endChar": 7
+      },
+      "revId": "31fc537dc81919d86137fca3e73ef7482a844a92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d91827bf_e2a25f44",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-08T22:14:19Z",
       "side": 1,
       "message": "nit: \u003d\u003d true is redundant",
+      "range": {
+        "startLine": 419,
+        "startChar": 35,
+        "endLine": 419,
+        "endChar": 42
+      },
+      "revId": "31fc537dc81919d86137fca3e73ef7482a844a92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b65be8_9a8f8d20",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T08:33:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d91827bf_e2a25f44",
       "range": {
         "startLine": 419,
         "startChar": 35,
