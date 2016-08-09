@@ -46,6 +46,30 @@
       "revId": "be40525af7645f933bffc04eec67a3e4f8ce580c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a53384_2731d407",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T12:25:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b94a9396_ff297b8e",
+      "range": {
+        "startLine": 2078,
+        "startChar": 0,
+        "endLine": 2106,
+        "endChar": 1
+      },
+      "revId": "be40525af7645f933bffc04eec67a3e4f8ce580c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
