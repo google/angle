@@ -46,6 +46,7 @@
             '<(angle_path)/src/tests/compiler_tests/CollectVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ConstantFolding_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/DebugShaderPrecision_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ExpressionLimit_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/EXT_blend_func_extended_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/FragDepth_test.cpp',

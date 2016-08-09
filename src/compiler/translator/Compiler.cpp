@@ -8,6 +8,7 @@
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
+#include "compiler/translator/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/ForLoopUnroll.h"
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeParseContext.h"
@@ -384,6 +385,13 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         {
             RegenerateStructNames gen(symbolTable, shaderVersion);
             root->traverse(&gen);
+        }
+
+        if (success && shaderType == GL_FRAGMENT_SHADER && shaderVersion == 100 &&
+            compileResources.EXT_draw_buffers && compileResources.MaxDrawBuffers > 1 &&
+            IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
+        {
+            EmulateGLFragColorBroadcast(root, compileResources.MaxDrawBuffers, &outputVariables);
         }
 
         if (success)

@@ -40,6 +40,8 @@
             'compiler/translator/Diagnostics.h',
             'compiler/translator/DirectiveHandler.cpp',
             'compiler/translator/DirectiveHandler.h',
+            'compiler/translator/EmulateGLFragColorBroadcast.cpp',
+            'compiler/translator/EmulateGLFragColorBroadcast.h',
             'compiler/translator/EmulatePrecision.cpp',
             'compiler/translator/EmulatePrecision.h',
             'compiler/translator/ExpandIntegerPowExpressions.cpp',
