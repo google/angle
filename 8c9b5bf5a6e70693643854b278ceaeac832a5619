@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b94a9396_bf51b30c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T12:46:55Z",
+      "side": 1,
+      "message": "One final style nit: output parameters should be last (in Google style guide). Also this function could take a TLocalSize * instead of TLayoutQualifier *.",
+      "range": {
+        "startLine": 3226,
+        "startChar": 35,
+        "endLine": 3226,
+        "endChar": 69
+      },
+      "revId": "8c9b5bf5a6e70693643854b278ceaeac832a5619",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
