@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79b65be8_fa0b2977",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T11:30:45Z",
+      "side": 1,
+      "message": "Those two were also failing in the previous version, but now I think I have captured all cases given the current state of the grammar.",
+      "range": {
+        "startLine": 2078,
+        "startChar": 0,
+        "endLine": 2106,
+        "endChar": 1
+      },
+      "revId": "be40525af7645f933bffc04eec67a3e4f8ce580c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
