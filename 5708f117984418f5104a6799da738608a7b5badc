@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b9a53384_4722d0c2",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T12:25:23Z",
+      "side": 1,
+      "message": "I changed it. I was thinking that since we won\u0027t be exposing the TLocalSize outside of the compiler, we would have to switch to std::array\u003cint, 3\u003e again. Maybe that can be done in the ShGetComputeShaderLocalGroupSize.",
+      "parentUuid": "79b65be8_faafa977",
+      "range": {
+        "startLine": 89,
+        "startChar": 10,
+        "endLine": 89,
+        "endChar": 28
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9a53384_67b4ac82",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-09T10:41:00Z",
       "side": 1,
       "message": "This check can be removed - singleDeclarationErrorCheck is not run on global layout declarations. It\u0027s always an error to specify local work group size for a specific variable.",
+      "range": {
+        "startLine": 1059,
+        "startChar": 8,
+        "endLine": 1059,
+        "endChar": 44
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b94a9396_7f68cbc5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T12:25:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9a53384_67b4ac82",
       "range": {
         "startLine": 1059,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "79b65be8_da674552",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1102,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T12:25:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79b65be8_bae7f1db",
+      "range": {
+        "startLine": 1102,
+        "startChar": 19,
+        "endLine": 1102,
+        "endChar": 49
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79b65be8_9aea2da3",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -82,6 +154,24 @@
       "writtenOn": "2016-08-09T10:41:00Z",
       "side": 1,
       "message": "There\u0027s still a missing check here - local_size qualifier should not be accepted for \"uniform\". Add this fragment shader to MalformedShaderTest and make sure it fails compilation:\n\n#version 310 es\nprecision mediump float;\nout vec4 my_FragColor;\nlayout(local_size_x\u003d1) uniform;\nvoid main() {\n    my_FragColor \u003d vec4(0.0, 0.0, 0.0, 1.0);\n}",
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ace39a_98b875c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2052,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T12:25:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79b65be8_9aea2da3",
       "revId": "5708f117984418f5104a6799da738608a7b5badc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
