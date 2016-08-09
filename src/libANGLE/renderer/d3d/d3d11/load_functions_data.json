@@ -3,8 +3,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,2>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_SNORM"
       }
     ]
   },
@@ -12,8 +11,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLubyte,0xFF>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB"
       }
     ]
   },
@@ -21,8 +19,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SINT"
       }
     ]
   },
@@ -30,8 +27,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,1>",
-        "dxgiFormat": "DXGI_FORMAT_R8_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8_SNORM"
       }
     ]
   },
@@ -39,8 +35,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SNORM"
       }
     ]
   },
@@ -48,8 +43,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLshort,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_SINT"
       }
     ]
   },
@@ -57,8 +51,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2SRGBA8ToSRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB"
       }
     ]
   },
@@ -66,8 +59,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2RGB8A1ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -75,8 +67,7 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadToNative3To4<GLuint,0x00000001>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_UINT"
       }
     ]
   },
@@ -84,8 +75,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadA32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -93,8 +83,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_UINT"
       }
     ]
   },
@@ -102,29 +91,25 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadRGB16FToRGB9E5",
-        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP"
       }
     ],
     "GL_UNSIGNED_INT_5_9_9_9_REV": [
       {
         "loadFunction": "LoadToNative<GLuint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadRGB32FToRGB9E5",
-        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadRGB16FToRGB9E5",
-        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP"
       }
     ]
   },
@@ -132,8 +117,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadEACR11ToR8",
-        "dxgiFormat": "DXGI_FORMAT_R8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8_UNORM"
       }
     ]
   },
@@ -141,8 +125,7 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadToNative<GLuint,4>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_UINT"
       }
     ]
   },
@@ -150,8 +133,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,2>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_UINT"
       }
     ]
   },
@@ -159,8 +141,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadL32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -168,8 +149,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2SRGB8A1ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB"
       }
     ]
   },
@@ -177,22 +157,19 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLhalf,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "Load32FTo16F<1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadToNative<GLhalf,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_FLOAT"
       }
     ]
   },
@@ -200,8 +177,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UINT"
       }
     ]
   },
@@ -209,15 +185,13 @@
     "GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT": [
       {
         "loadFunction": "LoadRGBA4ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -225,22 +199,19 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLhalf,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "Load32FTo16F<4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadToNative<GLhalf,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ]
   },
@@ -248,8 +219,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadL8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -257,8 +227,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadCompressedToNative<4,4,16>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -266,15 +235,13 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_UNSIGNED_SHORT_5_6_5": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -282,37 +249,31 @@
     "GL_UNSIGNED_INT_2_10_10_10_REV": [
       {
         "loadFunction": "LoadRGB10A2ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGB10A2ToBGR5A1",
-        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGBA8ToBGR5A1",
-        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM"
       }
     ],
     "GL_UNSIGNED_SHORT_5_5_5_1": [
       {
         "loadFunction": "LoadRGB5A1ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGB5A1ToA1RGB5",
-        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B5G5R5A1_UNORM"
       }
     ]
   },
@@ -320,8 +281,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative3To4<GLushort,0x0001>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UINT"
       }
     ]
   },
@@ -329,8 +289,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -338,8 +297,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2RGB8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -347,8 +305,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLfloat,4>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT"
       }
     ]
   },
@@ -356,8 +313,7 @@
     "GL_INT": [
       {
         "loadFunction": "LoadToNative<GLint,4>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_SINT"
       }
     ]
   },
@@ -365,8 +321,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadLA8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -374,8 +329,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,2>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_UNORM"
       }
     ]
   },
@@ -383,8 +337,7 @@
     "GL_UNSIGNED_INT_2_10_10_10_REV": [
       {
         "loadFunction": "LoadToNative<GLuint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R10G10B10A2_UNORM"
       }
     ]
   },
@@ -392,8 +345,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadEACRG11SToRG8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_SNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_SNORM"
       }
     ]
   },
@@ -401,20 +353,17 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadR32ToR16",
-        "dxgiFormat": "DXGI_FORMAT_R16_TYPELESS",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16_TYPELESS"
       }
     ],
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_TYPELESS",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_TYPELESS"
       },
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_D16_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_D16_UNORM"
       }
     ]
   },
@@ -422,8 +371,7 @@
     "GL_INT": [
       {
         "loadFunction": "LoadToNative3To4<GLint,0x00000001>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_SINT"
       }
     ]
   },
@@ -431,8 +379,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,1>",
-        "dxgiFormat": "DXGI_FORMAT_R8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8_UNORM"
       }
     ]
   },
@@ -440,8 +387,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadToNative3To4<GLfloat,gl::Float32One>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT"
       }
     ]
   },
@@ -449,29 +395,25 @@
     "GL_UNSIGNED_INT_10F_11F_11F_REV": [
       {
         "loadFunction": "LoadToNative<GLuint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT"
       }
     ],
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadRGB16FToRG11B10F",
-        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadRGB32FToRG11B10F",
-        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadRGB16FToRG11B10F",
-        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R11G11B10_FLOAT"
       }
     ]
   },
@@ -479,8 +421,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLubyte,0xFF>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -488,29 +429,25 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadLA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadLA32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadLA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ]
   },
@@ -518,8 +455,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLshort,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SINT"
       }
     ]
   },
@@ -527,8 +463,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,1>",
-        "dxgiFormat": "DXGI_FORMAT_R8_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8_SINT"
       }
     ]
   },
@@ -536,8 +471,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLbyte,0x7F>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SNORM"
       }
     ]
   },
@@ -545,8 +479,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLfloat,2>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32_FLOAT"
       }
     ]
   },
@@ -554,13 +487,11 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadD32FToD32F",
-        "dxgiFormat": "DXGI_FORMAT_R32_TYPELESS",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32_TYPELESS"
       },
       {
         "loadFunction": "UnimplementedLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -568,8 +499,7 @@
     "GL_INT": [
       {
         "loadFunction": "LoadToNative<GLint,2>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32_SINT"
       }
     ]
   },
@@ -577,13 +507,11 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,1>",
-        "dxgiFormat": "DXGI_FORMAT_A8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_A8_UNORM"
       },
       {
         "loadFunction": "LoadA8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -591,8 +519,7 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadToNative<GLuint,2>",
-        "dxgiFormat": "DXGI_FORMAT_R32G32_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G32_UINT"
       }
     ]
   },
@@ -600,8 +527,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UINT"
       }
     ]
   },
@@ -609,8 +535,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2RGBA8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -618,8 +543,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLbyte,0x01>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_SINT"
       }
     ]
   },
@@ -627,8 +551,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC2SRGB8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB"
       }
     ]
   },
@@ -636,13 +559,11 @@
     "GL_FLOAT_32_UNSIGNED_INT_24_8_REV": [
       {
         "loadFunction": "LoadD32FS8X24ToD32FS8X24",
-        "dxgiFormat": "DXGI_FORMAT_R32G8X24_TYPELESS",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32G8X24_TYPELESS"
       },
       {
         "loadFunction": "UnimplementedLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -650,8 +571,7 @@
     "GL_BYTE": [
       {
         "loadFunction": "LoadToNative<GLbyte,2>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_SINT"
       }
     ]
   },
@@ -659,8 +579,7 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadToNative<GLuint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R32_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32_UINT"
       }
     ]
   },
@@ -668,15 +587,13 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT": [
       {
         "loadFunction": "LoadRGB5A1ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -684,15 +601,13 @@
     "GL_UNSIGNED_SHORT_5_6_5": [
       {
         "loadFunction": "LoadRGB565ToBGR565",
-        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM"
       }
     ]
   },
@@ -700,8 +615,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadEACRG11ToRG8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8_UNORM"
       }
     ]
   },
@@ -709,8 +623,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB"
       }
     ]
   },
@@ -718,15 +631,13 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadLA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadLA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -734,22 +645,19 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_UNSIGNED_SHORT_4_4_4_4": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_UNSIGNED_SHORT_5_5_5_1": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -757,13 +665,11 @@
     "GL_UNSIGNED_INT_24_8": [
       {
         "loadFunction": "LoadR32ToR24G8",
-        "dxgiFormat": "DXGI_FORMAT_R24G8_TYPELESS",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R24G8_TYPELESS"
       },
       {
         "loadFunction": "LoadR32ToR24G8",
-        "dxgiFormat": "DXGI_FORMAT_D24_UNORM_S8_UINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_D24_UNORM_S8_UINT"
       }
     ]
   },
@@ -771,8 +677,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative3To4<GLshort,0x0001>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SINT"
       }
     ]
   },
@@ -780,8 +685,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,1>",
-        "dxgiFormat": "DXGI_FORMAT_R8_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8_UINT"
       }
     ]
   },
@@ -789,29 +693,25 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadA32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ]
   },
@@ -819,22 +719,19 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadToNative3To4<GLhalf,gl::Float16One>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadRGB32FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadToNative3To4<GLhalf,gl::Float16One>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ]
   },
@@ -842,8 +739,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadEACR11SToR8",
-        "dxgiFormat": "DXGI_FORMAT_R8_SNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8_SNORM"
       }
     ]
   },
@@ -851,8 +747,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadCompressedToNative<4,4,8>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -860,8 +755,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadCompressedToNative<4,4,8>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -869,15 +763,13 @@
     "DXGI_FORMAT_R24G8_TYPELESS": [
       {
         "loadFunction": "UnimplementedLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "DXGI_FORMAT_D24_UNORM_S8_UINT": [
       {
         "loadFunction": "UnimplementedLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -885,8 +777,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadLA32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -894,8 +785,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLubyte,0x01>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UINT"
       }
     ]
   },
@@ -903,13 +793,11 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadR32ToR24G8",
-        "dxgiFormat": "DXGI_FORMAT_R24G8_TYPELESS",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R24G8_TYPELESS"
       },
       {
         "loadFunction": "LoadR32ToR24G8",
-        "dxgiFormat": "DXGI_FORMAT_D24_UNORM_S8_UINT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_D24_UNORM_S8_UINT"
       }
     ]
   },
@@ -917,8 +805,7 @@
     "GL_INT": [
       {
         "loadFunction": "LoadToNative<GLint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R32_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32_SINT"
       }
     ]
   },
@@ -926,8 +813,7 @@
     "GL_UNSIGNED_INT": [
       {
         "loadFunction": "LoadR32ToR24G8",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -935,8 +821,7 @@
     "GL_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLfloat,1>",
-        "dxgiFormat": "DXGI_FORMAT_R32_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R32_FLOAT"
       }
     ]
   },
@@ -944,22 +829,19 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadToNative<GLhalf,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "Load32FTo16F<2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadToNative<GLhalf,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_FLOAT"
       }
     ]
   },
@@ -967,25 +849,21 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative3To4<GLubyte,0xFF>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGB8ToBGR565",
-        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM"
       }
     ],
     "GL_UNSIGNED_SHORT_5_6_5": [
       {
         "loadFunction": "LoadR5G6B5ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_B5G6R5_UNORM"
       }
     ]
   },
@@ -993,15 +871,13 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadL16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadL16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -1009,8 +885,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_UINT"
       }
     ]
   },
@@ -1018,8 +893,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadCompressedToNative<4,4,16>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -1027,8 +901,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLshort,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_SINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_SINT"
       }
     ]
   },
@@ -1036,8 +909,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -1045,15 +917,13 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadA16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ]
   },
@@ -1061,25 +931,21 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGBA8ToBGRA4",
-        "dxgiFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B4G4R4A4_UNORM"
       }
     ],
     "GL_UNSIGNED_SHORT_4_4_4_4": [
       {
         "loadFunction": "LoadRGBA4ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       },
       {
         "loadFunction": "LoadRGBA4ToARGB4",
-        "dxgiFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_B4G4R4A4_UNORM"
       }
     ]
   },
@@ -1087,8 +953,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadToNative<GLubyte,4>",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -1096,29 +961,25 @@
     "GL_HALF_FLOAT": [
       {
         "loadFunction": "LoadL16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ],
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "UnreachableLoadFunction",
-        "dxgiFormat": "DXGI_FORMAT_UNKNOWN",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_UNKNOWN"
       }
     ],
     "GL_FLOAT": [
       {
         "loadFunction": "LoadL32FToRGBA32F",
-        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT"
       }
     ],
     "GL_HALF_FLOAT_OES": [
       {
         "loadFunction": "LoadL16FToRGBA16F",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT"
       }
     ]
   },
@@ -1126,8 +987,7 @@
     "GL_UNSIGNED_INT_2_10_10_10_REV": [
       {
         "loadFunction": "LoadToNative<GLuint,1>",
-        "dxgiFormat": "DXGI_FORMAT_R10G10B10A2_UINT",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R10G10B10A2_UINT"
       }
     ]
   },
@@ -1135,8 +995,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC1RGB8ToRGBA8",
-        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R8G8B8A8_UNORM"
       }
     ]
   },
@@ -1144,8 +1003,7 @@
     "GL_UNSIGNED_BYTE": [
       {
         "loadFunction": "LoadETC1RGB8ToBC1",
-        "dxgiFormat": "DXGI_FORMAT_BC1_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_BC1_UNORM"
       }
     ]
   },
@@ -1153,8 +1011,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_UNORM"
       }
     ]
   },
@@ -1162,8 +1019,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_UNORM"
       }
     ]
   },
@@ -1171,8 +1027,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative3To4<GLushort,0xFFFF>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM"
       }
     ]
   },
@@ -1180,8 +1035,7 @@
     "GL_UNSIGNED_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_UNORM"
       }
     ]
   },
@@ -1189,8 +1043,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,1>",
-        "dxgiFormat": "DXGI_FORMAT_R16_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16_SNORM"
       }
     ]
   },
@@ -1198,8 +1051,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,2>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16_SNORM"
       }
     ]
   },
@@ -1207,8 +1059,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative3To4<GLushort,0x7FFF>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
-        "requiresConversion": "true"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM"
       }
     ]
   },
@@ -1216,8 +1067,7 @@
     "GL_SHORT": [
       {
         "loadFunction": "LoadToNative<GLushort,4>",
-        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
-        "requiresConversion": "false"
+        "dxgiFormat": "DXGI_FORMAT_R16G16B16A16_SNORM"
       }
     ]
   }

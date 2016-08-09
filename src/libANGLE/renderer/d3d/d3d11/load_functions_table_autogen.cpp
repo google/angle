@@ -570,7 +570,7 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                 case DXGI_FORMAT_R32G8X24_TYPELESS:
                 {
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
-                        { GL_FLOAT_32_UNSIGNED_INT_24_8_REV, LoadImageFunctionInfo(LoadD32FS8X24ToD32FS8X24, false) },
+                        { GL_FLOAT_32_UNSIGNED_INT_24_8_REV, LoadImageFunctionInfo(LoadD32FS8X24ToD32FS8X24, true) },
                     };
 
                     return loadFunctionsMap;
@@ -649,7 +649,7 @@ const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum intern
                 case DXGI_FORMAT_R32_TYPELESS:
                 {
                     static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {
-                        { GL_FLOAT, LoadImageFunctionInfo(LoadD32FToD32F, false) },
+                        { GL_FLOAT, LoadImageFunctionInfo(LoadD32FToD32F, true) },
                     };
 
                     return loadFunctionsMap;

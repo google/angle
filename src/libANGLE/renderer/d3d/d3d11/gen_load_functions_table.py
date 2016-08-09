@@ -161,7 +161,8 @@ def parse_json_into_switch_string(json_data):
             insert_map_string = ''
             types_already_in_loadmap = set()
             for type_function in sorted(dxgi_format_item[1]):
-                insert_map_string += get_function_maps_string(type_function['type'], type_function['loadFunction'], type_function['requiresConversion'])
+                requiresConversion = str('LoadToNative<' not in type_function['loadFunction']).lower()
+                insert_map_string += get_function_maps_string(type_function['type'], type_function['loadFunction'], requiresConversion)
                 types_already_in_loadmap.add(type_function['type'])
 
             # DXGI_FORMAT_UNKNOWN add ons
