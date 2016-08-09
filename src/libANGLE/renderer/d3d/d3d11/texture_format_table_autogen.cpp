@@ -34,37 +34,6 @@ const Format &Format::Get(GLenum internalFormat,
     // clang-format off
     switch (internalFormat)
     {
-        case GL_ALPHA:
-        {
-            if (OnlyFL10Plus(deviceCaps))
-            {
-                static const Format info(GL_ALPHA,
-                                         angle::Format::ID::A8_UNORM,
-                                         DXGI_FORMAT_A8_UNORM,
-                                         DXGI_FORMAT_A8_UNORM,
-                                         DXGI_FORMAT_A8_UNORM,
-                                         DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_A8_UNORM,
-                                         GL_RGBA8,
-                                         nullptr,
-                                         deviceCaps);
-                return info;
-            }
-            else
-            {
-                static const Format info(GL_ALPHA,
-                                         angle::Format::ID::R8G8B8A8_UNORM,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                         DXGI_FORMAT_UNKNOWN,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
-                                         GL_RGBA8,
-                                         nullptr,
-                                         deviceCaps);
-                return info;
-            }
-        }
         case GL_ALPHA16F_EXT:
         {
             static const Format info(GL_ALPHA16F_EXT,
@@ -979,20 +948,6 @@ const Format &Format::Get(GLenum internalFormat,
                                      deviceCaps);
             return info;
         }
-        case GL_LUMINANCE:
-        {
-            static const Format info(GL_LUMINANCE,
-                                     angle::Format::ID::R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_UNKNOWN,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     GL_RGBA8,
-                                     Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>,
-                                     deviceCaps);
-            return info;
-        }
         case GL_LUMINANCE16F_EXT:
         {
             static const Format info(GL_LUMINANCE16F_EXT,
@@ -1046,20 +1001,6 @@ const Format &Format::Get(GLenum internalFormat,
                                      DXGI_FORMAT_R8G8B8A8_UNORM,
                                      GL_RGBA8,
                                      Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>,
-                                     deviceCaps);
-            return info;
-        }
-        case GL_LUMINANCE_ALPHA:
-        {
-            static const Format info(GL_LUMINANCE_ALPHA,
-                                     angle::Format::ID::R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     DXGI_FORMAT_UNKNOWN,
-                                     DXGI_FORMAT_R8G8B8A8_UNORM,
-                                     GL_RGBA8,
-                                     nullptr,
                                      deviceCaps);
             return info;
         }
