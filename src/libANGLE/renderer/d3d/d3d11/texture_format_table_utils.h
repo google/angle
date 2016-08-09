@@ -28,8 +28,7 @@ inline bool OnlyFL9_3(const Renderer11DeviceCaps &deviceCaps)
     return (deviceCaps.featureLevel == D3D_FEATURE_LEVEL_9_3);
 }
 
-template <DXGI_FORMAT format, bool requireSupport>
-bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
+inline bool SupportsFormat(DXGI_FORMAT format, const Renderer11DeviceCaps &deviceCaps)
 {
     // Must support texture, SRV and RTV support
     UINT mustSupport = D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_TEXTURECUBE |
@@ -63,26 +62,12 @@ bool SupportsFormat(const Renderer11DeviceCaps &deviceCaps)
         return false;
     }
 
-    // This 'SupportsFormat' function is used by individual entries in the D3D11 Format Map below,
-    // which maps GL formats to DXGI formats.
-    if (requireSupport)
-    {
-        // This means that ANGLE would like to use the entry in the map if the inputted DXGI format
-        // *IS* supported.
-        // e.g. the entry might map GL_RGB5_A1 to DXGI_FORMAT_B5G5R5A1, which should only be used if
-        // DXGI_FORMAT_B5G5R5A1 is supported.
-        // In this case, we should only return 'true' if the format *IS* supported.
-        return fullSupport;
-    }
-    else
-    {
-        // This means that ANGLE would like to use the entry in the map if the inputted DXGI format
-        // *ISN'T* supported.
-        // This might be a fallback entry. e.g. for ANGLE to use DXGI_FORMAT_R8G8B8A8_UNORM if
-        // DXGI_FORMAT_B5G5R5A1 isn't supported.
-        // In this case, we should only return 'true' if the format *ISN'T* supported.
-        return !fullSupport;
-    }
+    // This means that ANGLE would like to use the entry in the map if the inputted DXGI format
+    // *IS* supported.
+    // e.g. the entry might map GL_RGB5_A1 to DXGI_FORMAT_B5G5R5A1, which should only be used if
+    // DXGI_FORMAT_B5G5R5A1 is supported.
+    // In this case, we should only return 'true' if the format *IS* supported.
+    return fullSupport;
 }
 
 }  // namespace d3d11

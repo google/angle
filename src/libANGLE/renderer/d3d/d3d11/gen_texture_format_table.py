@@ -157,7 +157,8 @@ def get_internal_format_initializer(internal_format, angle_format):
 
     return internal_format_initializer
 
-def get_swizzle_format_id(angle_format_id, angle_format):
+def get_swizzle_format_id(angle_format):
+    angle_format_id = angle_format["formatName"]
     if angle_format_id == 'NONE':
         return 'NONE'
     elif 'swizzleFormat' in angle_format:
@@ -207,17 +208,22 @@ def get_swizzle_format_id(angle_format_id, angle_format):
     else:
         raise ValueError('could not determine swizzleformat based on componentType for format: ' + angle_format_id)
 
-def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_id, angle_format):
+def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_id, json_data):
     table_data = '';
+
+    angle_format = json_data[angle_format_id]
+    # TODO(jmadill): Remove this hack.
+    if requirements_fn != None and idx == 0 and 'fallbackFormat' in angle_format:
+        angle_format = json_data[angle_format['fallbackFormat']]
 
     internal_format_initializer = get_internal_format_initializer(internal_format, angle_format)
 
     indent = '            '
     if requirements_fn != None:
         if idx == 0:
-            table_data += '            if (' + requirements_fn + '(deviceCaps))\n'
+            table_data += '            if (' + requirements_fn + ')\n'
         else:
-            table_data += '            else if (' + requirements_fn + '(deviceCaps))\n'
+            table_data += '            else if (' + requirements_fn + ')\n'
         table_data += '            {\n'
         indent += '    '
 
@@ -243,11 +249,11 @@ def parse_json_into_switch_texture_format_string(json_map, json_data):
 
         if isinstance(json_map[internal_format], basestring):
             angle_format_id = json_map[internal_format]
-            table_data += get_texture_format_item(0, internal_format, None, angle_format_id, json_data[angle_format_id])
+            table_data += get_texture_format_item(0, internal_format, None, angle_format_id, json_data)
         else:
             for idx, requirements_map in enumerate(sorted(json_map[internal_format].iteritems())):
                 angle_format_id = requirements_map[1]
-                table_data += get_texture_format_item(idx, internal_format, requirements_map[0], angle_format_id, json_data[angle_format_id])
+                table_data += get_texture_format_item(idx, internal_format, requirements_map[0], angle_format_id, json_data)
             table_data += '            else\n'
             table_data += '            {\n'
             table_data += '                break;\n'
@@ -312,45 +318,64 @@ def json_to_table_data(format_name, prefix, json):
 
     # Derived values.
     parsed["blitSRVFormat"] = get_blit_srv_format(parsed)
-    parsed["swizzleFormat"] = get_swizzle_format_id(format_name, parsed)
+    parsed["swizzleFormat"] = get_swizzle_format_id(parsed)
 
     if len(prefix) > 0:
         return split_format_entry_template.format(**parsed)
     else:
         return format_entry_template.format(**parsed)
 
+def parse_json_angle_format_case(format_name, angle_format, json_data):
+    supported_case = {}
+    unsupported_case = {}
+    support_test = None
+    fallback = None
+
+    for k, v in angle_format.iteritems():
+        if k == "FL10Plus":
+            assert support_test is None
+            support_test = "OnlyFL10Plus(deviceCaps)"
+            for k2, v2 in v.iteritems():
+                supported_case[k2] = v2
+        elif k == "FL9_3":
+            split = True
+            for k2, v2 in v.iteritems():
+                unsupported_case[k2] = v2
+        elif k == "supportTest":
+            assert support_test is None
+            support_test = v
+        elif k == "fallbackFormat":
+            fallback = v
+        else:
+            supported_case[k] = v
+            unsupported_case[k] = v
+
+    if fallback != None:
+        unsupported_case, _, _ = parse_json_angle_format_case(
+            fallback, json_data[fallback], json_data)
+        unsupported_case["formatName"] = fallback
+
+    if support_test != None:
+        return supported_case, unsupported_case, support_test
+    else:
+        return supported_case, None, None
+
 def parse_json_into_switch_angle_format_string(json_data):
     table_data = ''
-    for angle_format_item in sorted(json_data.iteritems()):
-        table_data += '        case angle::Format::ID::' + angle_format_item[0] + ':\n'
-        format_name = angle_format_item[0]
-        angle_format = angle_format_item[1]
+    for format_name, angle_format in sorted(json_data.iteritems()):
 
-        fl10plus = {}
-        fl9_3 = {}
-        split = False
+        supported_case, unsupported_case, support_test = parse_json_angle_format_case(
+            format_name, angle_format, json_data)
 
-        for k, v in angle_format.iteritems():
-            if k == "FL10Plus":
-                split = True
-                for k2, v2 in v.iteritems():
-                    fl10plus[k2] = v2
-            elif k == "FL9_3":
-                split = True
-                for k2, v2 in v.iteritems():
-                    fl9_3[k2] = v2
-            else:
-                fl10plus[k] = v
-                fl9_3[k] = v
+        table_data += '        case angle::Format::ID::' + format_name + ':\n'
 
-        if split:
+        if support_test != None:
             table_data += "        {\n"
-            table_data += json_to_table_data(format_name, "if (OnlyFL10Plus(deviceCaps))", fl10plus)
-            table_data += json_to_table_data(format_name, "else", fl9_3)
+            table_data += json_to_table_data(format_name, "if (" + support_test + ")", supported_case)
+            table_data += json_to_table_data(format_name, "else", unsupported_case)
             table_data += "        }\n"
-            table_data += "        break;\n"
         else:
-            table_data += json_to_table_data(format_name, "", fl10plus)
+            table_data += json_to_table_data(format_name, "", supported_case)
 
     return table_data
 

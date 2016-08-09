@@ -35,51 +35,111 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
     {
         case angle::Format::ID::A8_UNORM:
         {
-            static const ANGLEFormatSet info(angle::Format::ID::A8_UNORM,
-                                             DXGI_FORMAT_A8_UNORM,
-                                             DXGI_FORMAT_A8_UNORM,
-                                             DXGI_FORMAT_A8_UNORM,
-                                             DXGI_FORMAT_UNKNOWN,
-                                             DXGI_FORMAT_A8_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM,
-                                             deviceCaps);
-            return info;
+            if (OnlyFL10Plus(deviceCaps))
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::A8_UNORM,
+                                                 DXGI_FORMAT_A8_UNORM,
+                                                 DXGI_FORMAT_A8_UNORM,
+                                                 DXGI_FORMAT_A8_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_A8_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
+            else
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
         }
         case angle::Format::ID::B4G4R4A4_UNORM:
         {
-            static const ANGLEFormatSet info(angle::Format::ID::B4G4R4A4_UNORM,
-                                             DXGI_FORMAT_B4G4R4A4_UNORM,
-                                             DXGI_FORMAT_B4G4R4A4_UNORM,
-                                             DXGI_FORMAT_B4G4R4A4_UNORM,
-                                             DXGI_FORMAT_UNKNOWN,
-                                             DXGI_FORMAT_B4G4R4A4_UNORM,
-                                             angle::Format::ID::B4G4R4A4_UNORM,
-                                             deviceCaps);
-            return info;
+            if (SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps))
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::B4G4R4A4_UNORM,
+                                                 DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                 DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                 DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_B4G4R4A4_UNORM,
+                                                 angle::Format::ID::B4G4R4A4_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
+            else
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
         }
         case angle::Format::ID::B5G5R5A1_UNORM:
         {
-            static const ANGLEFormatSet info(angle::Format::ID::B5G5R5A1_UNORM,
-                                             DXGI_FORMAT_B5G5R5A1_UNORM,
-                                             DXGI_FORMAT_B5G5R5A1_UNORM,
-                                             DXGI_FORMAT_B5G5R5A1_UNORM,
-                                             DXGI_FORMAT_UNKNOWN,
-                                             DXGI_FORMAT_B5G5R5A1_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM,
-                                             deviceCaps);
-            return info;
+            if (SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps))
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::B5G5R5A1_UNORM,
+                                                 DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                 DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                 DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_B5G5R5A1_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
+            else
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
         }
         case angle::Format::ID::B5G6R5_UNORM:
         {
-            static const ANGLEFormatSet info(angle::Format::ID::B5G6R5_UNORM,
-                                             DXGI_FORMAT_B5G6R5_UNORM,
-                                             DXGI_FORMAT_B5G6R5_UNORM,
-                                             DXGI_FORMAT_B5G6R5_UNORM,
-                                             DXGI_FORMAT_UNKNOWN,
-                                             DXGI_FORMAT_B5G6R5_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM,
-                                             deviceCaps);
-            return info;
+            if (SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps))
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::B5G6R5_UNORM,
+                                                 DXGI_FORMAT_B5G6R5_UNORM,
+                                                 DXGI_FORMAT_B5G6R5_UNORM,
+                                                 DXGI_FORMAT_B5G6R5_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_B5G6R5_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
+            else
+            {
+                static const ANGLEFormatSet info(angle::Format::ID::R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 DXGI_FORMAT_UNKNOWN,
+                                                 DXGI_FORMAT_R8G8B8A8_UNORM,
+                                                 angle::Format::ID::R8G8B8A8_UNORM,
+                                                 deviceCaps);
+                return info;
+            }
         }
         case angle::Format::ID::B8G8R8A8_UNORM:
         {
@@ -156,7 +216,6 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                 return info;
             }
         }
-        break;
         case angle::Format::ID::D24_UNORM_S8_UINT:
         {
             if (OnlyFL10Plus(deviceCaps))
@@ -184,7 +243,6 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                 return info;
             }
         }
-        break;
         case angle::Format::ID::D32_FLOAT:
         {
             static const ANGLEFormatSet info(angle::Format::ID::D32_FLOAT,
@@ -743,7 +801,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             else if (OnlyFL9_3(deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
-                                                angle::Format::ID::R8G8B8A8_UNORM,
+                                                angle::Format::ID::A8_UNORM,
                                                 nullptr,
                                                 deviceCaps);
                 return info;
@@ -782,7 +840,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
             else if (OnlyFL9_3(deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
-                                                angle::Format::ID::R8G8B8A8_UNORM,
+                                                angle::Format::ID::A8_UNORM,
                                                 nullptr,
                                                 deviceCaps);
                 return info;
@@ -1730,15 +1788,15 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         }
         case GL_RGB565:
         {
-            if (SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,false>(deviceCaps))
+            if (!SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
-                                                angle::Format::ID::R8G8B8A8_UNORM,
+                                                angle::Format::ID::B5G6R5_UNORM,
                                                 Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>,
                                                 deviceCaps);
                 return info;
             }
-            else if (SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,true>(deviceCaps))
+            else if (SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
                                                 angle::Format::ID::B5G6R5_UNORM,
@@ -1753,15 +1811,15 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         }
         case GL_RGB5_A1:
         {
-            if (SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,false>(deviceCaps))
+            if (!SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
-                                                angle::Format::ID::R8G8B8A8_UNORM,
+                                                angle::Format::ID::B5G5R5A1_UNORM,
                                                 nullptr,
                                                 deviceCaps);
                 return info;
             }
-            else if (SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,true>(deviceCaps))
+            else if (SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
                                                 angle::Format::ID::B5G5R5A1_UNORM,
@@ -1888,15 +1946,15 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
         }
         case GL_RGBA4:
         {
-            if (SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,false>(deviceCaps))
+            if (!SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
-                                                angle::Format::ID::R8G8B8A8_UNORM,
+                                                angle::Format::ID::B4G4R4A4_UNORM,
                                                 nullptr,
                                                 deviceCaps);
                 return info;
             }
-            else if (SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,true>(deviceCaps))
+            else if (SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps))
             {
                 static const TextureFormat info(internalFormat,
                                                 angle::Format::ID::B4G4R4A4_UNORM,

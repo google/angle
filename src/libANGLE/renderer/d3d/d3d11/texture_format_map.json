@@ -1,13 +1,13 @@
 {
   "GL_ALPHA": {
-    "OnlyFL10Plus": "A8_UNORM",
-    "OnlyFL9_3": "R8G8B8A8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "A8_UNORM",
+    "OnlyFL9_3(deviceCaps)": "A8_UNORM"
   },
   "GL_ALPHA16F_EXT": "R16G16B16A16_FLOAT",
   "GL_ALPHA32F_EXT": "R32G32B32A32_FLOAT",
   "GL_ALPHA8_EXT": {
-    "OnlyFL10Plus": "A8_UNORM",
-    "OnlyFL9_3": "R8G8B8A8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "A8_UNORM",
+    "OnlyFL9_3(deviceCaps)": "A8_UNORM"
   },
   "GL_BGR565_ANGLEX": "B5G6R5_UNORM",
   "GL_BGR5_A1_ANGLEX": "B8G8R8A8_UNORM",
@@ -15,19 +15,19 @@
   "GL_BGRA8_EXT": "B8G8R8A8_UNORM",
   "GL_BGRA_EXT": "B8G8R8A8_UNORM",
   "GL_COMPRESSED_R11_EAC": {
-    "OnlyFL10Plus": "R8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8_UNORM"
   },
   "GL_COMPRESSED_RG11_EAC": {
-    "OnlyFL10Plus": "R8G8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8G8_UNORM"
   },
   "GL_COMPRESSED_RGB8_ETC2": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM"
   },
   "GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM"
   },
   "GL_COMPRESSED_RGBA8_ETC2_EAC": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM"
   },
   "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT": "BC1_UNORM",
   "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE": "BC2_UNORM",
@@ -48,10 +48,10 @@
   "GL_COMPRESSED_RGBA_ASTC_12x12_KHR": "NONE",
   "GL_COMPRESSED_RGB_S3TC_DXT1_EXT": "BC1_UNORM",
   "GL_COMPRESSED_SIGNED_R11_EAC": {
-    "OnlyFL10Plus": "R8_SNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8_SNORM"
   },
   "GL_COMPRESSED_SIGNED_RG11_EAC": {
-    "OnlyFL10Plus": "R8G8_SNORM"
+    "OnlyFL10Plus(deviceCaps)": "R8G8_SNORM"
   },
   "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR": "NONE",
   "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR": "NONE",
@@ -68,34 +68,34 @@
   "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR": "NONE",
   "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR": "NONE",
   "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM_SRGB"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM_SRGB"
   },
   "GL_COMPRESSED_SRGB8_ETC2": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM_SRGB"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM_SRGB"
   },
   "GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2": {
-    "OnlyFL10Plus": "R8G8B8A8_UNORM_SRGB"
+    "OnlyFL10Plus(deviceCaps)": "R8G8B8A8_UNORM_SRGB"
   },
   "GL_DEPTH24_STENCIL8": {
-    "OnlyFL10Plus": "D24_UNORM_S8_UINT",
-    "OnlyFL9_3": "D24_UNORM_S8_UINT"
+    "OnlyFL10Plus(deviceCaps)": "D24_UNORM_S8_UINT",
+    "OnlyFL9_3(deviceCaps)": "D24_UNORM_S8_UINT"
   },
   "GL_DEPTH32F_STENCIL8": {
-    "OnlyFL10Plus": "D32_FLOAT_S8X24_UINT"
+    "OnlyFL10Plus(deviceCaps)": "D32_FLOAT_S8X24_UINT"
   },
   "GL_DEPTH_COMPONENT16": {
-    "OnlyFL10Plus": "D16_UNORM",
-    "OnlyFL9_3": "D16_UNORM"
+    "OnlyFL10Plus(deviceCaps)": "D16_UNORM",
+    "OnlyFL9_3(deviceCaps)": "D16_UNORM"
   },
   "GL_DEPTH_COMPONENT24": {
-    "OnlyFL10Plus": "D24_UNORM_S8_UINT",
-    "OnlyFL9_3": "D24_UNORM_S8_UINT"
+    "OnlyFL10Plus(deviceCaps)": "D24_UNORM_S8_UINT",
+    "OnlyFL9_3(deviceCaps)": "D24_UNORM_S8_UINT"
   },
   "GL_DEPTH_COMPONENT32F": {
-    "OnlyFL10Plus": "D32_FLOAT"
+    "OnlyFL10Plus(deviceCaps)": "D32_FLOAT"
   },
   "GL_DEPTH_COMPONENT32_OES": {
-    "OnlyFL10Plus": "D24_UNORM_S8_UINT"
+    "OnlyFL10Plus(deviceCaps)": "D24_UNORM_S8_UINT"
   },
   "GL_ETC1_RGB8_OES": "R8G8B8A8_UNORM",
   "GL_ETC1_RGB8_LOSSY_DECODE_ANGLE": "BC1_UNORM",
@@ -139,12 +139,12 @@
   "GL_RGB32I": "R32G32B32A32_SINT",
   "GL_RGB32UI": "R32G32B32A32_UINT",
   "GL_RGB565": {
-    "SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,false>": "R8G8B8A8_UNORM",
-    "SupportsFormat<DXGI_FORMAT_B5G6R5_UNORM,true>": "B5G6R5_UNORM"
+    "SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps)": "B5G6R5_UNORM",
+    "!SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps)": "B5G6R5_UNORM"
   },
   "GL_RGB5_A1": {
-    "SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,false>": "R8G8B8A8_UNORM",
-    "SupportsFormat<DXGI_FORMAT_B5G5R5A1_UNORM,true>": "B5G5R5A1_UNORM"
+    "SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps)": "B5G5R5A1_UNORM",
+    "!SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps)": "B5G5R5A1_UNORM"
   },
   "GL_RGB8": "R8G8B8A8_UNORM",
   "GL_RGB8I": "R8G8B8A8_SINT",
@@ -159,8 +159,8 @@
   "GL_RGBA32I": "R32G32B32A32_SINT",
   "GL_RGBA32UI": "R32G32B32A32_UINT",
   "GL_RGBA4": {
-    "SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,false>": "R8G8B8A8_UNORM",
-    "SupportsFormat<DXGI_FORMAT_B4G4R4A4_UNORM,true>": "B4G4R4A4_UNORM"
+    "SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps)": "B4G4R4A4_UNORM",
+    "!SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps)": "B4G4R4A4_UNORM"
   },
   "GL_RGBA8": "R8G8B8A8_UNORM",
   "GL_RGBA8I": "R8G8B8A8_SINT",
@@ -169,8 +169,8 @@
   "GL_SRGB8": "R8G8B8A8_UNORM_SRGB",
   "GL_SRGB8_ALPHA8": "R8G8B8A8_UNORM_SRGB",
   "GL_STENCIL_INDEX8": {
-    "OnlyFL10Plus": "D24_UNORM_S8_UINT",
-    "OnlyFL9_3": "D24_UNORM_S8_UINT"
+    "OnlyFL10Plus(deviceCaps)": "D24_UNORM_S8_UINT",
+    "OnlyFL9_3(deviceCaps)": "D24_UNORM_S8_UINT"
   },
   "GL_R16_EXT": "R16_UNORM",
   "GL_RG16_EXT": "R16G16_UNORM",

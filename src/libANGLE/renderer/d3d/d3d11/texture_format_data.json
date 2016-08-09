@@ -7,7 +7,9 @@
     "rtvFormat": "DXGI_FORMAT_A8_UNORM",
     "channels": "a",
     "componentType": "unorm",
-    "bits": { "alpha": 8 }
+    "bits": { "alpha": 8 },
+    "supportTest": "OnlyFL10Plus(deviceCaps)",
+    "fallbackFormat": "R8G8B8A8_UNORM"
   },
   "R8G8B8A8_UNORM": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
@@ -369,7 +371,9 @@
     "rtvFormat": "DXGI_FORMAT_B5G6R5_UNORM",
     "channels": "bgr",
     "componentType":  "unorm",
-    "bits": { "red": 5, "green": 6, "blue": 5 }
+    "bits": { "red": 5, "green": 6, "blue": 5 },
+    "supportTest": "SupportsFormat(DXGI_FORMAT_B5G6R5_UNORM, deviceCaps)",
+    "fallbackFormat": "R8G8B8A8_UNORM"
   },
   "B5G5R5A1_UNORM": {
     "texFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
@@ -377,7 +381,9 @@
     "rtvFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
     "channels": "bgra",
     "componentType": "unorm",
-    "bits": { "red": 5, "green": 5, "blue": 5, "alpha": 1 }
+    "bits": { "red": 5, "green": 5, "blue": 5, "alpha": 1 },
+    "supportTest": "SupportsFormat(DXGI_FORMAT_B5G5R5A1_UNORM, deviceCaps)",
+    "fallbackFormat": "R8G8B8A8_UNORM"
   },
   "R8G8B8A8_SINT": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
@@ -418,7 +424,9 @@
     "rtvFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
     "channels": "bgra",
     "componentType":  "unorm",
-    "bits": { "red": 4, "green": 4, "blue": 4, "alpha": 4 }
+    "bits": { "red": 4, "green": 4, "blue": 4, "alpha": 4 },
+    "supportTest": "SupportsFormat(DXGI_FORMAT_B4G4R4A4_UNORM, deviceCaps)",
+    "fallbackFormat": "R8G8B8A8_UNORM"
   },
   "R8G8B8A8_UNORM_SRGB": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
