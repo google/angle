@@ -107,7 +107,7 @@ class TextureStorage11 : public TextureStorage
     int mTopLevel;
     unsigned int mMipLevels;
 
-    const d3d11::TextureFormat &mFormatInfo;
+    const d3d11::ANGLEFormatSet &mFormatInfo;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
     unsigned int mTextureDepth;

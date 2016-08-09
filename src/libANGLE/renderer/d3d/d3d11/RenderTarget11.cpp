@@ -190,9 +190,8 @@ const d3d11::ANGLEFormatSet &GetSurfaceFormatSet(bool depth,
                                                  SwapChain11 *swapChain,
                                                  Renderer11 *renderer)
 {
-    return d3d11::GetTextureFormatInfo(GetSurfaceRTFormat(depth, swapChain),
-                                       renderer->getRenderer11DeviceCaps())
-        .formatSet;
+    return d3d11::GetANGLEFormatSet(GetSurfaceRTFormat(depth, swapChain),
+                                    renderer->getRenderer11DeviceCaps());
 }
 
 }  // anonymous namespace

@@ -16,48 +16,41 @@ namespace d3d11
 {
 
 ANGLEFormatSet::ANGLEFormatSet()
-    : format(angle::Format::Get(angle::Format::ID::NONE)),
+    : internalFormat(GL_NONE),
+      format(angle::Format::Get(angle::Format::ID::NONE)),
       texFormat(DXGI_FORMAT_UNKNOWN),
       srvFormat(DXGI_FORMAT_UNKNOWN),
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
       blitSRVFormat(DXGI_FORMAT_UNKNOWN),
-      swizzle(*this)
+      swizzle(*this),
+      dataInitializerFunction(nullptr)
 {
 }
 
-ANGLEFormatSet::ANGLEFormatSet(angle::Format::ID formatID,
+ANGLEFormatSet::ANGLEFormatSet(GLenum internalFormat,
+                               angle::Format::ID formatID,
                                DXGI_FORMAT texFormat,
                                DXGI_FORMAT srvFormat,
                                DXGI_FORMAT rtvFormat,
                                DXGI_FORMAT dsvFormat,
                                DXGI_FORMAT blitSRVFormat,
-                               angle::Format::ID swizzleID,
+                               GLenum swizzleFormat,
+                               InitializeTextureDataFunction internalFormatInitializer,
                                const Renderer11DeviceCaps &deviceCaps)
-    : format(angle::Format::Get(formatID)),
+    : internalFormat(internalFormat),
+      format(angle::Format::Get(formatID)),
       texFormat(texFormat),
       srvFormat(srvFormat),
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
       blitSRVFormat(blitSRVFormat),
-      swizzle(swizzleID == formatID ? *this : GetANGLEFormatSet(swizzleID, deviceCaps))
-{
-}
-
-// For sized GL internal formats, there are several possible corresponding D3D11 formats depending
-// on device capabilities.
-// This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
-// DSVs given a GL internal format.
-TextureFormat::TextureFormat(GLenum internalFormat,
-                             const angle::Format::ID angleFormatID,
-                             InitializeTextureDataFunction internalFormatInitializer,
-                             const Renderer11DeviceCaps &deviceCaps)
-    : internalFormat(internalFormat),
-      formatSet(GetANGLEFormatSet(angleFormatID, deviceCaps)),
+      swizzle(swizzleFormat == internalFormat ? *this
+                                              : GetANGLEFormatSet(swizzleFormat, deviceCaps)),
       dataInitializerFunction(internalFormatInitializer),
-      loadFunctions(GetLoadFunctionsMap(internalFormat, formatSet.texFormat))
+      loadFunctions(GetLoadFunctionsMap(internalFormat, texFormat))
 {
-    ASSERT(!loadFunctions.empty() || angleFormatID == angle::Format::ID::NONE);
+    ASSERT(!loadFunctions.empty() || formatID == angle::Format::ID::NONE);
 }
 
 }  // namespace d3d11

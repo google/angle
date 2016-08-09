@@ -38,18 +38,25 @@ struct LoadImageFunctionInfo
     bool requiresConversion;
 };
 
+// For sized GL internal formats, there are several possible corresponding D3D11 formats depending
+// on device capabilities.
+// This structure allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
+// DSVs given a GL internal format.
 struct ANGLEFormatSet final : angle::NonCopyable
 {
     ANGLEFormatSet();
-    ANGLEFormatSet(angle::Format::ID formatID,
+    ANGLEFormatSet(GLenum internalFormat,
+                   angle::Format::ID formatID,
                    DXGI_FORMAT texFormat,
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
                    DXGI_FORMAT blitSRVFormat,
-                   angle::Format::ID swizzleID,
+                   GLenum swizzleFormat,
+                   InitializeTextureDataFunction internalFormatInitializer,
                    const Renderer11DeviceCaps &deviceCaps);
 
+    GLenum internalFormat;
     const angle::Format &format;
 
     DXGI_FORMAT texFormat;
@@ -60,17 +67,6 @@ struct ANGLEFormatSet final : angle::NonCopyable
     DXGI_FORMAT blitSRVFormat;
 
     const ANGLEFormatSet &swizzle;
-};
-
-struct TextureFormat : public angle::NonCopyable
-{
-    TextureFormat(GLenum internalFormat,
-                  const angle::Format::ID angleFormatID,
-                  InitializeTextureDataFunction internalFormatInitializer,
-                  const Renderer11DeviceCaps &deviceCaps);
-
-    GLenum internalFormat;
-    const ANGLEFormatSet &formatSet;
 
     InitializeTextureDataFunction dataInitializerFunction;
     typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
@@ -78,11 +74,8 @@ struct TextureFormat : public angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
-const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID angleFormat,
+const ANGLEFormatSet &GetANGLEFormatSet(GLenum internalFormat,
                                         const Renderer11DeviceCaps &deviceCaps);
-
-const TextureFormat &GetTextureFormatInfo(GLenum internalformat,
-                                          const Renderer11DeviceCaps &renderer11DeviceCaps);
 
 }  // namespace d3d11
 

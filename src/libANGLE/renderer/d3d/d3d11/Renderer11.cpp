@@ -3123,7 +3123,8 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
-    const d3d11::TextureFormat &formatInfo = d3d11::GetTextureFormatInfo(format, mRenderer11DeviceCaps);
+    const d3d11::ANGLEFormatSet &formatInfo =
+        d3d11::GetANGLEFormatSet(format, mRenderer11DeviceCaps);
 
     const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
@@ -3136,7 +3137,7 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
         desc.Height = height;
         desc.MipLevels = 1;
         desc.ArraySize = 1;
-        desc.Format             = formatInfo.formatSet.texFormat;
+        desc.Format             = formatInfo.texFormat;
         desc.SampleDesc.Count = (supportedSamples == 0) ? 1 : supportedSamples;
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
@@ -3147,9 +3148,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
         // we'll flag it to allow binding that way. Shader resource views are a little
         // more complicated.
         bool bindRTV = false, bindDSV = false, bindSRV = false;
-        bindRTV = (formatInfo.formatSet.rtvFormat != DXGI_FORMAT_UNKNOWN);
-        bindDSV = (formatInfo.formatSet.dsvFormat != DXGI_FORMAT_UNKNOWN);
-        bindSRV = (formatInfo.formatSet.srvFormat != DXGI_FORMAT_UNKNOWN);
+        bindRTV = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
+        bindDSV = (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
+        bindSRV = (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN);
 
         desc.BindFlags = (bindRTV ? D3D11_BIND_RENDER_TARGET   : 0) |
                          (bindDSV ? D3D11_BIND_DEPTH_STENCIL   : 0) |
@@ -3171,7 +3172,7 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
         if (bindSRV)
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = formatInfo.formatSet.srvFormat;
+            srvDesc.Format = formatInfo.srvFormat;
             srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels = 1;
@@ -3184,10 +3185,10 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target shader resource view, result: 0x%X.", result);
             }
 
-            if (formatInfo.formatSet.blitSRVFormat != formatInfo.formatSet.srvFormat)
+            if (formatInfo.blitSRVFormat != formatInfo.srvFormat)
             {
                 D3D11_SHADER_RESOURCE_VIEW_DESC blitSRVDesc;
-                blitSRVDesc.Format        = formatInfo.formatSet.blitSRVFormat;
+                blitSRVDesc.Format        = formatInfo.blitSRVFormat;
                 blitSRVDesc.ViewDimension = (supportedSamples == 0)
                                                 ? D3D11_SRV_DIMENSION_TEXTURE2D
                                                 : D3D11_SRV_DIMENSION_TEXTURE2DMS;
@@ -3216,7 +3217,7 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
         if (bindDSV)
         {
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-            dsvDesc.Format = formatInfo.formatSet.dsvFormat;
+            dsvDesc.Format = formatInfo.dsvFormat;
             dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags = 0;
@@ -3232,15 +3233,15 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target depth stencil view, result: 0x%X.", result);
             }
 
-            *outRT = new TextureRenderTarget11(dsv, texture, srv, format, formatInfo.formatSet,
-                                               width, height, 1, supportedSamples);
+            *outRT = new TextureRenderTarget11(dsv, texture, srv, format, formatInfo, width, height,
+                                               1, supportedSamples);
 
             SafeRelease(dsv);
         }
         else if (bindRTV)
         {
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-            rtvDesc.Format = formatInfo.formatSet.rtvFormat;
+            rtvDesc.Format = formatInfo.rtvFormat;
             rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
             rtvDesc.Texture2D.MipSlice = 0;
 
@@ -3261,9 +3262,8 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
                 mDeviceContext->ClearRenderTargetView(rtv, clearValues);
             }
 
-            *outRT =
-                new TextureRenderTarget11(rtv, texture, srv, blitSRV, format, formatInfo.formatSet,
-                                          width, height, 1, supportedSamples);
+            *outRT = new TextureRenderTarget11(rtv, texture, srv, blitSRV, format, formatInfo,
+                                               width, height, 1, supportedSamples);
 
             SafeRelease(rtv);
         }
@@ -3278,10 +3278,10 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     }
     else
     {
-        *outRT = new TextureRenderTarget11(
-            static_cast<ID3D11RenderTargetView *>(nullptr), nullptr, nullptr, nullptr, format,
-            d3d11::GetANGLEFormatSet(angle::Format::ID::NONE, mRenderer11DeviceCaps), width, height,
-            1, supportedSamples);
+        *outRT = new TextureRenderTarget11(static_cast<ID3D11RenderTargetView *>(nullptr), nullptr,
+                                           nullptr, nullptr, format,
+                                           d3d11::GetANGLEFormatSet(GL_NONE, mRenderer11DeviceCaps),
+                                           width, height, 1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -3517,7 +3517,8 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     ASSERT(getNativeExtensions().pixelBufferObject);
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-    const d3d11::TextureFormat &d3d11FormatInfo = d3d11::GetTextureFormatInfo(internalFormat, mRenderer11DeviceCaps);
+    const d3d11::ANGLEFormatSet &d3d11FormatInfo =
+        d3d11::GetANGLEFormatSet(internalFormat, mRenderer11DeviceCaps);
 
     // sRGB formats do not work with D3D11 buffer SRVs
     if (internalFormatInfo.colorEncoding == GL_SRGB)
@@ -3526,7 +3527,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We cannot support direct copies to non-color-renderable formats
-    if (d3d11FormatInfo.formatSet.rtvFormat == DXGI_FORMAT_UNKNOWN)
+    if (d3d11FormatInfo.rtvFormat == DXGI_FORMAT_UNKNOWN)
     {
         return false;
     }
@@ -3538,7 +3539,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We don't support formats which we can't represent without conversion
-    if (d3d11FormatInfo.formatSet.format.glInternalFormat != internalFormat)
+    if (d3d11FormatInfo.format.glInternalFormat != internalFormat)
     {
         return false;
     }

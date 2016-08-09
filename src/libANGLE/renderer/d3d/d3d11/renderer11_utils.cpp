@@ -349,8 +349,8 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
     gl::TextureCaps textureCaps;
 
     DXGISupportHelper support(device, renderer11DeviceCaps.featureLevel);
-    const d3d11::TextureFormat &formatInfo =
-        d3d11::GetTextureFormatInfo(internalFormat, renderer11DeviceCaps);
+    const d3d11::ANGLEFormatSet &formatInfo =
+        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
 
@@ -364,21 +364,21 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
         }
     }
 
-    textureCaps.texturable = support.query(formatInfo.formatSet.texFormat, texSupportMask);
+    textureCaps.texturable = support.query(formatInfo.texFormat, texSupportMask);
     textureCaps.filterable =
-        support.query(formatInfo.formatSet.srvFormat, D3D11_FORMAT_SUPPORT_SHADER_SAMPLE);
+        support.query(formatInfo.srvFormat, D3D11_FORMAT_SUPPORT_SHADER_SAMPLE);
     textureCaps.renderable =
-        (support.query(formatInfo.formatSet.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
-        (support.query(formatInfo.formatSet.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
+        (support.query(formatInfo.rtvFormat, D3D11_FORMAT_SUPPORT_RENDER_TARGET)) ||
+        (support.query(formatInfo.dsvFormat, D3D11_FORMAT_SUPPORT_DEPTH_STENCIL));
 
     DXGI_FORMAT renderFormat = DXGI_FORMAT_UNKNOWN;
-    if (formatInfo.formatSet.dsvFormat != DXGI_FORMAT_UNKNOWN)
+    if (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
     {
-        renderFormat = formatInfo.formatSet.dsvFormat;
+        renderFormat = formatInfo.dsvFormat;
     }
-    else if (formatInfo.formatSet.rtvFormat != DXGI_FORMAT_UNKNOWN)
+    else if (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
     {
-        renderFormat = formatInfo.formatSet.rtvFormat;
+        renderFormat = formatInfo.rtvFormat;
     }
     if (renderFormat != DXGI_FORMAT_UNKNOWN &&
         support.query(renderFormat, D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
@@ -1368,11 +1368,12 @@ void GenerateInitialTextureData(GLint internalFormat,
                                 std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
                                 std::vector<std::vector<BYTE>> *outData)
 {
-    const d3d11::TextureFormat &d3dFormatInfo = d3d11::GetTextureFormatInfo(internalFormat, renderer11DeviceCaps);
+    const d3d11::ANGLEFormatSet &d3dFormatInfo =
+        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
     ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
-        d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.formatSet.texFormat);
+        d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);
 
     outSubresourceData->resize(mipLevels);
     outData->resize(mipLevels);

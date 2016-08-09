@@ -43,11 +43,11 @@ namespace rx
 namespace d3d11
 {{
 
-const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
+const ANGLEFormatSet &GetANGLEFormatSet(GLenum internalFormat,
                                         const Renderer11DeviceCaps &deviceCaps)
 {{
     // clang-format off
-    switch (formatID)
+    switch (internalFormat)
     {{
 {angle_format_info_cases}
         default:
@@ -59,23 +59,6 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
     static const ANGLEFormatSet defaultInfo;
     return defaultInfo;
 }}
-
-const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
-                                          const Renderer11DeviceCaps &deviceCaps)
-{{
-    // clang-format off
-    switch (internalFormat)
-    {{
-{texture_format_info_cases}
-        default:
-            UNREACHABLE();
-            break;
-    }}
-    // clang-format on
-
-    static const TextureFormat defaultInfo(GL_NONE, angle::Format::ID::NONE, nullptr, deviceCaps);
-    return defaultInfo;
-}}  // GetTextureFormatInfo
 
 }}  // namespace d3d11
 
@@ -157,17 +140,18 @@ def get_internal_format_initializer(internal_format, angle_format):
 
     return internal_format_initializer
 
-def get_swizzle_format_id(angle_format):
+def get_swizzle_format_id(internal_format, angle_format):
     angle_format_id = angle_format["formatName"]
-    if angle_format_id == 'NONE':
-        return 'NONE'
+    if (internal_format == 'GL_NONE') or (angle_format_id == 'NONE'):
+        return 'GL_NONE'
+
     elif 'swizzleFormat' in angle_format:
         # For some special formats like compressed formats that don't have a clearly defined number
         # of bits per channel, swizzle format needs to be specified manually.
         return angle_format['swizzleFormat']
 
     if 'bits' not in angle_format:
-        raise ValueError('no bits information for determining swizzleformat for format: ' + angle_format_id)
+        raise ValueError('no bits information for determining swizzleformat for format: ' + internal_format)
 
     bits = angle_format['bits']
     max_component_bits = max(bits.itervalues())
@@ -176,7 +160,7 @@ def get_swizzle_format_id(angle_format):
     # The format itself can be used for swizzles if it can be accessed as a render target and
     # sampled and the bit count for all 4 channels is the same.
     if "rtvFormat" in angle_format and "srvFormat" in angle_format and not channels_different and len(angle_format['channels']) == 4:
-        return angle_format_id
+        return angle_format["glInternalFormat"] if "glInternalFormat" in angle_format else internal_format
 
     b = int(math.ceil(float(max_component_bits) / 8) * 8)
 
@@ -184,84 +168,39 @@ def get_swizzle_format_id(angle_format):
     # defined component type.
     if angle_format['channels'].find('d') >= 0:
         if b == 24 or b == 32:
-            return 'R32G32B32A32_FLOAT'
+            return 'GL_RGBA32F'
         if b == 16:
-            return 'R16G16B16A16_UNORM'
+            return 'GL_RGBA16_EXT'
 
     if b == 24:
-        raise ValueError('unexpected 24-bit format when determining swizzleformat for format: ' + angle_format_id)
+        raise ValueError('unexpected 24-bit format when determining swizzleformat for format: ' + internal_format)
 
     if 'componentType' not in angle_format:
-        raise ValueError('no component type information for determining swizzleformat for format: ' + angle_format_id)
+        raise ValueError('no component type information for determining swizzleformat for format: ' + internal_format)
 
     component_type = angle_format['componentType']
+
+    swizzle = "GL_RGBA" + str(b)
+
     if component_type == 'uint':
-        return 'R{}G{}B{}A{}_UINT'.format(b, b, b, b)
+        swizzle += "I"
     elif component_type == 'int':
-        return 'R{}G{}B{}A{}_SINT'.format(b, b, b, b)
+        swizzle += "I"
     elif component_type == 'unorm':
-        return 'R{}G{}B{}A{}_UNORM'.format(b, b, b, b)
+        if (b == 16):
+            swizzle += "_EXT"
     elif component_type == 'snorm':
-        return 'R{}G{}B{}A{}_SNORM'.format(b, b, b, b)
+        swizzle += "_SNORM"
+        if (b == 16):
+            swizzle += "_EXT"
     elif component_type == 'float':
-        return 'R{}G{}B{}A{}_FLOAT'.format(b, b, b, b)
+        swizzle += "F"
+        if (b == 16):
+            swizzle += "_EXT"
     else:
-        raise ValueError('could not determine swizzleformat based on componentType for format: ' + angle_format_id)
+        raise ValueError('could not determine swizzleformat based on componentType for format: ' + internal_format)
 
-def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_id, json_data):
-    table_data = '';
-
-    angle_format = json_data[angle_format_id]
-    # TODO(jmadill): Remove this hack.
-    if requirements_fn != None and idx == 0 and 'fallbackFormat' in angle_format:
-        angle_format = json_data[angle_format['fallbackFormat']]
-
-    internal_format_initializer = get_internal_format_initializer(internal_format, angle_format)
-
-    indent = '            '
-    if requirements_fn != None:
-        if idx == 0:
-            table_data += '            if (' + requirements_fn + ')\n'
-        else:
-            table_data += '            else if (' + requirements_fn + ')\n'
-        table_data += '            {\n'
-        indent += '    '
-
-    table_data += indent + 'static const TextureFormat info(internalFormat,\n'
-    table_data += indent + '                                angle::Format::ID::' + angle_format_id + ',\n'
-    table_data += indent + '                                ' + internal_format_initializer + ',\n'
-    table_data += indent + '                                deviceCaps);\n'
-    table_data += indent + 'return info;\n'
-
-    if requirements_fn != None:
-        table_data += '            }\n'
-
-    return table_data
-
-def parse_json_into_switch_texture_format_string(json_map, json_data):
-    table_data = ''
-    angle_format_map = {}
-
-    for internal_format_item in sorted(json_map.iteritems()):
-        internal_format = internal_format_item[0]
-        table_data += '        case ' + internal_format + ':\n'
-        table_data += '        {\n'
-
-        if isinstance(json_map[internal_format], basestring):
-            angle_format_id = json_map[internal_format]
-            table_data += get_texture_format_item(0, internal_format, None, angle_format_id, json_data)
-        else:
-            for idx, requirements_map in enumerate(sorted(json_map[internal_format].iteritems())):
-                angle_format_id = requirements_map[1]
-                table_data += get_texture_format_item(idx, internal_format, requirements_map[0], angle_format_id, json_data)
-            table_data += '            else\n'
-            table_data += '            {\n'
-            table_data += '                break;\n'
-            table_data += '            }\n'
-
-        table_data += '        }\n'
-
-    return table_data
+    return swizzle
 
 def get_blit_srv_format(angle_format):
     if 'channels' not in angle_format:
@@ -273,13 +212,15 @@ def get_blit_srv_format(angle_format):
 
 
 format_entry_template = """{space}{{
-{space}    static const ANGLEFormatSet info(angle::Format::ID::{formatName},
+{space}    static const ANGLEFormatSet info({internalFormat},
+{space}                                     angle::Format::ID::{formatName},
 {space}                                     {texFormat},
 {space}                                     {srvFormat},
 {space}                                     {rtvFormat},
 {space}                                     {dsvFormat},
 {space}                                     {blitSRVFormat},
-{space}                                     angle::Format::ID::{swizzleFormat},
+{space}                                     {swizzleFormat},
+{space}                                     {initializer},
 {space}                                     deviceCaps);
 {space}    return info;
 {space}}}
@@ -287,24 +228,27 @@ format_entry_template = """{space}{{
 
 split_format_entry_template = """{space}    {condition}
 {space}    {{
-{space}        static const ANGLEFormatSet info(angle::Format::ID::{formatName},
+{space}        static const ANGLEFormatSet info({internalFormat},
+{space}                                         angle::Format::ID::{formatName},
 {space}                                         {texFormat},
 {space}                                         {srvFormat},
 {space}                                         {rtvFormat},
 {space}                                         {dsvFormat},
 {space}                                         {blitSRVFormat},
-{space}                                         angle::Format::ID::{swizzleFormat},
+{space}                                         {swizzleFormat},
+{space}                                         {initializer},
 {space}                                         deviceCaps);
 {space}        return info;
 {space}    }}
 """
 
-def json_to_table_data(format_name, prefix, json):
+def json_to_table_data(internal_format, format_name, prefix, json):
 
     table_data = ""
 
     parsed = {
         "space": "        ",
+        "internalFormat": internal_format,
         "formatName": format_name,
         "texFormat": "DXGI_FORMAT_UNKNOWN",
         "srvFormat": "DXGI_FORMAT_UNKNOWN",
@@ -318,7 +262,8 @@ def json_to_table_data(format_name, prefix, json):
 
     # Derived values.
     parsed["blitSRVFormat"] = get_blit_srv_format(parsed)
-    parsed["swizzleFormat"] = get_swizzle_format_id(parsed)
+    parsed["swizzleFormat"] = get_swizzle_format_id(internal_format, parsed)
+    parsed["initializer"]   = get_internal_format_initializer(internal_format, json)
 
     if len(prefix) > 0:
         return split_format_entry_template.format(**parsed)
@@ -360,22 +305,24 @@ def parse_json_angle_format_case(format_name, angle_format, json_data):
     else:
         return supported_case, None, None
 
-def parse_json_into_switch_angle_format_string(json_data):
+def parse_json_into_switch_angle_format_string(json_map, json_data):
     table_data = ''
-    for format_name, angle_format in sorted(json_data.iteritems()):
+
+    for internal_format, format_name in sorted(json_map.iteritems()):
+        angle_format = json_data[format_name]
 
         supported_case, unsupported_case, support_test = parse_json_angle_format_case(
             format_name, angle_format, json_data)
 
-        table_data += '        case angle::Format::ID::' + format_name + ':\n'
+        table_data += '        case ' + internal_format + ':\n'
 
         if support_test != None:
             table_data += "        {\n"
-            table_data += json_to_table_data(format_name, "if (" + support_test + ")", supported_case)
-            table_data += json_to_table_data(format_name, "else", unsupported_case)
+            table_data += json_to_table_data(internal_format, format_name, "if (" + support_test + ")", supported_case)
+            table_data += json_to_table_data(internal_format, format_name, "else", unsupported_case)
             table_data += "        }\n"
         else:
-            table_data += json_to_table_data(format_name, "", supported_case)
+            table_data += json_to_table_data(internal_format, format_name, "", supported_case)
 
     return table_data
 
@@ -397,11 +344,9 @@ with open('texture_format_map.json') as texture_format_map_file:
         json_map = json.loads(texture_format_map, object_pairs_hook=reject_duplicate_keys)
         json_data = json.loads(texture_format_data, object_pairs_hook=reject_duplicate_keys)
 
-        texture_format_cases = parse_json_into_switch_texture_format_string(json_map, json_data)
-        angle_format_cases = parse_json_into_switch_angle_format_string(json_data)
+        angle_format_cases = parse_json_into_switch_angle_format_string(json_map, json_data)
         output_cpp = template_texture_format_table_autogen_cpp.format(
             copyright_year=date.today().year,
-            texture_format_info_cases=texture_format_cases,
             angle_format_info_cases=angle_format_cases)
         with open('texture_format_table_autogen.cpp', 'wt') as out_file:
             out_file.write(output_cpp)
