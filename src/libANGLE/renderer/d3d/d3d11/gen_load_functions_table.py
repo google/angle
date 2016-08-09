@@ -107,41 +107,54 @@ dxgi_format_unknown = "DXGI_FORMAT_UNKNOWN"
 
 def get_function_maps_string(typestr, function):
     requiresConversion = str('LoadToNative<' not in function).lower()
-    return '                        { ' + typestr + ', LoadImageFunctionInfo(' + function + ', ' + requiresConversion + ') },\n'
+    return '    { ' + typestr + ', LoadImageFunctionInfo(' + function + ', ' + requiresConversion + ') },\n'
 
-def get_unknown_format_string(dxgi_to_type_map, dxgi_unknown_string):
+def get_unknown_format_string(s, dxgi_to_type_map, dxgi_unknown_string):
      if dxgi_unknown_string not in dxgi_to_type_map:
         return ''
 
      table_data = ''
 
      for gl_type, load_function in sorted(dxgi_to_type_map[dxgi_unknown_string].iteritems()):
-        table_data += get_function_maps_string(gl_type, load_function)
+        table_data += s + get_function_maps_string(gl_type, load_function)
 
      return table_data
 
-def get_load_function_map_snippet(insert_map_string):
+def get_load_function_map_snippet(s, insert_map_string):
     load_function_map_snippet = ''
-    load_function_map_snippet += '                    static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {\n'
+    load_function_map_snippet += s + 'static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {\n'
     load_function_map_snippet += insert_map_string
-    load_function_map_snippet += '                    };\n\n'
-    load_function_map_snippet += '                    return loadFunctionsMap;\n'
+    load_function_map_snippet += s + '};\n\n'
+    load_function_map_snippet += s + 'return loadFunctionsMap;\n'
 
     return load_function_map_snippet
 
 def parse_json_into_switch_string(json_data):
     table_data = ''
     for internal_format, dxgi_to_type_map in sorted(json_data.iteritems()):
-        table_data += '        case ' + internal_format + ':\n'
-        table_data += '        {\n'
-        table_data += '            switch (' + dxgi_format_param + ')\n'
-        table_data += '            {\n'
+
+        s = '        '
+
+        table_data += s + 'case ' + internal_format + ':\n'
+
+        do_switch = len(dxgi_to_type_map) > 1 or dxgi_to_type_map.keys()[0] != dxgi_format_unknown
+
+        if do_switch:
+            table_data += s + '{\n'
+            s += '    '
+            table_data += s + 'switch (' + dxgi_format_param + ')\n'
+            table_data += s + '{\n'
+            s += '    '
 
         for dxgi_format, type_functions in sorted(dxgi_to_type_map.iteritems()):
 
+            if dxgi_format == dxgi_format_unknown:
+                continue
+
             # Main case statements
-            table_data += '                case ' + dxgi_format + ':\n'
-            table_data += '                {\n'
+            table_data += s + 'case ' + dxgi_format + ':\n'
+            table_data += s + '{\n'
+            s += '    '
             insert_map_string = ''
 
             if dxgi_format_unknown in dxgi_to_type_map:
@@ -150,22 +163,31 @@ def parse_json_into_switch_string(json_data):
                         type_functions[gl_type] = load_function
 
             for gl_type, load_function in sorted(type_functions.iteritems()):
-                insert_map_string += get_function_maps_string(gl_type, load_function)
+                insert_map_string += s + get_function_maps_string(gl_type, load_function)
 
-            table_data += get_load_function_map_snippet(insert_map_string)
-            table_data += '                }\n'
+            table_data += get_load_function_map_snippet(s, insert_map_string)
+            s = s[4:]
+            table_data += s + '}\n'
 
-        table_data += '                default:\n'
+        if do_switch:
+            table_data += s + 'default:\n'
 
-        dxgi_unknown_str = get_unknown_format_string(dxgi_to_type_map, dxgi_format_unknown);
-        if dxgi_unknown_str:
-            table_data += '                {\n'
-            table_data += get_load_function_map_snippet(dxgi_unknown_str)
-            table_data += '                }\n'
+        if dxgi_format_unknown in dxgi_to_type_map:
+            table_data += s + '{\n'
+            s += '    '
+            dxgi_unknown_str = get_unknown_format_string(
+                s, dxgi_to_type_map, dxgi_format_unknown);
+            table_data += get_load_function_map_snippet(s, dxgi_unknown_str)
+            s = s[4:]
+            table_data += s + '}\n'
         else:
-            table_data += '                    break;\n'
-        table_data += '            }\n'
-        table_data += '        }\n'
+            table_data += s + '    break;\n'
+
+        if do_switch:
+            s = s[4:]
+            table_data += s + '}\n'
+            s = s[4:]
+            table_data += s + '}\n'
 
     return table_data
 
