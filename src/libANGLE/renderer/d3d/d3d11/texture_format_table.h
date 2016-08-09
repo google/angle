@@ -14,9 +14,9 @@
 
 #include "common/angleutils.h"
 #include "common/platform.h"
+#include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
-#include "libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.h"
 
 namespace rx
 {
@@ -41,7 +41,7 @@ struct LoadImageFunctionInfo
 struct ANGLEFormatSet final : angle::NonCopyable
 {
     ANGLEFormatSet();
-    ANGLEFormatSet(ANGLEFormat format,
+    ANGLEFormatSet(angle::Format format,
                    GLenum glInternalFormat,
                    GLenum fboImplementationInternalFormat,
                    DXGI_FORMAT texFormat,
@@ -49,11 +49,11 @@ struct ANGLEFormatSet final : angle::NonCopyable
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
                    DXGI_FORMAT blitSRVFormat,
-                   ANGLEFormat swizzleFormat,
+                   angle::Format swizzleFormat,
                    MipGenerationFunction mipGenerationFunction,
                    ColorReadFunction colorReadFunction);
 
-    ANGLEFormat format;
+    angle::Format format;
 
     // The closest matching GL internal format for the DXGI formats this format uses. Note that this
     // may be a different internal format than the one this ANGLE format is used for.
@@ -71,7 +71,7 @@ struct ANGLEFormatSet final : angle::NonCopyable
 
     DXGI_FORMAT blitSRVFormat;
 
-    ANGLEFormat swizzleFormat;
+    angle::Format swizzleFormat;
 
     MipGenerationFunction mipGenerationFunction;
     ColorReadFunction colorReadFunction;
@@ -80,7 +80,7 @@ struct ANGLEFormatSet final : angle::NonCopyable
 struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
-                  const ANGLEFormat angleFormat,
+                  const angle::Format angleFormat,
                   InitializeTextureDataFunction internalFormatInitializer,
                   const Renderer11DeviceCaps &deviceCaps);
 
@@ -94,7 +94,7 @@ struct TextureFormat : public angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
-const ANGLEFormatSet &GetANGLEFormatSet(ANGLEFormat angleFormat,
+const ANGLEFormatSet &GetANGLEFormatSet(angle::Format angleFormat,
                                         const Renderer11DeviceCaps &deviceCaps);
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalformat,

@@ -1,8 +1,7 @@
 {
-  "ANGLE_FORMAT_NONE": {
-
+  "angle::Format::NONE": {
   },
-  "ANGLE_FORMAT_A8_UNORM": {
+  "angle::Format::A8_UNORM": {
     "texFormat": "DXGI_FORMAT_A8_UNORM",
     "srvFormat": "DXGI_FORMAT_A8_UNORM",
     "rtvFormat": "DXGI_FORMAT_A8_UNORM",
@@ -11,7 +10,7 @@
     "bits": { "alpha": 8 },
     "glInternalFormat": "GL_ALPHA8_EXT"
   },
-  "ANGLE_FORMAT_R8G8B8A8_UNORM": {
+  "angle::Format::R8G8B8A8_UNORM": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM",
@@ -20,7 +19,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_RGBA8"
   },
-  "ANGLE_FORMAT_R16G16B16A16_UNORM": {
+  "angle::Format::R16G16B16A16_UNORM": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
@@ -29,7 +28,7 @@
     "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 },
     "glInternalFormat": "GL_RGBA16_EXT"
   },
-  "ANGLE_FORMAT_R16G16B16A16_FLOAT": {
+  "angle::Format::R16G16B16A16_FLOAT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_FLOAT",
@@ -38,7 +37,7 @@
     "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 },
     "glInternalFormat": "GL_RGBA16F"
   },
-  "ANGLE_FORMAT_R32G32B32A32_FLOAT": {
+  "angle::Format::R32G32B32A32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_FLOAT",
@@ -47,7 +46,7 @@
     "bits": { "red": 32, "green": 32, "blue": 32, "alpha": 32 },
     "glInternalFormat": "GL_RGBA32F"
   },
-  "ANGLE_FORMAT_B8G8R8A8_UNORM": {
+  "angle::Format::B8G8R8A8_UNORM": {
     "texFormat": "DXGI_FORMAT_B8G8R8A8_UNORM",
     "srvFormat": "DXGI_FORMAT_B8G8R8A8_UNORM",
     "rtvFormat": "DXGI_FORMAT_B8G8R8A8_UNORM",
@@ -56,31 +55,31 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_BGRA8_EXT"
   },
-  "ANGLE_FORMAT_BC1_UNORM": {
+  "angle::Format::BC1_UNORM": {
     "texFormat": "DXGI_FORMAT_BC1_UNORM",
     "srvFormat": "DXGI_FORMAT_BC1_UNORM",
     "channels": "rgba",
     "componentType": "unorm",
-    "swizzleFormat": "ANGLE_FORMAT_R8G8B8A8_UNORM",
+    "swizzleFormat": "angle::Format::R8G8B8A8_UNORM",
     "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT1_EXT"
   },
-  "ANGLE_FORMAT_BC2_UNORM": {
+  "angle::Format::BC2_UNORM": {
     "texFormat": "DXGI_FORMAT_BC2_UNORM",
     "srvFormat": "DXGI_FORMAT_BC2_UNORM",
     "channels": "rgba",
     "componentType": "unorm",
-    "swizzleFormat": "ANGLE_FORMAT_R8G8B8A8_UNORM",
+    "swizzleFormat": "angle::Format::R8G8B8A8_UNORM",
     "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE"
   },
-  "ANGLE_FORMAT_BC3_UNORM": {
+  "angle::Format::BC3_UNORM": {
     "texFormat": "DXGI_FORMAT_BC3_UNORM",
     "srvFormat": "DXGI_FORMAT_BC3_UNORM",
     "channels": "rgba",
     "componentType": "unorm",
-    "swizzleFormat": "ANGLE_FORMAT_R8G8B8A8_UNORM",
+    "swizzleFormat": "angle::Format::R8G8B8A8_UNORM",
     "glInternalFormat": "GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE"
   },
-  "ANGLE_FORMAT_D24_UNORM_S8_UINT": {
+  "angle::Format::D24_UNORM_S8_UINT": {
     "FL10Plus": {
       "texFormat": "DXGI_FORMAT_R24G8_TYPELESS",
       "srvFormat": "DXGI_FORMAT_R24_UNORM_X8_TYPELESS"
@@ -93,7 +92,7 @@
     "bits": { "depth": 24, "stencil": 8 },
     "glInternalFormat": "GL_DEPTH24_STENCIL8_OES"
   },
-  "ANGLE_FORMAT_D32_FLOAT_S8X24_UINT": {
+  "angle::Format::D32_FLOAT_S8X24_UINT": {
     "texFormat": "DXGI_FORMAT_R32G8X24_TYPELESS",
     "srvFormat": "DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS",
     "dsvFormat": "DXGI_FORMAT_D32_FLOAT_S8X24_UINT",
@@ -101,7 +100,7 @@
     "bits": { "depth": 32, "stencil": 8 },
     "glInternalFormat": "GL_DEPTH32F_STENCIL8"
   },
-  "ANGLE_FORMAT_D16_UNORM": {
+  "angle::Format::D16_UNORM": {
     "FL10Plus": {
       "texFormat": "DXGI_FORMAT_R16_TYPELESS",
       "srvFormat": "DXGI_FORMAT_R16_UNORM"
@@ -115,7 +114,7 @@
     "bits": { "depth": 16 },
     "glInternalFormat": "GL_DEPTH_COMPONENT16"
   },
-  "ANGLE_FORMAT_D32_FLOAT": {
+  "angle::Format::D32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32_TYPELESS",
     "srvFormat": "DXGI_FORMAT_R32_FLOAT",
     "dsvFormat": "DXGI_FORMAT_D32_FLOAT",
@@ -124,7 +123,7 @@
     "bits": { "depth": 32 },
     "glInternalFormat": "GL_DEPTH_COMPONENT32F"
   },
-  "ANGLE_FORMAT_R11G11B10_FLOAT": {
+  "angle::Format::R11G11B10_FLOAT": {
     "texFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
     "srvFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R11G11B10_FLOAT",
@@ -133,7 +132,7 @@
     "bits": { "red": 11, "green": 11, "blue": 10 },
     "glInternalFormat": "GL_R11F_G11F_B10F"
   },
-  "ANGLE_FORMAT_R16_FLOAT": {
+  "angle::Format::R16_FLOAT": {
     "texFormat": "DXGI_FORMAT_R16_FLOAT",
     "srvFormat": "DXGI_FORMAT_R16_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R16_FLOAT",
@@ -142,7 +141,7 @@
     "bits": { "red": 16 },
     "glInternalFormat": "GL_R16F"
   },
-  "ANGLE_FORMAT_R16_SINT": {
+  "angle::Format::R16_SINT": {
     "texFormat": "DXGI_FORMAT_R16_SINT",
     "srvFormat": "DXGI_FORMAT_R16_SINT",
     "rtvFormat": "DXGI_FORMAT_R16_SINT",
@@ -151,7 +150,7 @@
     "bits": { "red": 16 },
     "glInternalFormat": "GL_R16I"
   },
-  "ANGLE_FORMAT_R16_UINT": {
+  "angle::Format::R16_UINT": {
     "texFormat": "DXGI_FORMAT_R16_UINT",
     "srvFormat": "DXGI_FORMAT_R16_UINT",
     "rtvFormat": "DXGI_FORMAT_R16_UINT",
@@ -160,7 +159,7 @@
     "bits": { "red": 16 },
     "glInternalFormat": "GL_R16UI"
   },
-  "ANGLE_FORMAT_R32_FLOAT": {
+  "angle::Format::R32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32_FLOAT",
     "srvFormat": "DXGI_FORMAT_R32_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R32_FLOAT",
@@ -169,7 +168,7 @@
     "bits": { "red": 32 },
     "glInternalFormat": "GL_R32F"
   },
-  "ANGLE_FORMAT_R32_SINT": {
+  "angle::Format::R32_SINT": {
     "texFormat": "DXGI_FORMAT_R32_SINT",
     "srvFormat": "DXGI_FORMAT_R32_SINT",
     "rtvFormat": "DXGI_FORMAT_R32_SINT",
@@ -178,7 +177,7 @@
     "bits": { "red": 32 },
     "glInternalFormat": "GL_R32I"
   },
-  "ANGLE_FORMAT_R32_UINT": {
+  "angle::Format::R32_UINT": {
     "texFormat": "DXGI_FORMAT_R32_UINT",
     "srvFormat": "DXGI_FORMAT_R32_UINT",
     "rtvFormat": "DXGI_FORMAT_R32_UINT",
@@ -187,7 +186,7 @@
     "bits": { "red": 32 },
     "glInternalFormat": "GL_R32UI"
   },
-  "ANGLE_FORMAT_R8_UNORM": {
+  "angle::Format::R8_UNORM": {
     "texFormat": "DXGI_FORMAT_R8_UNORM",
     "srvFormat": "DXGI_FORMAT_R8_UNORM",
     "rtvFormat": "DXGI_FORMAT_R8_UNORM",
@@ -196,7 +195,7 @@
     "bits": { "red": 8 },
     "glInternalFormat": "GL_R8"
   },
-  "ANGLE_FORMAT_R8_SINT": {
+  "angle::Format::R8_SINT": {
     "texFormat": "DXGI_FORMAT_R8_SINT",
     "srvFormat": "DXGI_FORMAT_R8_SINT",
     "rtvFormat": "DXGI_FORMAT_R8_SINT",
@@ -205,7 +204,7 @@
     "bits": { "red": 8 },
     "glInternalFormat": "GL_R8I"
   },
-  "ANGLE_FORMAT_R8_UINT": {
+  "angle::Format::R8_UINT": {
     "texFormat": "DXGI_FORMAT_R8_UINT",
     "srvFormat": "DXGI_FORMAT_R8_UINT",
     "rtvFormat": "DXGI_FORMAT_R8_UINT",
@@ -214,7 +213,7 @@
     "bits": { "red": 8 },
     "glInternalFormat": "GL_R8UI"
   },
-  "ANGLE_FORMAT_R8_SNORM": {
+  "angle::Format::R8_SNORM": {
     "texFormat": "DXGI_FORMAT_R8_SNORM",
     "srvFormat": "DXGI_FORMAT_R8_SNORM",
     "channels": "r",
@@ -222,7 +221,7 @@
     "bits": { "red": 8 },
     "glInternalFormat": "GL_R8_SNORM"
   },
-  "ANGLE_FORMAT_R16G16_FLOAT": {
+  "angle::Format::R16G16_FLOAT": {
     "texFormat": "DXGI_FORMAT_R16G16_FLOAT",
     "srvFormat": "DXGI_FORMAT_R16G16_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R16G16_FLOAT",
@@ -231,7 +230,7 @@
     "bits": { "red": 16, "green": 16 },
     "glInternalFormat": "GL_RG16F"
   },
-  "ANGLE_FORMAT_R16G16_SINT": {
+  "angle::Format::R16G16_SINT": {
     "texFormat": "DXGI_FORMAT_R16G16_SINT",
     "srvFormat": "DXGI_FORMAT_R16G16_SINT",
     "rtvFormat": "DXGI_FORMAT_R16G16_SINT",
@@ -240,7 +239,7 @@
     "bits": { "red": 16, "green": 16 },
     "glInternalFormat": "GL_RG16I"
   },
-  "ANGLE_FORMAT_R16G16_UINT": {
+  "angle::Format::R16G16_UINT": {
     "texFormat": "DXGI_FORMAT_R16G16_UINT",
     "srvFormat": "DXGI_FORMAT_R16G16_UINT",
     "rtvFormat": "DXGI_FORMAT_R16G16_UINT",
@@ -249,7 +248,7 @@
     "bits": { "red": 16, "green": 16 },
     "glInternalFormat": "GL_RG16UI"
   },
-  "ANGLE_FORMAT_R32G32_FLOAT": {
+  "angle::Format::R32G32_FLOAT": {
     "texFormat": "DXGI_FORMAT_R32G32_FLOAT",
     "srvFormat": "DXGI_FORMAT_R32G32_FLOAT",
     "rtvFormat": "DXGI_FORMAT_R32G32_FLOAT",
@@ -258,7 +257,7 @@
     "bits": { "red": 32, "green": 32 },
     "glInternalFormat": "GL_RG32F"
   },
-  "ANGLE_FORMAT_R32G32_SINT": {
+  "angle::Format::R32G32_SINT": {
     "texFormat": "DXGI_FORMAT_R32G32_SINT",
     "srvFormat": "DXGI_FORMAT_R32G32_SINT",
     "rtvFormat": "DXGI_FORMAT_R32G32_SINT",
@@ -267,7 +266,7 @@
     "bits": { "red": 32, "green": 32 },
     "glInternalFormat": "GL_RG32I"
   },
-  "ANGLE_FORMAT_R32G32_UINT": {
+  "angle::Format::R32G32_UINT": {
     "texFormat": "DXGI_FORMAT_R32G32_UINT",
     "srvFormat": "DXGI_FORMAT_R32G32_UINT",
     "rtvFormat": "DXGI_FORMAT_R32G32_UINT",
@@ -276,7 +275,7 @@
     "bits": { "red": 32, "green": 32 },
     "glInternalFormat": "GL_RG32UI"
   },
-  "ANGLE_FORMAT_R8G8_UNORM": {
+  "angle::Format::R8G8_UNORM": {
     "texFormat": "DXGI_FORMAT_R8G8_UNORM",
     "srvFormat": "DXGI_FORMAT_R8G8_UNORM",
     "rtvFormat": "DXGI_FORMAT_R8G8_UNORM",
@@ -285,7 +284,7 @@
     "bits": { "red": 8, "green": 8 },
     "glInternalFormat": "GL_RG8"
   },
-  "ANGLE_FORMAT_R8G8_SINT": {
+  "angle::Format::R8G8_SINT": {
     "texFormat": "DXGI_FORMAT_R8G8_SINT",
     "srvFormat": "DXGI_FORMAT_R8G8_SINT",
     "rtvFormat": "DXGI_FORMAT_R8G8_SINT",
@@ -294,7 +293,7 @@
     "bits": { "red": 8, "green": 8 },
     "glInternalFormat": "GL_RG8I"
   },
-  "ANGLE_FORMAT_R8G8_UINT": {
+  "angle::Format::R8G8_UINT": {
     "texFormat": "DXGI_FORMAT_R8G8_UINT",
     "srvFormat": "DXGI_FORMAT_R8G8_UINT",
     "rtvFormat": "DXGI_FORMAT_R8G8_UINT",
@@ -303,7 +302,7 @@
     "bits": { "red": 8, "green": 8 },
     "glInternalFormat": "GL_RG8UI"
   },
-  "ANGLE_FORMAT_R8G8_SNORM": {
+  "angle::Format::R8G8_SNORM": {
     "texFormat": "DXGI_FORMAT_R8G8_SNORM",
     "srvFormat": "DXGI_FORMAT_R8G8_SNORM",
     "channels": "rg",
@@ -311,7 +310,7 @@
     "bits": { "red": 8, "green": 8 },
     "glInternalFormat": "GL_RG8_SNORM"
   },
-  "ANGLE_FORMAT_R10G10B10A2_UNORM": {
+  "angle::Format::R10G10B10A2_UNORM": {
     "texFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
     "srvFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
     "rtvFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
@@ -320,7 +319,7 @@
     "bits": { "red": 10, "green": 10, "blue": 10, "alpha": 2 },
     "glInternalFormat": "GL_RGB10_A2"
   },
-  "ANGLE_FORMAT_R10G10B10A2_UINT": {
+  "angle::Format::R10G10B10A2_UINT": {
     "texFormat": "DXGI_FORMAT_R10G10B10A2_UINT",
     "srvFormat": "DXGI_FORMAT_R10G10B10A2_UINT",
     "rtvFormat": "DXGI_FORMAT_R10G10B10A2_UINT",
@@ -329,7 +328,7 @@
     "bits": { "red": 10, "green": 10, "blue": 10, "alpha": 2 },
     "glInternalFormat": "GL_RGB10_A2UI"
   },
-  "ANGLE_FORMAT_R16G16B16A16_SINT": {
+  "angle::Format::R16G16B16A16_SINT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
@@ -338,7 +337,7 @@
     "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 },
     "glInternalFormat": "GL_RGBA16I"
   },
-  "ANGLE_FORMAT_R16G16B16A16_UINT": {
+  "angle::Format::R16G16B16A16_UINT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
     "rtvFormat": "DXGI_FORMAT_R16G16B16A16_UINT",
@@ -347,7 +346,7 @@
     "bits": { "red": 16, "green": 16, "blue": 16, "alpha": 16 },
     "glInternalFormat": "GL_RGBA16UI"
   },
-  "ANGLE_FORMAT_R32G32B32A32_SINT": {
+  "angle::Format::R32G32B32A32_SINT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_SINT",
@@ -356,7 +355,7 @@
     "bits": { "red": 32, "green": 32, "blue": 32, "alpha": 32 },
     "glInternalFormat": "GL_RGBA32I"
   },
-  "ANGLE_FORMAT_R32G32B32A32_UINT": {
+  "angle::Format::R32G32B32A32_UINT": {
     "texFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
     "srvFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
     "rtvFormat": "DXGI_FORMAT_R32G32B32A32_UINT",
@@ -365,7 +364,7 @@
     "bits": { "red": 32, "green": 32, "blue": 32, "alpha": 32 },
     "glInternalFormat": "GL_RGBA32UI"
   },
-  "ANGLE_FORMAT_B5G6R5_UNORM": {
+  "angle::Format::B5G6R5_UNORM": {
     "texFormat": "DXGI_FORMAT_B5G6R5_UNORM",
     "srvFormat": "DXGI_FORMAT_B5G6R5_UNORM",
     "rtvFormat": "DXGI_FORMAT_B5G6R5_UNORM",
@@ -376,7 +375,7 @@
     "fboImplementationInternalFormat": "GL_RGB565",
     "channelStruct": "B5G6R5"
   },
-  "ANGLE_FORMAT_B5G5R5A1_UNORM": {
+  "angle::Format::B5G5R5A1_UNORM": {
     "texFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
     "srvFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
     "rtvFormat": "DXGI_FORMAT_B5G5R5A1_UNORM",
@@ -387,7 +386,7 @@
     "fboImplementationInternalFormat": "GL_RGB5_A1",
     "channelStruct": "A1R5G5B5"
   },
-  "ANGLE_FORMAT_R8G8B8A8_SINT": {
+  "angle::Format::R8G8B8A8_SINT": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_SINT",
@@ -396,7 +395,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_RGBA8I"
   },
-  "ANGLE_FORMAT_R8G8B8A8_UINT": {
+  "angle::Format::R8G8B8A8_UINT": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_UINT",
@@ -405,7 +404,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_RGBA8UI"
   },
-  "ANGLE_FORMAT_R8G8B8A8_SNORM": {
+  "angle::Format::R8G8B8A8_SNORM": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_SNORM",
     "channels": "rgba",
@@ -413,7 +412,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_RGBA8_SNORM"
   },
-  "ANGLE_FORMAT_R9G9B9E5_SHAREDEXP": {
+  "angle::Format::R9G9B9E5_SHAREDEXP": {
     "texFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
     "srvFormat": "DXGI_FORMAT_R9G9B9E5_SHAREDEXP",
     "channels": "rgb",
@@ -422,7 +421,7 @@
     "glInternalFormat": "GL_RGB9_E5",
     "channelStruct":  "R9G9B9E5"
   },
-  "ANGLE_FORMAT_B4G4R4A4_UNORM": {
+  "angle::Format::B4G4R4A4_UNORM": {
     "texFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
     "srvFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
     "rtvFormat": "DXGI_FORMAT_B4G4R4A4_UNORM",
@@ -433,7 +432,7 @@
     "fboImplementationInternalFormat": "GL_RGBA4",
     "channelStruct":  "A4R4G4B4"
   },
-  "ANGLE_FORMAT_R8G8B8A8_UNORM_SRGB": {
+  "angle::Format::R8G8B8A8_UNORM_SRGB": {
     "texFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
     "srvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
     "rtvFormat": "DXGI_FORMAT_R8G8B8A8_UNORM_SRGB",
@@ -442,7 +441,7 @@
     "bits": { "red": 8, "green": 8, "blue": 8, "alpha": 8 },
     "glInternalFormat": "GL_SRGB8_ALPHA8"
   },
-  "ANGLE_FORMAT_R16_UNORM": {
+  "angle::Format::R16_UNORM": {
     "texFormat": "DXGI_FORMAT_R16_UNORM",
     "srvFormat": "DXGI_FORMAT_R16_UNORM",
     "rtvFormat": "DXGI_FORMAT_R16_UNORM",
@@ -451,7 +450,7 @@
     "bits": { "red": 16 },
     "glInternalFormat": "GL_R16_EXT"
   },
-  "ANGLE_FORMAT_R16G16_UNORM": {
+  "angle::Format::R16G16_UNORM": {
     "texFormat": "DXGI_FORMAT_R16G16_UNORM",
     "srvFormat": "DXGI_FORMAT_R16G16_UNORM",
     "rtvFormat": "DXGI_FORMAT_R16G16_UNORM",
@@ -460,7 +459,7 @@
     "bits": { "red": 16, "green": 16 },
     "glInternalFormat": "GL_RG16_EXT"
   },
-  "ANGLE_FORMAT_R16_SNORM": {
+  "angle::Format::R16_SNORM": {
     "texFormat": "DXGI_FORMAT_R16_SNORM",
     "srvFormat": "DXGI_FORMAT_R16_SNORM",
     "channels": "r",
@@ -468,7 +467,7 @@
     "bits": { "red": 16 },
     "glInternalFormat": "GL_R16_SNORM_EXT"
   },
-  "ANGLE_FORMAT_R16G16_SNORM": {
+  "angle::Format::R16G16_SNORM": {
     "texFormat": "DXGI_FORMAT_R16G16_SNORM",
     "srvFormat": "DXGI_FORMAT_R16G16_SNORM",
     "channels": "rg",
@@ -476,7 +475,7 @@
     "bits": { "red": 16, "green": 16 },
     "glInternalFormat": "GL_RG16_SNORM_EXT"
   },
-  "ANGLE_FORMAT_R16G16B16A16_SNORM": {
+  "angle::Format::R16G16B16A16_SNORM": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_SNORM",
     "channels": "rgba",

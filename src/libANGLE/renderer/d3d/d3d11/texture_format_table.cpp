@@ -16,7 +16,7 @@ namespace d3d11
 {
 
 ANGLEFormatSet::ANGLEFormatSet()
-    : format(ANGLE_FORMAT_NONE),
+    : format(angle::Format::NONE),
       glInternalFormat(GL_NONE),
       fboImplementationInternalFormat(GL_NONE),
       texFormat(DXGI_FORMAT_UNKNOWN),
@@ -24,13 +24,13 @@ ANGLEFormatSet::ANGLEFormatSet()
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
       blitSRVFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleFormat(ANGLE_FORMAT_NONE),
+      swizzleFormat(angle::Format::NONE),
       mipGenerationFunction(nullptr),
       colorReadFunction(nullptr)
 {
 }
 
-ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
+ANGLEFormatSet::ANGLEFormatSet(angle::Format format,
                                GLenum glInternalFormat,
                                GLenum fboImplementationInternalFormat,
                                DXGI_FORMAT texFormat,
@@ -38,7 +38,7 @@ ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
                                DXGI_FORMAT rtvFormat,
                                DXGI_FORMAT dsvFormat,
                                DXGI_FORMAT blitSRVFormat,
-                               ANGLEFormat swizzleFormat,
+                               angle::Format swizzleFormat,
                                MipGenerationFunction mipGenerationFunction,
                                ColorReadFunction colorReadFunction)
     : format(format),
@@ -60,7 +60,7 @@ ANGLEFormatSet::ANGLEFormatSet(ANGLEFormat format,
 // This function allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
 TextureFormat::TextureFormat(GLenum internalFormat,
-                             const ANGLEFormat angleFormat,
+                             const angle::Format angleFormat,
                              InitializeTextureDataFunction internalFormatInitializer,
                              const Renderer11DeviceCaps &deviceCaps)
     : internalFormat(internalFormat),
@@ -69,7 +69,7 @@ TextureFormat::TextureFormat(GLenum internalFormat,
       dataInitializerFunction(internalFormatInitializer),
       loadFunctions(GetLoadFunctionsMap(internalFormat, formatSet.texFormat))
 {
-    ASSERT(!loadFunctions.empty() || angleFormat == ANGLE_FORMAT_NONE);
+    ASSERT(!loadFunctions.empty() || angleFormat == angle::Format::NONE);
 }
 
 }  // namespace d3d11
