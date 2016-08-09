@@ -26,18 +26,6 @@ struct Renderer11DeviceCaps;
 namespace d3d11
 {
 
-struct LoadImageFunctionInfo
-{
-    LoadImageFunctionInfo() : loadFunction(nullptr), requiresConversion(false) {}
-    LoadImageFunctionInfo(LoadImageFunction loadFunction, bool requiresConversion)
-        : loadFunction(loadFunction), requiresConversion(requiresConversion)
-    {
-    }
-
-    LoadImageFunction loadFunction;
-    bool requiresConversion;
-};
-
 // For sized GL internal formats, there are several possible corresponding D3D11 formats depending
 // on device capabilities.
 // This structure allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
@@ -71,7 +59,6 @@ struct Format final : angle::NonCopyable
     const Format &swizzle;
 
     InitializeTextureDataFunction dataInitializerFunction;
-    typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
 
     LoadFunctionMap loadFunctions;
 };

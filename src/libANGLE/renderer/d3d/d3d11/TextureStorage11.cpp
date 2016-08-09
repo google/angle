@@ -664,7 +664,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     MemoryBuffer *conversionBuffer = nullptr;
     const uint8_t *data            = nullptr;
 
-    d3d11::LoadImageFunctionInfo loadFunctionInfo = d3d11Format.loadFunctions.at(type);
+    LoadImageFunctionInfo loadFunctionInfo = d3d11Format.loadFunctions(type);
     if (loadFunctionInfo.requiresConversion)
     {
         ANGLE_TRY(mRenderer->getScratchMemoryBuffer(neededSize, &conversionBuffer));

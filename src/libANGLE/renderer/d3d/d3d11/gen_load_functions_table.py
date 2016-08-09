@@ -76,19 +76,17 @@ void UnreachableLoadFunction(size_t width,
     UNREACHABLE();
 }}
 
-}}  // namespace
+{load_functions_data}}}  // namespace
 
-// TODO we can replace these maps with more generated code
-const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum {internal_format},
-                                                                   DXGI_FORMAT {dxgi_format})
+LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, DXGI_FORMAT {dxgi_format})
 {{
     // clang-format off
     switch ({internal_format})
     {{
-{data}
+{switch_data}
         default:
         {{
-            static std::map<GLenum, LoadImageFunctionInfo> emptyLoadFunctionsMap;
+            static LoadFunctionMap emptyLoadFunctionsMap;
             return emptyLoadFunctionsMap;
         }}
     }}
@@ -105,32 +103,38 @@ internal_format_param = 'internalFormat'
 dxgi_format_param = 'dxgiFormat'
 dxgi_format_unknown = "DXGI_FORMAT_UNKNOWN"
 
-def get_function_maps_string(typestr, function):
-    requiresConversion = str('LoadToNative<' not in function).lower()
-    return '    { ' + typestr + ', LoadImageFunctionInfo(' + function + ', ' + requiresConversion + ') },\n'
+def load_functions_name(internal_format, dxgi_format):
+    short_name = dxgi_format if dxgi_format == "default" else dxgi_format[len("DXGI_FORMAT_"):]
+    return internal_format[3:] + "_to_" + short_name
 
-def get_unknown_format_string(s, dxgi_to_type_map, dxgi_unknown_string):
-     if dxgi_unknown_string not in dxgi_to_type_map:
-        return ''
+def unknown_func_name(internal_format):
+    return load_functions_name(internal_format, "default")
 
-     table_data = ''
+def get_load_func(func_name, type_functions):
+    snippet = "LoadImageFunctionInfo " + func_name + "(GLenum type)\n"
+    snippet += "{\n"
+    snippet += "    switch (type)\n"
+    snippet += "    {\n"
+    for gl_type, load_function in sorted(type_functions.iteritems()):
+        snippet += "        case " + gl_type + ":\n"
+        requiresConversion = str('LoadToNative<' not in load_function).lower()
+        snippet += "            return LoadImageFunctionInfo(" + load_function + ", " + requiresConversion + ");\n"
+    snippet += "        default:\n"
+    snippet += "            UNREACHABLE();\n"
+    snippet += "            return LoadImageFunctionInfo(UnreachableLoadFunction, true);\n"
+    snippet += "    }\n"
+    snippet += "}\n"
+    snippet += "\n"
 
-     for gl_type, load_function in sorted(dxgi_to_type_map[dxgi_unknown_string].iteritems()):
-        table_data += s + get_function_maps_string(gl_type, load_function)
+    return snippet
 
-     return table_data
+def get_unknown_load_func(dxgi_to_type_map, internal_format):
+    assert dxgi_format_unknown in dxgi_to_type_map
+    return get_load_func(unknown_func_name(internal_format), dxgi_to_type_map[dxgi_format_unknown])
 
-def get_load_function_map_snippet(s, insert_map_string):
-    load_function_map_snippet = ''
-    load_function_map_snippet += s + 'static const std::map<GLenum, LoadImageFunctionInfo> loadFunctionsMap = {\n'
-    load_function_map_snippet += insert_map_string
-    load_function_map_snippet += s + '};\n\n'
-    load_function_map_snippet += s + 'return loadFunctionsMap;\n'
-
-    return load_function_map_snippet
-
-def parse_json_into_switch_string(json_data):
+def parse_json(json_data):
     table_data = ''
+    load_functions_data = ''
     for internal_format, dxgi_to_type_map in sorted(json_data.iteritems()):
 
         s = '        '
@@ -151,35 +155,25 @@ def parse_json_into_switch_string(json_data):
             if dxgi_format == dxgi_format_unknown:
                 continue
 
+            func_name = load_functions_name(internal_format, dxgi_format)
+
             # Main case statements
             table_data += s + 'case ' + dxgi_format + ':\n'
-            table_data += s + '{\n'
-            s += '    '
-            insert_map_string = ''
+            table_data += s + '    return ' + func_name + ';\n'
 
             if dxgi_format_unknown in dxgi_to_type_map:
                 for gl_type, load_function in dxgi_to_type_map[dxgi_format_unknown].iteritems():
                     if gl_type not in type_functions:
                         type_functions[gl_type] = load_function
 
-            for gl_type, load_function in sorted(type_functions.iteritems()):
-                insert_map_string += s + get_function_maps_string(gl_type, load_function)
-
-            table_data += get_load_function_map_snippet(s, insert_map_string)
-            s = s[4:]
-            table_data += s + '}\n'
+            load_functions_data += get_load_func(func_name, type_functions)
 
         if do_switch:
             table_data += s + 'default:\n'
 
         if dxgi_format_unknown in dxgi_to_type_map:
-            table_data += s + '{\n'
-            s += '    '
-            dxgi_unknown_str = get_unknown_format_string(
-                s, dxgi_to_type_map, dxgi_format_unknown);
-            table_data += get_load_function_map_snippet(s, dxgi_unknown_str)
-            s = s[4:]
-            table_data += s + '}\n'
+            table_data += s + '    return ' + unknown_func_name(internal_format) + ';\n'
+            load_functions_data += get_unknown_load_func(dxgi_to_type_map, internal_format)
         else:
             table_data += s + '    break;\n'
 
@@ -189,14 +183,15 @@ def parse_json_into_switch_string(json_data):
             s = s[4:]
             table_data += s + '}\n'
 
-    return table_data
+    return table_data, load_functions_data
 
 json_data = angle_format.load_json('load_functions_data.json')
 
-table_data = parse_json_into_switch_string(json_data)
+switch_data, load_functions_data = parse_json(json_data)
 output = template.format(internal_format = internal_format_param,
                          dxgi_format = dxgi_format_param,
-                         data=table_data)
+                         switch_data = switch_data,
+                         load_functions_data = load_functions_data)
 
 with open('load_functions_table_autogen.cpp', 'wt') as out_file:
     out_file.write(output)

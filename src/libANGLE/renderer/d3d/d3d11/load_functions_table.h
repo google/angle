@@ -21,8 +21,7 @@ namespace rx
 namespace d3d11
 {
 
-const std::map<GLenum, LoadImageFunctionInfo> &GetLoadFunctionsMap(GLenum internalFormat,
-                                                                   DXGI_FORMAT dxgiFormat);
+LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiFormat);
 
 }  // namespace d3d11
 

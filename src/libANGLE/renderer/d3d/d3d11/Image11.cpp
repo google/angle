@@ -271,7 +271,7 @@ gl::Error Image11::loadData(const gl::Box &area,
 
     const d3d11::Format &d3dFormatInfo =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(type).loadFunction;
+    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions(type).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     gl::Error error = map(D3D11_MAP_WRITE, &mappedImage);
@@ -310,7 +310,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
 
     const d3d11::Format &d3dFormatInfo =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions.at(GL_UNSIGNED_BYTE).loadFunction;
+    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions(GL_UNSIGNED_BYTE).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     gl::Error error = map(D3D11_MAP_WRITE, &mappedImage);
@@ -403,7 +403,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const auto &destD3D11Format =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    auto loadFunction = destD3D11Format.loadFunctions.at(destFormatInfo.type);
+    auto loadFunction = destD3D11Format.loadFunctions(destFormatInfo.type);
     if (loadFunction.requiresConversion)
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;

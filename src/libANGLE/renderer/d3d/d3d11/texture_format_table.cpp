@@ -49,7 +49,6 @@ Format::Format(GLenum internalFormat,
       dataInitializerFunction(internalFormatInitializer),
       loadFunctions(GetLoadFunctionsMap(internalFormat, texFormat))
 {
-    ASSERT(!loadFunctions.empty() || formatID == angle::Format::ID::NONE);
 }
 
 }  // namespace d3d11
