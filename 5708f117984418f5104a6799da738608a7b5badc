@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "79b65be8_9a46adac",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T12:46:55Z",
+      "side": 1,
+      "message": "Yep, this interface is still \"inside the compiler\" in a sense. The \"Sh\" interface in ShaderLang.h is the API for the compiler compoinent.",
+      "parentUuid": "b9a53384_4722d0c2",
+      "range": {
+        "startLine": 89,
+        "startChar": 10,
+        "endLine": 89,
+        "endChar": 28
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9a53384_67b4ac82",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
