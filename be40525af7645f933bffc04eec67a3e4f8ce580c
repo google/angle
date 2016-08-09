@@ -22,6 +22,30 @@
       "revId": "be40525af7645f933bffc04eec67a3e4f8ce580c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b94a9396_ff297b8e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T11:46:47Z",
+      "side": 1,
+      "message": "Could still add this test, after that I think everything is covered:\n\n#version 310 es\nstruct S {\nlayout(local_size_x \u003d 12) vec4 foo;\n};\nvoid main()\n{\n}",
+      "parentUuid": "79b65be8_fa0b2977",
+      "range": {
+        "startLine": 2078,
+        "startChar": 0,
+        "endLine": 2106,
+        "endChar": 1
+      },
+      "revId": "be40525af7645f933bffc04eec67a3e4f8ce580c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
