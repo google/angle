@@ -42,19 +42,21 @@ struct LoadImageFunctionInfo
 // on device capabilities.
 // This structure allows querying for the DXGI texture formats to use for textures, SRVs, RTVs and
 // DSVs given a GL internal format.
-struct ANGLEFormatSet final : angle::NonCopyable
+struct Format final : angle::NonCopyable
 {
-    ANGLEFormatSet();
-    ANGLEFormatSet(GLenum internalFormat,
-                   angle::Format::ID formatID,
-                   DXGI_FORMAT texFormat,
-                   DXGI_FORMAT srvFormat,
-                   DXGI_FORMAT rtvFormat,
-                   DXGI_FORMAT dsvFormat,
-                   DXGI_FORMAT blitSRVFormat,
-                   GLenum swizzleFormat,
-                   InitializeTextureDataFunction internalFormatInitializer,
-                   const Renderer11DeviceCaps &deviceCaps);
+    Format();
+    Format(GLenum internalFormat,
+           angle::Format::ID formatID,
+           DXGI_FORMAT texFormat,
+           DXGI_FORMAT srvFormat,
+           DXGI_FORMAT rtvFormat,
+           DXGI_FORMAT dsvFormat,
+           DXGI_FORMAT blitSRVFormat,
+           GLenum swizzleFormat,
+           InitializeTextureDataFunction internalFormatInitializer,
+           const Renderer11DeviceCaps &deviceCaps);
+
+    static const Format &Get(GLenum internalFormat, const Renderer11DeviceCaps &deviceCaps);
 
     GLenum internalFormat;
     const angle::Format &format;
@@ -66,16 +68,13 @@ struct ANGLEFormatSet final : angle::NonCopyable
 
     DXGI_FORMAT blitSRVFormat;
 
-    const ANGLEFormatSet &swizzle;
+    const Format &swizzle;
 
     InitializeTextureDataFunction dataInitializerFunction;
     typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
 
     LoadFunctionMap loadFunctions;
 };
-
-const ANGLEFormatSet &GetANGLEFormatSet(GLenum internalFormat,
-                                        const Renderer11DeviceCaps &deviceCaps);
 
 }  // namespace d3d11
 

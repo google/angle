@@ -349,8 +349,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(GLint maxClientVersion, GLenum 
     gl::TextureCaps textureCaps;
 
     DXGISupportHelper support(device, renderer11DeviceCaps.featureLevel);
-    const d3d11::ANGLEFormatSet &formatInfo =
-        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
+    const d3d11::Format &formatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
 
@@ -1368,8 +1367,7 @@ void GenerateInitialTextureData(GLint internalFormat,
                                 std::vector<D3D11_SUBRESOURCE_DATA> *outSubresourceData,
                                 std::vector<std::vector<BYTE>> *outData)
 {
-    const d3d11::ANGLEFormatSet &d3dFormatInfo =
-        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
+    const d3d11::Format &d3dFormatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
@@ -1580,7 +1578,7 @@ TextureHelper11::TextureHelper11(TextureHelper11 &&toCopy)
 
 // static
 TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResource,
-                                                  const d3d11::ANGLEFormatSet &formatSet)
+                                                  const d3d11::Format &formatSet)
 {
     TextureHelper11 newHelper;
     newHelper.mFormatSet   = &formatSet;
@@ -1593,7 +1591,7 @@ TextureHelper11 TextureHelper11::MakeAndReference(ID3D11Resource *genericResourc
 
 // static
 TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn,
-                                                  const d3d11::ANGLEFormatSet &formatSet)
+                                                  const d3d11::Format &formatSet)
 {
     TextureHelper11 newHelper;
     newHelper.mFormatSet   = &formatSet;
@@ -1605,7 +1603,7 @@ TextureHelper11 TextureHelper11::MakeAndPossess2D(ID3D11Texture2D *texToOwn,
 
 // static
 TextureHelper11 TextureHelper11::MakeAndPossess3D(ID3D11Texture3D *texToOwn,
-                                                  const d3d11::ANGLEFormatSet &formatSet)
+                                                  const d3d11::Format &formatSet)
 {
     TextureHelper11 newHelper;
     newHelper.mFormatSet   = &formatSet;
@@ -1689,7 +1687,7 @@ bool TextureHelper11::valid() const
 }
 
 gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
-                                                        const d3d11::ANGLEFormatSet &formatSet,
+                                                        const d3d11::Format &formatSet,
                                                         const gl::Extents &size,
                                                         StagingAccess readAndWriteAccess,
                                                         ID3D11Device *device)

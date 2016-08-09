@@ -186,17 +186,15 @@ GLenum GetSurfaceRTFormat(bool depth, SwapChain11 *swapChain)
                   : swapChain->getRenderTargetInternalFormat());
 }
 
-const d3d11::ANGLEFormatSet &GetSurfaceFormatSet(bool depth,
-                                                 SwapChain11 *swapChain,
-                                                 Renderer11 *renderer)
+const d3d11::Format &GetSurfaceFormatSet(bool depth, SwapChain11 *swapChain, Renderer11 *renderer)
 {
-    return d3d11::GetANGLEFormatSet(GetSurfaceRTFormat(depth, swapChain),
-                                    renderer->getRenderer11DeviceCaps());
+    return d3d11::Format::Get(GetSurfaceRTFormat(depth, swapChain),
+                              renderer->getRenderer11DeviceCaps());
 }
 
 }  // anonymous namespace
 
-RenderTarget11::RenderTarget11(const d3d11::ANGLEFormatSet &formatSet) : mFormatSet(formatSet)
+RenderTarget11::RenderTarget11(const d3d11::Format &formatSet) : mFormatSet(formatSet)
 {
 }
 
@@ -218,7 +216,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv,
                                              ID3D11ShaderResourceView *srv,
                                              ID3D11ShaderResourceView *blitSRV,
                                              GLenum internalFormat,
-                                             const d3d11::ANGLEFormatSet &formatSet,
+                                             const d3d11::Format &formatSet,
                                              GLsizei width,
                                              GLsizei height,
                                              GLsizei depth,
@@ -267,7 +265,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
                                              ID3D11Resource *resource,
                                              ID3D11ShaderResourceView *srv,
                                              GLenum internalFormat,
-                                             const d3d11::ANGLEFormatSet &formatSet,
+                                             const d3d11::Format &formatSet,
                                              GLsizei width,
                                              GLsizei height,
                                              GLsizei depth,

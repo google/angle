@@ -23,7 +23,7 @@ class Renderer11;
 class RenderTarget11 : public RenderTargetD3D
 {
   public:
-    RenderTarget11(const d3d11::ANGLEFormatSet &formatSet);
+    RenderTarget11(const d3d11::Format &formatSet);
     virtual ~RenderTarget11();
 
     virtual ID3D11Resource *getTexture() const = 0;
@@ -37,11 +37,11 @@ class RenderTarget11 : public RenderTargetD3D
     void signalDirty() override;
     angle::BroadcastChannel *getBroadcastChannel() { return &mBroadcastChannel; }
 
-    const d3d11::ANGLEFormatSet &getFormatSet() const { return mFormatSet; }
+    const d3d11::Format &getFormatSet() const { return mFormatSet; }
 
   protected:
     angle::BroadcastChannel mBroadcastChannel;
-    const d3d11::ANGLEFormatSet &mFormatSet;
+    const d3d11::Format &mFormatSet;
 };
 
 class TextureRenderTarget11 : public RenderTarget11
@@ -53,7 +53,7 @@ class TextureRenderTarget11 : public RenderTarget11
                           ID3D11ShaderResourceView *srv,
                           ID3D11ShaderResourceView *blitSRV,
                           GLenum internalFormat,
-                          const d3d11::ANGLEFormatSet &formatSet,
+                          const d3d11::Format &formatSet,
                           GLsizei width,
                           GLsizei height,
                           GLsizei depth,
@@ -62,7 +62,7 @@ class TextureRenderTarget11 : public RenderTarget11
                           ID3D11Resource *resource,
                           ID3D11ShaderResourceView *srv,
                           GLenum internalFormat,
-                          const d3d11::ANGLEFormatSet &formatSet,
+                          const d3d11::Format &formatSet,
                           GLsizei width,
                           GLsizei height,
                           GLsizei depth,

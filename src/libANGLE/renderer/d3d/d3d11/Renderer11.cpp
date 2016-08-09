@@ -3123,8 +3123,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
 {
-    const d3d11::ANGLEFormatSet &formatInfo =
-        d3d11::GetANGLEFormatSet(format, mRenderer11DeviceCaps);
+    const d3d11::Format &formatInfo = d3d11::Format::Get(format, mRenderer11DeviceCaps);
 
     const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
     GLuint supportedSamples = textureCaps.getNearestSamples(samples);
@@ -3278,10 +3277,9 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     }
     else
     {
-        *outRT = new TextureRenderTarget11(static_cast<ID3D11RenderTargetView *>(nullptr), nullptr,
-                                           nullptr, nullptr, format,
-                                           d3d11::GetANGLEFormatSet(GL_NONE, mRenderer11DeviceCaps),
-                                           width, height, 1, supportedSamples);
+        *outRT = new TextureRenderTarget11(
+            static_cast<ID3D11RenderTargetView *>(nullptr), nullptr, nullptr, nullptr, format,
+            d3d11::Format::Get(GL_NONE, mRenderer11DeviceCaps), width, height, 1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -3517,8 +3515,8 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     ASSERT(getNativeExtensions().pixelBufferObject);
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-    const d3d11::ANGLEFormatSet &d3d11FormatInfo =
-        d3d11::GetANGLEFormatSet(internalFormat, mRenderer11DeviceCaps);
+    const d3d11::Format &d3d11FormatInfo =
+        d3d11::Format::Get(internalFormat, mRenderer11DeviceCaps);
 
     // sRGB formats do not work with D3D11 buffer SRVs
     if (internalFormatInfo.colorEncoding == GL_SRGB)

@@ -48,8 +48,8 @@ TEST_P(D3D11FormatTablesTest, TestFormatSupport)
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
     {
-        const rx::d3d11::ANGLEFormatSet &formatInfo =
-            rx::d3d11::GetANGLEFormatSet(internalFormat, renderer->getRenderer11DeviceCaps());
+        const rx::d3d11::Format &formatInfo =
+            rx::d3d11::Format::Get(internalFormat, renderer->getRenderer11DeviceCaps());
         const auto &textureInfo = textureCaps.get(internalFormat);
 
         // Bits for texturing

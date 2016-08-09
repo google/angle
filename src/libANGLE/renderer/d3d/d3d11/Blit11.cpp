@@ -442,7 +442,7 @@ D3D11_INPUT_ELEMENT_DESC quad3DLayout[] = {
     {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
 };
 
-DXGI_FORMAT GetStencilSRVFormat(const d3d11::ANGLEFormatSet &formatSet)
+DXGI_FORMAT GetStencilSRVFormat(const d3d11::Format &formatSet)
 {
     switch (formatSet.texFormat)
     {
@@ -1984,8 +1984,7 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
         releaseResolveDepthStencilResources();
     }
 
-    const auto &formatSet =
-        d3d11::GetANGLEFormatSet(GL_RG32F, mRenderer->getRenderer11DeviceCaps());
+    const auto &formatSet = d3d11::Format::Get(GL_RG32F, mRenderer->getRenderer11DeviceCaps());
 
     D3D11_TEXTURE2D_DESC textureDesc;
     textureDesc.Width              = extents.width;

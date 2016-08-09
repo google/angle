@@ -15,7 +15,7 @@ namespace rx
 namespace d3d11
 {
 
-ANGLEFormatSet::ANGLEFormatSet()
+Format::Format()
     : internalFormat(GL_NONE),
       format(angle::Format::Get(angle::Format::ID::NONE)),
       texFormat(DXGI_FORMAT_UNKNOWN),
@@ -28,16 +28,16 @@ ANGLEFormatSet::ANGLEFormatSet()
 {
 }
 
-ANGLEFormatSet::ANGLEFormatSet(GLenum internalFormat,
-                               angle::Format::ID formatID,
-                               DXGI_FORMAT texFormat,
-                               DXGI_FORMAT srvFormat,
-                               DXGI_FORMAT rtvFormat,
-                               DXGI_FORMAT dsvFormat,
-                               DXGI_FORMAT blitSRVFormat,
-                               GLenum swizzleFormat,
-                               InitializeTextureDataFunction internalFormatInitializer,
-                               const Renderer11DeviceCaps &deviceCaps)
+Format::Format(GLenum internalFormat,
+               angle::Format::ID formatID,
+               DXGI_FORMAT texFormat,
+               DXGI_FORMAT srvFormat,
+               DXGI_FORMAT rtvFormat,
+               DXGI_FORMAT dsvFormat,
+               DXGI_FORMAT blitSRVFormat,
+               GLenum swizzleFormat,
+               InitializeTextureDataFunction internalFormatInitializer,
+               const Renderer11DeviceCaps &deviceCaps)
     : internalFormat(internalFormat),
       format(angle::Format::Get(formatID)),
       texFormat(texFormat),
@@ -45,8 +45,7 @@ ANGLEFormatSet::ANGLEFormatSet(GLenum internalFormat,
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
       blitSRVFormat(blitSRVFormat),
-      swizzle(swizzleFormat == internalFormat ? *this
-                                              : GetANGLEFormatSet(swizzleFormat, deviceCaps)),
+      swizzle(swizzleFormat == internalFormat ? *this : Format::Get(swizzleFormat, deviceCaps)),
       dataInitializerFunction(internalFormatInitializer),
       loadFunctions(GetLoadFunctionsMap(internalFormat, texFormat))
 {

@@ -43,8 +43,9 @@ namespace rx
 namespace d3d11
 {{
 
-const ANGLEFormatSet &GetANGLEFormatSet(GLenum internalFormat,
-                                        const Renderer11DeviceCaps &deviceCaps)
+// static
+const Format &Format::Get(GLenum internalFormat,
+                          const Renderer11DeviceCaps &deviceCaps)
 {{
     // clang-format off
     switch (internalFormat)
@@ -56,7 +57,7 @@ const ANGLEFormatSet &GetANGLEFormatSet(GLenum internalFormat,
     // clang-format on
 
     UNREACHABLE();
-    static const ANGLEFormatSet defaultInfo;
+    static const Format defaultInfo;
     return defaultInfo;
 }}
 
@@ -212,32 +213,32 @@ def get_blit_srv_format(angle_format):
 
 
 format_entry_template = """{space}{{
-{space}    static const ANGLEFormatSet info({internalFormat},
-{space}                                     angle::Format::ID::{formatName},
-{space}                                     {texFormat},
-{space}                                     {srvFormat},
-{space}                                     {rtvFormat},
-{space}                                     {dsvFormat},
-{space}                                     {blitSRVFormat},
-{space}                                     {swizzleFormat},
-{space}                                     {initializer},
-{space}                                     deviceCaps);
+{space}    static const Format info({internalFormat},
+{space}                             angle::Format::ID::{formatName},
+{space}                             {texFormat},
+{space}                             {srvFormat},
+{space}                             {rtvFormat},
+{space}                             {dsvFormat},
+{space}                             {blitSRVFormat},
+{space}                             {swizzleFormat},
+{space}                             {initializer},
+{space}                             deviceCaps);
 {space}    return info;
 {space}}}
 """
 
 split_format_entry_template = """{space}    {condition}
 {space}    {{
-{space}        static const ANGLEFormatSet info({internalFormat},
-{space}                                         angle::Format::ID::{formatName},
-{space}                                         {texFormat},
-{space}                                         {srvFormat},
-{space}                                         {rtvFormat},
-{space}                                         {dsvFormat},
-{space}                                         {blitSRVFormat},
-{space}                                         {swizzleFormat},
-{space}                                         {initializer},
-{space}                                         deviceCaps);
+{space}        static const Format info({internalFormat},
+{space}                                 angle::Format::ID::{formatName},
+{space}                                 {texFormat},
+{space}                                 {srvFormat},
+{space}                                 {rtvFormat},
+{space}                                 {dsvFormat},
+{space}                                 {blitSRVFormat},
+{space}                                 {swizzleFormat},
+{space}                                 {initializer},
+{space}                                 deviceCaps);
 {space}        return info;
 {space}    }}
 """

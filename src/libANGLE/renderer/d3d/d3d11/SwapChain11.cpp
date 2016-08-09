@@ -177,8 +177,8 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
     releaseOffscreenColorBuffer();
 
-    const d3d11::ANGLEFormatSet &backbufferFormatInfo = d3d11::GetANGLEFormatSet(
-        mOffscreenRenderTargetFormat, mRenderer->getRenderer11DeviceCaps());
+    const d3d11::Format &backbufferFormatInfo =
+        d3d11::Format::Get(mOffscreenRenderTargetFormat, mRenderer->getRenderer11DeviceCaps());
 
     // If the app passed in a share handle, open the resource
     // See EGL_ANGLE_d3d_share_handle_client_buffer
@@ -334,8 +334,8 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
 
     if (mDepthBufferFormat != GL_NONE)
     {
-        const d3d11::ANGLEFormatSet &depthBufferFormatInfo =
-            d3d11::GetANGLEFormatSet(mDepthBufferFormat, mRenderer->getRenderer11DeviceCaps());
+        const d3d11::Format &depthBufferFormatInfo =
+            d3d11::Format::Get(mDepthBufferFormat, mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE2D_DESC depthStencilTextureDesc;
         depthStencilTextureDesc.Width = backbufferWidth;

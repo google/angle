@@ -49,7 +49,7 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer,
     : mRenderer(renderer),
       mTopLevel(0),
       mMipLevels(0),
-      mFormatInfo(d3d11::GetANGLEFormatSet(internalFormat, mRenderer->getRenderer11DeviceCaps())),
+      mFormatInfo(d3d11::Format::Get(internalFormat, mRenderer->getRenderer11DeviceCaps())),
       mTextureWidth(0),
       mTextureHeight(0),
       mTextureDepth(0),
@@ -81,8 +81,7 @@ DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat,
 {
     UINT bindFlags = 0;
 
-    const d3d11::ANGLEFormatSet &formatInfo =
-        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
+    const d3d11::Format &formatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     if (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
     {
         bindFlags |= D3D11_BIND_SHADER_RESOURCE;
@@ -106,8 +105,7 @@ DWORD TextureStorage11::GetTextureMiscFlags(GLenum internalFormat,
 {
     UINT miscFlags = 0;
 
-    const d3d11::ANGLEFormatSet &formatInfo =
-        d3d11::GetANGLEFormatSet(internalFormat, renderer11DeviceCaps);
+    const d3d11::Format &formatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     if (renderTarget && levels > 1)
     {
         const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.texFormat);
@@ -325,7 +323,7 @@ gl::Error TextureStorage11::getSRVLevels(GLint baseLevel,
     return gl::NoError();
 }
 
-const d3d11::ANGLEFormatSet &TextureStorage11::getFormatSet() const
+const d3d11::Format &TextureStorage11::getFormatSet() const
 {
     return mFormatInfo;
 }
@@ -652,8 +650,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
                                             unpack.skipRows, unpack.skipPixels, index.is3D()),
         srcSkipBytes);
 
-    const d3d11::ANGLEFormatSet &d3d11Format =
-        d3d11::GetANGLEFormatSet(image->getInternalFormat(), mRenderer->getRenderer11DeviceCaps());
+    const d3d11::Format &d3d11Format =
+        d3d11::Format::Get(image->getInternalFormat(), mRenderer->getRenderer11DeviceCaps());
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(d3d11Format.texFormat);
 
