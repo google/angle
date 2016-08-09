@@ -22,7 +22,7 @@ ANGLEFormatSet::ANGLEFormatSet()
       rtvFormat(DXGI_FORMAT_UNKNOWN),
       dsvFormat(DXGI_FORMAT_UNKNOWN),
       blitSRVFormat(DXGI_FORMAT_UNKNOWN),
-      swizzleFormat(angle::Format::ID::NONE)
+      swizzle(*this)
 {
 }
 
@@ -32,14 +32,15 @@ ANGLEFormatSet::ANGLEFormatSet(angle::Format::ID formatID,
                                DXGI_FORMAT rtvFormat,
                                DXGI_FORMAT dsvFormat,
                                DXGI_FORMAT blitSRVFormat,
-                               angle::Format::ID swizzleFormat)
+                               angle::Format::ID swizzleID,
+                               const Renderer11DeviceCaps &deviceCaps)
     : format(angle::Format::Get(formatID)),
       texFormat(texFormat),
       srvFormat(srvFormat),
       rtvFormat(rtvFormat),
       dsvFormat(dsvFormat),
       blitSRVFormat(blitSRVFormat),
-      swizzleFormat(swizzleFormat)
+      swizzle(swizzleID == formatID ? *this : GetANGLEFormatSet(swizzleID, deviceCaps))
 {
 }
 
@@ -53,7 +54,6 @@ TextureFormat::TextureFormat(GLenum internalFormat,
                              const Renderer11DeviceCaps &deviceCaps)
     : internalFormat(internalFormat),
       formatSet(GetANGLEFormatSet(angleFormatID, deviceCaps)),
-      swizzleFormatSet(GetANGLEFormatSet(formatSet.swizzleFormat, deviceCaps)),
       dataInitializerFunction(internalFormatInitializer),
       loadFunctions(GetLoadFunctionsMap(internalFormat, formatSet.texFormat))
 {

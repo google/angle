@@ -273,7 +273,8 @@ format_entry_template = """{space}{{
 {space}                                     {rtvFormat},
 {space}                                     {dsvFormat},
 {space}                                     {blitSRVFormat},
-{space}                                     angle::Format::ID::{swizzleFormat});
+{space}                                     angle::Format::ID::{swizzleFormat},
+{space}                                     deviceCaps);
 {space}    return info;
 {space}}}
 """
@@ -286,7 +287,8 @@ split_format_entry_template = """{space}    {condition}
 {space}                                         {rtvFormat},
 {space}                                         {dsvFormat},
 {space}                                         {blitSRVFormat},
-{space}                                         angle::Format::ID::{swizzleFormat});
+{space}                                         angle::Format::ID::{swizzleFormat},
+{space}                                         deviceCaps);
 {space}        return info;
 {space}    }}
 """

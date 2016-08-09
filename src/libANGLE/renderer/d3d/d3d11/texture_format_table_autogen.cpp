@@ -41,7 +41,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_A8_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_A8_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::B4G4R4A4_UNORM:
@@ -52,7 +53,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_B4G4R4A4_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_B4G4R4A4_UNORM,
-                                             angle::Format::ID::B4G4R4A4_UNORM);
+                                             angle::Format::ID::B4G4R4A4_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::B5G5R5A1_UNORM:
@@ -63,7 +65,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_B5G5R5A1_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_B5G5R5A1_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::B5G6R5_UNORM:
@@ -74,7 +77,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_B5G6R5_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_B5G6R5_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::B8G8R8A8_UNORM:
@@ -85,7 +89,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_B8G8R8A8_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_B8G8R8A8_UNORM,
-                                             angle::Format::ID::B8G8R8A8_UNORM);
+                                             angle::Format::ID::B8G8R8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::BC1_UNORM:
@@ -96,7 +101,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_BC1_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::BC2_UNORM:
@@ -107,7 +113,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_BC2_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::BC3_UNORM:
@@ -118,7 +125,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_BC3_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::D16_UNORM:
@@ -131,7 +139,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                                  DXGI_FORMAT_UNKNOWN,
                                                  DXGI_FORMAT_D16_UNORM,
                                                  DXGI_FORMAT_R16_UNORM,
-                                                 angle::Format::ID::R16G16B16A16_UNORM);
+                                                 angle::Format::ID::R16G16B16A16_UNORM,
+                                                 deviceCaps);
                 return info;
             }
             else
@@ -142,7 +151,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                                  DXGI_FORMAT_UNKNOWN,
                                                  DXGI_FORMAT_D16_UNORM,
                                                  DXGI_FORMAT_UNKNOWN,
-                                                 angle::Format::ID::R16G16B16A16_UNORM);
+                                                 angle::Format::ID::R16G16B16A16_UNORM,
+                                                 deviceCaps);
                 return info;
             }
         }
@@ -157,7 +167,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                                  DXGI_FORMAT_UNKNOWN,
                                                  DXGI_FORMAT_D24_UNORM_S8_UINT,
                                                  DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
-                                                 angle::Format::ID::R32G32B32A32_FLOAT);
+                                                 angle::Format::ID::R32G32B32A32_FLOAT,
+                                                 deviceCaps);
                 return info;
             }
             else
@@ -168,7 +179,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                                  DXGI_FORMAT_UNKNOWN,
                                                  DXGI_FORMAT_D24_UNORM_S8_UINT,
                                                  DXGI_FORMAT_UNKNOWN,
-                                                 angle::Format::ID::R32G32B32A32_FLOAT);
+                                                 angle::Format::ID::R32G32B32A32_FLOAT,
+                                                 deviceCaps);
                 return info;
             }
         }
@@ -181,7 +193,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_D32_FLOAT,
                                              DXGI_FORMAT_R32_FLOAT,
-                                             angle::Format::ID::R32G32B32A32_FLOAT);
+                                             angle::Format::ID::R32G32B32A32_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::D32_FLOAT_S8X24_UINT:
@@ -192,7 +205,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
                                              DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
-                                             angle::Format::ID::R32G32B32A32_FLOAT);
+                                             angle::Format::ID::R32G32B32A32_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::NONE:
@@ -203,7 +217,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
-                                             angle::Format::ID::NONE);
+                                             angle::Format::ID::NONE,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R10G10B10A2_UINT:
@@ -214,7 +229,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R10G10B10A2_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R10G10B10A2_UINT,
-                                             angle::Format::ID::R16G16B16A16_UINT);
+                                             angle::Format::ID::R16G16B16A16_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R10G10B10A2_UNORM:
@@ -225,7 +241,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R10G10B10A2_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R10G10B10A2_UNORM,
-                                             angle::Format::ID::R16G16B16A16_UNORM);
+                                             angle::Format::ID::R16G16B16A16_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R11G11B10_FLOAT:
@@ -236,7 +253,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R11G11B10_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R11G11B10_FLOAT,
-                                             angle::Format::ID::R16G16B16A16_FLOAT);
+                                             angle::Format::ID::R16G16B16A16_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16B16A16_FLOAT:
@@ -247,7 +265,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16B16A16_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                             angle::Format::ID::R16G16B16A16_FLOAT);
+                                             angle::Format::ID::R16G16B16A16_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16B16A16_SINT:
@@ -258,7 +277,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16B16A16_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16B16A16_SINT,
-                                             angle::Format::ID::R16G16B16A16_SINT);
+                                             angle::Format::ID::R16G16B16A16_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16B16A16_SNORM:
@@ -269,7 +289,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16B16A16_SNORM,
-                                             angle::Format::ID::R16G16B16A16_SNORM);
+                                             angle::Format::ID::R16G16B16A16_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16B16A16_UINT:
@@ -280,7 +301,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16B16A16_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16B16A16_UINT,
-                                             angle::Format::ID::R16G16B16A16_UINT);
+                                             angle::Format::ID::R16G16B16A16_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16B16A16_UNORM:
@@ -291,7 +313,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16B16A16_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16B16A16_UNORM,
-                                             angle::Format::ID::R16G16B16A16_UNORM);
+                                             angle::Format::ID::R16G16B16A16_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16_FLOAT:
@@ -302,7 +325,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16_FLOAT,
-                                             angle::Format::ID::R16G16B16A16_FLOAT);
+                                             angle::Format::ID::R16G16B16A16_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16_SINT:
@@ -313,7 +337,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16_SINT,
-                                             angle::Format::ID::R16G16B16A16_SINT);
+                                             angle::Format::ID::R16G16B16A16_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16_SNORM:
@@ -324,7 +349,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16_SNORM,
-                                             angle::Format::ID::R16G16B16A16_SNORM);
+                                             angle::Format::ID::R16G16B16A16_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16_UINT:
@@ -335,7 +361,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16_UINT,
-                                             angle::Format::ID::R16G16B16A16_UINT);
+                                             angle::Format::ID::R16G16B16A16_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16G16_UNORM:
@@ -346,7 +373,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16G16_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16G16_UNORM,
-                                             angle::Format::ID::R16G16B16A16_UNORM);
+                                             angle::Format::ID::R16G16B16A16_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16_FLOAT:
@@ -357,7 +385,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16_FLOAT,
-                                             angle::Format::ID::R16G16B16A16_FLOAT);
+                                             angle::Format::ID::R16G16B16A16_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16_SINT:
@@ -368,7 +397,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16_SINT,
-                                             angle::Format::ID::R16G16B16A16_SINT);
+                                             angle::Format::ID::R16G16B16A16_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16_SNORM:
@@ -379,7 +409,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16_SNORM,
-                                             angle::Format::ID::R16G16B16A16_SNORM);
+                                             angle::Format::ID::R16G16B16A16_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16_UINT:
@@ -390,7 +421,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16_UINT,
-                                             angle::Format::ID::R16G16B16A16_UINT);
+                                             angle::Format::ID::R16G16B16A16_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R16_UNORM:
@@ -401,7 +433,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R16_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R16_UNORM,
-                                             angle::Format::ID::R16G16B16A16_UNORM);
+                                             angle::Format::ID::R16G16B16A16_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32B32A32_FLOAT:
@@ -412,7 +445,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32B32A32_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32B32A32_FLOAT,
-                                             angle::Format::ID::R32G32B32A32_FLOAT);
+                                             angle::Format::ID::R32G32B32A32_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32B32A32_SINT:
@@ -423,7 +457,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32B32A32_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32B32A32_SINT,
-                                             angle::Format::ID::R32G32B32A32_SINT);
+                                             angle::Format::ID::R32G32B32A32_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32B32A32_UINT:
@@ -434,7 +469,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32B32A32_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32B32A32_UINT,
-                                             angle::Format::ID::R32G32B32A32_UINT);
+                                             angle::Format::ID::R32G32B32A32_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32_FLOAT:
@@ -445,7 +481,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32_FLOAT,
-                                             angle::Format::ID::R32G32B32A32_FLOAT);
+                                             angle::Format::ID::R32G32B32A32_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32_SINT:
@@ -456,7 +493,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32_SINT,
-                                             angle::Format::ID::R32G32B32A32_SINT);
+                                             angle::Format::ID::R32G32B32A32_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32G32_UINT:
@@ -467,7 +505,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32G32_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32G32_UINT,
-                                             angle::Format::ID::R32G32B32A32_UINT);
+                                             angle::Format::ID::R32G32B32A32_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32_FLOAT:
@@ -478,7 +517,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32_FLOAT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32_FLOAT,
-                                             angle::Format::ID::R32G32B32A32_FLOAT);
+                                             angle::Format::ID::R32G32B32A32_FLOAT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32_SINT:
@@ -489,7 +529,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32_SINT,
-                                             angle::Format::ID::R32G32B32A32_SINT);
+                                             angle::Format::ID::R32G32B32A32_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R32_UINT:
@@ -500,7 +541,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R32_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R32_UINT,
-                                             angle::Format::ID::R32G32B32A32_UINT);
+                                             angle::Format::ID::R32G32B32A32_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8B8A8_SINT:
@@ -511,7 +553,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8B8A8_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8B8A8_SINT,
-                                             angle::Format::ID::R8G8B8A8_SINT);
+                                             angle::Format::ID::R8G8B8A8_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8B8A8_SNORM:
@@ -522,7 +565,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8B8A8_SNORM,
-                                             angle::Format::ID::R8G8B8A8_SNORM);
+                                             angle::Format::ID::R8G8B8A8_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8B8A8_UINT:
@@ -533,7 +577,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8B8A8_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8B8A8_UINT,
-                                             angle::Format::ID::R8G8B8A8_UINT);
+                                             angle::Format::ID::R8G8B8A8_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8B8A8_UNORM:
@@ -544,7 +589,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8B8A8_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8B8A8_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8B8A8_UNORM_SRGB:
@@ -555,7 +601,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-                                             angle::Format::ID::R8G8B8A8_UNORM_SRGB);
+                                             angle::Format::ID::R8G8B8A8_UNORM_SRGB,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8_SINT:
@@ -566,7 +613,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8_SINT,
-                                             angle::Format::ID::R8G8B8A8_SINT);
+                                             angle::Format::ID::R8G8B8A8_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8_SNORM:
@@ -577,7 +625,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8_SNORM,
-                                             angle::Format::ID::R8G8B8A8_SNORM);
+                                             angle::Format::ID::R8G8B8A8_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8_UINT:
@@ -588,7 +637,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8_UINT,
-                                             angle::Format::ID::R8G8B8A8_UINT);
+                                             angle::Format::ID::R8G8B8A8_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8G8_UNORM:
@@ -599,7 +649,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8G8_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8G8_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8_SINT:
@@ -610,7 +661,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8_SINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8_SINT,
-                                             angle::Format::ID::R8G8B8A8_SINT);
+                                             angle::Format::ID::R8G8B8A8_SINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8_SNORM:
@@ -621,7 +673,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8_SNORM,
-                                             angle::Format::ID::R8G8B8A8_SNORM);
+                                             angle::Format::ID::R8G8B8A8_SNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8_UINT:
@@ -632,7 +685,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8_UINT,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8_UINT,
-                                             angle::Format::ID::R8G8B8A8_UINT);
+                                             angle::Format::ID::R8G8B8A8_UINT,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R8_UNORM:
@@ -643,7 +697,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_R8_UNORM,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R8_UNORM,
-                                             angle::Format::ID::R8G8B8A8_UNORM);
+                                             angle::Format::ID::R8G8B8A8_UNORM,
+                                             deviceCaps);
             return info;
         }
         case angle::Format::ID::R9G9B9E5_SHAREDEXP:
@@ -654,7 +709,8 @@ const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_UNKNOWN,
                                              DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
-                                             angle::Format::ID::R16G16B16A16_FLOAT);
+                                             angle::Format::ID::R16G16B16A16_FLOAT,
+                                             deviceCaps);
             return info;
         }
 

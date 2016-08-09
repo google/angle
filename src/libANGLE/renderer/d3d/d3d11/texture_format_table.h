@@ -47,7 +47,8 @@ struct ANGLEFormatSet final : angle::NonCopyable
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
                    DXGI_FORMAT blitSRVFormat,
-                   angle::Format::ID swizzleFormat);
+                   angle::Format::ID swizzleID,
+                   const Renderer11DeviceCaps &deviceCaps);
 
     const angle::Format &format;
 
@@ -58,7 +59,7 @@ struct ANGLEFormatSet final : angle::NonCopyable
 
     DXGI_FORMAT blitSRVFormat;
 
-    angle::Format::ID swizzleFormat;
+    const ANGLEFormatSet &swizzle;
 };
 
 struct TextureFormat : public angle::NonCopyable
@@ -70,7 +71,6 @@ struct TextureFormat : public angle::NonCopyable
 
     GLenum internalFormat;
     const ANGLEFormatSet &formatSet;
-    const ANGLEFormatSet &swizzleFormatSet;
 
     InitializeTextureDataFunction dataInitializerFunction;
     typedef std::map<GLenum, LoadImageFunctionInfo> LoadFunctionMap;
