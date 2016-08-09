@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79b65be8_fa96c937",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-09T08:33:30Z",
+      "side": 1,
+      "message": "We can no longer return a null pointer as before. I wonder whether this is fine.",
+      "range": {
+        "startLine": 363,
+        "startChar": 4,
+        "endLine": 363,
+        "endChar": 19
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
