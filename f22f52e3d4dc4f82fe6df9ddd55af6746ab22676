@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59a0b7a5_f1afc877",
+        "filename": "src/libANGLE/renderer/Format.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-09T14:17:56Z",
+      "side": 1,
+      "message": "I think this should be called TextureFormat.  We already have enums for vertex and attribute formats and if those move to this level it will become more confusing.",
+      "range": {
+        "startLine": 19,
+        "startChar": 11,
+        "endLine": 19,
+        "endChar": 17
+      },
+      "revId": "f22f52e3d4dc4f82fe6df9ddd55af6746ab22676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a0b7a5_11ce0c61",
+        "filename": "src/libANGLE/renderer/Format.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-09T14:17:56Z",
+      "side": 1,
+      "message": "nit: put NONE at the top?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 9
+      },
+      "revId": "f22f52e3d4dc4f82fe6df9ddd55af6746ab22676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
