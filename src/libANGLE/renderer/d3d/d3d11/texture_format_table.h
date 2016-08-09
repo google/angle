@@ -41,28 +41,15 @@ struct LoadImageFunctionInfo
 struct ANGLEFormatSet final : angle::NonCopyable
 {
     ANGLEFormatSet();
-    ANGLEFormatSet(angle::Format format,
-                   GLenum glInternalFormat,
-                   GLenum fboImplementationInternalFormat,
+    ANGLEFormatSet(angle::Format::ID formatID,
                    DXGI_FORMAT texFormat,
                    DXGI_FORMAT srvFormat,
                    DXGI_FORMAT rtvFormat,
                    DXGI_FORMAT dsvFormat,
                    DXGI_FORMAT blitSRVFormat,
-                   angle::Format swizzleFormat,
-                   MipGenerationFunction mipGenerationFunction,
-                   ColorReadFunction colorReadFunction);
+                   angle::Format::ID swizzleFormat);
 
-    angle::Format format;
-
-    // The closest matching GL internal format for the DXGI formats this format uses. Note that this
-    // may be a different internal format than the one this ANGLE format is used for.
-    GLenum glInternalFormat;
-
-    // The format we should report to the GL layer when querying implementation formats from a FBO.
-    // This might not be the same as the glInternalFormat, since some DXGI formats don't have
-    // matching GL format enums, like BGRA4, BGR5A1 and B5G6R6.
-    GLenum fboImplementationInternalFormat;
+    const angle::Format &format;
 
     DXGI_FORMAT texFormat;
     DXGI_FORMAT srvFormat;
@@ -71,16 +58,13 @@ struct ANGLEFormatSet final : angle::NonCopyable
 
     DXGI_FORMAT blitSRVFormat;
 
-    angle::Format swizzleFormat;
-
-    MipGenerationFunction mipGenerationFunction;
-    ColorReadFunction colorReadFunction;
+    angle::Format::ID swizzleFormat;
 };
 
 struct TextureFormat : public angle::NonCopyable
 {
     TextureFormat(GLenum internalFormat,
-                  const angle::Format angleFormat,
+                  const angle::Format::ID angleFormatID,
                   InitializeTextureDataFunction internalFormatInitializer,
                   const Renderer11DeviceCaps &deviceCaps);
 
@@ -94,7 +78,7 @@ struct TextureFormat : public angle::NonCopyable
     LoadFunctionMap loadFunctions;
 };
 
-const ANGLEFormatSet &GetANGLEFormatSet(angle::Format angleFormat,
+const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID angleFormat,
                                         const Renderer11DeviceCaps &deviceCaps);
 
 const TextureFormat &GetTextureFormatInfo(GLenum internalformat,

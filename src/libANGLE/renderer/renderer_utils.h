@@ -25,6 +25,16 @@ struct InternalFormat;
 namespace rx
 {
 
+using MipGenerationFunction = void (*)(size_t sourceWidth,
+                                       size_t sourceHeight,
+                                       size_t sourceDepth,
+                                       const uint8_t *sourceData,
+                                       size_t sourceRowPitch,
+                                       size_t sourceDepthPitch,
+                                       uint8_t *destData,
+                                       size_t destRowPitch,
+                                       size_t destDepthPitch);
+
 typedef void (*ColorReadFunction)(const uint8_t *source, uint8_t *dest);
 typedef void (*ColorWriteFunction)(const uint8_t *source, uint8_t *dest);
 typedef void (*ColorCopyFunction)(const uint8_t *source, uint8_t *dest);

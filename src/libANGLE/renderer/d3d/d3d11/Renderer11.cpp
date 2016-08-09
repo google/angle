@@ -3280,8 +3280,8 @@ gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, G
     {
         *outRT = new TextureRenderTarget11(
             static_cast<ID3D11RenderTargetView *>(nullptr), nullptr, nullptr, nullptr, format,
-            d3d11::GetANGLEFormatSet(angle::Format::NONE, mRenderer11DeviceCaps), width, height, 1,
-            supportedSamples);
+            d3d11::GetANGLEFormatSet(angle::Format::ID::NONE, mRenderer11DeviceCaps), width, height,
+            1, supportedSamples);
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -3538,7 +3538,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We don't support formats which we can't represent without conversion
-    if (d3d11FormatInfo.formatSet.glInternalFormat != internalFormat)
+    if (d3d11FormatInfo.formatSet.format.glInternalFormat != internalFormat)
     {
         return false;
     }
@@ -3788,11 +3788,11 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     int inputPitch  = static_cast<int>(mapping.RowPitch);
 
     const auto &angleFormatInfo = textureHelper.getFormatSet();
-    ASSERT(angleFormatInfo.glInternalFormat != GL_NONE);
+    ASSERT(angleFormatInfo.format.glInternalFormat != GL_NONE);
     const gl::InternalFormat &sourceFormatInfo =
-        gl::GetInternalFormatInfo(angleFormatInfo.glInternalFormat);
+        gl::GetInternalFormatInfo(angleFormatInfo.format.glInternalFormat);
     const auto &dxgiFormatInfo          = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
-    ColorReadFunction colorReadFunction = angleFormatInfo.colorReadFunction;
+    ColorReadFunction colorReadFunction = angleFormatInfo.format.colorReadFunction;
 
     PackPixels(params, sourceFormatInfo, dxgiFormatInfo.fastCopyFunctions, colorReadFunction,
                inputPitch, source, pixelsOut);
@@ -3988,7 +3988,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
     bool partialDSBlit = (dxgiFormatInfo.depthBits > 0 && depthBlit) != (dxgiFormatInfo.stencilBits > 0 && stencilBlit);
 
-    if (readRenderTarget11->getFormatSet().format == drawRenderTarget11->getFormatSet().format &&
+    if (readRenderTarget11->getFormatSet().format.id ==
+            drawRenderTarget11->getFormatSet().format.id &&
         !stretchRequired && !outOfBounds && !flipRequired && !partialDSBlit &&
         !colorMaskingNeeded && (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {

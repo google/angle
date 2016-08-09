@@ -12,69 +12,47 @@
 #ifndef LIBANGLE_RENDERER_FORMAT_H_
 #define LIBANGLE_RENDERER_FORMAT_H_
 
+#include "libANGLE/renderer/renderer_utils.h"
+
 namespace angle
 {
 
-// TODO(jmadill): It would be nice if we could auto-generate this.
-
-enum class Format
+struct Format final : angle::NonCopyable
 {
-    NONE,
-    A8_UNORM,
-    B4G4R4A4_UNORM,
-    B5G5R5A1_UNORM,
-    B5G6R5_UNORM,
-    B8G8R8A8_UNORM,
-    BC1_UNORM,
-    BC2_UNORM,
-    BC3_UNORM,
-    D16_UNORM,
-    D24_UNORM_S8_UINT,
-    D32_FLOAT,
-    D32_FLOAT_S8X24_UINT,
-    R10G10B10A2_UINT,
-    R10G10B10A2_UNORM,
-    R11G11B10_FLOAT,
-    R16G16B16A16_FLOAT,
-    R16G16B16A16_SINT,
-    R16G16B16A16_SNORM,
-    R16G16B16A16_UINT,
-    R16G16B16A16_UNORM,
-    R16G16_FLOAT,
-    R16G16_SINT,
-    R16G16_SNORM,
-    R16G16_UINT,
-    R16G16_UNORM,
-    R16_FLOAT,
-    R16_SINT,
-    R16_SNORM,
-    R16_UINT,
-    R16_UNORM,
-    R32G32B32A32_FLOAT,
-    R32G32B32A32_SINT,
-    R32G32B32A32_UINT,
-    R32G32_FLOAT,
-    R32G32_SINT,
-    R32G32_UINT,
-    R32_FLOAT,
-    R32_SINT,
-    R32_UINT,
-    R8G8B8A8_SINT,
-    R8G8B8A8_SNORM,
-    R8G8B8A8_UINT,
-    R8G8B8A8_UNORM,
-    R8G8B8A8_UNORM_SRGB,
-    R8G8_SINT,
-    R8G8_SNORM,
-    R8G8_UINT,
-    R8G8_UNORM,
-    R8_SINT,
-    R8_SNORM,
-    R8_UINT,
-    R8_UNORM,
-    R9G9B9E5_SHAREDEXP,
+    enum class ID;
+
+    Format(ID id,
+           GLenum glFormat,
+           GLenum fboFormat,
+           rx::MipGenerationFunction mipGen,
+           rx::ColorReadFunction colorRead)
+        : id(id),
+          glInternalFormat(glFormat),
+          fboImplementationInternalFormat(fboFormat),
+          mipGenerationFunction(mipGen),
+          colorReadFunction(colorRead)
+    {
+    }
+
+    static const Format &Get(ID id);
+
+    ID id;
+
+    // The closest matching GL internal format for the storage this format uses. Note that this
+    // may be a different internal format than the one this ANGLE format is used for.
+    GLenum glInternalFormat;
+
+    // The format we should report to the GL layer when querying implementation formats from a FBO.
+    // This might not be the same as the glInternalFormat, since some DXGI formats don't have
+    // matching GL format enums, like BGRA4, BGR5A1 and B5G6R6.
+    GLenum fboImplementationInternalFormat;
+
+    rx::MipGenerationFunction mipGenerationFunction;
+    rx::ColorReadFunction colorReadFunction;
 };
 
 }  // namespace angle
+
+#include "libANGLE/renderer/Format_ID_autogen.inl"
 
 #endif  // LIBANGLE_RENDERER_FORMAT_H_

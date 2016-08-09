@@ -43,11 +43,11 @@ namespace rx
 namespace d3d11
 {{
 
-const ANGLEFormatSet &GetANGLEFormatSet(angle::Format angleFormat,
+const ANGLEFormatSet &GetANGLEFormatSet(angle::Format::ID formatID,
                                         const Renderer11DeviceCaps &deviceCaps)
 {{
     // clang-format off
-    switch (angleFormat)
+    switch (formatID)
     {{
 {angle_format_info_cases}
         default:
@@ -73,7 +73,7 @@ const TextureFormat &GetTextureFormatInfo(GLenum internalFormat,
     }}
     // clang-format on
 
-    static const TextureFormat defaultInfo(GL_NONE, angle::Format::NONE, nullptr, deviceCaps);
+    static const TextureFormat defaultInfo(GL_NONE, angle::Format::ID::NONE, nullptr, deviceCaps);
     return defaultInfo;
 }}  // GetTextureFormatInfo
 
@@ -158,8 +158,8 @@ def get_internal_format_initializer(internal_format, angle_format):
     return internal_format_initializer
 
 def get_swizzle_format_id(angle_format_id, angle_format):
-    if angle_format_id == 'angle::Format::NONE':
-        return 'angle::Format::NONE'
+    if angle_format_id == 'NONE':
+        return 'NONE'
     elif 'swizzleFormat' in angle_format:
         # For some special formats like compressed formats that don't have a clearly defined number
         # of bits per channel, swizzle format needs to be specified manually.
@@ -183,9 +183,9 @@ def get_swizzle_format_id(angle_format_id, angle_format):
     # defined component type.
     if angle_format['channels'].find('d') >= 0:
         if b == 24 or b == 32:
-            return 'angle::Format::R32G32B32A32_FLOAT'
+            return 'R32G32B32A32_FLOAT'
         if b == 16:
-            return 'angle::Format::R16G16B16A16_UNORM'
+            return 'R16G16B16A16_UNORM'
 
     if b == 24:
         raise ValueError('unexpected 24-bit format when determining swizzleformat for format: ' + angle_format_id)
@@ -195,15 +195,15 @@ def get_swizzle_format_id(angle_format_id, angle_format):
 
     component_type = angle_format['componentType']
     if component_type == 'uint':
-        return 'angle::Format::R{}G{}B{}A{}_UINT'.format(b, b, b, b)
+        return 'R{}G{}B{}A{}_UINT'.format(b, b, b, b)
     elif component_type == 'int':
-        return 'angle::Format::R{}G{}B{}A{}_SINT'.format(b, b, b, b)
+        return 'R{}G{}B{}A{}_SINT'.format(b, b, b, b)
     elif component_type == 'unorm':
-        return 'angle::Format::R{}G{}B{}A{}_UNORM'.format(b, b, b, b)
+        return 'R{}G{}B{}A{}_UNORM'.format(b, b, b, b)
     elif component_type == 'snorm':
-        return 'angle::Format::R{}G{}B{}A{}_SNORM'.format(b, b, b, b)
+        return 'R{}G{}B{}A{}_SNORM'.format(b, b, b, b)
     elif component_type == 'float':
-        return 'angle::Format::R{}G{}B{}A{}_FLOAT'.format(b, b, b, b)
+        return 'R{}G{}B{}A{}_FLOAT'.format(b, b, b, b)
     else:
         raise ValueError('could not determine swizzleformat based on componentType for format: ' + angle_format_id)
 
@@ -221,11 +221,11 @@ def get_texture_format_item(idx, internal_format, requirements_fn, angle_format_
         table_data += '            {\n'
         indent += '    '
 
-    table_data += indent + 'static const TextureFormat textureFormat(internalFormat,\n'
-    table_data += indent + '                                         ' + angle_format_id + ',\n'
-    table_data += indent + '                                         ' + internal_format_initializer + ',\n'
-    table_data += indent + '                                         deviceCaps);\n'
-    table_data += indent + 'return textureFormat;\n'
+    table_data += indent + 'static const TextureFormat info(internalFormat,\n'
+    table_data += indent + '                                angle::Format::ID::' + angle_format_id + ',\n'
+    table_data += indent + '                                ' + internal_format_initializer + ',\n'
+    table_data += indent + '                                deviceCaps);\n'
+    table_data += indent + 'return info;\n'
 
     if requirements_fn != None:
         table_data += '            }\n'
@@ -257,51 +257,6 @@ def parse_json_into_switch_texture_format_string(json_map, json_data):
 
     return table_data
 
-def get_channel_struct(angle_format):
-    if 'bits' not in angle_format:
-        return None
-    bits = angle_format['bits']
-    if 'depth' in bits or 'stencil' in bits:
-        return None
-
-    if 'channelStruct' in angle_format:
-        return angle_format['channelStruct']
-
-    struct_name = ''
-    for channel in angle_format['channels']:
-        if channel == 'r':
-            struct_name += 'R{}'.format(bits['red'])
-        if channel == 'g':
-            struct_name += 'G{}'.format(bits['green'])
-        if channel == 'b':
-            struct_name += 'B{}'.format(bits['blue'])
-        if channel == 'a':
-            struct_name += 'A{}'.format(bits['alpha'])
-    if angle_format['componentType'] == 'float':
-        struct_name += 'F'
-    if angle_format['componentType'] == 'int' or angle_format['componentType'] == 'snorm':
-        struct_name += 'S'
-    return struct_name
-
-def get_mip_generation_function(angle_format):
-    channel_struct = get_channel_struct(angle_format)
-    if channel_struct == None:
-        return 'nullptr'
-    return 'GenerateMip<' + channel_struct + '>'
-
-def get_color_read_function(angle_format):
-    channel_struct = get_channel_struct(angle_format)
-    if channel_struct == None:
-        return 'nullptr'
-    component_type_map = {
-        'uint': 'GLuint',
-        'int': 'GLint',
-        'unorm': 'GLfloat',
-        'snorm': 'GLfloat',
-        'float': 'GLfloat'
-    }
-    return 'ReadColor<' + channel_struct + ', '+ component_type_map[angle_format['componentType']] + '>'
-
 def get_blit_srv_format(angle_format):
     if 'channels' not in angle_format:
         return 'DXGI_FORMAT_UNKNOWN'
@@ -312,35 +267,27 @@ def get_blit_srv_format(angle_format):
 
 
 format_entry_template = """{space}{{
-{space}    static const ANGLEFormatSet formatInfo({formatName},
-{space}                                           {glInternalFormat},
-{space}                                           {fboImplementationInternalFormat},
-{space}                                           {texFormat},
-{space}                                           {srvFormat},
-{space}                                           {rtvFormat},
-{space}                                           {dsvFormat},
-{space}                                           {blitSRVFormat},
-{space}                                           {swizzleFormat},
-{space}                                           {mipGenerationFunction},
-{space}                                           {colorReadFunction});
-{space}    return formatInfo;
+{space}    static const ANGLEFormatSet info(angle::Format::ID::{formatName},
+{space}                                     {texFormat},
+{space}                                     {srvFormat},
+{space}                                     {rtvFormat},
+{space}                                     {dsvFormat},
+{space}                                     {blitSRVFormat},
+{space}                                     angle::Format::ID::{swizzleFormat});
+{space}    return info;
 {space}}}
 """
 
 split_format_entry_template = """{space}    {condition}
 {space}    {{
-{space}        static const ANGLEFormatSet formatInfo({formatName},
-{space}                                               {glInternalFormat},
-{space}                                               {fboImplementationInternalFormat},
-{space}                                               {texFormat},
-{space}                                               {srvFormat},
-{space}                                               {rtvFormat},
-{space}                                               {dsvFormat},
-{space}                                               {blitSRVFormat},
-{space}                                               {swizzleFormat},
-{space}                                               {mipGenerationFunction},
-{space}                                               {colorReadFunction});
-{space}        return formatInfo;
+{space}        static const ANGLEFormatSet info(angle::Format::ID::{formatName},
+{space}                                         {texFormat},
+{space}                                         {srvFormat},
+{space}                                         {rtvFormat},
+{space}                                         {dsvFormat},
+{space}                                         {blitSRVFormat},
+{space}                                         angle::Format::ID::{swizzleFormat});
+{space}        return info;
 {space}    }}
 """
 
@@ -355,25 +302,15 @@ def json_to_table_data(format_name, prefix, json):
         "srvFormat": "DXGI_FORMAT_UNKNOWN",
         "rtvFormat": "DXGI_FORMAT_UNKNOWN",
         "dsvFormat": "DXGI_FORMAT_UNKNOWN",
-        "glInternalFormat": "GL_NONE",
         "condition": prefix,
     }
 
     for k, v in json.iteritems():
         parsed[k] = v
 
-    if (format_name != "angle::Format::NONE") and (parsed["glInternalFormat"] == "GL_NONE"):
-        print("Missing 'glInternalFormat' from " + format_name)
-        sys.exit(1)
-
-    if "fboImplementationInternalFormat" not in parsed:
-        parsed["fboImplementationInternalFormat"] = parsed["glInternalFormat"]
-
     # Derived values.
     parsed["blitSRVFormat"] = get_blit_srv_format(parsed)
     parsed["swizzleFormat"] = get_swizzle_format_id(format_name, parsed)
-    parsed["mipGenerationFunction"] = get_mip_generation_function(parsed)
-    parsed["colorReadFunction"] = get_color_read_function(parsed)
 
     if len(prefix) > 0:
         return split_format_entry_template.format(**parsed)
@@ -383,7 +320,7 @@ def json_to_table_data(format_name, prefix, json):
 def parse_json_into_switch_angle_format_string(json_data):
     table_data = ''
     for angle_format_item in sorted(json_data.iteritems()):
-        table_data += '        case ' + angle_format_item[0] + ':\n'
+        table_data += '        case angle::Format::ID::' + angle_format_item[0] + ':\n'
         format_name = angle_format_item[0]
         angle_format = angle_format_item[1]
 

@@ -68,7 +68,7 @@ gl::Error Image11::generateMipmap(Image11 *dest,
     uint8_t *destData = reinterpret_cast<uint8_t*>(destMapped.pData);
 
     auto mipGenerationFunction = d3d11::GetTextureFormatInfo(src->getInternalFormat(), rendererCaps)
-                                     .formatSet.mipGenerationFunction;
+                                     .formatSet.format.mipGenerationFunction;
     mipGenerationFunction(src->getWidth(), src->getHeight(), src->getDepth(), sourceData,
                           srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch,
                           destMapped.DepthPitch);
