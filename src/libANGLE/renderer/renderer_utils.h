@@ -67,7 +67,6 @@ struct PackPixelsParams
 
 void PackPixels(const PackPixelsParams &params,
                 const angle::Format &sourceFormat,
-                const FastCopyFunctionMap &fastCopyFunctionsMap,
                 int inputPitch,
                 const uint8_t *source,
                 uint8_t *destination);

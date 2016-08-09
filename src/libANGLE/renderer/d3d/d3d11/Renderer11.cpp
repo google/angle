@@ -3786,12 +3786,10 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     uint8_t *source = static_cast<uint8_t *>(mapping.pData);
     int inputPitch  = static_cast<int>(mapping.RowPitch);
 
-    const auto &angleFormatInfo = textureHelper.getFormatSet();
-    const auto &dxgiFormatInfo  = d3d11::GetDXGIFormatInfo(textureHelper.getFormat());
-    ASSERT(angleFormatInfo.format.glInternalFormat != GL_NONE);
+    const auto &formatInfo = textureHelper.getFormatSet();
+    ASSERT(formatInfo.format.glInternalFormat != GL_NONE);
 
-    PackPixels(params, angleFormatInfo.format, dxgiFormatInfo.fastCopyFunctions, inputPitch, source,
-               pixelsOut);
+    PackPixels(params, formatInfo.format, inputPitch, source, pixelsOut);
 
     mDeviceContext->Unmap(readResource, 0);
 

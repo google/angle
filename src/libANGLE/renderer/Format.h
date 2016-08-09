@@ -12,6 +12,7 @@
 #ifndef LIBANGLE_RENDERER_FORMAT_H_
 #define LIBANGLE_RENDERER_FORMAT_H_
 
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
 namespace angle
@@ -25,14 +26,7 @@ struct Format final : angle::NonCopyable
            GLenum glFormat,
            GLenum fboFormat,
            rx::MipGenerationFunction mipGen,
-           rx::ColorReadFunction colorRead)
-        : id(id),
-          glInternalFormat(glFormat),
-          fboImplementationInternalFormat(fboFormat),
-          mipGenerationFunction(mipGen),
-          colorReadFunction(colorRead)
-    {
-    }
+           rx::ColorReadFunction colorRead);
 
     static const Format &Get(ID id);
 
@@ -49,6 +43,9 @@ struct Format final : angle::NonCopyable
 
     rx::MipGenerationFunction mipGenerationFunction;
     rx::ColorReadFunction colorReadFunction;
+
+    // A map from a gl::FormatType to a fast pixel copy function for this format.
+    rx::FastCopyFunctionMap fastCopyFunctions;
 };
 
 }  // namespace angle

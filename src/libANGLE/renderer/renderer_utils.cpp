@@ -172,7 +172,6 @@ PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
 
 void PackPixels(const PackPixelsParams &params,
                 const angle::Format &sourceFormat,
-                const FastCopyFunctionMap &fastCopyFunctionsMap,
                 int inputPitchIn,
                 const uint8_t *sourceIn,
                 uint8_t *destWithoutOffset)
@@ -204,7 +203,8 @@ void PackPixels(const PackPixelsParams &params,
     ASSERT(sourceGLInfo.pixelBytes > 0);
 
     gl::FormatType formatType(params.format, params.type);
-    ColorCopyFunction fastCopyFunc = GetFastCopyFunction(fastCopyFunctionsMap, formatType);
+    ColorCopyFunction fastCopyFunc =
+        GetFastCopyFunction(sourceFormat.fastCopyFunctions, formatType);
     GLenum sizedDestInternalFormat = gl::GetSizedInternalFormat(formatType.format, formatType.type);
     const auto &destFormatInfo     = gl::GetInternalFormatInfo(sizedDestInternalFormat);
 

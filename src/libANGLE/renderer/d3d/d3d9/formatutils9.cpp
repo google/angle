@@ -27,43 +27,6 @@ namespace d3d9
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I', 'N', 'T', 'Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N', 'U', 'L', 'L')));
 
-struct D3D9FastCopyFormat
-{
-    GLenum destFormat;
-    GLenum destType;
-    ColorCopyFunction copyFunction;
-
-    D3D9FastCopyFormat(GLenum destFormat, GLenum destType, ColorCopyFunction copyFunction)
-        : destFormat(destFormat), destType(destType), copyFunction(copyFunction)
-    { }
-
-    bool operator<(const D3D9FastCopyFormat& other) const
-    {
-        return memcmp(this, &other, sizeof(D3D9FastCopyFormat)) < 0;
-    }
-};
-
-static const FastCopyFunctionMap &GetFastCopyFunctionMap(D3DFORMAT d3dFormat)
-{
-    switch (d3dFormat)
-    {
-        case D3DFMT_A8R8G8B8:
-        {
-            static FastCopyFunctionMap fastCopyMap;
-            if (fastCopyMap.empty())
-            {
-                fastCopyMap[gl::FormatType(GL_RGBA, GL_UNSIGNED_BYTE)] = angle::CopyBGRA8ToRGBA8;
-            }
-            return fastCopyMap;
-        }
-        default:
-        {
-            static FastCopyFunctionMap emptyMap;
-            return emptyMap;
-        }
-    }
-}
-
 // A map to determine the pixel size and mip generation function of a given D3D format
 typedef std::map<D3DFORMAT, D3DFormat> D3D9FormatInfoMap;
 
@@ -78,8 +41,7 @@ D3DFormat::D3DFormat()
       luminanceBits(0),
       depthBits(0),
       stencilBits(0),
-      info(nullptr),
-      fastCopyFunctions()
+      info(nullptr)
 {
 }
 
@@ -108,8 +70,7 @@ static inline void InsertD3DFormatInfo(D3D9FormatInfoMap *map,
     info.luminanceBits = lumBits;
     info.depthBits = depthBits;
     info.stencilBits = stencilBits;
-    info.info                  = &Format::Get(formatID);
-    info.fastCopyFunctions     = GetFastCopyFunctionMap(format);
+    info.info          = &Format::Get(formatID);
 
     map->insert(std::make_pair(format, info));
 }

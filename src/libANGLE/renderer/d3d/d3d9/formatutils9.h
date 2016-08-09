@@ -45,8 +45,6 @@ struct D3DFormat
     GLuint stencilBits;
 
     const angle::Format *info;
-
-    FastCopyFunctionMap fastCopyFunctions;
 };
 
 const D3DFormat &GetD3DFormatInfo(D3DFORMAT format);

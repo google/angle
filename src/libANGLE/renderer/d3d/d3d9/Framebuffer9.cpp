@@ -205,8 +205,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     packParams.outputPitch = static_cast<GLuint>(outputPitch);
     packParams.pack        = pack;
 
-    PackPixels(packParams, *d3dFormatInfo.info, d3dFormatInfo.fastCopyFunctions, inputPitch, source,
-               pixels);
+    PackPixels(packParams, *d3dFormatInfo.info, inputPitch, source, pixels);
 
     systemSurface->UnlockRect();
     SafeRelease(systemSurface);
