@@ -2,6 +2,115 @@
   "comments": [
     {
       "key": {
+        "uuid": "79b65be8_faafa977",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be TLocalSize as well?",
+      "range": {
+        "startLine": 89,
+        "startChar": 10,
+        "endLine": 89,
+        "endChar": 28
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a53384_67b4ac82",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1059,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "This check can be removed - singleDeclarationErrorCheck is not run on global layout declarations. It\u0027s always an error to specify local work group size for a specific variable.",
+      "range": {
+        "startLine": 1059,
+        "startChar": 8,
+        "endLine": 1059,
+        "endChar": 44
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b65be8_bae7f1db",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1102,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "Clearer error message: \"only valid when used with \u0027in\u0027 in a compute shader global layout declaration\"",
+      "range": {
+        "startLine": 1102,
+        "startChar": 19,
+        "endLine": 1102,
+        "endChar": 49
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b65be8_9aea2da3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2052,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "There\u0027s still a missing check here - local_size qualifier should not be accepted for \"uniform\". Add this fragment shader to MalformedShaderTest and make sure it fails compilation:\n\n#version 310 es\nprecision mediump float;\nout vec4 my_FragColor;\nlayout(local_size_x\u003d1) uniform;\nvoid main() {\n    my_FragColor \u003d vec4(0.0, 0.0, 0.0, 1.0);\n}",
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79b65be8_9ac14d2f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "Nit: these should have u suffix.",
+      "range": {
+        "startLine": 3260,
+        "startChar": 39,
+        "endLine": 3260,
+        "endChar": 40
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79b65be8_fa96c937",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 16
@@ -13,6 +122,30 @@
       "writtenOn": "2016-08-09T08:33:30Z",
       "side": 1,
       "message": "We can no longer return a null pointer as before. I wonder whether this is fine.",
+      "range": {
+        "startLine": 363,
+        "startChar": 4,
+        "endLine": 363,
+        "endChar": 19
+      },
+      "revId": "5708f117984418f5104a6799da738608a7b5badc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a53384_07a93829",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-09T10:41:00Z",
+      "side": 1,
+      "message": "Seems okay to me.",
+      "parentUuid": "79b65be8_fa96c937",
       "range": {
         "startLine": 363,
         "startChar": 4,
