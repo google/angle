@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59dd179f_a938ddf6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T12:35:25Z",
+      "side": 1,
+      "message": "Does this change make any dEQP tests pass as well?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_c95ef14a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T12:35:25Z",
+      "side": 1,
+      "message": "Better assert would be that either all of the localSizes are \u003c 1 or all of the localSizes are \u003e\u003d 1.",
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_696ee5ff",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T12:35:25Z",
+      "side": 1,
+      "message": "Rather than have these single-use boolean variables, I\u0027d just put the function call inside the if condition. It can make a bit harder to see where the function call ends, but code clarity can be helped by adding curly braces {} for the if.\n\nThis is somewhat of a matter of preference though, so doesn\u0027t matter too much. Also if git cl format does something really weird with the formatting if these are changed, fine by me to keep these as is.",
+      "range": {
+        "startLine": 2236,
+        "startChar": 13,
+        "endLine": 2236,
+        "endChar": 41
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9a8d3f4_ec730b18",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2717,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T12:35:25Z",
+      "side": 1,
+      "message": "This check is not needed.",
+      "range": {
+        "startLine": 2711,
+        "startChar": 16,
+        "endLine": 2717,
+        "endChar": 17
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
