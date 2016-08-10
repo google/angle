@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_c99431e6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T11:28:58Z",
+      "side": 1,
+      "message": "What I was after was that in release build the code could just check localSize[0] without looking at the other two at all.",
+      "parentUuid": "59dd179f_69cc2562",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_a9a45da5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
