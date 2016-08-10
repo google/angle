@@ -16,6 +16,24 @@
       "revId": "d9f05636cef84daa2bed15e524467740069e09a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_af499f6d",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:58:28Z",
+      "side": 1,
+      "message": "I used .inl because it must be included after the other headers, whereas generally headers can be used at the top of a file. I\u0027ll land it like this but willing to change it if necessary.",
+      "parentUuid": "1919df0e_4cffb1cd",
+      "revId": "d9f05636cef84daa2bed15e524467740069e09a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
