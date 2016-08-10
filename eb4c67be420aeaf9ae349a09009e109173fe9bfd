@@ -1,0 +1,215 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39b5c344_50974c34",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Is it ever the case that only one of these is \u003c\u003d 0? Could maybe check just one and add an ASSERT that they are consistent.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_a9a45da5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Should still keep the mention that the code is compiled into binaries.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_89a9997d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "I\u0027d move the inside of this if statement inside a \"doVertexAndFragmentUniformsMatch\" function.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_69b385e6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2145,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "The code could be cleaner if the check against max count was in a separate helper function and the other vertex/fragment shader specific checks would be done separately from that.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_29b98dc6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "\"exceeds\", could fix the existing typos as well.",
+      "range": {
+        "startLine": 2156,
+        "startChar": 67,
+        "endLine": 2156,
+        "endChar": 73
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_c9a39199",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2529,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Lots of the code looks very similar between compute, fragment and vertex shaders. The common functionality could be put into a helper function that takes a reference to the uniform list and the max components and max texture image units as a parameter.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_e99e554b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2686,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Could fix the typo as a part of this patch.",
+      "range": {
+        "startLine": 2686,
+        "startChar": 65,
+        "endLine": 2686,
+        "endChar": 72
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_49b041d8",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Remember punctuation.",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 57
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59b43747_31b9f0c6",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Should be the other way around: EXPECT_NE(0u, program)",
+      "range": {
+        "startLine": 226,
+        "startChar": 4,
+        "endLine": 226,
+        "endChar": 27
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_a9cd7d65",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Missing comment.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_89d23901",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T07:27:00Z",
+      "side": 1,
+      "message": "Odd formatting",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
