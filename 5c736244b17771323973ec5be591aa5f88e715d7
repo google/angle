@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "1919df0e_1839eff9",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-10T20:03:29Z",
+      "side": 1,
+      "message": "Since such pattern is in several place, it\u0027s better to clean up separately from this CL.",
+      "parentUuid": "1919df0e_af4d1f99",
+      "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_918c0c34",
         "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
         "patchSetId": 2
