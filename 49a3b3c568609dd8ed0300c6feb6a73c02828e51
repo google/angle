@@ -1,0 +1,397 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59dd179f_c91a716f",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Was there still something you were planning to do to change this code?",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_896239e7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3560,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "This is a bit weird - I\u0027d add a reference to the spec.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_a9345de3",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "This is a confusing entry point. I\u0027d at least change the variable names so that it\u0027s clear that one of the TPublicType parameters is used for qualifiers. Another alternative would be to add a struct that would only have qualifiers, I think that might be preferable.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_29498d6c",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "This function is large enough that the implementation should be in Types.cpp.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_6943854c",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "I\u0027d prefer \"ForFunctionParameter\" here instead. Just the suffix Function is a bit odd, makes me think of a function that would return a function pointer.",
+      "range": {
+        "startLine": 787,
+        "startChar": 32,
+        "endLine": 787,
+        "endChar": 40
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_c908b1fb",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Fix extra whitespace on the lines that have been changed.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_29eead20",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Don\u0027t add new complex functionality in the grammar file, but rather move non-trivial blocks in the grammar file into ParseContext member functions. If there\u0027s a block of more than 3-4 lines in the grammar .y file, it should get this treatment.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_e9b1354a",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1972,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "This is not needed - the test is valid whether the grammar changes are in place or not. With git blame anyone can dig out which patch added the test.",
+      "range": {
+        "startLine": 1972,
+        "startChar": 52,
+        "endLine": 1972,
+        "endChar": 89
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_89acf9f3",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "out",
+      "range": {
+        "startLine": 2018,
+        "startChar": 37,
+        "endLine": 2018,
+        "endChar": 39
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_c9b6f13f",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "in",
+      "range": {
+        "startLine": 2037,
+        "startChar": 36,
+        "endLine": 2037,
+        "endChar": 39
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_09b9292d",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2091,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "\"A variable cannot have two different storage qualifiers\" would be clearer. Similarly in some of the tests below.",
+      "range": {
+        "startLine": 2091,
+        "startChar": 3,
+        "endLine": 2091,
+        "endChar": 35
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_69c6e5b4",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2249,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Fix all of the comments with incorrect syntax.",
+      "range": {
+        "startLine": 2247,
+        "startChar": 0,
+        "endLine": 2249,
+        "endChar": 2
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_49c321a3",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2306,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Isn\u0027t this a duplicate test? Could sort these so that all the tests that repeat the same qualifier twice are. There\u0027s so many of these similar tests that auto-generating at least some of them could also be preferable. Could put this in a different file like QualificationOrder_test.cpp.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_a990dd9b",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2353,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Are you sure that there isn\u0027t a test for this already?",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_8995198c",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2400,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Not much need to copy from deqp in general, the deqp tests are run for all changes. Verbatim copying of code is also tricky because of the risk of hitting some licensing issues.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_c98f1178",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2480,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "\"Cannot have a function parameter with attribute qualifier.\" would be clearer.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_29a50dfd",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2564,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Maybe just include one of these centroid function parameter tests.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_699f05a5",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2652,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "I\u0027m sure this is covered by many other tests.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_499cc1ae",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2696,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Is this related to the patch at hand?",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_a9f9fdeb",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Use a description that\u0027s relevant for the specific test.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_e903f5dd",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2795,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-10T15:45:32Z",
+      "side": 1,
+      "message": "Would be clearer to say that \"in qualifier is optional, so it can be left out of a function prototype or the implementation of the same function\".",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
