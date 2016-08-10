@@ -1,0 +1,274 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1919df0e_0f00cb58",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: comment at the top with a short description of operations",
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_4cced188",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: this is a traverse, so I\u0027d call it GLFragColorBroadcastTraverser (or, since it\u0027s totally local and anonymous, just \u0027Traverser\u0027)",
+      "range": {
+        "startLine": 41,
+        "startChar": 6,
+        "endLine": 41,
+        "endChar": 34
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_4fe243a2",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "question, if the sequence is of size 1, that means it is an empty main function? sorry, just confused. if there\u0027s an empty main function i\u0027m not sure any emulation is needed.",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 75
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_8fc93b53",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "if maxDrawBuffers \u003c\u003d 1, can you just skip the whole emulation? if yes, check this at the top level and replace the other checks with ASSERT",
+      "range": {
+        "startLine": 104,
+        "startChar": 29,
+        "endLine": 104,
+        "endChar": 43
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_0ff68b90",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: use a better loop iteration name: colorIndex, outputIndex or similar",
+      "range": {
+        "startLine": 113,
+        "startChar": 13,
+        "endLine": 113,
+        "endChar": 15
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_4f1d63c7",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "I suggest you should not change var.name.. only var.mappedName. var.name is the name used by the input shader, while mappedName is after we apply ANGLE\u0027s magic.",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 13
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_8f0cdb91",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "this comment is not correct",
+      "range": {
+        "startLine": 6,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_8f65bb4b",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "is this header necessary?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_0f79abf6",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "can you comment here as to what happens to the output vars",
+      "range": {
+        "startLine": 23,
+        "startChar": 5,
+        "endLine": 23,
+        "endChar": 32
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_4fb48381",
+        "filename": "src/tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: short description of the file at the top",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_afa3df48",
+        "filename": "src/tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: can remove this?",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 30,
+        "endChar": 31
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_af7affc8",
+        "filename": "src/tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T17:55:30Z",
+      "side": 1,
+      "message": "nit: comment before every test",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 6
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
