@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d924a797_08bca71c",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T23:40:35Z",
+      "side": 1,
+      "message": "could you still add a comment, it\u0027s an angle style rule.",
+      "parentUuid": "1919df0e_7214ccf0",
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_4cced188",
         "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
         "patchSetId": 4
@@ -260,6 +278,30 @@
       "side": 1,
       "message": "No it doesn\u0027t work at the moment.  Chrome side code actually looks at original name for all validations, etc. This is a specific case, because the type is changed from scalar to array, so just keeping the name creates self conflicts.",
       "parentUuid": "1919df0e_4f1d63c7",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 138,
+        "endChar": 13
+      },
+      "revId": "80df95f84a0c71c54d159937ebcef75f37d97bb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_a848f333",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T23:40:35Z",
+      "side": 1,
+      "message": "OK, can we make a note to re-visit this in the future? I just want to understand exactly what\u0027s returned from the shader variable query - I think it\u0027s at least possible this is a Chrome problem.",
+      "parentUuid": "1919df0e_123eb06f",
       "range": {
         "startLine": 133,
         "startChar": 0,
