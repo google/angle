@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_29a34d4b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1914,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T12:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c9db91e2",
+      "range": {
+        "startLine": 1914,
+        "startChar": 4,
+        "endLine": 1914,
+        "endChar": 56
+      },
+      "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_e9d655bc",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2016-08-10T11:28:58Z",
       "side": 1,
       "message": "Might as well just have this call inside the if condition below.",
+      "range": {
+        "startLine": 1918,
+        "startChar": 34,
+        "endLine": 1918,
+        "endChar": 92
+      },
+      "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_09a0093b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1918,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T12:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_e9d655bc",
       "range": {
         "startLine": 1918,
         "startChar": 34,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_699d45fb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2187,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T12:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_69eb8577",
+      "range": {
+        "startLine": 2186,
+        "startChar": 8,
+        "endLine": 2187,
+        "endChar": 9
+      },
+      "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_49e84179",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -105,6 +177,24 @@
       "writtenOn": "2016-08-10T11:28:58Z",
       "side": 1,
       "message": "I noticed that there is actually a subtle difference between the different shader types - in the case of vertex and fragment shaders, the limit is defined in terms of vectors, and in the case of compute shaders, the limit is defined in terms of components. It\u0027s frankly a bit of a mess in the specification. Maybe the best way to deal with it now is to just determine the compute shader limit by dividing caps.maxComputeUniformComponents by four and adding a TODO to check if finer-grained checks are needed later.",
+      "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_8954f92e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T12:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_49e84179",
       "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
