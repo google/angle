@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_69cc2562",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "It should be. ParseContext initializes the values to -1 and it keeps track whether the group size has been declared with a boolean flag. It has a getter method which goes over all of the local size values and changes them to 1, if a group size has been declared and they are -1 (no value assigned).\n\nI added an #ifndef NDEBUG and an assert inside to check whether if one of the values is not positive, then all of them are.",
+      "parentUuid": "39b5c344_50974c34",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_a9a45da5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_a9b3bdb2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_89a9997d",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_69b385e6",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -64,6 +100,24 @@
       "writtenOn": "2016-08-10T07:27:00Z",
       "side": 1,
       "message": "The code could be cleaner if the check against max count was in a separate helper function and the other vertex/fragment shader specific checks would be done separately from that.",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_89b8798e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2145,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_69b385e6",
       "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +147,30 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_c9f55185",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_29b98dc6",
+      "range": {
+        "startLine": 2156,
+        "startChar": 67,
+        "endLine": 2156,
+        "endChar": 73
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_c9a39199",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -110,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_69e545d2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2529,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c9a39199",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_e99e554b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -121,6 +217,30 @@
       "writtenOn": "2016-08-10T07:27:00Z",
       "side": 1,
       "message": "Could fix the typo as a part of this patch.",
+      "range": {
+        "startLine": 2686,
+        "startChar": 65,
+        "endLine": 2686,
+        "endChar": 72
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_29eb4daa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2686,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_e99e554b",
       "range": {
         "startLine": 2686,
         "startChar": 65,
@@ -156,6 +276,30 @@
     },
     {
       "key": {
+        "uuid": "59dd179f_6941c592",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_49b041d8",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 57
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59b43747_31b9f0c6",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 1
@@ -167,6 +311,30 @@
       "writtenOn": "2016-08-10T07:27:00Z",
       "side": 1,
       "message": "Should be the other way around: EXPECT_NE(0u, program)",
+      "range": {
+        "startLine": 226,
+        "startChar": 4,
+        "endLine": 226,
+        "endChar": 27
+      },
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_493e810c",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done\nDid it also for the code which was already there.",
+      "parentUuid": "59b43747_31b9f0c6",
       "range": {
         "startLine": 226,
         "startChar": 4,
@@ -196,6 +364,24 @@
     },
     {
       "key": {
+        "uuid": "39b5c344_50cf4c25",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_a9cd7d65",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_89d23901",
         "filename": "util/shader_utils.cpp",
         "patchSetId": 1
@@ -207,6 +393,24 @@
       "writtenOn": "2016-08-10T07:27:00Z",
       "side": 1,
       "message": "Odd formatting",
+      "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59dd179f_69d265cf",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_89d23901",
       "revId": "eb4c67be420aeaf9ae349a09009e109173fe9bfd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
