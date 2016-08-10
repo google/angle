@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1919df0e_452d4940",
+        "filename": "src/libANGLE/renderer/Format.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T15:13:07Z",
+      "side": 1,
+      "message": "Sorry, I fixed the comments - the format enum isn\u0027t meant to be specific to Textures. It could also be used for vertex formats, or anything typed. Like a DXGI_FORMAT or VkFormat.",
+      "parentUuid": "59a0b7a5_f1afc877",
+      "range": {
+        "startLine": 19,
+        "startChar": 11,
+        "endLine": 19,
+        "endChar": 17
+      },
+      "revId": "f22f52e3d4dc4f82fe6df9ddd55af6746ab22676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59a0b7a5_11ce0c61",
         "filename": "src/libANGLE/renderer/Format.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-09T14:17:56Z",
       "side": 1,
       "message": "nit: put NONE at the top?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 9
+      },
+      "revId": "f22f52e3d4dc4f82fe6df9ddd55af6746ab22676",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9ef47c1_b6c1ce2e",
+        "filename": "src/libANGLE/renderer/Format.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-10T15:13:07Z",
+      "side": 1,
+      "message": "Done, it is sorted alphabetically, but I put in an exception for NONE in subsequent patches.",
+      "parentUuid": "59a0b7a5_11ce0c61",
       "range": {
         "startLine": 33,
         "startChar": 4,
