@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59dd179f_89e1999e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-10T11:24:17Z",
+      "side": 1,
+      "message": "It looks like the saveBinary and loadBinary get called when glGetProgramBinary and glProgramBinary are called. This makes sense.\nHowever, it might be good to also save the type of the program. Also, in that case there aren\u0027t any attached shaders at all. It might make sense to add some enum which would specify the type of the program - either a compute program, or a non-compute one.",
+      "range": {
+        "startLine": 870,
+        "startChar": 4,
+        "endLine": 872,
+        "endChar": 55
+      },
+      "revId": "946611329b2e1e101d2b38a7254bbced742c0754",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
