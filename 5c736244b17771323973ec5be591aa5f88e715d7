@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1919df0e_b18a7069",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-10T00:42:15Z",
+      "side": 1,
+      "message": "This string comparison looks like a hack. Is there a better way to identify the main function?",
+      "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_918c0c34",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-10T00:42:15Z",
+      "side": 1,
+      "message": "What does this code block do in addition to finding the main sequence where the gl_FragData assignments are appended? Not clear to me why the sequence would have a length of only 1 or 2 at this point.",
+      "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
