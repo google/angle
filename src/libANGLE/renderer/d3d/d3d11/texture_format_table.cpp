@@ -7,7 +7,7 @@
 
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
-#include "libANGLE/renderer/d3d/d3d11/load_functions_table.h"
+#include "libANGLE/renderer/load_functions_table.h"
 
 namespace rx
 {
