@@ -47,7 +47,7 @@ Format::Format(GLenum internalFormat,
       blitSRVFormat(blitSRVFormat),
       swizzle(swizzleFormat == internalFormat ? *this : Format::Get(swizzleFormat, deviceCaps)),
       dataInitializerFunction(internalFormatInitializer),
-      loadFunctions(GetLoadFunctionsMap(internalFormat, texFormat))
+      loadFunctions(GetLoadFunctionsMap(internalFormat, formatID))
 {
 }
 

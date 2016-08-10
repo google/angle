@@ -15,9 +15,6 @@
 #include "image_util/generatemip.h"
 #include "image_util/loadimage.h"
 
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
-
 using namespace angle;
 
 namespace rx
@@ -400,19 +397,7 @@ LoadImageFunctionInfo DEPTH24_STENCIL8_to_D24_UNORM_S8_UINT(GLenum type)
     }
 }
 
-LoadImageFunctionInfo DEPTH24_STENCIL8_to_R24G8_TYPELESS(GLenum type)
-{
-    switch (type)
-    {
-        case GL_UNSIGNED_INT_24_8:
-            return LoadImageFunctionInfo(LoadR32ToR24G8, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
-LoadImageFunctionInfo DEPTH32F_STENCIL8_to_R32G8X24_TYPELESS(GLenum type)
+LoadImageFunctionInfo DEPTH32F_STENCIL8_to_D32_FLOAT_S8X24_UINT(GLenum type)
 {
     switch (type)
     {
@@ -424,31 +409,7 @@ LoadImageFunctionInfo DEPTH32F_STENCIL8_to_R32G8X24_TYPELESS(GLenum type)
     }
 }
 
-LoadImageFunctionInfo DEPTH32F_STENCIL8_to_default(GLenum type)
-{
-    switch (type)
-    {
-        case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
-            return LoadImageFunctionInfo(UnimplementedLoadFunction, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
 LoadImageFunctionInfo DEPTH_COMPONENT16_to_D16_UNORM(GLenum type)
-{
-    switch (type)
-    {
-        case GL_UNSIGNED_SHORT:
-            return LoadImageFunctionInfo(LoadToNative<GLushort, 1>, false);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
-LoadImageFunctionInfo DEPTH_COMPONENT16_to_R16_TYPELESS(GLenum type)
 {
     switch (type)
     {
@@ -474,36 +435,12 @@ LoadImageFunctionInfo DEPTH_COMPONENT24_to_D24_UNORM_S8_UINT(GLenum type)
     }
 }
 
-LoadImageFunctionInfo DEPTH_COMPONENT24_to_R24G8_TYPELESS(GLenum type)
-{
-    switch (type)
-    {
-        case GL_UNSIGNED_INT:
-            return LoadImageFunctionInfo(LoadR32ToR24G8, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
-LoadImageFunctionInfo DEPTH_COMPONENT32F_to_R32_TYPELESS(GLenum type)
+LoadImageFunctionInfo DEPTH_COMPONENT32F_to_D32_FLOAT(GLenum type)
 {
     switch (type)
     {
         case GL_FLOAT:
             return LoadImageFunctionInfo(LoadD32FToD32F, true);
-        default:
-            UNREACHABLE();
-            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
-    }
-}
-
-LoadImageFunctionInfo DEPTH_COMPONENT32F_to_default(GLenum type)
-{
-    switch (type)
-    {
-        case GL_FLOAT:
-            return LoadImageFunctionInfo(UnimplementedLoadFunction, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
@@ -522,7 +459,7 @@ LoadImageFunctionInfo DEPTH_COMPONENT32_OES_to_default(GLenum type)
     }
 }
 
-LoadImageFunctionInfo ETC1_RGB8_LOSSY_DECODE_ANGLE_to_BC1_UNORM(GLenum type)
+LoadImageFunctionInfo ETC1_RGB8_LOSSY_DECODE_ANGLE_to_BC1_RGB_UNORM_BLOCK(GLenum type)
 {
     switch (type)
     {
@@ -1514,18 +1451,18 @@ LoadImageFunctionInfo STENCIL_INDEX8_to_default(GLenum type)
 
 }  // namespace
 
-LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiFormat)
+LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, Format::ID angleFormat)
 {
     // clang-format off
     switch (internalFormat)
     {
         case GL_ALPHA:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                case Format::ID::R16G16B16A16_FLOAT:
                     return ALPHA_to_R16G16B16A16_FLOAT;
-                case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                case Format::ID::R32G32B32A32_FLOAT:
                     return ALPHA_to_R32G32B32A32_FLOAT;
                 default:
                     return ALPHA_to_default;
@@ -1537,11 +1474,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return ALPHA32F_EXT_to_default;
         case GL_ALPHA8_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_A8_UNORM:
+                case Format::ID::A8_UNORM:
                     return ALPHA8_EXT_to_A8_UNORM;
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return ALPHA8_EXT_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -1549,9 +1486,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_BGR565_ANGLEX:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_B5G6R5_UNORM:
+                case Format::ID::B5G6R5_UNORM:
                     return BGR565_ANGLEX_to_B5G6R5_UNORM;
                 default:
                     break;
@@ -1567,9 +1504,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return BGRA_EXT_to_default;
         case GL_COMPRESSED_R11_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_UNORM:
+                case Format::ID::R8_UNORM:
                     return COMPRESSED_R11_EAC_to_R8_UNORM;
                 default:
                     break;
@@ -1577,9 +1514,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_RG11_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_UNORM:
+                case Format::ID::R8G8_UNORM:
                     return COMPRESSED_RG11_EAC_to_R8G8_UNORM;
                 default:
                     break;
@@ -1587,9 +1524,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_RGB8_ETC2:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return COMPRESSED_RGB8_ETC2_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -1597,9 +1534,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -1607,9 +1544,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_RGBA8_ETC2_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return COMPRESSED_RGBA8_ETC2_EAC_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -1625,9 +1562,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return COMPRESSED_RGB_S3TC_DXT1_EXT_to_default;
         case GL_COMPRESSED_SIGNED_R11_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_SNORM:
+                case Format::ID::R8_SNORM:
                     return COMPRESSED_SIGNED_R11_EAC_to_R8_SNORM;
                 default:
                     break;
@@ -1635,9 +1572,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_SIGNED_RG11_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_SNORM:
+                case Format::ID::R8G8_SNORM:
                     return COMPRESSED_SIGNED_RG11_EAC_to_R8G8_SNORM;
                 default:
                     break;
@@ -1645,9 +1582,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                case Format::ID::R8G8B8A8_UNORM_SRGB:
                     return COMPRESSED_SRGB8_ALPHA8_ETC2_EAC_to_R8G8B8A8_UNORM_SRGB;
                 default:
                     break;
@@ -1655,9 +1592,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_SRGB8_ETC2:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                case Format::ID::R8G8B8A8_UNORM_SRGB:
                     return COMPRESSED_SRGB8_ETC2_to_R8G8B8A8_UNORM_SRGB;
                 default:
                     break;
@@ -1665,9 +1602,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                case Format::ID::R8G8B8A8_UNORM_SRGB:
                     return COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2_to_R8G8B8A8_UNORM_SRGB;
                 default:
                     break;
@@ -1675,77 +1612,71 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_DEPTH24_STENCIL8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_D24_UNORM_S8_UINT:
+                case Format::ID::D24_UNORM_S8_UINT:
                     return DEPTH24_STENCIL8_to_D24_UNORM_S8_UINT;
-                case DXGI_FORMAT_R24G8_TYPELESS:
-                    return DEPTH24_STENCIL8_to_R24G8_TYPELESS;
                 default:
                     break;
             }
         }
         case GL_DEPTH32F_STENCIL8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G8X24_TYPELESS:
-                    return DEPTH32F_STENCIL8_to_R32G8X24_TYPELESS;
+                case Format::ID::D32_FLOAT_S8X24_UINT:
+                    return DEPTH32F_STENCIL8_to_D32_FLOAT_S8X24_UINT;
                 default:
-                    return DEPTH32F_STENCIL8_to_default;
+                    break;
             }
         }
         case GL_DEPTH_COMPONENT16:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_D16_UNORM:
+                case Format::ID::D16_UNORM:
                     return DEPTH_COMPONENT16_to_D16_UNORM;
-                case DXGI_FORMAT_R16_TYPELESS:
-                    return DEPTH_COMPONENT16_to_R16_TYPELESS;
                 default:
                     break;
             }
         }
         case GL_DEPTH_COMPONENT24:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_D24_UNORM_S8_UINT:
+                case Format::ID::D24_UNORM_S8_UINT:
                     return DEPTH_COMPONENT24_to_D24_UNORM_S8_UINT;
-                case DXGI_FORMAT_R24G8_TYPELESS:
-                    return DEPTH_COMPONENT24_to_R24G8_TYPELESS;
                 default:
                     break;
             }
         }
         case GL_DEPTH_COMPONENT32F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32_TYPELESS:
-                    return DEPTH_COMPONENT32F_to_R32_TYPELESS;
+                case Format::ID::D32_FLOAT:
+                    return DEPTH_COMPONENT32F_to_D32_FLOAT;
                 default:
-                    return DEPTH_COMPONENT32F_to_default;
+                    break;
             }
         }
         case GL_DEPTH_COMPONENT32_OES:
             return DEPTH_COMPONENT32_OES_to_default;
         case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_BC1_UNORM:
-                    return ETC1_RGB8_LOSSY_DECODE_ANGLE_to_BC1_UNORM;
+                case Format::ID::BC1_RGB_UNORM_BLOCK:
+                    return ETC1_RGB8_LOSSY_DECODE_ANGLE_to_BC1_RGB_UNORM_BLOCK;
                 default:
                     break;
             }
         }
         case GL_ETC1_RGB8_OES:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return ETC1_RGB8_OES_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -1753,11 +1684,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_LUMINANCE:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                case Format::ID::R16G16B16A16_FLOAT:
                     return LUMINANCE_to_R16G16B16A16_FLOAT;
-                case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                case Format::ID::R32G32B32A32_FLOAT:
                     return LUMINANCE_to_R32G32B32A32_FLOAT;
                 default:
                     return LUMINANCE_to_default;
@@ -1773,11 +1704,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return LUMINANCE8_EXT_to_default;
         case GL_LUMINANCE_ALPHA:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                case Format::ID::R16G16B16A16_FLOAT:
                     return LUMINANCE_ALPHA_to_R16G16B16A16_FLOAT;
-                case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                case Format::ID::R32G32B32A32_FLOAT:
                     return LUMINANCE_ALPHA_to_R32G32B32A32_FLOAT;
                 default:
                     return LUMINANCE_ALPHA_to_default;
@@ -1789,9 +1720,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return LUMINANCE_ALPHA32F_EXT_to_default;
         case GL_R11F_G11F_B10F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R11G11B10_FLOAT:
+                case Format::ID::R11G11B10_FLOAT:
                     return R11F_G11F_B10F_to_R11G11B10_FLOAT;
                 default:
                     break;
@@ -1799,9 +1730,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R16F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16_FLOAT:
+                case Format::ID::R16_FLOAT:
                     return R16F_to_R16_FLOAT;
                 default:
                     break;
@@ -1809,9 +1740,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R16I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16_SINT:
+                case Format::ID::R16_SINT:
                     return R16I_to_R16_SINT;
                 default:
                     break;
@@ -1819,9 +1750,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R16UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16_UINT:
+                case Format::ID::R16_UINT:
                     return R16UI_to_R16_UINT;
                 default:
                     break;
@@ -1829,9 +1760,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R16_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16_UNORM:
+                case Format::ID::R16_UNORM:
                     return R16_EXT_to_R16_UNORM;
                 default:
                     break;
@@ -1839,9 +1770,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R16_SNORM_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16_SNORM:
+                case Format::ID::R16_SNORM:
                     return R16_SNORM_EXT_to_R16_SNORM;
                 default:
                     break;
@@ -1849,9 +1780,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R32F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32_FLOAT:
+                case Format::ID::R32_FLOAT:
                     return R32F_to_R32_FLOAT;
                 default:
                     break;
@@ -1859,9 +1790,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R32I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32_SINT:
+                case Format::ID::R32_SINT:
                     return R32I_to_R32_SINT;
                 default:
                     break;
@@ -1869,9 +1800,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R32UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32_UINT:
+                case Format::ID::R32_UINT:
                     return R32UI_to_R32_UINT;
                 default:
                     break;
@@ -1879,9 +1810,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_UNORM:
+                case Format::ID::R8_UNORM:
                     return R8_to_R8_UNORM;
                 default:
                     break;
@@ -1889,9 +1820,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R8I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_SINT:
+                case Format::ID::R8_SINT:
                     return R8I_to_R8_SINT;
                 default:
                     break;
@@ -1899,9 +1830,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R8UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_UINT:
+                case Format::ID::R8_UINT:
                     return R8UI_to_R8_UINT;
                 default:
                     break;
@@ -1909,9 +1840,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_R8_SNORM:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8_SNORM:
+                case Format::ID::R8_SNORM:
                     return R8_SNORM_to_R8_SNORM;
                 default:
                     break;
@@ -1919,9 +1850,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG16F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16_FLOAT:
+                case Format::ID::R16G16_FLOAT:
                     return RG16F_to_R16G16_FLOAT;
                 default:
                     break;
@@ -1929,9 +1860,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG16I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16_SINT:
+                case Format::ID::R16G16_SINT:
                     return RG16I_to_R16G16_SINT;
                 default:
                     break;
@@ -1939,9 +1870,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG16UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16_UINT:
+                case Format::ID::R16G16_UINT:
                     return RG16UI_to_R16G16_UINT;
                 default:
                     break;
@@ -1949,9 +1880,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG16_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16_UNORM:
+                case Format::ID::R16G16_UNORM:
                     return RG16_EXT_to_R16G16_UNORM;
                 default:
                     break;
@@ -1959,9 +1890,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG16_SNORM_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16_SNORM:
+                case Format::ID::R16G16_SNORM:
                     return RG16_SNORM_EXT_to_R16G16_SNORM;
                 default:
                     break;
@@ -1969,9 +1900,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG32F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32_FLOAT:
+                case Format::ID::R32G32_FLOAT:
                     return RG32F_to_R32G32_FLOAT;
                 default:
                     break;
@@ -1979,9 +1910,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG32I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32_SINT:
+                case Format::ID::R32G32_SINT:
                     return RG32I_to_R32G32_SINT;
                 default:
                     break;
@@ -1989,9 +1920,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG32UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32_UINT:
+                case Format::ID::R32G32_UINT:
                     return RG32UI_to_R32G32_UINT;
                 default:
                     break;
@@ -1999,9 +1930,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_UNORM:
+                case Format::ID::R8G8_UNORM:
                     return RG8_to_R8G8_UNORM;
                 default:
                     break;
@@ -2009,9 +1940,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG8I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_SINT:
+                case Format::ID::R8G8_SINT:
                     return RG8I_to_R8G8_SINT;
                 default:
                     break;
@@ -2019,9 +1950,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG8UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_UINT:
+                case Format::ID::R8G8_UINT:
                     return RG8UI_to_R8G8_UINT;
                 default:
                     break;
@@ -2029,9 +1960,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RG8_SNORM:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8_SNORM:
+                case Format::ID::R8G8_SNORM:
                     return RG8_SNORM_to_R8G8_SNORM;
                 default:
                     break;
@@ -2041,9 +1972,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return RGB_to_default;
         case GL_RGB10_A2:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R10G10B10A2_UNORM:
+                case Format::ID::R10G10B10A2_UNORM:
                     return RGB10_A2_to_R10G10B10A2_UNORM;
                 default:
                     break;
@@ -2051,9 +1982,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB10_A2UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R10G10B10A2_UINT:
+                case Format::ID::R10G10B10A2_UINT:
                     return RGB10_A2UI_to_R10G10B10A2_UINT;
                 default:
                     break;
@@ -2061,9 +1992,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB16F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                case Format::ID::R16G16B16A16_FLOAT:
                     return RGB16F_to_R16G16B16A16_FLOAT;
                 default:
                     break;
@@ -2071,9 +2002,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB16I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_SINT:
+                case Format::ID::R16G16B16A16_SINT:
                     return RGB16I_to_R16G16B16A16_SINT;
                 default:
                     break;
@@ -2081,9 +2012,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB16UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_UINT:
+                case Format::ID::R16G16B16A16_UINT:
                     return RGB16UI_to_R16G16B16A16_UINT;
                 default:
                     break;
@@ -2091,9 +2022,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB16_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_UNORM:
+                case Format::ID::R16G16B16A16_UNORM:
                     return RGB16_EXT_to_R16G16B16A16_UNORM;
                 default:
                     break;
@@ -2101,9 +2032,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB16_SNORM_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_SNORM:
+                case Format::ID::R16G16B16A16_SNORM:
                     return RGB16_SNORM_EXT_to_R16G16B16A16_SNORM;
                 default:
                     break;
@@ -2111,9 +2042,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB32F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                case Format::ID::R32G32B32A32_FLOAT:
                     return RGB32F_to_R32G32B32A32_FLOAT;
                 default:
                     break;
@@ -2121,9 +2052,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB32I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_SINT:
+                case Format::ID::R32G32B32A32_SINT:
                     return RGB32I_to_R32G32B32A32_SINT;
                 default:
                     break;
@@ -2131,9 +2062,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB32UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_UINT:
+                case Format::ID::R32G32B32A32_UINT:
                     return RGB32UI_to_R32G32B32A32_UINT;
                 default:
                     break;
@@ -2141,11 +2072,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB565:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_B5G6R5_UNORM:
+                case Format::ID::B5G6R5_UNORM:
                     return RGB565_to_B5G6R5_UNORM;
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return RGB565_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -2153,11 +2084,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB5_A1:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_B5G5R5A1_UNORM:
+                case Format::ID::B5G5R5A1_UNORM:
                     return RGB5_A1_to_B5G5R5A1_UNORM;
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return RGB5_A1_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -2165,9 +2096,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return RGB8_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -2175,9 +2106,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB8I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_SINT:
+                case Format::ID::R8G8B8A8_SINT:
                     return RGB8I_to_R8G8B8A8_SINT;
                 default:
                     break;
@@ -2185,9 +2116,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB8UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UINT:
+                case Format::ID::R8G8B8A8_UINT:
                     return RGB8UI_to_R8G8B8A8_UINT;
                 default:
                     break;
@@ -2195,9 +2126,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB8_SNORM:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_SNORM:
+                case Format::ID::R8G8B8A8_SNORM:
                     return RGB8_SNORM_to_R8G8B8A8_SNORM;
                 default:
                     break;
@@ -2205,9 +2136,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGB9_E5:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R9G9B9E5_SHAREDEXP:
+                case Format::ID::R9G9B9E5_SHAREDEXP:
                     return RGB9_E5_to_R9G9B9E5_SHAREDEXP;
                 default:
                     break;
@@ -2217,9 +2148,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
             return RGBA_to_default;
         case GL_RGBA16F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_FLOAT:
+                case Format::ID::R16G16B16A16_FLOAT:
                     return RGBA16F_to_R16G16B16A16_FLOAT;
                 default:
                     break;
@@ -2227,9 +2158,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA16I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_SINT:
+                case Format::ID::R16G16B16A16_SINT:
                     return RGBA16I_to_R16G16B16A16_SINT;
                 default:
                     break;
@@ -2237,9 +2168,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA16UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_UINT:
+                case Format::ID::R16G16B16A16_UINT:
                     return RGBA16UI_to_R16G16B16A16_UINT;
                 default:
                     break;
@@ -2247,9 +2178,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA16_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_UNORM:
+                case Format::ID::R16G16B16A16_UNORM:
                     return RGBA16_EXT_to_R16G16B16A16_UNORM;
                 default:
                     break;
@@ -2257,9 +2188,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA16_SNORM_EXT:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R16G16B16A16_SNORM:
+                case Format::ID::R16G16B16A16_SNORM:
                     return RGBA16_SNORM_EXT_to_R16G16B16A16_SNORM;
                 default:
                     break;
@@ -2267,9 +2198,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA32F:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_FLOAT:
+                case Format::ID::R32G32B32A32_FLOAT:
                     return RGBA32F_to_R32G32B32A32_FLOAT;
                 default:
                     break;
@@ -2277,9 +2208,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA32I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_SINT:
+                case Format::ID::R32G32B32A32_SINT:
                     return RGBA32I_to_R32G32B32A32_SINT;
                 default:
                     break;
@@ -2287,9 +2218,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA32UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R32G32B32A32_UINT:
+                case Format::ID::R32G32B32A32_UINT:
                     return RGBA32UI_to_R32G32B32A32_UINT;
                 default:
                     break;
@@ -2297,11 +2228,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA4:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_B4G4R4A4_UNORM:
+                case Format::ID::B4G4R4A4_UNORM:
                     return RGBA4_to_B4G4R4A4_UNORM;
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return RGBA4_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -2309,9 +2240,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM:
+                case Format::ID::R8G8B8A8_UNORM:
                     return RGBA8_to_R8G8B8A8_UNORM;
                 default:
                     break;
@@ -2319,9 +2250,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA8I:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_SINT:
+                case Format::ID::R8G8B8A8_SINT:
                     return RGBA8I_to_R8G8B8A8_SINT;
                 default:
                     break;
@@ -2329,9 +2260,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA8UI:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UINT:
+                case Format::ID::R8G8B8A8_UINT:
                     return RGBA8UI_to_R8G8B8A8_UINT;
                 default:
                     break;
@@ -2339,9 +2270,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_RGBA8_SNORM:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_SNORM:
+                case Format::ID::R8G8B8A8_SNORM:
                     return RGBA8_SNORM_to_R8G8B8A8_SNORM;
                 default:
                     break;
@@ -2349,9 +2280,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_SRGB8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                case Format::ID::R8G8B8A8_UNORM_SRGB:
                     return SRGB8_to_R8G8B8A8_UNORM_SRGB;
                 default:
                     break;
@@ -2359,9 +2290,9 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiForma
         }
         case GL_SRGB8_ALPHA8:
         {
-            switch (dxgiFormat)
+            switch (angleFormat)
             {
-                case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+                case Format::ID::R8G8B8A8_UNORM_SRGB:
                     return SRGB8_ALPHA8_to_R8G8B8A8_UNORM_SRGB;
                 default:
                     break;

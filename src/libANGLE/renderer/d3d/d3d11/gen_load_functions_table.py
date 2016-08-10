@@ -29,9 +29,6 @@ template = """// GENERATED FILE - DO NOT EDIT.
 #include "image_util/generatemip.h"
 #include "image_util/loadimage.h"
 
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
-
 using namespace angle;
 
 namespace rx
@@ -78,7 +75,7 @@ void UnreachableLoadFunction(size_t width,
 
 {load_functions_data}}}  // namespace
 
-LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, DXGI_FORMAT {dxgi_format})
+LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, Format::ID {angle_format})
 {{
     // clang-format off
     switch ({internal_format})
@@ -100,12 +97,11 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum {internal_format}, DXGI_FORMAT {dxgi_
 """
 
 internal_format_param = 'internalFormat'
-dxgi_format_param = 'dxgiFormat'
-dxgi_format_unknown = "DXGI_FORMAT_UNKNOWN"
+angle_format_param = 'angleFormat'
+angle_format_unknown = 'NONE'
 
-def load_functions_name(internal_format, dxgi_format):
-    short_name = dxgi_format if dxgi_format == "default" else dxgi_format[len("DXGI_FORMAT_"):]
-    return internal_format[3:] + "_to_" + short_name
+def load_functions_name(internal_format, angle_format):
+    return internal_format[3:] + "_to_" + angle_format
 
 def unknown_func_name(internal_format):
     return load_functions_name(internal_format, "default")
@@ -128,41 +124,41 @@ def get_load_func(func_name, type_functions):
 
     return snippet
 
-def get_unknown_load_func(dxgi_to_type_map, internal_format):
-    assert dxgi_format_unknown in dxgi_to_type_map
-    return get_load_func(unknown_func_name(internal_format), dxgi_to_type_map[dxgi_format_unknown])
+def get_unknown_load_func(angle_to_type_map, internal_format):
+    assert angle_format_unknown in angle_to_type_map
+    return get_load_func(unknown_func_name(internal_format), angle_to_type_map[angle_format_unknown])
 
 def parse_json(json_data):
     table_data = ''
     load_functions_data = ''
-    for internal_format, dxgi_to_type_map in sorted(json_data.iteritems()):
+    for internal_format, angle_to_type_map in sorted(json_data.iteritems()):
 
         s = '        '
 
         table_data += s + 'case ' + internal_format + ':\n'
 
-        do_switch = len(dxgi_to_type_map) > 1 or dxgi_to_type_map.keys()[0] != dxgi_format_unknown
+        do_switch = len(angle_to_type_map) > 1 or angle_to_type_map.keys()[0] != angle_format_unknown
 
         if do_switch:
             table_data += s + '{\n'
             s += '    '
-            table_data += s + 'switch (' + dxgi_format_param + ')\n'
+            table_data += s + 'switch (' + angle_format_param + ')\n'
             table_data += s + '{\n'
             s += '    '
 
-        for dxgi_format, type_functions in sorted(dxgi_to_type_map.iteritems()):
+        for angle_format, type_functions in sorted(angle_to_type_map.iteritems()):
 
-            if dxgi_format == dxgi_format_unknown:
+            if angle_format == angle_format_unknown:
                 continue
 
-            func_name = load_functions_name(internal_format, dxgi_format)
+            func_name = load_functions_name(internal_format, angle_format)
 
             # Main case statements
-            table_data += s + 'case ' + dxgi_format + ':\n'
+            table_data += s + 'case Format::ID::' + angle_format + ':\n'
             table_data += s + '    return ' + func_name + ';\n'
 
-            if dxgi_format_unknown in dxgi_to_type_map:
-                for gl_type, load_function in dxgi_to_type_map[dxgi_format_unknown].iteritems():
+            if angle_format_unknown in angle_to_type_map:
+                for gl_type, load_function in angle_to_type_map[angle_format_unknown].iteritems():
                     if gl_type not in type_functions:
                         type_functions[gl_type] = load_function
 
@@ -171,9 +167,9 @@ def parse_json(json_data):
         if do_switch:
             table_data += s + 'default:\n'
 
-        if dxgi_format_unknown in dxgi_to_type_map:
+        if angle_format_unknown in angle_to_type_map:
             table_data += s + '    return ' + unknown_func_name(internal_format) + ';\n'
-            load_functions_data += get_unknown_load_func(dxgi_to_type_map, internal_format)
+            load_functions_data += get_unknown_load_func(angle_to_type_map, internal_format)
         else:
             table_data += s + '    break;\n'
 
@@ -189,7 +185,7 @@ json_data = angle_format.load_json('load_functions_data.json')
 
 switch_data, load_functions_data = parse_json(json_data)
 output = template.format(internal_format = internal_format_param,
-                         dxgi_format = dxgi_format_param,
+                         angle_format = angle_format_param,
                          switch_data = switch_data,
                          load_functions_data = load_functions_data)
 

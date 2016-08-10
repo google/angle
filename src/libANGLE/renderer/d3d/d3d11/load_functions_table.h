@@ -10,10 +10,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_LOADFUNCTIONSTABLE_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_LOADFUNCTIONSTABLE_H_
 
-#include <map>
-
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
+#include "libANGLE/renderer/Format.h"
 
 namespace rx
 {
@@ -21,7 +18,7 @@ namespace rx
 namespace d3d11
 {
 
-LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, DXGI_FORMAT dxgiFormat);
+LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, angle::Format::ID angleFormat);
 
 }  // namespace d3d11
 
