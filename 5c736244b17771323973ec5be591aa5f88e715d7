@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1919df0e_4c9a5b05",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-10T00:51:30Z",
+      "side": 1,
+      "message": "I see. OK.",
+      "parentUuid": "1919df0e_6c15df95",
+      "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_918c0c34",
         "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Same situation here.  I copied from other places. I probably wrote the first example, so still guilty. I forgot the reason, but it looked deliberately out of the way, so I assume there was a good reason. Just I can\u0027t remember.",
       "parentUuid": "1919df0e_918c0c34",
+      "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1919df0e_ac59b765",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-10T00:51:30Z",
+      "side": 1,
+      "message": "OK.",
+      "parentUuid": "1919df0e_2c684721",
       "revId": "5c736244b17771323973ec5be591aa5f88e715d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
