@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1919df0e_4cffb1cd",
+        "filename": "src/libANGLE/renderer/gen_angle_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-10T17:37:39Z",
+      "side": 1,
+      "message": "Is it better to change the filename to .h?",
+      "revId": "d9f05636cef84daa2bed15e524467740069e09a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
