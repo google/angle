@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d924a797_51eba70f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T17:31:46Z",
+      "side": 1,
+      "message": "I appreciate you trying to tackle this bug, but I don\u0027t agree with your analysis.\n\nThe quote of the MSDN docs[1] refers to the variable \"Location\", not offset. I think it means that if Location + Offset are out-of-bounds, the read will return 0. In the OpenGL 3.0 spec, page 76, it says such reads are undefined. Thus, the only way the wording of the D3D11 text would be relevant is if the dEQP test is using undefined OpenGL behaviour. If this is the case, there is a bug in the dEQP test. I believe this is *not* the case, but can you confirm?\n\n[1]: https://msdn.microsoft.com/en-us/library/windows/desktop/bb509694(v\u003dvs.85).aspx",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 66
+      },
+      "revId": "9e5f27f87cec766736d830c070a8120cefee3d06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_517e4746",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T17:31:46Z",
+      "side": 1,
+      "message": "I think your workaround is OK, and it\u0027s not even that bad to apply the workaround to all D3D11 shaders, but ideally we would apply the workaround only to the platforms which display the bug (ie, Intel with driver versions prior to the bug being fixed - and at this point I suspect there is an Intel bug).\n\nI suggest you take a different approach: instead of editing the workaround into TextureFunctionHLSL here, make a tree traverser that rewrites calls to textureFetchOffset to textureFetch, and apply this traversal rewriting step in TranslatorHLSL::translate. See sh::ExpandIntegerPowExpressions as a basic example to get started.\n\nYou\u0027ll also need to add a new compile option in ShaderLang.h to ShCompileOptions, and a new bool to WorkaroundsD3D.h. Again see expandIntegerPowExpressions for how to manage this.",
+      "range": {
+        "startLine": 835,
+        "startChar": 5,
+        "endLine": 866,
+        "endChar": 8
+      },
+      "revId": "9e5f27f87cec766736d830c070a8120cefee3d06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
