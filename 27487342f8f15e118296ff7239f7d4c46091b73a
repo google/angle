@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_dee0c5be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "It seems not. There is one shader which just has the local size layout qualifiers, but in that test also dispatch compute gets used.",
+      "parentUuid": "59dd179f_a938ddf6",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 0
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_c95ef14a",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -65,6 +89,48 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_1e2e2df5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "What would be the purpose of UNUSED_ASSERTION_VARIABLE in that case?\nAs far as I see, the macro clears the expression when assertions are enabled and keeps the expression when they are not.",
+      "parentUuid": "1919df0e_3222d4c2",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 13
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_3e29e9ec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c95ef14a",
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_72f92c1b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -76,6 +142,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "Could you add a comment about what this logic is checking for? It\u0027s not obvious from the code with one bool being a negation.  The info log probably needs to be written to as well.",
+      "range": {
+        "startLine": 578,
+        "startChar": 4,
+        "endLine": 578,
+        "endChar": 61
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_7e06517c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done.\nThe check is added because having both a compute and non-compute shader attached to the same program should lead to a linking error.",
+      "parentUuid": "1919df0e_72f92c1b",
       "range": {
         "startLine": 578,
         "startChar": 4,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_5e0b9582",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_b249046e",
+      "range": {
+        "startLine": 587,
+        "startChar": 12,
+        "endLine": 587,
+        "endChar": 38
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_725ccc1f",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -122,6 +236,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "Either pass the info log in or write the error information to it here.",
+      "range": {
+        "startLine": 593,
+        "startChar": 13,
+        "endLine": 593,
+        "endChar": 32
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be1b5969_b498806b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_725ccc1f",
       "range": {
         "startLine": 593,
         "startChar": 13,
@@ -180,6 +318,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_1e050d6b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_d2eb580e",
+      "range": {
+        "startLine": 1889,
+        "startChar": 14,
+        "endLine": 1889,
+        "endChar": 46
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_92f5e0e9",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -197,6 +359,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_fe1941d9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1923,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_92f5e0e9",
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_72628cb5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -208,6 +388,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "Can probably be const too.",
+      "range": {
+        "startLine": 2162,
+        "startChar": 14,
+        "endLine": 2162,
+        "endChar": 40
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_be13b9b5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2162,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_72628cb5",
       "range": {
         "startLine": 2162,
         "startChar": 14,
@@ -243,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_9e10fda9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2182,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_32441420",
+      "range": {
+        "startLine": 2182,
+        "startChar": 14,
+        "endLine": 2182,
+        "endChar": 64
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_727b6c55",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -260,6 +488,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_7e6d3132",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2213,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_727b6c55",
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_d207d8c6",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -271,6 +517,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "nit: merge into the if statement",
+      "range": {
+        "startLine": 2220,
+        "startChar": 8,
+        "endLine": 2224,
+        "endChar": 25
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_5e727514",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2224,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_d207d8c6",
       "range": {
         "startLine": 2220,
         "startChar": 8,
@@ -330,6 +600,54 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_3e77a904",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_b23344a7",
+      "range": {
+        "startLine": 2236,
+        "startChar": 13,
+        "endLine": 2236,
+        "endChar": 41
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_1e7cede4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_696ee5ff",
+      "range": {
+        "startLine": 2236,
+        "startChar": 13,
+        "endLine": 2236,
+        "endChar": 41
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_d2f118cf",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -341,6 +659,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "same nits as above for these cases.",
+      "range": {
+        "startLine": 2593,
+        "startChar": 8,
+        "endLine": 2600,
+        "endChar": 25
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_de5d6585",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2600,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_d2f118cf",
       "range": {
         "startLine": 2593,
         "startChar": 8,
@@ -399,6 +741,30 @@
     },
     {
       "key": {
+        "uuid": "be49997d_24ea12a2",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_b2dd8437",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 23
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1919df0e_72d7ec15",
         "filename": "src/libANGLE/Shader.cpp",
         "patchSetId": 4
@@ -410,6 +776,30 @@
       "writtenOn": "2016-08-10T18:43:34Z",
       "side": 1,
       "message": "nit: fill",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 5
+      },
+      "revId": "27487342f8f15e118296ff7239f7d4c46091b73a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e0d452c_b73c082c",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-11T09:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1919df0e_72d7ec15",
       "range": {
         "startLine": 78,
         "startChar": 4,
