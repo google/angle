@@ -1377,61 +1377,48 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
         GLintptr uniformBufferOffset = uniformBuffer.getOffset();
         GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
 
-        if (uniformBuffer.get() != nullptr)
+        if (uniformBuffer.get() == nullptr)
         {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer.get());
-            ID3D11Buffer *constantBuffer;
+            continue;
+        }
 
-            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
+        Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
+        ID3D11Buffer *constantBuffer = nullptr;
+
+        ANGLE_TRY_RESULT(
+            bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize),
+            constantBuffer);
+
+        if (!constantBuffer)
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Error retrieving constant buffer");
+        }
+
+        if (mCurrentConstantBufferVS[uniformBufferIndex] != bufferStorage->getSerial() ||
+            mCurrentConstantBufferVSOffset[uniformBufferIndex] != uniformBufferOffset ||
+            mCurrentConstantBufferVSSize[uniformBufferIndex] != uniformBufferSize)
+        {
+            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
             {
-                auto bufferOrError = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                constantBuffer = bufferOrError.getResult();
+                UINT firstConstant = 0, numConstants = 0;
+                CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize,
+                                              &firstConstant, &numConstants);
+                mDeviceContext1->VSSetConstantBuffers1(
+                    getReservedVertexUniformBuffers() +
+                        static_cast<unsigned int>(uniformBufferIndex),
+                    1, &constantBuffer, &firstConstant, &numConstants);
             }
             else
             {
-                auto bufferOrError =
-                    bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                constantBuffer = bufferOrError.getResult();
+                mDeviceContext->VSSetConstantBuffers(
+                    getReservedVertexUniformBuffers() +
+                        static_cast<unsigned int>(uniformBufferIndex),
+                    1, &constantBuffer);
             }
 
-            if (!constantBuffer)
-            {
-                return gl::Error(GL_OUT_OF_MEMORY);
-            }
-
-            if (mCurrentConstantBufferVS[uniformBufferIndex] != bufferStorage->getSerial() ||
-                mCurrentConstantBufferVSOffset[uniformBufferIndex] != uniformBufferOffset ||
-                mCurrentConstantBufferVSSize[uniformBufferIndex] != uniformBufferSize)
-            {
-                if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
-                {
-                    UINT firstConstant = 0, numConstants = 0;
-                    CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
-                    mDeviceContext1->VSSetConstantBuffers1(
-                        getReservedVertexUniformBuffers() +
-                            static_cast<unsigned int>(uniformBufferIndex),
-                        1, &constantBuffer, &firstConstant, &numConstants);
-                }
-                else
-                {
-                    mDeviceContext->VSSetConstantBuffers(
-                        getReservedVertexUniformBuffers() +
-                            static_cast<unsigned int>(uniformBufferIndex),
-                        1, &constantBuffer);
-                }
-
-                mCurrentConstantBufferVS[uniformBufferIndex] = bufferStorage->getSerial();
-                mCurrentConstantBufferVSOffset[uniformBufferIndex] = uniformBufferOffset;
-                mCurrentConstantBufferVSSize[uniformBufferIndex] = uniformBufferSize;
-            }
+            mCurrentConstantBufferVS[uniformBufferIndex]       = bufferStorage->getSerial();
+            mCurrentConstantBufferVSOffset[uniformBufferIndex] = uniformBufferOffset;
+            mCurrentConstantBufferVSSize[uniformBufferIndex]   = uniformBufferSize;
         }
     }
 
@@ -1449,65 +1436,52 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
         GLintptr uniformBufferOffset = uniformBuffer.getOffset();
         GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
 
-        if (uniformBuffer.get() != nullptr)
+        if (uniformBuffer.get() == nullptr)
         {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(uniformBuffer.get());
-            ID3D11Buffer *constantBuffer;
+            continue;
+        }
 
-            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets)
+        Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
+        ID3D11Buffer *constantBuffer = nullptr;
+
+        ANGLE_TRY_RESULT(
+            bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize),
+            constantBuffer);
+
+        if (!constantBuffer)
+        {
+            return gl::Error(GL_OUT_OF_MEMORY, "Error retrieving constant buffer");
+        }
+
+        if (mCurrentConstantBufferPS[uniformBufferIndex] != bufferStorage->getSerial() ||
+            mCurrentConstantBufferPSOffset[uniformBufferIndex] != uniformBufferOffset ||
+            mCurrentConstantBufferPSSize[uniformBufferIndex] != uniformBufferSize)
+        {
+            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
             {
-                auto bufferOrError = bufferStorage->getBuffer(BUFFER_USAGE_UNIFORM);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                constantBuffer = bufferOrError.getResult();
+                UINT firstConstant = 0, numConstants = 0;
+                CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize,
+                                              &firstConstant, &numConstants);
+                mDeviceContext1->PSSetConstantBuffers1(
+                    getReservedFragmentUniformBuffers() +
+                        static_cast<unsigned int>(uniformBufferIndex),
+                    1, &constantBuffer, &firstConstant, &numConstants);
             }
             else
             {
-                auto bufferOrError =
-                    bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize);
-                if (bufferOrError.isError())
-                {
-                    return bufferOrError.getError();
-                }
-                constantBuffer = bufferOrError.getResult();
+                mDeviceContext->PSSetConstantBuffers(
+                    getReservedFragmentUniformBuffers() +
+                        static_cast<unsigned int>(uniformBufferIndex),
+                    1, &constantBuffer);
             }
 
-            if (!constantBuffer)
-            {
-                return gl::Error(GL_OUT_OF_MEMORY);
-            }
-
-            if (mCurrentConstantBufferPS[uniformBufferIndex] != bufferStorage->getSerial() ||
-                mCurrentConstantBufferPSOffset[uniformBufferIndex] != uniformBufferOffset ||
-                mCurrentConstantBufferPSSize[uniformBufferIndex] != uniformBufferSize)
-            {
-                if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
-                {
-                    UINT firstConstant = 0, numConstants = 0;
-                    CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize, &firstConstant, &numConstants);
-                    mDeviceContext1->PSSetConstantBuffers1(
-                        getReservedFragmentUniformBuffers() +
-                            static_cast<unsigned int>(uniformBufferIndex),
-                        1, &constantBuffer, &firstConstant, &numConstants);
-                }
-                else
-                {
-                    mDeviceContext->PSSetConstantBuffers(
-                        getReservedFragmentUniformBuffers() +
-                            static_cast<unsigned int>(uniformBufferIndex),
-                        1, &constantBuffer);
-                }
-
-                mCurrentConstantBufferPS[uniformBufferIndex] = bufferStorage->getSerial();
-                mCurrentConstantBufferPSOffset[uniformBufferIndex] = uniformBufferOffset;
-                mCurrentConstantBufferPSSize[uniformBufferIndex] = uniformBufferSize;
-            }
+            mCurrentConstantBufferPS[uniformBufferIndex]       = bufferStorage->getSerial();
+            mCurrentConstantBufferPSOffset[uniformBufferIndex] = uniformBufferOffset;
+            mCurrentConstantBufferPSSize[uniformBufferIndex]   = uniformBufferSize;
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::updateState(const gl::ContextState &data, GLenum drawMode)
