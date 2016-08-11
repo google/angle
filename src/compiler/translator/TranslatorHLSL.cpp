@@ -14,6 +14,7 @@
 #include "compiler/translator/OutputHLSL.h"
 #include "compiler/translator/RemoveDynamicIndexing.h"
 #include "compiler/translator/RewriteElseBlocks.h"
+#include "compiler/translator/RewriteTexelFetchOffset.h"
 #include "compiler/translator/SeparateArrayInitialization.h"
 #include "compiler/translator/SeparateDeclarations.h"
 #include "compiler/translator/SeparateExpressionsReturningArrays.h"
@@ -89,6 +90,12 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
     if ((compileOptions & SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS) != 0)
     {
         sh::ExpandIntegerPowExpressions(root, getTemporaryIndex());
+    }
+
+    if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)
+    {
+        sh::RewriteTexelFetchOffset(root, getTemporaryIndex(), getSymbolTable(),
+                                    getShaderVersion());
     }
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),

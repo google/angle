@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 154
+#define ANGLE_SH_VERSION 155
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -227,6 +227,10 @@ typedef enum {
     // HLSL GetDimensions builtin.  This flag instructs the compiler to manually add the base level
     // offsetting.
     SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = 0x2000000,
+
+    // This flag works around an issue in translating GLSL function texelFetchOffset on
+    // INTEL drivers. It works by translating texelFetchOffset into texelFetch.
+    SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = 0x4000000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

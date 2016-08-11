@@ -49,9 +49,15 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &data, const WorkaroundsD3D &workarou
     {
         mAdditionalOptions |= SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS;
     }
+
     if (workarounds.getDimensionsIgnoresBaseLevel)
     {
         mAdditionalOptions |= SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL;
+    }
+
+    if (workarounds.preAddTexelFetchOffsets)
+    {
+        mAdditionalOptions |= SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH;
     }
 }
 

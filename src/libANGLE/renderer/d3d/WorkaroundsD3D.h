@@ -67,6 +67,14 @@ struct WorkaroundsD3D
     // Some drivers (NVIDIA) do not take into account the base level of the texture in the results
     // of the HLSL GetDimensions builtin.
     bool getDimensionsIgnoresBaseLevel = false;
+
+    // On some Intel drivers, HLSL's function texture.Load returns 0 when the parameter Location
+    // is negative, even if the sum of Offset and Location is in range. This may cause errors when
+    // translating GLSL's function texelFetchOffset into texture.Load, as it is valid for
+    // texelFetchOffset to use negative texture coordinates as its parameter P when the sum of P
+    // and Offset is in range. To work around this, we translatie texelFetchOffset into texelFetch
+    // by adding Offset directly to Location before reading the texture.
+    bool preAddTexelFetchOffsets = false;
 };
 
 }  // namespace rx
