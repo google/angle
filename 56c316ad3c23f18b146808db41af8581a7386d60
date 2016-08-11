@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d924a797_2b779de3",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-11T00:07:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d924a797_087bc787",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "56c316ad3c23f18b146808db41af8581a7386d60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d924a797_c880cf5d",
         "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.h",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-10T23:40:35Z",
       "side": 1,
       "message": "nit: include a top-level comment under the license",
+      "revId": "56c316ad3c23f18b146808db41af8581a7386d60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_0b64a11f",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-11T00:07:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d924a797_c880cf5d",
       "revId": "56c316ad3c23f18b146808db41af8581a7386d60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
