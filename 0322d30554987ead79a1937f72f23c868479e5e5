@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ede25f7_23f1c2cd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-11T23:44:02Z",
+      "side": 1,
+      "message": "Should this be negated?",
+      "range": {
+        "startLine": 553,
+        "startChar": 23,
+        "endLine": 553,
+        "endChar": 89
+      },
+      "revId": "0322d30554987ead79a1937f72f23c868479e5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
