@@ -1,0 +1,510 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d924a797_9aa459a6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "Actually thinking about this more, I\u0027d like you to make this a custom type in ShaderVars.h. Sorry to go back, but this can be replaced with a valid() method, and you can use the constructor to init the values to 1 instead of needing std::fill.\n\nI\u0027m fine if you want to do this in a follow-up CL, but I am pretty sure it\u0027s correct to do it with a custom type now.",
+      "range": {
+        "startLine": 140,
+        "startChar": 5,
+        "endLine": 140,
+        "endChar": 27
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_baa9157d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "This can also be a helper method.",
+      "range": {
+        "startLine": 149,
+        "startChar": 4,
+        "endLine": 149,
+        "endChar": 29
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_faa38d98",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: ()s",
+      "range": {
+        "startLine": 577,
+        "startChar": 35,
+        "endLine": 577,
+        "endChar": 75
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_1ab949c6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: ()s",
+      "range": {
+        "startLine": 579,
+        "startChar": 8,
+        "endLine": 579,
+        "endChar": 92
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_da9ed14b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "what about false, false? maybe you should assert that\u0027s not possible?",
+      "range": {
+        "startLine": 583,
+        "startChar": 8,
+        "endLine": 583,
+        "endChar": 60
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_9acd3966",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "I didn\u0027t actually see the spec for this check, and my understanding of local sizes is a bit foggy. why this check? is it in the spec somewhere? also should the assignment above happen after the check?",
+      "range": {
+        "startLine": 600,
+        "startChar": 13,
+        "endLine": 600,
+        "endChar": 32
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_3ab605d7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: s/Error(GL_NO_ERROR)/NoError()/g",
+      "range": {
+        "startLine": 603,
+        "startChar": 19,
+        "endLine": 603,
+        "endChar": 24
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_bad2f500",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "shouldn\u0027t you reset the local size as well?",
+      "range": {
+        "startLine": 689,
+        "startChar": 14,
+        "endLine": 689,
+        "endChar": 20
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_dad7b1ef",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1069,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "you\u0027re not assigning to count here.. maybe restructure this bit if that\u0027s not intentional (See below). Also a test for this would be helpful.",
+      "range": {
+        "startLine": 1069,
+        "startChar": 8,
+        "endLine": 1069,
+        "endChar": 14
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_fadc6d14",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1090,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 1090,
+        "startChar": 8,
+        "endLine": 1090,
+        "endChar": 13
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_9af61992",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1897,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: validateVertexAndFragmentUniforms?",
+      "range": {
+        "startLine": 1897,
+        "startChar": 14,
+        "endLine": 1897,
+        "endChar": 46
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_faf54d84",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: validateVertexAndFragmentInterfaceBlocks?\n\nwish there was a better term for non-compute.",
+      "range": {
+        "startLine": 2194,
+        "startChar": 14,
+        "endLine": 2194,
+        "endChar": 64
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_3ae8c5aa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2228,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: a good use case for const auto \u0026",
+      "range": {
+        "startLine": 2228,
+        "startChar": 14,
+        "endLine": 2228,
+        "endChar": 45
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_ba1cb5cd",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2236,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "if you early return here, you can flatten out the else",
+      "range": {
+        "startLine": 2236,
+        "startChar": 4,
+        "endLine": 2236,
+        "endChar": 5
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_5ae581d1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: same for these",
+      "range": {
+        "startLine": 2242,
+        "startChar": 14,
+        "endLine": 2242,
+        "endChar": 45
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_9a17f9aa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2729,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "if you return here, you don\u0027t need the else clause, which will help flatten this function and reduce the diff.",
+      "range": {
+        "startLine": 2729,
+        "startChar": 8,
+        "endLine": 2729,
+        "endChar": 9
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_7ac95d50",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "same as below comment",
+      "range": {
+        "startLine": 2845,
+        "startChar": 12,
+        "endLine": 2845,
+        "endChar": 14
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_3abfe5a2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2876,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: replace this with a switch (3 being the best time to switch)",
+      "range": {
+        "startLine": 2876,
+        "startChar": 12,
+        "endLine": 2876,
+        "endChar": 22
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_3a29a5ef",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: switch at this point seems reasonable.",
+      "range": {
+        "startLine": 310,
+        "startChar": 4,
+        "endLine": 320,
+        "endChar": 57
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_1a15c996",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "can you make a new ComputeShaderTest file for these?",
+      "range": {
+        "startLine": 32,
+        "startChar": 6,
+        "endLine": 32,
+        "endChar": 29
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_dafa5164",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "use ANGLE_GL_PROGRAM in gl_raii.h for the two programs where you expect success.",
+      "range": {
+        "startLine": 225,
+        "startChar": 4,
+        "endLine": 225,
+        "endChar": 18
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d924a797_ba6e7531",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T14:39:04Z",
+      "side": 1,
+      "message": "nit: can you share code here with a local helper function?",
+      "range": {
+        "startLine": 185,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 30
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
