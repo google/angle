@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "d924a797_daa89128",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-11T15:15:16Z",
+      "side": 1,
+      "message": "in the meantime, make this function return a bool, wrap it in #if defined(ANGLE_ENABLE_ASSERTS) and below, use ASSERT(ValidLocalSize(localSize)). I am not sure but clang may warn of an unused function, and it would be bad to break the non-gpu bots which don\u0027t use release asserts.",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 10
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d924a797_baa9157d",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
