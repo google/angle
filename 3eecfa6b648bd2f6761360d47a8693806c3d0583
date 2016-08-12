@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de000d88_258a8e1a",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T21:49:46Z",
+      "side": 1,
+      "message": "note: all of these suppressions could potentially be lifted.",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 5
+      },
+      "revId": "3eecfa6b648bd2f6761360d47a8693806c3d0583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
