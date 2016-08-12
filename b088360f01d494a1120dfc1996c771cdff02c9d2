@@ -22,6 +22,30 @@
       "revId": "b088360f01d494a1120dfc1996c771cdff02c9d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5eec1d0a_1168ec1a",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-12T11:47:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "d924a797_fa262d21",
+      "range": {
+        "startLine": 102,
+        "startChar": 4,
+        "endLine": 102,
+        "endChar": 63
+      },
+      "revId": "b088360f01d494a1120dfc1996c771cdff02c9d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
