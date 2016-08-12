@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ed25d19_b5329856",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "don\u0027t forget to increment the version number",
+      "range": {
+        "startLine": 499,
+        "startChar": 20,
+        "endLine": 499,
+        "endChar": 33
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_550b0c82",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: a default constructor should be OK",
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_7500105c",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: I think the comment could be updated",
+      "range": {
+        "startLine": 388,
+        "startChar": 4,
+        "endLine": 388,
+        "endChar": 28
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_9505946d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: don\u0027t need these ifs",
+      "range": {
+        "startLine": 452,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 33
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_d5163ca7",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: I\u0027d lean towards being conservative and calling this check something more explicit, since this operation is not transitive.",
+      "range": {
+        "startLine": 458,
+        "startChar": 20,
+        "endLine": 458,
+        "endChar": 28
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_b519b8da",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: space",
+      "range": {
+        "startLine": 489,
+        "startChar": 0,
+        "endLine": 489,
+        "endChar": 6
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_f51340b4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "is this correct? It seems valid to attach a compute and vertex and fragment shader, in which case the query for GL_ATTACHED_SHADERS should return 3. Can you add a test for this?",
+      "range": {
+        "startLine": 456,
+        "startChar": 3,
+        "endLine": 459,
+        "endChar": 5
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_356da833",
+        "filename": "src/libANGLE/Shader.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: I think we would place the break in the end of the inner block usually.",
+      "range": {
+        "startLine": 316,
+        "startChar": 8,
+        "endLine": 316,
+        "endChar": 14
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_f53c202d",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "nit: ANGLE_GL_COMPUTE_PROGRAM",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 60
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_d52f1ced",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "how about just checking if !mComputeShader.empty() instead of the flag?",
+      "range": {
+        "startLine": 72,
+        "startChar": 16,
+        "endLine": 72,
+        "endChar": 29
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
