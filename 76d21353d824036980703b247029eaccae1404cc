@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "5eec1d0a_5199d416",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-12T15:01:38Z",
+      "side": 1,
+      "message": "It seems not. \nI checked also on stackoverflow: http://stackoverflow.com/questions/321351/initializing-a-union-with-a-non-trivial-constructor",
+      "parentUuid": "5ed25d19_153a642e",
+      "range": {
+        "startLine": 140,
+        "startChar": 5,
+        "endLine": 140,
+        "endChar": 27
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d924a797_daa89128",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
