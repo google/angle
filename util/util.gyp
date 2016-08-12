@@ -85,6 +85,7 @@
         ],
         'util_android_sources':
         [
+            'android/AndroidPixmap.cpp',
             'android/AndroidWindow.cpp',
             'android/AndroidWindow.h',
             'android/third_party/android_native_app_glue.c',

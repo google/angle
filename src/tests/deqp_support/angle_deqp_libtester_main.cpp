@@ -27,6 +27,8 @@
 #include <sys/unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#elif (DE_OS == DE_OS_ANDROID)
+#include <sys/stat.h>
 #endif
 
 tcu::Platform *createPlatform();
@@ -68,7 +70,7 @@ deBool deIsDir(const char *filename)
 
     return false;
 }
-#elif (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX)
+#elif (DE_OS == DE_OS_UNIX) || (DE_OS == DE_OS_OSX) || (DE_OS == DE_OS_ANDROID)
 deBool deIsDir(const char *filename)
 {
     struct stat st;
