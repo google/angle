@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5ed25d19_153a642e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "Dang, unions really suck. Can you add a default constructor that inits it to -1 or 0 or 1 at least?",
+      "parentUuid": "5eec1d0a_5130b44e",
+      "range": {
+        "startLine": 140,
+        "startChar": 5,
+        "endLine": 140,
+        "endChar": 27
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d924a797_daa89128",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -507,6 +531,30 @@
       "side": 1,
       "message": "What would ref mean in this case?\nThat you are referring to this?",
       "parentUuid": "d924a797_fadc6d14",
+      "range": {
+        "startLine": 1090,
+        "startChar": 8,
+        "endLine": 1090,
+        "endChar": 13
+      },
+      "revId": "76d21353d824036980703b247029eaccae1404cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_3506887b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1090,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T14:04:01Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "5eec1d0a_b176c004",
       "range": {
         "startLine": 1090,
         "startChar": 8,
