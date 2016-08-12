@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ede25f7_e9c2b9a1",
+        "filename": "src/libANGLE/renderer/angle_format.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T00:23:37Z",
+      "side": 1,
+      "message": "nit: i should fix these tabs",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 2
+      },
+      "revId": "658843b1c4a28214c5a8caba2e1e95a1302d00b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

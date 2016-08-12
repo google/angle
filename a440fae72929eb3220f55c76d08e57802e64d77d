@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ede25f7_c9c9f5c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T00:23:37Z",
+      "side": 0,
+      "message": "This should be in the last CL - an unreachable unsized format.",
+      "range": {
+        "startLine": 169,
+        "startChar": 13,
+        "endLine": 169,
+        "endChar": 24
+      },
+      "revId": "a440fae72929eb3220f55c76d08e57802e64d77d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
