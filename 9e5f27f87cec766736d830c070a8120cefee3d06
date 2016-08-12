@@ -45,6 +45,30 @@
       "revId": "9e5f27f87cec766736d830c070a8120cefee3d06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_81955a8f",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-08-12T01:00:55Z",
+      "side": 1,
+      "message": "Thanks for your comments. According to the doc Remaining Windows WebGL2 failures from your team, this failure also occurs on AMD drivers, but the test can pass on NVidia drivers. \n\nI will first write native code to verify my guess before having further discussion with you.",
+      "parentUuid": "d924a797_517e4746",
+      "range": {
+        "startLine": 835,
+        "startChar": 5,
+        "endLine": 866,
+        "endChar": 8
+      },
+      "revId": "9e5f27f87cec766736d830c070a8120cefee3d06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
