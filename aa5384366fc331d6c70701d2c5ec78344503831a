@@ -177,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "5ed25d19_b518d88d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T15:11:05Z",
+      "side": 1,
+      "message": "I was concerned about having an unused function, but it shouldn\u0027t be necessary to hide the ASSERT line itself. I think an unused member function is OK too (hopefully)/",
+      "parentUuid": "5eec1d0a_b1a1203e",
+      "range": {
+        "startLine": 452,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 33
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ed25d19_d5163ca7",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 8
@@ -306,6 +330,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "5ed25d19_f51340b4",
+      "range": {
+        "startLine": 456,
+        "startChar": 3,
+        "endLine": 459,
+        "endChar": 5
+      },
+      "revId": "aa5384366fc331d6c70701d2c5ec78344503831a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ed25d19_1520a4a9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T15:11:05Z",
+      "side": 1,
+      "message": "Looks good, thanks for the test.",
+      "parentUuid": "5eec1d0a_319650e7",
       "range": {
         "startLine": 456,
         "startChar": 3,
