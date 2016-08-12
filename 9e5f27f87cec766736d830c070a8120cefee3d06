@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5ed25d19_87be4a15",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-08-12T03:18:48Z",
+      "side": 1,
+      "message": "I still think the MSDN doc you referred means there are restrictions only on the range of variable Location and do nothing about another argument Offset just according to this description. \nI will write native programs to find the true meaning.",
+      "parentUuid": "d924a797_51eba70f",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 66
+      },
+      "revId": "9e5f27f87cec766736d830c070a8120cefee3d06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d924a797_517e4746",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 6
