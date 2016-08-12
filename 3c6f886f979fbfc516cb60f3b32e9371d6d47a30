@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ede25f7_69e48936",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/load_functions_table_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-12T00:25:17Z",
+      "side": 1,
+      "message": "these are benign - the bool is never checked for depth formats. if it was, it would call the clamping functions on the depth values in a CopyTexImage call or when doing a fast SetData upload.",
+      "range": {
+        "startLine": 573,
+        "startChar": 109,
+        "endLine": 573,
+        "endChar": 113
+      },
+      "revId": "3c6f886f979fbfc516cb60f3b32e9371d6d47a30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
