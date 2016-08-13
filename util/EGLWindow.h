@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include <string>
 
+#include <export.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <GLES3/gl3.h>
@@ -28,7 +29,7 @@ class OSWindow;
 #define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
 #endif
 
-struct EGLPlatformParameters
+struct ANGLE_EXPORT EGLPlatformParameters
 {
     EGLint renderer;
     EGLint majorVersion;
@@ -46,10 +47,10 @@ struct EGLPlatformParameters
                           EGLint presentPath);
 };
 
-bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
-bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+ANGLE_EXPORT bool operator<(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
+ANGLE_EXPORT bool operator==(const EGLPlatformParameters &a, const EGLPlatformParameters &b);
 
-class EGLWindow : angle::NonCopyable
+class ANGLE_EXPORT EGLWindow : angle::NonCopyable
 {
   public:
     EGLWindow(EGLint glesMajorVersion,
