@@ -16,6 +16,7 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "common/Optional.h"
+#include "common/platform.h"
 #include "common/string_utils.h"
 #include "gpu_test_expectations_parser.h"
 #include "system_utils.h"
@@ -23,11 +24,16 @@
 namespace
 {
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+const char *g_CaseListRelativePath =
+    "/../../sdcard/chromium_tests_root/third_party/deqp/src/android/cts/master/";
+#else
 const char *g_CaseListRelativePath = "/../../third_party/deqp/src/android/cts/master/";
+#endif
 
 const char *g_TestExpectationsSearchPaths[] = {
     "/../../src/tests/deqp_support/", "/../../third_party/angle/src/tests/deqp_support/",
-    "/deqp_support/",
+    "/deqp_support/", "/../../sdcard/chromium_tests_root/third_party/angle/src/tests/deqp_support/",
 };
 
 const char *g_CaseListFiles[] = {
