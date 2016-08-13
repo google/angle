@@ -96,7 +96,7 @@
     [
         {
             'target_name': 'angle_util',
-            'type': 'static_library',
+            'type': 'shared_library',
             'includes': [ '../build/common_defines.gypi', ],
             'dependencies':
             [
@@ -121,6 +121,7 @@
             [
                 'GL_GLEXT_PROTOTYPES',
                 'EGL_EGLEXT_PROTOTYPES',
+                'LIBANGLE_UTIL_IMPLEMENTATION',
             ],
             'direct_dependent_settings':
             {

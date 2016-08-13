@@ -14,9 +14,11 @@
 #include <X11/Xutil.h>
 #include <X11/Xresource.h>
 
+#include <export.h>
+
 #include "OSWindow.h"
 
-class X11Window : public OSWindow
+class ANGLE_EXPORT X11Window : public OSWindow
 {
   public:
     X11Window();
