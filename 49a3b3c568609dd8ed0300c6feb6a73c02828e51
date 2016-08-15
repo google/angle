@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "bb1b6b69_547fec0b",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "It may create a problem if the qualifiers are used in code outside of ANGLE - this enum may be a part of the shader translator interface. Looking at the commit history of this file may reveal more about why the equalities are there.",
+      "parentUuid": "be49997d_e4ed1a88",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_896239e7",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -558,6 +576,24 @@
       "side": 1,
       "message": "I don\u0027t know. I think that previously the invariant qualifier was not handled properly in ess1. In this test, having the invariant qualifier there does not change the way the variable gets interpreted. However, it is not an error to have it there, where as in ESS3 and above it is.\nGLSL ES 1.0.17, 4.6.1 The Invariant Qualifier\nGLSL ES 3.00.6, 4.6.1 The Invariant Qualifier",
       "parentUuid": "59dd179f_a990dd9b",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1b6b69_94946437",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2353,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure it was already handled correctly before.",
+      "parentUuid": "fefcf12c_9ef6bd28",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
