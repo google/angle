@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "be49997d_e4ed1a88",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "No, I added those comments as a reminder. I will remove them. However, I still do not know whether this would create some kind of problem.",
+      "parentUuid": "59dd179f_c91a716f",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_896239e7",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "This is a bit weird - I\u0027d add a reference to the spec.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_7e0bf12b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3560,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done. I added it as a comment in the code, but here as well:\n4.5 Interpolation Qualifiers -\u003e \"A variable may be qualified as flat centroid, which will mean the same thing as qualifying it only as flat\"",
+      "parentUuid": "59dd179f_896239e7",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "1eec653b_7fd16fcd",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "I will change the variable names. Adding a separate struct seems to be quite a lot of work since I will have to do changes in the grammar and parse context.",
+      "parentUuid": "59dd179f_a9345de3",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_29498d6c",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "This function is large enough that the implementation should be in Types.cpp.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5eec1d0a_51eb1473",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_29498d6c",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "5eec1d0a_31e89074",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_6943854c",
+      "range": {
+        "startLine": 787,
+        "startChar": 32,
+        "endLine": 787,
+        "endChar": 40
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_c908b1fb",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 2
@@ -104,6 +200,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "Fix extra whitespace on the lines that have been changed.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5eec1d0a_f180c8a7",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c908b1fb",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -127,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "5eec1d0a_11e58c9a",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Is that ok? Maybe I could move the if statement inside addStructDeclaratorList, or is it ok? In that case I would also have to pass the type specifier.",
+      "parentUuid": "59dd179f_29eead20",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_e9b1354a",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -138,6 +270,30 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "This is not needed - the test is valid whether the grammar changes are in place or not. With git blame anyone can dig out which patch added the test.",
+      "range": {
+        "startLine": 1972,
+        "startChar": 52,
+        "endLine": 1972,
+        "endChar": 89
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_3e38c9f1",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1972,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_e9b1354a",
       "range": {
         "startLine": 1972,
         "startChar": 52,
@@ -173,6 +329,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_1e3d0de2",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_89acf9f3",
+      "range": {
+        "startLine": 2018,
+        "startChar": 37,
+        "endLine": 2018,
+        "endChar": 39
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_c9b6f13f",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -184,6 +364,30 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "in",
+      "range": {
+        "startLine": 2037,
+        "startChar": 36,
+        "endLine": 2037,
+        "endChar": 39
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_fe514138",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c9b6f13f",
       "range": {
         "startLine": 2037,
         "startChar": 36,
@@ -219,6 +423,30 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_be4bb984",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2091,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_09b9292d",
+      "range": {
+        "startLine": 2091,
+        "startChar": 3,
+        "endLine": 2091,
+        "endChar": 35
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_69c6e5b4",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -230,6 +458,30 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "Fix all of the comments with incorrect syntax.",
+      "range": {
+        "startLine": 2247,
+        "startChar": 0,
+        "endLine": 2249,
+        "endChar": 2
+      },
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_9e48fd88",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2249,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_69c6e5b4",
       "range": {
         "startLine": 2247,
         "startChar": 0,
@@ -259,6 +511,24 @@
     },
     {
       "key": {
+        "uuid": "1eec653b_df3cfbe7",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2306,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "59dd179f_49c321a3",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_a990dd9b",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -270,6 +540,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "Are you sure that there isn\u0027t a test for this already?",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_9ef6bd28",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2353,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "I don\u0027t know. I think that previously the invariant qualifier was not handled properly in ess1. In this test, having the invariant qualifier there does not change the way the variable gets interpreted. However, it is not an error to have it there, where as in ESS3 and above it is.\nGLSL ES 1.0.17, 4.6.1 The Invariant Qualifier\nGLSL ES 3.00.6, 4.6.1 The Invariant Qualifier",
+      "parentUuid": "59dd179f_a990dd9b",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -293,6 +581,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_5e2a7593",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2400,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_8995198c",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_c98f1178",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -304,6 +610,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "\"Cannot have a function parameter with attribute qualifier.\" would be clearer.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_1e34edf3",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2480,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_c98f1178",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -327,6 +651,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_fe18218e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2564,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dd179f_29a50dfd",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_699f05a5",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -338,6 +680,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "I\u0027m sure this is covered by many other tests.",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e42a54c_4f43ed71",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2652,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "This one is likely from deqp. Or I have just used the one I copied as a template and changed the thing I am testing for.\nAnyway, I will remove all of the tests I suspect would be handled by deqp.",
+      "parentUuid": "59dd179f_699f05a5",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -361,6 +721,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_de156554",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2696,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "removed it",
+      "parentUuid": "59dd179f_499cc1ae",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_a9f9fdeb",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -378,6 +756,24 @@
     },
     {
       "key": {
+        "uuid": "fefcf12c_be2299b2",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "removed it",
+      "parentUuid": "59dd179f_a9f9fdeb",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_e903f5dd",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -389,6 +785,24 @@
       "writtenOn": "2016-08-10T15:45:32Z",
       "side": 1,
       "message": "Would be clearer to say that \"in qualifier is optional, so it can be left out of a function prototype or the implementation of the same function\".",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fefcf12c_9e1fdd72",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2795,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T15:11:50Z",
+      "side": 1,
+      "message": "I decided to remove the test.",
+      "parentUuid": "59dd179f_e903f5dd",
       "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
