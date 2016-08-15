@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eec653b_ffd3bfd0",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T11:03:56Z",
+      "side": 1,
+      "message": "I\u0027d rather not have isAnyValueSet() and isDeclared() separately here, even though the isDeclared check is faster. It\u0027s a bit weird that sometimes objects of is class fill the isLocalSizeValid() invariant and sometimes not - it might be simpler to just assume everywhere that it is not necessarily true.",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eec653b_bfb2d7aa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2831,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T11:03:56Z",
+      "side": 1,
+      "message": "Is this indentation what git cl format generates? Looks a bit odd to me.",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eec653b_9fb7139b",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T11:03:56Z",
+      "side": 1,
+      "message": "These changes are unrelated now that the compute shader tests are in their own file. I\u0027d rather put these in a separate patch (which could include other similar fixes as well).",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
