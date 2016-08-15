@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb1b6b69_f48dd82a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "I\u0027d drop ES3 from the name now that this function is not specific to ES3.",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1b6b69_d48adc10",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "This check is unnecessary, since there can only be varying in variables in a fragment shader.",
+      "range": {
+        "startLine": 1129,
+        "startChar": 14,
+        "endLine": 1129,
+        "endChar": 50
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1b6b69_1489741e",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "Lots of things have moved around in the header for seemingly no reason - should put them back the way they were.",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1b6b69_349d9056",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "Clean up!",
+      "range": {
+        "startLine": 213,
+        "startChar": 67,
+        "endLine": 213,
+        "endChar": 86
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb1b6b69_54a80c70",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T20:25:37Z",
+      "side": 1,
+      "message": "Is it possible to split the changes to the parameter qualifier parsing into a separate patch? This patch is pretty complex, so it could speed up review.",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
