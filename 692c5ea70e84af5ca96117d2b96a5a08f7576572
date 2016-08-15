@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be6fd9aa_74ade87a",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-15T16:51:08Z",
+      "side": 1,
+      "message": "nit: ESS3 -\u003e ES3",
+      "range": {
+        "startLine": 195,
+        "startChar": 24,
+        "endLine": 195,
+        "endChar": 28
+      },
+      "revId": "692c5ea70e84af5ca96117d2b96a5a08f7576572",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
