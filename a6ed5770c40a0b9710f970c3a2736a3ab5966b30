@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1eec653b_5f72abde",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T14:03:06Z",
+      "side": 1,
+      "message": "Agreed that we can keep this as is for now and think about further improvements later, as we discussed offline. We need to move forward with this patch, which has a lot of other functionality.",
+      "parentUuid": "1eec653b_ff60df09",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eec653b_bfb2d7aa",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 11
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Yes, but those breaks should be in the blocks. I moved them now.",
       "parentUuid": "1eec653b_bfb2d7aa",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eec653b_9f42736c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2831,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T14:03:06Z",
+      "side": 1,
+      "message": "Nice!",
+      "parentUuid": "1eec653b_dfa6bb52",
       "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
