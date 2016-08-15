@@ -46,6 +46,23 @@
       "revId": "272b86f88fbed9f6708d5c7b94623596e8183357",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eec653b_1f4f8393",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-15T14:14:13Z",
+      "side": 1,
+      "message": "There should be a version check to make sure compute shaders can\u0027t be created on GLES versions \u003c 3.1. Should add ValidateCreateShader in the validation file to check for this, and a test.",
+      "revId": "272b86f88fbed9f6708d5c7b94623596e8183357",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
