@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1eec653b_ff60df09",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T13:59:32Z",
+      "side": 1,
+      "message": "I think that maybe we can keep it like it is now.\nIt would be possible to have only one. We would have to set the \"unspecified value\" (-1) to the default one (1).\nAnd to keep track which fields have been filled in we can just use maybe a bitset. That might be the best?",
+      "parentUuid": "1eec653b_ffd3bfd0",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eec653b_bfb2d7aa",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 11
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1eec653b_dfa6bb52",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2831,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T13:59:32Z",
+      "side": 1,
+      "message": "Yes, but those breaks should be in the blocks. I moved them now.",
+      "parentUuid": "1eec653b_bfb2d7aa",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eec653b_9fb7139b",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 11
@@ -47,6 +83,24 @@
       "writtenOn": "2016-08-15T11:03:56Z",
       "side": 1,
       "message": "These changes are unrelated now that the compute shader tests are in their own file. I\u0027d rather put these in a separate patch (which could include other similar fixes as well).",
+      "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1eec653b_ffa1ff3c",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-15T13:59:32Z",
+      "side": 1,
+      "message": "Rolled them back.",
+      "parentUuid": "1eec653b_9fb7139b",
       "revId": "a6ed5770c40a0b9710f970c3a2736a3ab5966b30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
