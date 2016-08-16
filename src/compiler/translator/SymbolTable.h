@@ -296,6 +296,7 @@ class TSymbolTableLevel
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
 
     TSymbolTableLevel()
+        : mGlobalInvariant(false)
     {
     }
     ~TSymbolTableLevel();
@@ -307,8 +308,22 @@ class TSymbolTableLevel
 
     TSymbol *find(const TString &name) const;
 
+    void addInvariantVarying(const std::string &name)
+    {
+        mInvariantVaryings.insert(name);
+    }
+
+    bool isVaryingInvariant(const std::string &name)
+    {
+        return (mGlobalInvariant || mInvariantVaryings.count(name) > 0);
+    }
+
+    void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
+
   protected:
     tLevel level;
+    std::set<std::string> mInvariantVaryings;
+    bool mGlobalInvariant;
 };
 
 // Define ESymbolLevel as int rather than an enum since level can go
@@ -326,7 +341,6 @@ class TSymbolTable : angle::NonCopyable
 {
   public:
     TSymbolTable()
-        : mGlobalInvariant(false)
     {
         // The symbol table cannot be used until push() is called, but
         // the lack of an initial call to push() can be used to detect
@@ -348,7 +362,7 @@ class TSymbolTable : angle::NonCopyable
     }
     bool atGlobalLevel() const
     {
-        return currentLevel() <= GLOBAL_LEVEL;
+        return currentLevel() == GLOBAL_LEVEL;
     }
     void push()
     {
@@ -477,25 +491,24 @@ class TSymbolTable : angle::NonCopyable
     // "invariant varying_name;".
     void addInvariantVarying(const std::string &originalName)
     {
-        mInvariantVaryings.insert(originalName);
+        ASSERT(atGlobalLevel());
+        table[currentLevel()]->addInvariantVarying(originalName);
     }
-
-    void clearInvariantVaryings()
-    {
-        mInvariantVaryings.clear();
-    }
-
     // If this returns false, the varying could still be invariant
     // if it is set as invariant during the varying variable
     // declaration - this piece of information is stored in the
     // variable's type, not here.
     bool isVaryingInvariant(const std::string &originalName) const
     {
-      return (mGlobalInvariant ||
-              mInvariantVaryings.count(originalName) > 0);
+        ASSERT(atGlobalLevel());
+        return table[currentLevel()]->isVaryingInvariant(originalName);
     }
 
-    void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
+    void setGlobalInvariant(bool invariant)
+    {
+        ASSERT(atGlobalLevel());
+        table[currentLevel()]->setGlobalInvariant(invariant);
+    }
 
     static int nextUniqueId()
     {
@@ -524,9 +537,6 @@ class TSymbolTable : angle::NonCopyable
     std::vector< PrecisionStackLevel *> precisionStack;
 
     std::set<std::string> mUnmangledBuiltinNames;
-
-    std::set<std::string> mInvariantVaryings;
-    bool mGlobalInvariant;
 
     static int uniqueIdCounter;
 };

@@ -410,12 +410,14 @@ void TParseContext::checkIsScalarInteger(TIntermTyped *node, const char *token)
 
 // Both test, and if necessary spit out an error, to see if we are currently
 // globally scoped.
-void TParseContext::checkIsAtGlobalLevel(const TSourceLoc &line, const char *token)
+bool TParseContext::checkIsAtGlobalLevel(const TSourceLoc &line, const char *token)
 {
     if (!symbolTable.atGlobalLevel())
     {
         error(line, "only allowed at global scope", token);
+        return false;
     }
+    return true;
 }
 
 // For now, keep it simple:  if it starts "gl_", it's reserved, independent
@@ -1672,7 +1674,8 @@ TIntermAggregate *TParseContext::parseInvariantDeclaration(const TSourceLoc &inv
                                                            const TSymbol *symbol)
 {
     // invariant declaration
-    checkIsAtGlobalLevel(invariantLoc, "invariant varying");
+    if (!checkIsAtGlobalLevel(invariantLoc, "invariant varying"))
+        return nullptr;
 
     if (!symbol)
     {

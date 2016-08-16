@@ -138,7 +138,7 @@ class TParseContext : angle::NonCopyable
     bool checkCanBeLValue(const TSourceLoc &line, const char *op, TIntermTyped *node);
     void checkIsConst(TIntermTyped *node);
     void checkIsScalarInteger(TIntermTyped *node, const char *token);
-    void checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
+    bool checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
     bool checkConstructorArguments(const TSourceLoc &line,
                                    TIntermNode *argumentsNode,
                                    const TFunction &function,
