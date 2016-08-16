@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "db501f1e_e5bbd6b2",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "I checked the changes to the file. It seems that those two enums were like that from the beginning.",
+      "parentUuid": "bb1b6b69_547fec0b",
+      "revId": "49a3b3c568609dd8ed0300c6feb6a73c02828e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59dd179f_896239e7",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
