@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b9b0733_7b23df0e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb1b6b69_f48dd82a",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb1b6b69_d48adc10",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2016-08-15T20:25:37Z",
       "side": 1,
       "message": "This check is unnecessary, since there can only be varying in variables in a fragment shader.",
+      "range": {
+        "startLine": 1129,
+        "startChar": 14,
+        "endLine": 1129,
+        "endChar": 50
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db501f1e_85db0215",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "Done. I changed the checking a bit so that it\u0027s less code.",
+      "parentUuid": "bb1b6b69_d48adc10",
       "range": {
         "startLine": 1129,
         "startChar": 14,
@@ -59,6 +101,47 @@
     },
     {
       "key": {
+        "uuid": "db501f1e_25eb2ea6",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "My mistake when merging. I was more focused on checking which functions were different from before and didn\u0027t think that also the order was important.\nFixed it.",
+      "parentUuid": "bb1b6b69_1489741e",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db501f1e_651ec6ce",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "Not sure why those are here. They are functions from the next patch. \nI cleaned them up.",
+      "range": {
+        "startLine": 172,
+        "startChar": 9,
+        "endLine": 172,
+        "endChar": 95
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb1b6b69_349d9056",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 3
@@ -82,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "db501f1e_c5e1fac2",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb1b6b69_349d9056",
+      "range": {
+        "startLine": 213,
+        "startChar": 67,
+        "endLine": 213,
+        "endChar": 86
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb1b6b69_54a80c70",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 3
@@ -93,6 +200,24 @@
       "writtenOn": "2016-08-15T20:25:37Z",
       "side": 1,
       "message": "Is it possible to split the changes to the parameter qualifier parsing into a separate patch? This patch is pretty complex, so it could speed up review.",
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db501f1e_a5defe04",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-16T14:33:47Z",
+      "side": 1,
+      "message": "Actually, it may not be easy to split it. The function parameters use the \u0027type_specified\u0027 token which previously used to split into \u0027precision type_specifier_no_prec\u0027 and \u0027type_specifier_no_prec\u0027. Now it doesn\u0027t since the precision is a child of \u0027single_type_qualifier\u0027.\nI cannot add it there since there would be a shift/reduce conflict.\n\nAnother way would be to add another type_specifier only for functions, but there is no such thing in the glsl grammar.",
+      "parentUuid": "bb1b6b69_54a80c70",
       "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
