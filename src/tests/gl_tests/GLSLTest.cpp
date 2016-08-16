@@ -12,6 +12,9 @@
 
 using namespace angle;
 
+namespace
+{
+
 class GLSLTest : public ANGLETest
 {
   protected:
@@ -1607,43 +1610,65 @@ TEST_P(GLSLTest, DepthRangeUniforms)
     glDeleteProgram(program);
 }
 
+std::string GenerateSmallPowShader(double base, double exponent)
+{
+    std::stringstream stream;
+
+    stream.precision(8);
+
+    double result = pow(base, exponent);
+
+    stream << "precision highp float;\n"
+           << "float fun(float arg)\n"
+           << "{\n"
+           << "    return pow(arg, " << std::fixed << exponent << ");\n"
+           << "}\n"
+           << "\n"
+           << "void main()\n"
+           << "{\n"
+           << "    const float a = " << std::scientific << base << ";\n"
+           << "    float b = fun(a);\n"
+           << "    if (abs(" << result << " - b) < " << std::abs(result * 0.001) << ")\n"
+           << "    {\n"
+           << "        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+           << "    }\n"
+           << "    else\n"
+           << "    {\n"
+           << "        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+           << "    }\n"
+           << "}\n";
+
+    return stream.str();
+}
+
 // Covers the WebGL test 'glsl/bugs/pow-of-small-constant-in-user-defined-function'
 // See http://anglebug.com/851
 TEST_P(GLSLTest, PowOfSmallConstant)
 {
-    const std::string &fragmentShaderSource = SHADER_SOURCE
-    (
-        precision highp float;
-
-        float fun(float arg)
+    std::vector<double> bads;
+    for (int eps = -1; eps <= 1; ++eps)
+    {
+        for (int i = -4; i <= 5; ++i)
         {
-            // These values are still easily within the highp range.
-            // The minimum range in terms of 10's exponent is around -19 to 19, and IEEE-754 single precision range is higher than that.
-            return pow(arg, 2.0);
+            if (i >= -1 && i <= 1)
+                continue;
+            const double epsilon = 1.0e-8;
+            double bad           = static_cast<double>(i) + static_cast<double>(eps) * epsilon;
+            bads.push_back(bad);
         }
+    }
 
-        void main()
-        {
-            // Note that the bug did not reproduce if an uniform was passed to the function instead of a constant,
-            // or if the expression was moved outside the user-defined function.
-            const float a = 1.0e-6;
-            float b = 1.0e12 * fun(a);
-            if (abs(b - 1.0) < 0.01)
-            {
-                gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // green
-            }
-            else
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // red
-            }
-        }
-    );
+    for (double bad : bads)
+    {
+        const std::string &fragmentShaderSource = GenerateSmallPowShader(1.0e-6, bad);
 
-    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
+        ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
 
-    drawQuad(program.get(), "inputAttribute", 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-    EXPECT_GL_NO_ERROR();
+        drawQuad(program.get(), "inputAttribute", 0.5f);
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        EXPECT_GL_NO_ERROR();
+    }
 }
 
 // Test that fragment shaders which contain non-constant loop indexers and compiled for FL9_3 and
@@ -2184,6 +2209,8 @@ TEST_P(GLSLTest, NestedPowStatements)
     drawQuad(prog.get(), "position", 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
+
+}  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,

@@ -95,7 +95,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     // Test 3: value is integer or pretty close to an integer.
-    float frac = std::abs(value) - std::floor(std::abs(value));
+    float absval = std::abs(value);
+    float frac   = absval - std::round(absval);
     if (frac > 0.0001f)
     {
         return true;
