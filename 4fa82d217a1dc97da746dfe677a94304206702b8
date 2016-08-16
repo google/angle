@@ -16,6 +16,24 @@
       "revId": "4fa82d217a1dc97da746dfe677a94304206702b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bd8af08_9a7fac0b",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-16T15:27:30Z",
+      "side": 1,
+      "message": "Yes, it is a bug in ANGLE. The EGL spec says of eglCreateContext: \"The context returned must be the specified version, or a later version which is backwards compatible with that version.\" (EGL 1.5 pg 52). My guess is we aren\u0027t validating the minor version correctly. What do you think?",
+      "parentUuid": "fb8163c9_76ebf0dd",
+      "revId": "4fa82d217a1dc97da746dfe677a94304206702b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
