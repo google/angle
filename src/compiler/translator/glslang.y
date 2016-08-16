@@ -1022,7 +1022,7 @@ type_specifier_no_prec
     | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
 
-        if (!context->checkIsValidTypeForArray(@2, $1))
+        if (context->checkIsValidTypeForArray(@2, $1))
         {
             unsigned int size = context->checkIsValidArraySize(@2, $3);
             $$.setArraySize(size);

@@ -130,6 +130,8 @@ class TParseContext : angle::NonCopyable
     void unaryOpError(const TSourceLoc &line, const char *op, TString operand);
     void binaryOpError(const TSourceLoc &line, const char *op, TString left, TString right);
 
+    // Check functions - the ones that return bool return false if an error was generated.
+
     bool checkIsNotReserved(const TSourceLoc &line, const TString &identifier);
     void checkPrecisionSpecified(const TSourceLoc &line, TPrecision precision, TBasicType type);
     bool checkCanBeLValue(const TSourceLoc &line, const char *op, TIntermTyped *node);
@@ -144,8 +146,8 @@ class TParseContext : angle::NonCopyable
 
     // Returns a sanitized array size to use (the size is at least 1).
     unsigned int checkIsValidArraySize(const TSourceLoc &line, TIntermTyped *expr);
-    bool checkIsValidQualifierForArray(const TSourceLoc &line, const TPublicType &type);
-    bool checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &type);
+    bool checkIsValidQualifierForArray(const TSourceLoc &line, const TPublicType &elementQualifier);
+    bool checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &elementType);
     bool checkIsNonVoid(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     void checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
     void checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType);
@@ -322,7 +324,7 @@ class TParseContext : angle::NonCopyable
     void enterStructDeclaration(const TSourceLoc &line, const TString &identifier);
     void exitStructDeclaration();
 
-    bool structNestingErrorCheck(const TSourceLoc &line, const TField &field);
+    void checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field);
 
     TIntermSwitch *addSwitch(TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &loc);
     TIntermCase *addCase(TIntermTyped *condition, const TSourceLoc &loc);
@@ -382,6 +384,9 @@ class TParseContext : angle::NonCopyable
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                               const TString &identifier,
                                               TPublicType *type);
+
+    bool checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
+                                              const TPublicType &elementType);
 
     TIntermTyped *addBinaryMathInternal(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);

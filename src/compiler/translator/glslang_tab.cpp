@@ -3768,7 +3768,7 @@ yyreduce:
     {
         (yyval.interm.type) = (yyvsp[-3].interm.type);
 
-        if (!context->checkIsValidTypeForArray((yylsp[-2]), (yyvsp[-3].interm.type)))
+        if (context->checkIsValidTypeForArray((yylsp[-2]), (yyvsp[-3].interm.type)))
         {
             unsigned int size = context->checkIsValidArraySize((yylsp[-2]), (yyvsp[-1].interm.intermTypedNode));
             (yyval.interm.type).setArraySize(size);

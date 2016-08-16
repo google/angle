@@ -241,12 +241,8 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
     }
 }
 
-//
 // Both test and if necessary, spit out an error, to see if the node is really
 // an l-value that can be operated on this way.
-//
-// Returns true if the was an error.
-//
 bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIntermTyped *node)
 {
     TIntermSymbol *symNode    = node->getAsSymbolNode();
@@ -254,8 +250,6 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
 
     if (binaryNode)
     {
-        bool errorReturn;
-
         switch (binaryNode->getOp())
         {
             case EOpIndexDirect:
@@ -264,35 +258,34 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             case EOpIndexDirectInterfaceBlock:
                 return checkCanBeLValue(line, op, binaryNode->getLeft());
             case EOpVectorSwizzle:
-                errorReturn = checkCanBeLValue(line, op, binaryNode->getLeft());
-                if (!errorReturn)
+            {
+                bool ok = checkCanBeLValue(line, op, binaryNode->getLeft());
+                if (ok)
                 {
-                    int offset[4] = {0, 0, 0, 0};
+                    int offsetCount[4] = {0, 0, 0, 0};
 
-                    TIntermTyped *rightNode    = binaryNode->getRight();
-                    TIntermAggregate *aggrNode = rightNode->getAsAggregate();
+                    TIntermAggregate *swizzleOffsets = binaryNode->getRight()->getAsAggregate();
 
-                    for (TIntermSequence::iterator p = aggrNode->getSequence()->begin();
-                         p != aggrNode->getSequence()->end(); p++)
+                    for (const auto &offset : *swizzleOffsets->getSequence())
                     {
-                        int value = (*p)->getAsTyped()->getAsConstantUnion()->getIConst(0);
-                        offset[value]++;
-                        if (offset[value] > 1)
+                        int value = offset->getAsTyped()->getAsConstantUnion()->getIConst(0);
+                        offsetCount[value]++;
+                        if (offsetCount[value] > 1)
                         {
                             error(line, " l-value of swizzle cannot have duplicate components", op);
-
-                            return true;
+                            return false;
                         }
                     }
                 }
 
-                return errorReturn;
+                return ok;
+            }
             default:
                 break;
         }
         error(line, " l-value required", op);
 
-        return true;
+        return false;
     }
 
     const char *symbol = 0;
@@ -371,14 +364,14 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
     {
         error(line, " l-value required", op);
 
-        return true;
+        return false;
     }
 
     //
     // Everything else is okay, no error.
     //
     if (message == 0)
-        return false;
+        return true;
 
     //
     // If we get here, we have an error and a message.
@@ -398,7 +391,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         error(line, " l-value required", op, extraInfo.c_str());
     }
 
-    return true;
+    return false;
 }
 
 // Both test, and if necessary spit out an error, to see if the node is really
@@ -436,9 +429,6 @@ void TParseContext::checkIsAtGlobalLevel(const TSourceLoc &line, const char *tok
 // which is when we are parsing built-ins.
 // Also checks for "webgl_" and "_webgl_" reserved identifiers if parsing a
 // webgl shader.
-//
-// Returns true if there was an error.
-//
 bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &identifier)
 {
     static const char *reservedErrMsg = "reserved built-in name";
@@ -447,24 +437,24 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
         if (identifier.compare(0, 3, "gl_") == 0)
         {
             error(line, reservedErrMsg, "gl_");
-            return true;
+            return false;
         }
         if (IsWebGLBasedSpec(mShaderSpec))
         {
             if (identifier.compare(0, 6, "webgl_") == 0)
             {
                 error(line, reservedErrMsg, "webgl_");
-                return true;
+                return false;
             }
             if (identifier.compare(0, 7, "_webgl_") == 0)
             {
                 error(line, reservedErrMsg, "_webgl_");
-                return true;
+                return false;
             }
             if (mShaderSpec == SH_CSS_SHADERS_SPEC && identifier.compare(0, 4, "css_") == 0)
             {
                 error(line, reservedErrMsg, "css_");
-                return true;
+                return false;
             }
         }
         if (identifier.find("__") != TString::npos)
@@ -473,20 +463,16 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
                   "identifiers containing two consecutive underscores (__) are reserved as "
                   "possible future keywords",
                   identifier.c_str());
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 
-//
 // Make sure there is enough data provided to the constructor to build
 // something of the type of the constructor.  Also returns the type of
 // the constructor.
-//
-// Returns true if there was an error in construction.
-//
 bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
                                               TIntermNode *argumentsNode,
                                               const TFunction &function,
@@ -544,14 +530,14 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         if (static_cast<size_t>(type.getArraySize()) != function.getParamCount())
         {
             error(line, "array constructor needs one argument per array element", "constructor");
-            return true;
+            return false;
         }
     }
 
     if (arrayArg && op != EOpConstructStruct)
     {
         error(line, "constructing from a non-dereferenced array", "constructor");
-        return true;
+        return false;
     }
 
     if (matrixInMatrix && !type.isArray())
@@ -560,14 +546,14 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         {
             error(line, "constructing matrix from matrix can only take one argument",
                   "constructor");
-            return true;
+            return false;
         }
     }
 
     if (overFull)
     {
         error(line, "too many arguments", "constructor");
-        return true;
+        return false;
     }
 
     if (op == EOpConstructStruct && !type.isArray() &&
@@ -576,7 +562,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         error(line,
               "Number of constructor parameters does not match the number of structure fields",
               "constructor");
-        return true;
+        return false;
     }
 
     if (!type.isMatrix() || !matrixInMatrix)
@@ -585,14 +571,14 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             (op == EOpConstructStruct && size < type.getObjectSize()))
         {
             error(line, "not enough data provided for construction", "constructor");
-            return true;
+            return false;
         }
     }
 
     if (argumentsNode == nullptr)
     {
         error(line, "constructor does not have any arguments", "constructor");
-        return true;
+        return false;
     }
 
     TIntermAggregate *argumentsAgg = argumentsNode->getAsAggregate();
@@ -603,12 +589,12 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         if (op != EOpConstructStruct && IsSampler(argTyped->getBasicType()))
         {
             error(line, "cannot convert a sampler", "constructor");
-            return true;
+            return false;
         }
         if (argTyped->getBasicType() == EbtVoid)
         {
             error(line, "cannot convert a void", "constructor");
-            return true;
+            return false;
         }
     }
 
@@ -624,7 +610,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             if (!argType.sameElementType(type))
             {
                 error(line, "Array constructor argument has an incorrect type", "Error");
-                return true;
+                return false;
             }
         }
     }
@@ -639,12 +625,12 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             {
                 error(line, "Structure constructor arguments do not match structure fields",
                       "Error");
-                return true;
+                return false;
             }
         }
     }
 
-    return false;
+    return true;
 }
 
 // This function checks to see if a void variable has been declared and raise an error message for
@@ -659,10 +645,10 @@ bool TParseContext::checkIsNonVoid(const TSourceLoc &line,
     if (type == EbtVoid)
     {
         error(line, "illegal use of type 'void'", identifier.c_str());
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 // This function checks to see if the node (for the expression) contains a scalar boolean expression
@@ -694,20 +680,18 @@ bool TParseContext::checkIsNotSampler(const TSourceLoc &line,
         if (containsSampler(*pType.userDef))
         {
             error(line, reason, getBasicString(pType.type), "(structure contains a sampler)");
-
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
     else if (IsSampler(pType.type))
     {
         error(line, reason, getBasicString(pType.type));
-
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 void TParseContext::checkDeclaratorLocationIsNotSpecified(const TSourceLoc &line,
@@ -813,46 +797,55 @@ unsigned int TParseContext::checkIsValidArraySize(const TSourceLoc &line, TInter
 }
 
 // See if this qualifier can be an array.
-//
-// Returns true if there is an error.
-//
-bool TParseContext::checkIsValidQualifierForArray(const TSourceLoc &line, const TPublicType &type)
+bool TParseContext::checkIsValidQualifierForArray(const TSourceLoc &line,
+                                                  const TPublicType &elementQualifier)
 {
-    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexIn) ||
-        (type.qualifier == EvqConst && mShaderVersion < 300))
+    if ((elementQualifier.qualifier == EvqAttribute) ||
+        (elementQualifier.qualifier == EvqVertexIn) ||
+        (elementQualifier.qualifier == EvqConst && mShaderVersion < 300))
     {
         error(line, "cannot declare arrays of this qualifier",
-              TType(type).getCompleteString().c_str());
-        return true;
+              TType(elementQualifier).getQualifierString());
+        return false;
     }
 
-    return false;
+    return true;
 }
 
-// See if this type can be an array.
-//
-// Returns true if there is an error.
-//
-bool TParseContext::checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &type)
+// See if this element type can be formed into an array.
+bool TParseContext::checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &elementType)
 {
     //
     // Can the type be an array?
     //
-    if (type.array)
+    if (elementType.array)
     {
-        error(line, "cannot declare arrays of arrays", TType(type).getCompleteString().c_str());
-        return true;
+        error(line, "cannot declare arrays of arrays",
+              TType(elementType).getCompleteString().c_str());
+        return false;
     }
     // In ESSL1.00 shaders, structs cannot be varying (section 4.3.5). This is checked elsewhere.
     // In ESSL3.00 shaders, struct inputs/outputs are allowed but not arrays of structs (section
     // 4.3.4).
-    if (mShaderVersion >= 300 && type.type == EbtStruct && sh::IsVarying(type.qualifier))
+    if (mShaderVersion >= 300 && elementType.type == EbtStruct &&
+        sh::IsVarying(elementType.qualifier))
     {
         error(line, "cannot declare arrays of structs of this qualifier",
-              TType(type).getCompleteString().c_str());
-        return true;
+              TType(elementType).getCompleteString().c_str());
+        return false;
     }
 
+    return true;
+}
+
+// Check if this qualified element type can be formed into an array.
+bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
+                                                         const TPublicType &elementType)
+{
+    if (checkIsValidTypeForArray(indexLocation, elementType))
+    {
+        return checkIsValidQualifierForArray(indexLocation, elementType);
+    }
     return false;
 }
 
@@ -911,7 +904,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         {
             if (TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
-                needsReservedCheck = checkCanUseExtension(line, builtInSymbol->getExtension());
+                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->getExtension());
             }
         }
         else
@@ -922,7 +915,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         }
     }
 
-    if (needsReservedCheck && checkIsNotReserved(line, identifier))
+    if (needsReservedCheck && !checkIsNotReserved(line, identifier))
         return false;
 
     (*variable) = new TVariable(&identifier, type);
@@ -933,7 +926,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         return false;
     }
 
-    if (checkIsNonVoid(line, identifier, type.getBasicType()))
+    if (!checkIsNonVoid(line, identifier, type.getBasicType()))
         return false;
 
     return true;
@@ -969,21 +962,21 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     if (iter == extBehavior.end())
     {
         error(line, "extension", extension.c_str(), "is not supported");
-        return true;
+        return false;
     }
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
         error(line, "extension", extension.c_str(), "is disabled");
-        return true;
+        return false;
     }
     if (iter->second == EBhWarn)
     {
         warning(line, "extension", extension.c_str(), "is being used");
-        return false;
+        return true;
     }
 
-    return false;
+    return true;
 }
 
 // These checks are common for all declarations starting a declarator list, and declarators that
@@ -1011,7 +1004,7 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
     }
 
     if (publicType.qualifier != EvqUniform &&
-        checkIsNotSampler(identifierLocation, publicType, "samplers must be uniform"))
+        !checkIsNotSampler(identifierLocation, publicType, "samplers must be uniform"))
     {
         return;
     }
@@ -1062,11 +1055,11 @@ bool TParseContext::checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
         {
             error(location, "invalid layout qualifier:", getLocalSizeString(i),
                   "only valid when used with 'in' in a compute shader global layout declaration");
-            return true;
+            return false;
         }
     }
 
-    return false;
+    return true;
 }
 
 void TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate,
@@ -1078,7 +1071,7 @@ void TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate,
         if (qual == EvqOut || qual == EvqInOut)
         {
             TIntermTyped *argument = (*(fnCall->getSequence()))[i]->getAsTyped();
-            if (checkCanBeLValue(argument->getLine(), "assign", argument))
+            if (!checkCanBeLValue(argument->getLine(), "assign", argument))
             {
                 error(argument->getLine(),
                       "Constant value cannot be passed for 'out' or 'inout' parameters.", "Error");
@@ -1569,10 +1562,7 @@ TIntermAggregate *TParseContext::parseSingleArrayDeclaration(TPublicType &public
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
 
-    if (!checkIsValidTypeForArray(indexLocation, publicType))
-    {
-        checkIsValidQualifierForArray(indexLocation, publicType);
-    }
+    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
 
     TType arrayType(publicType);
 
@@ -1628,10 +1618,7 @@ TIntermAggregate *TParseContext::parseSingleArrayInitDeclaration(
 
     singleDeclarationErrorCheck(publicType, identifierLocation);
 
-    if (!checkIsValidTypeForArray(indexLocation, publicType))
-    {
-        checkIsValidQualifierForArray(indexLocation, publicType);
-    }
+    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
 
     TPublicType arrayType(publicType);
 
@@ -1740,8 +1727,7 @@ TIntermAggregate *TParseContext::parseArrayDeclarator(TPublicType &publicType,
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
 
-    if (!checkIsValidTypeForArray(arrayLocation, publicType) &&
-        !checkIsValidQualifierForArray(arrayLocation, publicType))
+    if (checkIsValidTypeAndQualifierForArray(arrayLocation, publicType))
     {
         TType arrayType = TType(publicType);
         unsigned int size = checkIsValidArraySize(arrayLocation, indexExpression);
@@ -1818,10 +1804,7 @@ TIntermAggregate *TParseContext::parseArrayInitDeclarator(const TPublicType &pub
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
 
-    if (!checkIsValidTypeForArray(indexLocation, publicType))
-    {
-        checkIsValidQualifierForArray(indexLocation, publicType);
-    }
+    checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
 
     TPublicType arrayType(publicType);
 
@@ -1926,7 +1909,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
     else
     {
 
-        if (checkWorkGroupSizeIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier))
+        if (!checkWorkGroupSizeIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier))
         {
             return;
         }
@@ -2288,7 +2271,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
     if (constType)
         type.setQualifier(EvqConst);
 
-    if (checkConstructorArguments(line, arguments, *fnCall, op, type))
+    if (!checkConstructorArguments(line, arguments, *fnCall, op, type))
     {
         TIntermTyped *dummyNode = intermediate.setAggregateOperator(nullptr, op, line);
         dummyNode->setType(type);
@@ -2591,16 +2574,16 @@ const int kWebGLMaxStructNesting = 4;
 
 }  // namespace
 
-bool TParseContext::structNestingErrorCheck(const TSourceLoc &line, const TField &field)
+void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field)
 {
     if (!IsWebGLBasedSpec(mShaderSpec))
     {
-        return false;
+        return;
     }
 
     if (field.type()->getBasicType() != EbtStruct)
     {
-        return false;
+        return;
     }
 
     // We're already inside a structure definition at this point, so add
@@ -2612,10 +2595,8 @@ bool TParseContext::structNestingErrorCheck(const TSourceLoc &line, const TField
                      << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
         std::string reason = reasonStream.str();
         error(line, reason.c_str(), field.name().c_str(), "");
-        return true;
+        return;
     }
-
-    return false;
 }
 
 //
@@ -3229,7 +3210,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
             type->setStruct(typeSpecifier.userDef->getStruct());
         }
 
-        structNestingErrorCheck(typeSpecifier.line, *(*fieldList)[i]);
+        checkIsBelowStructNestingLimit(typeSpecifier.line, *(*fieldList)[i]);
     }
 
     return fieldList;
