@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b734fd0_598063a6",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-16T13:02:47Z",
+      "side": 1,
+      "message": "This check should really be at the level where the tests are filtered - this is not the only test class that will hit this issue. It should be possible to do this in a generic way so that it can be used across the context versions.",
+      "revId": "0f53fa6dfd67f70bab48d8d8a01000c82c8a445a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
