@@ -19,35 +19,22 @@ class TIntermSelection;
 class IntermNodePatternMatcher
 {
   public:
-    static bool IsDynamicIndexingOfVectorOrMatrix(TIntermBinary *node);
-
     enum PatternType
     {
-        // Matches expressions that are unfolded to if statements by UnfoldShortCircuitToIf
         kUnfoldedShortCircuitExpression = 0x0001,
 
         // Matches expressions that return arrays with the exception of simple statements where a
         // constructor or function call result is assigned.
-        kExpressionReturningArray = 0x0002,
-
-        // Matches dynamic indexing of vectors or matrices in l-values.
-        kDynamicIndexingOfVectorOrMatrixInLValue = 0x0004
+        kExpressionReturningArray = 0x0002
     };
     IntermNodePatternMatcher(const unsigned int mask);
 
     bool match(TIntermBinary *node, TIntermNode *parentNode);
-
-    // Use this version for checking binary node matches in case you're using flag
-    // kDynamicIndexingOfVectorOrMatrixInLValue.
-    bool match(TIntermBinary *node, TIntermNode *parentNode, bool isLValueRequiredHere);
-
     bool match(TIntermAggregate *node, TIntermNode *parentNode);
     bool match(TIntermSelection *node);
 
   private:
     const unsigned int mMask;
-
-    bool matchInternal(TIntermBinary *node, TIntermNode *parentNode);
 };
 
 #endif

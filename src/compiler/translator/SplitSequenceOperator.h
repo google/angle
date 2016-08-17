@@ -13,12 +13,9 @@
 #define COMPILER_TRANSLATOR_SPLITSEQUENCEOPERATOR_H_
 
 class TIntermNode;
-class TSymbolTable;
 
 void SplitSequenceOperator(TIntermNode *root,
                            int patternsToSplitMask,
-                           unsigned int *temporaryIndex,
-                           const TSymbolTable &symbolTable,
-                           int shaderVersion);
+                           unsigned int *temporaryIndex);
 
 #endif  // COMPILER_TRANSLATOR_SPLITSEQUENCEOPERATOR_H_
