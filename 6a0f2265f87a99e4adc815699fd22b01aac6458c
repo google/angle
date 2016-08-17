@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "7be73325_728e1828",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-17T07:54:11Z",
+      "side": 1,
+      "message": "The earlier version is better in this regard. It\u0027s much easier to check the code for correctness with regards to a particular version of the spec when the checks are separate and there\u0027s a comment documenting that the difference between versions is intentional.",
+      "parentUuid": "db501f1e_85db0215",
+      "range": {
+        "startLine": 1129,
+        "startChar": 14,
+        "endLine": 1129,
+        "endChar": 50
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb1b6b69_1489741e",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 3
