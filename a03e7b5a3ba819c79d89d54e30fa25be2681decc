@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "db749f0d_c56e7ac0",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-17T17:15:04Z",
+      "side": 1,
+      "message": "Only user defined variables can be invariant, so yeah, we don\u0027t need to worry about built-in levels.",
+      "parentUuid": "3bd3fb1e_ac80885c",
+      "range": {
+        "startLine": 494,
+        "startChar": 13,
+        "endLine": 494,
+        "endChar": 27
+      },
+      "revId": "a03e7b5a3ba819c79d89d54e30fa25be2681decc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bd3fb1e_fb43284c",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
