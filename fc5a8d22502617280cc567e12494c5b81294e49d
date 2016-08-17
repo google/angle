@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bc8679a_13958c31",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-17T07:54:11Z",
+      "side": 1,
+      "message": "Is an error generated correctly if the type has some other qualifiers? Like what if you say \"invariant centroid foo;\" in the shader.",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7be73325_d2a704a1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1732,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-17T07:54:11Z",
+      "side": 1,
+      "message": "Shouldn\u0027t you check here that the variable can be declared as invariant - like with checkInvariantIsOutVariable()? Singling out gl_FrontFacing above also seems odd, aren\u0027t there many other similar cases?",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7be73325_f2a20893",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-17T07:54:11Z",
+      "side": 1,
+      "message": "nit: Comment style.",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7be73325_12958c31",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-17T07:54:11Z",
+      "side": 1,
+      "message": "Are there now sufficient checks that struct members don\u0027t have any weird qualifiers, like layout location or invariant? Some existing checks are in ParseContext::addStructure.",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
