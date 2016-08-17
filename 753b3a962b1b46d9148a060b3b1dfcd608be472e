@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3bd3fb1e_4ca9bc24",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-17T07:06:31Z",
+      "side": 1,
+      "message": "True. Updated the comment.",
+      "parentUuid": "ea48a7ff_20b7d0a1",
+      "range": {
+        "startLine": 217,
+        "startChar": 60,
+        "endLine": 217,
+        "endChar": 64
+      },
+      "revId": "753b3a962b1b46d9148a060b3b1dfcd608be472e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea48a7ff_603e3811",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2016-07-23T01:59:17Z",
       "side": 1,
       "message": "I think it actually handles the inputs.",
+      "range": {
+        "startLine": 1524,
+        "startChar": 41,
+        "endLine": 1524,
+        "endChar": 52
+      },
+      "revId": "753b3a962b1b46d9148a060b3b1dfcd608be472e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bd3fb1e_ac65e819",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-17T07:06:31Z",
+      "side": 1,
+      "message": "Double-checking, you\u0027re right. Updated the comment.",
+      "parentUuid": "ea48a7ff_603e3811",
       "range": {
         "startLine": 1524,
         "startChar": 41,
