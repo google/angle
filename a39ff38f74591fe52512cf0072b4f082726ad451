@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b794741_1afa61d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-08-18T17:16:01Z",
+      "side": 1,
+      "message": "Be more precise about what this CL does",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_7a7285aa",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-08-18T17:16:01Z",
+      "side": 1,
+      "message": "move to is_linux section above?",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_9ab7313b",
+        "filename": "src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-08-18T17:16:01Z",
+      "side": 1,
+      "message": "I would do a separate CL for this",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
