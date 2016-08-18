@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dbd73f3a_2d414d45",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Yes, \u0027foo\u0027 : undeclared identifier declared as invariant",
+      "parentUuid": "9bc8679a_13958c31",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7be73325_d2a704a1",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2016-08-17T07:54:11Z",
       "side": 1,
       "message": "Shouldn\u0027t you check here that the variable can be declared as invariant - like with checkInvariantIsOutVariable()? Singling out gl_FrontFacing above also seems odd, aren\u0027t there many other similar cases?",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_673c522a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1732,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Yes, I should.\n\nI added a new function in util.cpp to check whether a builtin is an output variable.\nI checked from VariableInfo.cpp whether there are other output variables coming from some extensions.",
+      "parentUuid": "7be73325_d2a704a1",
       "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dbc81fe9_05e2b2c6",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "I changed it to // empty, but should I just remove it?",
+      "parentUuid": "7be73325_f2a20893",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7be73325_12958c31",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2016-08-17T07:54:11Z",
       "side": 1,
       "message": "Are there now sufficient checks that struct members don\u0027t have any weird qualifiers, like layout location or invariant? Some existing checks are in ParseContext::addStructure.",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bbab737_6f43919e",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "I tested them using the shader translator sampler application. There was a bug with being able to use invariant and the layout location in the struct or interface block.\nAlso, there seems to be tests for the invariant qualifier in a interface block already in dEQP3. Not sure whether there are such tests about structs.",
+      "parentUuid": "7be73325_12958c31",
       "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
