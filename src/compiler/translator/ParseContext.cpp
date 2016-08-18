@@ -3533,8 +3533,10 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
         return false;
     }
 
-    // Check that type sizes match exactly on ops that require that.
-    // Also check restrictions for structs that contain arrays or samplers.
+    // Check that:
+    // 1. Type sizes match exactly on ops that require that.
+    // 2. Restrictions for structs that contain arrays or samplers are respected.
+    // 3. Arithmetic op type dimensionality restrictions for ops other than multiply are respected.
     switch (op)
     {
         case EOpAssign:
@@ -3567,6 +3569,48 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
             {
                 return false;
             }
+            break;
+        case EOpAdd:
+        case EOpSub:
+        case EOpDiv:
+        case EOpIMod:
+        case EOpBitShiftLeft:
+        case EOpBitShiftRight:
+        case EOpBitwiseAnd:
+        case EOpBitwiseXor:
+        case EOpBitwiseOr:
+        case EOpAddAssign:
+        case EOpSubAssign:
+        case EOpDivAssign:
+        case EOpIModAssign:
+        case EOpBitShiftLeftAssign:
+        case EOpBitShiftRightAssign:
+        case EOpBitwiseAndAssign:
+        case EOpBitwiseXorAssign:
+        case EOpBitwiseOrAssign:
+            if ((left->isMatrix() && right->isVector()) || (left->isVector() && right->isMatrix()))
+            {
+                return false;
+            }
+
+            // Are the sizes compatible?
+            if (left->getNominalSize() != right->getNominalSize() ||
+                left->getSecondarySize() != right->getSecondarySize())
+            {
+                // If the nominal sizes of operands do not match:
+                // One of them must be a scalar.
+                if (!left->isScalar() && !right->isScalar())
+                    return false;
+
+                // In the case of compound assignment other than multiply-assign,
+                // the right side needs to be a scalar. Otherwise a vector/matrix
+                // would be assigned to a scalar. A scalar can't be shifted by a
+                // vector either.
+                if (!right->isScalar() &&
+                    (IsAssignment(op) || op == EOpBitShiftLeft || op == EOpBitShiftRight))
+                    return false;
+            }
+            break;
         default:
             break;
     }
@@ -3671,8 +3715,6 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
                 return nullptr;
             }
             break;
-        // Note that for bitwise ops, type checking is done in promote() to
-        // share code between ops and compound assignment
         default:
             break;
     }
@@ -3688,9 +3730,6 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
 
     TIntermBinary *node = new TIntermBinary(op, left, right);
     node->setLine(loc);
-
-    if (!node->promote())
-        return nullptr;
 
     // See if we can fold constants.
     TIntermTyped *foldedNode = node->fold(&mDiagnostics);
@@ -3750,9 +3789,6 @@ TIntermTyped *TParseContext::createAssign(TOperator op,
         }
         TIntermBinary *node = new TIntermBinary(op, left, right);
         node->setLine(loc);
-
-        if (!node->promote())
-            return nullptr;
 
         return node;
     }

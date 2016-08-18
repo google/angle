@@ -410,10 +410,9 @@ class TIntermBinary : public TIntermOperator
         : TIntermOperator(op),
           mAddIndexClamp(false) {}
 
-    TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right)
-        : TIntermOperator(op), mLeft(left), mRight(right), mAddIndexClamp(false)
-    {
-    }
+    // This constructor determines the type of the binary node based on the operands and op.
+    // This is only supported for math/logical ops, not indexing.
+    TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right);
 
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
 
@@ -433,7 +432,6 @@ class TIntermBinary : public TIntermOperator
     void setRight(TIntermTyped *node) { mRight = node; }
     TIntermTyped *getLeft() const { return mLeft; }
     TIntermTyped *getRight() const { return mRight; }
-    bool promote();
     TIntermTyped *fold(TDiagnostics *diagnostics);
 
     void setAddIndexClamp() { mAddIndexClamp = true; }
@@ -447,6 +445,8 @@ class TIntermBinary : public TIntermOperator
     bool mAddIndexClamp;
 
   private:
+    void promote();
+
     TIntermBinary(const TIntermBinary &node);  // Note: not deleted, just private!
 };
 
