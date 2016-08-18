@@ -22,6 +22,30 @@
       "revId": "5d5444dd9edb67cd0d68e53190df87978f2ffc90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_34dad642",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T09:20:30Z",
+      "side": 1,
+      "message": "A unit test is added to check illegal constructs.",
+      "parentUuid": "db749f0d_2b01ddd9",
+      "range": {
+        "startLine": 494,
+        "startChar": 8,
+        "endLine": 494,
+        "endChar": 14
+      },
+      "revId": "5d5444dd9edb67cd0d68e53190df87978f2ffc90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
