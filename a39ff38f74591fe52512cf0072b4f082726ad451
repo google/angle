@@ -19,6 +19,47 @@
     },
     {
       "key": {
+        "uuid": "9b794741_85e276c5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-18T17:50:59Z",
+      "side": 1,
+      "message": "+1... first line is fine, but adding a second paragraph with some documentation is always helpful.",
+      "parentUuid": "9b794741_1afa61d7",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_4539ee37",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-18T17:50:59Z",
+      "side": 1,
+      "message": "please add a comment here documenting what this very mysterious value is for",
+      "range": {
+        "startLine": 183,
+        "startChar": 20,
+        "endLine": 183,
+        "endChar": 33
+      },
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_7a7285aa",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 3
@@ -30,6 +71,24 @@
       "writtenOn": "2016-08-18T17:16:01Z",
       "side": 1,
       "message": "move to is_linux section above?",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_050c4697",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-18T17:50:59Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "9b794741_7a7285aa",
       "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
