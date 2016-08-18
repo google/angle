@@ -141,10 +141,7 @@ void TParseContext::error(const TSourceLoc &loc,
                           const char *token,
                           const char *extraInfo)
 {
-    pp::SourceLocation srcLoc;
-    srcLoc.file = loc.first_file;
-    srcLoc.line = loc.first_line;
-    mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, srcLoc, reason, token, extraInfo);
+    mDiagnostics.error(loc, reason, token, extraInfo);
 }
 
 void TParseContext::warning(const TSourceLoc &loc,
@@ -152,10 +149,7 @@ void TParseContext::warning(const TSourceLoc &loc,
                             const char *token,
                             const char *extraInfo)
 {
-    pp::SourceLocation srcLoc;
-    srcLoc.file = loc.first_file;
-    srcLoc.line = loc.first_line;
-    mDiagnostics.writeInfo(pp::Diagnostics::PP_WARNING, srcLoc, reason, token, extraInfo);
+    mDiagnostics.warning(loc, reason, token, extraInfo);
 }
 
 void TParseContext::outOfRangeError(bool isError,
