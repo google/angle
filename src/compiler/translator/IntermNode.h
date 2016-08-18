@@ -417,6 +417,9 @@ class TIntermBinary : public TIntermOperator
 
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
 
+    static TOperator GetMulOpBasedOnOperands(const TType &left, const TType &right);
+    static TOperator GetMulAssignOpBasedOnOperands(const TType &left, const TType &right);
+
     TIntermBinary *getAsBinaryNode() override { return this; };
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;

@@ -389,6 +389,9 @@ class TParseContext : angle::NonCopyable
     bool checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
                                               const TPublicType &elementType);
 
+    // Assumes that multiplication op has already been set based on the types.
+    bool isMultiplicationTypeCombinationValid(TOperator op, const TType &left, const TType &right);
+
     TIntermTyped *addBinaryMathInternal(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
     TIntermTyped *createAssign(

@@ -3574,6 +3574,49 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
     return true;
 }
 
+bool TParseContext::isMultiplicationTypeCombinationValid(TOperator op,
+                                                         const TType &left,
+                                                         const TType &right)
+{
+    switch (op)
+    {
+        case EOpMul:
+        case EOpMulAssign:
+            return left.getNominalSize() == right.getNominalSize() &&
+                   left.getSecondarySize() == right.getSecondarySize();
+        case EOpVectorTimesScalar:
+            return true;
+        case EOpVectorTimesScalarAssign:
+            ASSERT(!left.isMatrix() && !right.isMatrix());
+            return left.isVector() && !right.isVector();
+        case EOpVectorTimesMatrix:
+            return left.getNominalSize() == right.getRows();
+        case EOpVectorTimesMatrixAssign:
+            ASSERT(!left.isMatrix() && right.isMatrix());
+            return left.isVector() && left.getNominalSize() == right.getRows() &&
+                   left.getNominalSize() == right.getCols();
+        case EOpMatrixTimesVector:
+            return left.getCols() == right.getNominalSize();
+        case EOpMatrixTimesScalar:
+            return true;
+        case EOpMatrixTimesScalarAssign:
+            ASSERT(left.isMatrix() && !right.isMatrix());
+            return !right.isVector();
+        case EOpMatrixTimesMatrix:
+            return left.getCols() == right.getRows();
+        case EOpMatrixTimesMatrixAssign:
+            ASSERT(left.isMatrix() && right.isMatrix());
+            // We need to check two things:
+            // 1. The matrix multiplication step is valid.
+            // 2. The result will have the same number of columns as the lvalue.
+            return left.getCols() == right.getRows() && left.getCols() == right.getCols();
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
                                                    TIntermTyped *left,
                                                    TIntermTyped *right,
@@ -3634,6 +3677,15 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
             break;
     }
 
+    if (op == EOpMul)
+    {
+        op = TIntermBinary::GetMulOpBasedOnOperands(left->getType(), right->getType());
+        if (!isMultiplicationTypeCombinationValid(op, left->getType(), right->getType()))
+        {
+            return nullptr;
+        }
+    }
+
     TIntermBinary *node = new TIntermBinary(op, left, right);
     node->setLine(loc);
 
@@ -3688,6 +3740,14 @@ TIntermTyped *TParseContext::createAssign(TOperator op,
 {
     if (binaryOpCommonCheck(op, left, right, loc))
     {
+        if (op == EOpMulAssign)
+        {
+            op = TIntermBinary::GetMulAssignOpBasedOnOperands(left->getType(), right->getType());
+            if (!isMultiplicationTypeCombinationValid(op, left->getType(), right->getType()))
+            {
+                return nullptr;
+            }
+        }
         TIntermBinary *node = new TIntermBinary(op, left, right);
         node->setLine(loc);
 

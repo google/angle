@@ -60,7 +60,8 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         log->setLine(node->getLine());
         log->setType(x->getType());
 
-        TIntermBinary *mul = new TIntermBinary(EOpMul, y, log);
+        TOperator op       = TIntermBinary::GetMulOpBasedOnOperands(y->getType(), log->getType());
+        TIntermBinary *mul = new TIntermBinary(op, y, log);
         mul->setLine(node->getLine());
         bool valid = mul->promote();
         UNUSED_ASSERTION_VARIABLE(valid);
