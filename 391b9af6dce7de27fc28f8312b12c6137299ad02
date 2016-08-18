@@ -25,6 +25,69 @@
     },
     {
       "key": {
+        "uuid": "9b794741_74d9397f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-18T20:57:55Z",
+      "side": 1,
+      "message": "Also, this should use ANGLE\u0027s ASSERT macro, I think: src/common/debug.h .",
+      "range": {
+        "startLine": 494,
+        "startChar": 8,
+        "endLine": 494,
+        "endChar": 14
+      },
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_b46481b5",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-18T20:57:55Z",
+      "side": 1,
+      "message": "I was rather thinking that this should be just \"invariant v_varying;\". Of course a varying declaration inside a function is illegal. Also, I\u0027d move the definition of \"foo\" below \"varying vec4 v_varying;\".",
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_d4690d8c",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-18T20:57:55Z",
+      "side": 1,
+      "message": "I was thinking to remove this declaration.",
+      "range": {
+        "startLine": 289,
+        "startChar": 9,
+        "endLine": 289,
+        "endChar": 18
+      },
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_d4310def",
         "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
         "patchSetId": 3
