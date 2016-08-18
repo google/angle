@@ -2,6 +2,80 @@
   "comments": [
     {
       "key": {
+        "uuid": "fba24310_0e464bae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "You should document the dEQP tests you used to find bugs in the previous version of the patch.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_e7d4c2bc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1728,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "Better name for this function would be \"parseInvariantDeclaration\". Empty declaration actually means something like this where type is included but no variables are declared:\n\n\"vec4;\"\n\nIt\u0027s valid ESSL.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bdd0f9f_692265b7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1729,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "Why is this variable named like this? Why not just \"identifierLocation\" like before?",
+      "range": {
+        "startLine": 1729,
+        "startChar": 73,
+        "endLine": 1729,
+        "endChar": 97
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_8784e6ba",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1749,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "Instead of string matching the identifier, it would be better to match the qualifier of the variable type with EvqFragColor, EvqFragDepth etc.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fba24310_ce53a371",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -19,6 +93,81 @@
         "endLine": 1752,
         "endChar": 9
       },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_a77f6abb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "I don\u0027t think that these errors make it necessary to stop running this function. In general it\u0027s better if the user of the compiler sees as much error information as possible.",
+      "parentUuid": "fba24310_ce53a371",
+      "range": {
+        "startLine": 1749,
+        "startChar": 7,
+        "endLine": 1752,
+        "endChar": 9
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_27effa7f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "This old parseInvariantDeclaration is not used anymore and should be cleaned up.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5bdd0f9f_0915a953",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3651,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "\"invalid storage qualifier combination\" would be a clearer error message.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fbcb23e0_a6b126ab",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3685,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "It would be better if the qualification order was covered in full by getMaximumQualifierIndex().",
       "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -134,6 +283,40 @@
         "endLine": 1266,
         "endChar": 36
       },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bb5bb44_f04e40c7",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "\"GLES\" means \"OpenGL ES\".\n\"ESSL\" or \"GLSL ES\" means \"OpenGL ES shading language\".\n\n\"ESS\" abbreviation is not common practice and should not be used.\n\nAre you sure these are not already covered by some other test?",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_47cdce2d",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "I don\u0027t think a separate test is necessary for ESSL 3.1",
       "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
