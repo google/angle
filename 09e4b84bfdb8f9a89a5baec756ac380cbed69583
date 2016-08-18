@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fba24310_ce53a371",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Should we stop parsing if there is an error - like above?",
+      "range": {
+        "startLine": 1749,
+        "startChar": 7,
+        "endLine": 1752,
+        "endChar": 9
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_27609a36",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3770,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Broadcast the invariant qualifier. It will be checked either in addStructure or addInterfaceBlock .",
+      "range": {
+        "startLine": 3770,
+        "startChar": 8,
+        "endLine": 3770,
+        "endChar": 52
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bb5bb44_f000005f",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Previously it was in the wrong place I think.",
+      "range": {
+        "startLine": 636,
+        "startChar": 8,
+        "endLine": 636,
+        "endChar": 43
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ba5c71d_6b15419a",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "Oops, I will fix this in the next patch version once this gets reviewed.",
+      "range": {
+        "startLine": 820,
+        "startChar": 0,
+        "endLine": 820,
+        "endChar": 0
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd39797_e775e2fb",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 1266,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "The invariant qualifier has to be broadcasted. Otherwise I could not do error checking in ParseContext.",
+      "range": {
+        "startLine": 1266,
+        "startChar": 8,
+        "endLine": 1266,
+        "endChar": 36
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
