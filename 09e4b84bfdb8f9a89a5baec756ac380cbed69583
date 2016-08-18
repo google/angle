@@ -94,6 +94,29 @@
     },
     {
       "key": {
+        "uuid": "fbcb23e0_0618fad1",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 5
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T12:46:24Z",
+      "side": 1,
+      "message": "SHARED will have to be added here in a later patch when shared memory gets introduced. Otherwise the \u0027shared\u0027 layout qualifier will not be properly parsed.\nIt is already done in the shared memory patch I have not submitted yet. \nJust explaining why it is not yet added although it is in the es 3.1 grammar.",
+      "range": {
+        "startLine": 991,
+        "startChar": 4,
+        "endLine": 991,
+        "endChar": 5
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bd39797_e775e2fb",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 5
