@@ -65,6 +65,24 @@
     },
     {
       "key": {
+        "uuid": "e8227799_35835004",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T23:50:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_b46481b5",
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_d4690d8c",
         "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
         "patchSetId": 3
@@ -88,6 +106,30 @@
     },
     {
       "key": {
+        "uuid": "e8227799_557ecc0f",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T23:50:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_d4690d8c",
+      "range": {
+        "startLine": 289,
+        "startChar": 9,
+        "endLine": 289,
+        "endChar": 18
+      },
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_d4310def",
         "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
         "patchSetId": 3
@@ -99,6 +141,24 @@
       "writtenOn": "2016-08-18T20:44:37Z",
       "side": 1,
       "message": "Could you please also testing \"invariant gl_Position;\" inside main function and verify the compilation fails?",
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8227799_7579c825",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T23:50:57Z",
+      "side": 1,
+      "message": "This compilation do fail with this change. But it also trigger ASSERT(currentLevel() \u003d\u003d GLOBAL_LEVEL) to fail. So I change the assertions to if condition.",
+      "parentUuid": "9b794741_d4310def",
       "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
