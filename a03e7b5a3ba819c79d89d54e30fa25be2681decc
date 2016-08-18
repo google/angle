@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9b794741_f4b8cedc",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T09:20:30Z",
+      "side": 1,
+      "message": "Is this implementation correct? If currentLevel() \u003d\u003d ESSL1_BUILTINS, it will still return true.",
+      "revId": "a03e7b5a3ba819c79d89d54e30fa25be2681decc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bd3fb1e_bb19a082",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
@@ -85,6 +102,30 @@
       "side": 1,
       "message": "What happens if a built-in variable is marked invariant, like the following:\n  invariant gl_Position;\nI assume this will work because a user-level scope has already been pushed on to the symbol table. But can you confirm? This passes all tests, right?",
       "parentUuid": "db749f0d_c56e7ac0",
+      "range": {
+        "startLine": 494,
+        "startChar": 13,
+        "endLine": 494,
+        "endChar": 27
+      },
+      "revId": "a03e7b5a3ba819c79d89d54e30fa25be2681decc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b794741_d4b35200",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T09:20:30Z",
+      "side": 1,
+      "message": "built-in variable works well. This CL passed all tests locally.",
+      "parentUuid": "db749f0d_6bbd9518",
       "range": {
         "startLine": 494,
         "startChar": 13,
