@@ -3441,6 +3441,28 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                                         TIntermTyped *right,
                                         const TSourceLoc &loc)
 {
+    if (left->getType().getStruct() || right->getType().getStruct())
+    {
+        switch (op)
+        {
+            case EOpIndexDirectStruct:
+                ASSERT(left->getType().getStruct());
+                break;
+            case EOpEqual:
+            case EOpNotEqual:
+            case EOpAssign:
+            case EOpInitialize:
+                if (left->getType() != right->getType())
+                {
+                    return false;
+                }
+                break;
+            default:
+                error(loc, "Invalid operation for structs", GetOperatorString(op));
+                return false;
+        }
+    }
+
     if (left->isArray() || right->isArray())
     {
         if (mShaderVersion < 300)
@@ -3572,8 +3594,9 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
         case EOpGreaterThan:
         case EOpLessThanEqual:
         case EOpGreaterThanEqual:
-            ASSERT(!left->isArray() && !right->isArray());
-            if (left->isMatrix() || left->isVector() || left->getBasicType() == EbtStruct)
+            ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
+                   !right->getType().getStruct());
+            if (left->isMatrix() || left->isVector())
             {
                 return nullptr;
             }
@@ -3581,7 +3604,8 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
         case EOpLogicalOr:
         case EOpLogicalXor:
         case EOpLogicalAnd:
-            ASSERT(!left->isArray() && !right->isArray());
+            ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
+                   !right->getType().getStruct());
             if (left->getBasicType() != EbtBool || left->isMatrix() || left->isVector())
             {
                 return nullptr;
@@ -3591,17 +3615,18 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
         case EOpSub:
         case EOpDiv:
         case EOpMul:
-            ASSERT(!left->isArray() && !right->isArray());
-            if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool)
+            ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
+                   !right->getType().getStruct());
+            if (left->getBasicType() == EbtBool)
             {
                 return nullptr;
             }
             break;
         case EOpIMod:
-            ASSERT(!left->isArray() && !right->isArray());
+            ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
+                   !right->getType().getStruct());
             // Note that this is only for the % operator, not for mod()
-            if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool ||
-                left->getBasicType() == EbtFloat)
+            if (left->getBasicType() == EbtBool || left->getBasicType() == EbtFloat)
             {
                 return nullptr;
             }

@@ -1718,6 +1718,46 @@ TEST_F(MalformedShaderTest, MaxImageUnitsInES3Shader)
     }
 }
 
+// struct += struct is an invalid operation.
+TEST_F(MalformedShaderTest, StructCompoundAssignStruct)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 myOutput;\n"
+        "struct S { float foo; };\n"
+        "void main() {\n"
+        "   S a, b;\n"
+        "   a += b;\n"
+        "   myOutput = vec4(0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// struct == different struct is an invalid operation.
+TEST_F(MalformedShaderTest, StructEqDifferentStruct)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 myOutput;\n"
+        "struct S { float foo; };\n"
+        "struct S2 { float foobar; };\n"
+        "void main() {\n"
+        "   S a;\n"
+        "   S2 b;\n"
+        "   a == b;\n"
+        "   myOutput = vec4(0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
 // Compute shaders are not supported in versions lower than 310.
 TEST_F(MalformedComputeShaderTest, Version100)
 {

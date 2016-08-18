@@ -73,14 +73,6 @@ TIntermTyped *TIntermediate::addBinaryMath(
 TIntermTyped *TIntermediate::addAssign(
     TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &line)
 {
-    if (left->getType().getStruct() || right->getType().getStruct())
-    {
-        if (left->getType() != right->getType())
-        {
-            return NULL;
-        }
-    }
-
     TIntermBinary *node = new TIntermBinary(op);
     node->setLine(line);
 
