@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b794741_d47fcd6f",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-18T20:44:37Z",
+      "side": 1,
+      "message": "Good catch.  I think this function means the shader semantic, so builtin level is still the global scope.  However, in ANGLE internal implementation, we divide the scope into a few levels.",
+      "parentUuid": "9b794741_f4b8cedc",
+      "revId": "a03e7b5a3ba819c79d89d54e30fa25be2681decc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bd3fb1e_bb19a082",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
