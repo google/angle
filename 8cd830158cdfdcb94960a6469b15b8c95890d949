@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08fd0b27_3ee0c920",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-08-18T23:59:41Z",
+      "side": 1,
+      "message": "And if we\u0027re not at the global level? Who is responsible for signaling the compilation error? At least, it is worth a comment here, and below.",
+      "range": {
+        "startLine": 495,
+        "startChar": 11,
+        "endLine": 495,
+        "endChar": 16
+      },
+      "revId": "8cd830158cdfdcb94960a6469b15b8c95890d949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
