@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e8227799_f58cb832",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-18T23:50:57Z",
+      "side": 1,
+      "message": "I intend to do the name modification in a separate patch to avoid a lot changes unrelated to this CL.",
+      "parentUuid": "9b794741_d47fcd6f",
+      "revId": "a03e7b5a3ba819c79d89d54e30fa25be2681decc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3bd3fb1e_bb19a082",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 1
