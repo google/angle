@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "fba24310_0e2f6bee",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-18T11:55:57Z",
+      "side": 1,
+      "message": "I rolled it back.",
+      "parentUuid": "7be73325_728e1828",
+      "range": {
+        "startLine": 1129,
+        "startChar": 14,
+        "endLine": 1129,
+        "endChar": 50
+      },
+      "revId": "6a0f2265f87a99e4adc815699fd22b01aac6458c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb1b6b69_1489741e",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 3
