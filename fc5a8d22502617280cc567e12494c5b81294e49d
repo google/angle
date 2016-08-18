@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1bd39797_a7dacae6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1712,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "Nope, this is still an issue. Try adding the following test to MalformedShaderTest:\n\n// Invariant declaration should follow the following format \"invariant \u003cout variable name\u003e\".\n// Test having an incorrect qualifier in the invariant declaration.\nTEST_F(MalformedShaderTest, InvariantDeclarationWithStorageQualifier)\n{\n    const std::string \u0026shaderString \u003d\n        \"#version 300 es\\n\"\n        \"precision mediump float;\\n\"\n        \"out vec4 foo;\\n\"\n        \"invariant centroid foo;\\n\"\n        \"void main() {\\n\"\n        \"}\\n\";\n\n    if (compile(shaderString))\n    {\n        FAIL() \u003c\u003c \"Shader compilation succeeded, expecting failure \" \u003c\u003c mInfoLog;\n    }\n}",
+      "parentUuid": "dbd73f3a_2d414d45",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7be73325_d2a704a1",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "I changed it to // empty, but should I just remove it?",
       "parentUuid": "7be73325_f2a20893",
+      "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bb5bb44_3049e8be",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 4
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-18T13:45:15Z",
+      "side": 1,
+      "message": "I think // empty is fine.",
+      "parentUuid": "dbc81fe9_05e2b2c6",
       "revId": "fc5a8d22502617280cc567e12494c5b81294e49d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
