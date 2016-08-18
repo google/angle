@@ -17,6 +17,7 @@
 
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
+#include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
@@ -565,7 +566,7 @@ void TIntermUnary::promote(const TType *funcReturnType)
 // For lots of operations it should already be established that the operand
 // combination is valid, but returns false if operator can't work on operands.
 //
-bool TIntermBinary::promote(TInfoSink &infoSink)
+bool TIntermBinary::promote()
 {
     ASSERT(mLeft->isArray() == mRight->isArray());
 
@@ -686,8 +687,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
         }
         else
         {
-            infoSink.info.message(EPrefixInternalError, getLine(),
-                                  "Missing elses");
+            UNREACHABLE();
             return false;
         }
 
@@ -744,8 +744,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
         }
         else
         {
-            infoSink.info.message(EPrefixInternalError, getLine(),
-                                  "Missing elses");
+            UNREACHABLE();
             return false;
         }
 
@@ -836,7 +835,7 @@ bool TIntermBinary::promote(TInfoSink &infoSink)
     return true;
 }
 
-TIntermTyped *TIntermBinary::fold(TInfoSink &infoSink)
+TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
 {
     TIntermConstantUnion *leftConstant = mLeft->getAsConstantUnion();
     TIntermConstantUnion *rightConstant = mRight->getAsConstantUnion();
@@ -844,7 +843,7 @@ TIntermTyped *TIntermBinary::fold(TInfoSink &infoSink)
     {
         return nullptr;
     }
-    TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, infoSink);
+    TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, diagnostics);
 
     // Nodes may be constant folded without being qualified as constant.
     TQualifier resultQualifier = EvqConst;
@@ -917,7 +916,9 @@ TIntermTyped *TIntermAggregate::fold(TInfoSink &infoSink)
 //
 // Returns the constant value to keep using or nullptr.
 //
-TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink)
+TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
+                                                 TIntermConstantUnion *rightNode,
+                                                 TDiagnostics *diagnostics)
 {
     const TConstantUnion *leftArray  = getUnionArrayPointer();
     const TConstantUnion *rightArray = rightNode->getUnionArrayPointer();
@@ -966,14 +967,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
 
       case EOpMatrixTimesMatrix:
         {
-            if (getType().getBasicType() != EbtFloat ||
-                rightNode->getBasicType() != EbtFloat)
-            {
-                infoSink.info.message(
-                    EPrefixInternalError, getLine(),
-                    "Constant Folding cannot be done for matrix multiply");
-                return nullptr;
-            }
+            ASSERT(getType().getBasicType() == EbtFloat && rightNode->getBasicType() == EbtFloat);
 
             const int leftCols = getCols();
             const int leftRows = getRows();
@@ -1011,8 +1005,8 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
                   case EbtFloat:
                     if (rightArray[i] == 0.0f)
                     {
-                        infoSink.info.message(EPrefixWarning, getLine(),
-                                              "Divide by zero error during constant folding");
+                        diagnostics->warning(
+                            getLine(), "Divide by zero error during constant folding", "/", "");
                         resultArray[i].setFConst(leftArray[i].getFConst() < 0 ? -FLT_MAX : FLT_MAX);
                     }
                     else
@@ -1025,8 +1019,8 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
                   case EbtInt:
                     if (rightArray[i] == 0)
                     {
-                        infoSink.info.message(EPrefixWarning, getLine(),
-                                              "Divide by zero error during constant folding");
+                        diagnostics->warning(
+                            getLine(), "Divide by zero error during constant folding", "/", "");
                         resultArray[i].setIConst(INT_MAX);
                     }
                     else
@@ -1046,8 +1040,8 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
                   case EbtUInt:
                     if (rightArray[i] == 0)
                     {
-                        infoSink.info.message(EPrefixWarning, getLine(),
-                                              "Divide by zero error during constant folding");
+                        diagnostics->warning(
+                            getLine(), "Divide by zero error during constant folding", "/", "");
                         resultArray[i].setUConst(UINT_MAX);
                     }
                     else
@@ -1065,9 +1059,8 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
                     break;
 
                   default:
-                    infoSink.info.message(EPrefixInternalError, getLine(),
-                                          "Constant folding cannot be done for \"/\"");
-                    return nullptr;
+                      UNREACHABLE();
+                      return nullptr;
                 }
             }
         }
@@ -1075,12 +1068,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
 
       case EOpMatrixTimesVector:
         {
-            if (rightNode->getBasicType() != EbtFloat)
-            {
-                infoSink.info.message(EPrefixInternalError, getLine(),
-                                      "Constant Folding cannot be done for matrix times vector");
-                return nullptr;
-            }
+            ASSERT(rightNode->getBasicType() == EbtFloat);
 
             const int matrixCols = getCols();
             const int matrixRows = getRows();
@@ -1102,12 +1090,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
 
       case EOpVectorTimesMatrix:
         {
-            if (getType().getBasicType() != EbtFloat)
-            {
-                infoSink.info.message(EPrefixInternalError, getLine(),
-                                      "Constant Folding cannot be done for vector times matrix");
-                return nullptr;
-            }
+            ASSERT(getType().getBasicType() == EbtFloat);
 
             const int matrixCols = rightNode->getType().getCols();
             const int matrixRows = rightNode->getType().getRows();
@@ -1149,18 +1132,11 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
 
       case EOpLogicalXor:
         {
+            ASSERT(getType().getBasicType() == EbtBool);
             resultArray = new TConstantUnion[objectSize];
             for (size_t i = 0; i < objectSize; i++)
             {
-                switch (getType().getBasicType())
-                {
-                  case EbtBool:
-                    resultArray[i].setBConst(leftArray[i] != rightArray[i]);
-                    break;
-                  default:
-                    UNREACHABLE();
-                    break;
-                }
+                resultArray[i].setBConst(leftArray[i] != rightArray[i]);
             }
         }
         break;
@@ -1240,10 +1216,8 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op, TIntermConstantUn
         break;
 
       default:
-        infoSink.info.message(
-            EPrefixInternalError, getLine(),
-            "Invalid operator for constant folding");
-        return nullptr;
+          UNREACHABLE();
+          return nullptr;
     }
     return resultArray;
 }

@@ -27,6 +27,8 @@
 #include "compiler/translator/Operator.h"
 #include "compiler/translator/Types.h"
 
+class TDiagnostics;
+
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBinary;
@@ -349,7 +351,9 @@ class TIntermConstantUnion : public TIntermTyped
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
-    TConstantUnion *foldBinary(TOperator op, TIntermConstantUnion *rightNode, TInfoSink &infoSink);
+    TConstantUnion *foldBinary(TOperator op,
+                               TIntermConstantUnion *rightNode,
+                               TDiagnostics *diagnostics);
     TConstantUnion *foldUnaryWithDifferentReturnType(TOperator op, TInfoSink &infoSink);
     TConstantUnion *foldUnaryWithSameReturnType(TOperator op, TInfoSink &infoSink);
 
@@ -406,6 +410,11 @@ class TIntermBinary : public TIntermOperator
         : TIntermOperator(op),
           mAddIndexClamp(false) {}
 
+    TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right)
+        : TIntermOperator(op), mLeft(left), mRight(right), mAddIndexClamp(false)
+    {
+    }
+
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
 
     TIntermBinary *getAsBinaryNode() override { return this; };
@@ -421,8 +430,8 @@ class TIntermBinary : public TIntermOperator
     void setRight(TIntermTyped *node) { mRight = node; }
     TIntermTyped *getLeft() const { return mLeft; }
     TIntermTyped *getRight() const { return mRight; }
-    bool promote(TInfoSink &);
-    TIntermTyped *fold(TInfoSink &infoSink);
+    bool promote();
+    TIntermTyped *fold(TDiagnostics *diagnostics);
 
     void setAddIndexClamp() { mAddIndexClamp = true; }
     bool getAddIndexClamp() { return mAddIndexClamp; }

@@ -3631,7 +3631,18 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
             break;
     }
 
-    return intermediate.addBinaryMath(op, left, right, loc);
+    TIntermBinary *node = new TIntermBinary(op, left, right);
+    node->setLine(loc);
+
+    if (!node->promote())
+        return nullptr;
+
+    // See if we can fold constants.
+    TIntermTyped *foldedNode = node->fold(&mDiagnostics);
+    if (foldedNode)
+        return foldedNode;
+
+    return node;
 }
 
 TIntermTyped *TParseContext::addBinaryMath(TOperator op,
@@ -3674,7 +3685,13 @@ TIntermTyped *TParseContext::createAssign(TOperator op,
 {
     if (binaryOpCommonCheck(op, left, right, loc))
     {
-        return intermediate.addAssign(op, left, right, loc);
+        TIntermBinary *node = new TIntermBinary(op, left, right);
+        node->setLine(loc);
+
+        if (!node->promote())
+            return nullptr;
+
+        return node;
     }
     return nullptr;
 }
