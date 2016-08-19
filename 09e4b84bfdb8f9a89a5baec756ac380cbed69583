@@ -288,6 +288,24 @@
     },
     {
       "key": {
+        "uuid": "6873e7d0_59cb8355",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3685,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-19T10:18:09Z",
+      "side": 1,
+      "message": "I think the qualifiers could be assigned more fine-grained indices. So if \"EvqCentroid\" has an index of x, then \"EvqCentroidOut\" would have an index of x + 1. Then having two qualifiers with the same index would also be an error.",
+      "parentUuid": "48b2a3c6_e85f1379",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bd39797_27609a36",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
