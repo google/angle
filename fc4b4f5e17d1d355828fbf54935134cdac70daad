@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8187f6f_f954afcf",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-19T22:40:57Z",
+      "side": 1,
+      "message": "Can we ASSERT(currentLevel() \u003d\u003d GLOBAL) here and below?\n\nIt really won\u0027t work if this isn\u0027t all happening in one level, i.e., if it is added to the BUILTIN level but queried at GLOBAL level, then it\u0027s broken.\n\nHere and below.",
+      "range": {
+        "startLine": 494,
+        "startChar": 8,
+        "endLine": 494,
+        "endChar": 14
+      },
+      "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8187f6f_39090703",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-19T22:40:57Z",
+      "side": 1,
+      "message": "Can we ASSERT here bow?",
+      "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
