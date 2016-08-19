@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "6873e7d0_d98c7333",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1728,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bd39797_e7d4c2bc",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bdd0f9f_692265b7",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "e89517fc_9d96e33b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1729,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "I think there was already a \"parseEmptyDeclaration\" function before which I changed a bit. Also, I used the same parameter names.\nDone.",
+      "parentUuid": "5bdd0f9f_692265b7",
+      "range": {
+        "startLine": 1729,
+        "startChar": 73,
+        "endLine": 1729,
+        "endChar": 97
+      },
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bd39797_8784e6ba",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -70,6 +112,24 @@
       "writtenOn": "2016-08-18T13:45:15Z",
       "side": 1,
       "message": "Instead of string matching the identifier, it would be better to match the qualifier of the variable type with EvqFragColor, EvqFragDepth etc.",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08b0abbd_269f964e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1749,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bd39797_8784e6ba",
       "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -140,6 +200,24 @@
     },
     {
       "key": {
+        "uuid": "e89517fc_dd8c6b33",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bd39797_27effa7f",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bdd0f9f_0915a953",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -157,6 +235,24 @@
     },
     {
       "key": {
+        "uuid": "a8c95f46_eb895120",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3651,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bdd0f9f_0915a953",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbcb23e0_a6b126ab",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -168,6 +264,24 @@
       "writtenOn": "2016-08-18T13:45:15Z",
       "side": 1,
       "message": "It would be better if the qualification order was covered in full by getMaximumQualifierIndex().",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48b2a3c6_e85f1379",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3685,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "That wouldn\u0027t be possible with the way it is now - i.e. getting a rank based on the qualifier type.\nThe function just handles whether we have the qualifier groups properly ordered: \ninvariant-qualifier interpolation-qualifier layout-qualifier other-storage-qualifier precision-qualifier\n\nThe storage qualifiers allow enumeration and the others do not.\nDo you have any suggestions how this should be rewritten?\n\nI will at least put the error checks in a separate function checkJoinQualifiers. I will also rename joinTypeQualifiers to joinQualifiers",
+      "parentUuid": "fbcb23e0_a6b126ab",
       "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -306,6 +420,24 @@
     },
     {
       "key": {
+        "uuid": "488b83e0_a0adba80",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Fixed the names.\nI will also remove the tests. It was handled correctly before. There might be dEQP tests for them as well.",
+      "parentUuid": "3bb5bb44_f04e40c7",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bd39797_47cdce2d",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 5
@@ -317,6 +449,24 @@
       "writtenOn": "2016-08-18T13:45:15Z",
       "side": 1,
       "message": "I don\u0027t think a separate test is necessary for ESSL 3.1",
+      "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e89517fc_3d9f8f4e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T09:38:50Z",
+      "side": 1,
+      "message": "Removed it.",
+      "parentUuid": "1bd39797_47cdce2d",
       "revId": "09e4b84bfdb8f9a89a5baec756ac380cbed69583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
