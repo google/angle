@@ -22,6 +22,30 @@
       "revId": "8cd830158cdfdcb94960a6469b15b8c95890d949",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08fd0b27_e75f7079",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-19T07:30:04Z",
+      "side": 1,
+      "message": "For the Illegal \"invariant gl_Position\" in main() function,  checkIsAtGlobalLevel detects a compilation error, but the compilation isn\u0027t terminated right away. So addInvariantVarying will be called to add a non-global invariant varying. See, https://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/ParseContext.cpp?rcl\u003d0\u0026l\u003d1654\n\nThe compilation error is raised at the end of PaParseStrings: https://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/ParseContext.cpp?rcl\u003d0\u0026l\u003d3988",
+      "parentUuid": "08fd0b27_3ee0c920",
+      "range": {
+        "startLine": 495,
+        "startChar": 11,
+        "endLine": 495,
+        "endChar": 16
+      },
+      "revId": "8cd830158cdfdcb94960a6469b15b8c95890d949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
