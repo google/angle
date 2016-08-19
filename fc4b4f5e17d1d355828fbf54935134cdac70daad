@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8187f6f_fcb37de0",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-19T22:51:13Z",
+      "side": 1,
+      "message": "I changed the implementation of atGlobalLevel() which do the same thing as you pointed.",
+      "parentUuid": "a8187f6f_f954afcf",
+      "range": {
+        "startLine": 494,
+        "startChar": 8,
+        "endLine": 494,
+        "endChar": 14
+      },
+      "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8187f6f_39090703",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2016-08-19T22:40:57Z",
       "side": 1,
       "message": "Can we ASSERT here bow?",
+      "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8187f6f_799e5f65",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-19T22:51:13Z",
+      "side": 1,
+      "message": "I call it in the new added unittests at non-global level. I removed these calls. ASSERTing now.",
+      "parentUuid": "a8187f6f_39090703",
       "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
