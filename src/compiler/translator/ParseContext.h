@@ -31,14 +31,13 @@ class TParseContext : angle::NonCopyable
   public:
     TParseContext(TSymbolTable &symt,
                   TExtensionBehavior &ext,
-                  TIntermediate &interm,
                   sh::GLenum type,
                   ShShaderSpec spec,
                   int options,
                   bool checksPrecErrors,
                   TInfoSink &is,
                   const ShBuiltInResources &resources)
-        : intermediate(interm),
+        : intermediate(),
           symbolTable(symt),
           mDeferredSingleDeclarationErrorCheck(false),
           mShaderType(type),
@@ -367,7 +366,7 @@ class TParseContext : angle::NonCopyable
         TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock, const TSourceLoc &line);
 
     // TODO(jmadill): make these private
-    TIntermediate &intermediate; // to hold and build a parse tree
+    TIntermediate intermediate;  // to build a parse tree
     TSymbolTable &symbolTable;   // symbol table that goes with the language currently being parsed
 
   private:

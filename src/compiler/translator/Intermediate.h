@@ -16,15 +16,13 @@ struct TVectorFields
 };
 
 //
-// Set of helper functions to help parse and build the tree.
+// Set of helper functions to help build the tree.
 //
-class TInfoSink;
 class TIntermediate
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TIntermediate(TInfoSink &i)
-        : mInfoSink(i) { }
+    TIntermediate() {}
 
     TIntermSymbol *addSymbol(
         int id, const TString &, const TType &, const TSourceLoc &);
@@ -56,16 +54,14 @@ class TIntermediate
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, TIntermTyped *, const TSourceLoc &);
     TIntermTyped *addSwizzle(TVectorFields &, const TSourceLoc &);
-    TIntermAggregate *postProcess(TIntermNode *root);
+    static TIntermAggregate *PostProcess(TIntermNode *root);
 
     static void outputTree(TIntermNode *, TInfoSinkBase &);
 
-    TIntermTyped *foldAggregateBuiltIn(TIntermAggregate *aggregate);
+    TIntermTyped *foldAggregateBuiltIn(TIntermAggregate *aggregate, TDiagnostics *diagnostics);
 
   private:
     void operator=(TIntermediate &); // prevent assignments
-
-    TInfoSink & mInfoSink;
 };
 
 #endif  // COMPILER_TRANSLATOR_INTERMEDIATE_H_

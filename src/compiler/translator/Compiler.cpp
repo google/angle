@@ -219,8 +219,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         ++firstSource;
     }
 
-    TIntermediate intermediate(infoSink);
-    TParseContext parseContext(symbolTable, extensionBehavior, intermediate, shaderType, shaderSpec,
+    TParseContext parseContext(symbolTable, extensionBehavior, shaderType, shaderSpec,
                                compileOptions, true, infoSink, getResources());
 
     parseContext.setFragmentPrecisionHighOnESSL1(fragmentPrecisionHigh);
@@ -254,7 +253,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
         root = parseContext.getTreeRoot();
-        root = intermediate.postProcess(root);
+        root = TIntermediate::PostProcess(root);
 
         // Highp might have been auto-enabled based on shader version
         fragmentPrecisionHigh = parseContext.getFragmentPrecisionHigh();

@@ -319,6 +319,7 @@ class TIntermConstantUnion : public TIntermTyped
     TIntermConstantUnion(const TConstantUnion *unionPointer, const TType &type)
         : TIntermTyped(type), mUnionArrayPointer(unionPointer)
     {
+        ASSERT(unionPointer);
     }
 
     TIntermTyped *deepCopy() const override { return new TIntermConstantUnion(*this); }
@@ -346,6 +347,7 @@ class TIntermConstantUnion : public TIntermTyped
 
     void replaceConstantUnion(const TConstantUnion *safeConstantUnion)
     {
+        ASSERT(safeConstantUnion);
         // Previous union pointer freed on pool deallocation.
         mUnionArrayPointer = safeConstantUnion;
     }
@@ -357,12 +359,12 @@ class TIntermConstantUnion : public TIntermTyped
     TConstantUnion *foldBinary(TOperator op,
                                TIntermConstantUnion *rightNode,
                                TDiagnostics *diagnostics);
-    TConstantUnion *foldUnaryWithDifferentReturnType(TOperator op, TInfoSink &infoSink);
-    TConstantUnion *foldUnaryWithSameReturnType(TOperator op, TInfoSink &infoSink);
+    TConstantUnion *foldUnaryNonComponentWise(TOperator op);
+    TConstantUnion *foldUnaryComponentWise(TOperator op, TDiagnostics *diagnostics);
 
-    static TConstantUnion *FoldAggregateConstructor(TIntermAggregate *aggregate,
-                                                    TInfoSink &infoSink);
-    static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate, TInfoSink &infoSink);
+    static TConstantUnion *FoldAggregateConstructor(TIntermAggregate *aggregate);
+    static TConstantUnion *FoldAggregateBuiltIn(TIntermAggregate *aggregate,
+                                                TDiagnostics *diagnostics);
 
   protected:
     // Same data may be shared between multiple constant unions, so it can't be modified.
@@ -370,7 +372,9 @@ class TIntermConstantUnion : public TIntermTyped
 
   private:
     typedef float(*FloatTypeUnaryFunc) (float);
-    bool foldFloatTypeUnary(const TConstantUnion &parameter, FloatTypeUnaryFunc builtinFunc, TInfoSink &infoSink, TConstantUnion *result) const;
+    void foldFloatTypeUnary(const TConstantUnion &parameter,
+                            FloatTypeUnaryFunc builtinFunc,
+                            TConstantUnion *result) const;
 
     TIntermConstantUnion(const TIntermConstantUnion &node);  // Note: not deleted, just private!
 };
@@ -468,6 +472,11 @@ class TIntermUnary : public TIntermOperator
           mOperand(NULL),
           mUseEmulatedFunction(false) {}
 
+    TIntermUnary(TOperator op, TIntermTyped *operand)
+        : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false)
+    {
+    }
+
     TIntermTyped *deepCopy() const override { return new TIntermUnary(*this); }
 
     void traverse(TIntermTraverser *it) override;
@@ -479,7 +488,7 @@ class TIntermUnary : public TIntermOperator
     void setOperand(TIntermTyped *operand) { mOperand = operand; }
     TIntermTyped *getOperand() { return mOperand; }
     void promote(const TType *funcReturnType);
-    TIntermTyped *fold(TInfoSink &infoSink);
+    TIntermTyped *fold(TDiagnostics *diagnostics);
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
@@ -532,7 +541,7 @@ class TIntermAggregate : public TIntermOperator
     bool insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions);
     // Conservatively assume function calls and other aggregate operators have side-effects
     bool hasSideEffects() const override { return true; }
-    TIntermTyped *fold(TInfoSink &infoSink);
+    TIntermTyped *fold(TDiagnostics *diagnostics);
 
     TIntermSequence *getSequence() { return &mSequence; }
     const TIntermSequence *getSequence() const { return &mSequence; }

@@ -2376,7 +2376,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
 
     constructor->setType(type);
 
-    TIntermTyped *constConstructor = intermediate.foldAggregateBuiltIn(constructor);
+    TIntermTyped *constConstructor = intermediate.foldAggregateBuiltIn(constructor, &mDiagnostics);
     if (constConstructor)
     {
         return constConstructor;
@@ -3425,7 +3425,15 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             break;
     }
 
-    return intermediate.addUnaryMath(op, child, loc, funcReturnType);
+    TIntermUnary *node = new TIntermUnary(op, child);
+    node->setLine(loc);
+    node->promote(funcReturnType);
+
+    TIntermTyped *foldedNode = node->fold(&mDiagnostics);
+    if (foldedNode)
+        return foldedNode;
+
+    return node;
 }
 
 TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
@@ -4054,7 +4062,8 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
 
                     // See if we can constant fold a built-in. Note that this may be possible even
                     // if it is not const-qualified.
-                    TIntermTyped *foldedNode = intermediate.foldAggregateBuiltIn(aggregate);
+                    TIntermTyped *foldedNode =
+                        intermediate.foldAggregateBuiltIn(aggregate, &mDiagnostics);
                     if (foldedNode)
                     {
                         callNode = foldedNode;
