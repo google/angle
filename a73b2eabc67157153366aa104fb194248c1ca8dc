@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6873e7d0_79b6879f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e89517fc_3d030f6b",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "488b83e0_c0379e42",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2016-08-19T10:18:09Z",
       "side": 1,
       "message": "Format \"dEQP-GLES3.functional.shaders.*\" is more compact, there\u0027s no reason to have the full command line here. This becomes more important if a patch fix multiple very specific tests. It would be helpful to be a bit more specific about the tests that revealed problems in case of this patch as well.",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8a23f7a_43f2c69b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "I do not remember the exact tests. Possible filters would be:\ndEQP-GLES3.functional.shaders.*precision*\ndEQP-GLES3.functional.shaders.*function*\ndEQP-GLES3.functional.shaders.*invariant*",
+      "parentUuid": "488b83e0_c0379e42",
       "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "488b83e0_00e9067b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3477,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "488b83e0_a03a9a2b",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "488b83e0_e030a24f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 6
@@ -64,6 +118,24 @@
       "writtenOn": "2016-08-19T10:18:09Z",
       "side": 1,
       "message": "What is the position of layout qualifier here based on?",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28b72fb7_a7cb8a1d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3484,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "I followed the order from here https://www.opengl.org/wiki/Type_Qualifier_(GLSL) , but it might be incorrect to use that since it is not for GLSL ES. I checked GLSL ES 3.0.6, 4.7 Order of Qualification and it only specified this order -\u003e invariant-qualifier interpolation-qualifier storage-qualifier precision-qualifier\n\nHowever, the ES 3.00 grammar has this rule:\ntype_qualifier:\nstorage_qualifier\nlayout_qualifier\nlayout_qualifier storage_qualifier\n\nwhich would mean that the order is indeed the correct one?",
+      "parentUuid": "488b83e0_e030a24f",
       "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "08b0abbd_2636b6fc",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8c95f46_ebe2b1c6",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48b2a3c6_08506762",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 6
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "488b83e0_208d2adf",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "True. I initially did so because I was using strings. Now it would be better to use a switch statement.",
+      "parentUuid": "48b2a3c6_08506762",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8c95f46_2bf19992",
         "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
         "patchSetId": 6
@@ -115,6 +223,24 @@
       "writtenOn": "2016-08-19T10:18:09Z",
       "side": 1,
       "message": "Description is wrong.",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08998b37_fe4cc1a1",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8c95f46_2bf19992",
       "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
