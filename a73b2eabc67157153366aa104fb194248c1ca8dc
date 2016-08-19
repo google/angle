@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "e89517fc_3d030f6b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-19T10:19:46Z",
+      "side": 1,
+      "message": "could rather say \"will allow\" to make it clear that this patch doesn\u0027t yet add support for these features, only does the groundwork.",
+      "revId": "a73b2eabc67157153366aa104fb194248c1ca8dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "488b83e0_c0379e42",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
