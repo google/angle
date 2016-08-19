@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6873e7d0_b9cbbf1d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 967,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "This should fix the problem with having a sampler in a function declaration.\n\nI noticed the problem when fixing the same problem in the image patch.",
+      "range": {
+        "startLine": 967,
+        "startChar": 4,
+        "endLine": 967,
+        "endChar": 53
+      },
+      "revId": "929c091f2d2cfa3b8f6b7448a29b9f475aa7c221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08b0abbd_660eee3e",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-19T13:54:42Z",
+      "side": 1,
+      "message": "CheckoutParameterNotSampler was moved inside checkIsParameterQualifierValid.",
+      "range": {
+        "startLine": 724,
+        "startChar": 8,
+        "endLine": 724,
+        "endChar": 71
+      },
+      "revId": "929c091f2d2cfa3b8f6b7448a29b9f475aa7c221",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
