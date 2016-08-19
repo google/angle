@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a8187f6f_c7dfce00",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-19T23:21:54Z",
+      "side": 1,
+      "message": "I am concerned this will break things because that\u0027s a semantic change.  To minimize this CL, it\u0027s better just to ASSERT(level \u003d\u003d GLOBAL here). However, if you test it out and nothing breaks, then it\u0027s OK.",
+      "parentUuid": "a8187f6f_fcb37de0",
+      "range": {
+        "startLine": 494,
+        "startChar": 8,
+        "endLine": 494,
+        "endChar": 14
+      },
+      "revId": "fc4b4f5e17d1d355828fbf54935134cdac70daad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8187f6f_39090703",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 5
