@@ -162,6 +162,24 @@
       "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08fd0b27_5e6dd59a",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-19T00:00:18Z",
+      "side": 1,
+      "message": "Then something is wrong.  I assume the ASSERT is triggered when trying to add the invariant? but that should never happen - the compiler should detect it\u0027s illegal and fail the compilation.\n\nI suggest keeping the ASSERT and file a bug on this with the failing shader.",
+      "parentUuid": "e8227799_7579c825",
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
