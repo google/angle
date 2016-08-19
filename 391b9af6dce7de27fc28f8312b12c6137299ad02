@@ -198,6 +198,24 @@
       "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08fd0b27_58ecc5be",
+        "filename": "src/tests/compiler_tests/ShaderVariable_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-19T17:11:27Z",
+      "side": 1,
+      "message": "We could make checkIsAtGlobalLevel return a bool and exit early if it returns false. By the way, checkIsAtGlobalLevel should check level \u003d\u003d GLOBAL, not level \u003c\u003d GLOBAL.",
+      "parentUuid": "08fd0b27_a7696823",
+      "revId": "391b9af6dce7de27fc28f8312b12c6137299ad02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
