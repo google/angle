@@ -8,7 +8,7 @@ ANGLE for Windows Store uses most of the same steps found in [ANGLE Development]
 
 ### Required Tools
  * [Visual Studio Community 2015](http://www.visualstudio.com/downloads/download-visual-studio-vs)
-   * Required to build ANGLE on Windows and for the packaged Windows 8.1 SDK.
+   * Required to build ANGLE on Windows and for the packaged Windows 10 SDK.
 
 
 ### Getting the source
@@ -29,8 +29,6 @@ git checkout master
 
 Gyp will generate multiple VS2015 solution files
  * `winrt/10/src/angle.sln` for Windows 10
- * `winrt/8.1/windows/src/angle.sln` for Windows 8.1
- * `winrt/8.1/windowsphone/src/angle.sln` for Windows Phone 8.1
 
 
 ### Building ANGLE

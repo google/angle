@@ -995,10 +995,6 @@
                 {
                     'msvs_requires_importlibrary' : 'true',
                 }],
-                ['angle_build_winphone==1',
-                {
-                    'msvs_enable_winphone' : '1',
-                }],
             ],
         },
     ],

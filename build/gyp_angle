@@ -37,7 +37,7 @@ def generateProjects(generate_args):
 
     gyp.main(args)
 
-def generateWinRTProjects(generate_args, generation_dir, build_winphone, msvs_version, app_type_rev,
+def generateWinRTProjects(generate_args, generation_dir, msvs_version, app_type_rev,
                           target_platform_ver):
     args = generate_args
     appendCommonArgs(args)
@@ -50,7 +50,6 @@ def generateWinRTProjects(generate_args, generation_dir, build_winphone, msvs_ve
     args.append('-Dangle_build_winrt=1')
     args.append('-Dangle_build_winrt_app_type_revision=' + app_type_rev)
     args.append('-Dangle_build_winrt_target_platform_ver=' + target_platform_ver)
-    args.append('-Dangle_build_winphone=' + ('1' if build_winphone else '0'))
     args.append('-Dangle_enable_d3d9=0')
     args.append('-Dangle_enable_gl=0')
     args.append('-Dangle_enable_essl=0')
@@ -73,12 +72,6 @@ if __name__ == '__main__':
 
     # Generate WinRT projects only if configured
     if 'GYP_GENERATE_WINRT' in os.environ:
-      # Generate Windows 8.1 projects
-      args = sys.argv[1:]
-      generateWinRTProjects(args, "winrt/8.1/windows", False, "2013e", "8.1", "");
-      args = sys.argv[1:]
-      generateWinRTProjects(args, "winrt/8.1/windowsphone", True, "2013e", "8.1", "");
-
       # Generate Windows 10 projects
       args = sys.argv[1:]
-      generateWinRTProjects(args, "winrt/10", False, "2015", "10.0", "10.0.10240.0");
+      generateWinRTProjects(args, "winrt/10", "2015", "10.0", "10.0.10240.0");

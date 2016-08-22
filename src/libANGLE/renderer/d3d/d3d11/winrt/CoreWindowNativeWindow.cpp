@@ -167,17 +167,6 @@ HRESULT CoreWindowNativeWindow::createSwapChain(ID3D11Device *device,
     HRESULT result = factory->CreateSwapChainForCoreWindow(device, mCoreWindow.Get(), &swapChainDesc, nullptr, newSwapChain.ReleaseAndGetAddressOf());
     if (SUCCEEDED(result))
     {
-
-#if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-        // Test if swapchain supports resize.  On Windows Phone devices, this will return DXGI_ERROR_UNSUPPORTED.  On
-        // other devices DXGI_ERROR_INVALID_CALL should be returned because the combination of flags passed
-        // (DXGI_SWAP_CHAIN_FLAG_NONPREROTATED | DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE) are invalid flag combinations.
-        if (newSwapChain->ResizeBuffers(swapChainDesc.BufferCount, swapChainDesc.Width, swapChainDesc.Height, swapChainDesc.Format, DXGI_SWAP_CHAIN_FLAG_NONPREROTATED | DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE) == DXGI_ERROR_UNSUPPORTED)
-        {
-            mSupportsSwapChainResize = false;
-        }
-#endif // (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-
         result = newSwapChain.CopyTo(swapChain);
     }
 
