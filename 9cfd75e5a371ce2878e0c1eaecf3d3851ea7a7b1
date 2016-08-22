@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6873e7d0_b9241f5a",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-22T15:08:11Z",
+      "side": 1,
+      "message": "Would be possible to combine it with AreQualifiersInOrder so that the qualifiers are looped only once. However, the code seems cleaner when they are separated.\nWhat do you think?\nWe do not expect many qualifier anyway.",
+      "range": {
+        "startLine": 15,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 27
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48b2a3c6_888bf71e",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-22T15:08:11Z",
+      "side": 1,
+      "message": "Starts from one since the first qualifier is always a scope qualifier.",
+      "range": {
+        "startLine": 22,
+        "startChar": 20,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "488b83e0_e02d0242",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-22T15:08:11Z",
+      "side": 1,
+      "message": "Would be possible to save the type in the base class instead of having it as a virtual method. Then we do not have to go through the vtable ?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 51
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
