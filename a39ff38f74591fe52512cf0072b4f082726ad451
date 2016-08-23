@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_32120eb1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:14:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_85e276c5",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_4539ee37",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 3
@@ -48,6 +66,30 @@
       "writtenOn": "2016-08-18T17:50:59Z",
       "side": 1,
       "message": "please add a comment here documenting what this very mysterious value is for",
+      "range": {
+        "startLine": 183,
+        "startChar": 20,
+        "endLine": 183,
+        "endChar": 33
+      },
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_520f928a",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:14:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_4539ee37",
       "range": {
         "startLine": 183,
         "startChar": 20,
@@ -95,6 +137,24 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_726f362e",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:14:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_050c4697",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_9ab7313b",
         "filename": "src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md",
         "patchSetId": 3
@@ -106,6 +166,24 @@
       "writtenOn": "2016-08-18T17:16:01Z",
       "side": 1,
       "message": "I would do a separate CL for this",
+      "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_9274bafe",
+        "filename": "src/tests/third_party/gpu_test_expectations/HowToMakeChanges.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:14:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_9ab7313b",
       "revId": "a39ff38f74591fe52512cf0072b4f082726ad451",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
