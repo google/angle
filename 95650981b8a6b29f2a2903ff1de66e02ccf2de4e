@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d3831d_21255abe",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-23T14:05:22Z",
+      "side": 1,
+      "message": "very minor nit, but I think we can get rid of these #ifs by changing the test below. See comment.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "95650981b8a6b29f2a2903ff1de66e02ccf2de4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_41225eb6",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-23T14:05:22Z",
+      "side": 1,
+      "message": "I think you could change this test to be deIsDir(searchDir + \"/\" + gles2), possibly same for below, and this would be a more robust check on Android.",
+      "range": {
+        "startLine": 91,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 31
+      },
+      "revId": "95650981b8a6b29f2a2903ff1de66e02ccf2de4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
