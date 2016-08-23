@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d3831d_ac7c017e",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T14:52:28Z",
+      "side": 1,
+      "message": "Instead of an isESVersionSupported method, how about getMaxSupportedESVersion like DisplayGL has?",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 66
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_cc814562",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T14:52:28Z",
+      "side": 1,
+      "message": "Please make sure this has a big TODO message (with the bug ID).",
+      "range": {
+        "startLine": 71,
+        "startChar": 77,
+        "endLine": 71,
+        "endChar": 88
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_4c561505",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T14:52:28Z",
+      "side": 1,
+      "message": "The check should be done in this block instead of below.",
+      "range": {
+        "startLine": 337,
+        "startChar": 8,
+        "endLine": 355,
+        "endChar": 18
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_8c873d77",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T14:52:28Z",
+      "side": 1,
+      "message": "You should probably update this to check minor versions as well.",
+      "range": {
+        "startLine": 390,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 9
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
