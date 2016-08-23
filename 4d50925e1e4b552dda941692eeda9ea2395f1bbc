@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_a736da02",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T15:41:47Z",
+      "side": 1,
+      "message": "They set the appropriate bits in the configs (EGL_OPENGL_ES2_BIT, EGL_OPENGL_ES3_BIT_KHR) to signify which versions are supported.  It\u0027s unfortunate that there is no bit for ES 3.1.\n\nYou would have to do a little work to have the maximum version stored somewhere but it should all be available.  D3D9 only supports ES2 and D3D11 supports ES3 if the feature level is at least 10.0.",
+      "parentUuid": "c8b21311_7cc5b90a",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 66
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d3831d_cc814562",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
         "patchSetId": 1
