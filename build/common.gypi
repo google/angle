@@ -103,6 +103,16 @@
                         'EnableFunctionLevelLinking': 'true',
                         'MinimalRebuild': 'false',
                         'WarningLevel': '4',
+                        'conditions':
+                        [
+                            ['angle_build_winrt==1',
+                            {
+                                # Use '/Wv:18' to avoid WRL warnings in VS2015 Update 3
+                                # Use /Gw and /Zc:threadSafeInit to avoid
+                                # LTCG-related crashes with VS2015 Update 3
+                                'AdditionalOptions': ['/Wv:18', '/Gw', '/Zc:threadSafeInit-'],
+                            }],
+                        ],
                     },
                     'VCLinkerTool':
                     {
