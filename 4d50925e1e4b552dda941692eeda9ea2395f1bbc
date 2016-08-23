@@ -73,6 +73,54 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_07186688",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-23T15:47:09Z",
+      "side": 1,
+      "message": "I just took a look at D3D and see a bit of inconsistency. What we should do is support 3.0 only on FL10.1+, as we have in GetMaximumClientVersion in renderer11_utils. We also have some custom checks in Renderer11::generateConfigs. We should consolidate these checks using the \"get maximum ES version\" methods you\u0027re adding. Like Geoff said, it sucks there\u0027s no standard \u0027bit\u0027 for this.",
+      "parentUuid": "c8b21311_7cc5b90a",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 66
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_47226eb6",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-23T15:47:09Z",
+      "side": 1,
+      "message": "10.1+",
+      "parentUuid": "48d3831d_a736da02",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 66
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d3831d_cc814562",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
         "patchSetId": 1
