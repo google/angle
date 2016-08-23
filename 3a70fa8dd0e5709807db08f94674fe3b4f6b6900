@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_b28d3ee1",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:25:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bec773b_7f984f6a",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 24
+      },
+      "revId": "3a70fa8dd0e5709807db08f94674fe3b4f6b6900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_c58e3ed7",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-18T18:03:45Z",
       "side": 1,
       "message": "git cl format",
+      "range": {
+        "startLine": 32,
+        "startChar": 12,
+        "endLine": 32,
+        "endChar": 41
+      },
+      "revId": "3a70fa8dd0e5709807db08f94674fe3b4f6b6900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_d292c2fa",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:25:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_c58e3ed7",
       "range": {
         "startLine": 32,
         "startChar": 12,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_5295d2d5",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:25:38Z",
+      "side": 1,
+      "message": "On Android it decides that \"data\" is a valid directory, I think because it confuses it with \"/data\".\nI\u0027ve rearranged the \"#if\" to try just the chromium_tests_root on Android, hope that\u0027s clearer.",
+      "parentUuid": "9b794741_65742add",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 28
+      },
+      "revId": "3a70fa8dd0e5709807db08f94674fe3b4f6b6900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_4571eed8",
         "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2016-08-18T18:03:45Z",
       "side": 1,
       "message": "nit: wrap this in a helper function, and add a small comment as to why Android requires a different dir",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 6
+      },
+      "revId": "3a70fa8dd0e5709807db08f94674fe3b4f6b6900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_925afa5c",
+        "filename": "src/tests/deqp_support/angle_deqp_libtester_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:25:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_4571eed8",
       "range": {
         "startLine": 134,
         "startChar": 0,
