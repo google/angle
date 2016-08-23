@@ -8,11 +8,11 @@ underway, and future plans include compute shader support (ES 3.1) and MacOS sup
 
 ### Level of OpenGL ES support via backing renderers
 
-|                |  Direct3D 9   |  Direct3D 11     |   Desktop GL   |    GL ES      |
-|----------------|:-------------:|:----------------:|:--------------:|:-------------:|
-| OpenGL ES 2.0  |    complete   |    complete      |    complete    |   complete    |
-| OpenGL ES 3.0  |               |    complete      |    complete    |  in progress  |
-| OpenGL ES 3.1  |               |   not started    |   in progress  |  in progress  |
+|                |  Direct3D 9   |  Direct3D 11     |   Desktop GL   |    GL ES      |    Vulkan     |
+|----------------|:-------------:|:----------------:|:--------------:|:-------------:|:-------------:|
+| OpenGL ES 2.0  |    complete   |    complete      |    complete    |   complete    |  in progress  |
+| OpenGL ES 3.0  |               |    complete      |    complete    |  in progress  |  not started  |
+| OpenGL ES 3.1  |               |   not started    |   in progress  |  in progress  |  not started  |
 
 ### Platform support via backing renderers
 
