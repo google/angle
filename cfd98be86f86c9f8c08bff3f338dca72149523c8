@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48d3831d_326dae2f",
+        "filename": "include/export.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:21:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b794741_45124eb4",
+      "range": {
+        "startLine": 13,
+        "startChar": 88,
+        "endLine": 13,
+        "endChar": 116
+      },
+      "revId": "cfd98be86f86c9f8c08bff3f338dca72149523c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b794741_608e5828",
         "filename": "util/Matrix.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-18T18:38:39Z",
       "side": 1,
       "message": "why only on this one? that\u0027s kind of strange?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 12
+      },
+      "revId": "cfd98be86f86c9f8c08bff3f338dca72149523c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_72565664",
+        "filename": "util/Matrix.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-08-23T01:21:25Z",
+      "side": 1,
+      "message": "Done\nI initially added it in places where the compiler complained. Now added in a bunch more of places to make it consistent.",
+      "parentUuid": "9b794741_608e5828",
       "range": {
         "startLine": 55,
         "startChar": 0,
