@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d3831d_2c5f11eb",
+        "filename": "build/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T15:00:01Z",
+      "side": 1,
+      "message": "nit: can you remove this too?",
+      "range": {
+        "startLine": 302,
+        "startChar": 29,
+        "endLine": 302,
+        "endChar": 57
+      },
+      "revId": "662783558c7db8e56a052d48a348ec70fae542bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_cc5065dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-23T15:00:01Z",
+      "side": 1,
+      "message": "static_assert requires a second argument with an error message.",
+      "revId": "662783558c7db8e56a052d48a348ec70fae542bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
