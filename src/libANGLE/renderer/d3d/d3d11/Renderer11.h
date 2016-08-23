@@ -361,6 +361,8 @@ class Renderer11 : public RendererD3D
 
     gl::Error getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut);
 
+    gl::Version getMaxSupportedESVersion() const override;
+
   protected:
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
 

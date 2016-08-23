@@ -996,4 +996,8 @@ Device *Display::getDevice() const
     return mDevice;
 }
 
+gl::Version Display::getMaxSupportedESVersion() const
+{
+    return mImplementation->getMaxSupportedESVersion();
+}
 }

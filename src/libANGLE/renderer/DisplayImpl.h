@@ -15,6 +15,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
 #include "libANGLE/Stream.h"
+#include "libANGLE/Version.h"
 
 #include <set>
 #include <vector>
@@ -67,7 +68,7 @@ class DisplayImpl : public EGLImplFactory
     virtual egl::Error waitNative(EGLint engine,
                                   egl::Surface *drawSurface,
                                   egl::Surface *readSurface) const = 0;
-
+    virtual gl::Version getMaxSupportedESVersion() const           = 0;
     const egl::Caps &getCaps() const;
 
     typedef std::set<egl::Surface*> SurfaceSet;

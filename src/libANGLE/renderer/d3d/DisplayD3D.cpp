@@ -345,4 +345,9 @@ egl::Error DisplayD3D::waitNative(EGLint engine,
     return egl::Error(EGL_SUCCESS);
 }
 
+gl::Version DisplayD3D::getMaxSupportedESVersion() const
+{
+    return mRenderer->getMaxSupportedESVersion();
+}
+
 }  // namespace rx

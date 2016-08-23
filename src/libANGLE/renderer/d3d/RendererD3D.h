@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "libANGLE/Version.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
 #include <array>
@@ -242,6 +243,8 @@ class RendererD3D : public BufferFactoryD3D
 
     // Necessary hack for default framebuffers in D3D.
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
+
+    virtual gl::Version getMaxSupportedESVersion() const = 0;
 
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;

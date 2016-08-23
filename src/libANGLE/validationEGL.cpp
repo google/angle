@@ -349,6 +349,12 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             {
                 return Error(EGL_BAD_CONFIG);
             }
+            if (display->getMaxSupportedESVersion() <
+                gl::Version(static_cast<GLuint>(clientMajorVersion),
+                            static_cast<GLuint>(clientMinorVersion)))
+            {
+                return Error(EGL_BAD_CONFIG, "Requested GLES version is not supported.");
+            }
             break;
         default:
             return Error(EGL_BAD_CONFIG);
@@ -387,7 +393,8 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             return Error(EGL_BAD_MATCH);
         }
 
-        if (shareContext->getClientMajorVersion() != clientMajorVersion)
+        if (shareContext->getClientMajorVersion() != clientMajorVersion ||
+            shareContext->getClientMinorVersion() != clientMinorVersion)
         {
             return Error(EGL_BAD_CONTEXT);
         }

@@ -193,8 +193,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         }
     }
 
-    // Start by assuming ES3 support and work down
-    *maxSupportedESVersion = gl::Version(3, 0);
+    // Start by assuming ES3.1 support and work down
+    *maxSupportedESVersion = gl::Version(3, 1);
 
     // Table 6.28, implementation dependent values
     if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->hasGLExtension("GL_ARB_ES3_compatibility") ||

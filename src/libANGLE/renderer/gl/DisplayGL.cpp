@@ -86,10 +86,9 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readS
     return glDrawSurface->makeCurrent();
 }
 
-const gl::Version &DisplayGL::getMaxSupportedESVersion() const
+gl::Version DisplayGL::getMaxSupportedESVersion() const
 {
     ASSERT(mRenderer != nullptr);
     return mRenderer->getMaxSupportedESVersion();
 }
-
 }

@@ -2911,4 +2911,9 @@ FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::FramebufferState 
     return new Framebuffer9(state, this);
 }
 
+gl::Version Renderer9::getMaxSupportedESVersion() const
+{
+    return gl::Version(2, 0);
+}
+
 }  // namespace rx
