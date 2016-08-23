@@ -57,6 +57,24 @@
       "revId": "662783558c7db8e56a052d48a348ec70fae542bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48d3831d_07414646",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-23T15:49:39Z",
+      "side": 1,
+      "message": "Can you change the above #if into a static_assert, instead of using an #if.",
+      "parentUuid": "48d3831d_8c6d7d9e",
+      "revId": "662783558c7db8e56a052d48a348ec70fae542bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
