@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8277349_489fafa8",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T13:39:58Z",
+      "side": 1,
+      "message": "you seem to have implemented this one - can remove the comment!",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 31
+      },
+      "revId": "a502026bda8ce279c3d8de7945dd11c348ea7d1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_080457e9",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T13:39:58Z",
+      "side": 1,
+      "message": "nit: put in the cpp file",
+      "range": {
+        "startLine": 333,
+        "startChar": 4,
+        "endLine": 333,
+        "endChar": 87
+      },
+      "revId": "a502026bda8ce279c3d8de7945dd11c348ea7d1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_a808c3ff",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T13:39:58Z",
+      "side": 1,
+      "message": "nit: can remove this comment",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 74,
+        "endChar": 31
+      },
+      "revId": "a502026bda8ce279c3d8de7945dd11c348ea7d1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
