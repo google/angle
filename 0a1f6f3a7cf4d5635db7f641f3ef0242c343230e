@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "48e70357_002c3bfc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-24T20:35:01Z",
+      "side": 1,
+      "message": "Yes the application can call GetResetStatus, here is the relevant spec paragraph:\n    If the reset notification behavior is NO_RESET_NOTIFICATION_EXT,\n    then the implementation will never deliver notification of reset\n    events, and GetGraphicsResetStatusEXT will always return\n    NO_ERROR[fn1].\n       [fn1: In this case it is recommended that implementations should\n        not allow loss of context state no matter what events occur.\n        However, this is only a recommendation, and cannot be relied\n        upon by applications.]",
+      "parentUuid": "48e70357_8fa241ed",
+      "range": {
+        "startLine": 1969,
+        "startChar": 15,
+        "endLine": 1969,
+        "endChar": 26
+      },
+      "revId": "0a1f6f3a7cf4d5635db7f641f3ef0242c343230e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48e70357_ef4f8d3c",
         "filename": "src/libANGLE/renderer/ContextImpl.h",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "48e70357_a06d8f30",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-24T20:35:01Z",
+      "side": 1,
+      "message": "thanks!",
+      "parentUuid": "48e70357_ef4f8d3c",
+      "range": {
+        "startLine": 111,
+        "startChar": 19,
+        "endLine": 111,
+        "endChar": 33
+      },
+      "revId": "0a1f6f3a7cf4d5635db7f641f3ef0242c343230e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48e70357_cf6729bb",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2016-08-24T19:25:26Z",
       "side": 1,
       "message": "nit: don\u0027t need the \"else\" here,",
+      "range": {
+        "startLine": 290,
+        "startChar": 4,
+        "endLine": 290,
+        "endChar": 8
+      },
+      "revId": "0a1f6f3a7cf4d5635db7f641f3ef0242c343230e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_20797ff5",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-24T20:35:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48e70357_cf6729bb",
       "range": {
         "startLine": 290,
         "startChar": 4,
