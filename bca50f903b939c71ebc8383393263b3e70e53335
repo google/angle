@@ -22,6 +22,30 @@
       "revId": "bca50f903b939c71ebc8383393263b3e70e53335",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_00d71bbc",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-24T20:39:47Z",
+      "side": 1,
+      "message": "Done, as well as in other places in DisplayWGL and DisplayGLX.",
+      "parentUuid": "48e70357_6f0edde7",
+      "range": {
+        "startLine": 559,
+        "startChar": 15,
+        "endLine": 559,
+        "endChar": 19
+      },
+      "revId": "bca50f903b939c71ebc8383393263b3e70e53335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
