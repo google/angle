@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c8a853f6_0cbe5712",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T21:13:05Z",
+      "side": 1,
+      "message": "Thanks. Putting that quote as a comment would be helpful.",
+      "parentUuid": "48e70357_002c3bfc",
+      "range": {
+        "startLine": 1969,
+        "startChar": 15,
+        "endLine": 1969,
+        "endChar": 26
+      },
+      "revId": "0a1f6f3a7cf4d5635db7f641f3ef0242c343230e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48e70357_ef4f8d3c",
         "filename": "src/libANGLE/renderer/ContextImpl.h",
         "patchSetId": 6
