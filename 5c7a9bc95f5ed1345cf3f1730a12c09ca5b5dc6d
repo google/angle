@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c8b21311_7c1db969",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-24T10:40:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d3831d_c7f11e94",
+      "range": {
+        "startLine": 71,
+        "startChar": 83,
+        "endLine": 71,
+        "endChar": 94
+      },
+      "revId": "5c7a9bc95f5ed1345cf3f1730a12c09ca5b5dc6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d3831d_e7e542d1",
         "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "08ad0bb1_de1725fc",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-24T10:40:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d3831d_e7e542d1",
+      "range": {
+        "startLine": 73,
+        "startChar": 82,
+        "endLine": 73,
+        "endChar": 94
+      },
+      "revId": "5c7a9bc95f5ed1345cf3f1730a12c09ca5b5dc6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d3831d_07e306cc",
         "filename": "src/libANGLE/validationEGL.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2016-08-23T15:47:09Z",
       "side": 1,
       "message": "nit: put an error message in the second argument.",
+      "range": {
+        "startLine": 354,
+        "startChar": 29,
+        "endLine": 354,
+        "endChar": 43
+      },
+      "revId": "5c7a9bc95f5ed1345cf3f1730a12c09ca5b5dc6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ecc70a_54b1c2d7",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-24T10:40:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d3831d_07e306cc",
       "range": {
         "startLine": 354,
         "startChar": 29,
