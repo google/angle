@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "68c76782_b9335fa4",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-24T10:40:07Z",
+      "side": 1,
+      "message": "Changed it.\nFor d3d9, I just return version(2,0). For d3d11 I return version(GetMaximumClientVersion(), 0). So, it will return either 3,0 or 2,0.",
+      "parentUuid": "48d3831d_47226eb6",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 66
+      },
+      "revId": "4d50925e1e4b552dda941692eeda9ea2395f1bbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48d3831d_cc814562",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.h",
         "patchSetId": 1
