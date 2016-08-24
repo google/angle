@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48e70357_6f0edde7",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T19:26:50Z",
+      "side": 1,
+      "message": "can leave out \"this-\u003e\". also brackets would be helpful.",
+      "range": {
+        "startLine": 559,
+        "startChar": 15,
+        "endLine": 559,
+        "endChar": 19
+      },
+      "revId": "bca50f903b939c71ebc8383393263b3e70e53335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
