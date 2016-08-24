@@ -1,0 +1,280 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8277349_236db42e",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "nit: run git cl format to fix the formatting",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 6
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_436a3018",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "you can make this a std::array or std::vector",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 23
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_a34f84c6",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 23
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_e3b01ca4",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "is this a complete list of all texelFetchOffset and texelFetch calls? I think we can use a more procedural approach instead of enumerating them all exhaustively.",
+      "range": {
+        "startLine": 62,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 40
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_8347e8aa",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "nit: for cases like this, use auto. you shouldn\u0027t need to typedef TexelFetchTable. although I\u0027m not sure you need a map here at all.",
+      "range": {
+        "startLine": 145,
+        "startChar": 4,
+        "endLine": 145,
+        "endChar": 35
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_4341d093",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "here call node-\u003egetName().compare(0, len, \"texelFetchOffset\") \u003d\u003d 0. you should also check \"isUserDefined\" to filter out user defined functions with similar names. \n\nto find the correct mangled name for texelFetch call, remove \"Offset\" and the final \"vi2\" from the string. This should let you remove the TMap.",
+      "range": {
+        "startLine": 145,
+        "startChar": 41,
+        "endLine": 145,
+        "endChar": 78
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_007c467b",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "size is unsigned, so use ASSERT(sequence-\u003esize() \u003d\u003d 4u);",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 10
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_a0175afc",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "this looks great.",
+      "range": {
+        "startLine": 182,
+        "startChar": 3,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_8070569d",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "nit: closing namespace comment",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 1
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8277349_68f38b03",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "nit: http://anglebug.com/1469",
+      "range": {
+        "startLine": 13,
+        "startChar": 7,
+        "endLine": 13,
+        "endChar": 24
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_6089d225",
+        "filename": "src/libANGLE/renderer/d3d/WorkaroundsD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "Please forgive my grammar corrections.\n\n\"On some Intel drivers, D3D\u0027s texture.Load instruction returns 0 when the Offset parameter is negative, even if the sum of Offset and Location is in range. This causes errors when translating GLSL\u0027s texelFetchOffset instruction into texture.Load, as it is valid for texelFetchOffset to use negative Offsets. We work around this by translating texelFetchOffset into texelFetch, by adding the offset directly to the location before reading the texture.\"",
+      "range": {
+        "startLine": 67,
+        "startChar": 6,
+        "endLine": 71,
+        "endChar": 70
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e70357_23bcf4a8",
+        "filename": "src/libANGLE/renderer/d3d/WorkaroundsD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-24T17:14:12Z",
+      "side": 1,
+      "message": "nit: call this preAddTexelFetchOffsets",
+      "range": {
+        "startLine": 72,
+        "startChar": 9,
+        "endLine": 72,
+        "endChar": 35
+      },
+      "revId": "e2281dd2027512eea9e622b57813c392ad278234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
