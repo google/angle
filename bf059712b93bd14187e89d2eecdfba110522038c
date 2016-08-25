@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e83b57ab_274fc66e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-25T13:03:11Z",
+      "side": 1,
+      "message": "nit: caps (BUG\u003d)",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 3
+      },
+      "revId": "bf059712b93bd14187e89d2eecdfba110522038c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_076acaba",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-25T13:03:11Z",
+      "side": 1,
+      "message": "please increment this version number.",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "bf059712b93bd14187e89d2eecdfba110522038c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
