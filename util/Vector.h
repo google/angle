@@ -12,9 +12,7 @@
 
 #include <ostream>
 
-#include <export.h>
-
-struct ANGLE_EXPORT Vector2
+struct Vector2
 {
     Vector2();
     Vector2(float x, float y);
@@ -33,9 +31,9 @@ struct ANGLE_EXPORT Vector2
     float x, y;
 };
 
-ANGLE_EXPORT std::ostream &operator<<(std::ostream &stream, const Vector2 &vec);
+std::ostream &operator<<(std::ostream &stream, const Vector2 &vec);
 
-struct ANGLE_EXPORT Vector3
+struct Vector3
 {
     Vector3();
     Vector3(float x, float y, float z);
@@ -54,14 +52,14 @@ struct ANGLE_EXPORT Vector3
     float x, y, z;
 };
 
-ANGLE_EXPORT Vector3 operator*(const Vector3 &a, const Vector3 &b);
-ANGLE_EXPORT Vector3 operator*(const Vector3 &a, const float &b);
-ANGLE_EXPORT Vector3 operator/(const Vector3 &a, const Vector3 &b);
-ANGLE_EXPORT Vector3 operator/(const Vector3 &a, const float &b);
-ANGLE_EXPORT Vector3 operator+(const Vector3 &a, const Vector3 &b);
-ANGLE_EXPORT Vector3 operator-(const Vector3 &a, const Vector3 &b);
+Vector3 operator*(const Vector3 &a, const Vector3 &b);
+Vector3 operator*(const Vector3 &a, const float &b);
+Vector3 operator/(const Vector3 &a, const Vector3 &b);
+Vector3 operator/(const Vector3 &a, const float &b);
+Vector3 operator+(const Vector3 &a, const Vector3 &b);
+Vector3 operator-(const Vector3 &a, const Vector3 &b);
 
-struct ANGLE_EXPORT Vector4
+struct Vector4
 {
     Vector4();
     Vector4(float x, float y, float z, float w);

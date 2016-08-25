@@ -11,13 +11,12 @@
 #include <stdint.h>
 #include <string>
 
-#include <export.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
 #include "Event.h"
 
-class ANGLE_EXPORT OSWindow
+class OSWindow
 {
   public:
     OSWindow();
@@ -64,6 +63,6 @@ class ANGLE_EXPORT OSWindow
     std::list<Event> mEvents;
 };
 
-ANGLE_EXPORT OSWindow *CreateOSWindow();
+OSWindow *CreateOSWindow();
 
 #endif // SAMPLE_UTIL_WINDOW_H

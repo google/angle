@@ -11,13 +11,12 @@
 
 #include <stdlib.h>
 
-#include <export.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
 #include "Event.h"
 
-class ANGLE_EXPORT OSPixmap
+class OSPixmap
 {
   public:
     OSPixmap() {}
@@ -28,6 +27,6 @@ class ANGLE_EXPORT OSPixmap
     virtual EGLNativePixmapType getNativePixmap() const = 0;
 };
 
-ANGLE_EXPORT OSPixmap *CreateOSPixmap();
+OSPixmap *CreateOSPixmap();
 
 #endif // SAMPLE_UTIL_PIXMAP_H_

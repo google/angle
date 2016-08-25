@@ -11,33 +11,31 @@
 
 #include <string>
 
-#include <export.h>
-
 #include "common/angleutils.h"
 
 namespace angle
 {
 
-ANGLE_EXPORT std::string GetExecutablePath();
-ANGLE_EXPORT std::string GetExecutableDirectory();
-ANGLE_EXPORT std::string GetSharedLibraryExtension();
+std::string GetExecutablePath();
+std::string GetExecutableDirectory();
+std::string GetSharedLibraryExtension();
 
 // Cross platform equivalent of the Windows Sleep function
-ANGLE_EXPORT void Sleep(unsigned int milliseconds);
+void Sleep(unsigned int milliseconds);
 
-ANGLE_EXPORT void SetLowPriorityProcess();
+void SetLowPriorityProcess();
 
 // Write a debug message, either to a standard output or Debug window.
-ANGLE_EXPORT void WriteDebugMessage(const char *format, ...);
+void WriteDebugMessage(const char *format, ...);
 
-class ANGLE_EXPORT Library : angle::NonCopyable
+class Library : angle::NonCopyable
 {
   public:
     virtual ~Library() {}
     virtual void *getSymbol(const std::string &symbolName) = 0;
 };
 
-ANGLE_EXPORT Library *loadLibrary(const std::string &libraryName);
+Library *loadLibrary(const std::string &libraryName);
 
 } // namespace angle
 
