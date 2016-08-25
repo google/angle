@@ -45,6 +45,40 @@
       "revId": "bf059712b93bd14187e89d2eecdfba110522038c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_4773f2a9",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T13:28:42Z",
+      "side": 1,
+      "message": "nit: Add this to the commit message instead? And also referenced -\u003e adapted.",
+      "revId": "bf059712b93bd14187e89d2eecdfba110522038c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_6770ee9c",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T13:28:42Z",
+      "side": 1,
+      "message": "typo: sampler",
+      "revId": "bf059712b93bd14187e89d2eecdfba110522038c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
