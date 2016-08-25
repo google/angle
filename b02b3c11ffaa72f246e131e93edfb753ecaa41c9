@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "856e46e8_fab129da",
+        "filename": "src/libANGLE/renderer/gl/FunctionsGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1895,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-25T14:50:24Z",
+      "side": 1,
+      "message": "EXT",
+      "range": {
+        "startLine": 1895,
+        "startChar": 48,
+        "endLine": 1895,
+        "endChar": 51
+      },
+      "revId": "b02b3c11ffaa72f246e131e93edfb753ecaa41c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
