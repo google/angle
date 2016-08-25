@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e83b57ab_e7293e88",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T12:30:34Z",
+      "side": 1,
+      "message": "nit you could have a an if for right nested in the true and false branch of an if for left. This would remove some redundant calls to isMatrix, and get rid of the UNREACHABLE.",
+      "revId": "dca94f04e542b62d6c25e1aec974a477c0096977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_27442657",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T12:30:34Z",
+      "side": 1,
+      "message": "the condition is equivalent to left.isVector() \u003d\u003d right.isVector() at this point.",
+      "revId": "dca94f04e542b62d6c25e1aec974a477c0096977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_072f2a8b",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T12:30:34Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "dca94f04e542b62d6c25e1aec974a477c0096977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e83b57ab_47413246",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-25T12:30:34Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "dca94f04e542b62d6c25e1aec974a477c0096977",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
