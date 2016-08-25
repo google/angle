@@ -1538,6 +1538,7 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     workarounds.expandIntegerPowExpressions = true;
 
     workarounds.flushAfterEndingTransformFeedback = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
+    workarounds.getDimensionsIgnoresBaseLevel     = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
 
     return workarounds;
 }

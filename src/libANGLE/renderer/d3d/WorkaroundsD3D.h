@@ -63,6 +63,10 @@ struct WorkaroundsD3D
     // NVIDIA drivers sometimes write out-of-order results to StreamOut buffers when transform
     // feedback is used to repeatedly write to the same buffer positions.
     bool flushAfterEndingTransformFeedback = false;
+
+    // Some drivers (NVIDIA) do not take into account the base level of the texture in the results
+    // of the HLSL GetDimensions builtin.
+    bool getDimensionsIgnoresBaseLevel = false;
 };
 
 }  // namespace rx

@@ -222,6 +222,11 @@ typedef enum {
     // varying variables and built-in GLSL variables. This compiler
     // option is enabled automatically when needed.
     SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = 0x1000000,
+
+    // Some drivers do not take into account the base level of the texture in the results of the
+    // HLSL GetDimensions builtin.  This flag instructs the compiler to manually add the base level
+    // offsetting.
+    SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = 0x2000000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

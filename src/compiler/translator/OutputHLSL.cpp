@@ -605,7 +605,9 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
         }
     }
 
-    mTextureFunctionHLSL->textureFunctionHeader(out, mOutputType);
+    bool getDimensionsIgnoresBaseLevel =
+        (mCompileOptions & SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL) != 0;
+    mTextureFunctionHLSL->textureFunctionHeader(out, mOutputType, getDimensionsIgnoresBaseLevel);
 
     if (mUsesFragCoord)
     {
