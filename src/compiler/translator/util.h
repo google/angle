@@ -37,8 +37,9 @@ bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
-// Handles only basic output variable types.
-TType ConvertShaderVariableTypeToTType(sh::GLenum type);
+
+TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
+TType GetShaderVariableType(const sh::ShaderVariable &var);
 
 TOperator TypeToConstructorOperator(const TType &type);
 

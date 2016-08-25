@@ -159,6 +159,9 @@ class TIntermTyped : public TIntermNode
 
     bool isConstructorWithOnlyConstantUnionParameters();
 
+    static TIntermTyped *CreateIndexNode(int index);
+    static TIntermTyped *CreateZero(const TType &type);
+
   protected:
     TType mType;
 

@@ -278,9 +278,9 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
     }
 }
 
-TType ConvertShaderVariableTypeToTType(sh::GLenum type)
+TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
 {
-    switch (type)
+    switch (var.type)
     {
         case GL_FLOAT:
             return TType(EbtFloat);
@@ -328,6 +328,35 @@ TType ConvertShaderVariableTypeToTType(sh::GLenum type)
             UNREACHABLE();
             return TType();
     }
+}
+
+TType GetShaderVariableType(const sh::ShaderVariable &var)
+{
+    TType type;
+    if (var.isStruct())
+    {
+        TFieldList *fields = new TFieldList;
+        TSourceLoc loc;
+        for (const auto &field : var.fields)
+        {
+            TType *fieldType = new TType(GetShaderVariableType(field));
+            fields->push_back(new TField(fieldType, new TString(field.name.c_str()), loc));
+        }
+        TStructure *structure = new TStructure(new TString(var.structName.c_str()), fields);
+
+        type.setBasicType(EbtStruct);
+        type.setStruct(structure);
+    }
+    else
+    {
+        type = GetShaderVariableBasicType(var);
+    }
+
+    if (var.isArray())
+    {
+        type.setArraySize(var.elementCount());
+    }
+    return type;
 }
 
 TOperator TypeToConstructorOperator(const TType &type)

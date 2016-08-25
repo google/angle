@@ -21,6 +21,7 @@
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/util.h"
 
 namespace
 {
@@ -334,6 +335,83 @@ bool TIntermTyped::isConstructorWithOnlyConstantUnionParameters()
             return false;
     }
     return true;
+}
+
+// static
+TIntermTyped *TIntermTyped::CreateIndexNode(int index)
+{
+    TConstantUnion *u = new TConstantUnion[1];
+    u[0].setIConst(index);
+
+    TType type(EbtInt, EbpUndefined, EvqConst, 1);
+    TIntermConstantUnion *node = new TIntermConstantUnion(u, type);
+    return node;
+}
+
+// static
+TIntermTyped *TIntermTyped::CreateZero(const TType &type)
+{
+    TType constType(type);
+    constType.setQualifier(EvqConst);
+
+    if (!type.isArray() && type.getBasicType() != EbtStruct)
+    {
+        ASSERT(type.isScalar() || type.isVector() || type.isMatrix());
+
+        size_t size       = constType.getObjectSize();
+        TConstantUnion *u = new TConstantUnion[size];
+        for (size_t i = 0; i < size; ++i)
+        {
+            switch (type.getBasicType())
+            {
+                case EbtFloat:
+                    u[i].setFConst(0.0f);
+                    break;
+                case EbtInt:
+                    u[i].setIConst(0);
+                    break;
+                case EbtUInt:
+                    u[i].setUConst(0u);
+                    break;
+                case EbtBool:
+                    u[i].setBConst(false);
+                    break;
+                default:
+                    UNREACHABLE();
+                    return nullptr;
+            }
+        }
+
+        TIntermConstantUnion *node = new TIntermConstantUnion(u, constType);
+        return node;
+    }
+
+    TIntermAggregate *constructor = new TIntermAggregate(sh::TypeToConstructorOperator(type));
+    constructor->setType(constType);
+
+    if (type.isArray())
+    {
+        TType elementType(type);
+        elementType.clearArrayness();
+
+        size_t arraySize = type.getArraySize();
+        for (size_t i = 0; i < arraySize; ++i)
+        {
+            constructor->getSequence()->push_back(CreateZero(elementType));
+        }
+    }
+    else
+    {
+        ASSERT(type.getBasicType() == EbtStruct);
+
+        TStructure *structure = type.getStruct();
+        for (const auto &field : structure->fields())
+        {
+            constructor->getSequence()->push_back(CreateZero(*field->type()));
+        }
+    }
+
+    return constructor;
 }
 
 TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : TIntermTyped(node)

@@ -56,22 +56,6 @@
 // TODO(jmadill): Find why this fails when run in a certain sequence, but not singly.
 1098 WIN : dEQP-GLES3.functional.uniform_api.random.50 = FAIL
 
-// Caused by a D3D compiler bug
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_sequence_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_1_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_1_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_2_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_2_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_1_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_1_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_2_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_2_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_1_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_1_fragment = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_2_vertex = FAIL
-1448 WIN : dEQP-GLES3.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_2_fragment = FAIL
-
 // Missing the SampleCmp instruction in vertex shaders.
 1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelod.sampler2dshadow_vertex = FAIL
 1435 WIN : dEQP-GLES3.functional.shaders.texture_functions.texturelodoffset.sampler2dshadow_vertex = FAIL
