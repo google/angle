@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0554160d_46f87278",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Much better to have them separate.",
+      "parentUuid": "6873e7d0_b9241f5a",
+      "range": {
+        "startLine": 15,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 27
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48b2a3c6_888bf71e",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-22T15:08:11Z",
       "side": 1,
       "message": "Starts from one since the first qualifier is always a scope qualifier.",
+      "range": {
+        "startLine": 22,
+        "startChar": 20,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_26ed76ba",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This should be an assert in the code (maybe a comment as well).",
+      "parentUuid": "48b2a3c6_888bf71e",
       "range": {
         "startLine": 22,
         "startChar": 20,
