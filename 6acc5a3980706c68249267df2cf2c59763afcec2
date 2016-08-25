@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e83b57ab_6759ce34",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-25T13:05:37Z",
+      "side": 1,
+      "message": "nit: put in cpp file.",
+      "range": {
+        "startLine": 414,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 5
+      },
+      "revId": "6acc5a3980706c68249267df2cf2c59763afcec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
