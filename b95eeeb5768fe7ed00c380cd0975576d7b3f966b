@@ -1,0 +1,333 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0554160d_460ab280",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Would be worth mentioning in a comment here that \"centroid\" is treated as a storage qualifier in the grammar, since this is somewhat weird. (and flat centroid is valid)",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_26ffb652",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This could start from 1 as well.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_0604ba70",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This should be outside the loop.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_c615829b",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This function could return a really useful error message in a const char** out parameter, like \"interpolation qualifiers must be after storage qualifiers\".",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25903a09_1fede3b9",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t make sense. Repeating qualifiers are checked separately.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_666ece32",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Should also remove this comment.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_86c42a3f",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Validation of the qualifier sequence should be accessible separately from getPublicType().",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_86366a47",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "I don\u0027t think the joinInvariantQualifier helper function is needed.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_c62c62fd",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "You shouldn\u0027t pass the same variable as both input and output parameter to a function. Can just as well make it a one-parameter function.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_e62f5eef",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem like the precision qualifier could ever be undefined when reaching here. Maybe remove the joinPrecisionQualifier helper and assert that the precision is not undefined where it\u0027s being called at the moment.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_6605ae70",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This function doesn\u0027t return a boolean.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e59542fc_9d1263b0",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Member variables go after functions, put a space in between.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_2678d6ee",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This code is unnecessary now, remember to clean up.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_26d456f0",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "This is a bit of a weird error message actually - I\u0027m sure an equally valid one could be generated without converting the qualifier sequence to a public type first.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_46cf5260",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "It would make more sense to pass $1 (the qualifier sequence) to addInterfaceBlock directly.",
+      "range": {
+        "startLine": 621,
+        "startChar": 22,
+        "endLine": 621,
+        "endChar": 39
+      },
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_06d95a26",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Here too - I don\u0027t think the conversion to PublicType first is necessary.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_e6bd1ea7",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_c6ba22ad",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Using the name \"appendQualifier\" instead of \"joinQualifier\" would make it a bit clearer that the function adds a qualifier to the end of the qualifier sequence.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0554160d_e6619e3d",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-25T10:38:14Z",
+      "side": 1,
+      "message": "Please still check these shaders for missing newlines, there are a few other instances as well. Should be possible to find easily by regex search.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
