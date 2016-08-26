@@ -53,6 +53,7 @@ ES3FormatCombinationSet BuildES3FormatSet()
 
     // Format combinations from ES 3.0.1 spec, table 3.2
 
+    // clang-format off
     //                        | Internal format      | Format            | Type                            |
     //                        |                      |                   |                                 |
     InsertES3FormatCombo(&set, GL_RGBA8,              GL_RGBA,            GL_UNSIGNED_BYTE                 );
@@ -164,6 +165,8 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_ALPHA,              GL_ALPHA,           GL_FLOAT                         );
 
     // From GL_OES_texture_half_float
+    InsertES3FormatCombo(&set, GL_RGBA,               GL_RGBA,            GL_HALF_FLOAT_OES                );
+    InsertES3FormatCombo(&set, GL_RGB,                GL_RGB,             GL_HALF_FLOAT_OES                );
     InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_HALF_FLOAT                    );
     InsertES3FormatCombo(&set, GL_LUMINANCE_ALPHA,    GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES                );
     InsertES3FormatCombo(&set, GL_LUMINANCE,          GL_LUMINANCE,       GL_HALF_FLOAT                    );
@@ -197,8 +200,10 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_BGR5_A1_ANGLEX,         GL_BGRA_EXT,        GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT);
     InsertES3FormatCombo(&set, GL_BGR5_A1_ANGLEX,         GL_BGRA_EXT,        GL_UNSIGNED_BYTE                 );
 
-    // From GL_ANGLE_depth_texture
+    // From GL_ANGLE_depth_texture and OES_depth_texture
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT32_OES,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8_OES         );
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT,        GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT                );
+    InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT,        GL_DEPTH_COMPONENT, GL_UNSIGNED_INT                  );
 
     // From GL_EXT_texture_norm16
     InsertES3FormatCombo(&set, GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
@@ -209,6 +214,7 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_RG16_SNORM_EXT, GL_RG, GL_SHORT);
     InsertES3FormatCombo(&set, GL_RGB16_SNORM_EXT, GL_RGB, GL_SHORT);
     InsertES3FormatCombo(&set, GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT);
+    // clang-format on
 
     return set;
 }
@@ -750,6 +756,7 @@ static CopyConversionSet BuildValidES3CopyTexImageCombinations()
     set.insert(CopyConversion(GL_RG, GL_BGRA_EXT));
     set.insert(CopyConversion(GL_RGB, GL_BGRA_EXT));
     set.insert(CopyConversion(GL_RGBA, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_BGRA_EXT, GL_BGRA_EXT));
 
     set.insert(CopyConversion(GL_RED_INTEGER, GL_RED_INTEGER));
     set.insert(CopyConversion(GL_RED_INTEGER, GL_RG_INTEGER));
