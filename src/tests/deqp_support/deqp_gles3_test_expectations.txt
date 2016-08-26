@@ -100,7 +100,6 @@
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d = FAIL
 1101 WIN LINUX : dEQP-GLES3.functional.negative_api.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
-1101 WIN LINUX : dEQP-GLES3.functional.negative_api.vertex_array.vertex_attrib_i_pointer = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
 1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL

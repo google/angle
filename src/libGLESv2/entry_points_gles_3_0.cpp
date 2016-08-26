@@ -987,8 +987,6 @@ void GL_APIENTRY VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
           case GL_UNSIGNED_SHORT:
           case GL_INT:
           case GL_UNSIGNED_INT:
-          case GL_INT_2_10_10_10_REV:
-          case GL_UNSIGNED_INT_2_10_10_10_REV:
             break;
 
           default:
@@ -999,12 +997,6 @@ void GL_APIENTRY VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
         if (stride < 0)
         {
             context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
