@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85c2c66f_3de73ba9",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-26T18:30:46Z",
+      "side": 1,
+      "message": "I wrote similar code in the GenerateTypeConstructor function in AddDefaultReturnStatements.cpp.  You may be able to re-use that code.",
+      "range": {
+        "startLine": 365,
+        "startChar": 33,
+        "endLine": 365,
+        "endChar": 43
+      },
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
