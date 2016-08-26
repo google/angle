@@ -87,6 +87,24 @@
       "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85c2c66f_0083ea6e",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-26T19:19:50Z",
+      "side": 1,
+      "message": "That check looks fine.  I was concerned that the depth texture extensions were being used to gate the availability of the draw buffers extensions but the test looks robust.",
+      "parentUuid": "85c2c66f_20c5ce39",
+      "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
