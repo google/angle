@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "85c2c66f_5d00af0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-26T18:38:28Z",
+      "side": 1,
+      "message": "typo: cominations",
+      "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85c2c66f_7d03731a",
         "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
         "patchSetId": 6
@@ -13,6 +30,24 @@
       "writtenOn": "2016-08-26T18:37:06Z",
       "side": 1,
       "message": "Is this an undesirable consequence of these changes? Do you think it would be a better idea to update the calling code instead to do something different when it\u0027s using an ES 3.0 context?",
+      "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85c2c66f_dd5eff20",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-26T18:38:28Z",
+      "side": 1,
+      "message": "What prevents us from supporting both?",
+      "parentUuid": "85c2c66f_7d03731a",
       "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
