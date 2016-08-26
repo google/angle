@@ -3402,7 +3402,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
         case EOpNegative:
         case EOpPositive:
             if (child->getBasicType() == EbtStruct || child->getBasicType() == EbtBool ||
-                child->isArray())
+                child->isArray() || IsSampler(child->getBasicType()))
             {
                 return nullptr;
             }

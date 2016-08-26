@@ -2418,3 +2418,20 @@ TEST_F(MalformedComputeShaderTest, SpecialVariableWorkGroupSize)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// It is illegal to apply an unary operator to a sampler.
+TEST_F(MalformedShaderTest, SamplerUnaryOperator)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform sampler2D s;\n"
+        "void main()\n"
+        "{\n"
+        "   -s;\n"
+        "   gl_FragColor = vec4(0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
