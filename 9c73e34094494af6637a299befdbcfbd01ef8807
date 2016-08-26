@@ -51,6 +51,24 @@
       "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85c2c66f_fd68a38d",
+        "filename": "src/tests/deqp_support/deqp_gles3_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-08-26T18:44:47Z",
+      "side": 1,
+      "message": "It was a legitimate validation bug to not allow these formats though but deqp is unaware of the ANGLE_depth_texture extension\u0027s existence so it believes these are invalid formats.  We would be able to support the OES_depth_texture extension in ANGLE but only for the GL backend due to the requirements that depth textures are sampled like luminance textures.\n\nThat said, we should probably update the checks that chrome does to make sure the webgl draw buffers extensions are available to not rely on this extension being present.",
+      "parentUuid": "85c2c66f_dd5eff20",
+      "revId": "9c73e34094494af6637a299befdbcfbd01ef8807",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
