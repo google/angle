@@ -83,7 +83,7 @@ bool SimplifyLoopConditionsTraverser::visitBinary(Visit visit, TIntermBinary *no
     if (!mInsideLoopConditionOrExpression)
         return false;
 
-    mFoundLoopToChange = mConditionsToSimplify.match(node, getParentNode());
+    mFoundLoopToChange = mConditionsToSimplify.match(node, getParentNode(), isLValueRequiredHere());
     return !mFoundLoopToChange;
 }
 

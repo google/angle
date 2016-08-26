@@ -17,10 +17,12 @@
 namespace
 {
 
-class SplitSequenceOperatorTraverser : public TIntermTraverser
+class SplitSequenceOperatorTraverser : public TLValueTrackingTraverser
 {
   public:
-    SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask);
+    SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask,
+                                   const TSymbolTable &symbolTable,
+                                   int shaderVersion);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
@@ -38,8 +40,10 @@ class SplitSequenceOperatorTraverser : public TIntermTraverser
     IntermNodePatternMatcher mPatternToSplitMatcher;
 };
 
-SplitSequenceOperatorTraverser::SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask)
-    : TIntermTraverser(true, false, true),
+SplitSequenceOperatorTraverser::SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask,
+                                                               const TSymbolTable &symbolTable,
+                                                               int shaderVersion)
+    : TLValueTrackingTraverser(true, false, true, symbolTable, shaderVersion),
       mFoundExpressionToSplit(false),
       mInsideSequenceOperator(0),
       mPatternToSplitMatcher(patternsToSplitMask)
@@ -61,7 +65,8 @@ bool SplitSequenceOperatorTraverser::visitBinary(Visit visit, TIntermBinary *nod
     if (mInsideSequenceOperator > 0 && visit == PreVisit)
     {
         // Detect expressions that need to be simplified
-        mFoundExpressionToSplit = mPatternToSplitMatcher.match(node, getParentNode());
+        mFoundExpressionToSplit =
+            mPatternToSplitMatcher.match(node, getParentNode(), isLValueRequiredHere());
         return !mFoundExpressionToSplit;
     }
 
@@ -133,9 +138,13 @@ bool SplitSequenceOperatorTraverser::visitSelection(Visit visit, TIntermSelectio
 
 }  // namespace
 
-void SplitSequenceOperator(TIntermNode *root, int patternsToSplitMask, unsigned int *temporaryIndex)
+void SplitSequenceOperator(TIntermNode *root,
+                           int patternsToSplitMask,
+                           unsigned int *temporaryIndex,
+                           const TSymbolTable &symbolTable,
+                           int shaderVersion)
 {
-    SplitSequenceOperatorTraverser traverser(patternsToSplitMask);
+    SplitSequenceOperatorTraverser traverser(patternsToSplitMask, symbolTable, shaderVersion);
     ASSERT(temporaryIndex != nullptr);
     traverser.useTemporaryIndex(temporaryIndex);
     // Separate one expression at a time, and reset the traverser between iterations.

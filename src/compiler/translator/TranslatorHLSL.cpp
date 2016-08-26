@@ -37,16 +37,17 @@ void TranslatorHLSL::translate(TIntermNode *root, int compileOptions)
 
     // Note that SimplifyLoopConditions needs to be run before any other AST transformations that
     // may need to generate new statements from loop conditions or loop expressions.
-    SimplifyLoopConditions(root, IntermNodePatternMatcher::kExpressionReturningArray |
-                                     IntermNodePatternMatcher::kUnfoldedShortCircuitExpression,
+    SimplifyLoopConditions(root,
+                           IntermNodePatternMatcher::kExpressionReturningArray |
+                               IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
+                               IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue,
                            getTemporaryIndex(), getSymbolTable(), getShaderVersion());
 
-    // TODO (oetuaho): Sequence operators should also be split in case there is dynamic indexing of
-    // a vector or matrix as an l-value inside (RemoveDynamicIndexing transformation step generates
-    // statements in this case).
-    SplitSequenceOperator(root, IntermNodePatternMatcher::kExpressionReturningArray |
-                                    IntermNodePatternMatcher::kUnfoldedShortCircuitExpression,
-                          getTemporaryIndex());
+    SplitSequenceOperator(root,
+                          IntermNodePatternMatcher::kExpressionReturningArray |
+                              IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
+                              IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue,
+                          getTemporaryIndex(), getSymbolTable(), getShaderVersion());
 
     // Note that SeparateDeclarations needs to be run before UnfoldShortCircuitToIf.
     UnfoldShortCircuitToIf(root, getTemporaryIndex());

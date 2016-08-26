@@ -11,6 +11,7 @@
 
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace
@@ -405,9 +406,17 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
             TIntermSymbol *tempIndex = createTempSymbol(node->getRight()->getType());
             queueReplacementWithParent(node, node->getRight(), tempIndex, OriginalNode::IS_DROPPED);
         }
-        else if (!node->getLeft()->isArray() && node->getLeft()->getBasicType() != EbtStruct)
+        else if (IntermNodePatternMatcher::IsDynamicIndexingOfVectorOrMatrix(node))
         {
             bool write = isLValueRequiredHere();
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+            // Make sure that IntermNodePatternMatcher is consistent with the slightly differently
+            // implemented checks in this traverser.
+            IntermNodePatternMatcher matcher(
+                IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue);
+            ASSERT(matcher.match(node, getParentNode(), isLValueRequiredHere()) == write);
+#endif
 
             TType type = node->getLeft()->getType();
             mIndexedVecAndMatrixTypes.insert(type);
