@@ -87,7 +87,9 @@ bool SplitSequenceOperatorTraverser::visitAggregate(Visit visit, TIntermAggregat
         }
         else if (visit == PostVisit)
         {
-            if (mFoundExpressionToSplit)
+            // Split sequence operators starting from the outermost one to preserve correct
+            // execution order.
+            if (mFoundExpressionToSplit && mInsideSequenceOperator == 1)
             {
                 // Move all operands of the sequence operation except the last one into separate
                 // statements in the parent block.

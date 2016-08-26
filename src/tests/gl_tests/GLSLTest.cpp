@@ -2210,6 +2210,35 @@ TEST_P(GLSLTest, NestedPowStatements)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test a nested sequence operator with a ternary operator inside. The ternary operator is
+// intended to be such that it gets converted to an if statement on the HLSL backend.
+TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
+{
+    const std::string &vert =
+        "attribute vec2 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "}";
+
+    // Note that the uniform keep_flop_positive doesn't need to be set - the test expects it to have
+    // its default value false.
+    const std::string &frag =
+        "precision mediump float;\n"
+        "uniform bool keep_flop_positive;\n"
+        "float flop;\n"
+        "void main() {\n"
+        "    flop = -1.0,\n"
+        "    (flop *= -1.0,\n"
+        "    keep_flop_positive ? 0.0 : flop *= -1.0),\n"
+        "    gl_FragColor = vec4(0, -flop, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+    drawQuad(prog.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
