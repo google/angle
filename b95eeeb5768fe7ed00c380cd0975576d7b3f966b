@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_09736917",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_460ab280",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_26ffb652",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
@@ -30,6 +48,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "This could start from 1 as well.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_c9ab1168",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_26ffb652",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_69d4a5f1",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_0604ba70",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_c615829b",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
@@ -64,6 +118,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "This function could return a really useful error message in a const char** out parameter, like \"interpolation qualifiers must be after storage qualifiers\".",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_c9c4b140",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "0554160d_c615829b",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "05f336ac_eee09fc0",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "By \u0027found\u0027 I wasn\u0027t referring to whether the qualifier has occurred multiple times but rather that the qualifier has been previously seen in the sequence of qualifiers.\nI removed the comment.",
+      "parentUuid": "25903a09_1fede3b9",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_666ece32",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
@@ -98,6 +188,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "Should also remove this comment.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_a9bdfda7",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Same as above. Removed it.",
+      "parentUuid": "0554160d_666ece32",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "05f336ac_cedde308",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_86c42a3f",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_86366a47",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
@@ -132,6 +258,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "I don\u0027t think the joinInvariantQualifier helper function is needed.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_09f88977",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_86366a47",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_69edc5b9",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_c62c62fd",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_e62f5eef",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
@@ -166,6 +328,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "It doesn\u0027t seem like the precision qualifier could ever be undefined when reaching here. Maybe remove the joinPrecisionQualifier helper and assert that the precision is not undefined where it\u0027s being called at the moment.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_a9e69ddb",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_e62f5eef",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_e9e095c0",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_6605ae70",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e59542fc_9d1263b0",
         "filename": "src/compiler/translator/QualifierTypes.h",
         "patchSetId": 9
@@ -200,6 +398,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "Member variables go after functions, put a space in between.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_c9ddd108",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e59542fc_9d1263b0",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -223,6 +439,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_291c6dd1",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_2678d6ee",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_26d456f0",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 9
@@ -234,6 +468,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "This is a bit of a weird error message actually - I\u0027m sure an equally valid one could be generated without converting the qualifier sequence to a public type first.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f83e8c_4cbf3f70",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_26d456f0",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -263,6 +515,30 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_e91255b0",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_46cf5260",
+      "range": {
+        "startLine": 621,
+        "startChar": 22,
+        "endLine": 621,
+        "endChar": 39
+      },
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_06d95a26",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 9
@@ -274,6 +550,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "Here too - I don\u0027t think the conversion to PublicType first is necessary.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5f50a93_4b91e5f6",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_06d95a26",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -297,6 +591,24 @@
     },
     {
       "key": {
+        "uuid": "852806c7_8ae3cbcb",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_e6bd1ea7",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_c6ba22ad",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 9
@@ -314,6 +626,24 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_c90f9188",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_c6ba22ad",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_e6619e3d",
         "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
         "patchSetId": 9
@@ -325,6 +655,24 @@
       "writtenOn": "2016-08-25T10:38:14Z",
       "side": 1,
       "message": "Please still check these shaders for missing newlines, there are a few other instances as well. Should be possible to find easily by regex search.",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652dd2d5_090a497f",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0554160d_e6619e3d",
       "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
