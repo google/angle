@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "c5f91ed7_849026f5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T14:06:25Z",
+      "side": 1,
+      "message": "I think that this would definitely be better if changed as I suggested. Conceptually, the \"publicType\" doesn\u0027t really make sense here - it doesn\u0027t represent a type, but the list of qualifiers. It would be neater to do the validation for the list of qualifiers in the TQualifierSequence, and only return the relevant information from there. That also makes it possible to more cleanly separate the different Evq values that are used for parameters vs. other variables. TQualifierSequence::getPublicType wouldn\u0027t need to be able to join \"EvqOut\" and \"EvqIn\" at all, but just \"EvqFragmentOut\" and other such variations. And the suggested \"getParameterQualifiers\" doesn\u0027t need nearly as complex logic as the regular \"getPublicType\" path, though some of the code can of course be shared.",
+      "parentUuid": "c5f91ed7_64c40a11",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f91ed7_6419aad5",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
