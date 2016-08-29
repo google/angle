@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5f91ed7_649f6afb",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T15:03:07Z",
+      "side": 1,
+      "message": "nit: Typo still here, maybe I should leave the cheekiness out of review comments.",
+      "range": {
+        "startLine": 9,
+        "startChar": 62,
+        "endLine": 9,
+        "endChar": 66
+      },
+      "revId": "34760de4eab8e7a1b948591d9c81b5b7be42ebc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_449c6e04",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T15:03:07Z",
+      "side": 1,
+      "message": "This constructor should not be used for indexing ops yet, though I\u0027m planning on fixing that.",
+      "revId": "34760de4eab8e7a1b948591d9c81b5b7be42ebc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_24997214",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T15:03:07Z",
+      "side": 1,
+      "message": "Same here, can\u0027t change this yet.",
+      "revId": "34760de4eab8e7a1b948591d9c81b5b7be42ebc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
