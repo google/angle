@@ -2,6 +2,63 @@
   "comments": [
     {
       "key": {
+        "uuid": "c5f91ed7_248052a2",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T14:23:21Z",
+      "side": 1,
+      "message": "nit: As annoying as this bug is, no need to go breaking chins I think. :)",
+      "range": {
+        "startLine": 9,
+        "startChar": 62,
+        "endLine": 9,
+        "endChar": 66
+      },
+      "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_e4aa3a1c",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T14:23:21Z",
+      "side": 1,
+      "message": "Is this transformation intended to be done inside loop condition/expression as well? I suppose it will work correctly there too, but wanted to make sure.",
+      "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_047d56ba",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T14:23:21Z",
+      "side": 1,
+      "message": "You could now use the new, improved TIntermBinary constructor that takes the left and right children. That way the new node\u0027s type gets set correctly. I\u0027d set the line of B to bPlusZero as well.",
+      "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85c2c66f_31cf5461",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 8
