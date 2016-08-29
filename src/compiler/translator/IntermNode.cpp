@@ -113,8 +113,9 @@ angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray,
     for (size_t i = 0; i < rows * cols; i++)
         elements.push_back(paramArray[i].getFConst());
     // Transpose is used since the Matrix constructor expects arguments in row-major order,
-    // whereas the paramArray is in column-major order.
-    return angle::Matrix<float>(elements, rows, cols).transpose();
+    // whereas the paramArray is in column-major order. Rows/cols parameters are also flipped below
+    // so that the created matrix will have the expected dimensions after the transpose.
+    return angle::Matrix<float>(elements, cols, rows).transpose();
 }
 
 angle::Matrix<float> GetMatrix(const TConstantUnion *paramArray, const unsigned int &size)
@@ -1225,7 +1226,7 @@ TConstantUnion *TIntermConstantUnion::foldUnaryWithDifferentReturnType(TOperator
         {
             resultArray = new TConstantUnion[objectSize];
             angle::Matrix<float> result =
-                GetMatrix(operandArray, getType().getNominalSize(), getType().getSecondarySize()).transpose();
+                GetMatrix(operandArray, getType().getRows(), getType().getCols()).transpose();
             SetUnionArrayFromMatrix(result, resultArray);
             break;
         }
@@ -1943,7 +1944,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             maxObjectSize = objectSizes[i];
     }
 
-    if (!(*sequence)[0]->getAsTyped()->isMatrix())
+    if (!(*sequence)[0]->getAsTyped()->isMatrix() && aggregate->getOp() != EOpOuterProduct)
     {
         for (unsigned int i = 0; i < paramsCount; i++)
             if (objectSizes[i] != maxObjectSize)
@@ -2318,8 +2319,8 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 size_t numCols = (*sequence)[1]->getAsTyped()->getType().getObjectSize();
                 resultArray = new TConstantUnion[numRows * numCols];
                 angle::Matrix<float> result =
-                    GetMatrix(unionArrays[0], 1, static_cast<int>(numCols))
-                        .outerProduct(GetMatrix(unionArrays[1], static_cast<int>(numRows), 1));
+                    GetMatrix(unionArrays[0], static_cast<int>(numRows), 1)
+                        .outerProduct(GetMatrix(unionArrays[1], 1, static_cast<int>(numCols)));
                 SetUnionArrayFromMatrix(result, resultArray);
             }
             else
