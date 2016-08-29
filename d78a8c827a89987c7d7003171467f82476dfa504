@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c5f91ed7_84626611",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T15:38:16Z",
+      "side": 1,
+      "message": "Done.\nYes, it looks better. Also, separated the joining of qualifiers into 2 functions - one for variables and one for function parameters.",
+      "parentUuid": "c5f91ed7_849026f5",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f91ed7_6419aad5",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
