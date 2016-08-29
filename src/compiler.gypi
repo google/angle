@@ -92,6 +92,8 @@
             'compiler/translator/RecordConstantPrecision.h',
             'compiler/translator/RegenerateStructNames.cpp',
             'compiler/translator/RegenerateStructNames.h',
+            'compiler/translator/RemoveInvariantDeclaration.cpp',
+            'compiler/translator/RemoveInvariantDeclaration.h',
             'compiler/translator/RemovePow.cpp',
             'compiler/translator/RemovePow.h',
             'compiler/translator/RewriteDoWhile.cpp',

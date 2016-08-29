@@ -23,6 +23,7 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/PruneEmptyDeclarations.h"
 #include "compiler/translator/RegenerateStructNames.h"
+#include "compiler/translator/RemoveInvariantDeclaration.h"
 #include "compiler/translator/RemovePow.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
@@ -86,6 +87,14 @@ bool IsGLSL130OrNewer(ShShaderOutput output)
             output == SH_GLSL_400_CORE_OUTPUT ||
             output == SH_GLSL_410_CORE_OUTPUT ||
             output == SH_GLSL_420_CORE_OUTPUT ||
+            output == SH_GLSL_430_CORE_OUTPUT ||
+            output == SH_GLSL_440_CORE_OUTPUT ||
+            output == SH_GLSL_450_CORE_OUTPUT);
+}
+
+bool IsGLSL420OrNewer(ShShaderOutput output)
+{
+    return (output == SH_GLSL_420_CORE_OUTPUT ||
             output == SH_GLSL_430_CORE_OUTPUT ||
             output == SH_GLSL_440_CORE_OUTPUT ||
             output == SH_GLSL_450_CORE_OUTPUT);
@@ -381,6 +390,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             ((compileOptions & SH_INIT_GL_POSITION) ||
              (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
             initializeGLPosition(root);
+
+        if (success && shaderType == GL_FRAGMENT_SHADER && IsGLSL420OrNewer(outputType))
+            sh::RemoveInvariantDeclaration(root);
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
         if (success && (compileOptions & SH_REWRITE_DO_WHILE_LOOPS))
