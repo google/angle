@@ -22,6 +22,10 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
 
 void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions)
 {
+    if (compileOptions & SH_EMULATE_ABS_INT_FUNCTION)
+    {
+        InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
+    }
     if (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS)
     {
         InitBuiltInFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
