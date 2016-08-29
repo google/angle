@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c5f91ed7_4448eeba",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "Instead of calling getPublicType() here, I think a better alternative would be to add a \"getParameterQualifiers\" function to qualifierSequence that would return the main qualifier and also have precision qualifier as an out parameter. The getParameterQualifiers function could include many of the checks below, with the exception of checkOutParameterIsNotSampler.",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f91ed7_6419aad5",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 10
@@ -19,6 +36,120 @@
         "endLine": 1745,
         "endChar": 9
       },
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_e46d9a34",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "I\u0027d still mention at least in a comment here why the iteration starts from 1 instead of 0.",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_a477a200",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "Rename to \"checkOrderIsValid\". Including \"QualifierSequence\" in the name is redundant, and prefix \"check\" is now commonly used in ParseContext for functions that generate error messages.\n\nAlso pass in TDiagnostics * instead of TParseContext *.",
+      "range": {
+        "startLine": 520,
+        "startChar": 25,
+        "endLine": 520,
+        "endChar": 49
+      },
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_c4729e12",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "Instead of passing in the whole context, could pass in TDiagnostics *.",
+      "range": {
+        "startLine": 538,
+        "startChar": 61,
+        "endLine": 538,
+        "endChar": 68
+      },
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_a450c265",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "These already combined types should not be here - they\u0027re never going to be in the list of qualifiers. This includes:\n\nCentroidOut, CentroidIn, FlatOut, FlatIn, SmoothOut, SmoothIn.\n\nRemember to remove the unnecessary join functions for these as well.",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_445fce79",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "Member variable should be after private functions.",
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_246cd230",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 10
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "struct is not the correct token here - you should rather use the identifier used to name the interface block, for example. This should be accessible through $2.string.",
       "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
