@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "652dd2d5_e9aed579",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:06:40Z",
+      "side": 1,
+      "message": "There was already an assert in getPublicType. I thought it might be better the same condition to not be checked multiple times.\nI moved the invariant check to a separate helper function. It gets asserted only in the getPublicType.",
+      "parentUuid": "0554160d_26ed76ba",
+      "range": {
+        "startLine": 22,
+        "startChar": 20,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "9cfd75e5a371ce2878e0c1eaecf3d3851ea7a7b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "488b83e0_e02d0242",
         "filename": "src/compiler/translator/QualifierTypes.h",
         "patchSetId": 8
