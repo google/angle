@@ -22,7 +22,8 @@ class TOutputGLSLBase : public TIntermTraverser
                     NameMap &nameMap,
                     TSymbolTable& symbolTable,
                     int shaderVersion,
-                    ShShaderOutput output);
+                    ShShaderOutput output,
+                    ShCompileOptions compileOptions);
 
     ShShaderOutput getShaderOutput() const
     {
@@ -98,6 +99,8 @@ class TOutputGLSLBase : public TIntermTraverser
     const int mShaderVersion;
 
     ShShaderOutput mOutput;
+
+    ShCompileOptions mCompileOptions;
 };
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_

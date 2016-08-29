@@ -18,7 +18,8 @@ public:
                 NameMap& nameMap,
                 TSymbolTable& symbolTable,
                 int shaderVersion,
-                bool forceHighp);
+                bool forceHighp,
+                ShCompileOptions compileOptions);
 
 protected:
   bool writeVariablePrecision(TPrecision precision) override;

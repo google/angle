@@ -83,7 +83,8 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
                                  NameMap &nameMap,
                                  TSymbolTable &symbolTable,
                                  int shaderVersion,
-                                 ShShaderOutput output)
+                                 ShShaderOutput output,
+                                 ShCompileOptions compileOptions)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
       mDeclaringVariables(false),
@@ -92,7 +93,8 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
       mNameMap(nameMap),
       mSymbolTable(symbolTable),
       mShaderVersion(shaderVersion),
-      mOutput(output)
+      mOutput(output),
+      mCompileOptions(compileOptions)
 {
 }
 
@@ -146,8 +148,11 @@ void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
 
 void TOutputGLSLBase::writeVariableType(const TType &type)
 {
+    TQualifier qualifier = type.getQualifier();
     TInfoSinkBase &out = objSink();
-    if (type.isInvariant())
+    bool removeInvariant = (qualifier == EvqVaryingIn && IsGLSL420OrNewer(mOutput) &&
+                            !(mCompileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT));
+    if (type.isInvariant() && !removeInvariant)
     {
         out << "invariant ";
     }
@@ -156,7 +161,6 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
         TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         declareInterfaceBlockLayout(interfaceBlock);
     }
-    TQualifier qualifier = type.getQualifier();
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
         if (IsGLSL130OrNewer(mOutput))

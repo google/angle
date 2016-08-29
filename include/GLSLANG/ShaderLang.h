@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 163
+#define ANGLE_SH_VERSION 164
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -215,6 +215,15 @@ const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
 // OpenGL ES3.0.4 requires all members of a named uniform block declared with a shared or std140
 // layout qualifier to be considered active. The uniform block itself is also considered active.
 const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
+
+// This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20 on AMD.
+// From GLSL >= 4.20, it's optional to add invariant for fragment input, but GPU vendors have
+// different implementations about this. Some drivers forbid invariant in fragment for GLSL>= 4.20,
+// e.g. Linux Mesa, some drivers treat that as optional, e.g. NVIDIA, some drivers require invariant
+// must match between vertex and fragment shader, e.g. AMD. The behavior on AMD is obviously wrong.
+// Remove invariant for input in fragment shader to workaround the restriction on Intel Mesa.
+// But don't remove on AMD Linux to avoid triggering the bug on AMD.
+const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1) << 29;
 
 // Defines alternate strategies for implementing array index clamping.
 typedef enum {

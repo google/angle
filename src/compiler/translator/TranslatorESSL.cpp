@@ -78,7 +78,7 @@ void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOption
 
     // Write translated shader.
     TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
-                           getSymbolTable(), shaderVer, precisionEmulation);
+                           getSymbolTable(), shaderVer, precisionEmulation, compileOptions);
     root->traverse(&outputESSL);
 }
 

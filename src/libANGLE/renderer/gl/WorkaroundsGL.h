@@ -25,7 +25,8 @@ struct WorkaroundsGL
           emulateAbsIntFunction(false),
           addAndTrueToLoopCondition(false),
           emulateIsnanFloat(false),
-          useUnusedBlocksWithStandardOrSharedLayout(false)
+          useUnusedBlocksWithStandardOrSharedLayout(false),
+          dontRemoveInvariantForFragmentInput(false)
     {
     }
 
@@ -111,6 +112,10 @@ struct WorkaroundsGL
     // treated as inactive which is not consistent with WebGL2.0 spec. Reference all members in a
     // unused std140 or shared uniform block at the beginning of main to work around it.
     bool useUnusedBlocksWithStandardOrSharedLayout;
+
+    // This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20
+    // on AMD.
+    bool dontRemoveInvariantForFragmentInput;
 };
 }
 

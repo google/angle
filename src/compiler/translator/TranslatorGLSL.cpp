@@ -191,7 +191,8 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
                            getNameMap(),
                            getSymbolTable(),
                            getShaderVersion(),
-                           getOutputType());
+                           getOutputType(),
+                           compileOptions);
     root->traverse(&outputGLSL);
 }
 

@@ -12,14 +12,16 @@ TOutputGLSL::TOutputGLSL(TInfoSinkBase& objSink,
                          NameMap& nameMap,
                          TSymbolTable& symbolTable,
                          int shaderVersion,
-                         ShShaderOutput output)
+                         ShShaderOutput output,
+                         ShCompileOptions compileOptions)
     : TOutputGLSLBase(objSink,
                       clampingStrategy,
                       hashFunction,
                       nameMap,
                       symbolTable,
                       shaderVersion,
-                      output)
+                      output,
+                      compileOptions)
 {
 }
 

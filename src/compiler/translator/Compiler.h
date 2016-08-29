@@ -38,6 +38,7 @@ bool IsWebGLBasedSpec(ShShaderSpec spec);
 // Helper function to check if the shader type is GLSL.
 //
 bool IsGLSL130OrNewer(ShShaderOutput output);
+bool IsGLSL420OrNewer(ShShaderOutput output);
 
 //
 // The base class used to back handles returned to the driver.

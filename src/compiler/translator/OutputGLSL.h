@@ -18,7 +18,8 @@ class TOutputGLSL : public TOutputGLSLBase
                 NameMap& nameMap,
                 TSymbolTable& symbolTable,
                 int shaderVersion,
-                ShShaderOutput output);
+                ShShaderOutput output,
+                ShCompileOptions compileOptions);
 
   protected:
     bool writeVariablePrecision(TPrecision) override;

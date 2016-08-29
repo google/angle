@@ -12,14 +12,16 @@ TOutputESSL::TOutputESSL(TInfoSinkBase &objSink,
                          NameMap &nameMap,
                          TSymbolTable &symbolTable,
                          int shaderVersion,
-                         bool forceHighp)
+                         bool forceHighp,
+                         ShCompileOptions compileOptions)
     : TOutputGLSLBase(objSink,
                       clampingStrategy,
                       hashFunction,
                       nameMap,
                       symbolTable,
                       shaderVersion,
-                      SH_ESSL_OUTPUT),
+                      SH_ESSL_OUTPUT,
+                      compileOptions),
       mForceHighp(forceHighp)
 {
 }
