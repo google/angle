@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c5f91ed7_a4d202cc",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T13:56:49Z",
+      "side": 1,
+      "message": "Moved it here. Also changed it somewhat.",
+      "parentUuid": "c5f91ed7_644beab9",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_26ffb652",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
