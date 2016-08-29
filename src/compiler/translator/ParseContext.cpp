@@ -2385,98 +2385,6 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
     return constructor;
 }
 
-// This function returns vector field(s) being accessed from a constant vector.
-TIntermConstantUnion *TParseContext::foldVectorSwizzle(TVectorFields &fields,
-                                                       TIntermConstantUnion *baseNode,
-                                                       const TSourceLoc &location)
-{
-    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
-    ASSERT(unionArray);
-
-    TConstantUnion *constArray = new TConstantUnion[fields.num];
-    const auto &type           = baseNode->getType();
-
-    for (int i = 0; i < fields.num; i++)
-    {
-        // Out-of-range indices should already be checked.
-        ASSERT(fields.offsets[i] < type.getNominalSize());
-        constArray[i] = unionArray[fields.offsets[i]];
-    }
-    return intermediate.addConstantUnion(constArray, type, location);
-}
-
-// This function returns the column vector being accessed from a constant matrix.
-TIntermConstantUnion *TParseContext::foldMatrixSubscript(int index,
-                                                         TIntermConstantUnion *baseNode,
-                                                         const TSourceLoc &location)
-{
-    ASSERT(index < baseNode->getType().getCols());
-
-    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
-    int size                         = baseNode->getType().getRows();
-    return intermediate.addConstantUnion(&unionArray[size * index], baseNode->getType(), location);
-}
-
-// This function returns an element of an array accessed from a constant array.
-TIntermConstantUnion *TParseContext::foldArraySubscript(int index,
-                                                        TIntermConstantUnion *baseNode,
-                                                        const TSourceLoc &location)
-{
-    ASSERT(index < static_cast<int>(baseNode->getArraySize()));
-
-    TType arrayElementType = baseNode->getType();
-    arrayElementType.clearArrayness();
-    size_t arrayElementSize          = arrayElementType.getObjectSize();
-    const TConstantUnion *unionArray = baseNode->getUnionArrayPointer();
-    return intermediate.addConstantUnion(&unionArray[arrayElementSize * index], baseNode->getType(),
-                                         location);
-}
-
-//
-// This function returns the value of a particular field inside a constant structure from the symbol
-// table.
-// If there is an embedded/nested struct, it appropriately calls addConstStructNested or
-// addConstStructFromAggr function and returns the parse-tree with the values of the embedded/nested
-// struct.
-//
-TIntermTyped *TParseContext::addConstStruct(const TString &identifier,
-                                            TIntermTyped *node,
-                                            const TSourceLoc &line)
-{
-    const TFieldList &fields = node->getType().getStruct()->fields();
-    size_t instanceSize      = 0;
-
-    for (size_t index = 0; index < fields.size(); ++index)
-    {
-        if (fields[index]->name() == identifier)
-        {
-            break;
-        }
-        else
-        {
-            instanceSize += fields[index]->type()->getObjectSize();
-        }
-    }
-
-    TIntermTyped *typedNode;
-    TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
-    if (tempConstantNode)
-    {
-        const TConstantUnion *constArray = tempConstantNode->getUnionArrayPointer();
-
-        // type will be changed in the calling function
-        typedNode = intermediate.addConstantUnion(constArray + instanceSize,
-                                                  tempConstantNode->getType(), line);
-    }
-    else
-    {
-        error(line, "Cannot offset into the structure", "Error");
-        return nullptr;
-    }
-
-    return typedNode;
-}
-
 //
 // Interface/uniform blocks
 //
@@ -2697,8 +2605,6 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                                                 const TSourceLoc &location,
                                                 TIntermTyped *indexExpression)
 {
-    TIntermTyped *indexedExpression = NULL;
-
     if (!baseExpression->isArray() && !baseExpression->isMatrix() && !baseExpression->isVector())
     {
         if (baseExpression->getAsSymbolNode())
@@ -2710,6 +2616,11 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         {
             error(location, " left of '[' is not of type array, matrix, or vector ", "expression");
         }
+
+        TConstantUnion *unionArray = new TConstantUnion[1];
+        unionArray->setFConst(0.0f);
+        return intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst),
+                                             location);
     }
 
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
@@ -2739,151 +2650,78 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
     if (indexConstantUnion)
     {
-        // If the index is not qualified as constant, the behavior in the spec is undefined. This
-        // applies even if ANGLE has been able to constant fold it (ANGLE may constant fold
-        // expressions that are not constant expressions). The most compatible way to handle this
-        // case is to report a warning instead of an error and force the index to be in the
-        // correct range.
+        // If an out-of-range index is not qualified as constant, the behavior in the spec is
+        // undefined. This applies even if ANGLE has been able to constant fold it (ANGLE may
+        // constant fold expressions that are not constant expressions). The most compatible way to
+        // handle this case is to report a warning instead of an error and force the index to be in
+        // the correct range.
         bool outOfRangeIndexIsError = indexExpression->getQualifier() == EvqConst;
         int index = indexConstantUnion->getIConst(0);
-        if (!baseExpression->isArray())
+
+        int safeIndex = -1;
+
+        if (baseExpression->isArray())
         {
-            // Array checks are done later because a different error message might be generated
-            // based on the index in some cases.
-            if (baseExpression->isVector())
+            if (baseExpression->getQualifier() == EvqFragData && index > 0)
             {
-                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                             baseExpression->getType().getNominalSize(),
-                                             "vector field selection out of range", "[]");
+                if (mShaderSpec == SH_WEBGL2_SPEC)
+                {
+                    // Error has been already generated if index is not const.
+                    if (indexExpression->getQualifier() == EvqConst)
+                    {
+                        error(location, "", "[",
+                              "array index for gl_FragData must be constant zero");
+                    }
+                    safeIndex = 0;
+                }
+                else if (!isExtensionEnabled("GL_EXT_draw_buffers"))
+                {
+                    outOfRangeError(outOfRangeIndexIsError, location, "", "[",
+                                    "array index for gl_FragData must be zero when "
+                                    "GL_EXT_draw_buffers is disabled");
+                    safeIndex = 0;
+                }
             }
-            else if (baseExpression->isMatrix())
+            // Only do generic out-of-range check if similar error hasn't already been reported.
+            if (safeIndex < 0)
             {
-                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                                 baseExpression->getArraySize(),
+                                                 "array index out of range", "[]");
+            }
+        }
+        else if (baseExpression->isMatrix())
+        {
+            safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
                                              baseExpression->getType().getCols(),
                                              "matrix field selection out of range", "[]");
-            }
         }
-
-        TIntermConstantUnion *baseConstantUnion = baseExpression->getAsConstantUnion();
-        if (baseConstantUnion)
+        else if (baseExpression->isVector())
         {
-            if (baseExpression->isArray())
-            {
-                index = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                             baseExpression->getArraySize(),
-                                             "array index out of range", "[]");
-                // Constant folding for array indexing.
-                indexedExpression = foldArraySubscript(index, baseConstantUnion, location);
-            }
-            else if (baseExpression->isVector())
-            {
-                // Constant folding for vector indexing - reusing vector swizzle folding.
-                TVectorFields fields;
-                fields.num = 1;
-                fields.offsets[0] = index;
-                indexedExpression = foldVectorSwizzle(fields, baseConstantUnion, location);
-            }
-            else if (baseExpression->isMatrix())
-            {
-                // Constant folding for matrix indexing.
-                indexedExpression = foldMatrixSubscript(index, baseConstantUnion, location);
-            }
+            safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
+                                             baseExpression->getType().getNominalSize(),
+                                             "vector field selection out of range", "[]");
         }
-        else
+
+        ASSERT(safeIndex >= 0);
+        // Data of constant unions can't be changed, because it may be shared with other
+        // constant unions or even builtins, like gl_MaxDrawBuffers. Instead use a new
+        // sanitized object.
+        if (safeIndex != index)
         {
-            int safeIndex = -1;
-
-            if (baseExpression->isArray())
-            {
-                if (baseExpression->getQualifier() == EvqFragData && index > 0)
-                {
-                    if (mShaderSpec == SH_WEBGL2_SPEC)
-                    {
-                        // Error has been already generated if index is not const.
-                        if (indexExpression->getQualifier() == EvqConst)
-                        {
-                            error(location, "", "[",
-                                  "array index for gl_FragData must be constant zero");
-                        }
-                        safeIndex = 0;
-                    }
-                    else if (!isExtensionEnabled("GL_EXT_draw_buffers"))
-                    {
-                        outOfRangeError(outOfRangeIndexIsError, location, "", "[",
-                                        "array index for gl_FragData must be zero when "
-                                        "GL_EXT_draw_buffers is disabled");
-                        safeIndex = 0;
-                    }
-                }
-                // Only do generic out-of-range check if similar error hasn't already been reported.
-                if (safeIndex < 0)
-                {
-                    safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
-                                                     baseExpression->getArraySize(),
-                                                     "array index out of range", "[]");
-                }
-            }
-
-            // Data of constant unions can't be changed, because it may be shared with other
-            // constant unions or even builtins, like gl_MaxDrawBuffers. Instead use a new
-            // sanitized object.
-            if (safeIndex != -1)
-            {
-                TConstantUnion *safeConstantUnion = new TConstantUnion();
-                safeConstantUnion->setIConst(safeIndex);
-                indexConstantUnion->replaceConstantUnion(safeConstantUnion);
-            }
-
-            indexedExpression =
-                intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location);
+            TConstantUnion *safeConstantUnion = new TConstantUnion();
+            safeConstantUnion->setIConst(safeIndex);
+            indexConstantUnion->replaceConstantUnion(safeConstantUnion);
         }
+
+        return intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location,
+                                     &mDiagnostics);
     }
     else
     {
-        indexedExpression =
-            intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
+        return intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location,
+                                     &mDiagnostics);
     }
-
-    if (indexedExpression == 0)
-    {
-        TConstantUnion *unionArray = new TConstantUnion[1];
-        unionArray->setFConst(0.0f);
-        indexedExpression =
-            intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), location);
-    }
-    else if (baseExpression->isArray())
-    {
-        TType indexedType = baseExpression->getType();
-        indexedType.clearArrayness();
-        indexedExpression->setType(indexedType);
-    }
-    else if (baseExpression->isMatrix())
-    {
-        indexedExpression->setType(TType(baseExpression->getBasicType(),
-                                         baseExpression->getPrecision(), EvqTemporary,
-                                         static_cast<unsigned char>(baseExpression->getRows())));
-    }
-    else if (baseExpression->isVector())
-    {
-        indexedExpression->setType(
-            TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary));
-    }
-    else
-    {
-        indexedExpression->setType(baseExpression->getType());
-    }
-
-    if (baseExpression->getType().getQualifier() == EvqConst &&
-        indexExpression->getType().getQualifier() == EvqConst)
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqConst);
-    }
-    else
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqTemporary);
-    }
-
-    return indexedExpression;
 }
 
 int TParseContext::checkIndexOutOfRange(bool outOfRangeIndexIsError,
@@ -2916,11 +2754,10 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                                                          const TString &fieldString,
                                                          const TSourceLoc &fieldLocation)
 {
-    TIntermTyped *indexedExpression = NULL;
-
     if (baseExpression->isArray())
     {
         error(fieldLocation, "cannot apply dot operator to an array", ".");
+        return baseExpression;
     }
 
     if (baseExpression->isVector())
@@ -2933,41 +2770,21 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             fields.offsets[0] = 0;
         }
 
-        if (baseExpression->getAsConstantUnion())
-        {
-            // constant folding for vector fields
-            indexedExpression =
-                foldVectorSwizzle(fields, baseExpression->getAsConstantUnion(), fieldLocation);
-        }
-        else
-        {
-            TIntermTyped *index = intermediate.addSwizzle(fields, fieldLocation);
-            indexedExpression =
-                intermediate.addIndex(EOpVectorSwizzle, baseExpression, index, dotLocation);
-        }
-        if (indexedExpression == nullptr)
-        {
-            indexedExpression = baseExpression;
-        }
-        else
-        {
-            // Note that the qualifier set here will be corrected later.
-            indexedExpression->setType(TType(baseExpression->getBasicType(),
-                                             baseExpression->getPrecision(), EvqTemporary,
-                                             static_cast<unsigned char>(fields.num)));
-        }
+        TIntermTyped *index = intermediate.addSwizzle(fields, fieldLocation);
+        return intermediate.addIndex(EOpVectorSwizzle, baseExpression, index, dotLocation,
+                                     &mDiagnostics);
     }
     else if (baseExpression->getBasicType() == EbtStruct)
     {
-        bool fieldFound          = false;
         const TFieldList &fields = baseExpression->getType().getStruct()->fields();
         if (fields.empty())
         {
             error(dotLocation, "structure has no fields", "Internal Error");
-            indexedExpression = baseExpression;
+            return baseExpression;
         }
         else
         {
+            bool fieldFound = false;
             unsigned int i;
             for (i = 0; i < fields.size(); ++i)
             {
@@ -2979,47 +2796,29 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
             if (fieldFound)
             {
-                if (baseExpression->getAsConstantUnion())
-                {
-                    indexedExpression = addConstStruct(fieldString, baseExpression, dotLocation);
-                    if (indexedExpression == 0)
-                    {
-                        indexedExpression = baseExpression;
-                    }
-                    else
-                    {
-                        indexedExpression->setType(*fields[i]->type());
-                    }
-                }
-                else
-                {
-                    TConstantUnion *unionArray = new TConstantUnion[1];
-                    unionArray->setIConst(i);
-                    TIntermTyped *index = intermediate.addConstantUnion(
-                        unionArray, *fields[i]->type(), fieldLocation);
-                    indexedExpression = intermediate.addIndex(EOpIndexDirectStruct, baseExpression,
-                                                              index, dotLocation);
-                    indexedExpression->setType(*fields[i]->type());
-                }
+                TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
+                index->setLine(fieldLocation);
+                return intermediate.addIndex(EOpIndexDirectStruct, baseExpression, index,
+                                             dotLocation, &mDiagnostics);
             }
             else
             {
                 error(dotLocation, " no such field in structure", fieldString.c_str());
-                indexedExpression = baseExpression;
+                return baseExpression;
             }
         }
     }
     else if (baseExpression->isInterfaceBlock())
     {
-        bool fieldFound          = false;
         const TFieldList &fields = baseExpression->getType().getInterfaceBlock()->fields();
         if (fields.empty())
         {
             error(dotLocation, "interface block has no fields", "Internal Error");
-            indexedExpression = baseExpression;
+            return baseExpression;
         }
         else
         {
+            bool fieldFound = false;
             unsigned int i;
             for (i = 0; i < fields.size(); ++i)
             {
@@ -3031,18 +2830,15 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
             if (fieldFound)
             {
-                TConstantUnion *unionArray = new TConstantUnion[1];
-                unionArray->setIConst(i);
-                TIntermTyped *index =
-                    intermediate.addConstantUnion(unionArray, *fields[i]->type(), fieldLocation);
-                indexedExpression = intermediate.addIndex(EOpIndexDirectInterfaceBlock,
-                                                          baseExpression, index, dotLocation);
-                indexedExpression->setType(*fields[i]->type());
+                TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
+                index->setLine(fieldLocation);
+                return intermediate.addIndex(EOpIndexDirectInterfaceBlock, baseExpression, index,
+                                             dotLocation, &mDiagnostics);
             }
             else
             {
                 error(dotLocation, " no such field in interface block", fieldString.c_str());
-                indexedExpression = baseExpression;
+                return baseExpression;
             }
         }
     }
@@ -3060,19 +2856,8 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                   "side",
                   fieldString.c_str());
         }
-        indexedExpression = baseExpression;
+        return baseExpression;
     }
-
-    if (baseExpression->getQualifier() == EvqConst)
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqConst);
-    }
-    else
-    {
-        indexedExpression->getTypePointer()->setQualifier(EvqTemporary);
-    }
-
-    return indexedExpression;
 }
 
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,

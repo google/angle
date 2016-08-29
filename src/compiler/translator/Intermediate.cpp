@@ -44,15 +44,20 @@ TIntermSymbol *TIntermediate::addSymbol(
 // Returns the added node.
 // The caller should set the type of the returned node.
 //
-TIntermTyped *TIntermediate::addIndex(
-    TOperator op, TIntermTyped *base, TIntermTyped *index, const TSourceLoc &line)
+TIntermTyped *TIntermediate::addIndex(TOperator op,
+                                      TIntermTyped *base,
+                                      TIntermTyped *index,
+                                      const TSourceLoc &line,
+                                      TDiagnostics *diagnostics)
 {
-    TIntermBinary *node = new TIntermBinary(op);
+    TIntermBinary *node = new TIntermBinary(op, base, index);
     node->setLine(line);
-    node->setLeft(base);
-    node->setRight(index);
 
-    // caller should set the type
+    TIntermTyped *folded = node->fold(diagnostics);
+    if (folded)
+    {
+        return folded;
+    }
 
     return node;
 }
@@ -312,6 +317,7 @@ TIntermTyped *TIntermediate::addSwizzle(
 {
 
     TIntermAggregate *node = new TIntermAggregate(EOpSequence);
+    node->getTypePointer()->setQualifier(EvqConst);
 
     node->setLine(line);
     TIntermConstantUnion *constIntNode;

@@ -26,8 +26,11 @@ class TIntermediate
 
     TIntermSymbol *addSymbol(
         int id, const TString &, const TType &, const TSourceLoc &);
-    TIntermTyped *addIndex(
-        TOperator op, TIntermTyped *base, TIntermTyped *index, const TSourceLoc &);
+    TIntermTyped *addIndex(TOperator op,
+                           TIntermTyped *base,
+                           TIntermTyped *index,
+                           const TSourceLoc &line,
+                           TDiagnostics *diagnostics);
     TIntermTyped *addUnaryMath(
         TOperator op, TIntermTyped *child, const TSourceLoc &line, const TType *funcReturnType);
     TIntermAggregate *growAggregate(

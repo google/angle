@@ -99,10 +99,9 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
 
             for (unsigned int i = 0; i < var.arraySize; ++i)
             {
-                TIntermBinary *element = new TIntermBinary(EOpIndexDirect);
-                element->setLeft(new TIntermSymbol(0, name, type));
-                element->setRight(TIntermTyped::CreateIndexNode(i));
-                element->setType(elementType);
+                TIntermSymbol *arraySymbol = new TIntermSymbol(0, name, type);
+                TIntermBinary *element     = new TIntermBinary(EOpIndexDirect, arraySymbol,
+                                                           TIntermTyped::CreateIndexNode(i));
 
                 TIntermTyped *zero        = TIntermTyped::CreateZero(elementType);
                 TIntermBinary *assignment = new TIntermBinary(EOpAssign, element, zero);

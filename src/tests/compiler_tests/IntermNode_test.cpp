@@ -147,10 +147,8 @@ TEST_F(IntermNodeTest, DeepCopyBinaryNode)
 {
     TType type(EbtFloat, EbpHigh);
 
-    TIntermBinary *original = new TIntermBinary(EOpAdd);
+    TIntermBinary *original = new TIntermBinary(EOpAdd, createTestSymbol(), createTestSymbol());
     original->setLine(getTestSourceLoc());
-    original->setLeft(createTestSymbol());
-    original->setRight(createTestSymbol());
     TIntermTyped *copyTyped = original->deepCopy();
     TIntermBinary *copy = copyTyped->getAsBinaryNode();
     ASSERT_NE(nullptr, copy);

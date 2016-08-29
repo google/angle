@@ -47,17 +47,13 @@ class GLFragColorBroadcastTraverser : public TIntermTraverser
 
 TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataNode(int index) const
 {
-    TType gl_FragDataElementType = TType(EbtFloat, 4);
-    TType gl_FragDataType        = gl_FragDataElementType;
+    TType gl_FragDataType = TType(EbtFloat, EbpMedium, EvqFragData, 4);
     gl_FragDataType.setArraySize(mMaxDrawBuffers);
 
     TIntermSymbol *symbol   = new TIntermSymbol(0, "gl_FragData", gl_FragDataType);
     TIntermTyped *indexNode = TIntermTyped::CreateIndexNode(index);
 
-    TIntermBinary *binary = new TIntermBinary(EOpIndexDirect);
-    binary->setLeft(symbol);
-    binary->setRight(indexNode);
-    binary->setType(gl_FragDataElementType);
+    TIntermBinary *binary = new TIntermBinary(EOpIndexDirect, symbol, indexNode);
     return binary;
 }
 

@@ -359,6 +359,7 @@ class TIntermConstantUnion : public TIntermTyped
     TConstantUnion *foldBinary(TOperator op,
                                TIntermConstantUnion *rightNode,
                                TDiagnostics *diagnostics);
+    const TConstantUnion *foldIndexing(int index);
     TConstantUnion *foldUnaryNonComponentWise(TOperator op);
     TConstantUnion *foldUnaryComponentWise(TOperator op, TDiagnostics *diagnostics);
 
@@ -413,12 +414,7 @@ class TIntermOperator : public TIntermTyped
 class TIntermBinary : public TIntermOperator
 {
   public:
-    TIntermBinary(TOperator op)
-        : TIntermOperator(op),
-          mAddIndexClamp(false) {}
-
     // This constructor determines the type of the binary node based on the operands and op.
-    // This is only supported for math/logical ops, not indexing.
     TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right);
 
     TIntermTyped *deepCopy() const override { return new TIntermBinary(*this); }
@@ -435,8 +431,6 @@ class TIntermBinary : public TIntermOperator
         return isAssignment() || mLeft->hasSideEffects() || mRight->hasSideEffects();
     }
 
-    void setLeft(TIntermTyped *node) { mLeft = node; }
-    void setRight(TIntermTyped *node) { mRight = node; }
     TIntermTyped *getLeft() const { return mLeft; }
     TIntermTyped *getRight() const { return mRight; }
     TIntermTyped *fold(TDiagnostics *diagnostics);

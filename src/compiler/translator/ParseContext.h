@@ -284,8 +284,6 @@ class TParseContext : angle::NonCopyable
                                  TFunction *fnCall,
                                  const TSourceLoc &line);
 
-    TIntermTyped *addConstStruct(
-        const TString &identifier, TIntermTyped *node, const TSourceLoc& line);
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
                                      const TSourceLoc& location,
                                      TIntermTyped *indexExpression);
@@ -377,18 +375,6 @@ class TParseContext : angle::NonCopyable
                              int arraySize,
                              const char *reason,
                              const char *token);
-
-    // Constant folding for element access. Note that the returned node does not have the correct
-    // type - it is expected to be fixed later.
-    TIntermConstantUnion *foldVectorSwizzle(TVectorFields &fields,
-                                            TIntermConstantUnion *baseNode,
-                                            const TSourceLoc &location);
-    TIntermConstantUnion *foldMatrixSubscript(int index,
-                                              TIntermConstantUnion *baseNode,
-                                              const TSourceLoc &location);
-    TIntermConstantUnion *foldArraySubscript(int index,
-                                             TIntermConstantUnion *baseNode,
-                                             const TSourceLoc &location);
 
     bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
 

@@ -93,7 +93,7 @@ float VectorDotProduct(const TConstantUnion *paramArray1,
     return result;
 }
 
-TIntermTyped *CreateFoldedNode(TConstantUnion *constArray,
+TIntermTyped *CreateFoldedNode(const TConstantUnion *constArray,
                                const TIntermTyped *originalNode,
                                TQualifier qualifier)
 {
@@ -680,19 +680,12 @@ TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *rig
 //
 void TIntermBinary::promote()
 {
-    ASSERT(mLeft->isArray() == mRight->isArray());
-
     ASSERT(!isMultiplication() ||
            mOp == GetMulOpBasedOnOperands(mLeft->getType(), mRight->getType()));
 
     // Base assumption:  just make the type the same as the left
     // operand.  Then only deviations from this need be coded.
     setType(mLeft->getType());
-
-    // The result gets promoted to the highest precision.
-    TPrecision higherPrecision = GetHigherPrecision(
-        mLeft->getPrecision(), mRight->getPrecision());
-    getTypePointer()->setPrecision(higherPrecision);
 
     TQualifier resultQualifier = EvqConst;
     // Binary operations results in temporary variables unless both
@@ -702,6 +695,62 @@ void TIntermBinary::promote()
         resultQualifier = EvqTemporary;
         getTypePointer()->setQualifier(EvqTemporary);
     }
+
+    // Handle indexing ops.
+    switch (mOp)
+    {
+        case EOpIndexDirect:
+        case EOpIndexIndirect:
+            if (mLeft->isArray())
+            {
+                mType.clearArrayness();
+            }
+            else if (mLeft->isMatrix())
+            {
+                setType(TType(mLeft->getBasicType(), mLeft->getPrecision(), resultQualifier,
+                              static_cast<unsigned char>(mLeft->getRows())));
+            }
+            else if (mLeft->isVector())
+            {
+                setType(TType(mLeft->getBasicType(), mLeft->getPrecision(), resultQualifier));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+            return;
+        case EOpIndexDirectStruct:
+        {
+            const TFieldList &fields = mLeft->getType().getStruct()->fields();
+            const int i              = mRight->getAsConstantUnion()->getIConst(0);
+            setType(*fields[i]->type());
+            getTypePointer()->setQualifier(resultQualifier);
+            return;
+        }
+        case EOpIndexDirectInterfaceBlock:
+        {
+            const TFieldList &fields = mLeft->getType().getInterfaceBlock()->fields();
+            const int i              = mRight->getAsConstantUnion()->getIConst(0);
+            setType(*fields[i]->type());
+            getTypePointer()->setQualifier(resultQualifier);
+            return;
+        }
+        case EOpVectorSwizzle:
+        {
+            auto numFields = mRight->getAsAggregate()->getSequence()->size();
+            setType(TType(mLeft->getBasicType(), mLeft->getPrecision(), resultQualifier,
+                          static_cast<unsigned char>(numFields)));
+            return;
+        }
+        default:
+            break;
+    }
+
+    ASSERT(mLeft->isArray() == mRight->isArray());
+
+    // The result gets promoted to the highest precision.
+    TPrecision higherPrecision = GetHigherPrecision(mLeft->getPrecision(), mRight->getPrecision());
+    getTypePointer()->setPrecision(higherPrecision);
 
     const int nominalSize =
         std::max(mLeft->getNominalSize(), mRight->getNominalSize());
@@ -722,8 +771,8 @@ void TIntermBinary::promote()
           case EOpGreaterThan:
           case EOpLessThanEqual:
           case EOpGreaterThanEqual:
-            setType(TType(EbtBool, EbpUndefined, resultQualifier));
-            break;
+              setType(TType(EbtBool, EbpUndefined, resultQualifier));
+              break;
 
           //
           // And and Or operate on conditionals
@@ -828,8 +877,8 @@ void TIntermBinary::promote()
         case EOpIndexIndirect:
         case EOpIndexDirectInterfaceBlock:
         case EOpIndexDirectStruct:
-            // TODO (oetuaho): These ops could be handled here as well (should be done closer to the
-            // top of the function).
+        case EOpVectorSwizzle:
+            // These ops should be already fully handled.
             UNREACHABLE();
             break;
         default:
@@ -838,18 +887,103 @@ void TIntermBinary::promote()
     }
 }
 
-TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
+const TConstantUnion *TIntermConstantUnion::foldIndexing(int index)
 {
-    TIntermConstantUnion *leftConstant = mLeft->getAsConstantUnion();
-    TIntermConstantUnion *rightConstant = mRight->getAsConstantUnion();
-    if (leftConstant == nullptr || rightConstant == nullptr)
+    if (isArray())
     {
+        ASSERT(index < static_cast<int>(getType().getArraySize()));
+        TType arrayElementType = getType();
+        arrayElementType.clearArrayness();
+        size_t arrayElementSize = arrayElementType.getObjectSize();
+        return &mUnionArrayPointer[arrayElementSize * index];
+    }
+    else if (isMatrix())
+    {
+        ASSERT(index < getType().getCols());
+        int size = getType().getRows();
+        return &mUnionArrayPointer[size * index];
+    }
+    else if (isVector())
+    {
+        ASSERT(index < getType().getNominalSize());
+        return &mUnionArrayPointer[index];
+    }
+    else
+    {
+        UNREACHABLE();
         return nullptr;
     }
-    TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, diagnostics);
+}
 
-    // Nodes may be constant folded without being qualified as constant.
-    return CreateFoldedNode(constArray, this, mType.getQualifier());
+TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
+{
+    TIntermConstantUnion *leftConstant  = mLeft->getAsConstantUnion();
+    TIntermConstantUnion *rightConstant = mRight->getAsConstantUnion();
+    switch (mOp)
+    {
+        case EOpIndexDirect:
+        {
+            if (leftConstant == nullptr || rightConstant == nullptr)
+            {
+                return nullptr;
+            }
+            int index = rightConstant->getIConst(0);
+
+            const TConstantUnion *constArray = leftConstant->foldIndexing(index);
+            return CreateFoldedNode(constArray, this, mType.getQualifier());
+        }
+        case EOpIndexDirectStruct:
+        {
+            if (leftConstant == nullptr || rightConstant == nullptr)
+            {
+                return nullptr;
+            }
+            const TFieldList &fields = mLeft->getType().getStruct()->fields();
+            size_t index             = static_cast<size_t>(rightConstant->getIConst(0));
+
+            size_t previousFieldsSize = 0;
+            for (size_t i = 0; i < index; ++i)
+            {
+                previousFieldsSize += fields[i]->type()->getObjectSize();
+            }
+
+            const TConstantUnion *constArray = leftConstant->getUnionArrayPointer();
+            return CreateFoldedNode(constArray + previousFieldsSize, this, mType.getQualifier());
+        }
+        case EOpIndexIndirect:
+        case EOpIndexDirectInterfaceBlock:
+            // Can never be constant folded.
+            return nullptr;
+        case EOpVectorSwizzle:
+        {
+            if (leftConstant == nullptr)
+            {
+                return nullptr;
+            }
+            TIntermAggregate *fieldsAgg     = mRight->getAsAggregate();
+            TIntermSequence *fieldsSequence = fieldsAgg->getSequence();
+            size_t numFields                = fieldsSequence->size();
+
+            TConstantUnion *constArray = new TConstantUnion[numFields];
+            for (size_t i = 0; i < numFields; i++)
+            {
+                int fieldOffset = fieldsSequence->at(i)->getAsConstantUnion()->getIConst(0);
+                constArray[i]   = *leftConstant->foldIndexing(fieldOffset);
+            }
+            return CreateFoldedNode(constArray, this, mType.getQualifier());
+        }
+        default:
+        {
+            if (leftConstant == nullptr || rightConstant == nullptr)
+            {
+                return nullptr;
+            }
+            TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, diagnostics);
+
+            // Nodes may be constant folded without being qualified as constant.
+            return CreateFoldedNode(constArray, this, mType.getQualifier());
+        }
+    }
 }
 
 TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)

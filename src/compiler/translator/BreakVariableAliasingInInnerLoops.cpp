@@ -68,7 +68,7 @@ class AliasingBreaker : public TIntermTraverser
         TIntermBinary *bPlusZero = new TIntermBinary(EOpAdd, B, TIntermTyped::CreateZero(type));
         bPlusZero->setLine(B->getLine());
 
-        binary->setRight(bPlusZero);
+        binary->replaceChildNode(B, bPlusZero);
 
         return true;
     }

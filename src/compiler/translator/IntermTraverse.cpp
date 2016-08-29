@@ -147,10 +147,7 @@ TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *init
     ASSERT(initializer != nullptr);
     TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType(), qualifier);
     TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
-    TIntermBinary *tempInit = new TIntermBinary(EOpInitialize);
-    tempInit->setLeft(tempSymbol);
-    tempInit->setRight(initializer);
-    tempInit->setType(tempSymbol->getType());
+    TIntermBinary *tempInit           = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
     tempDeclaration->getSequence()->push_back(tempInit);
     return tempDeclaration;
 }
@@ -164,10 +161,7 @@ TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)
 {
     ASSERT(rightNode != nullptr);
     TIntermSymbol *tempSymbol = createTempSymbol(rightNode->getType());
-    TIntermBinary *assignment = new TIntermBinary(EOpAssign);
-    assignment->setLeft(tempSymbol);
-    assignment->setRight(rightNode);
-    assignment->setType(tempSymbol->getType());
+    TIntermBinary *assignment = new TIntermBinary(EOpAssign, tempSymbol, rightNode);
     return assignment;
 }
 
