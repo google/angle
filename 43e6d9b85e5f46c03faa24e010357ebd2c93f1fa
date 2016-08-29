@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e5d7023a_f0a0be8e",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:03:01Z",
+      "side": 1,
+      "message": "Thank you, this is much clearer than I could have done :)",
+      "parentUuid": "c5f91ed7_243a922d",
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85c2c66f_3de73ba9",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "e5d7023a_10934a4e",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:03:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85c2c66f_3de73ba9",
+      "range": {
+        "startLine": 365,
+        "startChar": 33,
+        "endLine": 365,
+        "endChar": 43
+      },
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f91ed7_442d8ef5",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 5
@@ -53,6 +95,24 @@
       "writtenOn": "2016-08-29T08:34:25Z",
       "side": 1,
       "message": "I don\u0027t see this function being used - even if it would be needed, I\u0027d rather follow the current typical pattern \"getBasicType() \u003d\u003d EbtStruct\".",
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5d7023a_3096463e",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:03:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5f91ed7_442d8ef5",
       "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
