@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5f91ed7_6419aad5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1745,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-29T11:09:03Z",
+      "side": 1,
+      "message": "Changed this check a bit so that addInvariantVarying never gets called if the invariant has not been declared at global scope. The addInvariantVarying method contains an assert which would fail if we do not return early.",
+      "range": {
+        "startLine": 1742,
+        "startChar": 8,
+        "endLine": 1745,
+        "endChar": 9
+      },
+      "revId": "d78a8c827a89987c7d7003171467f82476dfa504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
