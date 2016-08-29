@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "e5d7023a_10c58a39",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:48:02Z",
+      "side": 1,
+      "message": "Hadn\u0027t thought about it. I think it is reasonable to think the HLSL compiler will do aliasing analysis on the loop condition/expression.",
+      "parentUuid": "c5f91ed7_e4aa3a1c",
+      "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f91ed7_047d56ba",
         "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
         "patchSetId": 8
@@ -53,6 +71,24 @@
       "writtenOn": "2016-08-29T14:23:21Z",
       "side": 1,
       "message": "You could now use the new, improved TIntermBinary constructor that takes the left and right children. That way the new node\u0027s type gets set correctly. I\u0027d set the line of B to bPlusZero as well.",
+      "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5d7023a_f0f2fe9a",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:48:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5f91ed7_047d56ba",
       "revId": "e4690002de2283fce0b62b95c3361d084463b6d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
