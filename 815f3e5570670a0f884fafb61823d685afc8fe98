@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e5d7023a_70be0ea4",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:22:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5d7023a_50b2f2df",
+      "range": {
+        "startLine": 28,
+        "startChar": 6,
+        "endLine": 28,
+        "endChar": 21
+      },
+      "revId": "815f3e5570670a0f884fafb61823d685afc8fe98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5d7023a_30af6678",
         "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.h",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-29T14:13:18Z",
       "side": 1,
       "message": "nit: the new traversers we\u0027ve been putting in the sh namespace",
+      "range": {
+        "startLine": 15,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 38
+      },
+      "revId": "815f3e5570670a0f884fafb61823d685afc8fe98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5d7023a_50bb12b2",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-29T14:22:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5d7023a_30af6678",
       "range": {
         "startLine": 15,
         "startChar": 5,
