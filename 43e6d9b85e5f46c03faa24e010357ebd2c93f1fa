@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c5f91ed7_243a922d",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T08:34:25Z",
+      "side": 1,
+      "message": "A bit more detailed description that introduces \"aliasing information\" first would be easier to understand. Like \"To optimize simple assignment, HLSL front-end compiler may record a variable as aliasing another variable instead of treating it as separate. In some cases this aliasing information gets garbled. Work around this issue by breaking the aliasing chain in inner loops.\"",
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85c2c66f_3de73ba9",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 5
@@ -19,6 +36,23 @@
         "endLine": 365,
         "endChar": 43
       },
+      "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5f91ed7_442d8ef5",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T08:34:25Z",
+      "side": 1,
+      "message": "I don\u0027t see this function being used - even if it would be needed, I\u0027d rather follow the current typical pattern \"getBasicType() \u003d\u003d EbtStruct\".",
       "revId": "43e6d9b85e5f46c03faa24e010357ebd2c93f1fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
