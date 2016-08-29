@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "c5f91ed7_644beab9",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-29T12:15:44Z",
+      "side": 1,
+      "message": "I see that you added the comment elsewhere, but the most logical place for the comment is here. It is an odd quirk of the spec that \"centroid\" is a storage qualifier even though it is used to control interpolation.",
+      "parentUuid": "652dd2d5_09736917",
+      "revId": "b95eeeb5768fe7ed00c380cd0975576d7b3f966b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0554160d_26ffb652",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 9
