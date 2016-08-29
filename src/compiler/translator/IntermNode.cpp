@@ -722,7 +722,7 @@ void TIntermBinary::promote()
           case EOpGreaterThan:
           case EOpLessThanEqual:
           case EOpGreaterThanEqual:
-            setType(TType(EbtBool, EbpUndefined));
+            setType(TType(EbtBool, EbpUndefined, resultQualifier));
             break;
 
           //
@@ -732,7 +732,7 @@ void TIntermBinary::promote()
           case EOpLogicalXor:
           case EOpLogicalOr:
             ASSERT(mLeft->getBasicType() == EbtBool && mRight->getBasicType() == EbtBool);
-            setType(TType(EbtBool, EbpUndefined));
+            setType(TType(EbtBool, EbpUndefined, resultQualifier));
             break;
 
           default:
@@ -849,12 +849,7 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
     TConstantUnion *constArray = leftConstant->foldBinary(mOp, rightConstant, diagnostics);
 
     // Nodes may be constant folded without being qualified as constant.
-    TQualifier resultQualifier = EvqConst;
-    if (mLeft->getQualifier() != EvqConst || mRight->getQualifier() != EvqConst)
-    {
-        resultQualifier = EvqTemporary;
-    }
-    return CreateFoldedNode(constArray, this, resultQualifier);
+    return CreateFoldedNode(constArray, this, mType.getQualifier());
 }
 
 TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
@@ -888,8 +883,7 @@ TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
     }
 
     // Nodes may be constant folded without being qualified as constant.
-    TQualifier resultQualifier = mOperand->getQualifier() == EvqConst ? EvqConst : EvqTemporary;
-    return CreateFoldedNode(constArray, this, resultQualifier);
+    return CreateFoldedNode(constArray, this, mType.getQualifier());
 }
 
 TIntermTyped *TIntermAggregate::fold(TDiagnostics *diagnostics)
