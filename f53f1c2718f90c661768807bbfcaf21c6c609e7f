@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71175938_f926f725",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T08:02:29Z",
+      "side": 1,
+      "message": "I actually wonder whether not having them initialized would cause a problem when building on windows.",
+      "range": {
+        "startLine": 941,
+        "startChar": 4,
+        "endLine": 942,
+        "endChar": 25
+      },
+      "revId": "f53f1c2718f90c661768807bbfcaf21c6c609e7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
