@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4551aef3_50caccbb",
+        "filename": "src/compiler/translator/RewriteAbsInt.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:36:08Z",
+      "side": 1,
+      "message": "please run git cl format",
+      "revId": "17565c81daca79c72c037afc0632e45160ae203f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4551aef3_70c7d0b2",
+        "filename": "src/compiler/translator/RewriteAbsInt.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:36:08Z",
+      "side": 1,
+      "message": "This will have problems when the expression i contains side effects. You could instead introduce a function int angle_abs_workaround(int i) {return i * sign(i);} and replace abs(i) with a call to it.",
+      "revId": "17565c81daca79c72c037afc0632e45160ae203f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4551aef3_30bd4815",
+        "filename": "src/compiler/translator/RewriteAbsInt.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:36:08Z",
+      "side": 1,
+      "message": "We are now putting these in \n\nnamespace sh\n{\n}  // namespace sh",
+      "revId": "17565c81daca79c72c037afc0632e45160ae203f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
