@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71175938_39cfcf53",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1725,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:43:03Z",
+      "side": 1,
+      "message": "One more bug here - this still accepts declarations like \"invariant highp foo;\" and \"invariant layout(location\u003d0) foo;\". Here\u0027s a couple of tests you could throw into MalformedShader_test.cpp:\n\n// Invariant declaration should follow the following format \"invariant \u003cout variable name\u003e\".\n// Test having an incorrect precision qualifier in the invariant declaration.\nTEST_F(MalformedShaderTest, InvariantDeclarationWithPrecisionQualifier)\n{\n    const std::string \u0026shaderString \u003d\n        \"#version 300 es\\n\"\n        \"precision mediump float;\\n\"\n        \"out vec4 foo;\\n\"\n        \"invariant highp foo;\\n\"\n        \"void main() {\\n\"\n        \"}\\n\";\n    if (compile(shaderString))\n    {\n        FAIL() \u003c\u003c \"Shader compilation succeeded, expecting failure \" \u003c\u003c mInfoLog;\n    }\n}\n\n// Invariant declaration should follow the following format \"invariant \u003cout variable name\u003e\".\n// Test having an incorrect layout qualifier in the invariant declaration.\nTEST_F(MalformedShaderTest, InvariantDeclarationWithLayoutQualifier)\n{\n    const std::string \u0026shaderString \u003d\n        \"#version 300 es\\n\"\n        \"precision mediump float;\\n\"\n        \"out vec4 foo;\\n\"\n        \"invariant layout(location\u003d0) foo;\\n\"\n        \"void main() {\\n\"\n        \"}\\n\";\n    if (compile(shaderString))\n    {\n        FAIL() \u003c\u003c \"Shader compilation succeeded, expecting failure \" \u003c\u003c mInfoLog;\n    }\n}",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_b9abdf74",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:43:03Z",
+      "side": 1,
+      "message": "Could just set the qualifier to EvqTemporary by default. In addition to that maybe assert that the first qualifier in the list is EvqTemporary if you think that is necessary.",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_59a3a3a1",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:43:03Z",
+      "side": 1,
+      "message": "Use descriptive variable names. isQualifierValid would be better.",
+      "range": {
+        "startLine": 471,
+        "startChar": 13,
+        "endLine": 471,
+        "endChar": 23
+      },
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_d9ae9386",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:43:03Z",
+      "side": 1,
+      "message": "Would rather name this joinParameterStorageQualifier",
+      "range": {
+        "startLine": 479,
+        "startChar": 29,
+        "endLine": 479,
+        "endChar": 57
+      },
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_3998ef69",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:43:03Z",
+      "side": 1,
+      "message": "Same variable name here, actually.",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
