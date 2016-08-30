@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4551aef3_50a3acf3",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:51:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_f9b837c6",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_99bffbaa",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 12
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4551aef3_d0079ced",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:51:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_99bffbaa",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_d9b573cc",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 12
@@ -47,6 +83,24 @@
       "writtenOn": "2016-08-30T06:58:51Z",
       "side": 1,
       "message": "This one could use the constructor taking left and right, so the type of the node would be set correctly.",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4551aef3_70a0b0e6",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T13:51:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_d9b573cc",
       "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
