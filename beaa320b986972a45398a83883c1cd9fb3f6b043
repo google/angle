@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "71175938_391d8fd3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1725,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T07:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_39cfcf53",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_b9abdf74",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 13
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "71175938_b9d99f14",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T07:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_b9abdf74",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_59a3a3a1",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 13
@@ -47,6 +83,30 @@
       "writtenOn": "2016-08-30T06:43:03Z",
       "side": 1,
       "message": "Use descriptive variable names. isQualifierValid would be better.",
+      "range": {
+        "startLine": 471,
+        "startChar": 13,
+        "endLine": 471,
+        "endChar": 23
+      },
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_791307c9",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T07:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_59a3a3a1",
       "range": {
         "startLine": 471,
         "startChar": 13,
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "71175938_591843e3",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T07:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_d9ae9386",
+      "range": {
+        "startLine": 479,
+        "startChar": 29,
+        "endLine": 479,
+        "endChar": 57
+      },
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_3998ef69",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 13
@@ -93,6 +177,24 @@
       "writtenOn": "2016-08-30T06:43:03Z",
       "side": 1,
       "message": "Same variable name here, actually.",
+      "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_99d6dbe0",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T07:58:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_3998ef69",
       "revId": "beaa320b986972a45398a83883c1cd9fb3f6b043",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
