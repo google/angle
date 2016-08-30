@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71175938_f9b837c6",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:58:51Z",
+      "side": 1,
+      "message": "Constructor is still being used incorrectly here.",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_99bffbaa",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:58:51Z",
+      "side": 1,
+      "message": "Previously the output of this class used to be compatible with ESSL 1.00. Now it\u0027s not, since it may assign an array. Should probably roll back some of the changes to fix this.",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_d9b573cc",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T06:58:51Z",
+      "side": 1,
+      "message": "This one could use the constructor taking left and right, so the type of the node would be set correctly.",
+      "revId": "c9eeb16b9bbb5eb7c5c6e93da9aff4e91236b232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
