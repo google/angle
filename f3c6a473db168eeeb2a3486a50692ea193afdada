@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "71175938_d945733e",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T15:34:24Z",
+      "side": 1,
+      "message": "I will actually remove the test. It will always fail as the grammar itself prevents this from happening.",
+      "parentUuid": "71175938_d917b34e",
+      "range": {
+        "startLine": 173,
+        "startChar": 9,
+        "endLine": 173,
+        "endChar": 23
+      },
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "112b7d7f_ee1a9f78",
         "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
         "patchSetId": 18
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-30T14:49:22Z",
       "side": 1,
       "message": "\"conflicting\" would be better here. \"centroid in\" is allowed after all.",
+      "range": {
+        "startLine": 184,
+        "startChar": 30,
+        "endLine": 184,
+        "endChar": 39
+      },
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_b952bf04",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T15:34:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "112b7d7f_ee1a9f78",
       "range": {
         "startLine": 184,
         "startChar": 30,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "71175938_994ffb5c",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T15:34:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_f91a7778",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_99213bad",
         "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
         "patchSetId": 18
@@ -76,6 +142,24 @@
       "writtenOn": "2016-08-30T14:49:22Z",
       "side": 1,
       "message": "Weird line break.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71175938_59816363",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T15:34:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71175938_99213bad",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
