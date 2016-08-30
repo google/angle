@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "25883aa4_d78157ae",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-30T16:45:02Z",
+      "side": 1,
+      "message": "We need another mechanism for these shader function rewrite.  I expect we will end up working around a lot of built in functions, considering the passing rate of builtin function tests if we turn them on.\n\nWe do have SH_EMULATE_BUILT_IN_FUNCTIONS above to be considered, although how to selectively targeting a platform (as vs applying almost all of them) is something to be worked out.",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "17565c81daca79c72c037afc0632e45160ae203f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4551aef3_50caccbb",
         "filename": "src/compiler/translator/RewriteAbsInt.cpp",
         "patchSetId": 2
