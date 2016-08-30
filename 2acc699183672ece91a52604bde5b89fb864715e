@@ -16,6 +16,24 @@
       "revId": "2acc699183672ece91a52604bde5b89fb864715e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_6117ed5a",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T14:31:37Z",
+      "side": 1,
+      "message": "Yeah I was lazy and didn\u0027t want to support this, Done.",
+      "parentUuid": "71175938_592e03b4",
+      "revId": "2acc699183672ece91a52604bde5b89fb864715e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
