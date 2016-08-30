@@ -2,6 +2,159 @@
   "comments": [
     {
       "key": {
+        "uuid": "25883aa4_016381b0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "The name has become misleading: checkInvariantVariableValid?",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_21688588",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1096,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "nit: error should reflect comment above.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_c13a797a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1710,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "nit: do the else branch first and early out of the function.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4551aef3_50b48ce0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "nit: use a pointer instead for typeSpecifier.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_e1877d76",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "nit: clang format split this comment.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_61d8cd79",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "Only JoinConst is reused between the join* member functions, and most of them only check for EvqGlobal. I think the logic would be easier to see of the Join* functions were inlined (and the necessary simplifications done).",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_5c19ecd4",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "I think the logic here could be simplified a lot by having two separate classes, on TQualifierSequenceBuilder used during the lexing that outputs a TQualifierSequence struct that has one member per qualifier type (that already went through the \"join\" logic).\n\nAdditional notes about such a change:\n - TQualifierSequence doesn\u0027t need to care about Diagnostics which simplifies a ParseContext a bit.\n - TQualifierSequence could change a TPublicType directly instead of having to output one and copy the arguments over.\n - GetParameterQualifiers become a direct member access.\n - On the builder side, one qualifier per type could be stored, removing the need for a vector. Duplicate detection and order detection can be done in streaming.\n - This way the builder can have a bunch of appendFooQualifier taking the qualifier by value.\n - The builder can cache errors and return them only when builder-\u003eget(*diagnostics, *qualifierSequence) is called.\n\nApologies for the additional work involved or if this is a plain stupid idea because I\u0027m missing something.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_61a7edb8",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 18
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "I don\u0027t know flex too much, but would there be a way to access the TQualifierSequence directly so that these can become appendStorageQualifier and likewise below?",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25883aa4_01c70170",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2439,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-30T15:50:38Z",
+      "side": 1,
+      "message": "The comment doesn\u0027t seem to reflect the test.\n// Invariant cannot be used with block size declaration.\nAnd add another test for regular in variables?",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71175938_d917b34e",
         "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
         "patchSetId": 18
