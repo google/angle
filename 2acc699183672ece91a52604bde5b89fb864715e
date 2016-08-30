@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71175938_592e03b4",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-30T14:24:29Z",
+      "side": 1,
+      "message": "Could also add a note to the header that this class can\u0027t be used to initialize structures containing arrays when translating to ESSL 1.00. That shouldn\u0027t make a difference in the current uses of this class but is something to be aware of.",
+      "revId": "2acc699183672ece91a52604bde5b89fb864715e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
