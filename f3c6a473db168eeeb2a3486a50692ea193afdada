@@ -121,6 +121,24 @@
     },
     {
       "key": {
+        "uuid": "11261dad_363eb87c",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-30T20:26:48Z",
+      "side": 1,
+      "message": "I decided to save all of the qualifiers and process them afterwards on purpose.\nSome combinations of storage qualifiers are a bit strange, but I decided to stick with the way it was already done.\nFor example, joining EvqFlat and EvqCentroid results in EvqFlat again. So, if I have \"flat centroid centroid\", \"flat centroid\" would become \"flat\" again. I have to keep track somehow which qualifiers have been already parsed.\nSo, doing the validation while streaming the qualifiers might be a bit more cumbersome.\n\nI think that the current approach might be better as it is easy to add more qualifiers in the future.",
+      "parentUuid": "25883aa4_5c19ecd4",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_61a7edb8",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 18
