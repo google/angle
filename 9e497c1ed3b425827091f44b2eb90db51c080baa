@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5137b50c_dd547c56",
+        "filename": "src/compiler/translator/EmulateGLFragColorBroadcast.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T16:49:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_7098106b",
+      "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_10a384a2",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 14
@@ -30,6 +48,24 @@
       "writtenOn": "2016-08-31T06:46:35Z",
       "side": 1,
       "message": "I think there\u0027s a bug here that was revealed by the tests - the symbol points to the array, so it should have the array type. On the other hand, the type of \"element\" should be set to the element type.",
+      "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_dd3bdc27",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T16:49:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_10a384a2",
       "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5137b50c_5db4ec8b",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T16:49:11Z",
+      "side": 1,
+      "message": "If that\u0027s ok, I\u0027m not going to address this, since the type was already absent before the CL and you have a CL making promote work with EOpIndexDirect.",
+      "parentUuid": "5105f548_509d0c59",
+      "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_b0b1d8e9",
         "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
         "patchSetId": 14
@@ -64,6 +118,24 @@
       "writtenOn": "2016-08-31T06:46:35Z",
       "side": 1,
       "message": "And here.",
+      "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_3db92884",
+        "filename": "src/compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T16:49:11Z",
+      "side": 1,
+      "message": "Same here.",
+      "parentUuid": "5105f548_b0b1d8e9",
       "revId": "9e497c1ed3b425827091f44b2eb90db51c080baa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
