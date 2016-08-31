@@ -42,7 +42,6 @@
             '<(angle_path)/src/libANGLE/validationES_unittest.cpp',
             '<(angle_path)/src/tests/angle_unittests_utils.h',
             '<(angle_path)/src/tests/compiler_tests/API_test.cpp',
-            '<(angle_path)/src/tests/compiler_tests/BuiltInFunctionEmulator_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/CollectVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ConstantFolding_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/DebugShaderPrecision_test.cpp',

@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 157
+#define ANGLE_SH_VERSION 158
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -110,8 +110,9 @@ typedef enum {
     // This is to work around a mac driver bug.
     SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = 0x0080,
 
-    // This is needed only as a workaround for certain OpenGL driver bugs.
-    SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100,
+    // This flag works around bug in Intel Mac drivers related to abs(i) where
+    // i is an integer.
+    SH_EMULATE_ABS_INT_FUNCTION = 0x0100,
 
     // This is an experimental flag to enforce restrictions that aim to prevent
     // timing attacks.
@@ -210,10 +211,6 @@ typedef enum {
     // This flag works around an issue in translating GLSL function texelFetchOffset on
     // INTEL drivers. It works by translating texelFetchOffset into texelFetch.
     SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = 0x4000000,
-
-    // This flag works around bug in Intel Mac drivers related to abs(i) where
-    // i is an integer.
-    SH_EMULATE_ABS_INT_FUNCTION = 0x8000000,
 } ShCompileOptions;
 
 // Defines alternate strategies for implementing array index clamping.

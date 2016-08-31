@@ -26,10 +26,6 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, i
     {
         InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
     }
-    if (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS)
-    {
-        InitBuiltInFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
-    }
 
     int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
     InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
