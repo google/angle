@@ -91,7 +91,6 @@
             'compiler/translator/RewriteDoWhile.h',
             'compiler/translator/RewriteTexelFetchOffset.cpp',
             'compiler/translator/RewriteTexelFetchOffset.h',
-            'compiler/translator/RenameFunction.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
             'compiler/translator/SearchSymbol.cpp',

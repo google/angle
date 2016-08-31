@@ -134,9 +134,6 @@ int main(int argc, char *argv[])
                                 spec = SH_WEBGL_SPEC;
                             }
                             break;
-                        case 'c':
-                            spec = SH_CSS_SHADERS_SPEC;
-                            break;
                         default:
                             failCode = EFailUsage;
                     }
@@ -331,7 +328,6 @@ void usage()
         "       -s=e31   : use GLES31 spec (in development)\n"
         "       -s=w     : use WebGL spec\n"
         "       -s=w2    : use WebGL 2 spec (in development)\n"
-        "       -s=c     : use CSS Shaders spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code (compatibility profile)\n"
         "       -b=g[NUM]: output GLSL code (NUM can be 130, 140, 150, 330, 400, 410, 420, 430, "

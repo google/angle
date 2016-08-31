@@ -31,8 +31,7 @@ class TranslatorHLSL;
 #endif // ANGLE_ENABLE_HLSL
 
 //
-// Helper function to identify specs that are based on the WebGL spec,
-// like the CSS Shaders spec.
+// Helper function to identify specs that are based on the WebGL spec.
 //
 bool IsWebGLBasedSpec(ShShaderSpec spec);
 
@@ -119,8 +118,6 @@ class TCompiler : public TShHandleBase
     bool checkCallDepth();
     // Returns true if a program has no conflicting or missing fragment outputs
     bool validateOutputs(TIntermNode* root);
-    // Rewrites a shader's intermediate tree according to the CSS Shaders spec.
-    void rewriteCSSShader(TIntermNode* root);
     // Returns true if the given shader does not exceed the minimum
     // functionality mandated in GLSL 1.0 spec Appendix A.
     bool validateLimitations(TIntermNode* root);

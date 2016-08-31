@@ -17,7 +17,6 @@
 #include "compiler/translator/PruneEmptyDeclarations.h"
 #include "compiler/translator/RegenerateStructNames.h"
 #include "compiler/translator/RemovePow.h"
-#include "compiler/translator/RenameFunction.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
@@ -35,8 +34,7 @@
 
 bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
-    return (spec == SH_WEBGL_SPEC || spec == SH_CSS_SHADERS_SPEC || spec == SH_WEBGL2_SPEC ||
-            spec == SH_WEBGL3_SPEC);
+    return (spec == SH_WEBGL_SPEC || spec == SH_WEBGL2_SPEC || spec == SH_WEBGL3_SPEC);
 }
 
 bool IsGLSL130OrNewer(ShShaderOutput output)
@@ -60,7 +58,6 @@ size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
     switch (spec)
     {
       case SH_WEBGL_SPEC:
-      case SH_CSS_SHADERS_SPEC:
         return 256;
       default:
         return 1024;
@@ -111,7 +108,6 @@ int MapSpecToShaderVersion(ShShaderSpec spec)
     {
       case SH_GLES2_SPEC:
       case SH_WEBGL_SPEC:
-      case SH_CSS_SHADERS_SPEC:
         return 100;
       case SH_GLES3_SPEC:
       case SH_WEBGL2_SPEC:
@@ -297,9 +293,6 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && (compileOptions & SH_TIMING_RESTRICTIONS))
             success = enforceTimingRestrictions(root, (compileOptions & SH_DEPENDENCY_GRAPH) != 0);
-
-        if (success && shaderSpec == SH_CSS_SHADERS_SPEC)
-            rewriteCSSShader(root);
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
@@ -761,12 +754,6 @@ bool TCompiler::validateOutputs(TIntermNode* root)
     ValidateOutputs validateOutputs(getExtensionBehavior(), compileResources.MaxDrawBuffers);
     root->traverse(&validateOutputs);
     return (validateOutputs.validateAndCountErrors(infoSink.info) == 0);
-}
-
-void TCompiler::rewriteCSSShader(TIntermNode* root)
-{
-    RenameFunction renamer("main(", "css_main(");
-    root->traverse(&renamer);
 }
 
 bool TCompiler::validateLimitations(TIntermNode* root)

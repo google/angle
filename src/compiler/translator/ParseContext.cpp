@@ -447,11 +447,6 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
                 error(line, reservedErrMsg, "_webgl_");
                 return false;
             }
-            if (mShaderSpec == SH_CSS_SHADERS_SPEC && identifier.compare(0, 4, "css_") == 0)
-            {
-                error(line, reservedErrMsg, "css_");
-                return false;
-            }
         }
         if (identifier.find("__") != TString::npos)
         {
