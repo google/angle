@@ -94,6 +94,30 @@
       "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_bdc8989e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-31T17:02:51Z",
+      "side": 1,
+      "message": "Ah that\u0027s really good news.  Then can you just remove SH_EMULATE_BUILT_IN_FUNCTION and all related emulation code.  From now on, we will do per flag per function overwrite as jmadill suggested.\n\nI am removing chromium side SH_EMULATE_BUILT_IN_FUNCTION reference right now, so your CL will be able to land without breaking chromium build when it\u0027s ready.",
+      "parentUuid": "5137b50c_7d7bb082",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
