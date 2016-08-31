@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_f094003c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T06:33:58Z",
+      "side": 1,
+      "message": "I\u0027d say checkInvariantVariableQualifier",
+      "parentUuid": "25883aa4_016381b0",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_21688588",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 18
@@ -139,6 +157,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_9087740d",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T06:33:58Z",
+      "side": 1,
+      "message": "I don\u0027t agree with Corentin\u0027s suggestion, because of the following reasons:\n1. ESSL31 will need to relax the validation of qualifier order compared to ESSL3. Choosing whether to validate qualifier order is much easier to add in a solution where the qualifier sequence is validated after they\u0027ve all been streamed.\n2. As Martin said, validation against \"flat centroid centroid\" is much easier if the qualifiers are not combined while streaming.\n3. The validation algorithms are easier to understand in general this way.\n4. A vector of qualifier objects is a more accurate representation of the semantics of the qualifier sequence than TPublicType - TPublicType has extra data like the type and arrayness.",
+      "parentUuid": "11261dad_363eb87c",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_61a7edb8",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 18
@@ -150,6 +186,24 @@
       "writtenOn": "2016-08-30T15:50:38Z",
       "side": 1,
       "message": "I don\u0027t know flex too much, but would there be a way to access the TQualifierSequence directly so that these can become appendStorageQualifier and likewise below?",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_d091fc49",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 18
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T06:33:58Z",
+      "side": 1,
+      "message": "No, the appending needs to happen under the type_qualifier rule.",
+      "parentUuid": "25883aa4_61a7edb8",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
