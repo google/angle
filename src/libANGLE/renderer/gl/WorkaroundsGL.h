@@ -67,6 +67,9 @@ struct WorkaroundsGL
 
     // In the case of unpacking from a pixel unpack buffer, unpack overlapping rows row by row.
     bool unpackOverlappingRowsSeparatelyUnpackBuffer;
+
+    // During initialization, assign the current vertex attributes to the spec-mandated defaults.
+    bool initializeCurrentVertexAttributes;
 };
 }
 

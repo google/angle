@@ -896,6 +896,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->alwaysCallUseProgramAfterLink = true;
 
     workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer = vendor == VENDOR_ID_NVIDIA;
+
+    workarounds->initializeCurrentVertexAttributes = vendor == VENDOR_ID_NVIDIA;
 }
 
 }

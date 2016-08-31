@@ -137,6 +137,17 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     {
         mSkipDrawCalls = true;
     }
+
+    if (mWorkarounds.initializeCurrentVertexAttributes)
+    {
+        GLint maxVertexAttribs = 0;
+        mFunctions->getIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
+
+        for (GLint i = 0; i < maxVertexAttribs; ++i)
+        {
+            mFunctions->vertexAttrib4f(i, 0.0f, 0.0f, 0.0f, 1.0f);
+        }
+    }
 }
 
 RendererGL::~RendererGL()
