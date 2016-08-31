@@ -22,6 +22,30 @@
       "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_bda41856",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-08-31T16:51:56Z",
+      "side": 1,
+      "message": "We\u0027ve discussed the bit problem previously locally in Montreal - we are OK with changing to a 64-bit enum for now, and can revisit this problem when we run close to the end of 64-bits. We can use a std::bitset or similar design when necessary. I\u0027d be in favour of keeping the \u0027many flags\u0027 design, as it avoids annoying problems that crop up with \"Optimization level\" type designs.",
+      "parentUuid": "5137b50c_1df4244d",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
