@@ -319,6 +319,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_70849064",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T15:38:17Z",
+      "side": 1,
+      "message": "I addressed the comment. Yes, it makes sense and it looks better. Thanks!",
+      "parentUuid": "5137b50c_e7cbb199",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_61a7edb8",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 18
