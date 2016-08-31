@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5105f548_f0f36064",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T11:21:10Z",
+      "side": 1,
+      "message": "Changed to version 300, since the order of qualifiers in 310 is relaxed.",
+      "range": {
+        "startLine": 99,
+        "startChar": 18,
+        "endLine": 99,
+        "endChar": 21
+      },
+      "revId": "1a3e73156d6737cb368e481dc8fcb2bf425fb404",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
