@@ -192,6 +192,7 @@ bool TIntermBinary::replaceChildNode(
 bool TIntermUnary::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
+    ASSERT(original->getAsTyped()->getType() == replacement->getAsTyped()->getType());
     REPLACE_IF_IS(mOperand, TIntermTyped, original, replacement);
     return false;
 }
@@ -623,46 +624,66 @@ TOperator TIntermBinary::GetMulAssignOpBasedOnOperands(const TType &left, const 
 // Make sure the type of a unary operator is appropriate for its
 // combination of operation and operand type.
 //
-void TIntermUnary::promote(const TType *funcReturnType)
+void TIntermUnary::promote()
 {
+    TQualifier resultQualifier = EvqTemporary;
+    if (mOperand->getQualifier() == EvqConst)
+        resultQualifier = EvqConst;
+
+    unsigned char operandPrimarySize =
+        static_cast<unsigned char>(mOperand->getType().getNominalSize());
     switch (mOp)
     {
-      case EOpFloatBitsToInt:
-      case EOpFloatBitsToUint:
-      case EOpIntBitsToFloat:
-      case EOpUintBitsToFloat:
-      case EOpPackSnorm2x16:
-      case EOpPackUnorm2x16:
-      case EOpPackHalf2x16:
-      case EOpUnpackSnorm2x16:
-      case EOpUnpackUnorm2x16:
-        mType.setPrecision(EbpHigh);
-        break;
-      case EOpUnpackHalf2x16:
-        mType.setPrecision(EbpMedium);
-        break;
-      default:
-        setType(mOperand->getType());
+        case EOpFloatBitsToInt:
+            setType(TType(EbtInt, EbpHigh, resultQualifier, operandPrimarySize));
+            break;
+        case EOpFloatBitsToUint:
+            setType(TType(EbtUInt, EbpHigh, resultQualifier, operandPrimarySize));
+            break;
+        case EOpIntBitsToFloat:
+        case EOpUintBitsToFloat:
+            setType(TType(EbtFloat, EbpHigh, resultQualifier, operandPrimarySize));
+            break;
+        case EOpPackSnorm2x16:
+        case EOpPackUnorm2x16:
+        case EOpPackHalf2x16:
+            setType(TType(EbtUInt, EbpHigh, resultQualifier));
+            break;
+        case EOpUnpackSnorm2x16:
+        case EOpUnpackUnorm2x16:
+            setType(TType(EbtFloat, EbpHigh, resultQualifier, 2));
+            break;
+        case EOpUnpackHalf2x16:
+            setType(TType(EbtFloat, EbpMedium, resultQualifier, 2));
+            break;
+        case EOpAny:
+        case EOpAll:
+            setType(TType(EbtBool, EbpUndefined, resultQualifier));
+            break;
+        case EOpLength:
+        case EOpDeterminant:
+            setType(TType(EbtFloat, mOperand->getType().getPrecision(), resultQualifier));
+            break;
+        case EOpTranspose:
+            setType(TType(EbtFloat, mOperand->getType().getPrecision(), resultQualifier,
+                          static_cast<unsigned char>(mOperand->getType().getRows()),
+                          static_cast<unsigned char>(mOperand->getType().getCols())));
+            break;
+        case EOpIsInf:
+        case EOpIsNan:
+            setType(TType(EbtBool, EbpUndefined, resultQualifier, operandPrimarySize));
+            break;
+        default:
+            setType(mOperand->getType());
+            mType.setQualifier(resultQualifier);
+            break;
     }
+}
 
-    if (funcReturnType != nullptr)
-    {
-        if (funcReturnType->getBasicType() == EbtBool)
-        {
-            // Bool types should not have precision.
-            setType(*funcReturnType);
-        }
-        else
-        {
-            // Precision of the node has been set based on the operand.
-            setTypePreservePrecision(*funcReturnType);
-        }
-    }
-
-    if (mOperand->getQualifier() == EvqConst)
-        mType.setQualifier(EvqConst);
-    else
-        mType.setQualifier(EvqTemporary);
+TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand)
+    : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false)
+{
+    promote();
 }
 
 TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *right)

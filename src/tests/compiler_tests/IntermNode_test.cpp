@@ -166,9 +166,8 @@ TEST_F(IntermNodeTest, DeepCopyUnaryNode)
 {
     TType type(EbtFloat, EbpHigh);
 
-    TIntermUnary *original = new TIntermUnary(EOpPreIncrement);
+    TIntermUnary *original = new TIntermUnary(EOpPreIncrement, createTestSymbol());
     original->setLine(getTestSourceLoc());
-    original->setOperand(createTestSymbol());
     TIntermTyped *copyTyped = original->deepCopy();
     TIntermUnary *copy = copyTyped->getAsUnaryNode();
     ASSERT_NE(nullptr, copy);
