@@ -46,6 +46,30 @@
       "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_1d2544b8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-08-31T16:55:03Z",
+      "side": 1,
+      "message": "That\u0027s OK if we use bits for now.  However, SH_EMULATE_BUILT_IN_FUNCTIONS is an umbrella flag that should include this abs() rewrite.  What makes abs() so unique to break away from SH_EMULATE_BUILT_IN_FUNCTIONS?",
+      "parentUuid": "5137b50c_bda41856",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
