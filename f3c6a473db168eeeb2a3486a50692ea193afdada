@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_10ca6442",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_f094003c",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_21688588",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 18
@@ -48,6 +66,24 @@
       "writtenOn": "2016-08-30T15:50:38Z",
       "side": 1,
       "message": "nit: error should reflect comment above.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_70cf7052",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1096,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Done. \nI found it hard to write a concise error message which explains when invariant can be used. So, I decided to not explain what is allowed, but rather state that the invariant qualifier cannot be used here.",
+      "parentUuid": "25883aa4_21688588",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_301328ca",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1710,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25883aa4_c13a797a",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4551aef3_50b48ce0",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 18
@@ -82,6 +136,24 @@
       "writtenOn": "2016-08-30T15:50:38Z",
       "side": 1,
       "message": "nit: use a pointer instead for typeSpecifier.",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_50d4ece4",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3223,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4551aef3_50b48ce0",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -105,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "5105f548_b0b8b8c5",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25883aa4_e1877d76",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_61d8cd79",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 18
@@ -116,6 +206,24 @@
       "writtenOn": "2016-08-30T15:50:38Z",
       "side": 1,
       "message": "Only JoinConst is reused between the join* member functions, and most of them only check for EvqGlobal. I think the logic would be easier to see of the Join* functions were inlined (and the necessary simplifications done).",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_70e650da",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-08-31T08:54:26Z",
+      "side": 1,
+      "message": "Thanks. A lot less code and it looks better.",
+      "parentUuid": "25883aa4_61d8cd79",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
