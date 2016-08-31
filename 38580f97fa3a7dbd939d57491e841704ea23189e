@@ -1,0 +1,231 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5105f548_5047cc9f",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "Fix comment style.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_b03b9828",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "Would be nice to include a comment that a variable can have both readonly and writeonly qualifiers. It\u0027s somewhat unintuitive.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b160f11c_5347c49f",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "I don\u0027t think the location and image format qualifiers can coexist, so \"isFirst\" is currently unnecessary.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_90cf741e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3486,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "Is this check redundant? ParseLayoutQualifier also checks for shading language version when it encounters a image internal format qualifier.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_d0d9fcea",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4308,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "functionParameterType. Use \"parameter\" for variables in a function definition and \"argument\" for values passed into a function call.",
+      "range": {
+        "startLine": 4308,
+        "startChar": 21,
+        "endLine": 4308,
+        "endChar": 41
+      },
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_d0757cc2",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "Could also add a note here that having both readonly and writeonly is valid.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_90f65456",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "This block is quite convoluted compared to the other ones - is there any way to simplify this code?",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_50e50c9a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "I can\u0027t see where this patch needs to add built-ins without any parameters.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_907db4be",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "This one doesn\u0027t seem to be used.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b160f11c_73c9201c",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 3
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "Might be nice to remove the need to set the scope qualifier on the type in a separate patch (before this patch). Do you think that would be a lot of work to do?",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_305b285b",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2541,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "The spec says that this is an error, not undefined behavior (page 68 of ESSL 3.10).",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_1060a403",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2655,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "I don\u0027t think all of these variations of this test are needed - maybe keep just one of the three.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5105f548_506a2ce5",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2727,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 1,
+      "message": "All the new tests should be after the pre-existing tests.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

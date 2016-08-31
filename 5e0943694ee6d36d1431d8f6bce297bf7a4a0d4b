@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5105f548_f08a40c4",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-08-31T11:55:11Z",
+      "side": 0,
+      "message": "Whitespace change.",
+      "revId": "5e0943694ee6d36d1431d8f6bce297bf7a4a0d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
