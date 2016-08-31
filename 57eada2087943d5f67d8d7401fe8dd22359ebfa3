@@ -70,6 +70,30 @@
       "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_7d7bb082",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-31T16:58:44Z",
+      "side": 1,
+      "message": "Actually, SH_EMULATE_BUILT_IN_FUNCTIONS isn\u0027t enabled in chrome. That\u0027s why I add abs() as a standalone workaround. I am not sure about the effect when enabling SH_EMULATE_BUILT_IN_FUNCTIONS.",
+      "parentUuid": "5137b50c_1d2544b8",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
