@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5137b50c_0795f58c",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T12:27:29Z",
+      "side": 1,
+      "message": "This version of the workaround will still be incorrect if X has side effects. \"int webgl_abs_emu(int x) {return x * sign(x);}\"?",
+      "revId": "2d7f58e25dc94ee7fd1296e8400ad322d1bbb108",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
