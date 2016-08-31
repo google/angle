@@ -118,6 +118,30 @@
       "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_a0cfcf50",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-08-31T17:17:08Z",
+      "side": 1,
+      "message": "I am removing SH_EMULATE_BUILT_IN_FUNCTIONS in ANGLE and will rebase the patch after this CL land.\n\nThis CL conflicts with https://chromium-review.googlesource.com/#/c/378739/. It should be rebased after 378739 land.",
+      "parentUuid": "5137b50c_bdc8989e",
+      "range": {
+        "startLine": 237,
+        "startChar": 4,
+        "endLine": 237,
+        "endChar": 31
+      },
+      "revId": "57eada2087943d5f67d8d7401fe8dd22359ebfa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
