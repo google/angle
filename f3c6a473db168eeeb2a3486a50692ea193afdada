@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "5137b50c_8700e5d7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1096,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T12:39:55Z",
+      "side": 1,
+      "message": "Ok sounds good.",
+      "parentUuid": "5105f548_70cf7052",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25883aa4_c13a797a",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 18
@@ -277,6 +295,24 @@
       "side": 1,
       "message": "I don\u0027t agree with Corentin\u0027s suggestion, because of the following reasons:\n1. ESSL31 will need to relax the validation of qualifier order compared to ESSL3. Choosing whether to validate qualifier order is much easier to add in a solution where the qualifier sequence is validated after they\u0027ve all been streamed.\n2. As Martin said, validation against \"flat centroid centroid\" is much easier if the qualifiers are not combined while streaming.\n3. The validation algorithms are easier to understand in general this way.\n4. A vector of qualifier objects is a more accurate representation of the semantics of the qualifier sequence than TPublicType - TPublicType has extra data like the type and arrayness.",
       "parentUuid": "11261dad_363eb87c",
+      "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5137b50c_e7cbb199",
+        "filename": "src/compiler/translator/QualifierTypes.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-08-31T12:39:55Z",
+      "side": 1,
+      "message": "Thank you for the explanation, I was mistaken about adding streaming validation. However the part about having a builder object is still standing, TQualifierSequence would gain from being a \"stupid\" pre-validated struct.",
+      "parentUuid": "5105f548_9087740d",
       "revId": "f3c6a473db168eeeb2a3486a50692ea193afdada",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
