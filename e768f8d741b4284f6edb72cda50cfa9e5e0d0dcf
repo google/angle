@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11cc5df8_c6d382fc",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-01T21:18:37Z",
+      "side": 1,
+      "message": "this one was still failing for me.\n\nDriver 10.18.10.4425, 4-4-2016, Windows 10, HD Graphics 4000.",
+      "range": {
+        "startLine": 625,
+        "startChar": 0,
+        "endLine": 629,
+        "endChar": 5
+      },
+      "revId": "e768f8d741b4284f6edb72cda50cfa9e5e0d0dcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
