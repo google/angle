@@ -16,7 +16,10 @@
 namespace angle
 {
 
-std::string GetExecutablePath()
+namespace
+{
+
+std::string GetExecutablePathImpl()
 {
     // We cannot use lstat to get the size of /proc/self/exe as it always returns 0
     // so we just use a big buffer and hope the path fits in it.
@@ -32,14 +35,28 @@ std::string GetExecutablePath()
     return path;
 }
 
-std::string GetExecutableDirectory()
+std::string GetExecutableDirectoryImpl()
 {
     std::string executablePath = GetExecutablePath();
     size_t lastPathSepLoc = executablePath.find_last_of("/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
-std::string GetSharedLibraryExtension()
+}  // anonymous namespace
+
+const char *GetExecutablePath()
+{
+    const static std::string &exePath = GetExecutablePathImpl();
+    return exePath.c_str();
+}
+
+const char *GetExecutableDirectory()
+{
+    const static std::string &exeDir = GetExecutableDirectoryImpl();
+    return exeDir.c_str();
+}
+
+const char *GetSharedLibraryExtension()
 {
     return "so";
 }

@@ -84,8 +84,14 @@ class MultiTextureSample : public SampleApplication
         mLightMapLoc = glGetUniformLocation(mProgram, "s_lightMap");
 
         // Load the textures
-        mBaseMapTexID = loadTexture(angle::GetExecutableDirectory() + "/basemap.tga");
-        mLightMapTexID = loadTexture(angle::GetExecutableDirectory() + "/lightmap.tga");
+        std::stringstream baseStr;
+        baseStr << angle::GetExecutableDirectory() << "/basemap.tga";
+
+        std::stringstream lightStr;
+        lightStr << angle::GetExecutableDirectory() << "/lightmap.tga";
+
+        mBaseMapTexID  = loadTexture(baseStr.str());
+        mLightMapTexID = loadTexture(lightStr.str());
         if (mBaseMapTexID == 0 || mLightMapTexID == 0)
         {
             return false;

@@ -115,8 +115,11 @@ class ParticleSystemSample : public SampleApplication
 
         mParticleTime = 1.0f;
 
+        std::stringstream smokeStr;
+        smokeStr << angle::GetExecutableDirectory() << "/smoke.tga";
+
         TGAImage img;
-        if (!LoadTGAImageFromFile(angle::GetExecutableDirectory() + "/smoke.tga", &img))
+        if (!LoadTGAImageFromFile(smokeStr.str(), &img))
         {
             return false;
         }
