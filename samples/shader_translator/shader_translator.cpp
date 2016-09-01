@@ -94,7 +94,6 @@ int main(int argc, char *argv[])
               case 'o': compileOptions |= SH_OBJECT_CODE; break;
               case 'u': compileOptions |= SH_VARIABLES; break;
               case 'l': compileOptions |= SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX; break;
-              case 'e': compileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS; break;
               case 'd': compileOptions |= SH_DEPENDENCY_GRAPH; break;
               case 't': compileOptions |= SH_TIMING_RESTRICTIONS; break;
               case 'p': resources.WEBGL_debug_shader_precision = 1; break;
@@ -313,13 +312,12 @@ void usage()
 {
     // clang-format off
     printf(
-        "Usage: translate [-i -o -u -l -e -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
+        "Usage: translate [-i -o -u -l -t -d -p -b=e -b=g -b=h9 -x=i -x=d] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
         "       -i       : print intermediate tree\n"
         "       -o       : print translated code\n"
         "       -u       : print active attribs, uniforms, varyings and program outputs\n"
         "       -l       : unroll for-loops with integer indices\n"
-        "       -e       : emulate certain built-in functions (workaround for driver bugs)\n"
         "       -t       : enforce experimental timing restrictions\n"
         "       -d       : print dependency graph used to enforce timing restrictions\n"
         "       -p       : use precision emulation\n"
