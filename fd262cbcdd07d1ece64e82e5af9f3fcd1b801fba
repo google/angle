@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51edf505_1ad23a25",
+        "filename": "util/system_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-01T05:10:55Z",
+      "side": 1,
+      "message": "probably should pre-emptively fix this and the ext one below. they\u0027re bugged too, just aren\u0027t used in the \u0027bad\u0027 way currently.",
+      "range": {
+        "startLine": 21,
+        "startChar": 25,
+        "endLine": 21,
+        "endChar": 42
+      },
+      "revId": "fd262cbcdd07d1ece64e82e5af9f3fcd1b801fba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
