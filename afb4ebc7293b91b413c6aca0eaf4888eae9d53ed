@@ -16,6 +16,24 @@
       "revId": "afb4ebc7293b91b413c6aca0eaf4888eae9d53ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "911e8df2_1afeddff",
+        "filename": "src/compiler/translator/BreakVariableAliasingInInnerLoops.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-01T14:13:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_f0b6c0f5",
+      "revId": "afb4ebc7293b91b413c6aca0eaf4888eae9d53ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
