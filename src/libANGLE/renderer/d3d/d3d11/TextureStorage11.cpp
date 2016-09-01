@@ -613,6 +613,8 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
 {
     ASSERT(!image->isDirty());
 
+    invalidateSwizzleCacheLevel(index.mipIndex);
+
     ID3D11Resource *resource = nullptr;
     ANGLE_TRY(getResource(&resource));
     ASSERT(resource);
