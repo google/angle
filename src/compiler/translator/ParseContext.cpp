@@ -662,14 +662,14 @@ void TParseContext::checkIsScalarBool(const TSourceLoc &line, const TIntermTyped
 // or not.
 void TParseContext::checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType)
 {
-    if (pType.type != EbtBool || pType.isAggregate())
+    if (pType.getBasicType() != EbtBool || pType.isAggregate())
     {
         error(line, "boolean expression expected", "");
     }
 }
 
 bool TParseContext::checkIsNotSampler(const TSourceLoc &line,
-                                      const TPublicType &pType,
+                                      const TTypeSpecifierNonArray &pType,
                                       const char *reason)
 {
     if (pType.type == EbtStruct)
@@ -824,7 +824,7 @@ bool TParseContext::checkIsValidTypeForArray(const TSourceLoc &line, const TPubl
     // In ESSL1.00 shaders, structs cannot be varying (section 4.3.5). This is checked elsewhere.
     // In ESSL3.00 shaders, struct inputs/outputs are allowed but not arrays of structs (section
     // 4.3.4).
-    if (mShaderVersion >= 300 && elementType.type == EbtStruct &&
+    if (mShaderVersion >= 300 && elementType.getBasicType() == EbtStruct &&
         sh::IsVarying(elementType.qualifier))
     {
         error(line, "cannot declare arrays of structs of this qualifier",
@@ -986,7 +986,7 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
         case EvqVertexIn:
         case EvqFragmentOut:
         case EvqComputeIn:
-            if (publicType.type == EbtStruct)
+            if (publicType.getBasicType() == EbtStruct)
             {
                 error(identifierLocation, "cannot be used with a structure",
                       getQualifierString(publicType.qualifier));
@@ -998,7 +998,8 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
     }
 
     if (publicType.qualifier != EvqUniform &&
-        !checkIsNotSampler(identifierLocation, publicType, "samplers must be uniform"))
+        !checkIsNotSampler(identifierLocation, publicType.typeSpecifierNonArray,
+                           "samplers must be uniform"))
     {
         return;
     }
@@ -1414,31 +1415,33 @@ TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &ty
         returnType.precision = typeQualifier.precision;
     }
 
-    checkPrecisionSpecified(typeSpecifier.line, returnType.precision, typeSpecifier.type);
+    checkPrecisionSpecified(typeSpecifier.getLine(), returnType.precision,
+                            typeSpecifier.getBasicType());
 
-    checkInvariantVariableQualifier(returnType.invariant, returnType.qualifier, typeSpecifier.line);
+    checkInvariantVariableQualifier(returnType.invariant, returnType.qualifier,
+                                    typeSpecifier.getLine());
 
-    checkWorkGroupSizeIsNotSpecified(typeSpecifier.line, returnType.layoutQualifier);
+    checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), returnType.layoutQualifier);
 
     if (mShaderVersion < 300)
     {
         if (typeSpecifier.array)
         {
-            error(typeSpecifier.line, "not supported", "first-class array");
+            error(typeSpecifier.getLine(), "not supported", "first-class array");
             returnType.clearArrayness();
         }
 
         if (returnType.qualifier == EvqAttribute &&
-            (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+            (typeSpecifier.getBasicType() == EbtBool || typeSpecifier.getBasicType() == EbtInt))
         {
-            error(typeSpecifier.line, "cannot be bool or int",
+            error(typeSpecifier.getLine(), "cannot be bool or int",
                   getQualifierString(returnType.qualifier));
         }
 
         if ((returnType.qualifier == EvqVaryingIn || returnType.qualifier == EvqVaryingOut) &&
-            (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+            (typeSpecifier.getBasicType() == EbtBool || typeSpecifier.getBasicType() == EbtInt))
         {
-            error(typeSpecifier.line, "cannot be bool or int",
+            error(typeSpecifier.getLine(), "cannot be bool or int",
                   getQualifierString(returnType.qualifier));
         }
     }
@@ -1446,16 +1449,17 @@ TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &ty
     {
         if (!returnType.layoutQualifier.isEmpty())
         {
-            checkIsAtGlobalLevel(typeSpecifier.line, "layout");
+            checkIsAtGlobalLevel(typeSpecifier.getLine(), "layout");
         }
         if (sh::IsVarying(returnType.qualifier) || returnType.qualifier == EvqVertexIn ||
             returnType.qualifier == EvqFragmentOut)
         {
-            checkInputOutputTypeIsValidES3(returnType.qualifier, typeSpecifier, typeSpecifier.line);
+            checkInputOutputTypeIsValidES3(returnType.qualifier, typeSpecifier,
+                                           typeSpecifier.getLine());
         }
         if (returnType.qualifier == EvqComputeIn)
         {
-            error(typeSpecifier.line, "'in' can be only used to specify the local group size",
+            error(typeSpecifier.getLine(), "'in' can be only used to specify the local group size",
                   "in");
         }
     }
@@ -1468,7 +1472,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
                                                    const TSourceLoc &qualifierLocation)
 {
     // An input/output variable can never be bool or a sampler. Samplers are checked elsewhere.
-    if (type.type == EbtBool)
+    if (type.getBasicType() == EbtBool)
     {
         error(qualifierLocation, "cannot be bool", getQualifierString(qualifier));
     }
@@ -1486,7 +1490,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
             return;
         case EvqFragmentOut:
             // ESSL 3.00 section 4.3.6
-            if (type.isMatrix())
+            if (type.typeSpecifierNonArray.isMatrix())
             {
                 error(qualifierLocation, "cannot be matrix", getQualifierString(qualifier));
             }
@@ -1499,15 +1503,15 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
     // Vertex shader outputs / fragment shader inputs have a different, slightly more lenient set of
     // restrictions.
     bool typeContainsIntegers =
-        (type.type == EbtInt || type.type == EbtUInt || type.isStructureContainingType(EbtInt) ||
-         type.isStructureContainingType(EbtUInt));
+        (type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt ||
+         type.isStructureContainingType(EbtInt) || type.isStructureContainingType(EbtUInt));
     if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut)
     {
         error(qualifierLocation, "must use 'flat' interpolation here",
               getQualifierString(qualifier));
     }
 
-    if (type.type == EbtStruct)
+    if (type.getBasicType() == EbtStruct)
     {
         // ESSL 3.00 sections 4.3.4 and 4.3.6.
         // These restrictions are only implied by the ESSL 3.00 spec, but
@@ -2269,7 +2273,8 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
         error(location, "no qualifiers allowed for function return", "layout");
     }
     // make sure a sampler is not involved as well...
-    checkIsNotSampler(location, type, "samplers can't be function return values");
+    checkIsNotSampler(location, type.typeSpecifierNonArray,
+                      "samplers can't be function return values");
     if (mShaderVersion < 300)
     {
         // Array return values are forbidden, but there's also no valid syntax for declaring array
@@ -2291,14 +2296,14 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
 {
     TPublicType publicType = publicTypeIn;
-    if (publicType.isStructSpecifier)
+    if (publicType.isStructSpecifier())
     {
-        error(publicType.line, "constructor can't be a structure definition",
-              getBasicString(publicType.type));
+        error(publicType.getLine(), "constructor can't be a structure definition",
+              getBasicString(publicType.getBasicType()));
     }
 
     TOperator op = EOpNull;
-    if (publicType.userDef)
+    if (publicType.getUserDef())
     {
         op = EOpConstructStruct;
     }
@@ -2307,8 +2312,9 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
         op = sh::TypeToConstructorOperator(TType(publicType));
         if (op == EOpNull)
         {
-            error(publicType.line, "cannot construct this type", getBasicString(publicType.type));
-            publicType.type = EbtFloat;
+            error(publicType.getLine(), "cannot construct this type",
+                  getBasicString(publicType.getBasicType()));
+            publicType.setBasicType(EbtFloat);
             op              = EOpConstructFloat;
         }
     }
@@ -3226,11 +3232,12 @@ TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
 TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecifier,
                                                    TFieldList *fieldList)
 {
-    checkPrecisionSpecified(typeSpecifier.line, typeSpecifier.precision, typeSpecifier.type);
+    checkPrecisionSpecified(typeSpecifier.getLine(), typeSpecifier.precision,
+                            typeSpecifier.getBasicType());
 
-    checkIsNonVoid(typeSpecifier.line, (*fieldList)[0]->name(), typeSpecifier.type);
+    checkIsNonVoid(typeSpecifier.getLine(), (*fieldList)[0]->name(), typeSpecifier.getBasicType());
 
-    checkWorkGroupSizeIsNotSpecified(typeSpecifier.line, typeSpecifier.layoutQualifier);
+    checkWorkGroupSizeIsNotSpecified(typeSpecifier.getLine(), typeSpecifier.layoutQualifier);
 
     for (unsigned int i = 0; i < fieldList->size(); ++i)
     {
@@ -3238,9 +3245,9 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         // Careful not to replace already known aspects of type, like array-ness
         //
         TType *type = (*fieldList)[i]->type();
-        type->setBasicType(typeSpecifier.type);
-        type->setPrimarySize(typeSpecifier.primarySize);
-        type->setSecondarySize(typeSpecifier.secondarySize);
+        type->setBasicType(typeSpecifier.getBasicType());
+        type->setPrimarySize(typeSpecifier.getPrimarySize());
+        type->setSecondarySize(typeSpecifier.getSecondarySize());
         type->setPrecision(typeSpecifier.precision);
         type->setQualifier(typeSpecifier.qualifier);
         type->setLayoutQualifier(typeSpecifier.layoutQualifier);
@@ -3249,25 +3256,25 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         // don't allow arrays of arrays
         if (type->isArray())
         {
-            checkIsValidTypeForArray(typeSpecifier.line, typeSpecifier);
+            checkIsValidTypeForArray(typeSpecifier.getLine(), typeSpecifier);
         }
         if (typeSpecifier.array)
             type->setArraySize(static_cast<unsigned int>(typeSpecifier.arraySize));
-        if (typeSpecifier.userDef)
+        if (typeSpecifier.getUserDef())
         {
-            type->setStruct(typeSpecifier.userDef->getStruct());
+            type->setStruct(typeSpecifier.getUserDef()->getStruct());
         }
 
-        checkIsBelowStructNestingLimit(typeSpecifier.line, *(*fieldList)[i]);
+        checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *(*fieldList)[i]);
     }
 
     return fieldList;
 }
 
-TPublicType TParseContext::addStructure(const TSourceLoc &structLine,
-                                        const TSourceLoc &nameLine,
-                                        const TString *structName,
-                                        TFieldList *fieldList)
+TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
+                                                   const TSourceLoc &nameLine,
+                                                   const TString *structName,
+                                                   TFieldList *fieldList)
 {
     TStructure *structure = new TStructure(structName, fieldList);
     TType *structureType  = new TType(structure);
@@ -3310,13 +3317,13 @@ TPublicType TParseContext::addStructure(const TSourceLoc &structLine,
         checkLocationIsNotSpecified(field.line(), field.type()->getLayoutQualifier());
     }
 
-    TPublicType publicType;
-    publicType.setBasic(EbtStruct, EvqTemporary, structLine);
-    publicType.userDef = structureType;
-    publicType.isStructSpecifier = true;
+    TTypeSpecifierNonArray typeSpecifierNonArray;
+    typeSpecifierNonArray.initialize(EbtStruct, structLine);
+    typeSpecifierNonArray.userDef           = structureType;
+    typeSpecifierNonArray.isStructSpecifier = true;
     exitStructDeclaration();
 
-    return publicType;
+    return typeSpecifierNonArray;
 }
 
 TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,

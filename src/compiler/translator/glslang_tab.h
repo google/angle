@@ -208,6 +208,7 @@ union YYSTYPE
             TIntermCase* intermCase;
         };
         union {
+            TTypeSpecifierNonArray typeSpecifierNonArray;
             TPublicType type;
             TPrecision precision;
             TLayoutQualifier layoutQualifier;

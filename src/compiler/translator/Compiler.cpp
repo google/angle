@@ -445,15 +445,13 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     symbolTable.push();   // ESSL3_1_BUILTINS
 
     TPublicType integer;
-    integer.type = EbtInt;
-    integer.primarySize = 1;
-    integer.secondarySize = 1;
+    integer.setBasicType(EbtInt);
+    integer.initializeSizeForScalarTypes();
     integer.array = false;
 
     TPublicType floatingPoint;
-    floatingPoint.type = EbtFloat;
-    floatingPoint.primarySize = 1;
-    floatingPoint.secondarySize = 1;
+    floatingPoint.setBasicType(EbtFloat);
+    floatingPoint.initializeSizeForScalarTypes();
     floatingPoint.array = false;
 
     switch(shaderType)
@@ -493,10 +491,9 @@ void TCompiler::initSamplerDefaultPrecision(TBasicType samplerType)
 {
     ASSERT(samplerType > EbtGuardSamplerBegin && samplerType < EbtGuardSamplerEnd);
     TPublicType sampler;
-    sampler.primarySize   = 1;
-    sampler.secondarySize = 1;
+    sampler.initializeSizeForScalarTypes();
+    sampler.setBasicType(samplerType);
     sampler.array         = false;
-    sampler.type          = samplerType;
     symbolTable.setDefaultPrecision(sampler, EbpLow);
 }
 

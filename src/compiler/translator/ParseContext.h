@@ -160,7 +160,9 @@ class TParseContext : angle::NonCopyable
     bool checkIsNonVoid(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     void checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
     void checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType);
-    bool checkIsNotSampler(const TSourceLoc &line, const TPublicType &pType, const char *reason);
+    bool checkIsNotSampler(const TSourceLoc &line,
+                           const TTypeSpecifierNonArray &pType,
+                           const char *reason);
     void checkDeclaratorLocationIsNotSpecified(const TSourceLoc &line, const TPublicType &pType);
     void checkLocationIsNotSpecified(const TSourceLoc &location,
                                      const TLayoutQualifier &layoutQualifier);
@@ -298,10 +300,10 @@ class TParseContext : angle::NonCopyable
         TPublicType *typeSpecifier,
         TFieldList *fieldList);
     TFieldList *addStructDeclaratorList(const TPublicType &typeSpecifier, TFieldList *fieldList);
-    TPublicType addStructure(const TSourceLoc &structLine,
-                             const TSourceLoc &nameLine,
-                             const TString *structName,
-                             TFieldList *fieldList);
+    TTypeSpecifierNonArray addStructure(const TSourceLoc &structLine,
+                                        const TSourceLoc &nameLine,
+                                        const TString *structName,
+                                        TFieldList *fieldList);
 
     TIntermAggregate *addInterfaceBlock(const TTypeQualifierBuilder &typeQualifierBuilder,
                                         const TSourceLoc &nameLine,

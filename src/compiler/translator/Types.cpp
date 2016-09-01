@@ -48,12 +48,20 @@ const char* getBasicString(TBasicType t)
 }
 
 TType::TType(const TPublicType &p)
-    : type(p.type), precision(p.precision), qualifier(p.qualifier), invariant(p.invariant),
-      layoutQualifier(p.layoutQualifier), primarySize(p.primarySize), secondarySize(p.secondarySize),
-      array(p.array), arraySize(p.arraySize), interfaceBlock(0), structure(0)
+    : type(p.getBasicType()),
+      precision(p.precision),
+      qualifier(p.qualifier),
+      invariant(p.invariant),
+      layoutQualifier(p.layoutQualifier),
+      primarySize(p.getPrimarySize()),
+      secondarySize(p.getSecondarySize()),
+      array(p.array),
+      arraySize(p.arraySize),
+      interfaceBlock(0),
+      structure(0)
 {
-    if (p.userDef)
-        structure = p.userDef->getStruct();
+    if (p.getUserDef())
+        structure = p.getUserDef()->getStruct();
 }
 
 bool TStructure::equals(const TStructure &other) const
