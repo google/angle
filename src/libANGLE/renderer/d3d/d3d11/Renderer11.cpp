@@ -2934,7 +2934,7 @@ gl::Error Renderer11::copyImage2D(const gl::Framebuffer *framebuffer,
 
     ANGLE_TRY(copyImageInternal(framebuffer, sourceRect, destFormat, destOffset, destRenderTarget));
 
-    storage11->invalidateSwizzleCacheLevel(level);
+    storage11->markLevelDirty(level);
 
     return gl::NoError();
 }
@@ -2952,7 +2952,7 @@ gl::Error Renderer11::copyImageCube(const gl::Framebuffer *framebuffer, const gl
 
     ANGLE_TRY(copyImageInternal(framebuffer, sourceRect, destFormat, destOffset, destRenderTarget));
 
-    storage11->invalidateSwizzleCacheLevel(level);
+    storage11->markLevelDirty(level);
 
     return gl::NoError();
 }
@@ -2970,7 +2970,7 @@ gl::Error Renderer11::copyImage3D(const gl::Framebuffer *framebuffer, const gl::
 
     ANGLE_TRY(copyImageInternal(framebuffer, sourceRect, destFormat, destOffset, destRenderTarget));
 
-    storage11->invalidateSwizzleCacheLevel(level);
+    storage11->markLevelDirty(level);
 
     return gl::NoError();
 }
@@ -2987,7 +2987,7 @@ gl::Error Renderer11::copyImage2DArray(const gl::Framebuffer *framebuffer, const
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(framebuffer, sourceRect, destFormat, destOffset, destRenderTarget));
-    storage11->invalidateSwizzleCacheLevel(level);
+    storage11->markLevelDirty(level);
 
     return gl::NoError();
 }
@@ -3077,7 +3077,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
                                      unpackUnmultiplyAlpha));
     }
 
-    destStorage11->invalidateSwizzleCacheLevel(destLevel);
+    destStorage11->markLevelDirty(destLevel);
 
     return gl::Error(GL_NO_ERROR);
 }

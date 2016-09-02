@@ -59,8 +59,8 @@ class TextureStorage11 : public TextureStorage
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
 
     gl::Error generateSwizzles(const gl::SwizzleState &swizzleTarget);
-    void invalidateSwizzleCacheLevel(int mipLevel);
-    void invalidateSwizzleCache();
+    void markLevelDirty(int mipLevel);
+    void markDirty();
 
     gl::Error updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource,
                                      const gl::ImageIndex &index, const gl::Box &copyArea);

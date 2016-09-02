@@ -368,7 +368,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarg
     return gl::Error(GL_NO_ERROR);
 }
 
-void TextureStorage11::invalidateSwizzleCacheLevel(int mipLevel)
+void TextureStorage11::markLevelDirty(int mipLevel)
 {
     if (mipLevel >= 0 && static_cast<unsigned int>(mipLevel) < ArraySize(mSwizzleCache))
     {
@@ -378,11 +378,11 @@ void TextureStorage11::invalidateSwizzleCacheLevel(int mipLevel)
     }
 }
 
-void TextureStorage11::invalidateSwizzleCache()
+void TextureStorage11::markDirty()
 {
     for (unsigned int mipLevel = 0; mipLevel < ArraySize(mSwizzleCache); mipLevel++)
     {
-        invalidateSwizzleCacheLevel(mipLevel);
+        markLevelDirty(mipLevel);
     }
 }
 
@@ -395,7 +395,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
 
     const GLint level = index.mipIndex;
 
-    invalidateSwizzleCacheLevel(level);
+    markLevelDirty(level);
 
     gl::Extents texSize(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
 
@@ -511,7 +511,7 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
 {
     ASSERT(sourceIndex.layerIndex == destIndex.layerIndex);
 
-    invalidateSwizzleCacheLevel(destIndex.mipIndex);
+    markLevelDirty(destIndex.mipIndex);
 
     RenderTargetD3D *source = nullptr;
     gl::Error error = getRenderTarget(sourceIndex, &source);
@@ -554,7 +554,7 @@ void TextureStorage11::verifySwizzleExists(const gl::SwizzleState &swizzleState)
 
 void TextureStorage11::clearSRVCache()
 {
-    invalidateSwizzleCache();
+    markDirty();
 
     auto iter = mSrvCache.begin();
     while (iter != mSrvCache.end())
@@ -599,7 +599,7 @@ gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
     immediateContext->CopyResource(destResource, sourceResouce);
 
-    dest11->invalidateSwizzleCache();
+    dest11->markDirty();
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -613,7 +613,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
 {
     ASSERT(!image->isDirty());
 
-    invalidateSwizzleCacheLevel(index.mipIndex);
+    markLevelDirty(index.mipIndex);
 
     ID3D11Resource *resource = nullptr;
     ANGLE_TRY(getResource(&resource));
@@ -884,7 +884,7 @@ gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
         }
 
         immediateContext->CopyResource(destResource, sourceResouce);
-        dest11->invalidateSwizzleCache();
+        dest11->markDirty();
     }
 
     return gl::Error(GL_NO_ERROR);
@@ -1628,7 +1628,7 @@ gl::Error TextureStorage11_EGLImage::copyToStorage(TextureStorage *destStorage)
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
     immediateContext->CopyResource(destResource, sourceResouce);
 
-    dest11->invalidateSwizzleCache();
+    dest11->markDirty();
 
     return gl::Error(GL_NO_ERROR);
 }
@@ -1981,7 +1981,7 @@ gl::Error TextureStorage11_Cube::copyToStorage(TextureStorage *destStorage)
         immediateContext->CopyResource(destResource, sourceResouce);
     }
 
-    dest11->invalidateSwizzleCache();
+    dest11->markDirty();
 
     return gl::Error(GL_NO_ERROR);
 }
