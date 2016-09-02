@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "512a5561_c8e52fcd",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T08:49:37Z",
+      "side": 1,
+      "message": "I think it would be cleaner to split this part into another function that would take in \"const std::vector\u003cconst TQualifierWrapperBase\u003e \u0026qualifiers\". That function could be called with either mQualifiers or the sorted copy as an argument. That way the copy vector can be initialized and in scope only when it is needed.\n\nIt would also actually be more consistent to call the sorted copy \"sortedQualifiers\".",
+      "revId": "c3dd2b152ff0a97b511a4b88b993a02b818128c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
