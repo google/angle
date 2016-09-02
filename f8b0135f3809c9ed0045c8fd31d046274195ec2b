@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11cc5df8_0642af90",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-02T14:27:10Z",
+      "side": 1,
+      "message": "it\u0027s kind of odd to call something with a negative, but seeing as it mirrors the grammar it\u0027s probably best that way.",
+      "range": {
+        "startLine": 599,
+        "startChar": 7,
+        "endLine": 599,
+        "endChar": 29
+      },
+      "revId": "f8b0135f3809c9ed0045c8fd31d046274195ec2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11cc5df8_463ca720",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-02T14:27:10Z",
+      "side": 1,
+      "message": "nit: data should go after functions",
+      "range": {
+        "startLine": 601,
+        "startChar": 1,
+        "endLine": 608,
+        "endChar": 27
+      },
+      "revId": "f8b0135f3809c9ed0045c8fd31d046274195ec2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11cc5df8_6633a34e",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-02T14:27:10Z",
+      "side": 1,
+      "message": "nit: data after functions.",
+      "range": {
+        "startLine": 648,
+        "startChar": 0,
+        "endLine": 654,
+        "endChar": 18
+      },
+      "revId": "f8b0135f3809c9ed0045c8fd31d046274195ec2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
