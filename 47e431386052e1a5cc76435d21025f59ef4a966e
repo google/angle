@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "512a5561_68a9a37b",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:38:37Z",
+      "side": 1,
+      "message": "I will remove my comment for now as I do not any other way to investigate this except asking somebody from Khronos.",
+      "parentUuid": "5105f548_13926e03",
+      "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_338df2e3",
         "filename": "src/compiler/translator/QualifierTypes.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-01T14:30:49Z",
       "side": 1,
       "message": "Rename this to \"sortedQualifierSequence\". It would also be nicer to skip the copy in case the checks are not relaxed.",
+      "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "512a5561_28afab83",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:38:37Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5105f548_338df2e3",
       "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "512a5561_48acdf8c",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:38:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_f3f36a64",
+      "range": {
+        "startLine": 425,
+        "startChar": 64,
+        "endLine": 426,
+        "endChar": 34
+      },
+      "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_73977af3",
         "filename": "src/tests/compiler_tests/QualificationOrderESSL31_test.cpp",
         "patchSetId": 1
@@ -70,6 +130,24 @@
       "writtenOn": "2016-09-01T14:30:49Z",
       "side": 1,
       "message": "Do any other tests need this kind of code, and if so can this be shared with them?",
+      "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "512a5561_08b2e7ec",
+        "filename": "src/tests/compiler_tests/QualificationOrderESSL31_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:38:37Z",
+      "side": 1,
+      "message": "The image patch will need the same class. I will move it to test_utils/compiler_test.h",
+      "parentUuid": "5105f548_73977af3",
       "revId": "47e431386052e1a5cc76435d21025f59ef4a966e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
