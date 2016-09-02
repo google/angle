@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "512a5561_68da83e0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T12:47:57Z",
+      "side": 1,
+      "message": "Add BUG\u003dangleproject:911",
+      "revId": "a859f18187d5a06b77fbe74c3193fc9477179ca3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96e9236c_a2d83ee5",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T12:47:57Z",
+      "side": 1,
+      "message": "This could be const \u0026",
+      "range": {
+        "startLine": 610,
+        "startChar": 35,
+        "endLine": 610,
+        "endChar": 48
+      },
+      "revId": "a859f18187d5a06b77fbe74c3193fc9477179ca3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96e9236c_c2db42e1",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T12:47:57Z",
+      "side": 1,
+      "message": "This would be a good time to change these to proper variable names like columns/rows.",
+      "revId": "a859f18187d5a06b77fbe74c3193fc9477179ca3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
