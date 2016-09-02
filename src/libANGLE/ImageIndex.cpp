@@ -149,20 +149,28 @@ ImageIndex ImageIndexIterator::next()
 
     if (mCurrentLayer != ImageIndex::ENTIRE_LEVEL)
     {
-        if (mCurrentLayer < maxLayer()-1)
+        if (mCurrentLayer < maxLayer() - 1)
         {
             mCurrentLayer++;
         }
-        else if (mCurrentMip < mMipRange.end-1)
+        else if (mCurrentMip < mMipRange.end - 1)
         {
             mCurrentMip++;
             mCurrentLayer = mLayerRange.start;
         }
+        else
+        {
+            done();
+        }
     }
-    else if (mCurrentMip < mMipRange.end-1)
+    else if (mCurrentMip < mMipRange.end - 1)
     {
         mCurrentMip++;
         mCurrentLayer = mLayerRange.start;
+    }
+    else
+    {
+        done();
     }
 
     return value;
@@ -185,4 +193,10 @@ bool ImageIndexIterator::hasNext() const
     return (mCurrentMip < mMipRange.end || mCurrentLayer < maxLayer());
 }
 
+void ImageIndexIterator::done()
+{
+    mCurrentMip   = mMipRange.end;
+    mCurrentLayer = maxLayer();
 }
+
+}  // namespace gl
