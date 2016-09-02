@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "512a5561_c897ef38",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T07:40:21Z",
+      "side": 1,
+      "message": "Is this variant of the function still used somewhere?",
+      "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
