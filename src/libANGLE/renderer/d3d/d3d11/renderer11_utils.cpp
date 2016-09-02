@@ -1542,6 +1542,9 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
 
     workarounds.preAddTexelFetchOffsets = (adapterDesc.VendorId == VENDOR_ID_INTEL);
 
+    // TODO(jmadill): Disable when we have a fixed driver version.
+    workarounds.emulateTinyStencilTextures = (adapterDesc.VendorId == VENDOR_ID_AMD);
+
     return workarounds;
 }
 

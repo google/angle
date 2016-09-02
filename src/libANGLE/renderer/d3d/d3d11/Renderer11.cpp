@@ -3079,7 +3079,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
 
     destStorage11->markLevelDirty(destLevel);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, RenderTargetD3D **outRT)
@@ -3541,16 +3541,12 @@ gl::Error Renderer11::generateMipmapUsingD3D(TextureStorage *storage,
     ASSERT(storage11->supportsNativeMipmapFunction());
 
     ID3D11ShaderResourceView *srv;
-    gl::Error error = storage11->getSRVLevels(textureState.getEffectiveBaseLevel(),
-                                              textureState.getEffectiveMaxLevel(), &srv);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(storage11->getSRVLevels(textureState.getEffectiveBaseLevel(),
+                                      textureState.getEffectiveMaxLevel(), &srv));
 
     mDeviceContext->GenerateMips(srv);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(SwapChainD3D *swapChain)
