@@ -19,6 +19,47 @@
     },
     {
       "key": {
+        "uuid": "512a5561_88eb37a3",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:56:48Z",
+      "side": 1,
+      "message": "Yes, only one place. \npublicType.setBasic(EbtStruct, EvqTemporary, structLine);\npublicType.userDef \u003d structureType;\npublicType.isStructSpecifier \u003d true;\n\nI will remove the function then.",
+      "parentUuid": "512a5561_c897ef38",
+      "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "512a5561_08e027b9",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T08:56:48Z",
+      "side": 1,
+      "message": "No reason to have this. I will remove it and instead of a function call, I will just use a member access.",
+      "range": {
+        "startLine": 641,
+        "startChar": 4,
+        "endLine": 641,
+        "endChar": 54
+      },
+      "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "512a5561_28ddebff",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 2
