@@ -45,6 +45,23 @@
       "revId": "191100f7a7e7f862ff44e1d4d42462460f65a87c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11cc5df8_329ba5c6",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-02T19:19:48Z",
+      "side": 1,
+      "message": "Nit: put this in compiler_test.cpp and only expose FindShdaerVariable(root, name, type)\n\nCan be done in another CL.",
+      "revId": "191100f7a7e7f862ff44e1d4d42462460f65a87c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
