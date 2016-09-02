@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11cc5df8_c6e5379f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-02T14:34:31Z",
+      "side": 1,
+      "message": "this might look a bit nicer if you pass the shader version and do the check inside the builder.",
+      "range": {
+        "startLine": 949,
+        "startChar": 23,
+        "endLine": 949,
+        "endChar": 52
+      },
+      "revId": "191100f7a7e7f862ff44e1d4d42462460f65a87c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11cc5df8_46fae73e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-02T14:34:31Z",
+      "side": 1,
+      "message": "would it be possible to initialize the builder with mdiagnositics and shaderversion? then no need to pass them.",
+      "range": {
+        "startLine": 949,
+        "startChar": 9,
+        "endLine": 949,
+        "endChar": 21
+      },
+      "revId": "191100f7a7e7f862ff44e1d4d42462460f65a87c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
