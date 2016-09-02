@@ -896,10 +896,18 @@ void Renderer11::populateRenderer11DeviceCaps()
         }
     }
 
-    hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B5G6R5_UNORM, &(mRenderer11DeviceCaps.B5G6R5support));
-    if (FAILED(hr))
+    if (getWorkarounds().disableB5G6R5Support)
     {
         mRenderer11DeviceCaps.B5G6R5support = 0;
+    }
+    else
+    {
+        hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B5G6R5_UNORM,
+                                         &(mRenderer11DeviceCaps.B5G6R5support));
+        if (FAILED(hr))
+        {
+            mRenderer11DeviceCaps.B5G6R5support = 0;
+        }
     }
 
     hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B4G4R4A4_UNORM, &(mRenderer11DeviceCaps.B4G4R4A4support));
