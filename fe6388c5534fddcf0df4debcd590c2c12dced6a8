@@ -16,6 +16,23 @@
       "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "512a5561_28ddebff",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 1027,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-02T08:54:05Z",
+      "side": 1,
+      "message": "Now that I think of this more, this grammar rule only needs to return the basic type and its column/row count. TPublicType has all sorts of extra data that\u0027s not needed. It would be cleaner to return just a simple struct with TBasicType, rows and columns from here, and have TPublicType::setBasic to take in that struct and the qualifier. That way the EvqUnspecified wouldn\u0027t be needed either.",
+      "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
