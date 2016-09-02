@@ -74,6 +74,24 @@
       "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "512a5561_08d3c7cd",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 2
+      },
+      "lineNbr": 1027,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2016-09-02T12:40:05Z",
+      "side": 1,
+      "message": "Refactored it. Might be good at some point to have structures which match the grammar.\nI.e. there might not be a reason for both fully_specified_type and type_specifier to use TPublicType.\nAlso, the naming seems off.",
+      "parentUuid": "512a5561_28ddebff",
+      "revId": "fe6388c5534fddcf0df4debcd590c2c12dced6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
