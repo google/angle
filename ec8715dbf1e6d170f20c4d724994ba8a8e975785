@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76366f11_ea689b88",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-05T17:10:51Z",
+      "side": 1,
+      "message": "can you add a comment somewhere along the lines of \"The negative unary operator is buggy on OSX. Work around this by using abs instead.\"",
+      "range": {
+        "startLine": 166,
+        "startChar": 49,
+        "endLine": 166,
+        "endChar": 52
+      },
+      "revId": "ec8715dbf1e6d170f20c4d724994ba8a8e975785",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
