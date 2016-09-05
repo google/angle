@@ -387,6 +387,7 @@ enum TLayoutBlockStorage
 struct TLayoutQualifier
 {
     int location;
+    unsigned int locationsSpecified;
     TLayoutMatrixPacking matrixPacking;
     TLayoutBlockStorage blockStorage;
 
@@ -398,6 +399,7 @@ struct TLayoutQualifier
         TLayoutQualifier layoutQualifier;
 
         layoutQualifier.location = -1;
+        layoutQualifier.locationsSpecified = 0;
         layoutQualifier.matrixPacking = EmpUnspecified;
         layoutQualifier.blockStorage = EbsUnspecified;
 

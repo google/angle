@@ -222,6 +222,10 @@ int main(int argc, char *argv[])
         }
         else
         {
+            if (spec != SH_GLES2_SPEC && spec != SH_WEBGL_SPEC)
+            {
+                resources.MaxDrawBuffers = 8;
+            }
             ShHandle compiler = 0;
             switch (FindShaderType(argv[0]))
             {

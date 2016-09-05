@@ -27,6 +27,7 @@ class QualificationOrderShaderTest : public testing::Test
     {
         ShBuiltInResources resources;
         ShInitBuiltInResources(&resources);
+        resources.MaxDrawBuffers = (spec == SH_GLES2_SPEC) ? 1 : 8;
 
         TranslatorESSL *translator = new TranslatorESSL(shaderType, spec);
         EXPECT_TRUE(translator->Init(resources));
@@ -547,5 +548,22 @@ TEST_F(QualificationOrderShaderTest, InvalidFunctionParametersFlatIn)
     if (compile(shaderString, GL_FRAGMENT_SHADER, SH_GLES3_SPEC))
     {
         FAIL() << "Shader compilation succeeded, expecting failure" << mInfoLog;
+    }
+}
+
+// Output layout location qualifier can't appear more than once within a declaration.
+// GLSL ES 3.00.6 section 4.3.8.2 Output Layout Qualifiers.
+TEST_F(QualificationOrderShaderTest, TwoOutputLocations)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(location=1, location=2) out vec4 myColor;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString, GL_FRAGMENT_SHADER, SH_GLES3_SPEC))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
