@@ -87,32 +87,8 @@ class MatchOutputCodeTest : public testing::Test
     std::map<ShShaderOutput, std::string> mOutputCode;
 };
 
-class ShaderVariableFinder : public TIntermTraverser
-{
-  public:
-    ShaderVariableFinder(const TString &variableName, TBasicType basicType)
-        : TIntermTraverser(true, false, false),
-          mVariableName(variableName),
-          mNodeFound(nullptr),
-          mBasicType(basicType)
-    {
-    }
-
-    void visitSymbol(TIntermSymbol *node)
-    {
-        if (node->getBasicType() == mBasicType && node->getSymbol() == mVariableName)
-        {
-            mNodeFound = node;
-        }
-    }
-
-    bool isFound() const { return mNodeFound != nullptr; }
-    const TIntermSymbol *getNode() const { return mNodeFound; }
-
-  private:
-    TString mVariableName;
-    TIntermSymbol *mNodeFound;
-    TBasicType mBasicType;
-};
+const TIntermSymbol *FindSymbolNode(TIntermNode *root,
+                                    const TString &symbolName,
+                                    TBasicType basicType);
 
 #endif // TESTS_TEST_UTILS_COMPILER_TEST_H_

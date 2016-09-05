@@ -836,7 +836,7 @@ interpolation_qualifier
 
 type_qualifier
     : single_type_qualifier {
-        $$ = new TTypeQualifierBuilder(new TStorageQualifierWrapper(context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary, @1));
+        $$ = context->createTypeQualifierBuilder(@1);
         $$->appendQualifier($1);
     }
     | type_qualifier single_type_qualifier {

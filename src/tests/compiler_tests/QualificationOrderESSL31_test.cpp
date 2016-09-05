@@ -41,11 +41,9 @@ class QualificationVertexShaderTestESSL31 : public testing::Test
         return mASTRoot != nullptr;
     }
 
-    const TIntermSymbol *findSymbolInAST(const TString &stringToFind, TBasicType basicType)
+    const TIntermSymbol *findSymbolInAST(const TString &symbolName, TBasicType basicType)
     {
-        ShaderVariableFinder finder(stringToFind, basicType);
-        mASTRoot->traverse(&finder);
-        return finder.getNode();
+        return FindSymbolNode(mASTRoot, symbolName, basicType);
     }
 
   protected:

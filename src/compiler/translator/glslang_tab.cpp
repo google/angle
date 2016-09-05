@@ -3414,7 +3414,7 @@ yyreduce:
   case 125:
 
     {
-        (yyval.interm.typeQualifierBuilder) = new TTypeQualifierBuilder(new TStorageQualifierWrapper(context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary, (yylsp[0])));
+        (yyval.interm.typeQualifierBuilder) = context->createTypeQualifierBuilder((yylsp[0]));
         (yyval.interm.typeQualifierBuilder)->appendQualifier((yyvsp[0].interm.qualifierWrapper));
     }
 

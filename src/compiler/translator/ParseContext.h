@@ -327,6 +327,7 @@ class TParseContext : angle::NonCopyable
                                           const TSourceLoc &qualifierTypeLine,
                                           int intValue,
                                           const TSourceLoc &intValueLine);
+    TTypeQualifierBuilder *createTypeQualifierBuilder(const TSourceLoc &loc);
     TLayoutQualifier joinLayoutQualifiers(TLayoutQualifier leftQualifier,
                                           TLayoutQualifier rightQualifier,
                                           const TSourceLoc &rightQualifierLocation);
