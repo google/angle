@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include <cmath>
-
+#include "common/mathutil.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -3494,7 +3493,7 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
     const int size = getWindowWidth();
 
     auto dim   = [size](int level) { return size >> level; };
-    int levels = static_cast<int>(std::log2(size));
+    int levels = gl::log2(size);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
