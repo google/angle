@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76366f11_d90bee7f",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3417,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-06T14:51:36Z",
+      "side": 1,
+      "message": "There are memory leaks here and other places in this patch. Please see: https://luci-logdog.appspot.com/v/?s\u003dchromium%2Fbb%2Ftryserver.chromium.linux%2Flinux_chromium_asan_rel_ng%2F221507%2F%2B%2Frecipes%2Fsteps%2Fgpu_unittests__with_patch__on_Ubuntu-12.04%2F0%2Flogs%2FKnownOpenGLContexts_ShaderTranslatorOutputVersionTest.HasCorrectOutputGLSLVersion_0%2F0.",
+      "revId": "70866b89141f25091a72b8eb9acbb05f73240786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
