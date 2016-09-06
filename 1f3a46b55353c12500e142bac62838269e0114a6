@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76366f11_f9b7d2d3",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-06T14:35:45Z",
+      "side": 1,
+      "message": "nit: can be IsD3D11 (for future reference, no need to dq-CQ)",
+      "range": {
+        "startLine": 101,
+        "startChar": 20,
+        "endLine": 101,
+        "endChar": 84
+      },
+      "revId": "1f3a46b55353c12500e142bac62838269e0114a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
