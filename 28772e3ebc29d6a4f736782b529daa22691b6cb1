@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "76366f11_99ecc6b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-06T15:53:54Z",
+      "side": 1,
+      "message": "Correct. There was a problem here that I tracked to the index iteration, but while I was here I cleaned this up a bit.",
+      "parentUuid": "56508b48_586fdd23",
+      "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56508b48_b853996c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 4
@@ -47,6 +65,30 @@
       "writtenOn": "2016-09-06T14:21:55Z",
       "side": 1,
       "message": "What forces this to be the case? I think it\u0027s possible to set the swizzle parameters on a depth texture.",
+      "range": {
+        "startLine": 252,
+        "startChar": 8,
+        "endLine": 253,
+        "endChar": 88
+      },
+      "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76366f11_d922ce11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-06T15:53:54Z",
+      "side": 1,
+      "message": "This is the swizzle format, not the depth. Swizzle formats never use depth components. See this code in the swizzle code in gen_texture_format_table.py:\n\n    # Depth formats need special handling, since combined depth/stencil formats don\u0027t have a clearly\n    # defined component type.\n    if angle_format[\u0027channels\u0027].find(\u0027d\u0027) \u003e\u003d 0:\n        if b \u003d\u003d 24 or b \u003d\u003d 32:\n            return \u0027GL_RGBA32F\u0027\n        if b \u003d\u003d 16:\n            return \u0027GL_RGBA16_EXT\u0027",
+      "parentUuid": "76366f11_999e8654",
       "range": {
         "startLine": 252,
         "startChar": 8,
