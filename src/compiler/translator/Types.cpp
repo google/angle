@@ -11,6 +11,7 @@
 #include "compiler/translator/Types.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/SymbolTable.h"
 
 #include <algorithm>
 #include <climits>
@@ -334,6 +335,14 @@ size_t TType::getObjectSize() const
     }
 
     return totalSize;
+}
+
+TStructure::TStructure(const TString *name, TFieldList *fields)
+    : TFieldListCollection(name, fields),
+      mDeepestNesting(0),
+      mUniqueId(TSymbolTable::nextUniqueId()),
+      mAtGlobalScope(false)
+{
 }
 
 bool TStructure::containsArrays() const

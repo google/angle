@@ -103,13 +103,7 @@ class TStructure : public TFieldListCollection
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TStructure(const TString *name, TFieldList *fields)
-        : TFieldListCollection(name, fields),
-          mDeepestNesting(0),
-          mUniqueId(0),
-          mAtGlobalScope(false)
-    {
-    }
+    TStructure(const TString *name, TFieldList *fields);
 
     int deepestNesting() const
     {

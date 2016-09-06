@@ -3259,7 +3259,6 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
 
     // Store a bool in the struct if we're at global scope, to allow us to
     // skip the local struct scoping workaround in HLSL.
-    structure->setUniqueId(TSymbolTable::nextUniqueId());
     structure->setAtGlobalScope(symbolTable.atGlobalLevel());
 
     if (!structName->empty())
