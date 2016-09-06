@@ -22,6 +22,30 @@
       "revId": "fc3a74aa461113a431ed26813c5f49b080602af8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76366f11_39f5ba4b",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2016-09-06T15:37:07Z",
+      "side": 1,
+      "message": "Good catch! Thanks!",
+      "parentUuid": "76366f11_59c99e4b",
+      "range": {
+        "startLine": 346,
+        "startChar": 3,
+        "endLine": 346,
+        "endChar": 45
+      },
+      "revId": "fc3a74aa461113a431ed26813c5f49b080602af8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
