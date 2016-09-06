@@ -33,6 +33,29 @@
       "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76366f11_999e8654",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-06T14:21:55Z",
+      "side": 1,
+      "message": "What forces this to be the case? I think it\u0027s possible to set the swizzle parameters on a depth texture.",
+      "range": {
+        "startLine": 252,
+        "startChar": 8,
+        "endLine": 253,
+        "endChar": 88
+      },
+      "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
