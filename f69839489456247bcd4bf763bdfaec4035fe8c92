@@ -16,6 +16,24 @@
       "revId": "f69839489456247bcd4bf763bdfaec4035fe8c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76366f11_34c0218c",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-06T17:29:57Z",
+      "side": 1,
+      "message": "Was going to try and understand what the bug was, thanks! :)",
+      "parentUuid": "512a5561_28888b1d",
+      "revId": "f69839489456247bcd4bf763bdfaec4035fe8c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
