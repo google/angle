@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "QualifierTypes.h"
+#include "compiler/translator/QualifierTypes.h"
 
-#include "Diagnostics.h"
+#include "compiler/translator/Diagnostics.h"
 
 #include <algorithm>
 

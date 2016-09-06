@@ -7,11 +7,9 @@
 #ifndef COMPILER_TRANSLATOR_QUALIFIER_TYPES_H_
 #define COMPILER_TRANSLATOR_QUALIFIER_TYPES_H_
 
-#include "BaseTypes.h"
 #include "common/angleutils.h"
-#include "Types.h"
-
-#include <vector>
+#include "compiler/translator/BaseTypes.h"
+#include "compiler/translator/Types.h"
 
 class TDiagnostics;
 
@@ -34,8 +32,8 @@ enum TQualifierType
 
 class TQualifierWrapperBase : angle::NonCopyable
 {
-
   public:
+    POOL_ALLOCATOR_NEW_DELETE();
     TQualifierWrapperBase(const TSourceLoc &line) : mLine(line) {}
     virtual ~TQualifierWrapperBase(){};
     virtual TQualifierType getType() const     = 0;
@@ -147,9 +145,10 @@ struct TTypeQualifier
 class TTypeQualifierBuilder : angle::NonCopyable
 {
   public:
-    using QualifierSequence = std::vector<const TQualifierWrapperBase *>;
+    using QualifierSequence = TVector<const TQualifierWrapperBase *>;
 
   public:
+    POOL_ALLOCATOR_NEW_DELETE();
     TTypeQualifierBuilder(const TStorageQualifierWrapper *scope, int shaderVersion);
     // Adds the passed qualifier to the end of the sequence.
     void appendQualifier(const TQualifierWrapperBase *qualifier);
