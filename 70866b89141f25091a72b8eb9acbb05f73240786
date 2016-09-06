@@ -16,6 +16,24 @@
       "revId": "70866b89141f25091a72b8eb9acbb05f73240786",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91668dcf_3d6d1bc2",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3417,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-06T15:03:24Z",
+      "side": 1,
+      "message": "Oh, right, I think there\u0027s POOL_ALLOCATOR_NEW_DELETE missing from a few places and also TTypeQualifierBuilder might have an issue with an std::vector that doesn\u0027t get freed.",
+      "parentUuid": "76366f11_d90bee7f",
+      "revId": "70866b89141f25091a72b8eb9acbb05f73240786",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
