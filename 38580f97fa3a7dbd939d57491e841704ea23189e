@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6417f7a_e0d71cdd",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-06T08:36:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5105f548_5047cc9f",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_b03b9828",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 3
@@ -47,6 +65,24 @@
       "writtenOn": "2016-08-31T11:55:11Z",
       "side": 1,
       "message": "I don\u0027t think the location and image format qualifiers can coexist, so \"isFirst\" is currently unnecessary.",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16453384_de3925de",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-06T08:36:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b160f11c_5347c49f",
       "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
