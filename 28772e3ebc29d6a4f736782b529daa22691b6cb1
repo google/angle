@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56508b48_586fdd23",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-06T13:41:53Z",
+      "side": 1,
+      "message": "Just to be sure, no functional changes were intended in this file right? (I don\u0027t see any)",
+      "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56508b48_b853996c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-06T13:41:53Z",
+      "side": 1,
+      "message": "Nice!",
+      "revId": "28772e3ebc29d6a4f736782b529daa22691b6cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
