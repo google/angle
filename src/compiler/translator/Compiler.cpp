@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/translator/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/Cache.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/CallDAG.h"
@@ -330,6 +331,9 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // This pass might emit short circuits so keep it before the short circuit unfolding
         if (success && (compileOptions & SH_REWRITE_DO_WHILE_LOOPS))
             RewriteDoWhile(root, getTemporaryIndex());
+
+        if (success && (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION))
+            sh::AddAndTrueToLoopCondition(root);
 
         if (success && (compileOptions & SH_UNFOLD_SHORT_CIRCUIT))
         {

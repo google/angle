@@ -22,6 +22,8 @@
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
             '../include/angle_gl.h',
+            'compiler/translator/AddAndTrueToLoopCondition.cpp',
+            'compiler/translator/AddAndTrueToLoopCondition.h',
             'compiler/translator/BaseTypes.h',
             'compiler/translator/BuiltInFunctionEmulator.cpp',
             'compiler/translator/BuiltInFunctionEmulator.h',
