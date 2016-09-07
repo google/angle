@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "36b157f2_f74d008c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "Bitfields don\u0027t work nicely with enum classes, unless you manually write the | ~ \u0026 overloads (see https://github.com/Unvanquished/PrototypeRenderer/blob/master/src/vkcpp/include/vkcpp/EnumClassBitmasks.h ).\n+1 for 64bits",
+      "parentUuid": "16f373ac_6234b0ec",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 7
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_02484c54",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 1
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "36b157f2_1728b4a4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "+1, and rewrite is too general and we have used it only when we transform language constructs to simpler constructs. Use SH_ADD_AND_TRUE_TO_LOOP_CONDITION instead?\nAlso rename the new files accordingly etc.",
+      "parentUuid": "16f373ac_e23f00c2",
+      "range": {
+        "startLine": 216,
+        "startChar": 29,
+        "endLine": 216,
+        "endChar": 35
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_224f485d",
         "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
         "patchSetId": 1
@@ -82,6 +130,30 @@
       "writtenOn": "2016-09-07T14:07:15Z",
       "side": 1,
       "message": "does this handle rewriting nested loops?",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_57322c18",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "why not use visitLoop to avoid having to search inside the statements?",
+      "parentUuid": "16f373ac_224f485d",
       "range": {
         "startLine": 27,
         "startChar": 9,
@@ -111,6 +183,57 @@
         "endLine": 36,
         "endChar": 55
       },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_77373007",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "Doesn\u0027t the problem happen with do-while loops too?",
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_971be48b",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "This is unnecessary, andOp will have the correct type set in its constructor.\nThen you might want to put the TType(EbtBool) in the trueValue constructor call.",
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_d7255cca",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:32:29Z",
+      "side": 1,
+      "message": "The temporaryIndex is not used and can be removed from RewriteForAndWhile.",
       "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
