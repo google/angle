@@ -72,7 +72,7 @@ struct WorkaroundsD3D
     // is negative, even if the sum of Offset and Location is in range. This may cause errors when
     // translating GLSL's function texelFetchOffset into texture.Load, as it is valid for
     // texelFetchOffset to use negative texture coordinates as its parameter P when the sum of P
-    // and Offset is in range. To work around this, we translatie texelFetchOffset into texelFetch
+    // and Offset is in range. To work around this, we translate texelFetchOffset into texelFetch
     // by adding Offset directly to Location before reading the texture.
     bool preAddTexelFetchOffsets = false;
 
@@ -85,6 +85,10 @@ struct WorkaroundsD3D
     // This workaroud will disable B5G6R5 support when it's Intel driver. By default, it will use
     // R8G8B8A8 format.
     bool disableB5G6R5Support = false;
+
+    // On some Intel drivers, evaluating unary minus operator on integer may get wrong answer in
+    // vertex shaders. To work around this bug, we translate -(int) into ~(int)+1.
+    bool rewriteUnaryMinusOperator = false;
 };
 
 }  // namespace rx

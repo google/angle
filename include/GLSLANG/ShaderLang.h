@@ -95,6 +95,7 @@ typedef enum
 } ShShaderOutput;
 
 // Compile options.
+
 typedef uint64_t ShCompileOptions;
 
 const ShCompileOptions SH_VALIDATE                           = 0;
@@ -198,6 +199,10 @@ const ShCompileOptions SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = UINT64_C(1) <
 // This flag works around condition bug of for and while loops in Intel Mac OSX drivers.
 // Condition calculation is not correct. Rewrite it from "CONDITION" to "CONDITION && true".
 const ShCompileOptions SH_ADD_AND_TRUE_TO_LOOP_CONDITION = UINT64_C(1) << 25;
+
+// This flag works around a bug in evaluating unary minus operator on integer on some INTEL
+// drivers. It works by translating -(int) into ~(int) + 1.
+const ShCompileOptions SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR = UINT64_C(1) << 26;
 
 // Defines alternate strategies for implementing array index clamping.
 typedef enum {
