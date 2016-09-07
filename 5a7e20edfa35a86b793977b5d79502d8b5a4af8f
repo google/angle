@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f373ac_9f801cfa",
+        "filename": "src/compiler/translator/RewriteTexelFetchOffset.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-07T08:12:54Z",
+      "side": 0,
+      "message": "Duplicate code in line 123.",
+      "revId": "5a7e20edfa35a86b793977b5d79502d8b5a4af8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
