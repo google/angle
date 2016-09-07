@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f373ac_6234b0ec",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:07:15Z",
+      "side": 1,
+      "message": "we might want to use c++11 enum classes and typedef this to a 64-bit int now.",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 7
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_02484c54",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:07:15Z",
+      "side": 1,
+      "message": "nit: can you mention what the rewriting does? (It adds a \u0026\u0026 true expression)",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 92
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_e23f00c2",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:07:15Z",
+      "side": 1,
+      "message": "nit: you\u0027re not actually re-writing the loop, you\u0027re re-writing the condition. so maybe call this SH_REWRITE_FOR_AND_WHILE_CONDITIONS",
+      "range": {
+        "startLine": 216,
+        "startChar": 29,
+        "endLine": 216,
+        "endChar": 35
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_224f485d",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:07:15Z",
+      "side": 1,
+      "message": "does this handle rewriting nested loops?",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_42525408",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:07:15Z",
+      "side": 1,
+      "message": "nit: I think you can use a range-for iterator here.",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 36,
+        "endChar": 55
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
