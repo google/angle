@@ -22,6 +22,98 @@
       "revId": "7279da314adc834f92d0d753b671546678774bf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_37169861",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:40:31Z",
+      "side": 1,
+      "message": "typo: MINURS -\u003e MINUS",
+      "parentUuid": "16f373ac_828b9c75",
+      "range": {
+        "startLine": 217,
+        "startChar": 4,
+        "endLine": 217,
+        "endChar": 47
+      },
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_b701c813",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:40:31Z",
+      "side": 1,
+      "message": "The code here can be put in RewriteMinusOperator directly.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_d7fe3cfe",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:40:31Z",
+      "side": 1,
+      "message": "Because the transformation you are doing is \"simple\" you don\u0027t need to do an iterative transform, and doing traverse once is enough.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_370bf82e",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:40:31Z",
+      "side": 1,
+      "message": "Put this at the end and use the following constructor that deduces the type automatically:\n\nTIntermBinary *add \u003d new TIntermBinary(EOpAdd, bitwiseNot, oneNode);",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36b157f2_9704c424",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-07T14:40:31Z",
+      "side": 1,
+      "message": "The temporaryIndex is not used and can be removed.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
