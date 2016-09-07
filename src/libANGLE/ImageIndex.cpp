@@ -135,7 +135,12 @@ ImageIndexIterator::ImageIndexIterator(GLenum type, const Range<GLint> &mipRange
 
 GLint ImageIndexIterator::maxLayer() const
 {
-    return (mLayerCounts ? static_cast<GLint>(mLayerCounts[mCurrentMip]) : mLayerRange.end);
+    if (mLayerCounts)
+    {
+        ASSERT(mCurrentMip >= 0);
+        return (mCurrentMip < mMipRange.end) ? mLayerCounts[mCurrentMip] : 0;
+    }
+    return mLayerRange.end;
 }
 
 ImageIndex ImageIndexIterator::next()
