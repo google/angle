@@ -3490,6 +3490,13 @@ T UNorm(double value)
 // Test rendering a depth texture with mipmaps.
 TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
 {
+    //TODO(cwallez) this is failing on Intel Win7 OpenGL
+    if (IsIntel() && IsWindows() && IsOpenGL())
+    {
+        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        return;
+    }
+
     const int size = getWindowWidth();
 
     auto dim   = [size](int level) { return size >> level; };
