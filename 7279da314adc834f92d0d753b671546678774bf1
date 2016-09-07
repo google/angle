@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "16f373ac_02396c8f",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:49:13Z",
+      "side": 1,
+      "message": "We use this pattern elsewhere, it allows for more private functions, I like keeping it.",
+      "parentUuid": "36b157f2_b701c813",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_d7fe3cfe",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
@@ -77,6 +95,24 @@
       "writtenOn": "2016-09-07T14:40:31Z",
       "side": 1,
       "message": "Because the transformation you are doing is \"simple\" you don\u0027t need to do an iterative transform, and doing traverse once is enough.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_82b8bce8",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:49:13Z",
+      "side": 1,
+      "message": "Are you sure? What about something weird like (-(-(-(-(-x)))), etc",
+      "parentUuid": "36b157f2_d7fe3cfe",
       "revId": "7279da314adc834f92d0d753b671546678774bf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
