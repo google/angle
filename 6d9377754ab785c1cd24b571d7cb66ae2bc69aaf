@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f373ac_22ebc804",
+        "filename": "src/libANGLE/renderer/d3d/WorkaroundsD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:24:13Z",
+      "side": 1,
+      "message": "formatParseError is could be more clear, how about \"disableB5G6R6Support\" or \"alwaysEmulateB5G6R6\"",
+      "range": {
+        "startLine": 87,
+        "startChar": 9,
+        "endLine": 87,
+        "endChar": 31
+      },
+      "revId": "6d9377754ab785c1cd24b571d7cb66ae2bc69aaf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
