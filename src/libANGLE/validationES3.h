@@ -32,6 +32,7 @@ bool ValidateES3TexImageParametersBase(ValidationContext *context,
                                        GLint border,
                                        GLenum format,
                                        GLenum type,
+                                       GLsizei imageSize,
                                        const GLvoid *pixels);
 
 bool ValidateES3TexStorageParameters(Context *context,
@@ -57,6 +58,7 @@ bool ValidateES3TexImage2DParameters(Context *context,
                                      GLint border,
                                      GLenum format,
                                      GLenum type,
+                                     GLsizei imageSize,
                                      const GLvoid *pixels);
 
 bool ValidateES3TexImage3DParameters(Context *context,

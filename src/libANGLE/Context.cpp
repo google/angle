@@ -2417,6 +2417,9 @@ void Context::initCaps(bool webGLContext)
     mExtensions.maxDebugGroupStackDepth = 1024;
     mExtensions.maxLabelLength          = 1024;
 
+    // Explicitly enable GL_ANGLE_robust_client_memory
+    mExtensions.robustClientMemory = true;
+
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
     mCaps.maxVertexUniformBlocks = std::min<GLuint>(mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);

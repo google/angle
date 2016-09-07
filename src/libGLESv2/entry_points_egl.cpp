@@ -1475,6 +1475,67 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         // GL_ANGLE_webgl_compatibility
         INSERT_PROC_ADDRESS(gl, EnableExtensionANGLE);
 
+        // GL_ANGLE_robust_client_memory
+        INSERT_PROC_ADDRESS(gl, GetBooleanvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetBufferParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetFloatvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetFramebufferAttachmentParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetIntegervRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetProgramivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetRenderbufferParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetShaderivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexParameterfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetUniformfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetUniformivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetVertexAttribfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetVertexAttribivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetVertexAttribPointervRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, ReadPixelsRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexImage2DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexParameterfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexSubImage2DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexImage3DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexSubImage3DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetQueryivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetBufferPointervRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetIntegeri_vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetVertexAttribIivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetVertexAttribIuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetUniformuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetActiveUniformBlockivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetInteger64vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetInteger64i_vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetBufferParameteri64vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, SamplerParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, SamplerParameterfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetSamplerParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetSamplerParameterfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetFramebufferParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetProgramInterfaceivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetBooleani_vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetMultisamplefvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexLevelParameterivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexLevelParameterfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetPointervRobustANGLERobustANGLE);
+        INSERT_PROC_ADDRESS(gl, ReadnPixelsRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetnUniformfvRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetnUniformivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetnUniformuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexParameterIivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, TexParameterIuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexParameterIivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetTexParameterIuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, SamplerParameterIivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, SamplerParameterIuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetSamplerParameterIivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetSamplerParameterIuivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectivRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjecti64vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetQueryObjectui64vRobustANGLE);
+
         // GLES3 core
         INSERT_PROC_ADDRESS(gl, ReadBuffer);
         INSERT_PROC_ADDRESS(gl, DrawRangeElements);

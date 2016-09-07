@@ -297,6 +297,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
                                        GLint border,
                                        GLenum format,
                                        GLenum type,
+                                       GLsizei imageSize,
                                        const GLvoid *pixels)
 {
     // Validate image size
@@ -475,43 +476,24 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
     }
 
+    if (!ValidImageDataSize(context, target, width, height, 1, actualInternalFormat, type, pixels,
+                            imageSize))
+    {
+        return false;
+    }
+
     // Check for pixel unpack buffer related API errors
     gl::Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
     if (pixelUnpackBuffer != nullptr)
     {
-        // ...the data would be unpacked from the buffer object such that the memory reads required
-        // would exceed the data store size.
-        GLenum sizedFormat = GetSizedInternalFormat(actualInternalFormat, type);
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedFormat);
-        const gl::Extents size(width, height, depth);
-        const auto &unpack = context->getGLState().getUnpackState();
-
-        bool targetIs3D     = target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY;
-        auto endByteOrErr   = formatInfo.computePackUnpackEndByte(type, size, unpack, targetIs3D);
-        if (endByteOrErr.isError())
-        {
-            context->handleError(endByteOrErr.getError());
-            return false;
-        }
-        CheckedNumeric<size_t> checkedEndByte(endByteOrErr.getResult());
-        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
-        checkedEndByte += checkedOffset;
-
-        if (!checkedEndByte.IsValid() ||
-            (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelUnpackBuffer->getSize())))
-        {
-            // Overflow past the end of the buffer
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-
         // ...data is not evenly divisible into the number of bytes needed to store in memory a datum
         // indicated by type.
         if (!isCompressed)
         {
+            size_t offset            = reinterpret_cast<size_t>(pixels);
             size_t dataBytesPerPixel = static_cast<size_t>(gl::GetTypeInfo(type).bytes);
 
-            if ((checkedOffset.ValueOrDie() % dataBytesPerPixel) != 0)
+            if ((offset % dataBytesPerPixel) != 0)
             {
                 context->handleError(
                     Error(GL_INVALID_OPERATION, "Reads would overflow the pixel unpack buffer."));
@@ -545,6 +527,7 @@ bool ValidateES3TexImage2DParameters(Context *context,
                                      GLint border,
                                      GLenum format,
                                      GLenum type,
+                                     GLsizei imageSize,
                                      const GLvoid *pixels)
 {
     if (!ValidTexture2DDestinationTarget(context, target))
@@ -555,7 +538,7 @@ bool ValidateES3TexImage2DParameters(Context *context,
 
     return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
                                              isSubImage, xoffset, yoffset, zoffset, width, height,
-                                             depth, border, format, type, pixels);
+                                             depth, border, format, type, imageSize, pixels);
 }
 
 bool ValidateES3TexImage3DParameters(Context *context,
@@ -583,7 +566,7 @@ bool ValidateES3TexImage3DParameters(Context *context,
 
     return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
                                              isSubImage, xoffset, yoffset, zoffset, width, height,
-                                             depth, border, format, type, pixels);
+                                             depth, border, format, type, -1, pixels);
 }
 
 struct EffectiveInternalFormatInfo

@@ -299,6 +299,9 @@ struct Extensions
     // GL_CHROMIUM_bind_generates_resource
     bool bindGeneratesResource;
 
+    // GL_ANGLE_robust_client_memory
+    bool robustClientMemory;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

@@ -18,9 +18,21 @@ class Context;
 class ValidationContext;
 class Texture;
 
-bool ValidateES2TexImageParameters(Context *context, GLenum target, GLint level, GLenum internalformat, bool isCompressed, bool isSubImage,
-                                   GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                   GLint border, GLenum format, GLenum type, const GLvoid *pixels);
+bool ValidateES2TexImageParameters(Context *context,
+                                   GLenum target,
+                                   GLint level,
+                                   GLenum internalformat,
+                                   bool isCompressed,
+                                   bool isSubImage,
+                                   GLint xoffset,
+                                   GLint yoffset,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLint border,
+                                   GLenum format,
+                                   GLenum type,
+                                   GLsizei imageSize,
+                                   const GLvoid *pixels);
 
 bool ValidateES2CopyTexImageParameters(ValidationContext *context,
                                        GLenum target,
@@ -137,6 +149,17 @@ bool ValidateTexImage2D(Context *context,
                         GLenum format,
                         GLenum type,
                         const GLvoid *pixels);
+bool ValidateTexImage2DRobust(Context *context,
+                              GLenum target,
+                              GLint level,
+                              GLint internalformat,
+                              GLsizei width,
+                              GLsizei height,
+                              GLint border,
+                              GLenum format,
+                              GLenum type,
+                              GLsizei bufSize,
+                              const GLvoid *pixels);
 bool ValidateTexSubImage2D(Context *context,
                            GLenum target,
                            GLint level,

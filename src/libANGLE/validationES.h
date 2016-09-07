@@ -37,7 +37,7 @@ bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum ta
 bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum target);
 bool ValidFramebufferTarget(GLenum target);
 bool ValidBufferTarget(const ValidationContext *context, GLenum target);
-bool ValidBufferParameter(const Context *context, GLenum pname);
+bool ValidBufferParameter(const ValidationContext *context, GLenum pname, GLsizei *numParams);
 bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level);
 bool ValidImageSizeParameters(const Context *context,
                               GLenum target,
@@ -50,6 +50,16 @@ bool ValidCompressedImageSize(const ValidationContext *context,
                               GLenum internalFormat,
                               GLsizei width,
                               GLsizei height);
+bool ValidImageDataSize(ValidationContext *context,
+                        GLenum textureTarget,
+                        GLsizei width,
+                        GLsizei height,
+                        GLsizei depth,
+                        GLenum internalFormat,
+                        GLenum type,
+                        const GLvoid *pixels,
+                        GLsizei imageSize);
+
 bool ValidQueryType(const Context *context, GLenum queryType);
 
 // Returns valid program if id is a valid program name
@@ -130,6 +140,12 @@ bool ValidateStateQuery(ValidationContext *context,
                         GLenum pname,
                         GLenum *nativeType,
                         unsigned int *numParams);
+
+bool ValidateRobustStateQuery(ValidationContext *context,
+                              GLenum pname,
+                              GLsizei bufSize,
+                              GLenum *nativeType,
+                              unsigned int *numParams);
 
 bool ValidateCopyTexImageParametersBase(ValidationContext *context,
                                         GLenum target,
@@ -272,6 +288,37 @@ bool ValidateGenOrDelete(Context *context, GLint n);
 bool ValidateEnable(Context *context, GLenum cap);
 bool ValidateDisable(Context *context, GLenum cap);
 bool ValidateIsEnabled(Context *context, GLenum cap);
+
+bool ValidateRobustEntryPoint(ValidationContext *context, GLsizei bufSize);
+
+bool ValidateGetFramebufferAttachmentParameteriv(ValidationContext *context,
+                                                 GLenum target,
+                                                 GLenum attachment,
+                                                 GLenum pname,
+                                                 GLsizei *numParams);
+bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(ValidationContext *context,
+                                                            GLenum target,
+                                                            GLenum attachment,
+                                                            GLenum pname,
+                                                            GLsizei bufSize,
+                                                            GLsizei *numParams);
+
+bool ValidateGetBufferParameteriv(ValidationContext *context,
+                                  GLenum target,
+                                  GLenum pname,
+                                  GLsizei *numParams);
+bool ValidateGetBufferParameterivRobustANGLE(ValidationContext *context,
+                                             GLenum target,
+                                             GLenum pname,
+                                             GLsizei bufSize,
+                                             GLsizei *numParams);
+
+bool ValidateGetProgramiv(Context *context, GLuint program, GLenum pname, GLsizei *numParams);
+bool ValidateGetProgramivRobustANGLE(Context *context,
+                                     GLuint program,
+                                     GLenum pname,
+                                     GLsizei bufSize,
+                                     GLsizei *numParams);
 
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
