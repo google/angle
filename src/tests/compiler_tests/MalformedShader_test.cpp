@@ -2516,3 +2516,20 @@ TEST_F(MalformedShaderTest, InvariantDeclarationWithLayoutQualifier)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Variable declaration with both invariant and layout qualifiers is not valid in the formal grammar
+// provided in the ESSL 3.00 spec. ESSL 3.10 starts allowing this combination, but ESSL 3.00 should
+// still disallow it.
+TEST_F(MalformedShaderTest, VariableDeclarationWithInvariantAndLayoutQualifierESSL300)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "invariant layout(location = 0) out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

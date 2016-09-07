@@ -135,6 +135,16 @@ bool HasRepeatingQualifiers(const TTypeQualifierBuilder::QualifierSequence &qual
                     *errorMessage = "The layout qualifier specified multiple times.";
                     return true;
                 }
+                if (invariantFound && !areQualifierChecksRelaxed)
+                {
+                    // This combination is not correct according to the syntax specified in the
+                    // formal grammar in the ESSL 3.00 spec. In ESSL 3.10 the grammar does not have
+                    // a similar restriction.
+                    *errorMessage =
+                        "The layout qualifier and invariant qualifier cannot coexist in the same "
+                        "declaration according to the grammar.";
+                    return true;
+                }
                 layoutFound = true;
                 const TLayoutQualifier &currentQualifier =
                     static_cast<const TLayoutQualifierWrapper *>(qualifiers[i])->getQualifier();
