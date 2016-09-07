@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f373ac_a27cd879",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:12:53Z",
+      "side": 1,
+      "message": "I\u0027m not sure it\u0027s entirely clear what ComponentWise or NonComponentWise mean. \"same return type\" was clearer to me.",
+      "range": {
+        "startLine": 1231,
+        "startChar": 38,
+        "endLine": 1231,
+        "endChar": 63
+      },
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16f373ac_e2b26053",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:12:53Z",
+      "side": 1,
+      "message": "nit: PostProcess (caps for static)",
+      "range": {
+        "startLine": 57,
+        "startChar": 29,
+        "endLine": 57,
+        "endChar": 40
+      },
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
