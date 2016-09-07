@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d66d5b44_c4f4be51",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-07T14:21:06Z",
+      "side": 1,
+      "message": "The issue with \"same return type\" is that the basic type of the return type would actually not be the same in some cases, so I thought the name was misleading. With \"component-wise\" I\u0027ve tried to convey that the function folds operations where each component of the result is computed based on one component of the operand. Would \"foldUnarySameDimensionalityReturnType\" or something similar be preferable?",
+      "parentUuid": "16f373ac_a27cd879",
+      "range": {
+        "startLine": 1231,
+        "startChar": 38,
+        "endLine": 1231,
+        "endChar": 63
+      },
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_e2b26053",
         "filename": "src/compiler/translator/Intermediate.h",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-07T14:12:53Z",
       "side": 1,
       "message": "nit: PostProcess (caps for static)",
+      "range": {
+        "startLine": 57,
+        "startChar": 29,
+        "endLine": 57,
+        "endChar": 40
+      },
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6741f0d_656946ee",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-07T14:21:06Z",
+      "side": 1,
+      "message": "Will fix this.",
+      "parentUuid": "16f373ac_e2b26053",
       "range": {
         "startLine": 57,
         "startChar": 29,
