@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "56a16ba9_b0537833",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-07T14:27:20Z",
+      "side": 1,
+      "message": "A follow-up patch will do that.",
+      "parentUuid": "36b157f2_7742d061",
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_e2b26053",
         "filename": "src/compiler/translator/Intermediate.h",
         "patchSetId": 5
@@ -124,6 +142,24 @@
       "writtenOn": "2016-09-07T14:23:07Z",
       "side": 1,
       "message": "I\u0027m not sure I understand the promote trying a specific type, can you explain the rational?",
+      "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76890f3e_e9c3557e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3430,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-07T14:27:20Z",
+      "side": 1,
+      "message": "The function return type has been used as a shortcut to avoid having complete code for determining the return type in promote(). Of course it\u0027s a bit messy because it is nicer to have promote being neatly encapsulated inside the TIntermUnary constructor, and follow-up patches will fix this.",
+      "parentUuid": "36b157f2_b7538833",
       "revId": "d29edcfea486ec720b8f69c77a20d7635eeec9a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
