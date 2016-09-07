@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f373ac_828b9c75",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T14:20:09Z",
+      "side": 1,
+      "message": "nit: we should probably switch to 64-bit c++11 enum classes now (same comment as other CL). also you can call this SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR to be a bit more succinct.",
+      "range": {
+        "startLine": 217,
+        "startChar": 4,
+        "endLine": 217,
+        "endChar": 47
+      },
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
