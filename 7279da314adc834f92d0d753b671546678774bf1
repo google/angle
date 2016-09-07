@@ -137,6 +137,24 @@
     },
     {
       "key": {
+        "uuid": "76dd8f9f_ece663d8",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-07T23:32:35Z",
+      "side": 1,
+      "message": "Cool. A test for this kind of code would be welcome.",
+      "parentUuid": "36b157f2_3734d8eb",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
