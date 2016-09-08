@@ -22,6 +22,30 @@
       "revId": "041d847f7e62b25e72da993e70043beeea70bd28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_d28a4972",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-08T15:45:00Z",
+      "side": 1,
+      "message": "std::bitset doesn\u0027t have limitations on number of max ShCompileOption. Maybe 64bits is sufficient for current usage. bitset is inefficient for operations like this: compile_options_ \u003d SH_OBJECT_CODE | SH_VARIABLES | SH_ENFORCE_PACKING_RESTRICTIONS | SH_LIMIT_EXPRESSION_COMPLEXITY | SH_LIMIT_CALL_STACK_DEPTH | SH_CLAMP_INDIRECT_ARRAY_BOUNDS.\n\nAnyway, either method is Ok for me to implement.",
+      "parentUuid": "d6963bc8_bcb756f8",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 34
+      },
+      "revId": "041d847f7e62b25e72da993e70043beeea70bd28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
