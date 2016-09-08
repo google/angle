@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b61aa755_43f5a649",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-08T13:19:16Z",
+      "side": 1,
+      "message": "This comments doesn\u0027t apply anymore. Why is it now correct to use mType\u0027s qualifier directly?\nSame below",
+      "revId": "2a9418f2d3cb0504287382ed100159a06bc2dfae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
