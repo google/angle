@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6963bc8_c8e61cab",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2016-09-08T17:26:44Z",
+      "side": 1,
+      "message": "Hey, sorry for the late drive-by comment, but I just got /analyze working again and it pointed out a small issue here.\n\nIf nonOpaquePunchThroughAlpha is false then whenever pixelIndexCounts[i] \u003c\u003d 0 then encodedColors[i] will be uinitialized. Should maybe zero-init the encodedColors array with \"\u003d {};\" to avoid undefined behavior?",
+      "revId": "41ee20248d0df70212b099fab857e938b5c18ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
