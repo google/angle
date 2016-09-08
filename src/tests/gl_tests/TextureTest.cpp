@@ -3543,6 +3543,43 @@ TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests unpacking into the unsized GL_ALPHA format.
+TEST_P(Texture2DTestES3, UnsizedAlphaUnpackBuffer)
+{
+    // TODO(jmadill): Figure out why this fails on OSX.
+    ANGLE_SKIP_TEST_IF(IsOSX());
+
+    // Initialize the texure.
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, getWindowWidth(), getWindowHeight(), 0, GL_ALPHA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    std::vector<GLubyte> bufferData(getWindowWidth() * getWindowHeight(), 127);
+
+    // Pull in the color data from the unpack buffer.
+    angle::GLBuffer unpackBuffer;
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer.get());
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, getWindowWidth() * getWindowHeight(), bufferData.data(),
+                 GL_STATIC_DRAW);
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, getWindowWidth(), getWindowHeight(), GL_ALPHA,
+                    GL_UNSIGNED_BYTE, nullptr);
+
+    // Clear to a weird color to make sure we're drawing something.
+    glClearColor(0.5f, 0.8f, 1.0f, 0.2f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw with the alpha texture and verify.
+    drawQuad(mProgram, "position", 0.5f);
+    swapBuffers();
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 127, 1);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
@@ -3628,4 +3665,4 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
-} // namespace
+}  // anonymous namespace
