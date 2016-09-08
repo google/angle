@@ -155,6 +155,24 @@
     },
     {
       "key": {
+        "uuid": "8b373ada_5283946f",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-08T14:01:26Z",
+      "side": 1,
+      "message": "I second this - would like to see a test.",
+      "parentUuid": "76dd8f9f_ece663d8",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
