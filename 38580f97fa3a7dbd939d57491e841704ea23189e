@@ -259,6 +259,24 @@
     },
     {
       "key": {
+        "uuid": "cb3052eb_8c7327db",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-08T14:35:37Z",
+      "side": 1,
+      "message": "Nice! I think this version is more readable.",
+      "parentUuid": "91668dcf_1d3cd71f",
+      "revId": "38580f97fa3a7dbd939d57491e841704ea23189e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5105f548_50e50c9a",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 3
