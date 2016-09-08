@@ -80,11 +80,14 @@ const TConstantUnion *WriteConstantUnionArray(TInfoSinkBase &out,
 namespace sh
 {
 
-OutputHLSL::OutputHLSL(sh::GLenum shaderType, int shaderVersion,
-    const TExtensionBehavior &extensionBehavior,
-    const char *sourcePath, ShShaderOutput outputType,
-    int numRenderTargets, const std::vector<Uniform> &uniforms,
-    int compileOptions)
+OutputHLSL::OutputHLSL(sh::GLenum shaderType,
+                       int shaderVersion,
+                       const TExtensionBehavior &extensionBehavior,
+                       const char *sourcePath,
+                       ShShaderOutput outputType,
+                       int numRenderTargets,
+                       const std::vector<Uniform> &uniforms,
+                       ShCompileOptions compileOptions)
     : TIntermTraverser(true, true, true),
       mShaderType(shaderType),
       mShaderVersion(shaderVersion),

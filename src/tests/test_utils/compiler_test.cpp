@@ -49,7 +49,7 @@ bool compileTestShader(GLenum type,
                        ShShaderOutput output,
                        const std::string &shaderString,
                        ShBuiltInResources *resources,
-                       int compileOptions,
+                       ShCompileOptions compileOptions,
                        std::string *translatedCode,
                        std::string *infoLog)
 {
@@ -76,7 +76,7 @@ bool compileTestShader(GLenum type,
                        ShShaderSpec spec,
                        ShShaderOutput output,
                        const std::string &shaderString,
-                       int compileOptions,
+                       ShCompileOptions compileOptions,
                        std::string *translatedCode,
                        std::string *infoLog)
 {
@@ -86,7 +86,7 @@ bool compileTestShader(GLenum type,
 }
 
 MatchOutputCodeTest::MatchOutputCodeTest(GLenum shaderType,
-                                         int defaultCompileOptions,
+                                         ShCompileOptions defaultCompileOptions,
                                          ShShaderOutput outputType)
     : mShaderType(shaderType), mDefaultCompileOptions(defaultCompileOptions)
 {
@@ -109,7 +109,8 @@ void MatchOutputCodeTest::compile(const std::string &shaderString)
     compile(shaderString, mDefaultCompileOptions);
 }
 
-void MatchOutputCodeTest::compile(const std::string &shaderString, const int compileOptions)
+void MatchOutputCodeTest::compile(const std::string &shaderString,
+                                  const ShCompileOptions compileOptions)
 {
     std::string infoLog;
     for (auto &code : mOutputCode)
@@ -125,7 +126,7 @@ void MatchOutputCodeTest::compile(const std::string &shaderString, const int com
 
 bool MatchOutputCodeTest::compileWithSettings(ShShaderOutput output,
                                               const std::string &shaderString,
-                                              const int compileOptions,
+                                              const ShCompileOptions compileOptions,
                                               std::string *translatedCode,
                                               std::string *infoLog)
 {

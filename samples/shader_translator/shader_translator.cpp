@@ -28,7 +28,7 @@ enum TFailCode
 
 static void usage();
 static sh::GLenum FindShaderType(const char *fileName);
-static bool CompileFile(char *fileName, ShHandle compiler, int compileOptions);
+static bool CompileFile(char *fileName, ShHandle compiler, ShCompileOptions compileOptions);
 static void LogMsg(const char *msg, const char *name, const int num, const char *logName);
 static void PrintVariable(const std::string &prefix, size_t index, const sh::ShaderVariable &var);
 static void PrintActiveVariables(ShHandle compiler);
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 {
     TFailCode failCode = ESuccess;
 
-    int compileOptions = 0;
+    ShCompileOptions compileOptions = 0;
     int numCompiles = 0;
     ShHandle vertexCompiler = 0;
     ShHandle fragmentCompiler = 0;
@@ -378,7 +378,7 @@ sh::GLenum FindShaderType(const char *fileName)
 //
 //   Read a file's data into a string, and compile it using ShCompile
 //
-bool CompileFile(char *fileName, ShHandle compiler, int compileOptions)
+bool CompileFile(char *fileName, ShHandle compiler, ShCompileOptions compileOptions)
 {
     ShaderSource source;
     if (!ReadShaderSource(fileName, source))

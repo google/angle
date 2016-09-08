@@ -20,7 +20,8 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
     : TCompiler(type, spec, output) {
 }
 
-void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions)
+void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
+                                                 ShCompileOptions compileOptions)
 {
     if (compileOptions & SH_EMULATE_ABS_INT_FUNCTION)
     {
@@ -31,7 +32,7 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, i
     InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
 }
 
-void TranslatorGLSL::translate(TIntermNode *root, int compileOptions)
+void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOptions)
 {
     TInfoSinkBase& sink = getInfoSink().obj;
 

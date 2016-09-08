@@ -33,7 +33,7 @@ class TParseContext : angle::NonCopyable
                   TExtensionBehavior &ext,
                   sh::GLenum type,
                   ShShaderSpec spec,
-                  int options,
+                  ShCompileOptions options,
                   bool checksPrecErrors,
                   TInfoSink &is,
                   const ShBuiltInResources &resources)
@@ -407,16 +407,18 @@ class TParseContext : angle::NonCopyable
     bool mDeferredSingleDeclarationErrorCheck;
 
     sh::GLenum mShaderType;              // vertex or fragment language (future: pack or unpack)
-    ShShaderSpec mShaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
-    int mCompileOptions;                   // Options passed to TCompiler
+    ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES2 or WebGL.
+    ShCompileOptions mCompileOptions;  // Options passed to TCompiler
     int mShaderVersion;
-    TIntermNode *mTreeRoot;       // root of parse tree being created
+    TIntermNode *mTreeRoot;      // root of parse tree being created
     int mLoopNestingLevel;       // 0 if outside all loops
-    int mStructNestingLevel;      // incremented while parsing a struct declaration
+    int mStructNestingLevel;     // incremented while parsing a struct declaration
     int mSwitchNestingLevel;     // 0 if outside all switch statements
-    const TType *mCurrentFunctionType;  // the return type of the function that's currently being parsed
+    const TType
+        *mCurrentFunctionType;   // the return type of the function that's currently being parsed
     bool mFunctionReturnsValue;  // true if a non-void function has a return
-    bool mChecksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
+    bool mChecksPrecisionErrors;  // true if an error will be generated when a variable is declared
+                                  // without precision, explicit or implicit.
     bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
                                          // ESSL1.
     TLayoutMatrixPacking mDefaultMatrixPacking;

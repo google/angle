@@ -154,7 +154,7 @@ TCompiler::~TCompiler()
 {
 }
 
-bool TCompiler::shouldRunLoopAndIndexingValidation(int compileOptions) const
+bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const
 {
     // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
     // validate loop and indexing as well (to verify that the shader only uses minimal functionality
@@ -189,15 +189,16 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     return true;
 }
 
-TIntermNode *TCompiler::compileTreeForTesting(const char* const shaderStrings[],
-    size_t numStrings, int compileOptions)
+TIntermNode *TCompiler::compileTreeForTesting(const char *const shaderStrings[],
+                                              size_t numStrings,
+                                              ShCompileOptions compileOptions)
 {
     return compileTreeImpl(shaderStrings, numStrings, compileOptions);
 }
 
 TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                                         size_t numStrings,
-                                        const int compileOptions)
+                                        const ShCompileOptions compileOptions)
 {
     clearResults();
 
@@ -393,12 +394,14 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     return NULL;
 }
 
-bool TCompiler::compile(const char *const shaderStrings[], size_t numStrings, int compileOptionsIn)
+bool TCompiler::compile(const char *const shaderStrings[],
+                        size_t numStrings,
+                        ShCompileOptions compileOptionsIn)
 {
     if (numStrings == 0)
         return true;
 
-    int compileOptions = compileOptionsIn;
+    ShCompileOptions compileOptions = compileOptionsIn;
 
     // Apply key workarounds.
     if (shouldFlattenPragmaStdglInvariantAll())
@@ -852,7 +855,7 @@ const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
     return builtInFunctionEmulator;
 }
 
-void TCompiler::writePragma(int compileOptions)
+void TCompiler::writePragma(ShCompileOptions compileOptions)
 {
     if (!(compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL))
     {

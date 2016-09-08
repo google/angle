@@ -73,11 +73,13 @@ class TCompiler : public TShHandleBase
     // compileTreeForTesting should be used only when tests require access to
     // the AST. Users of this function need to manually manage the global pool
     // allocator. Returns NULL whenever there are compilation errors.
-    TIntermNode *compileTreeForTesting(const char* const shaderStrings[],
-        size_t numStrings, int compileOptions);
+    TIntermNode *compileTreeForTesting(const char *const shaderStrings[],
+                                       size_t numStrings,
+                                       ShCompileOptions compileOptions);
 
-    bool compile(const char* const shaderStrings[],
-        size_t numStrings, int compileOptions);
+    bool compile(const char *const shaderStrings[],
+                 size_t numStrings,
+                 ShCompileOptions compileOptions);
 
     // Get results of the last compilation.
     int getShaderVersion() const { return shaderVersion; }
@@ -102,7 +104,7 @@ class TCompiler : public TShHandleBase
     ShShaderOutput getOutputType() const { return outputType; }
     const std::string &getBuiltInResourcesString() const { return builtInResourcesString; }
 
-    bool shouldRunLoopAndIndexingValidation(int compileOptions) const;
+    bool shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const;
 
     // Get the resources set by InitBuiltInSymbolTable
     const ShBuiltInResources& getResources() const;
@@ -123,9 +125,10 @@ class TCompiler : public TShHandleBase
     // Collect info for all attribs, uniforms, varyings.
     void collectVariables(TIntermNode* root);
     // Add emulated functions to the built-in function emulator.
-    virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu, int compileOptions) {};
+    virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
+                                             ShCompileOptions compileOptions){};
     // Translate to object code.
-    virtual void translate(TIntermNode *root, int compileOptions) = 0;
+    virtual void translate(TIntermNode *root, ShCompileOptions compileOptions) = 0;
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
     // Appendix A, section 7, the shader does not use too many uniforms.
     bool enforcePackingRestrictions();
@@ -143,7 +146,7 @@ class TCompiler : public TShHandleBase
     const TExtensionBehavior& getExtensionBehavior() const;
     const char *getSourcePath() const;
     const TPragma& getPragma() const { return mPragma; }
-    void writePragma(int compileOptions);
+    void writePragma(ShCompileOptions compileOptions);
     unsigned int *getTemporaryIndex() { return &mTemporaryIndex; }
     // Relies on collectVariables having been called.
     bool isVaryingDefined(const char *varyingName);
@@ -152,7 +155,7 @@ class TCompiler : public TShHandleBase
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
     const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
-    virtual bool shouldCollectVariables(int compileOptions)
+    virtual bool shouldCollectVariables(ShCompileOptions compileOptions)
     {
         return (compileOptions & SH_VARIABLES) != 0;
     }
@@ -182,7 +185,7 @@ class TCompiler : public TShHandleBase
 
     TIntermNode *compileTreeImpl(const char *const shaderStrings[],
                                  size_t numStrings,
-                                 const int compileOptions);
+                                 const ShCompileOptions compileOptions);
 
     sh::GLenum shaderType;
     ShShaderSpec shaderSpec;

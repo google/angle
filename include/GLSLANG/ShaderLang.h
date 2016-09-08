@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 159
+#define ANGLE_SH_VERSION 160
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -95,107 +95,105 @@ typedef enum
 } ShShaderOutput;
 
 // Compile options.
-typedef enum {
-    SH_VALIDATE                           = 0,
-    SH_VALIDATE_LOOP_INDEXING             = 0x0001,
-    SH_INTERMEDIATE_TREE                  = 0x0002,
-    SH_OBJECT_CODE                        = 0x0004,
-    SH_VARIABLES                          = 0x0008,
-    SH_LINE_DIRECTIVES                    = 0x0010,
-    SH_SOURCE_PATH                        = 0x0020,
-    SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0040,
-    // If a sampler array index happens to be a loop index,
-    //   1) if its type is integer, unroll the loop.
-    //   2) if its type is float, fail the shader compile.
-    // This is to work around a mac driver bug.
-    SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = 0x0080,
+typedef uint64_t ShCompileOptions;
 
-    // This flag works around bug in Intel Mac drivers related to abs(i) where
-    // i is an integer.
-    SH_EMULATE_ABS_INT_FUNCTION = 0x0100,
+const ShCompileOptions SH_VALIDATE                           = 0;
+const ShCompileOptions SH_VALIDATE_LOOP_INDEXING             = UINT64_C(1) << 0;
+const ShCompileOptions SH_INTERMEDIATE_TREE                  = UINT64_C(1) << 1;
+const ShCompileOptions SH_OBJECT_CODE                        = UINT64_C(1) << 2;
+const ShCompileOptions SH_VARIABLES                          = UINT64_C(1) << 3;
+const ShCompileOptions SH_LINE_DIRECTIVES                    = UINT64_C(1) << 4;
+const ShCompileOptions SH_SOURCE_PATH                        = UINT64_C(1) << 5;
+const ShCompileOptions SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = UINT64_C(1) << 6;
+// If a sampler array index happens to be a loop index,
+//   1) if its type is integer, unroll the loop.
+//   2) if its type is float, fail the shader compile.
+// This is to work around a mac driver bug.
+const ShCompileOptions SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX = UINT64_C(1) << 7;
 
-    // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
-    // This flag only enforces (and can only enforce) the packing
-    // restrictions for uniform variables in both vertex and fragment
-    // shaders. ShCheckVariablesWithinPackingLimits() lets embedders
-    // enforce the packing restrictions for varying variables during
-    // program link time.
-    SH_ENFORCE_PACKING_RESTRICTIONS = 0x0800,
+// This flag works around bug in Intel Mac drivers related to abs(i) where
+// i is an integer.
+const ShCompileOptions SH_EMULATE_ABS_INT_FUNCTION = UINT64_C(1) << 8;
 
-    // This flag ensures all indirect (expression-based) array indexing
-    // is clamped to the bounds of the array. This ensures, for example,
-    // that you cannot read off the end of a uniform, whether an array
-    // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
-    // specified in the ShBuiltInResources when constructing the
-    // compiler, selects the strategy for the clamping implementation.
-    SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x1000,
+// Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
+// This flag only enforces (and can only enforce) the packing
+// restrictions for uniform variables in both vertex and fragment
+// shaders. ShCheckVariablesWithinPackingLimits() lets embedders
+// enforce the packing restrictions for varying variables during
+// program link time.
+const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 9;
 
-    // This flag limits the complexity of an expression.
-    SH_LIMIT_EXPRESSION_COMPLEXITY = 0x2000,
+// This flag ensures all indirect (expression-based) array indexing
+// is clamped to the bounds of the array. This ensures, for example,
+// that you cannot read off the end of a uniform, whether an array
+// vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
+// specified in the ShBuiltInResources when constructing the
+// compiler, selects the strategy for the clamping implementation.
+const ShCompileOptions SH_CLAMP_INDIRECT_ARRAY_BOUNDS = UINT64_C(1) << 10;
 
-    // This flag limits the depth of the call stack.
-    SH_LIMIT_CALL_STACK_DEPTH = 0x4000,
+// This flag limits the complexity of an expression.
+const ShCompileOptions SH_LIMIT_EXPRESSION_COMPLEXITY = UINT64_C(1) << 11;
 
-    // This flag initializes gl_Position to vec4(0,0,0,0) at the
-    // beginning of the vertex shader's main(), and has no effect in the
-    // fragment shader. It is intended as a workaround for drivers which
-    // incorrectly fail to link programs if gl_Position is not written.
-    SH_INIT_GL_POSITION = 0x8000,
+// This flag limits the depth of the call stack.
+const ShCompileOptions SH_LIMIT_CALL_STACK_DEPTH = UINT64_C(1) << 12;
 
-    // This flag replaces
-    //   "a && b" with "a ? b : false",
-    //   "a || b" with "a ? true : b".
-    // This is to work around a MacOSX driver bug that |b| is executed
-    // independent of |a|'s value.
-    SH_UNFOLD_SHORT_CIRCUIT = 0x10000,
+// This flag initializes gl_Position to vec4(0,0,0,0) at the
+// beginning of the vertex shader's main(), and has no effect in the
+// fragment shader. It is intended as a workaround for drivers which
+// incorrectly fail to link programs if gl_Position is not written.
+const ShCompileOptions SH_INIT_GL_POSITION = UINT64_C(1) << 13;
 
-    // This flag initializes output variables to 0 at the beginning of main().
-    // It is to avoid undefined behaviors.
-    SH_INIT_OUTPUT_VARIABLES = 0x20000,
-    // TODO(zmo): obsolete, remove after ANGLE roll into Chromium.
-    SH_INIT_VARYINGS_WITHOUT_STATIC_USE = 0x20000,
+// This flag replaces
+//   "a && b" with "a ? b : false",
+//   "a || b" with "a ? true : b".
+// This is to work around a MacOSX driver bug that |b| is executed
+// independent of |a|'s value.
+const ShCompileOptions SH_UNFOLD_SHORT_CIRCUIT = UINT64_C(1) << 14;
 
-    // This flag scalarizes vec/ivec/bvec/mat constructor args.
-    // It is intended as a workaround for Linux/Mac driver bugs.
-    SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = 0x40000,
+// This flag initializes output variables to 0 at the beginning of main().
+// It is to avoid undefined behaviors.
+const ShCompileOptions SH_INIT_OUTPUT_VARIABLES = UINT64_C(1) << 15;
 
-    // This flag overwrites a struct name with a unique prefix.
-    // It is intended as a workaround for drivers that do not handle
-    // struct scopes correctly, including all Mac drivers and Linux AMD.
-    SH_REGENERATE_STRUCT_NAMES = 0x80000,
+// This flag scalarizes vec/ivec/bvec/mat constructor args.
+// It is intended as a workaround for Linux/Mac driver bugs.
+const ShCompileOptions SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = UINT64_C(1) << 16;
 
-    // This flag makes the compiler not prune unused function early in the
-    // compilation process. Pruning coupled with SH_LIMIT_CALL_STACK_DEPTH
-    // helps avoid bad shaders causing stack overflows.
-    SH_DONT_PRUNE_UNUSED_FUNCTIONS = 0x100000,
+// This flag overwrites a struct name with a unique prefix.
+// It is intended as a workaround for drivers that do not handle
+// struct scopes correctly, including all Mac drivers and Linux AMD.
+const ShCompileOptions SH_REGENERATE_STRUCT_NAMES = UINT64_C(1) << 17;
 
-    // This flag works around a bug in NVIDIA 331 series drivers related
-    // to pow(x, y) where y is a constant vector.
-    SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = 0x200000,
+// This flag makes the compiler not prune unused function early in the
+// compilation process. Pruning coupled with SH_LIMIT_CALL_STACK_DEPTH
+// helps avoid bad shaders causing stack overflows.
+const ShCompileOptions SH_DONT_PRUNE_UNUSED_FUNCTIONS = UINT64_C(1) << 18;
 
-    // This flag works around bugs in Mac drivers related to do-while by
-    // transforming them into an other construct.
-    SH_REWRITE_DO_WHILE_LOOPS = 0x400000,
+// This flag works around a bug in NVIDIA 331 series drivers related
+// to pow(x, y) where y is a constant vector.
+const ShCompileOptions SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = UINT64_C(1) << 19;
 
-    // This flag works around a bug in the HLSL compiler optimizer that folds certain
-    // constant pow expressions incorrectly. Only applies to the HLSL back-end. It works
-    // by expanding the integer pow expressions into a series of multiplies.
-    SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS = 0x800000,
+// This flag works around bugs in Mac drivers related to do-while by
+// transforming them into an other construct.
+const ShCompileOptions SH_REWRITE_DO_WHILE_LOOPS = UINT64_C(1) << 20;
 
-    // Flatten "#pragma STDGL invariant(all)" into the declarations of
-    // varying variables and built-in GLSL variables. This compiler
-    // option is enabled automatically when needed.
-    SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = 0x1000000,
+// This flag works around a bug in the HLSL compiler optimizer that folds certain
+// constant pow expressions incorrectly. Only applies to the HLSL back-end. It works
+// by expanding the integer pow expressions into a series of multiplies.
+const ShCompileOptions SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS = UINT64_C(1) << 21;
 
-    // Some drivers do not take into account the base level of the texture in the results of the
-    // HLSL GetDimensions builtin.  This flag instructs the compiler to manually add the base level
-    // offsetting.
-    SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = 0x2000000,
+// Flatten "#pragma STDGL invariant(all)" into the declarations of
+// varying variables and built-in GLSL variables. This compiler
+// option is enabled automatically when needed.
+const ShCompileOptions SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = UINT64_C(1) << 22;
 
-    // This flag works around an issue in translating GLSL function texelFetchOffset on
-    // INTEL drivers. It works by translating texelFetchOffset into texelFetch.
-    SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = 0x4000000,
-} ShCompileOptions;
+// Some drivers do not take into account the base level of the texture in the results of the
+// HLSL GetDimensions builtin.  This flag instructs the compiler to manually add the base level
+// offsetting.
+const ShCompileOptions SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = UINT64_C(1) << 23;
+
+// This flag works around an issue in translating GLSL function texelFetchOffset on
+// INTEL drivers. It works by translating texelFetchOffset into texelFetch.
+const ShCompileOptions SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = UINT64_C(1) << 24;
 
 // Defines alternate strategies for implementing array index clamping.
 typedef enum {
@@ -429,11 +427,10 @@ COMPILER_EXPORT void ShDestruct(ShHandle handle);
 // SH_VARIABLES: Extracts attributes, uniforms, and varyings.
 //               Can be queried by calling ShGetVariableInfo().
 //
-COMPILER_EXPORT bool ShCompile(
-    const ShHandle handle,
-    const char * const shaderStrings[],
-    size_t numStrings,
-    int compileOptions);
+COMPILER_EXPORT bool ShCompile(const ShHandle handle,
+                               const char *const shaderStrings[],
+                               size_t numStrings,
+                               ShCompileOptions compileOptions);
 
 // Clears the results from the previous compilation.
 COMPILER_EXPORT void ShClearResults(const ShHandle handle);

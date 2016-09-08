@@ -36,8 +36,8 @@ ShaderGL::~ShaderGL()
     }
 }
 
-int ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sourceStream,
-                                            std::string * /*sourcePath*/)
+ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sourceStream,
+                                                         std::string * /*sourcePath*/)
 {
     // Reset the previous state
     if (mShaderID != 0)
@@ -48,7 +48,7 @@ int ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sourceStream,
 
     *sourceStream << mData.getSource();
 
-    int options = SH_INIT_GL_POSITION;
+    ShCompileOptions options = SH_INIT_GL_POSITION;
 
     if (mWorkarounds.doWhileGLSLCausesGPUHang)
     {

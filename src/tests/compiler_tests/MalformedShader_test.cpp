@@ -51,7 +51,7 @@ class MalformedShaderTest : public testing::Test
   protected:
     std::string mInfoLog;
     TranslatorESSL *mTranslator;
-    int mExtraCompileOptions;
+    ShCompileOptions mExtraCompileOptions;
 };
 
 class MalformedVertexShaderTest : public MalformedShaderTest
