@@ -16,6 +16,24 @@
       "revId": "2a9418f2d3cb0504287382ed100159a06bc2dfae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb3052eb_acda63db",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 851,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-08T13:31:54Z",
+      "side": 1,
+      "message": "It still applies. It\u0027s correct to use mType\u0027s qualifier directly now since promote() has been fixed and verified to always determine the qualifier correctly - previously the qualifier used to be redundantly determined here just because it was easier to make sure that way that the constant folded nodes would have the correct qualifier. That was desirable to minimize risk of having incorrectly qualified constant folded nodes, which might create issues that would be hard to fix due to backward compatibility impact.\n\nHowever, in a clean architecture promote() is the proper place for determining the qualifier. This patch could maybe still do something more to assert that promote() does always set the qualifier correctly.",
+      "parentUuid": "b61aa755_43f5a649",
+      "revId": "2a9418f2d3cb0504287382ed100159a06bc2dfae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
