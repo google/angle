@@ -16,6 +16,24 @@
       "revId": "41ee20248d0df70212b099fab857e938b5c18ed3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_a80550b5",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-08T17:42:21Z",
+      "side": 1,
+      "message": "Good timing! We just got a bug report about this issue this morning.",
+      "parentUuid": "d6963bc8_c8e61cab",
+      "revId": "41ee20248d0df70212b099fab857e938b5c18ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
