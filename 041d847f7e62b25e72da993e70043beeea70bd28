@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6963bc8_bcb756f8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-08T14:32:55Z",
+      "side": 1,
+      "message": "on second thought, we might just want to future-proof outselves by using a std::bitset right now. then you can use an enum {} for the options themselves, and change the code in the c++. We would have to do this 30 or so bits in the future.\n\nSomething like (maybe enum class isn\u0027t necessary)\n\n enum class ShCompileOption {\n   VALIDATE,\n   VALIDATE_LOOP_INDEXING,\n   INTERMEDIATE_TREE,\n   ...\n   MAX_COUNT\n };\n\n using ShCompileFlags \u003d std::bitset\u003cShCompileOption::MAX_COUNT\u003e;\n\n COMPILER_EXPORT bool ShCompile(const ShHandle handle,\n                               const char *const shaderStrings[],\n                               size_t numStrings,\n                               const ShCompileFlags \u0026compileOptions);\n\nOther reviewers, what do you think?",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 34
+      },
+      "revId": "041d847f7e62b25e72da993e70043beeea70bd28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
