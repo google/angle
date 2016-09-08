@@ -69,7 +69,6 @@
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgb_stencil_index8 = FAIL
 1027 WIN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_tex2d_rgba_stencil_index8 = FAIL
 1033 WIN : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
-1017 WIN : dEQP-GLES2.functional.shaders.loops.for_constant_iterations.nested_sequence_* = FAIL
 1017 WIN : dEQP-GLES2.functional.shaders.loops.for_constant_iterations.nested_tricky_dataflow_* = FAIL
 1017 WIN : dEQP-GLES2.functional.shaders.loops.while_constant_iterations.nested_tricky_dataflow_* = FAIL
 1017 WIN : dEQP-GLES2.functional.shaders.loops.do_while_constant_iterations.nested_tricky_dataflow_* = FAIL
