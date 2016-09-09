@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_7ae4dc36",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T13:34:41Z",
+      "side": 1,
+      "message": "Thanks to point out this! I have verified this and it is really the matter.",
+      "parentUuid": "cb3052eb_0c9e170d",
+      "revId": "0e18be6d32c8f586a377c271f1f4a7d882844d00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb3052eb_ac8ca3e3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 4
