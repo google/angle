@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebefd6c0_4d20d90c",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-09T13:41:27Z",
+      "side": 1,
+      "message": "Still should make \"oneNode\" have the EvqConst qualifier.",
+      "revId": "0054e539e181a9a92d39c50ac87652ae3fd5bd9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
