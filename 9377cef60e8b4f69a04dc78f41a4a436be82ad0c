@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_bf99f6cb",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "A separate patch has been uploaded to implement 64-bits shader compile options: https://chromium-review.googlesource.com/#/c/382712/",
+      "parentUuid": "36b157f2_f74d008c",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 7
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_02484c54",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 1
@@ -60,6 +84,30 @@
       "writtenOn": "2016-09-07T14:07:15Z",
       "side": 1,
       "message": "nit: can you mention what the rewriting does? (It adds a \u0026\u0026 true expression)",
+      "range": {
+        "startLine": 215,
+        "startChar": 3,
+        "endLine": 215,
+        "endChar": 92
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_df96c299",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16f373ac_02484c54",
       "range": {
         "startLine": 215,
         "startChar": 3,
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_ffeffe13",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "Thanks for your suggestion: change the flag name to SH_ADD_AND_TRUE_TO_LOOP_CONDITION.",
+      "parentUuid": "36b157f2_1728b4a4",
+      "range": {
+        "startLine": 216,
+        "startChar": 29,
+        "endLine": 216,
+        "endChar": 35
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_224f485d",
         "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
         "patchSetId": 1
@@ -166,6 +238,54 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_1ff58ae7",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "Nested loops is also handled.",
+      "parentUuid": "16f373ac_224f485d",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_3ffa46d7",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "Nested loops is also handled.",
+      "parentUuid": "16f373ac_224f485d",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "16f373ac_42525408",
         "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
         "patchSetId": 1
@@ -200,6 +320,24 @@
       "writtenOn": "2016-09-07T14:32:29Z",
       "side": 1,
       "message": "Doesn\u0027t the problem happen with do-while loops too?",
+      "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_5fff12c5",
+        "filename": "src/compiler/translator/RewriteForAndWhile.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-09T11:18:10Z",
+      "side": 1,
+      "message": "do-while loop doesn\u0027t have this problem.",
+      "parentUuid": "36b157f2_77373007",
       "revId": "9377cef60e8b4f69a04dc78f41a4a436be82ad0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
