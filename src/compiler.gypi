@@ -35,6 +35,7 @@
             'compiler/translator/Common.h',
             'compiler/translator/Compiler.cpp',
             'compiler/translator/Compiler.h',
+            'compiler/translator/ConstantUnion.cpp',
             'compiler/translator/ConstantUnion.h',
             'compiler/translator/DeferGlobalInitializers.cpp',
             'compiler/translator/DeferGlobalInitializers.h',
