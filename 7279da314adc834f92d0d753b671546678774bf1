@@ -173,6 +173,24 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_9ab36858",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T13:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b373ada_5283946f",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
@@ -184,6 +202,24 @@
       "writtenOn": "2016-09-07T15:04:27Z",
       "side": 1,
       "message": "The traversal might continue even if mFound \u003d true, add if (mFound) {return false;} here.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_bac0248e",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T13:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36b157f2_b73f08c3",
       "revId": "7279da314adc834f92d0d753b671546678774bf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -207,6 +243,24 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_dabdf021",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T13:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36b157f2_370bf82e",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_772e5099",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
@@ -218,6 +272,24 @@
       "writtenOn": "2016-09-07T15:04:27Z",
       "side": 1,
       "message": "[2] Found something, return false to stop the traversal of this node.",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6963bc8_fa8aac71",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T13:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36b157f2_772e5099",
       "revId": "7279da314adc834f92d0d753b671546678774bf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
