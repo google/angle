@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6963bc8_1a7cb849",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-09T14:05:12Z",
+      "side": 0,
+      "message": "nice that you can remove these",
+      "range": {
+        "startLine": 438,
+        "startChar": 0,
+        "endLine": 439,
+        "endChar": 56
+      },
+      "revId": "2c07eb2188a377cfb8d3fe0dfbbcdcaba2387722",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

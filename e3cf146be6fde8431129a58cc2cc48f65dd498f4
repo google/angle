@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6963bc8_5a76406b",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-09T14:05:12Z",
+      "side": 1,
+      "message": "subscript? Is this an indexing operation?",
+      "range": {
+        "startLine": 362,
+        "startChar": 26,
+        "endLine": 362,
+        "endChar": 39
+      },
+      "revId": "e3cf146be6fde8431129a58cc2cc48f65dd498f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
