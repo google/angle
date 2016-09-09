@@ -209,6 +209,24 @@
     },
     {
       "key": {
+        "uuid": "d6963bc8_1aef58e6",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-09T14:28:28Z",
+      "side": 1,
+      "message": "The related CTS test is still under preparation. Sorry for my missing explanation.\n\nThe only use of the variable temporarilyIndex in class TIntermTraverser is to generate temporary variables in order. See function TIntermTraverser::createTempSymbol()  in compiler/translator/IntermTraverse.cpp:119. Here no temporary variables should be created so I delete it in patch set 5.\n\nTo my investigation, the logic of this piece of code is that when the target is first found in root or its son, traverser.mFound will be set to true, the tree will be updated, and a new iteration of the traverse will be started again. So only when there is no workaround target in root and all its sons will the do-while loop be exited.",
+      "parentUuid": "ebefd6c0_8d212111",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
