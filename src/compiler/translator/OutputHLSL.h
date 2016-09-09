@@ -58,6 +58,7 @@ class OutputHLSL : public TIntermTraverser
     void visitConstantUnion(TIntermConstantUnion*);
     bool visitBinary(Visit visit, TIntermBinary*);
     bool visitUnary(Visit visit, TIntermUnary*);
+    bool visitTernary(Visit visit, TIntermTernary *);
     bool visitSelection(Visit visit, TIntermSelection*);
     bool visitSwitch(Visit visit, TIntermSwitch *);
     bool visitCase(Visit visit, TIntermCase *);

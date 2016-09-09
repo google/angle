@@ -360,8 +360,10 @@ class TParseContext : angle::NonCopyable
                                           const TSourceLoc &loc,
                                           bool *fatalError);
 
-    TIntermTyped *addTernarySelection(
-        TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock, const TSourceLoc &line);
+    TIntermTyped *addTernarySelection(TIntermTyped *cond,
+                                      TIntermTyped *trueExpression,
+                                      TIntermTyped *falseExpression,
+                                      const TSourceLoc &line);
 
     // TODO(jmadill): make these private
     TIntermediate intermediate;  // to build a parse tree

@@ -236,43 +236,37 @@ TIntermTyped *TIntermediate::addComma(TIntermTyped *left,
     return commaNode;
 }
 
-//
 // For "?:" test nodes.  There are three children; a condition,
 // a true path, and a false path.  The two paths are specified
 // as separate parameters.
 //
-// Returns the selection node created, or one of trueBlock and falseBlock if the expression could be folded.
-//
-TIntermTyped *TIntermediate::addSelection(TIntermTyped *cond, TIntermTyped *trueBlock, TIntermTyped *falseBlock,
-                                          const TSourceLoc &line)
+// Returns the ternary node created, or one of trueExpression and falseExpression if the expression
+// could be folded.
+TIntermTyped *TIntermediate::AddTernarySelection(TIntermTyped *cond,
+                                                 TIntermTyped *trueExpression,
+                                                 TIntermTyped *falseExpression,
+                                                 const TSourceLoc &line)
 {
-    TQualifier resultQualifier = EvqTemporary;
-    if (cond->getQualifier() == EvqConst && trueBlock->getQualifier() == EvqConst &&
-        falseBlock->getQualifier() == EvqConst)
-    {
-        resultQualifier = EvqConst;
-    }
     // Note that the node resulting from here can be a constant union without being qualified as
     // constant.
     if (cond->getAsConstantUnion())
     {
+        TQualifier resultQualifier =
+            TIntermTernary::DetermineQualifier(cond, trueExpression, falseExpression);
         if (cond->getAsConstantUnion()->getBConst(0))
         {
-            trueBlock->getTypePointer()->setQualifier(resultQualifier);
-            return trueBlock;
+            trueExpression->getTypePointer()->setQualifier(resultQualifier);
+            return trueExpression;
         }
         else
         {
-            falseBlock->getTypePointer()->setQualifier(resultQualifier);
-            return falseBlock;
+            falseExpression->getTypePointer()->setQualifier(resultQualifier);
+            return falseExpression;
         }
     }
 
-    //
-    // Make a selection node.
-    //
-    TIntermSelection *node = new TIntermSelection(cond, trueBlock, falseBlock, trueBlock->getType());
-    node->getTypePointer()->setQualifier(resultQualifier);
+    // Make a ternary node.
+    TIntermTernary *node = new TIntermTernary(cond, trueExpression, falseExpression);
     node->setLine(line);
 
     return node;

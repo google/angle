@@ -3903,34 +3903,35 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
 }
 
 TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
-                                                 TIntermTyped *trueBlock,
-                                                 TIntermTyped *falseBlock,
+                                                 TIntermTyped *trueExpression,
+                                                 TIntermTyped *falseExpression,
                                                  const TSourceLoc &loc)
 {
     checkIsScalarBool(loc, cond);
 
-    if (trueBlock->getType() != falseBlock->getType())
+    if (trueExpression->getType() != falseExpression->getType())
     {
-        binaryOpError(loc, ":", trueBlock->getCompleteString(), falseBlock->getCompleteString());
-        return falseBlock;
+        binaryOpError(loc, ":", trueExpression->getCompleteString(),
+                      falseExpression->getCompleteString());
+        return falseExpression;
     }
     // ESSL1 sections 5.2 and 5.7:
     // ESSL3 section 5.7:
     // Ternary operator is not among the operators allowed for structures/arrays.
-    if (trueBlock->isArray() || trueBlock->getBasicType() == EbtStruct)
+    if (trueExpression->isArray() || trueExpression->getBasicType() == EbtStruct)
     {
         error(loc, "ternary operator is not allowed for structures or arrays", ":");
-        return falseBlock;
+        return falseExpression;
     }
     // WebGL2 section 5.26, the following results in an error:
     // "Ternary operator applied to void, arrays, or structs containing arrays"
-    if (mShaderSpec == SH_WEBGL2_SPEC && trueBlock->getBasicType() == EbtVoid)
+    if (mShaderSpec == SH_WEBGL2_SPEC && trueExpression->getBasicType() == EbtVoid)
     {
         error(loc, "ternary operator is not allowed for void", ":");
-        return falseBlock;
+        return falseExpression;
     }
 
-    return intermediate.addSelection(cond, trueBlock, falseBlock, loc);
+    return TIntermediate::AddTernarySelection(cond, trueExpression, falseExpression, loc);
 }
 
 //
