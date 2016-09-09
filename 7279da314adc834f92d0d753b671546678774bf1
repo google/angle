@@ -191,6 +191,24 @@
     },
     {
       "key": {
+        "uuid": "ebefd6c0_8d212111",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-09T13:41:27Z",
+      "side": 1,
+      "message": "I can\u0027t see the test, did you notice comments about that? Even if you added some automated test outside of ANGLE, like to WebGL conformance, I\u0027d still prefer to see a test for a case like (-(-(-x))) in angle_end2end_tests or angle_unittests.",
+      "parentUuid": "d6963bc8_9ab36858",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
