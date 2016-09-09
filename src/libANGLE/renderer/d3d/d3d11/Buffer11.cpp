@@ -271,6 +271,11 @@ Buffer11::~Buffer11()
     }
 
     mRenderer->onBufferDelete(this);
+
+    for (auto &srv : mBufferResourceViews)
+    {
+        SafeRelease(srv.second.second);
+    }
 }
 
 gl::Error Buffer11::setData(GLenum target, const void *data, size_t size, GLenum usage)
