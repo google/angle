@@ -34,6 +34,24 @@
       "revId": "41ee20248d0df70212b099fab857e938b5c18ed3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bca6a6e_9db0644c",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2016-09-10T00:33:46Z",
+      "side": 1,
+      "message": "Still feel a little weird to me. pixelIndices should always contains correct values, don\u0027t need to be zero inited. I need sometime to figure it out. Currently I just kick-off a a 2-week vacation. I\u0027ll fix this as soon as I get back to work.",
+      "parentUuid": "d6963bc8_a80550b5",
+      "revId": "41ee20248d0df70212b099fab857e938b5c18ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
