@@ -22,6 +22,30 @@
       "revId": "e3cf146be6fde8431129a58cc2cc48f65dd498f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b99fa95_222cae04",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-12T09:37:08Z",
+      "side": 1,
+      "message": "Maybe foldIndexing is a clearer name, changed it. The functions that this replaces used to be called \"fold*Subscript\", that\u0027s the only reason why I named the new function \"subscript\" initially. Both \"subscript\" and \"index\" are used in the spec.",
+      "parentUuid": "d6963bc8_5a76406b",
+      "range": {
+        "startLine": 362,
+        "startChar": 26,
+        "endLine": 362,
+        "endChar": 39
+      },
+      "revId": "e3cf146be6fde8431129a58cc2cc48f65dd498f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
