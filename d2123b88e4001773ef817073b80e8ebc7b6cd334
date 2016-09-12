@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0bad0ab1_9eecfdba",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "type.getQualifier() \u003d\u003d EvqTemporary || type.getQualifier() \u003d\u003d EvqUniform)\nthis might be better as images should either be uniform or have local scope whenever used a function parameters.",
+      "parentUuid": "6b3cc6c0_b122c0b0",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb3052eb_0c6857ec",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 6
@@ -30,6 +48,70 @@
       "writtenOn": "2016-09-08T14:35:37Z",
       "side": 1,
       "message": "This makes me think - is an error generated correctly in case there is a function call that discards a memory qualifier of a parameter of an user-defined function? Would still be good to add a test for this. So you\u0027d have two functions, one of which takes readonly, and another which takes non-qualified image. The function with the non-qualified image would call the readonly function.",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eba996a7_3d384f28",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4281,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "I think you meant the other way around. A function which has the readonly qualifier specified for one of its parameters passes the parameter as an argument to another function which does not have the readonly qualifier:\nvoid func1(in readonly image2D img)\n{\n     func2(img);\n}\n\nvoid func2(in image2D img)\n{\n     // something\n}\n\nThis should be an error. However, adding an additional qualifier is not an error:\n\"It is legal to have any additional memory qualifiers on a\nformal parameter, but only restrict can be taken away from a calling argument\". 4.9 Memory Access Qualifiers.\n13.51 Matching of Memory Qualifiers in Function Parameters states the same as well.\nI will add the test I described.",
+      "parentUuid": "cb3052eb_0c6857ec",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eba996a7_5d99dbc8",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "No need for this since order is relaxed when the shader version is \u003e\u003d 310. Memory qualifiers are only available in es 3.10.",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 36
+      },
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b7f2ee8_a77fcab1",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Fixed the unnecessarily introduced changes.",
+      "range": {
+        "startLine": 437,
+        "startChar": 1,
+        "endLine": 445,
+        "endChar": 48
+      },
       "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +135,24 @@
     },
     {
       "key": {
+        "uuid": "cb6db244_44e8cea6",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 6
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Done. Configured my editor on my laptop properly.",
+      "parentUuid": "cb3052eb_ec53cb30",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb3052eb_0c3f37e6",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 6
@@ -70,6 +170,24 @@
     },
     {
       "key": {
+        "uuid": "0bad0ab1_bee7b9d5",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 6
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb3052eb_0c3f37e6",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb3052eb_6c2b5ba6",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 6
@@ -81,6 +199,24 @@
       "writtenOn": "2016-09-08T14:35:37Z",
       "side": 1,
       "message": "Suggestion for changing the test description: \"Passing an image qualifier to a function should not be able to discard readonly qualifier.\" Similarly below.",
+      "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b99fa95_c21aa2d9",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2691,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb3052eb_6c2b5ba6",
       "revId": "d2123b88e4001773ef817073b80e8ebc7b6cd334",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
