@@ -24,10 +24,6 @@
 #include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/VariablePacker.h"
-#include "compiler/translator/depgraph/DependencyGraph.h"
-#include "compiler/translator/depgraph/DependencyGraphOutput.h"
-#include "compiler/translator/timing/RestrictFragmentShaderTiming.h"
-#include "compiler/translator/timing/RestrictVertexShaderTiming.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 #include "angle_gl.h"
 #include "common/utilities.h"
@@ -289,9 +285,6 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
             success = validateLimitations(root);
-
-        if (success && (compileOptions & SH_TIMING_RESTRICTIONS))
-            success = enforceTimingRestrictions(root, (compileOptions & SH_DEPENDENCY_GRAPH) != 0);
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
@@ -759,36 +752,6 @@ bool TCompiler::validateLimitations(TIntermNode* root)
     return validate.numErrors() == 0;
 }
 
-bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
-{
-    if (shaderSpec != SH_WEBGL_SPEC)
-    {
-        infoSink.info << "Timing restrictions must be enforced under the WebGL spec.";
-        return false;
-    }
-
-    if (shaderType == GL_FRAGMENT_SHADER)
-    {
-        TDependencyGraph graph(root);
-
-        // Output any errors first.
-        bool success = enforceFragmentShaderTimingRestrictions(graph);
-
-        // Then, output the dependency graph.
-        if (outputGraph)
-        {
-            TDependencyGraphOutput output(infoSink.info);
-            output.outputAllSpanningTrees(graph);
-        }
-
-        return success;
-    }
-    else
-    {
-        return enforceVertexShaderTimingRestrictions(root);
-    }
-}
-
 bool TCompiler::limitExpressionComplexity(TIntermNode* root)
 {
     TMaxDepthTraverser traverser(maxExpressionComplexity+1);
@@ -807,20 +770,6 @@ bool TCompiler::limitExpressionComplexity(TIntermNode* root)
     }
 
     return true;
-}
-
-bool TCompiler::enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph)
-{
-    RestrictFragmentShaderTiming restrictor(infoSink.info);
-    restrictor.enforceRestrictions(graph);
-    return restrictor.numErrors() == 0;
-}
-
-bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
-{
-    RestrictVertexShaderTiming restrictor(infoSink.info);
-    restrictor.enforceRestrictions(root);
-    return restrictor.numErrors() == 0;
 }
 
 void TCompiler::collectVariables(TIntermNode* root)

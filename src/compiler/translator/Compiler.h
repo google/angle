@@ -25,7 +25,6 @@
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
 class TCompiler;
-class TDependencyGraph;
 #ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
 #endif // ANGLE_ENABLE_HLSL
@@ -138,13 +137,6 @@ class TCompiler : public TShHandleBase
     // while spec says it is allowed.
     // This function should only be applied to vertex shaders.
     void initializeGLPosition(TIntermNode* root);
-    // Returns true if the shader passes the restrictions that aim to prevent timing attacks.
-    bool enforceTimingRestrictions(TIntermNode* root, bool outputGraph);
-    // Returns true if the shader does not use samplers.
-    bool enforceVertexShaderTimingRestrictions(TIntermNode* root);
-    // Returns true if the shader does not use sampler dependent values to affect control
-    // flow or in operations whose time can depend on the input values.
-    bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph);
     // Return true if the maximum expression complexity is below the limit.
     bool limitExpressionComplexity(TIntermNode* root);
     // Get built-in extensions with default behavior.
