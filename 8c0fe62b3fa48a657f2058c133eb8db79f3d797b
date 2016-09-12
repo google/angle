@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b99fa95_424e928c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Without this memory qualifiers would not be forwarded for function parameters.",
+      "range": {
+        "startLine": 1017,
+        "startChar": 8,
+        "endLine": 1017,
+        "endChar": 64
+      },
+      "revId": "8c0fe62b3fa48a657f2058c133eb8db79f3d797b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb4e920b_fc82096b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1178,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-09-12T13:59:49Z",
+      "side": 1,
+      "message": "Previously it was wrong. It was the other way around.",
+      "range": {
+        "startLine": 1169,
+        "startChar": 12,
+        "endLine": 1178,
+        "endChar": 22
+      },
+      "revId": "8c0fe62b3fa48a657f2058c133eb8db79f3d797b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
