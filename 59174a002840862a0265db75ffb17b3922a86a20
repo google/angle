@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3a0657_b8379ae6",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-13T13:26:35Z",
+      "side": 1,
+      "message": "nit: could use a comment why ternary is unreachable",
+      "range": {
+        "startLine": 1986,
+        "startChar": 4,
+        "endLine": 1986,
+        "endChar": 15
+      },
+      "revId": "59174a002840862a0265db75ffb17b3922a86a20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
