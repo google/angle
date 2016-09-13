@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b3a0657_7b7a6c18",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-13T15:01:28Z",
+      "side": 1,
+      "message": "The code has been rebased. SH_TIMING_RESTRICTIONS, SH_DEPENDENCY_GRAPH and SH_INIT_VARYINGS_WITHOUT_STATIC_USE are removed.",
+      "parentUuid": "8b99fa95_02e9aae4",
+      "range": {
+        "startLine": 52,
+        "startChar": 25,
+        "endLine": 52,
+        "endChar": 28
+      },
+      "revId": "90a2bde84b588ae7149b59991b404999bed35685",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b99fa95_62fab6a4",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 3
