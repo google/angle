@@ -16,6 +16,24 @@
       "revId": "0f59a44478762941ab4da2e95bc8d1917af9bf1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b99fa95_a2a0bea5",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-13T14:22:00Z",
+      "side": 1,
+      "message": "Yep, did that. It took changes in a few different places, but it does make the code cleaner.",
+      "parentUuid": "0bd6ea36_f9baf3de",
+      "revId": "0f59a44478762941ab4da2e95bc8d1917af9bf1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
