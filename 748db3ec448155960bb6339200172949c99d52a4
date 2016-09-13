@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bd6ea36_b9c91b79",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-13T13:47:59Z",
+      "side": 1,
+      "message": "nit: this has changed in latest master (again :) )",
+      "revId": "748db3ec448155960bb6339200172949c99d52a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bd6ea36_d9d4d70e",
+        "filename": "src/compiler/translator/AddAndTrueToLoopCondition.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-13T13:47:59Z",
+      "side": 1,
+      "message": "nit: update this too",
+      "revId": "748db3ec448155960bb6339200172949c99d52a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
