@@ -227,6 +227,24 @@
     },
     {
       "key": {
+        "uuid": "6b3a0657_785cb21d",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-13T13:28:45Z",
+      "side": 1,
+      "message": "Can you add the test also to GLSLTest.cpp as an angle_end2end_test? This would ensure the code is tested at the same time it\u0027s being landed.",
+      "parentUuid": "d6963bc8_1aef58e6",
+      "revId": "7279da314adc834f92d0d753b671546678774bf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36b157f2_b73f08c3",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorInt.cpp",
         "patchSetId": 3
