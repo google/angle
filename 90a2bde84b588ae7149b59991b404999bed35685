@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b99fa95_02e9aae4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-13T12:56:44Z",
+      "side": 1,
+      "message": "This will need to be updated to 160 after rebasing on latest master.",
+      "range": {
+        "startLine": 52,
+        "startChar": 25,
+        "endLine": 52,
+        "endChar": 28
+      },
+      "revId": "90a2bde84b588ae7149b59991b404999bed35685",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b99fa95_62fab6a4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-13T12:56:44Z",
+      "side": 1,
+      "message": "This and the following flag were already removed.",
+      "revId": "90a2bde84b588ae7149b59991b404999bed35685",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b99fa95_e2eda6f0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-13T12:56:44Z",
+      "side": 1,
+      "message": "This can probably be removed?",
+      "revId": "90a2bde84b588ae7149b59991b404999bed35685",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
