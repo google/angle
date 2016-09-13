@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b60aa87_ec4ebfbf",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-13T19:50:00Z",
+      "side": 1,
+      "message": "I would put this behind a #if defined(), like we do with ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER.",
+      "range": {
+        "startLine": 40,
+        "startChar": 11,
+        "endLine": 40,
+        "endChar": 25
+      },
+      "revId": "73e0f7dc9371ab2c1210247403cc41777e6efc3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
