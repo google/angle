@@ -885,6 +885,18 @@ void Renderer11::populateRenderer11DeviceCaps()
 {
     HRESULT hr = S_OK;
 
+    LARGE_INTEGER version;
+    hr = mDxgiAdapter->CheckInterfaceSupport(__uuidof(IDXGIDevice), &version);
+    if (FAILED(hr))
+    {
+        mRenderer11DeviceCaps.driverVersion.reset();
+        ERR("Error querying driver version from DXGI Adapter.");
+    }
+    else
+    {
+        mRenderer11DeviceCaps.driverVersion = version;
+    }
+
     if (mDeviceContext1)
     {
         D3D11_FEATURE_DATA_D3D11_OPTIONS d3d11Options;
@@ -925,18 +937,6 @@ void Renderer11::populateRenderer11DeviceCaps()
     IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
     mRenderer11DeviceCaps.supportsDXGI1_2 = (dxgiAdapter2 != nullptr);
     SafeRelease(dxgiAdapter2);
-
-    LARGE_INTEGER version;
-    hr = mDxgiAdapter->CheckInterfaceSupport(__uuidof(IDXGIDevice), &version);
-    if (FAILED(hr))
-    {
-        mRenderer11DeviceCaps.driverVersion.reset();
-        ERR("Error querying driver version from DXGI Adapter.");
-    }
-    else
-    {
-        mRenderer11DeviceCaps.driverVersion = version;
-    }
 }
 
 egl::ConfigSet Renderer11::generateConfigs()
