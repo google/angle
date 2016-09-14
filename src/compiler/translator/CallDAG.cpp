@@ -44,6 +44,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 skipped++;
             }
         }
+
         ASSERT(mFunctions.size() == mCurrentIndex + skipped);
         return INITDAG_SUCCESS;
     }
@@ -165,52 +166,102 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
     }
 
     // Recursively assigns indices to a sub DAG
-    InitResult assignIndicesInternal(CreatorFunctionData *function)
+    InitResult assignIndicesInternal(CreatorFunctionData *root)
     {
-        ASSERT(function);
+        // Iterative implementation of the index assignment algorithm. A recursive version
+        // would be prettier but since the CallDAG creation runs before the limiting of the
+        // call depth, we might get stack overflows (computation of the call depth uses the
+        // CallDAG).
 
-        if (!function->node)
-        {
-            *mCreationInfo << "Undefined function '" << function->name
-                           << ")' used in the following call chain:";
-            return INITDAG_UNDEFINED;
-        }
+        ASSERT(root);
 
-        if (function->indexAssigned)
+        if (root->indexAssigned)
         {
             return INITDAG_SUCCESS;
         }
 
-        if (function->visiting)
-        {
-            if (mCreationInfo)
-            {
-                *mCreationInfo << "Recursive function call in the following call chain:" << function->name;
-            }
-            return INITDAG_RECURSION;
-        }
-        function->visiting = true;
+        // If we didn't have to detect recursion, functionsToProcess could be a simple queue
+        // in which we add the function being processed's callees. However in order to detect
+        // recursion we need to know which functions we are currently visiting. For that reason
+        // functionsToProcess will look like a concatenation of segments of the form
+        // [F visiting = true, subset of F callees with visiting = false] and the following
+        // segment (if any) will be start with a callee of F.
+        // This way we can remember when we started visiting a function, to put visiting back
+        // to false.
+        TVector<CreatorFunctionData *> functionsToProcess;
+        functionsToProcess.push_back(root);
 
-        for (auto &callee : function->callees)
+        InitResult result = INITDAG_SUCCESS;
+
+        while (!functionsToProcess.empty())
         {
-            InitResult result = assignIndicesInternal(callee);
+            CreatorFunctionData *function = functionsToProcess.back();
+
+            if (function->visiting)
+            {
+                function->visiting      = false;
+                function->index         = mCurrentIndex++;
+                function->indexAssigned = true;
+
+                functionsToProcess.pop_back();
+                continue;
+            }
+
+            if (!function->node)
+            {
+                *mCreationInfo << "Undefined function '" << function->name
+                               << ")' used in the following call chain:";
+                result = INITDAG_UNDEFINED;
+                break;
+            }
+
+            if (function->indexAssigned)
+            {
+                functionsToProcess.pop_back();
+                continue;
+            }
+
+            function->visiting = true;
+
+            for (auto callee : function->callees)
+            {
+                functionsToProcess.push_back(callee);
+
+                // Check if the callee is already being visited after pushing it so that it appears
+                // in the chain printed in the info log.
+                if (callee->visiting)
+                {
+                    *mCreationInfo << "Recursive function call in the following call chain:";
+                    result = INITDAG_RECURSION;
+                    break;
+                }
+            }
+
             if (result != INITDAG_SUCCESS)
             {
-                // We know that there is an issue with the call chain in the AST,
-                // print the link of the chain we were processing.
-                if (mCreationInfo)
-                {
-                    *mCreationInfo << " <- " << function->name << ")";
-                }
-                return result;
+                break;
             }
         }
 
-        function->index = mCurrentIndex++;
-        function->indexAssigned = true;
+        // The call chain is made of the function we were visiting when the error was detected.
+        if (result != INITDAG_SUCCESS)
+        {
+            bool first = true;
+            for (auto function : functionsToProcess)
+            {
+                if (function->visiting)
+                {
+                    if (!first)
+                    {
+                        *mCreationInfo << " -> ";
+                    }
+                    *mCreationInfo << function->name << ")";
+                    first = false;
+                }
+            }
+        }
 
-        function->visiting = false;
-        return INITDAG_SUCCESS;
+        return result;
     }
 
     TInfoSinkBase *mCreationInfo;
@@ -276,6 +327,8 @@ void CallDAG::clear()
 
 CallDAG::InitResult CallDAG::init(TIntermNode *root, TInfoSinkBase *info)
 {
+    ASSERT(info);
+
     CallDAGCreator creator(info);
 
     // Creates the mapping of functions to callees
