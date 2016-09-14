@@ -197,6 +197,10 @@
                     [
                         '<@(util_osx_sources)',
                     ],
+                    'xcode_settings':
+                    {
+                        'DYLIB_INSTALL_NAME_BASE': '@rpath',
+                    },
                     'link_settings':
                     {
                         'libraries':
