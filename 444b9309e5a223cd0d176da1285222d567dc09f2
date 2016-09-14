@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b60aa87_12eec9ec",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-14T13:51:29Z",
+      "side": 1,
+      "message": "did you mean to add this in this CL? You should either put in a different CL or add a note to the CL description.",
+      "range": {
+        "startLine": 884,
+        "startChar": 4,
+        "endLine": 884,
+        "endChar": 67
+      },
+      "revId": "444b9309e5a223cd0d176da1285222d567dc09f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
