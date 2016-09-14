@@ -80,6 +80,20 @@ struct WorkaroundsGL
     // On Intel Mac, calculation of loop conditions in for and while loop has bug.
     // Add "&& true" to the end of the condition expression to work around the bug.
     bool addAndTrueToLoopCondition;
+
+    // When uploading textures from an unpack buffer, some drivers count an extra row padding when
+    // checking if the pixel unpack buffer is big enough. Tracking bug: http://anglebug.com/1512
+    // For example considering the pixel buffer below where in memory, each row data (D) of the
+    // texture is followed by some unused data (the dots):
+    //     +-------+--+
+    //     |DDDDDDD|..|
+    //     |DDDDDDD|..|
+    //     |DDDDDDD|..|
+    //     |DDDDDDD|..|
+    //     +-------A--B
+    // The last pixel read will be A, but the driver will think it is B, causing it to generate an
+    // error when the pixel buffer is just big enough.
+    bool unpackLastRowSeparatelyForPaddingInclusion;
 };
 }
 

@@ -47,6 +47,8 @@ struct InternalFormat
 {
     InternalFormat();
 
+    GLuint computePixelBytes(GLenum formatType) const;
+
     gl::ErrorOrResult<GLuint> computeRowPitch(GLenum formatType,
                                               GLsizei width,
                                               GLint alignment,
@@ -69,6 +71,10 @@ struct InternalFormat
                                                 const gl::Extents &size,
                                                 const gl::PixelUnpackState &unpack) const;
 
+    gl::ErrorOrResult<GLuint> computeUnpackEndByte(GLenum formatType,
+                                                   const gl::Extents &size,
+                                                   const gl::PixelUnpackState &unpack,
+                                                   bool applySkipImages) const;
     bool isLUMA() const;
 
     bool operator==(const InternalFormat &other) const;

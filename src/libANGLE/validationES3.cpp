@@ -486,44 +486,19 @@ bool ValidateES3TexImageParametersBase(Context *context,
         const gl::Extents size(width, height, depth);
         const auto &unpack = context->getGLState().getUnpackState();
 
-        auto copyBytesOrErr = formatInfo.computeUnpackSize(type, size, unpack);
-        if (copyBytesOrErr.isError())
-        {
-            context->handleError(copyBytesOrErr.getError());
-            return false;
-        }
-        CheckedNumeric<size_t> checkedCopyBytes(copyBytesOrErr.getResult());
-        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
-        checkedCopyBytes += checkedOffset;
-
-        auto rowPitchOrErr =
-            formatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength);
-        if (rowPitchOrErr.isError())
-        {
-            context->handleError(rowPitchOrErr.getError());
-            return false;
-        }
-        auto depthPitchOrErr = formatInfo.computeDepthPitch(type, width, height, unpack.alignment,
-                                                            unpack.rowLength, unpack.imageHeight);
-        if (depthPitchOrErr.isError())
-        {
-            context->handleError(depthPitchOrErr.getError());
-            return false;
-        }
-
         bool targetIs3D     = target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY;
-        auto skipBytesOrErr = formatInfo.computeSkipBytes(
-            rowPitchOrErr.getResult(), depthPitchOrErr.getResult(), unpack.skipImages,
-            unpack.skipRows, unpack.skipPixels, targetIs3D);
-        if (skipBytesOrErr.isError())
+        auto endByteOrErr   = formatInfo.computeUnpackEndByte(type, size, unpack, targetIs3D);
+        if (endByteOrErr.isError())
         {
-            context->handleError(skipBytesOrErr.getError());
+            context->handleError(endByteOrErr.getError());
             return false;
         }
-        checkedCopyBytes += skipBytesOrErr.getResult();
+        CheckedNumeric<size_t> checkedEndByte(endByteOrErr.getResult());
+        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
+        checkedEndByte += checkedOffset;
 
-        if (!checkedCopyBytes.IsValid() ||
-            (checkedCopyBytes.ValueOrDie() > static_cast<size_t>(pixelUnpackBuffer->getSize())))
+        if (!checkedEndByte.IsValid() ||
+            (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelUnpackBuffer->getSize())))
         {
             // Overflow past the end of the buffer
             context->handleError(Error(GL_INVALID_OPERATION));

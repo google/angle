@@ -831,6 +831,13 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat)
     }
 }
 
+GLuint InternalFormat::computePixelBytes(GLenum formatType) const
+{
+    const auto &typeInfo = GetTypeInfo(formatType);
+    GLuint components    = typeInfo.specialInterpretation ? 1u : componentCount;
+    return components * typeInfo.bytes;
+}
+
 gl::ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
                                                           GLsizei width,
                                                           GLint alignment,
@@ -843,11 +850,8 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
         return computeCompressedImageSize(formatType, gl::Extents(width, 1, 1));
     }
 
-    const auto &typeInfo = GetTypeInfo(formatType);
-    CheckedNumeric<GLuint> checkedComponents(typeInfo.specialInterpretation ? 1u : componentCount);
-    CheckedNumeric<GLuint> checkedTypeBytes(typeInfo.bytes);
     CheckedNumeric<GLuint> checkedWidth(rowLength > 0 ? rowLength : width);
-    CheckedNumeric<GLuint> checkedRowBytes = checkedWidth * checkedComponents * checkedTypeBytes;
+    CheckedNumeric<GLuint> checkedRowBytes = checkedWidth * computePixelBytes(formatType);
 
     ASSERT(alignment > 0 && isPow2(alignment));
     CheckedNumeric<GLuint> checkedAlignment(alignment);
@@ -926,23 +930,51 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(
         return computeCompressedImageSize(formatType, size);
     }
 
-    base::CheckedNumeric<GLuint> checkedGroups(unpack.rowLength > 0 ? unpack.rowLength
-                                                                    : size.width);
-    base::CheckedNumeric<GLuint> checkedRows(unpack.imageHeight > 0 ? unpack.imageHeight
-                                                                    : size.height);
+    CheckedNumeric<GLuint> rowPitch;
+    CheckedNumeric<GLuint> depthPitch;
+    ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, unpack.alignment, unpack.rowLength),
+                     rowPitch);
+    ANGLE_TRY_RESULT(computeDepthPitch(formatType, size.width, size.height, unpack.alignment,
+                                       unpack.rowLength, unpack.imageHeight),
+                     depthPitch);
 
-    // Compute the groups of all the layers in (0,depth-1)
-    auto layerGroups = checkedGroups * checkedRows * (size.depth - 1);
+    CheckedNumeric<GLuint> depthMinusOne  = size.depth - 1;
+    CheckedNumeric<GLuint> heightMinusOne = size.height - 1;
+    CheckedNumeric<GLuint> pixelBytes     = computePixelBytes(formatType);
 
-    // Compute the groups in the last layer (for non-3D textures, the only one)
-    auto lastLayerGroups = checkedGroups * (size.height - 1) + size.width;
-
-    // The total size is the sum times the bytes per pixel.
-    auto totalSize = (layerGroups + lastLayerGroups) * pixelBytes;
+    CheckedNumeric<GLuint> totalSize = depthMinusOne * depthPitch;
+    totalSize += heightMinusOne * rowPitch;
+    totalSize += size.width * pixelBytes;
 
     ANGLE_TRY_CHECKED_MATH(totalSize);
 
     return totalSize.ValueOrDie();
+}
+
+gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackEndByte(GLenum formatType,
+                                                               const gl::Extents &size,
+                                                               const gl::PixelUnpackState &unpack,
+                                                               bool applySkipImages) const
+{
+    GLuint rowPitch;
+    GLuint depthPitch;
+    CheckedNumeric<GLuint> checkedSkipBytes;
+    CheckedNumeric<GLuint> checkedCopyBytes;
+
+    ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, unpack.alignment, unpack.rowLength),
+                     rowPitch);
+    ANGLE_TRY_RESULT(computeDepthPitch(formatType, size.width, size.height, unpack.alignment,
+                                       unpack.rowLength, unpack.imageHeight),
+                     depthPitch);
+    ANGLE_TRY_RESULT(computeSkipBytes(rowPitch, depthPitch, unpack.skipImages, unpack.skipRows,
+                                      unpack.skipPixels, applySkipImages),
+                     checkedSkipBytes);
+    ANGLE_TRY_RESULT(computeUnpackSize(formatType, size, unpack), checkedCopyBytes);
+
+    CheckedNumeric<GLuint> endByte = checkedCopyBytes + checkedSkipBytes;
+
+    ANGLE_TRY_CHECKED_MATH(endByte);
+    return endByte.ValueOrDie();
 }
 
 GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type)
