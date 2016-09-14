@@ -45,7 +45,7 @@ class TOutputTraverser : public TIntermTraverser
     bool visitBinary(Visit visit, TIntermBinary *) override;
     bool visitUnary(Visit visit, TIntermUnary *) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
-    bool visitSelection(Visit visit, TIntermSelection *) override;
+    bool visitIfElse(Visit visit, TIntermIfElse *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
     bool visitLoop(Visit visit, TIntermLoop *) override;
     bool visitBranch(Visit visit, TIntermBranch *) override;
@@ -492,7 +492,7 @@ bool TOutputTraverser::visitTernary(Visit visit, TIntermTernary *node)
     return false;
 }
 
-bool TOutputTraverser::visitSelection(Visit visit, TIntermSelection *node)
+bool TOutputTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
 {
     TInfoSinkBase &out = sink;
 

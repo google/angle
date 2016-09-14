@@ -62,7 +62,7 @@ class OutputHLSL : public TIntermTraverser
     bool visitBinary(Visit visit, TIntermBinary*);
     bool visitUnary(Visit visit, TIntermUnary*);
     bool visitTernary(Visit visit, TIntermTernary *);
-    bool visitSelection(Visit visit, TIntermSelection*);
+    bool visitIfElse(Visit visit, TIntermIfElse *);
     bool visitSwitch(Visit visit, TIntermSwitch *);
     bool visitCase(Visit visit, TIntermCase *);
     bool visitAggregate(Visit visit, TIntermAggregate*);
@@ -105,7 +105,7 @@ class OutputHLSL : public TIntermTraverser
                                      TIntermTyped *expression);
 
     void writeDeferredGlobalInitializers(TInfoSinkBase &out);
-    void writeSelection(TInfoSinkBase &out, TIntermSelection *node);
+    void writeIfElse(TInfoSinkBase &out, TIntermIfElse *node);
 
     // Returns the function name
     TString addStructEqualityFunction(const TStructure &structure);

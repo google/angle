@@ -300,8 +300,7 @@ bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replac
     return false;
 }
 
-bool TIntermSelection::replaceChildNode(
-    TIntermNode *original, TIntermNode *replacement)
+bool TIntermIfElse::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mTrueBlock, TIntermNode, original, replacement);

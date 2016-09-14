@@ -280,7 +280,7 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
         TIntermBranch *returnLastNode = new TIntermBranch(EOpReturn, indexLastNode);
         useLastBlock->getSequence()->push_back(returnLastNode);
     }
-    TIntermSelection *ifNode = new TIntermSelection(cond, useFirstBlock, nullptr);
+    TIntermIfElse *ifNode = new TIntermIfElse(cond, useFirstBlock, nullptr);
     bodyNode->getSequence()->push_back(ifNode);
     bodyNode->getSequence()->push_back(useLastBlock);
 

@@ -4400,7 +4400,7 @@ yyreduce:
 
     {
         context->checkIsScalarBool((yylsp[-4]), (yyvsp[-2].interm.intermTypedNode));
-        (yyval.interm.intermNode) = context->intermediate.addSelection((yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.nodePair), (yylsp[-4]));
+        (yyval.interm.intermNode) = context->intermediate.addIfElse((yyvsp[-2].interm.intermTypedNode), (yyvsp[0].interm.nodePair), (yylsp[-4]));
     }
 
     break;

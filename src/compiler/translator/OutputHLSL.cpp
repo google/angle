@@ -1457,9 +1457,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 // Don't output ; after case labels, they're terminated by :
                 // This is needed especially since outputting a ; after a case statement would turn empty
                 // case statements into non-empty case statements, disallowing fall-through from them.
-                // Also no need to output ; after selection (if) statements or sequences. This is done just
-                // for code clarity.
-                if ((*sit)->getAsCaseNode() == nullptr && (*sit)->getAsSelectionNode() == nullptr &&
+                // Also no need to output ; after if statements or sequences. This is done just for
+                // code clarity.
+                if ((*sit)->getAsCaseNode() == nullptr && (*sit)->getAsIfElseNode() == nullptr &&
                     !IsSequence(*sit))
                     out << ";\n";
             }
@@ -1929,7 +1929,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
     return true;
 }
 
-void OutputHLSL::writeSelection(TInfoSinkBase &out, TIntermSelection *node)
+void OutputHLSL::writeIfElse(TInfoSinkBase &out, TIntermIfElse *node)
 {
     out << "if (";
 
@@ -1967,7 +1967,8 @@ void OutputHLSL::writeSelection(TInfoSinkBase &out, TIntermSelection *node)
         outputLineDirective(out, node->getFalseBlock()->getLine().first_line);
 
         // Either this is "else if" or the falseBlock child node will output braces.
-        ASSERT(IsSequence(node->getFalseBlock()) || node->getFalseBlock()->getAsSelectionNode() != nullptr);
+        ASSERT(IsSequence(node->getFalseBlock()) ||
+               node->getFalseBlock()->getAsIfElseNode() != nullptr);
 
         node->getFalseBlock()->traverse(this);
 
@@ -1992,7 +1993,7 @@ bool OutputHLSL::visitTernary(Visit, TIntermTernary *)
     return false;
 }
 
-bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
+bool OutputHLSL::visitIfElse(Visit visit, TIntermIfElse *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
@@ -2004,7 +2005,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
         out << "FLATTEN ";
     }
 
-    writeSelection(out, node);
+    writeIfElse(out, node);
 
     return false;
 }

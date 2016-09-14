@@ -25,7 +25,7 @@ class VariableInitializer : public TIntermTraverser
   protected:
     bool visitBinary(Visit, TIntermBinary *node) override { return false; }
     bool visitUnary(Visit, TIntermUnary *node) override { return false; }
-    bool visitSelection(Visit, TIntermSelection *node) override { return false; }
+    bool visitIfElse(Visit, TIntermIfElse *node) override { return false; }
     bool visitLoop(Visit, TIntermLoop *node) override { return false; }
     bool visitBranch(Visit, TIntermBranch *node) override { return false; }
 

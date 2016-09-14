@@ -38,9 +38,9 @@ void TIntermTernary::traverse(TIntermTraverser *it)
     it->traverseTernary(this);
 }
 
-void TIntermSelection::traverse(TIntermTraverser *it)
+void TIntermIfElse::traverse(TIntermTraverser *it)
 {
-    it->traverseSelection(this);
+    it->traverseIfElse(this);
 }
 
 void TIntermSwitch::traverse(TIntermTraverser *it)
@@ -596,15 +596,13 @@ void TIntermTraverser::traverseTernary(TIntermTernary *node)
         visitTernary(PostVisit, node);
 }
 
-//
-// Traverse a selection node.  Same comments in binary node apply here.
-//
-void TIntermTraverser::traverseSelection(TIntermSelection *node)
+// Traverse an if-else node.  Same comments in binary node apply here.
+void TIntermTraverser::traverseIfElse(TIntermIfElse *node)
 {
     bool visit = true;
 
     if (preVisit)
-        visit = visitSelection(PreVisit, node);
+        visit = visitIfElse(PreVisit, node);
 
     if (visit)
     {
@@ -618,7 +616,7 @@ void TIntermTraverser::traverseSelection(TIntermSelection *node)
     }
 
     if (visit && postVisit)
-        visitSelection(PostVisit, node);
+        visitIfElse(PostVisit, node);
 }
 
 //

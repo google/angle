@@ -38,7 +38,7 @@ class TIntermediate
     TIntermAggregate *makeAggregate(TIntermNode *node, const TSourceLoc &);
     TIntermAggregate *ensureSequence(TIntermNode *node);
     TIntermAggregate *setAggregateOperator(TIntermNode *, TOperator, const TSourceLoc &);
-    TIntermNode *addSelection(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &line);
+    TIntermNode *addIfElse(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &line);
     static TIntermTyped *AddTernarySelection(TIntermTyped *cond,
                                              TIntermTyped *trueExpression,
                                              TIntermTyped *falseExpression,

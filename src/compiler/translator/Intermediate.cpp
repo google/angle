@@ -172,37 +172,35 @@ TIntermAggregate *TIntermediate::ensureSequence(TIntermNode *node)
     return aggNode;
 }
 
-//
 // For "if" test nodes.  There are three children; a condition,
 // a true path, and a false path.  The two paths are in the
 // nodePair.
 //
-// Returns the selection node created.
-//
-TIntermNode *TIntermediate::addSelection(
-    TIntermTyped *cond, TIntermNodePair nodePair, const TSourceLoc &line)
+// Returns the node created.
+TIntermNode *TIntermediate::addIfElse(TIntermTyped *cond,
+                                      TIntermNodePair nodePair,
+                                      const TSourceLoc &line)
 {
-    //
-    // For compile time constant selections, prune the code and
-    // test now.
-    //
+    // For compile time constant conditions, prune the code now.
 
     if (cond->getAsConstantUnion())
     {
         if (cond->getAsConstantUnion()->getBConst(0) == true)
         {
-            return nodePair.node1 ? setAggregateOperator(
-                nodePair.node1, EOpSequence, nodePair.node1->getLine()) : NULL;
+            return nodePair.node1 ? setAggregateOperator(nodePair.node1, EOpSequence,
+                                                         nodePair.node1->getLine())
+                                  : nullptr;
         }
         else
         {
-            return nodePair.node2 ? setAggregateOperator(
-                nodePair.node2, EOpSequence, nodePair.node2->getLine()) : NULL;
+            return nodePair.node2 ? setAggregateOperator(nodePair.node2, EOpSequence,
+                                                         nodePair.node2->getLine())
+                                  : nullptr;
         }
     }
 
-    TIntermSelection *node = new TIntermSelection(
-        cond, ensureSequence(nodePair.node1), ensureSequence(nodePair.node2));
+    TIntermIfElse *node =
+        new TIntermIfElse(cond, ensureSequence(nodePair.node1), ensureSequence(nodePair.node2));
     node->setLine(line);
 
     return node;

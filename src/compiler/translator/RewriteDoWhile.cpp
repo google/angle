@@ -95,7 +95,7 @@ class DoWhileRewriter : public TIntermTraverser
             //     break;
             //   }
             // }
-            TIntermSelection *breakIf = nullptr;
+            TIntermIfElse *breakIf = nullptr;
             {
                 TIntermBranch *breakStatement = new TIntermBranch(EOpBreak, nullptr);
 
@@ -105,13 +105,12 @@ class DoWhileRewriter : public TIntermTraverser
                 TIntermUnary *negatedCondition =
                     new TIntermUnary(EOpLogicalNot, loop->getCondition());
 
-                TIntermSelection *innerIf =
-                    new TIntermSelection(negatedCondition, breakBlock, nullptr);
+                TIntermIfElse *innerIf = new TIntermIfElse(negatedCondition, breakBlock, nullptr);
 
                 TIntermAggregate *innerIfBlock = new TIntermAggregate(EOpSequence);
                 innerIfBlock->getSequence()->push_back(innerIf);
 
-                breakIf = new TIntermSelection(createTempSymbol(boolType), innerIfBlock, nullptr);
+                breakIf = new TIntermIfElse(createTempSymbol(boolType), innerIfBlock, nullptr);
             }
 
             // Assemble the replacement loops, reusing the do-while loop's body and inserting our

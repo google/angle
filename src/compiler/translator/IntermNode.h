@@ -35,7 +35,7 @@ class TIntermBinary;
 class TIntermUnary;
 class TIntermConstantUnion;
 class TIntermTernary;
-class TIntermSelection;
+class TIntermIfElse;
 class TIntermSwitch;
 class TIntermCase;
 class TIntermTyped;
@@ -95,7 +95,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermBinary *getAsBinaryNode() { return 0; }
     virtual TIntermUnary *getAsUnaryNode() { return 0; }
     virtual TIntermTernary *getAsTernaryNode() { return nullptr; }
-    virtual TIntermSelection *getAsSelectionNode() { return 0; }
+    virtual TIntermIfElse *getAsIfElseNode() { return nullptr; }
     virtual TIntermSwitch *getAsSwitchNode() { return 0; }
     virtual TIntermCase *getAsCaseNode() { return 0; }
     virtual TIntermSymbol *getAsSymbolNode() { return 0; }
@@ -603,11 +603,10 @@ class TIntermTernary : public TIntermTyped
     TIntermTyped *mFalseExpression;
 };
 
-// For if tests.
-class TIntermSelection : public TIntermNode
+class TIntermIfElse : public TIntermNode
 {
   public:
-    TIntermSelection(TIntermTyped *cond, TIntermNode *trueB, TIntermNode *falseB)
+    TIntermIfElse(TIntermTyped *cond, TIntermNode *trueB, TIntermNode *falseB)
         : TIntermNode(), mCondition(cond), mTrueBlock(trueB), mFalseBlock(falseB)
     {
     }
@@ -618,7 +617,7 @@ class TIntermSelection : public TIntermNode
     TIntermTyped *getCondition() const { return mCondition; }
     TIntermNode *getTrueBlock() const { return mTrueBlock; }
     TIntermNode *getFalseBlock() const { return mFalseBlock; }
-    TIntermSelection *getAsSelectionNode() override { return this; }
+    TIntermIfElse *getAsIfElseNode() override { return this; }
 
   protected:
     TIntermTyped *mCondition;
@@ -710,7 +709,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual bool visitBinary(Visit visit, TIntermBinary *node) { return true; }
     virtual bool visitUnary(Visit visit, TIntermUnary *node) { return true; }
     virtual bool visitTernary(Visit visit, TIntermTernary *node) { return true; }
-    virtual bool visitSelection(Visit visit, TIntermSelection *node) { return true; }
+    virtual bool visitIfElse(Visit visit, TIntermIfElse *node) { return true; }
     virtual bool visitSwitch(Visit visit, TIntermSwitch *node) { return true; }
     virtual bool visitCase(Visit visit, TIntermCase *node) { return true; }
     virtual bool visitAggregate(Visit visit, TIntermAggregate *node) { return true; }
@@ -726,7 +725,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void traverseBinary(TIntermBinary *node);
     virtual void traverseUnary(TIntermUnary *node);
     virtual void traverseTernary(TIntermTernary *node);
-    virtual void traverseSelection(TIntermSelection *node);
+    virtual void traverseIfElse(TIntermIfElse *node);
     virtual void traverseSwitch(TIntermSwitch *node);
     virtual void traverseCase(TIntermCase *node);
     virtual void traverseAggregate(TIntermAggregate *node);
@@ -1014,7 +1013,7 @@ class TMaxDepthTraverser : public TIntermTraverser
     bool visitBinary(Visit, TIntermBinary *) override { return depthCheck(); }
     bool visitUnary(Visit, TIntermUnary *) override { return depthCheck(); }
     bool visitTernary(Visit, TIntermTernary *) override { return depthCheck(); }
-    bool visitSelection(Visit, TIntermSelection *) override { return depthCheck(); }
+    bool visitIfElse(Visit, TIntermIfElse *) override { return depthCheck(); }
     bool visitAggregate(Visit, TIntermAggregate *) override { return depthCheck(); }
     bool visitLoop(Visit, TIntermLoop *) override { return depthCheck(); }
     bool visitBranch(Visit, TIntermBranch *) override { return depthCheck(); }

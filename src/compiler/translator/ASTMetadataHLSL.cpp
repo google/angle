@@ -72,9 +72,9 @@ class PullGradient : public TIntermTraverser
         return true;
     }
 
-    bool visitSelection(Visit visit, TIntermSelection *selection) override
+    bool visitIfElse(Visit visit, TIntermIfElse *ifElse) override
     {
-        visitControlFlow(visit, selection);
+        visitControlFlow(visit, ifElse);
         return true;
     }
 
@@ -196,7 +196,7 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
         return true;
     }
 
-    bool visitSelection(Visit visit, TIntermSelection *node) override
+    bool visitIfElse(Visit visit, TIntermIfElse *node) override
     {
         if (visit == PreVisit)
         {
@@ -310,7 +310,7 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
     const CallDAG &mDag;
 
     std::vector<TIntermNode*> mLoopsAndSwitches;
-    std::vector<TIntermSelection*> mIfs;
+    std::vector<TIntermIfElse *> mIfs;
 };
 
 // Tags all the functions called in a discontinuous loop
@@ -385,7 +385,7 @@ bool ASTMetadataHLSL::hasGradientInCallGraph(TIntermLoop *node)
     return mControlFlowsContainingGradient.count(node) > 0;
 }
 
-bool ASTMetadataHLSL::hasGradientLoop(TIntermSelection *node)
+bool ASTMetadataHLSL::hasGradientLoop(TIntermIfElse *node)
 {
     return mIfsContainingGradientLoop.count(node) > 0;
 }

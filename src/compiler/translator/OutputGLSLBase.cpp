@@ -27,7 +27,7 @@ bool isSingleStatement(TIntermNode *node)
         return (aggregate->getOp() != EOpFunction) &&
                (aggregate->getOp() != EOpSequence);
     }
-    else if (node->getAsSelectionNode())
+    else if (node->getAsIfElseNode())
     {
         return false;
     }
@@ -726,7 +726,7 @@ bool TOutputGLSLBase::visitTernary(Visit visit, TIntermTernary *node)
     return false;
 }
 
-bool TOutputGLSLBase::visitSelection(Visit visit, TIntermSelection *node)
+bool TOutputGLSLBase::visitIfElse(Visit visit, TIntermIfElse *node)
 {
     TInfoSinkBase &out = objSink();
 

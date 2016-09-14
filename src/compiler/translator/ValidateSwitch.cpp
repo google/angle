@@ -71,7 +71,7 @@ bool ValidateSwitch::visitTernary(Visit, TIntermTernary *)
     return true;
 }
 
-bool ValidateSwitch::visitSelection(Visit visit, TIntermSelection *)
+bool ValidateSwitch::visitIfElse(Visit visit, TIntermIfElse *)
 {
     if (visit == PreVisit)
         ++mControlFlowDepth;

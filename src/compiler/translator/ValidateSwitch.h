@@ -24,7 +24,7 @@ class ValidateSwitch : public TIntermTraverser
     bool visitBinary(Visit, TIntermBinary *) override;
     bool visitUnary(Visit, TIntermUnary *) override;
     bool visitTernary(Visit, TIntermTernary *) override;
-    bool visitSelection(Visit visit, TIntermSelection *) override;
+    bool visitIfElse(Visit visit, TIntermIfElse *) override;
     bool visitSwitch(Visit, TIntermSwitch *) override;
     bool visitCase(Visit, TIntermCase *node) override;
     bool visitAggregate(Visit, TIntermAggregate *) override;

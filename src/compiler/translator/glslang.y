@@ -1334,7 +1334,7 @@ expression_statement
 selection_statement
     : IF LEFT_PAREN expression RIGHT_PAREN selection_rest_statement {
         context->checkIsScalarBool(@1, $3);
-        $$ = context->intermediate.addSelection($3, $5, @1);
+        $$ = context->intermediate.addIfElse($3, $5, @1);
     }
     ;
 
