@@ -22,6 +22,30 @@
       "revId": "444b9309e5a223cd0d176da1285222d567dc09f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_d76ca034",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-09-14T16:47:26Z",
+      "side": 1,
+      "message": "I added a note in the description.",
+      "parentUuid": "0b60aa87_12eec9ec",
+      "range": {
+        "startLine": 884,
+        "startChar": 4,
+        "endLine": 884,
+        "endChar": 67
+      },
+      "revId": "444b9309e5a223cd0d176da1285222d567dc09f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
