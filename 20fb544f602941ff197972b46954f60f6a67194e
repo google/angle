@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_f3af5e9b",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_f388be5a",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_336e5694",
         "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-15T14:36:39Z",
       "side": 1,
       "message": "nit: default init values?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 20
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_b3b9e6e6",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_336e5694",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_13ad5aa3",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_5373d277",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 5
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_7374ce61",
         "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2016-09-15T14:36:39Z",
       "side": 1,
       "message": "nit: closing namespace comment",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 1
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_d3b6e2f2",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_7374ce61",
       "range": {
         "startLine": 39,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_73a28eb2",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Yes, the exact format is TBD though.",
+      "parentUuid": "0b60aa87_93794a5c",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 54
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_d368228c",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 7
@@ -128,6 +248,30 @@
       "writtenOn": "2016-09-15T14:36:39Z",
       "side": 1,
       "message": "nit: closing namespace comment",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_339c166c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_d368228c",
       "range": {
         "startLine": 69,
         "startChar": 0,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_1e87a110",
+        "filename": "src/compiler/translator/PoolAlloc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_335736ca",
+      "range": {
+        "startLine": 55,
+        "startChar": 1,
+        "endLine": 55,
+        "endChar": 7
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_135f9adf",
         "filename": "src/compiler/translator/PoolAlloc.cpp",
         "patchSetId": 7
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_be93ed4f",
+        "filename": "src/compiler/translator/PoolAlloc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_135f9adf",
+      "range": {
+        "startLine": 78,
+        "startChar": 1,
+        "endLine": 78,
+        "endChar": 7
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_b36b2687",
         "filename": "src/compiler/translator/PoolAlloc.cpp",
         "patchSetId": 7
@@ -197,6 +389,30 @@
       "writtenOn": "2016-09-15T14:36:39Z",
       "side": 1,
       "message": "same, and so on",
+      "range": {
+        "startLine": 106,
+        "startChar": 1,
+        "endLine": 106,
+        "endChar": 7
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_de902945",
+        "filename": "src/compiler/translator/PoolAlloc.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_b36b2687",
       "range": {
         "startLine": 106,
         "startChar": 1,
@@ -255,6 +471,54 @@
     },
     {
       "key": {
+        "uuid": "0b60aa87_5e84390c",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_734dae3b",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 165,
+        "endChar": 37
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_3e7ffd06",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_535c32eb",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 165,
+        "endChar": 37
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b60aa87_9352aad8",
         "filename": "src/compiler/translator/PoolAlloc.h",
         "patchSetId": 7
@@ -266,6 +530,30 @@
       "writtenOn": "2016-09-15T14:36:39Z",
       "side": 1,
       "message": "nit: mStack",
+      "range": {
+        "startLine": 220,
+        "startChar": 37,
+        "endLine": 220,
+        "endChar": 42
+      },
+      "revId": "20fb544f602941ff197972b46954f60f6a67194e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b60aa87_fe896525",
+        "filename": "src/compiler/translator/PoolAlloc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-15T15:25:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b60aa87_9352aad8",
       "range": {
         "startLine": 220,
         "startChar": 37,
