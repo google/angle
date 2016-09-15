@@ -360,7 +360,8 @@ class TIntermConstantUnion : public TIntermTyped
 
     TConstantUnion *foldBinary(TOperator op,
                                TIntermConstantUnion *rightNode,
-                               TDiagnostics *diagnostics);
+                               TDiagnostics *diagnostics,
+                               const TSourceLoc &line);
     const TConstantUnion *foldIndexing(int index);
     TConstantUnion *foldUnaryNonComponentWise(TOperator op);
     TConstantUnion *foldUnaryComponentWise(TOperator op, TDiagnostics *diagnostics);

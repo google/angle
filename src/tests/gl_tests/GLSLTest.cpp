@@ -2270,6 +2270,71 @@ TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that multiplication ops are properly validated.
+TEST_P(GLSLTest, FoldedIntProductOutOfBounds)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "void main(void)\n"
+        "{\n"
+        " int prod = -2580 * 25800 * 25800;\n"
+        " gl_FragColor = vec4(float(prod));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Test that multiplication ops are properly validated.
+TEST_P(GLSLTest_ES3, FoldedUIntProductOutOfBounds)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "   unsigned int prod = 2580u * 25800u * 25800u;\n"
+        "   gl_FragColor = vec4(float(prod));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Test that addition ops are properly validated.
+TEST_P(GLSLTest, FoldedIntSumOutOfBounds)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "void main(void)\n"
+        "{\n"
+        " int sum = 2147483647 + 2147483647;\n"
+        " gl_FragColor = vec4(float(sum));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Test that subtraction ops are properly validated.
+TEST_P(GLSLTest, FoldedIntDifferenceOutOfBounds)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "void main(void)\n"
+        "{\n"
+        " int diff = -2147483000 - 2147483000;\n"
+        " gl_FragColor = vec4(float(diff));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

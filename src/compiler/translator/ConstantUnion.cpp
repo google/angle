@@ -7,7 +7,61 @@
 
 #include "compiler/translator/ConstantUnion.h"
 
+#include "base/numerics/safe_math.h"
 #include "compiler/translator/Diagnostics.h"
+
+namespace
+{
+
+template <typename T>
+T CheckedSum(base::CheckedNumeric<T> lhs,
+             base::CheckedNumeric<T> rhs,
+             TDiagnostics *diag,
+             const TSourceLoc &line)
+{
+    ASSERT(lhs.IsValid() && rhs.IsValid());
+    auto result = lhs + rhs;
+    if (!result.IsValid())
+    {
+        diag->error(line, "Addition out of range", "*", "");
+        return 0;
+    }
+    return result.ValueOrDefault(0);
+}
+
+template <typename T>
+T CheckedDiff(base::CheckedNumeric<T> lhs,
+              base::CheckedNumeric<T> rhs,
+              TDiagnostics *diag,
+              const TSourceLoc &line)
+{
+    ASSERT(lhs.IsValid() && rhs.IsValid());
+    auto result = lhs - rhs;
+    if (!result.IsValid())
+    {
+        diag->error(line, "Difference out of range", "*", "");
+        return 0;
+    }
+    return result.ValueOrDefault(0);
+}
+
+template <typename T>
+T CheckedMul(base::CheckedNumeric<T> lhs,
+             base::CheckedNumeric<T> rhs,
+             TDiagnostics *diag,
+             const TSourceLoc &line)
+{
+    ASSERT(lhs.IsValid() && rhs.IsValid());
+    auto result = lhs * rhs;
+    if (!result.IsValid())
+    {
+        diag->error(line, "Multiplication out of range", "*", "");
+        return 0;
+    }
+    return result.ValueOrDefault(0);
+}
+
+}  // anonymous namespace
 
 TConstantUnion::TConstantUnion()
 {
@@ -221,20 +275,21 @@ bool TConstantUnion::operator<(const TConstantUnion &constant) const
 // static
 TConstantUnion TConstantUnion::add(const TConstantUnion &lhs,
                                    const TConstantUnion &rhs,
-                                   TDiagnostics *diag)
+                                   TDiagnostics *diag,
+                                   const TSourceLoc &line)
 {
     TConstantUnion returnValue;
     ASSERT(lhs.type == rhs.type);
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(lhs.iConst + rhs.iConst);
+            returnValue.setIConst(CheckedSum<int>(lhs.iConst, rhs.iConst, diag, line));
             break;
         case EbtUInt:
-            returnValue.setUConst(lhs.uConst + rhs.uConst);
+            returnValue.setUConst(CheckedSum<unsigned int>(lhs.uConst, rhs.uConst, diag, line));
             break;
         case EbtFloat:
-            returnValue.setFConst(lhs.fConst + rhs.fConst);
+            returnValue.setFConst(CheckedSum<float>(lhs.fConst, rhs.fConst, diag, line));
             break;
         default:
             UNREACHABLE();
@@ -246,20 +301,21 @@ TConstantUnion TConstantUnion::add(const TConstantUnion &lhs,
 // static
 TConstantUnion TConstantUnion::sub(const TConstantUnion &lhs,
                                    const TConstantUnion &rhs,
-                                   TDiagnostics *diag)
+                                   TDiagnostics *diag,
+                                   const TSourceLoc &line)
 {
     TConstantUnion returnValue;
     ASSERT(lhs.type == rhs.type);
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(lhs.iConst - rhs.iConst);
+            returnValue.setIConst(CheckedDiff<int>(lhs.iConst, rhs.iConst, diag, line));
             break;
         case EbtUInt:
-            returnValue.setUConst(lhs.uConst - rhs.uConst);
+            returnValue.setUConst(CheckedDiff<unsigned int>(lhs.uConst, rhs.uConst, diag, line));
             break;
         case EbtFloat:
-            returnValue.setFConst(lhs.fConst - rhs.fConst);
+            returnValue.setFConst(CheckedDiff<float>(lhs.fConst, rhs.fConst, diag, line));
             break;
         default:
             UNREACHABLE();
@@ -271,20 +327,21 @@ TConstantUnion TConstantUnion::sub(const TConstantUnion &lhs,
 // static
 TConstantUnion TConstantUnion::mul(const TConstantUnion &lhs,
                                    const TConstantUnion &rhs,
-                                   TDiagnostics *diag)
+                                   TDiagnostics *diag,
+                                   const TSourceLoc &line)
 {
     TConstantUnion returnValue;
     ASSERT(lhs.type == rhs.type);
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(lhs.iConst * rhs.iConst);
+            returnValue.setIConst(CheckedMul<int>(lhs.iConst, rhs.iConst, diag, line));
             break;
         case EbtUInt:
-            returnValue.setUConst(lhs.uConst * rhs.uConst);
+            returnValue.setUConst(CheckedMul<unsigned int>(lhs.uConst, rhs.uConst, diag, line));
             break;
         case EbtFloat:
-            returnValue.setFConst(lhs.fConst * rhs.fConst);
+            returnValue.setFConst(CheckedMul<float>(lhs.fConst, rhs.fConst, diag, line));
             break;
         default:
             UNREACHABLE();

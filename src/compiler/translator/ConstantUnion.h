@@ -46,13 +46,16 @@ class TConstantUnion
     bool operator<(const TConstantUnion &constant) const;
     static TConstantUnion add(const TConstantUnion &lhs,
                               const TConstantUnion &rhs,
-                              TDiagnostics *diag);
+                              TDiagnostics *diag,
+                              const TSourceLoc &line);
     static TConstantUnion sub(const TConstantUnion &lhs,
                               const TConstantUnion &rhs,
-                              TDiagnostics *diag);
+                              TDiagnostics *diag,
+                              const TSourceLoc &line);
     static TConstantUnion mul(const TConstantUnion &lhs,
                               const TConstantUnion &rhs,
-                              TDiagnostics *diag);
+                              TDiagnostics *diag,
+                              const TSourceLoc &line);
     TConstantUnion operator%(const TConstantUnion &constant) const;
     TConstantUnion operator>>(const TConstantUnion &constant) const;
     TConstantUnion operator<<(const TConstantUnion &constant) const;
