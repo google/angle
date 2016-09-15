@@ -4,9 +4,14 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/translator/Compiler.h"
+
+#include <sstream>
+
+#include "angle_gl.h"
+#include "common/utilities.h"
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/Cache.h"
-#include "compiler/translator/Compiler.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
@@ -26,10 +31,6 @@
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/VariablePacker.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
-#include "angle_gl.h"
-#include "common/utilities.h"
-
-#include <iostream>
 
 namespace
 {
