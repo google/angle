@@ -239,7 +239,7 @@ static_library("translator_static") {
   ]
 }
 
-fuzzer_test("translator_fuzzer") {
+source_set("translator_fuzzer") {
   sources = [
     "src/compiler/fuzz/translator_fuzzer.cpp",
   ]
