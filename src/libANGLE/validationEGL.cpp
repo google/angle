@@ -327,6 +327,21 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE:
+              if (!display->getExtensions().createContextWebGLCompatibility)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "Attribute EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE requires "
+                               "EGL_ANGLE_create_context_webgl_compatibility.");
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return Error(
+                      EGL_BAD_ATTRIBUTE,
+                      "EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE must be EGL_TRUE or EGL_FALSE.");
+              }
+              break;
+
           default:
             return Error(EGL_BAD_ATTRIBUTE);
         }

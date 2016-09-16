@@ -259,6 +259,9 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
                                                      GLboolean unpackPremultiplyAlpha,
                                                      GLboolean unpackUnmultiplyAlpha);
 
+// GL_ANGLE_webgl_compatibility
+GL_APICALL GLboolean GL_APIENTRY EnableExtensionANGLE(const GLchar *name);
+
 }  // namespace gl
 
 #endif // LIBGLESV2_ENTRYPOINTGLES20EXT_H_

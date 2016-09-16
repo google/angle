@@ -481,6 +481,8 @@ class Context final : public ValidationContext
 
     void generateMipmap(GLenum target);
 
+    GLboolean enableExtension(const char *name);
+
     Error flush();
     Error finish();
 
@@ -582,10 +584,10 @@ class Context final : public ValidationContext
     EGLenum getClientType() const;
     EGLenum getRenderBuffer() const;
 
-    const std::string &getRendererString() const;
+    const char *getRendererString() const;
 
-    const std::string &getExtensionString() const;
-    const std::string &getExtensionString(size_t idx) const;
+    const char *getExtensionString() const;
+    const char *getExtensionString(size_t idx) const;
     size_t getExtensionStringCount() const;
 
     rx::ContextImpl *getImplementation() const { return mImplementation.get(); }
@@ -612,7 +614,8 @@ class Context final : public ValidationContext
     void initRendererString();
     void initExtensionStrings();
 
-    void initCaps();
+    void initCaps(bool webGLContext);
+    void updateCaps();
 
     LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
     LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
@@ -653,9 +656,9 @@ class Context final : public ValidationContext
     ResourceMap<TransformFeedback> mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackAllocator;
 
-    std::string mRendererString;
-    std::string mExtensionString;
-    std::vector<std::string> mExtensionStrings;
+    const char *mRendererString;
+    const char *mExtensionString;
+    std::vector<const char *> mExtensionStrings;
 
     // Recorded errors
     typedef std::set<GLenum> ErrorSet;

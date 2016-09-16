@@ -567,6 +567,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglStreamPostD3DTextureNV12ANGLE(EGLDisplay dpy, E
 #endif
 #endif /* EGL_ANGLE_stream_producer_d3d_texture_nv12 */
 
+#ifndef EGL_ANGLE_create_context_webgl_compatibility
+#define EGL_ANGLE_create_context_webgl_compatibility 1
+#define EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE 0x3AAC
+#endif /* EGL_ANGLE_create_context_webgl_compatibility */
+
 #ifndef EGL_ARM_pixmap_multisample_discard
 #define EGL_ARM_pixmap_multisample_discard 1
 #define EGL_DISCARD_SAMPLES_ARM           0x3286

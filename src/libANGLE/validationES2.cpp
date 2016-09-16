@@ -3433,4 +3433,24 @@ bool ValidateBufferSubData(ValidationContext *context,
     return true;
 }
 
+bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name)
+{
+    if (!context->getExtensions().webglCompatibility)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GL_ANGLE_webgl_compatibility is not available."));
+        return false;
+    }
+
+    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
+    auto extension                         = extensionInfos.find(name);
+    if (extension == extensionInfos.end() || !extension->second.Enableable)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Extension %s is not enableable.", name));
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

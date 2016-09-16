@@ -68,6 +68,10 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void setMultisample(bool multisample) { mMultisample = multisample; }
     void setDebugEnabled(bool debug) { mDebug = debug; }
     void setNoErrorEnabled(bool noError) { mNoError = noError; }
+    void setWebGLCompatibilityEnabled(bool webglCompatibility)
+    {
+        mWebGLCompatibility = webglCompatibility;
+    }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -113,6 +117,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mMultisample;
     bool mDebug;
     bool mNoError;
+    bool mWebGLCompatibility;
     EGLint mSwapInterval;
 };
 

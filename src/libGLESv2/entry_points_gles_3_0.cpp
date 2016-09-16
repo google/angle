@@ -1441,7 +1441,7 @@ const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
             return NULL;
         }
 
-        return reinterpret_cast<const GLubyte*>(context->getExtensionString(index).c_str());
+        return reinterpret_cast<const GLubyte *>(context->getExtensionString(index));
     }
 
     return NULL;

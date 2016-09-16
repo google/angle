@@ -317,6 +317,8 @@ bool ValidateBufferSubData(ValidationContext *context,
                            GLsizeiptr size,
                            const GLvoid *data);
 
+bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

@@ -918,6 +918,7 @@ void Display::initDisplayExtensions()
     // Some extensions are always available because they are implemented in the EGL layer.
     mDisplayExtensions.createContext        = true;
     mDisplayExtensions.createContextNoError = true;
+    mDisplayExtensions.createContextWebGLCompatibility = true;
 
     // Force EGL_KHR_get_all_proc_addresses on.
     mDisplayExtensions.getAllProcAddresses = true;

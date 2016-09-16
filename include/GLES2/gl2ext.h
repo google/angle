@@ -821,6 +821,14 @@ GL_APICALL void GL_APIENTRY glBlitFramebufferANGLE (GLint srcX0, GLint srcY0, GL
 #endif
 #endif /* GL_ANGLE_framebuffer_blit */
 
+#ifndef GL_ANGLE_webgl_compatibility
+#define GL_ANGLE_webgl_compatibility 1
+typedef GLboolean(GL_APIENTRYP PFNGLENABLEEXTENSIONANGLEPROC) (const GLchar *name);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL GLboolean GL_APIENTRY glEnableExtensionANGLE (const GLchar *name);
+#endif
+#endif /* GL_ANGLE_webgl_compatibility */
+
 #ifndef GL_CHROMIUM_framebuffer_mixed_samples
 #define GL_CHROMIUM_frambuffer_mixed_samples 1
 #define GL_COVERAGE_MODULATION_CHROMIUM 0x9332

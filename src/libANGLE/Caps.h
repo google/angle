@@ -52,6 +52,7 @@ class TextureCapsMap
 
     void insert(GLenum internalFormat, const TextureCaps &caps);
     void remove(GLenum internalFormat);
+    void clear();
 
     const TextureCaps &get(GLenum internalFormat) const;
 
@@ -292,6 +293,9 @@ struct Extensions
     // GL_CHROMIUM_copy_texture
     bool copyTexture;
 
+    // GL_ANGLE_webgl_compatibility
+    bool webglCompatibility;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float
@@ -311,6 +315,19 @@ struct Extensions
     // GL_CHROMIUM_path_rendering
     bool pathRendering;
 };
+
+struct ExtensionInfo
+{
+    // If this extension can be enabled with glEnableExtension (GL_ANGLE_webgl_compatibility)
+    bool Enableable = false;
+
+    // Pointer to a boolean member of the Extensions struct
+    typedef bool(Extensions::*ExtensionBool);
+    ExtensionBool ExtensionsMember = nullptr;
+};
+
+using ExtensionInfoMap = std::map<std::string, ExtensionInfo>;
+const ExtensionInfoMap &GetExtensionInfoMap();
 
 struct Limitations
 {
@@ -572,6 +589,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_stream_producer_d3d_texture_nv12
     bool streamProducerD3DTextureNV12;
+
+    // EGL_ANGLE_create_context_webgl_compatibility
+    bool createContextWebGLCompatibility;
 };
 
 struct DeviceExtensions

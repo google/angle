@@ -179,6 +179,11 @@ bool GetNoError(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_OPENGL_NO_ERROR_KHR, EGL_FALSE) == EGL_TRUE);
 }
 
+bool GetWebGLContext(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -244,7 +249,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 {
     ASSERT(!mRobustAccess);  // Unimplemented
 
-    initCaps();
+    initCaps(GetWebGLContext(attribs));
 
     mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs));
 
@@ -2292,26 +2297,30 @@ void Context::initRendererString()
     mRendererString = MakeStaticString(rendererString.str());
 }
 
-const std::string &Context::getRendererString() const
+const char *Context::getRendererString() const
 {
     return mRendererString;
 }
 
 void Context::initExtensionStrings()
 {
-    mExtensionStrings = mExtensions.getStrings();
+    for (const auto &extensionString : mExtensions.getStrings())
+    {
+        mExtensionStrings.push_back(MakeStaticString(extensionString));
+    }
 
     std::ostringstream combinedStringStream;
-    std::copy(mExtensionStrings.begin(), mExtensionStrings.end(), std::ostream_iterator<std::string>(combinedStringStream, " "));
-    mExtensionString = combinedStringStream.str();
+    std::copy(mExtensionStrings.begin(), mExtensionStrings.end(),
+              std::ostream_iterator<const char *>(combinedStringStream, " "));
+    mExtensionString = MakeStaticString(combinedStringStream.str());
 }
 
-const std::string &Context::getExtensionString() const
+const char *Context::getExtensionString() const
 {
     return mExtensionString;
 }
 
-const std::string &Context::getExtensionString(size_t idx) const
+const char *Context::getExtensionString(size_t idx) const
 {
     return mExtensionStrings[idx];
 }
@@ -2342,7 +2351,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
     return false;
 }
 
-void Context::initCaps()
+void Context::initCaps(bool webGLContext)
 {
     mCaps = mImplementation->getNativeCaps();
 
@@ -2385,7 +2394,25 @@ void Context::initCaps()
 
     mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
+    // WebGL compatibility
+    mExtensions.webglCompatibility = webGLContext;
+    for (const auto &extensionInfo : GetExtensionInfoMap())
+    {
+        // If this context is for WebGL, disable all enableable extensions
+        if (webGLContext && extensionInfo.second.Enableable)
+        {
+            mExtensions.*(extensionInfo.second.ExtensionsMember) = false;
+        }
+    }
+
+    // Generate texture caps
+    updateCaps();
+}
+
+void Context::updateCaps()
+{
     mCaps.compressedTextureFormats.clear();
+    mTextureCaps.clear();
 
     const TextureCapsMap &rendererFormats = mImplementation->getNativeTextureCaps();
     for (TextureCapsMap::const_iterator i = rendererFormats.begin(); i != rendererFormats.end(); i++)
@@ -2922,6 +2949,32 @@ void Context::generateMipmap(GLenum target)
 {
     Texture *texture = getTargetTexture(target);
     handleError(texture->generateMipmap());
+}
+
+GLboolean Context::enableExtension(const char *name)
+{
+    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
+    ASSERT(extensionInfos.find(name) != extensionInfos.end());
+    const auto &extension = extensionInfos.at(name);
+    ASSERT(extension.Enableable);
+
+    if (mExtensions.*(extension.ExtensionsMember))
+    {
+        // Extension already enabled
+        return GL_TRUE;
+    }
+
+    const auto &nativeExtensions = mImplementation->getNativeExtensions();
+    if (!(nativeExtensions.*(extension.ExtensionsMember)))
+    {
+        // Underlying implementation does not support this valid extension
+        return GL_FALSE;
+    }
+
+    mExtensions.*(extension.ExtensionsMember) = true;
+    updateCaps();
+    initExtensionStrings();
+    return GL_TRUE;
 }
 
 void Context::copyTextureCHROMIUM(GLuint sourceId,

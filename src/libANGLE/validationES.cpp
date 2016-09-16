@@ -482,7 +482,8 @@ bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
               break;
 
           case GL_DEPTH_STENCIL_ATTACHMENT:
-              if (context->getClientMajorVersion() < 3)
+              if (!context->getExtensions().webglCompatibility &&
+                  context->getClientMajorVersion() < 3)
               {
                   context->handleError(Error(GL_INVALID_ENUM));
                   return false;

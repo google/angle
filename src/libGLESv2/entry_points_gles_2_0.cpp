@@ -2101,7 +2101,7 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
                 return reinterpret_cast<const GLubyte *>("Google Inc.");
 
             case GL_RENDERER:
-                return reinterpret_cast<const GLubyte *>(context->getRendererString().c_str());
+                return reinterpret_cast<const GLubyte *>(context->getRendererString());
 
             case GL_VERSION:
                 if (context->getClientMajorVersion() == 2)
@@ -2128,7 +2128,7 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
                 }
 
             case GL_EXTENSIONS:
-                return reinterpret_cast<const GLubyte *>(context->getExtensionString().c_str());
+                return reinterpret_cast<const GLubyte *>(context->getExtensionString());
 
             default:
                 context->handleError(Error(GL_INVALID_ENUM));

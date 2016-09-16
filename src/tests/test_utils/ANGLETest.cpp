@@ -643,6 +643,11 @@ void ANGLETest::setNoErrorEnabled(bool enabled)
     mEGLWindow->setNoErrorEnabled(enabled);
 }
 
+void ANGLETest::setWebGLCompatibilityEnabled(bool webglCompatibility)
+{
+    mEGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
+}
+
 int ANGLETest::getClientMajorVersion() const
 {
     return mEGLWindow->getClientMajorVersion();

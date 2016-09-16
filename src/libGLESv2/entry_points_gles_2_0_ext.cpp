@@ -1935,4 +1935,22 @@ ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
     }
 }
 
+GL_APICALL GLboolean GL_APIENTRY EnableExtensionANGLE(const GLchar *name)
+{
+    EVENT("(const GLchar *name = %p)", name);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateEnableExtensionANGLE(context, name))
+        {
+            return GL_FALSE;
+        }
+
+        return context->enableExtension(name) ? GL_TRUE : GL_FALSE;
+    }
+
+    return GL_FALSE;
+}
+
 }  // gl
