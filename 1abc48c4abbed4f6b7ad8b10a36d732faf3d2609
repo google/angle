@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_b7a76aa8",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-16T13:41:20Z",
+      "side": 1,
+      "message": "nit: pushing",
+      "range": {
+        "startLine": 230,
+        "startChar": 70,
+        "endLine": 230,
+        "endChar": 76
+      },
+      "revId": "1abc48c4abbed4f6b7ad8b10a36d732faf3d2609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
