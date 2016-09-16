@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b09b8f32_5b8e23e2",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3591,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-16T14:50:27Z",
+      "side": 1,
+      "message": "mega-nit: reuse this computation when creating the vector.",
+      "revId": "8b6545d030823c851cc3096bbe7c309000d0ddb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_7b93df06",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3608,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-16T14:50:27Z",
+      "side": 1,
+      "message": "Just to be sure, is the point here to force recreation of the D3D11 NativeBuffer to check the cached SRVs are removed?",
+      "revId": "8b6545d030823c851cc3096bbe7c309000d0ddb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
