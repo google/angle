@@ -2763,6 +2763,13 @@ TEST_P(SamplerInStructAsFunctionParameterTest, SamplerInStructAsFunctionParamete
         std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
         return;
     }
+
+    if (IsWindows() && IsIntel() && IsOpenGL())
+    {
+        std::cout << "Test skipped on Windows OpenGL on Intel." << std::endl;
+        return;
+    }
+
     runSamplerInStructTest();
 }
 
