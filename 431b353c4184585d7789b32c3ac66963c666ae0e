@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_8b66adef",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-19T17:15:16Z",
+      "side": 1,
+      "message": "nit:features",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_eb5569ec",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-19T17:15:16Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we add enums for WebGL2 too as some validation for WebGL2 is different from WebGL1?",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_cbcb459b",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-19T17:15:16Z",
+      "side": 1,
+      "message": "nit: comment doesn\u0027t match the test.",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
