@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "6b3926b8_0bdc7d2e",
+        "filename": "extensions/ANGLE_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "you should probably describe your new entry point, point to the WebGL spec and mention to look there for new validation.",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 8
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_8b66adef",
         "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
         "patchSetId": 4
@@ -36,6 +59,144 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_cbac25aa",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "what happens if GL_ANGLE_webgl_compatibility is not available? You should maybe say blah blah is required, otherwise error.",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 41
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_0ea80b79",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "After looking at the map, rather than calling this bool Enableable, can we make it a bit more readable for new contributors? Something like\n\n struct ExtensionInfo\n {\n    enum ExposedIn\n    {\n       WEBGL,\n       ES_ONLY\n    };\n\n    ExposedIn visibility;\n    \n    using InfoMap \u003d std::map\u003c\u003e\n    static const InfoMap \u0026GetInfoMap();\n };\n\n... cpp ...\n\n // static\n const InfoMap \u0026ExtensionInfo::GetInfoMap()\n {\n    static const InfoMap infoMap \u003d {\n       {\"GL_element_uint\", { ExposedIn::WEBGL, \u0026... } },\n       {\"GL_other_ext\", { ExposedIn::ES_ONLY, \u0026... } },\n    };\n    return infoMap;\n }",
+      "range": {
+        "startLine": 322,
+        "startChar": 9,
+        "endLine": 322,
+        "endChar": 19
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_cecef323",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2957,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "can you also ASSERT the extension is actually in the list of WebGL-visible \"enablable\" extensions",
+      "range": {
+        "startLine": 2957,
+        "startChar": 4,
+        "endLine": 2957,
+        "endChar": 62
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_6e1b47de",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "nit: we should probably stick to using GLboolean for context EPs",
+      "range": {
+        "startLine": 484,
+        "startChar": 4,
+        "endLine": 484,
+        "endChar": 8
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_cef5134a",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "nit: you can omit this",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 55
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_0ef00b56",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "nit: wrap",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 12
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_cbcb459b",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 4
@@ -47,6 +208,29 @@
       "writtenOn": "2016-09-19T17:15:16Z",
       "side": 1,
       "message": "nit: comment doesn\u0027t match the test.",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_ce80b3a9",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:47:50Z",
+      "side": 1,
+      "message": "use the ANGLE_GL_PROGRAM macro. sorry if this isn\u0027t intuitive.. it\u0027s the only way to check for program compilation properly.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 13
+      },
       "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
