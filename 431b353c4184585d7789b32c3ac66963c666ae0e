@@ -148,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_fac5312e",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T20:10:31Z",
+      "side": 1,
+      "message": "EGL extensions aren\u0027t generally great examples for thoroughness and quality. I\u0027d still like for a short one sentence mention. For a higher quality pool of documents I would agree prior example is a good decision making tool.",
+      "parentUuid": "6b3926b8_ee4e578a",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 41
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_0ea80b79",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 4
