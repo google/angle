@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_48175b59",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T14:21:07Z",
+      "side": 1,
+      "message": "nit: tabs to spaces",
+      "range": {
+        "startLine": 2255,
+        "startChar": 9,
+        "endLine": 2255,
+        "endChar": 10
+      },
+      "revId": "86fffc9fbf0e8c83013c5d882cbfebb0ae63ab05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_680c1f4f",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T14:21:07Z",
+      "side": 1,
+      "message": "nit: you can use ANGLE_GL_PROGRAM in gl_raii.h",
+      "range": {
+        "startLine": 2274,
+        "startChar": 4,
+        "endLine": 2275,
+        "endChar": 27
+      },
+      "revId": "86fffc9fbf0e8c83013c5d882cbfebb0ae63ab05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_88115365",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2279,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T14:21:07Z",
+      "side": 1,
+      "message": "nit: for all of the indexes, ASSERT_NE(-1, index) after you query the locations",
+      "range": {
+        "startLine": 2279,
+        "startChar": 10,
+        "endLine": 2279,
+        "endChar": 18
+      },
+      "revId": "86fffc9fbf0e8c83013c5d882cbfebb0ae63ab05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_a806172a",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2292,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T14:21:07Z",
+      "side": 1,
+      "message": "same comments for this test",
+      "range": {
+        "startLine": 2292,
+        "startChar": 7,
+        "endLine": 2292,
+        "endChar": 19
+      },
+      "revId": "86fffc9fbf0e8c83013c5d882cbfebb0ae63ab05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
