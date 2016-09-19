@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_8eb07b4c",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3591,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:59:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_5b8e23e2",
+      "revId": "8b6545d030823c851cc3096bbe7c309000d0ddb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_7b93df06",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-16T14:50:27Z",
       "side": 1,
       "message": "Just to be sure, is the point here to force recreation of the D3D11 NativeBuffer to check the cached SRVs are removed?",
+      "revId": "8b6545d030823c851cc3096bbe7c309000d0ddb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_ae19bf84",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T17:59:57Z",
+      "side": 1,
+      "message": "Yes, exactly.",
+      "parentUuid": "b09b8f32_7b93df06",
       "revId": "8b6545d030823c851cc3096bbe7c309000d0ddb0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
