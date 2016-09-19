@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_1a05a5b4",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T20:58:32Z",
+      "side": 1,
+      "message": "nit: git cl format",
+      "range": {
+        "startLine": 154,
+        "startChar": 22,
+        "endLine": 154,
+        "endChar": 26
+      },
+      "revId": "8133dcf31e830b0dadb75f4ec519afab4faa0e3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_5ad55d07",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T20:58:32Z",
+      "side": 1,
+      "message": "nit: can these be capital ASSERT?",
+      "range": {
+        "startLine": 179,
+        "startChar": 4,
+        "endLine": 179,
+        "endChar": 10
+      },
+      "revId": "8133dcf31e830b0dadb75f4ec519afab4faa0e3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
