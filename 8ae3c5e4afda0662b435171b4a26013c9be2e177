@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_1a2da501",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T20:10:31Z",
+      "side": 1,
+      "message": "nit: I like the inner lambdas but the outer one seems a too much to me, I would flatten this one way or another (use non-lambda helper methods / make the map setting part of the constructor)",
+      "range": {
+        "startLine": 501,
+        "startChar": 4,
+        "endLine": 501,
+        "endChar": 39
+      },
+      "revId": "8ae3c5e4afda0662b435171b4a26013c9be2e177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
