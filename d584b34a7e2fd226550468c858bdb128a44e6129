@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_79995324",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T18:25:49Z",
+      "side": 1,
+      "message": "nit: update message",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 51
+      },
+      "revId": "d584b34a7e2fd226550468c858bdb128a44e6129",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_999e070b",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T18:25:49Z",
+      "side": 1,
+      "message": "nit: suggest \u0027disable_pool_alloc\u0027, and making it include this config if use_libfuzzer in the code below",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 31
+      },
+      "revId": "d584b34a7e2fd226550468c858bdb128a44e6129",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
