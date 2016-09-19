@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_d4b846c4",
+        "filename": "extensions/ANGLE_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_0bdc7d2e",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 8
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_8b66adef",
         "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
         "patchSetId": 4
@@ -59,6 +83,24 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_4e176359",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "For now, I\u0027m going to go with the assumption that requesting an ES2 context implies WebGL1 and ES3 implies WebGL2.  If we tried to host WebGL1 contexts with only ANGLE validation with an ES3 context, we would let way too many invalid enums though.\n\nI realize that this also conflicts with other EGL validation that disallows share groups with different client versions.  I\u0027m not sure how I want to address that yet.",
+      "parentUuid": "6b3926b8_eb5569ec",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_cbac25aa",
         "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
         "patchSetId": 4
@@ -70,6 +112,30 @@
       "writtenOn": "2016-09-19T17:47:50Z",
       "side": 1,
       "message": "what happens if GL_ANGLE_webgl_compatibility is not available? You should maybe say blah blah is required, otherwise error.",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 41
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_ee4e578a",
+        "filename": "extensions/EGL_ANGLE_create_context_webgl_compatibility.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "I based it off of the EGL_KHR_create_context_no_error extension which doesn\u0027t mention errors for the attribute enums.  I think it\u0027s covered by the base EGL spec.",
+      "parentUuid": "6b3926b8_cbac25aa",
       "range": {
         "startLine": 62,
         "startChar": 4,
@@ -105,6 +171,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_9914474c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "I like keeping it as a bool but I see your point.  I added helper lambdas in the cpp file to make it clear.",
+      "parentUuid": "6b3926b8_0ea80b79",
+      "range": {
+        "startLine": 322,
+        "startChar": 9,
+        "endLine": 322,
+        "endChar": 19
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_cecef323",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -116,6 +206,30 @@
       "writtenOn": "2016-09-19T17:47:50Z",
       "side": 1,
       "message": "can you also ASSERT the extension is actually in the list of WebGL-visible \"enablable\" extensions",
+      "range": {
+        "startLine": 2957,
+        "startChar": 4,
+        "endLine": 2957,
+        "endChar": 62
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_4e0a032e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2957,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_cecef323",
       "range": {
         "startLine": 2957,
         "startChar": 4,
@@ -151,6 +265,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_0eb72bf0",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_6e1b47de",
+      "range": {
+        "startLine": 484,
+        "startChar": 4,
+        "endLine": 484,
+        "endChar": 8
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_cef5134a",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 4
@@ -162,6 +300,30 @@
       "writtenOn": "2016-09-19T17:47:50Z",
       "side": 1,
       "message": "nit: you can omit this",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 55
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_d4df66f4",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Going to leave it in because it will be amended soon and I don\u0027t want to forget.",
+      "parentUuid": "6b3926b8_cef5134a",
       "range": {
         "startLine": 37,
         "startChar": 4,
@@ -197,6 +359,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_ee3ad7d0",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_0ef00b56",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 12
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_cbcb459b",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 4
@@ -214,6 +400,24 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_4e5cc31d",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_cbcb459b",
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_ce80b3a9",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 4
@@ -225,6 +429,30 @@
       "writtenOn": "2016-09-19T17:47:50Z",
       "side": 1,
       "message": "use the ANGLE_GL_PROGRAM macro. sorry if this isn\u0027t intuitive.. it\u0027s the only way to check for program compilation properly.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 13
+      },
+      "revId": "431b353c4184585d7789b32c3ac66963c666ae0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_0e53ab08",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T19:14:28Z",
+      "side": 1,
+      "message": "Done, hiding the declaration of the variable is a big gross though",
+      "parentUuid": "6b3926b8_ce80b3a9",
       "range": {
         "startLine": 99,
         "startChar": 4,
