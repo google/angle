@@ -151,6 +151,8 @@ bool MacroExpander::pushMacro(const Macro &macro, const Token &identifier)
     assert(identifier.type == Token::IDENTIFIER);
     assert(identifier.text == macro.name);
 
+    macro.expansionCount++;
+
     std::vector<Token> replacements;
     if (!expandMacro(macro, identifier, &replacements))
         return false;
@@ -174,7 +176,9 @@ void MacroExpander::popMacro()
 
     assert(context->empty());
     assert(context->macro->disabled);
+    assert(context->macro->expansionCount > 0);
     context->macro->disabled = false;
+    context->macro->expansionCount--;
     delete context;
 }
 

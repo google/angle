@@ -74,6 +74,8 @@ std::string Diagnostics::message(ID id)
         return "predefined macro undefined";
       case PP_MACRO_UNTERMINATED_INVOCATION:
         return "unterminated macro invocation";
+      case PP_MACRO_UNDEFINED_WHILE_INVOKED:
+          return "macro undefined while being invoked";
       case PP_MACRO_TOO_FEW_ARGS:
         return "Not enough arguments for macro";
       case PP_MACRO_TOO_MANY_ARGS:
