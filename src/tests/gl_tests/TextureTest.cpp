@@ -3566,7 +3566,7 @@ TEST_P(Texture2DTestES3, UnsizedAlphaUnpackBuffer)
     std::vector<GLubyte> bufferData(getWindowWidth() * getWindowHeight(), 127);
 
     // Pull in the color data from the unpack buffer.
-    angle::GLBuffer unpackBuffer;
+    GLBuffer unpackBuffer;
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer.get());
     glBufferData(GL_PIXEL_UNPACK_BUFFER, getWindowWidth() * getWindowHeight(), bufferData.data(),
@@ -3581,10 +3581,49 @@ TEST_P(Texture2DTestES3, UnsizedAlphaUnpackBuffer)
 
     // Draw with the alpha texture and verify.
     drawQuad(mProgram, "position", 0.5f);
-    swapBuffers();
 
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 127, 1);
+}
+
+// Ensure stale unpack data doesn't propagate in D3D11.
+TEST_P(Texture2DTestES3, StaleUnpackData)
+{
+    // Init unpack buffer.
+    GLsizei pixelCount = getWindowWidth() * getWindowHeight() / 2;
+    std::vector<GLColor> pixels(pixelCount, GLColor::red);
+
+    GLBuffer unpackBuffer;
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer.get());
+    GLsizei bufferSize = pixelCount * sizeof(GLColor);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, bufferSize, pixels.data(), GL_STATIC_DRAW);
+
+    // Create from unpack buffer.
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWindowWidth() / 2, getWindowHeight() / 2, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Fill unpack with green, recreating buffer.
+    pixels.assign(getWindowWidth() * getWindowHeight(), GLColor::green);
+    GLsizei size2 = getWindowWidth() * getWindowHeight() * sizeof(GLColor);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, size2, pixels.data(), GL_STATIC_DRAW);
+
+    // Reinit texture with green.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, getWindowWidth() / 2, getWindowHeight() / 2, GL_RGBA,
+                    GL_UNSIGNED_BYTE, nullptr);
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

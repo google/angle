@@ -130,9 +130,6 @@ class Buffer11 : public BufferD3D
     size_t mConstantBufferStorageAdditionalSize;
     unsigned int mMaxConstantBufferLruCount;
 
-    typedef std::pair<ID3D11Buffer *, ID3D11ShaderResourceView *> BufferSRVPair;
-    std::map<DXGI_FORMAT, BufferSRVPair> mBufferResourceViews;
-
     unsigned int mReadUsageCount;
     unsigned int mSystemMemoryDeallocThreshold;
 
