@@ -283,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_5129c349",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-19T22:20:07Z",
+      "side": 1,
+      "message": "That\u0027s good, can you still link to the angle bug? http://anglebug.com/1512 or what have you.",
+      "parentUuid": "6b3926b8_5199c323",
+      "range": {
+        "startLine": 84,
+        "startChar": 7,
+        "endLine": 85,
+        "endChar": 57
+      },
+      "revId": "fa8007391caa4e8d79f9064fac0a73a54f6b36fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_57bb8ebf",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 5
