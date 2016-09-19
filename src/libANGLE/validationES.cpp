@@ -131,40 +131,43 @@ bool ValidReadPixelsFormatType(ValidationContext *context,
     }
 }
 
-}  // anonymous namespace
-
-bool ValidCap(const Context *context, GLenum cap)
+bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 {
     switch (cap)
     {
-      // EXT_multisample_compatibility
-      case GL_MULTISAMPLE_EXT:
-      case GL_SAMPLE_ALPHA_TO_ONE_EXT:
-          return context->getExtensions().multisampleCompatibility;
+        // EXT_multisample_compatibility
+        case GL_MULTISAMPLE_EXT:
+        case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+            return context->getExtensions().multisampleCompatibility;
 
-      case GL_CULL_FACE:
-      case GL_POLYGON_OFFSET_FILL:
-      case GL_SAMPLE_ALPHA_TO_COVERAGE:
-      case GL_SAMPLE_COVERAGE:
-      case GL_SCISSOR_TEST:
-      case GL_STENCIL_TEST:
-      case GL_DEPTH_TEST:
-      case GL_BLEND:
-      case GL_DITHER:
-        return true;
+        case GL_CULL_FACE:
+        case GL_POLYGON_OFFSET_FILL:
+        case GL_SAMPLE_ALPHA_TO_COVERAGE:
+        case GL_SAMPLE_COVERAGE:
+        case GL_SCISSOR_TEST:
+        case GL_STENCIL_TEST:
+        case GL_DEPTH_TEST:
+        case GL_BLEND:
+        case GL_DITHER:
+            return true;
 
-      case GL_PRIMITIVE_RESTART_FIXED_INDEX:
-      case GL_RASTERIZER_DISCARD:
-          return (context->getClientMajorVersion() >= 3);
+        case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+        case GL_RASTERIZER_DISCARD:
+            return (context->getClientMajorVersion() >= 3);
 
-      case GL_DEBUG_OUTPUT_SYNCHRONOUS:
-      case GL_DEBUG_OUTPUT:
-          return context->getExtensions().debug;
+        case GL_DEBUG_OUTPUT_SYNCHRONOUS:
+        case GL_DEBUG_OUTPUT:
+            return context->getExtensions().debug;
 
-      default:
-        return false;
+        case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
+            return queryOnly && context->getExtensions().bindGeneratesResource;
+
+        default:
+            return false;
     }
 }
+
+}  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
 {
@@ -3130,6 +3133,52 @@ bool ValidateGenOrDelete(Context *context, GLint n)
         context->handleError(Error(GL_INVALID_VALUE, "n < 0"));
         return false;
     }
+    return true;
+}
+
+bool ValidateEnable(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, false))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
+    if (context->getLimitations().noSampleAlphaToCoverageSupport &&
+        cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
+    {
+        const char *errorMessage = "Current renderer doesn't support alpha-to-coverage";
+        context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
+
+        // We also output an error message to the debugger window if tracing is active, so that
+        // developers can see the error message.
+        ERR("%s", errorMessage);
+
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDisable(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, false))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsEnabled(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, true))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
     return true;
 }
 

@@ -42,7 +42,8 @@ class State : angle::NonCopyable
     void initialize(const Caps &caps,
                     const Extensions &extensions,
                     GLuint clientVersion,
-                    bool debug);
+                    bool debug,
+                    bool bindGeneratesResource);
     void reset();
 
     // State chunk getters
@@ -146,6 +147,9 @@ class State : angle::NonCopyable
     // Hint setters
     void setGenerateMipmapHint(GLenum hint);
     void setFragmentShaderDerivativeHint(GLenum hint);
+
+    // GL_CHROMIUM_bind_generates_resource
+    bool isBindGeneratesResourceEnabled() const;
 
     // Viewport state setter/getter
     void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height);
@@ -417,6 +421,8 @@ class State : angle::NonCopyable
 
     GLenum mGenerateMipmapHint;
     GLenum mFragmentShaderDerivativeHint;
+
+    bool mBindGeneratesResource;
 
     Rectangle mViewport;
     float mNearZ;

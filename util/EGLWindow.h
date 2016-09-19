@@ -72,6 +72,10 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     {
         mWebGLCompatibility = webglCompatibility;
     }
+    void setBindGeneratesResource(bool bindGeneratesResource)
+    {
+        mBindGeneratesResource = bindGeneratesResource;
+    }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -118,6 +122,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mDebug;
     bool mNoError;
     bool mWebGLCompatibility;
+    bool mBindGeneratesResource;
     EGLint mSwapInterval;
 };
 

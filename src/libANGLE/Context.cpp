@@ -184,6 +184,11 @@ bool GetWebGLContext(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) == EGL_TRUE);
 }
 
+bool GetBindGeneratesResource(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM, EGL_TRUE) == EGL_TRUE);
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -251,7 +256,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
     initCaps(GetWebGLContext(attribs));
 
-    mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs));
+    mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs),
+                        GetBindGeneratesResource(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -2080,13 +2086,36 @@ Framebuffer *Context::checkFramebufferAllocation(GLuint framebuffer)
     return framebufferIt->second;
 }
 
+bool Context::isTextureGenerated(GLuint texture) const
+{
+    return mResourceManager->isTextureGenerated(texture);
+}
+
+bool Context::isBufferGenerated(GLuint buffer) const
+{
+    return mResourceManager->isBufferGenerated(buffer);
+}
+
+bool Context::isRenderbufferGenerated(GLuint renderbuffer) const
+{
+    return mResourceManager->isRenderbufferGenerated(renderbuffer);
+}
+
+bool Context::isFramebufferGenerated(GLuint framebuffer) const
+{
+    ASSERT(mFramebufferMap.find(0) != mFramebufferMap.end());
+    return mFramebufferMap.find(framebuffer) != mFramebufferMap.end();
+}
+
 bool Context::isVertexArrayGenerated(GLuint vertexArray)
 {
+    ASSERT(mVertexArrayMap.find(0) != mVertexArrayMap.end());
     return mVertexArrayMap.find(vertexArray) != mVertexArrayMap.end();
 }
 
 bool Context::isTransformFeedbackGenerated(GLuint transformFeedback)
 {
+    ASSERT(mTransformFeedbackMap.find(0) != mTransformFeedbackMap.end());
     return mTransformFeedbackMap.find(transformFeedback) != mTransformFeedbackMap.end();
 }
 
@@ -2376,6 +2405,7 @@ void Context::initCaps(bool webGLContext)
     // Some extensions are always available because they are implemented in the GL layer.
     mExtensions.bindUniformLocation = true;
     mExtensions.vertexArrayObject   = true;
+    mExtensions.bindGeneratesResource = true;
 
     // Enable the no error extension if the context was created with the flag.
     mExtensions.noError = mSkipValidation;

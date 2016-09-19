@@ -185,6 +185,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setDebugEnabled(bool enabled);
     void setNoErrorEnabled(bool enabled);
     void setWebGLCompatibilityEnabled(bool webglCompatibility);
+    void setBindGeneratesResource(bool bindGeneratesResource);
 
     int getClientMajorVersion() const;
     int getClientMinorVersion() const;

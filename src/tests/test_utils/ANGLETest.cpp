@@ -609,6 +609,11 @@ void ANGLETest::setWebGLCompatibilityEnabled(bool webglCompatibility)
     mEGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
 }
 
+void ANGLETest::setBindGeneratesResource(bool bindGeneratesResource)
+{
+    mEGLWindow->setBindGeneratesResource(bindGeneratesResource);
+}
+
 int ANGLETest::getClientMajorVersion() const
 {
     return mEGLWindow->getClientMajorVersion();

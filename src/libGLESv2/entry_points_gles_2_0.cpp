@@ -123,6 +123,13 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
             return;
         }
 
+        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+            !context->isBufferGenerated(buffer))
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Buffer was not generated"));
+            return;
+        }
+
         switch (target)
         {
           case GL_ARRAY_BUFFER:
@@ -170,6 +177,13 @@ void GL_APIENTRY BindFramebuffer(GLenum target, GLuint framebuffer)
             return;
         }
 
+        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+            !context->isFramebufferGenerated(framebuffer))
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Framebuffer was not generated"));
+            return;
+        }
+
         if (target == GL_READ_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
         {
             context->bindReadFramebuffer(framebuffer);
@@ -192,6 +206,13 @@ void GL_APIENTRY BindRenderbuffer(GLenum target, GLuint renderbuffer)
         if (target != GL_RENDERBUFFER)
         {
             context->handleError(Error(GL_INVALID_ENUM));
+            return;
+        }
+
+        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+            !context->isRenderbufferGenerated(renderbuffer))
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Renderbuffer was not generated"));
             return;
         }
 
@@ -917,9 +938,8 @@ void GL_APIENTRY Disable(GLenum cap)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidCap(context, cap))
+        if (!context->skipValidation() && !ValidateDisable(context, cap))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
@@ -995,24 +1015,9 @@ void GL_APIENTRY Enable(GLenum cap)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidCap(context, cap))
+        if (!context->skipValidation() && !ValidateEnable(context, cap))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
-        }
-
-        if (context->getLimitations().noSampleAlphaToCoverageSupport)
-        {
-            if (cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
-            {
-                const char *errorMessage = "Current renderer doesn't support alpha-to-coverage";
-                context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
-
-                // We also output an error message to the debugger window if tracing is active, so that developers can see the error message.
-                ERR("%s", errorMessage);
-
-                return;
-            }
         }
 
         context->enable(cap);
@@ -2677,9 +2682,8 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidCap(context, cap))
+        if (!context->skipValidation() && !ValidateIsEnabled(context, cap))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return GL_FALSE;
         }
 

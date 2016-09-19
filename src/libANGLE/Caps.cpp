@@ -167,6 +167,7 @@ Extensions::Extensions()
       syncQuery(false),
       copyTexture(false),
       webglCompatibility(false),
+      bindGeneratesResource(false),
       colorBufferFloat(false),
       multisampleCompatibility(false),
       framebufferMixedSamples(false),
@@ -579,6 +580,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_CHROMIUM_sync_query"] = esOnlyExtension(&Extensions::syncQuery);
         map["GL_CHROMIUM_copy_texture"] = esOnlyExtension(&Extensions::copyTexture);
         map["GL_ANGLE_webgl_compatibility"] = esOnlyExtension(&Extensions::webglCompatibility);
+        map["GL_CHROMIUM_bind_generates_resource"] = esOnlyExtension(&Extensions::bindGeneratesResource);
         map["GL_EXT_multisample_compatibility"] = esOnlyExtension(&Extensions::multisampleCompatibility);
         map["GL_CHROMIUM_framebuffer_mixed_samples"] = esOnlyExtension(&Extensions::framebufferMixedSamples);
         map["GL_EXT_texture_norm16"] = esOnlyExtension(&Extensions::textureNorm16);
@@ -777,7 +779,8 @@ DisplayExtensions::DisplayExtensions()
       streamConsumerGLTexture(false),
       streamConsumerGLTextureYUV(false),
       streamProducerD3DTextureNV12(false),
-      createContextWebGLCompatibility(false)
+      createContextWebGLCompatibility(false),
+      createContextBindGeneratesResource(false)
 {
 }
 
@@ -786,34 +789,35 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     std::vector<std::string> extensionStrings;
 
     // clang-format off
-    //                   | Extension name                                 | Supported flag                | Output vector   |
-    InsertExtensionString("EGL_EXT_create_context_robustness",             createContextRobustness,        &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_d3d_share_handle_client_buffer",      d3dShareHandleClientBuffer,     &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_surface_d3d_texture_2d_share_handle", surfaceD3DTexture2DShareHandle, &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_query_surface_pointer",               querySurfacePointer,            &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_window_fixed_size",                   windowFixedSize,                &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_keyed_mutex",                         keyedMutex,                     &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_surface_orientation",                 surfaceOrientation,             &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_direct_composition",                  directComposition,              &extensionStrings);
-    InsertExtensionString("EGL_NV_post_sub_buffer",                        postSubBuffer,                  &extensionStrings);
-    InsertExtensionString("EGL_KHR_create_context",                        createContext,                  &extensionStrings);
-    InsertExtensionString("EGL_EXT_device_query",                          deviceQuery,                    &extensionStrings);
-    InsertExtensionString("EGL_KHR_image",                                 image,                          &extensionStrings);
-    InsertExtensionString("EGL_KHR_image_base",                            imageBase,                      &extensionStrings);
-    InsertExtensionString("EGL_KHR_image_pixmap",                          imagePixmap,                    &extensionStrings);
-    InsertExtensionString("EGL_KHR_gl_texture_2D_image",                   glTexture2DImage,               &extensionStrings);
-    InsertExtensionString("EGL_KHR_gl_texture_cubemap_image",              glTextureCubemapImage,          &extensionStrings);
-    InsertExtensionString("EGL_KHR_gl_texture_3D_image",                   glTexture3DImage,               &extensionStrings);
-    InsertExtensionString("EGL_KHR_gl_renderbuffer_image",                 glRenderbufferImage,            &extensionStrings);
-    InsertExtensionString("EGL_KHR_get_all_proc_addresses",                getAllProcAddresses,            &extensionStrings);
-    InsertExtensionString("EGL_KHR_stream",                                stream,                         &extensionStrings);
-    InsertExtensionString("EGL_KHR_stream_consumer_gltexture",             streamConsumerGLTexture,        &extensionStrings);
-    InsertExtensionString("EGL_NV_stream_consumer_gltexture_yuv",          streamConsumerGLTextureYUV,     &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",      flexibleSurfaceCompatibility,   &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_stream_producer_d3d_texture_nv12",    streamProducerD3DTextureNV12,   &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_create_context_webgl_compatibility",  createContextWebGLCompatibility,&extensionStrings);
+    //                   | Extension name                                       | Supported flag                    | Output vector   |
+    InsertExtensionString("EGL_EXT_create_context_robustness",                   createContextRobustness,            &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_d3d_share_handle_client_buffer",            d3dShareHandleClientBuffer,         &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_surface_d3d_texture_2d_share_handle",       surfaceD3DTexture2DShareHandle,     &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_query_surface_pointer",                     querySurfacePointer,                &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_window_fixed_size",                         windowFixedSize,                    &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_keyed_mutex",                               keyedMutex,                         &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_surface_orientation",                       surfaceOrientation,                 &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_direct_composition",                        directComposition,                  &extensionStrings);
+    InsertExtensionString("EGL_NV_post_sub_buffer",                              postSubBuffer,                      &extensionStrings);
+    InsertExtensionString("EGL_KHR_create_context",                              createContext,                      &extensionStrings);
+    InsertExtensionString("EGL_EXT_device_query",                                deviceQuery,                        &extensionStrings);
+    InsertExtensionString("EGL_KHR_image",                                       image,                              &extensionStrings);
+    InsertExtensionString("EGL_KHR_image_base",                                  imageBase,                          &extensionStrings);
+    InsertExtensionString("EGL_KHR_image_pixmap",                                imagePixmap,                        &extensionStrings);
+    InsertExtensionString("EGL_KHR_gl_texture_2D_image",                         glTexture2DImage,                   &extensionStrings);
+    InsertExtensionString("EGL_KHR_gl_texture_cubemap_image",                    glTextureCubemapImage,              &extensionStrings);
+    InsertExtensionString("EGL_KHR_gl_texture_3D_image",                         glTexture3DImage,                   &extensionStrings);
+    InsertExtensionString("EGL_KHR_gl_renderbuffer_image",                       glRenderbufferImage,                &extensionStrings);
+    InsertExtensionString("EGL_KHR_get_all_proc_addresses",                      getAllProcAddresses,                &extensionStrings);
+    InsertExtensionString("EGL_KHR_stream",                                      stream,                             &extensionStrings);
+    InsertExtensionString("EGL_KHR_stream_consumer_gltexture",                   streamConsumerGLTexture,            &extensionStrings);
+    InsertExtensionString("EGL_NV_stream_consumer_gltexture_yuv",                streamConsumerGLTextureYUV,         &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_flexible_surface_compatibility",            flexibleSurfaceCompatibility,       &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_stream_producer_d3d_texture_nv12",          streamProducerD3DTextureNV12,       &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_create_context_webgl_compatibility",        createContextWebGLCompatibility,    &extensionStrings);
+    InsertExtensionString("EGL_CHROMIUM_create_context_bind_generates_resource", createContextBindGeneratesResource, &extensionStrings);
     // TODO(jmadill): Enable this when complete.
-    //InsertExtensionString("KHR_create_context_no_error",                   createContextNoError,           &extensionStrings);
+    //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on
 
     return extensionStrings;

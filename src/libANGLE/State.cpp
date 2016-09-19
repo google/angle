@@ -50,6 +50,7 @@ State::State()
       mLineWidth(0),
       mGenerateMipmapHint(GL_NONE),
       mFragmentShaderDerivativeHint(GL_NONE),
+      mBindGeneratesResource(true),
       mNearZ(0),
       mFarZ(0),
       mReadFramebuffer(nullptr),
@@ -71,7 +72,8 @@ State::~State()
 void State::initialize(const Caps &caps,
                        const Extensions &extensions,
                        GLuint clientVersion,
-                       bool debug)
+                       bool debug,
+                       bool bindGeneratesResource)
 {
     mMaxDrawBuffers = caps.maxDrawBuffers;
     mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
@@ -136,6 +138,8 @@ void State::initialize(const Caps &caps,
     mSampleCoverageInvert = false;
     mGenerateMipmapHint = GL_DONT_CARE;
     mFragmentShaderDerivativeHint = GL_DONT_CARE;
+
+    mBindGeneratesResource = bindGeneratesResource;
 
     mLineWidth = 1.0f;
 
@@ -658,6 +662,8 @@ bool State::getEnableFeature(GLenum feature) const
           return mDebug.isOutputSynchronous();
       case GL_DEBUG_OUTPUT:
           return mDebug.isOutputEnabled();
+      case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
+          return isBindGeneratesResourceEnabled();
       default:                               UNREACHABLE(); return false;
     }
 }
@@ -686,6 +692,11 @@ void State::setFragmentShaderDerivativeHint(GLenum hint)
     // TODO: Propagate the hint to shader translator so we can write
     // ddx, ddx_coarse, or ddx_fine depending on the hint.
     // Ignore for now. It is valid for implementations to ignore hint.
+}
+
+bool State::isBindGeneratesResourceEnabled() const
+{
+    return mBindGeneratesResource;
 }
 
 void State::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
@@ -1485,6 +1496,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
           break;
       case GL_SAMPLE_ALPHA_TO_ONE_EXT:
           *params = mSampleAlphaToOne;
+          break;
+      case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
+          *params = isBindGeneratesResourceEnabled() ? GL_TRUE : GL_FALSE;
           break;
       default:
         UNREACHABLE();

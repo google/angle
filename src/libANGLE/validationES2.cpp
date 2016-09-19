@@ -2187,6 +2187,13 @@ bool ValidateBindTexture(Context *context, GLenum target, GLuint texture)
         return false;
     }
 
+    if (!context->getGLState().isBindGeneratesResourceEnabled() &&
+        !context->isTextureGenerated(texture))
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Texture was not generated"));
+        return false;
+    }
+
     switch (target)
     {
         case GL_TEXTURE_2D:

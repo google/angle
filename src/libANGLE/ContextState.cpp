@@ -327,6 +327,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
+    if (getExtensions().bindGeneratesResource)
+    {
+        switch (pname)
+        {
+            case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
+                *type      = GL_BOOL;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

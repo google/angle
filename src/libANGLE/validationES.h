@@ -29,7 +29,6 @@ class Program;
 class Shader;
 class ValidationContext;
 
-bool ValidCap(const Context *context, GLenum cap);
 bool ValidTextureTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture2DTarget(const ValidationContext *context, GLenum target);
 bool ValidTexture3DTarget(const ValidationContext *context, GLenum target);
@@ -269,6 +268,10 @@ bool ValidateGenTextures(Context *context, GLint n, GLuint *textures);
 bool ValidateDeleteTextures(Context *context, GLint n, const GLuint *textures);
 
 bool ValidateGenOrDelete(Context *context, GLint n);
+
+bool ValidateEnable(Context *context, GLenum cap);
+bool ValidateDisable(Context *context, GLenum cap);
+bool ValidateIsEnabled(Context *context, GLenum cap);
 
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
