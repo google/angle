@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3926b8_ae253f1d",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T17:45:13Z",
+      "side": 1,
+      "message": "nit: mark as static or put into an anonymous namespace.",
+      "revId": "fa8007391caa4e8d79f9064fac0a73a54f6b36fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_2ebdcf86",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-19T17:45:13Z",
+      "side": 1,
+      "message": "nit: assert that the unpack buffer isn\u0027t null or do the check here to better communicate that is is only for PBO uploads.",
+      "revId": "fa8007391caa4e8d79f9064fac0a73a54f6b36fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
