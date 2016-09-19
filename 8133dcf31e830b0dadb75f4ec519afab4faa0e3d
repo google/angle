@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6b3926b8_11590b5f",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-19T21:53:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3926b8_1a05a5b4",
+      "range": {
+        "startLine": 154,
+        "startChar": 22,
+        "endLine": 154,
+        "endChar": 26
+      },
+      "revId": "8133dcf31e830b0dadb75f4ec519afab4faa0e3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b3926b8_5ad55d07",
         "filename": "src/compiler/preprocessor/MacroExpander.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-19T20:58:32Z",
       "side": 1,
       "message": "nit: can these be capital ASSERT?",
+      "range": {
+        "startLine": 179,
+        "startChar": 4,
+        "endLine": 179,
+        "endChar": 10
+      },
+      "revId": "8133dcf31e830b0dadb75f4ec519afab4faa0e3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b3926b8_51638312",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-19T21:53:13Z",
+      "side": 1,
+      "message": "I\u0027ll do it in a follow up patch where I change all the asserts in ASSERTS",
+      "parentUuid": "6b3926b8_5ad55d07",
       "range": {
         "startLine": 179,
         "startChar": 4,
