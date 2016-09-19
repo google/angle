@@ -115,9 +115,10 @@ static_library("preprocessor") {
 
 config("translator_static_config") {
   defines = [ "ANGLE_TRANSLATOR_STATIC" ]
-  if (use_libfuzzer) {
-    defines += [ "ANGLE_TRANSLATOR_DISABLE_POOL_ALLOC" ]
-  }
+}
+
+config("translator_disable_pool_alloc") {
+  defines = [ "ANGLE_TRANSLATOR_DISABLE_POOL_ALLOC" ]
 }
 
 config("debug_annotations_config") {
@@ -203,6 +204,9 @@ static_library("translator_lib") {
     ":translator_static_config",
   ]
   public_configs = [ ":external_config" ]
+  if (use_libfuzzer) {
+    all_dependent_configs = [ ":translator_disable_pool_alloc" ]
+  }
 
   deps = [
     ":includes",
