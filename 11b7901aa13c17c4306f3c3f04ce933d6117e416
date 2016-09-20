@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b09b8f32_e417504e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T15:29:08Z",
+      "side": 1,
+      "message": "The commit message seems to imply GL_INT with type \u003d GL_UNSIGNED_INT is valid.",
+      "revId": "11b7901aa13c17c4306f3c3f04ce933d6117e416",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
