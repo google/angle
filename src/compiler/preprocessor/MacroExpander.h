@@ -84,6 +84,7 @@ class MacroExpander : public Lexer
 
     std::unique_ptr<Token> mReserveToken;
     std::vector<MacroContext *> mContextStack;
+    size_t mTotalTokensInContexts;
 };
 
 }  // namespace pp

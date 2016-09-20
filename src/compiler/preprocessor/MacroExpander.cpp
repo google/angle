@@ -15,6 +15,11 @@
 namespace pp
 {
 
+namespace
+{
+
+const size_t kMaxContextTokens = 10000;
+
 class TokenLexer : public Lexer
 {
  public:
@@ -46,8 +51,10 @@ class TokenLexer : public Lexer
     TokenVector::const_iterator mIter;
 };
 
+}  // anonymous namespace
+
 MacroExpander::MacroExpander(Lexer *lexer, MacroSet *macroSet, Diagnostics *diagnostics)
-    : mLexer(lexer), mMacroSet(macroSet), mDiagnostics(diagnostics)
+    : mLexer(lexer), mMacroSet(macroSet), mDiagnostics(diagnostics), mTotalTokensInContexts(0)
 {
 }
 
@@ -114,6 +121,7 @@ void MacroExpander::getToken(Token *token)
     }
     else
     {
+        assert(mTotalTokensInContexts == 0);
         mLexer->lex(token);
     }
 }
@@ -164,6 +172,7 @@ bool MacroExpander::pushMacro(const Macro &macro, const Token &identifier)
     context->macro = &macro;
     context->replacements.swap(replacements);
     mContextStack.push_back(context);
+    mTotalTokensInContexts += context->replacements.size();
     return true;
 }
 
@@ -179,6 +188,7 @@ void MacroExpander::popMacro()
     assert(context->macro->expansionCount > 0);
     context->macro->disabled = false;
     context->macro->expansionCount--;
+    mTotalTokensInContexts -= context->replacements.size();
     delete context;
 }
 
@@ -321,6 +331,7 @@ bool MacroExpander::collectMacroArgs(const Macro &macro,
     // Pre-expand each argument before substitution.
     // This step expands each argument individually before they are
     // inserted into the macro body.
+    size_t numTokens = 0;
     for (std::size_t i = 0; i < args->size(); ++i)
     {
         MacroArg &arg = args->at(i);
@@ -333,6 +344,12 @@ bool MacroExpander::collectMacroArgs(const Macro &macro,
         {
             arg.push_back(token);
             expander.lex(&token);
+            numTokens++;
+            if (numTokens + mTotalTokensInContexts > kMaxContextTokens)
+            {
+                mDiagnostics->report(Diagnostics::PP_OUT_OF_MEMORY, token.location, token.text);
+                return false;
+            }
         }
     }
     return true;
@@ -344,6 +361,14 @@ void MacroExpander::replaceMacroParams(const Macro &macro,
 {
     for (std::size_t i = 0; i < macro.replacements.size(); ++i)
     {
+        if (!replacements->empty() &&
+            replacements->size() + mTotalTokensInContexts > kMaxContextTokens)
+        {
+            const Token &token = replacements->back();
+            mDiagnostics->report(Diagnostics::PP_OUT_OF_MEMORY, token.location, token.text);
+            return;
+        }
+
         const Token &repl = macro.replacements[i];
         if (repl.type != Token::IDENTIFIER)
         {
