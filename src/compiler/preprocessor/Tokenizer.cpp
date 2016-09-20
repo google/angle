@@ -720,10 +720,10 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #pragma warning(disable: 4005)
 #endif
 
-#include "Tokenizer.h"
+#include "compiler/preprocessor/Tokenizer.h"
 
-#include "DiagnosticsBase.h"
-#include "Token.h"
+#include "compiler/preprocessor/DiagnosticsBase.h"
+#include "compiler/preprocessor/Token.h"
 
 #if defined(__GNUC__)
 // Triggered by the auto-generated yy_fatal_error function.
@@ -2794,9 +2794,7 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 namespace pp {
 
-Tokenizer::Tokenizer(Diagnostics *diagnostics)
-    : mHandle(0),
-      mMaxTokenSize(256)
+Tokenizer::Tokenizer(Diagnostics *diagnostics) : mHandle(nullptr), mMaxTokenSize(256)
 {
     mContext.diagnostics = diagnostics;
 }
@@ -2853,7 +2851,7 @@ void Tokenizer::lex(Token *token)
 
 bool Tokenizer::initScanner()
 {
-    if ((mHandle == NULL) && pplex_init_extra(&mContext,&mHandle))
+    if ((mHandle == nullptr) && pplex_init_extra(&mContext, &mHandle))
         return false;
 
     pprestart(0,mHandle);
@@ -2862,11 +2860,11 @@ bool Tokenizer::initScanner()
 
 void Tokenizer::destroyScanner()
 {
-    if (mHandle == NULL)
+    if (mHandle == nullptr)
         return;
 
     pplex_destroy(mHandle);
-    mHandle = NULL;
+    mHandle = nullptr;
 }
 
 }  // namespace pp

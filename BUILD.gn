@@ -112,6 +112,10 @@ static_library("preprocessor") {
 
   configs -= angle_undefine_configs
   configs += [ ":internal_config" ]
+
+  public_deps = [
+    ":angle_common",
+  ]
 }
 
 config("translator_static_config") {

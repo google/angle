@@ -577,7 +577,7 @@ void ProgramGL::postLink()
             for (GLint arrayIndex = 1; arrayIndex < arraySize; ++arrayIndex)
             {
                 PathRenderingFragmentInput arrayElementInput;
-                arrayElementInput.name     = name + "[" + std::to_string(arrayIndex) + "]";
+                arrayElementInput.name     = name + "[" + ToString(arrayIndex) + "]";
                 arrayElementInput.location = baseLocation + arrayIndex;
                 mPathRenderingFragmentInputs.push_back(std::move(arrayElementInput));
             }

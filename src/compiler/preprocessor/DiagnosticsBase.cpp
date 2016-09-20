@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "DiagnosticsBase.h"
+#include "compiler/preprocessor/DiagnosticsBase.h"
 
-#include <cassert>
+#include "common/debug.h"
 
 namespace pp
 {
@@ -31,7 +31,7 @@ Diagnostics::Severity Diagnostics::severity(ID id)
     if ((id > PP_WARNING_BEGIN) && (id < PP_WARNING_END))
         return PP_WARNING;
 
-    assert(false);
+    UNREACHABLE();
     return PP_ERROR;
 }
 
@@ -133,8 +133,8 @@ std::string Diagnostics::message(ID id)
         return "macro name with a double underscore is reserved - unintented behavior is possible";
       // Warnings end.
       default:
-        assert(false);
-        return "";
+          UNREACHABLE();
+          return "";
     }
 }
 

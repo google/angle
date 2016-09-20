@@ -523,7 +523,7 @@ BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
                     if (arrayIndex == GL_INVALID_INDEX)
                         arrayIndex = 0;
 
-                    ret.name = in.mappedName + "[" + std::to_string(arrayIndex) + "]";
+                    ret.name = in.mappedName + "[" + ToString(arrayIndex) + "]";
                 }
                 else
                 {

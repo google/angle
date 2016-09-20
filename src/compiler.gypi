@@ -234,7 +234,6 @@
             'compiler/preprocessor/Tokenizer.h',
             'compiler/preprocessor/Tokenizer.l',
             'compiler/preprocessor/numeric_lex.h',
-            'compiler/preprocessor/pp_utils.h',
         ],
     },
     # Everything below this is duplicated in the GN build. If you change
@@ -244,6 +243,7 @@
         {
             'target_name': 'preprocessor',
             'type': 'static_library',
+            'dependencies': [ 'angle_common' ],
             'includes': [ '../build/common_defines.gypi', ],
             'sources': [ '<@(angle_preprocessor_sources)', ],
         },

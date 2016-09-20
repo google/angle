@@ -564,7 +564,7 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
     for (const auto &array : uniformArrays)
     {
         uniformStream << "uniform " << array.type << " " << array.name << "["
-                      << std::to_string(kArraySize) << "];\n";
+                      << ToString(kArraySize) << "];\n";
 
         // We need to make use of the uniforms or they get compiled out.
         for (int i = 0; i < 4; i++)
@@ -610,7 +610,7 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
     {
         for (size_t index = 0; index < kArraySize; index++)
         {
-            std::string strIndex = "[" + std::to_string(index) + "]";
+            std::string strIndex = "[" + ToString(index) + "]";
             // Check all the different glGetUniformv functions
             CheckOneElement<float>(glGetUniformfv, mProgram, uniformArray.name + strIndex,
                                    uniformArray.components, 42.4242f);
