@@ -1,0 +1,225 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b09b8f32_842f6caf",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: one liner here too",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_443964f5",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: visitChildren \u003d false here too;",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_240d384a",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "Here you are using all the members of the interface block, is the Mac OpenGL driver optimizing at a per-member granularity, or per-interface granularity?",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_041b5c8a",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "for (const auto\u0026 var: block.fields)",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_8418cc89",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "Structures containing arrays and arrays containing structures are not handled, I think interface blocks are allowed to contain at least one of the two.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_a42708d3",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "Why not put the declaration and assignment on the same line?",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_c42494d0",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "Ditto.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_24345800",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: temporaryIndex !\u003d nullptr",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_c44b3478",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: one line to describe what the file does.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_a44e2889",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: Comment comes from another file and doesn\u0027t apply there.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_642a60a2",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "nit: there is no Mac with OpenGL 4.5",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_e406702d",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "You can use GLProgram for src/tests/test_utils/gl_raii.h",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b09b8f32_4412c469",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-20T14:57:51Z",
+      "side": 1,
+      "message": "I think marking unused blocks as active is correct, so it should be ASSERT_LE",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
