@@ -16,6 +16,24 @@
       "revId": "11b7901aa13c17c4306f3c3f04ce933d6117e416",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_c3db0a36",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-20T15:45:50Z",
+      "side": 1,
+      "message": "The language I used in the commit was just a bit condensed, I can expand it.",
+      "parentUuid": "b09b8f32_e417504e",
+      "revId": "11b7901aa13c17c4306f3c3f04ce933d6117e416",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
