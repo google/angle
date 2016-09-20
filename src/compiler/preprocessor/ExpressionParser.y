@@ -196,7 +196,7 @@ expression
         $$ = $1 < $3;
     }
     | expression TOK_OP_RIGHT expression {
-        if ($3 < 0)
+        if ($2 < 0 || $3 < 0)
         {
             if (!context->isIgnoringErrors())
             {
@@ -216,7 +216,7 @@ expression
         }
     }
     | expression TOK_OP_LEFT expression {
-        if ($3 < 0)
+        if ($2 < 0 || $3 < 0)
         {
             if (!context->isIgnoringErrors())
             {

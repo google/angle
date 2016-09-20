@@ -1492,7 +1492,7 @@ yyreduce:
   case 18:
 
     {
-        if ((yyvsp[0]) < 0)
+        if ((yyvsp[-1]) < 0 || (yyvsp[0]) < 0)
         {
             if (!context->isIgnoringErrors())
             {
@@ -1516,7 +1516,7 @@ yyreduce:
   case 19:
 
     {
-        if ((yyvsp[0]) < 0)
+        if ((yyvsp[-1]) < 0 || (yyvsp[0]) < 0)
         {
             if (!context->isIgnoringErrors())
             {
