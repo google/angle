@@ -287,6 +287,13 @@ TEST_P(DrawBuffersTest, FirstAndLast)
         return;
     }
 
+    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
+    {
+        // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
+        return;
+    }
+
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
 
@@ -324,6 +331,13 @@ TEST_P(DrawBuffersTest, FirstHalfNULL)
     {
         std::cout << "Test skipped because ES3 or GL_EXT_draw_buffers is not available."
                   << std::endl;
+        return;
+    }
+
+    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
+    {
+        // TODO(ynovikov): Investigate the failure (https://anglebug.com/1533)
+        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
         return;
     }
 
