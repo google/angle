@@ -1168,6 +1168,44 @@ bool ValidateReadPixels(ValidationContext *context,
         return false;
     }
 
+    // Check for pixel pack buffer related API errors
+    gl::Buffer *pixelPackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
+    if (pixelPackBuffer != nullptr)
+    {
+        // ..  the data would be packed to the buffer object such that the memory writes required
+        // would exceed the data store size.
+        GLenum sizedInternalFormat       = GetSizedInternalFormat(format, type);
+        const InternalFormat &formatInfo = GetInternalFormatInfo(sizedInternalFormat);
+        const gl::Extents size(width, height, 1);
+        const auto &pack = context->getGLState().getPackState();
+
+        auto endByteOrErr = formatInfo.computePackEndByte(type, size, pack);
+        if (endByteOrErr.isError())
+        {
+            context->handleError(endByteOrErr.getError());
+            return false;
+        }
+
+        CheckedNumeric<size_t> checkedEndByte(endByteOrErr.getResult());
+        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
+        checkedEndByte += checkedOffset;
+
+        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
+        {
+            // Overflow past the end of the buffer
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Writes would overflow the pixel pack buffer."));
+            return false;
+        }
+
+        // ...the buffer object's data store is currently mapped.
+        if (pixelPackBuffer->isMapped())
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Pixel pack buffer is mapped."));
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -1188,30 +1226,20 @@ bool ValidateReadnPixelsEXT(Context *context,
     }
 
     GLenum sizedInternalFormat = GetSizedInternalFormat(format, type);
-    const InternalFormat &sizedFormatInfo = GetInternalFormatInfo(sizedInternalFormat);
+    const InternalFormat &formatInfo = GetInternalFormatInfo(sizedInternalFormat);
+    const gl::Extents size(width, height, 1);
+    const auto &pack = context->getGLState().getPackState();
 
-    auto outputPitchOrErr =
-        sizedFormatInfo.computeRowPitch(type, width, context->getGLState().getPackAlignment(),
-                                        context->getGLState().getPackRowLength());
-
-    if (outputPitchOrErr.isError())
+    auto endByteOrErr = formatInfo.computePackEndByte(type, size, pack);
+    if (endByteOrErr.isError())
     {
-        context->handleError(outputPitchOrErr.getError());
+        context->handleError(endByteOrErr.getError());
         return false;
     }
 
-    CheckedNumeric<GLuint> checkedOutputPitch(outputPitchOrErr.getResult());
-    auto checkedRequiredSize = checkedOutputPitch * height;
-    if (!checkedRequiredSize.IsValid())
+    if (endByteOrErr.getResult() > static_cast<GLuint>(bufSize))
     {
-        context->handleError(Error(GL_INVALID_OPERATION, "Unsigned multiplication overflow."));
-        return false;
-    }
-
-    // sized query sanity check
-    if (checkedRequiredSize.ValueOrDie() > static_cast<GLuint>(bufSize))
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(Error(GL_INVALID_OPERATION, "Writes would overflow past bufSize."));
         return false;
     }
 

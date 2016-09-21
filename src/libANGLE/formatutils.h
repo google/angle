@@ -67,10 +67,17 @@ struct InternalFormat
                                                GLint skipRows,
                                                GLint skipPixels,
                                                bool applySkipImages) const;
+
+    gl::ErrorOrResult<GLuint> computePackSize(GLenum formatType,
+                                              const gl::Extents &size,
+                                              const gl::PixelPackState &pack) const;
     gl::ErrorOrResult<GLuint> computeUnpackSize(GLenum formatType,
                                                 const gl::Extents &size,
                                                 const gl::PixelUnpackState &unpack) const;
 
+    gl::ErrorOrResult<GLuint> computePackEndByte(GLenum formatType,
+                                                 const gl::Extents &size,
+                                                 const gl::PixelPackState &pack) const;
     gl::ErrorOrResult<GLuint> computeUnpackEndByte(GLenum formatType,
                                                    const gl::Extents &size,
                                                    const gl::PixelUnpackState &unpack,

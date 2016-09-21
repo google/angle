@@ -939,6 +939,32 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeSkipBytes(GLuint rowPitch,
     return skipBytes.ValueOrDie();
 }
 
+gl::ErrorOrResult<GLuint> InternalFormat::computePackSize(GLenum formatType,
+                                                          const gl::Extents &size,
+                                                          const gl::PixelPackState &pack) const
+{
+    ASSERT(!compressed);
+
+    if (size.height == 0)
+    {
+        return 0;
+    }
+
+    CheckedNumeric<GLuint> rowPitch;
+    ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, pack.alignment, pack.rowLength),
+                     rowPitch);
+
+    CheckedNumeric<GLuint> heightMinusOne = size.height - 1;
+    CheckedNumeric<GLuint> bytes          = computePixelBytes(formatType);
+
+    CheckedNumeric<GLuint> totalSize = heightMinusOne * rowPitch;
+    totalSize += size.width * bytes;
+
+    ANGLE_TRY_CHECKED_MATH(totalSize);
+
+    return totalSize.ValueOrDie();
+}
+
 gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(
     GLenum formatType,
     const gl::Extents &size,
@@ -948,6 +974,11 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(
     if (compressed)
     {
         return computeCompressedImageSize(formatType, size);
+    }
+
+    if (size.height == 0 || size.depth == 0)
+    {
+        return 0;
     }
 
     CheckedNumeric<GLuint> rowPitch;
@@ -969,6 +1000,26 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(
     ANGLE_TRY_CHECKED_MATH(totalSize);
 
     return totalSize.ValueOrDie();
+}
+
+gl::ErrorOrResult<GLuint> InternalFormat::computePackEndByte(GLenum formatType,
+                                                             const gl::Extents &size,
+                                                             const gl::PixelPackState &pack) const
+{
+    GLuint rowPitch;
+    CheckedNumeric<GLuint> checkedSkipBytes;
+    CheckedNumeric<GLuint> checkedCopyBytes;
+
+    ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, pack.alignment, pack.rowLength),
+                     rowPitch);
+    ANGLE_TRY_RESULT(computeSkipBytes(rowPitch, 0, 0, pack.skipRows, pack.skipPixels, false),
+                     checkedSkipBytes);
+    ANGLE_TRY_RESULT(computePackSize(formatType, size, pack), checkedCopyBytes);
+
+    CheckedNumeric<GLuint> endByte = checkedCopyBytes + checkedSkipBytes;
+
+    ANGLE_TRY_CHECKED_MATH(endByte);
+    return endByte.ValueOrDie();
 }
 
 gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackEndByte(GLenum formatType,

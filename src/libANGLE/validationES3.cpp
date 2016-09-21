@@ -477,7 +477,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
 
     // Check for pixel unpack buffer related API errors
     gl::Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
-    if (pixelUnpackBuffer != NULL)
+    if (pixelUnpackBuffer != nullptr)
     {
         // ...the data would be unpacked from the buffer object such that the memory reads required
         // would exceed the data store size.
@@ -513,7 +513,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
 
             if ((checkedOffset.ValueOrDie() % dataBytesPerPixel) != 0)
             {
-                context->handleError(Error(GL_INVALID_OPERATION));
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Reads would overflow the pixel unpack buffer."));
                 return false;
             }
         }
@@ -521,7 +522,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         // ...the buffer object's data store is currently mapped.
         if (pixelUnpackBuffer->isMapped())
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(Error(GL_INVALID_OPERATION, "Pixel unpack buffer is mapped."));
             return false;
         }
     }
