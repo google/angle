@@ -99,6 +99,38 @@ bool ValidateDrawAttribs(ValidationContext *context, GLint primcount, GLint maxV
     return true;
 }
 
+bool ValidReadPixelsFormatType(ValidationContext *context,
+                               GLenum framebufferComponentType,
+                               GLenum format,
+                               GLenum type)
+{
+    switch (framebufferComponentType)
+    {
+        case GL_UNSIGNED_NORMALIZED:
+            // TODO(geofflang): Don't accept BGRA here.  Some chrome internals appear to try to use
+            // ReadPixels with BGRA even if the extension is not present
+            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE) ||
+                   (context->getExtensions().readFormatBGRA && format == GL_BGRA_EXT &&
+                    type == GL_UNSIGNED_BYTE);
+
+        case GL_SIGNED_NORMALIZED:
+            return (format == GL_RGBA && type == GL_UNSIGNED_BYTE);
+
+        case GL_INT:
+            return (format == GL_RGBA_INTEGER && type == GL_INT);
+
+        case GL_UNSIGNED_INT:
+            return (format == GL_RGBA_INTEGER && type == GL_UNSIGNED_INT);
+
+        case GL_FLOAT:
+            return (format == GL_RGBA && type == GL_FLOAT);
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool ValidCap(const Context *context, GLenum cap)
@@ -1122,12 +1154,12 @@ bool ValidateReadPixels(ValidationContext *context,
     GLenum currentFormat = framebuffer->getImplementationColorReadFormat();
     GLenum currentType = framebuffer->getImplementationColorReadType();
     GLenum currentInternalFormat = readBuffer->getFormat().asSized();
-    GLuint clientVersion         = context->getClientMajorVersion();
 
-    bool validReadFormat = (clientVersion < 3) ? ValidES2ReadFormatType(context, format, type) :
-                                                 ValidES3ReadFormatType(context, currentInternalFormat, format, type);
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(currentInternalFormat);
+    bool validFormatTypeCombination =
+        ValidReadPixelsFormatType(context, internalFormatInfo.componentType, format, type);
 
-    if (!(currentFormat == format && currentType == type) && !validReadFormat)
+    if (!(currentFormat == format && currentType == type) && !validFormatTypeCombination)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;

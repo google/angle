@@ -153,11 +153,6 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer);
 
-bool ValidES3ReadFormatType(ValidationContext *context,
-                            GLenum internalFormat,
-                            GLenum format,
-                            GLenum type);
-
 bool ValidateES3RenderbufferStorageParameters(Context *context, GLenum target, GLsizei samples,
                                               GLenum internalformat, GLsizei width, GLsizei height);
 

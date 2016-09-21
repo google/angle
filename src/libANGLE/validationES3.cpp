@@ -204,6 +204,7 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT32_OES,  GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8_OES         );
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT,        GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT                );
     InsertES3FormatCombo(&set, GL_DEPTH_COMPONENT,        GL_DEPTH_COMPONENT, GL_UNSIGNED_INT                  );
+    // clang-format on
 
     // From GL_EXT_texture_norm16
     InsertES3FormatCombo(&set, GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
@@ -214,7 +215,6 @@ ES3FormatCombinationSet BuildES3FormatSet()
     InsertES3FormatCombo(&set, GL_RG16_SNORM_EXT, GL_RG, GL_SHORT);
     InsertES3FormatCombo(&set, GL_RGB16_SNORM_EXT, GL_RGB, GL_SHORT);
     InsertES3FormatCombo(&set, GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT);
-    // clang-format on
 
     return set;
 }
@@ -1268,100 +1268,6 @@ bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum att
         }
     }
 
-    return true;
-}
-
-bool ValidES3ReadFormatType(ValidationContext *context,
-                            GLenum internalFormat,
-                            GLenum format,
-                            GLenum type)
-{
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
-
-    switch (format)
-    {
-      case GL_RGBA:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-            break;
-          case GL_UNSIGNED_SHORT:
-              if (internalFormatInfo.componentType != GL_UNSIGNED_NORMALIZED &&
-                  internalFormatInfo.type != GL_UNSIGNED_SHORT)
-              {
-                  return false;
-              }
-              break;
-          case GL_UNSIGNED_INT_2_10_10_10_REV:
-            if (internalFormat != GL_RGB10_A2)
-            {
-                return false;
-            }
-            break;
-          case GL_FLOAT:
-            if (internalFormatInfo.componentType != GL_FLOAT)
-            {
-                return false;
-            }
-            break;
-          default:
-            return false;
-        }
-        break;
-      case GL_RGBA_INTEGER:
-        switch (type)
-        {
-          case GL_INT:
-            if (internalFormatInfo.componentType != GL_INT)
-            {
-                return false;
-            }
-            break;
-          case GL_UNSIGNED_INT:
-            if (internalFormatInfo.componentType != GL_UNSIGNED_INT)
-            {
-                return false;
-            }
-            break;
-          default:
-            return false;
-        }
-        break;
-      case GL_BGRA_EXT:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-            break;
-          default:
-            return false;
-        }
-        break;
-      case GL_RG_EXT:
-      case GL_RED_EXT:
-        if (!context->getExtensions().textureRG)
-        {
-            return false;
-        }
-        switch (type)
-        {
-        case GL_UNSIGNED_BYTE:
-            break;
-        case GL_UNSIGNED_SHORT:
-            if (internalFormatInfo.componentType != GL_UNSIGNED_NORMALIZED &&
-                internalFormatInfo.type != GL_UNSIGNED_SHORT)
-            {
-                return false;
-            }
-            break;
-        default:
-            return false;
-        }
-        break;
-      default:
-        return false;
-    }
     return true;
 }
 

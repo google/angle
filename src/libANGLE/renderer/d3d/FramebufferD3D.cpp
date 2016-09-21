@@ -207,7 +207,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
     GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
     const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
 
-    return implementationFormatInfo.format;
+    return implementationFormatInfo.getReadPixelsFormat();
 }
 
 GLenum FramebufferD3D::getImplementationColorReadType() const
@@ -229,7 +229,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
     const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
 
-    return implementationFormatInfo.type;
+    return implementationFormatInfo.getReadPixelsType();
 }
 
 gl::Error FramebufferD3D::readPixels(ContextImpl *context,

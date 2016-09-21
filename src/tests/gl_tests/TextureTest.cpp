@@ -14,24 +14,24 @@ namespace
 {
 
 // Take a pixel, and reset the components not covered by the format to default
-// values. In particular, the default value for the alpha component is 65535
+// values. In particular, the default value for the alpha component is 255
 // (1.0 as unsigned normalized fixed point value).
-GLColor16 SliceFormatColor16(GLenum format, GLColor16 full)
+GLColor SliceFormatColor(GLenum format, GLColor full)
 {
     switch (format)
     {
         case GL_RED:
-            return GLColor16(full.R, 0, 0, 65535u);
+            return GLColor(full.R, 0, 0, 255u);
         case GL_RG:
-            return GLColor16(full.R, full.G, 0, 65535u);
+            return GLColor(full.R, full.G, 0, 255u);
         case GL_RGB:
-            return GLColor16(full.R, full.G, full.B, 65535u);
+            return GLColor(full.R, full.G, full.B, 255u);
         case GL_RGBA:
             return full;
         default:
             UNREACHABLE();
+            return GLColor::white;
     }
-    return GLColor16::white;
 }
 
 class TexCoordDrawTest : public ANGLETest
@@ -3248,8 +3248,8 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
     void testNorm16Texture(GLint internalformat, GLenum format, GLenum type)
     {
-        GLushort pixelValue = type == GL_SHORT ? 0x7FFF : 0x6A35;
-        GLColor16 imageData(pixelValue, pixelValue, pixelValue, pixelValue);
+        GLushort pixelValue  = (type == GL_SHORT) ? 0x7FFF : 0x6A35;
+        GLushort imageData[] = {pixelValue, pixelValue, pixelValue, pixelValue};
 
         setUpProgram();
 
@@ -3261,20 +3261,17 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16_EXT, 1, 1, 0, GL_RGBA, GL_UNSIGNED_SHORT, nullptr);
 
         glBindTexture(GL_TEXTURE_2D, mTextures[1]);
-        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, &imageData.R);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, imageData);
 
         EXPECT_GL_NO_ERROR();
 
         drawQuad(mProgram, "position", 0.5f);
 
-        GLColor16 expectedValue = imageData;
-        if (type == GL_SHORT)
-        {
-            // sampled as signed value; then stored as unsigned value
-            expectedValue = GLColor16::white;
-        }
+        GLubyte expectedValue = (type == GL_SHORT) ? 0xFF : static_cast<GLubyte>(pixelValue >> 8);
 
-        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, expectedValue));
+        EXPECT_PIXEL_COLOR_EQ(
+            0, 0, SliceFormatColor(
+                      format, GLColor(expectedValue, expectedValue, expectedValue, expectedValue)));
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -3284,7 +3281,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
     void testNorm16Render(GLint internalformat, GLenum format, GLenum type)
     {
         GLushort pixelValue = 0x6A35;
-        GLColor16 imageData(pixelValue, pixelValue, pixelValue, pixelValue);
+        GLushort imageData[] = {pixelValue, pixelValue, pixelValue, pixelValue};
 
         setUpProgram();
 
@@ -3296,13 +3293,16 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
                                0);
 
         glBindTexture(GL_TEXTURE_2D, mTextures[2]);
-        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, &imageData.R);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, type, imageData);
 
         EXPECT_GL_NO_ERROR();
 
         drawQuad(mProgram, "position", 0.5f);
 
-        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, imageData));
+        GLubyte expectedValue = static_cast<GLubyte>(pixelValue >> 8);
+        EXPECT_PIXEL_COLOR_EQ(
+            0, 0, SliceFormatColor(
+                      format, GLColor(expectedValue, expectedValue, expectedValue, expectedValue)));
 
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, internalformat, 1, 1);
@@ -3316,8 +3316,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
         glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
 
-        GLColor16 expectedValue = GLColor16::white;
-        EXPECT_PIXEL_COLOR16_EQ(0, 0, SliceFormatColor16(format, expectedValue));
+        EXPECT_PIXEL_COLOR_EQ(0, 0, SliceFormatColor(format, GLColor::white));
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

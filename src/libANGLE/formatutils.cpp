@@ -352,6 +352,26 @@ bool InternalFormat::isLUMA() const
             (luminanceBits + alphaBits) > 0);
 }
 
+GLenum InternalFormat::getReadPixelsFormat() const
+{
+    return format;
+}
+
+GLenum InternalFormat::getReadPixelsType() const
+{
+    switch (type)
+    {
+        case GL_HALF_FLOAT:
+            // The internal format may have a type of GL_HALF_FLOAT but when exposing this type as
+            // the IMPLEMENTATION_READ_TYPE, only HALF_FLOAT_OES is allowed by
+            // OES_texture_half_float
+            return GL_HALF_FLOAT_OES;
+
+        default:
+            return type;
+    }
+}
+
 Format::Format(GLenum internalFormat) : Format(GetInternalFormatInfo(internalFormat))
 {
 }

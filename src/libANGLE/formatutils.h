@@ -76,6 +76,8 @@ struct InternalFormat
                                                    const gl::PixelUnpackState &unpack,
                                                    bool applySkipImages) const;
     bool isLUMA() const;
+    GLenum getReadPixelsFormat() const;
+    GLenum getReadPixelsType() const;
 
     bool operator==(const InternalFormat &other) const;
     bool operator!=(const InternalFormat &other) const;

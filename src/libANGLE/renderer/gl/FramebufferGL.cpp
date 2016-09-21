@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "libANGLE/renderer/gl/formatutilsgl.h"
 #include "platform/Platform.h"
 
 using namespace gl;
@@ -212,14 +213,14 @@ GLenum FramebufferGL::getImplementationColorReadFormat() const
 {
     const auto *readAttachment = mState.getReadAttachment();
     const Format &format       = readAttachment->getFormat();
-    return format.info->format;
+    return format.info->getReadPixelsFormat();
 }
 
 GLenum FramebufferGL::getImplementationColorReadType() const
 {
     const auto *readAttachment = mState.getReadAttachment();
     const Format &format       = readAttachment->getFormat();
-    return format.info->type;
+    return format.info->getReadPixelsType();
 }
 
 Error FramebufferGL::readPixels(ContextImpl *context,
@@ -234,7 +235,11 @@ Error FramebufferGL::readPixels(ContextImpl *context,
     mStateManager->setPixelPackState(packState);
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
-    mFunctions->readPixels(area.x, area.y, area.width, area.height, format, type, pixels);
+
+    nativegl::ReadPixelsFormat readPixelsFormat =
+        nativegl::GetReadPixelsFormat(mFunctions, mWorkarounds, format, type);
+    mFunctions->readPixels(area.x, area.y, area.width, area.height, readPixelsFormat.format,
+                           readPixelsFormat.type, pixels);
 
     return Error(GL_NO_ERROR);
 }

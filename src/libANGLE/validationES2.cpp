@@ -1187,52 +1187,6 @@ bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei le
     return true;
 }
 
-// check for combinations of format and type that are valid for ReadPixels
-bool ValidES2ReadFormatType(ValidationContext *context, GLenum format, GLenum type)
-{
-    switch (format)
-    {
-      case GL_RGBA:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-            break;
-          default:
-            return false;
-        }
-        break;
-      case GL_BGRA_EXT:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-            break;
-          default:
-            return false;
-        }
-        break;
-      case GL_RG_EXT:
-      case GL_RED_EXT:
-        if (!context->getExtensions().textureRG)
-        {
-            return false;
-        }
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-            break;
-          default:
-            return false;
-        }
-        break;
-
-      default:
-        return false;
-    }
-    return true;
-}
-
 bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numAttachments,
                                    const GLenum *attachments)
 {

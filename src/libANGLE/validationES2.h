@@ -38,8 +38,6 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
 bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                                    GLsizei width, GLsizei height);
 
-bool ValidES2ReadFormatType(ValidationContext *context, GLenum format, GLenum type);
-
 bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numAttachments,
                                    const GLenum *attachments);
 
