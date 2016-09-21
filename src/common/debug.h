@@ -154,8 +154,7 @@ bool DebugAnnotationsActive();
 // A macro for code which is not expected to be reached under valid assumptions
 #if !defined(NDEBUG)
 #define UNREACHABLE() \
-    ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__), \
-    assert(false)
+    ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__), assert(false)
 #else
     #define UNREACHABLE() ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__)
 #endif

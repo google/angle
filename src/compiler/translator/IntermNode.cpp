@@ -1340,12 +1340,12 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
       case EOpBitShiftLeft:
         resultArray = new TConstantUnion[objectSize];
         for (size_t i = 0; i < objectSize; i++)
-            resultArray[i] = leftArray[i] << rightArray[i];
+            resultArray[i] = TConstantUnion::lshift(leftArray[i], rightArray[i], diagnostics, line);
         break;
       case EOpBitShiftRight:
         resultArray = new TConstantUnion[objectSize];
         for (size_t i = 0; i < objectSize; i++)
-            resultArray[i] = leftArray[i] >> rightArray[i];
+            resultArray[i] = TConstantUnion::rshift(leftArray[i], rightArray[i], diagnostics, line);
         break;
 
       case EOpLessThan:

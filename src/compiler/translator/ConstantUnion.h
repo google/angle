@@ -57,8 +57,14 @@ class TConstantUnion
                               TDiagnostics *diag,
                               const TSourceLoc &line);
     TConstantUnion operator%(const TConstantUnion &constant) const;
-    TConstantUnion operator>>(const TConstantUnion &constant) const;
-    TConstantUnion operator<<(const TConstantUnion &constant) const;
+    static TConstantUnion rshift(const TConstantUnion &lhs,
+                                 const TConstantUnion &rhs,
+                                 TDiagnostics *diag,
+                                 const TSourceLoc &line);
+    static TConstantUnion lshift(const TConstantUnion &lhs,
+                                 const TConstantUnion &rhs,
+                                 TDiagnostics *diag,
+                                 const TSourceLoc &line);
     TConstantUnion operator&(const TConstantUnion &constant) const;
     TConstantUnion operator|(const TConstantUnion &constant) const;
     TConstantUnion operator^(const TConstantUnion &constant) const;

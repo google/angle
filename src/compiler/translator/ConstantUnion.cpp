@@ -369,17 +369,21 @@ TConstantUnion TConstantUnion::operator%(const TConstantUnion &constant) const
     return returnValue;
 }
 
-TConstantUnion TConstantUnion::operator>>(const TConstantUnion &constant) const
+// static
+TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
+                                      const TConstantUnion &rhs,
+                                      TDiagnostics *diag,
+                                      const TSourceLoc &line)
 {
     TConstantUnion returnValue;
-    ASSERT(type == constant.type);
-    switch (type)
+    ASSERT((lhs.type == rhs.type) && (lhs.type == EbtInt || lhs.type == EbtUInt));
+    switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(iConst >> constant.iConst);
+            returnValue.setIConst(lhs.iConst >> rhs.iConst);
             break;
         case EbtUInt:
-            returnValue.setUConst(uConst >> constant.uConst);
+            returnValue.setUConst(lhs.uConst >> rhs.uConst);
             break;
         default:
             UNREACHABLE();
@@ -388,20 +392,24 @@ TConstantUnion TConstantUnion::operator>>(const TConstantUnion &constant) const
     return returnValue;
 }
 
-TConstantUnion TConstantUnion::operator<<(const TConstantUnion &constant) const
+// static
+TConstantUnion TConstantUnion::lshift(const TConstantUnion &lhs,
+                                      const TConstantUnion &rhs,
+                                      TDiagnostics *diag,
+                                      const TSourceLoc &line)
 {
     TConstantUnion returnValue;
     // The signedness of the second parameter might be different, but we
     // don't care, since the result is undefined if the second parameter is
     // negative, and aliasing should not be a problem with unions.
-    ASSERT(constant.type == EbtInt || constant.type == EbtUInt);
-    switch (type)
+    ASSERT((lhs.type == rhs.type) && (lhs.type == EbtInt || lhs.type == EbtUInt));
+    switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(iConst << constant.iConst);
+            returnValue.setIConst(lhs.iConst << rhs.iConst);
             break;
         case EbtUInt:
-            returnValue.setUConst(uConst << constant.uConst);
+            returnValue.setUConst(lhs.uConst << rhs.uConst);
             break;
         default:
             UNREACHABLE();
