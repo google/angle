@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_e6a16e46",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-21T17:02:48Z",
+      "side": 1,
+      "message": "I think the problem here is that since we often do the mapping of GL_HALF_FLOAT_OES + RGBA -\u003e RGBA16F and then we can\u0027t recover that it came from the OES or regular HALF_FLOAT.  Luckily, the HALF_FLOAT_OES only matters for read pixels (as far as I can tell).",
+      "parentUuid": "70c1171d_66833e07",
+      "range": {
+        "startLine": 232,
+        "startChar": 43,
+        "endLine": 232,
+        "endChar": 47
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_0688421e",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_71ee9ab3",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-21T17:02:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_0688421e",
+      "range": {
+        "startLine": 235,
+        "startChar": 15,
+        "endLine": 235,
+        "endChar": 32
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_8674322c",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2016-09-21T14:13:37Z",
       "side": 1,
       "message": "nit: can remove this",
+      "range": {
+        "startLine": 218,
+        "startChar": 4,
+        "endLine": 218,
+        "endChar": 22
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_b1f41283",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-21T17:02:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_8674322c",
       "range": {
         "startLine": 218,
         "startChar": 4,
