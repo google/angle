@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70c1171d_cbc8f39f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:15:23Z",
+      "side": 1,
+      "message": "nit: can you tag this with the bug that you originally created for this issue",
+      "revId": "e60a4d3b7359599b76c9bae6a6ef4be837047182",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
