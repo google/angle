@@ -254,11 +254,11 @@ Buffer11::Buffer11(Renderer11 *renderer)
       mRenderer(renderer),
       mSize(0),
       mMappedStorage(nullptr),
-      mBufferStorages(BUFFER_USAGE_COUNT, nullptr),
+      mBufferStorages({}),
+      mDeallocThresholds({}),
+      mIdleness({}),
       mConstantBufferStorageAdditionalSize(0),
-      mMaxConstantBufferLruCount(0),
-      mReadUsageCount(0),
-      mSystemMemoryDeallocThreshold(0)
+      mMaxConstantBufferLruCount(0)
 {
 }
 
@@ -288,8 +288,6 @@ gl::Error Buffer11::getData(const uint8_t **outData)
 {
     SystemMemoryStorage *systemMemoryStorage = nullptr;
     ANGLE_TRY_RESULT(getSystemMemoryStorage(), systemMemoryStorage);
-
-    mReadUsageCount = 0;
 
     ASSERT(systemMemoryStorage->getSize() >= mSize);
 
@@ -484,41 +482,58 @@ gl::Error Buffer11::markTransformFeedbackUsage()
     return gl::NoError();
 }
 
-void Buffer11::updateSystemMemoryDeallocThreshold()
+void Buffer11::updateDeallocThreshold(BufferUsage usage)
 {
     // The following strategy was tuned on the Oort online benchmark (http://oortonline.gl/)
     // as well as a custom microbenchmark (IndexConversionPerfTest.Run/index_range_d3d11)
 
-    // First readback: 8 unmodified uses before we free system memory.
+    // First readback: 8 unmodified uses before we free buffer memory.
     // After that, double the threshold each time until we reach the max.
-    if (mSystemMemoryDeallocThreshold == 0)
+    if (mDeallocThresholds[usage] == 0)
     {
-        mSystemMemoryDeallocThreshold = 8;
+        mDeallocThresholds[usage] = 8;
     }
-    else if (mSystemMemoryDeallocThreshold < std::numeric_limits<unsigned int>::max() / 2u)
+    else if (mDeallocThresholds[usage] < std::numeric_limits<unsigned int>::max() / 2u)
     {
-        mSystemMemoryDeallocThreshold *= 2u;
+        mDeallocThresholds[usage] *= 2u;
     }
     else
     {
-        mSystemMemoryDeallocThreshold = std::numeric_limits<unsigned int>::max();
+        mDeallocThresholds[usage] = std::numeric_limits<unsigned int>::max();
     }
 }
 
-gl::Error Buffer11::markBufferUsage()
+// Free the storage if we decide it isn't being used very often.
+gl::Error Buffer11::checkForDeallocation(BufferUsage usage)
 {
-    mReadUsageCount++;
+    mIdleness[usage]++;
 
-    // Free the system memory storage if we decide it isn't being used very often.
-    BufferStorage *&sysMemStorage = mBufferStorages[BUFFER_USAGE_SYSTEM_MEMORY];
-    if (sysMemStorage != nullptr && mReadUsageCount > mSystemMemoryDeallocThreshold)
+    BufferStorage *&storage = mBufferStorages[usage];
+    if (storage != nullptr && mIdleness[usage] > mDeallocThresholds[usage])
     {
         BufferStorage *latestStorage = nullptr;
         ANGLE_TRY_RESULT(getLatestBufferStorage(), latestStorage);
-        if (latestStorage != sysMemStorage)
+        if (latestStorage != storage)
         {
-            SafeDelete(sysMemStorage);
+            SafeDelete(storage);
         }
+    }
+
+    return gl::NoError();
+}
+
+gl::Error Buffer11::markBufferUsage(BufferUsage usage)
+{
+    mIdleness[usage] = 0;
+
+    if (usage != BUFFER_USAGE_SYSTEM_MEMORY)
+    {
+        ANGLE_TRY(checkForDeallocation(BUFFER_USAGE_SYSTEM_MEMORY));
+    }
+
+    if (usage != BUFFER_USAGE_STAGING)
+    {
+        ANGLE_TRY(checkForDeallocation(BUFFER_USAGE_STAGING));
     }
 
     return gl::NoError();
@@ -526,8 +541,6 @@ gl::Error Buffer11::markBufferUsage()
 
 gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getBuffer(BufferUsage usage)
 {
-    ANGLE_TRY(markBufferUsage());
-
     BufferStorage *storage = nullptr;
     ANGLE_TRY_RESULT(getBufferStorage(usage), storage);
     return GetAs<NativeStorage>(storage)->getNativeStorage();
@@ -539,8 +552,6 @@ gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getEmulatedIndexedBuffer(
     GLint startVertex)
 {
     ASSERT(indexInfo);
-
-    ANGLE_TRY(markBufferUsage());
 
     BufferStorage *untypedStorage = nullptr;
     ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_EMULATED_INDEXED_VERTEX), untypedStorage);
@@ -556,8 +567,6 @@ gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getEmulatedIndexedBuffer(
 
 gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getConstantBufferRange(GLintptr offset, GLsizeiptr size)
 {
-    ANGLE_TRY(markBufferUsage());
-
     BufferStorage *bufferStorage = nullptr;
 
     if (offset == 0 || mRenderer->getRenderer11DeviceCaps().supportsConstantBufferOffsets)
@@ -626,21 +635,20 @@ gl::ErrorOrResult<Buffer11::BufferStorage *> Buffer11::getBufferStorage(BufferUs
     }
 
     ANGLE_TRY(updateBufferStorage(newStorage, 0, mSize));
+    ANGLE_TRY(markBufferUsage(usage));
 
     return newStorage;
 }
 
 Buffer11::BufferStorage *Buffer11::allocateStorage(BufferUsage usage)
 {
+    updateDeallocThreshold(usage);
     switch (usage)
     {
         case BUFFER_USAGE_PIXEL_PACK:
             return new PackStorage(mRenderer);
         case BUFFER_USAGE_SYSTEM_MEMORY:
-        {
-            updateSystemMemoryDeallocThreshold();
             return new SystemMemoryStorage(mRenderer);
-        }
         case BUFFER_USAGE_EMULATED_INDEXED_VERTEX:
             return new EmulatedIndexedStorage(mRenderer);
         case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
@@ -705,6 +713,7 @@ gl::ErrorOrResult<Buffer11::BufferStorage *> Buffer11::getConstantBufferRangeSto
     }
 
     ANGLE_TRY(updateBufferStorage(newStorage, offset, size));
+    ANGLE_TRY(markBufferUsage(BUFFER_USAGE_UNIFORM));
     return newStorage;
 }
 
