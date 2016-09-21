@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70c1171d_113f1e14",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-21T17:11:01Z",
+      "side": 1,
+      "message": "nit: return format; ?",
+      "revId": "a69991d249df5fef77d80c8ffd638018d2c1a43a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
