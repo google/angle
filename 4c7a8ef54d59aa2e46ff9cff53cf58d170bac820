@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70c1171d_66833e07",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T14:13:37Z",
+      "side": 1,
+      "message": "what bad things could happen if we change the InternalFormat structure to the _OES type?",
+      "range": {
+        "startLine": 232,
+        "startChar": 43,
+        "endLine": 232,
+        "endChar": 47
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_0688421e",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T14:13:37Z",
+      "side": 1,
+      "message": "for all these weirdo conversions, if you could tag them with a comment that would be nice (or alternatively wrap them in a formatutils.h function just so it\u0027s easy to find)",
+      "range": {
+        "startLine": 235,
+        "startChar": 15,
+        "endLine": 235,
+        "endChar": 32
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_8674322c",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T14:13:37Z",
+      "side": 1,
+      "message": "nit: can remove this",
+      "range": {
+        "startLine": 218,
+        "startChar": 4,
+        "endLine": 218,
+        "endChar": 22
+      },
+      "revId": "4c7a8ef54d59aa2e46ff9cff53cf58d170bac820",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
