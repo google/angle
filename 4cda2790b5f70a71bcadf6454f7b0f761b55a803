@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70c1171d_6b5b07f4",
+        "filename": "src/compiler/preprocessor/Macro.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:22:01Z",
+      "side": 1,
+      "message": "this hasn\u0027t been explicitly allowed yet, it\u0027s under \u0027to be discussed\u0027 in https://chromium-cpp.appspot.com/. Two choices: either open a thread for it, or just leave it as it was before with the stream.",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 31
+      },
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_ab7a5f4b",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:22:01Z",
+      "side": 1,
+      "message": "same for these uses",
+      "range": {
+        "startLine": 218,
+        "startChar": 33,
+        "endLine": 218,
+        "endChar": 42
+      },
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_0b604ba3",
+        "filename": "src/compiler/preprocessor/MacroExpander.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:22:01Z",
+      "side": 1,
+      "message": "nit: are you worried about making Lexer NonCopyable to preserve some interface-ness or something? We do this already for interface classes, see GLImplFactory. (tldr, just make Lexer NonCopyable)",
+      "range": {
+        "startLine": 23,
+        "startChar": 29,
+        "endLine": 23,
+        "endChar": 34
+      },
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
