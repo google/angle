@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "509fb379_a638d2f3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-21T19:40:38Z",
+      "side": 1,
+      "message": "nit: remove \u0027from\u0027",
+      "range": {
+        "startLine": 1162,
+        "startChar": 67,
+        "endLine": 1162,
+        "endChar": 71
+      },
+      "revId": "a81b711e6f8c243b01ce623e0ba109af274ebc4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "509fb379_861eee78",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-21T19:40:38Z",
+      "side": 1,
+      "message": "nit: remove \u0027from\u0027",
+      "range": {
+        "startLine": 517,
+        "startChar": 65,
+        "endLine": 517,
+        "endChar": 69
+      },
+      "revId": "a81b711e6f8c243b01ce623e0ba109af274ebc4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
