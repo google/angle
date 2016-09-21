@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "70c1171d_ab233f6b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "with shader versions lower than",
+      "range": {
+        "startLine": 204,
+        "startChar": 11,
+        "endLine": 204,
+        "endChar": 48
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_4b288345",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "inactive",
+      "range": {
+        "startLine": 205,
+        "startChar": 48,
+        "endLine": 205,
+        "endChar": 56
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_6b2d4754",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "to be",
+      "range": {
+        "startLine": 207,
+        "startChar": 20,
+        "endLine": 207,
+        "endChar": 23
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_eb18572c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "what about blocks with some members that are unused?\n\nuniform whatever {\n  int i;\n  float f;\n} b;\n\nvoid main() {\n  gl_Position \u003d vec4(b.f);\n  // b.i is unused\n}",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 9
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_0b128b0f",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "reference",
+      "range": {
+        "startLine": 135,
+        "startChar": 28,
+        "endLine": 135,
+        "endChar": 31
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_2b0f4fe9",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "inactive",
+      "range": {
+        "startLine": 137,
+        "startChar": 25,
+        "endLine": 137,
+        "endChar": 33
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_842f6caf",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -13,6 +151,29 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "nit: one liner here too",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_abed7ff0",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 51,
+        "startChar": 41,
+        "endLine": 51,
+        "endChar": 45
+      },
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +214,29 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_abd6df14",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "does this just insert statements like\n\n  block.memberName;\n\nJust wondering, is there anything to stop the compiler from optimizing out these statements?",
+      "range": {
+        "startLine": 74,
+        "startChar": 29,
+        "endLine": 74,
+        "endChar": 42
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_041b5c8a",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -64,6 +248,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "for (const auto\u0026 var: block.fields)",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_4bf2c3ce",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "b09b8f32_041b5c8a",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +323,29 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_6bf787bd",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "It seems like we should implement this TODO. All the block information should be available in the sh::InterfaceBlock struct.",
+      "range": {
+        "startLine": 128,
+        "startChar": 11,
+        "endLine": 128,
+        "endChar": 96
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_24345800",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -155,6 +380,29 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_cb347397",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "using InterfaceBlockList \u003d std::vector\u003csh::InterfaceBlock\u003e",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 58
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_a44e2889",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
         "patchSetId": 2
@@ -166,6 +414,29 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "nit: Comment comes from another file and doesn\u0027t apply there.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_2bf98fac",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "I\u0027m not sure we need to use a workaround in ANGLE - I think we handle this by abstracting the interface blocks at the GL layer. Can you test with ANGLE on OSX to determine if this is necessary?",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -189,6 +460,29 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_8bd19b20",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "can you add a test where a block has mixed used and unused fields?",
+      "range": {
+        "startLine": 400,
+        "startChar": 26,
+        "endLine": 400,
+        "endChar": 50
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_e406702d",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
@@ -206,6 +500,24 @@
     },
     {
       "key": {
+        "uuid": "70c1171d_cb0553b8",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "use ANGLE_GL_PROGRAM(program, vss, fss). You can remove the ASSERT_NE part.",
+      "parentUuid": "b09b8f32_e406702d",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_4412c469",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
@@ -217,6 +529,29 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "I think marking unused blocks as active is correct, so it should be ASSERT_LE",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c1171d_eb0297ad",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-21T13:41:04Z",
+      "side": 1,
+      "message": "can you add a test for the active member names?",
+      "range": {
+        "startLine": 442,
+        "startChar": 0,
+        "endLine": 442,
+        "endChar": 1
+      },
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
