@@ -22,7 +22,6 @@ class Traverser : public TIntermTraverser
 {
   public:
     static void Apply(TIntermNode *root,
-                      unsigned int *tempIndex,
                       const TSymbolTable &symbolTable,
                       int shaderVersion);
 
@@ -43,12 +42,10 @@ Traverser::Traverser(const TSymbolTable &symbolTable, int shaderVersion)
 
 // static
 void Traverser::Apply(TIntermNode *root,
-                      unsigned int *tempIndex,
                       const TSymbolTable &symbolTable,
                       int shaderVersion)
 {
     Traverser traverser(symbolTable, shaderVersion);
-    traverser.useTemporaryIndex(tempIndex);
     do
     {
         traverser.nextIteration();
@@ -63,7 +60,6 @@ void Traverser::Apply(TIntermNode *root,
 void Traverser::nextIteration()
 {
     mFound = false;
-    nextTemporaryIndex();
 }
 
 bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
@@ -87,7 +83,6 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     // Potential problem case detected, apply workaround.
     const TIntermSequence *sequence = node->getSequence();
     ASSERT(sequence->size() == 4u);
-    nextTemporaryIndex();
 
     // Decide if there is a 2DArray sampler.
     bool is2DArray = node->getName().find("s2a1") != TString::npos;
@@ -163,7 +158,6 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 }  // anonymous namespace
 
 void RewriteTexelFetchOffset(TIntermNode *root,
-                             unsigned int *tempIndex,
                              const TSymbolTable &symbolTable,
                              int shaderVersion)
 {
@@ -171,7 +165,7 @@ void RewriteTexelFetchOffset(TIntermNode *root,
     if (shaderVersion < 300)
         return;
 
-    Traverser::Apply(root, tempIndex, symbolTable, shaderVersion);
+    Traverser::Apply(root, symbolTable, shaderVersion);
 }
 
 }  // namespace sh

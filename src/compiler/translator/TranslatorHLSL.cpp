@@ -102,8 +102,7 @@ void TranslatorHLSL::translate(TIntermNode *root, ShCompileOptions compileOption
 
     if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)
     {
-        sh::RewriteTexelFetchOffset(root, getTemporaryIndex(), getSymbolTable(),
-                                    getShaderVersion());
+        sh::RewriteTexelFetchOffset(root, getSymbolTable(), getShaderVersion());
     }
 
     if (((compileOptions & SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR) != 0) &&

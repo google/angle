@@ -79,8 +79,7 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
 
     if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)
     {
-        sh::RewriteTexelFetchOffset(root, getTemporaryIndex(), getSymbolTable(),
-                                    getShaderVersion());
+        sh::RewriteTexelFetchOffset(root, getSymbolTable(), getShaderVersion());
     }
 
     bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
