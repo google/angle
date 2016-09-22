@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "d04e430b_e59fccb8",
+        "filename": "extensions/CHROMIUM_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "Please update the enum allocation doc https://docs.google.com/document/d/1PooqydYeXbn9wQptF29B-J4rkod2oMgKLw2FuXaAHzo/edit",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_e57eec71",
+        "filename": "extensions/CHROMIUM_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "nit: previous, same 3 other times below.",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_05a5180f",
+        "filename": "extensions/EGL_CHROMIUM_create_context_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "ditto: https://docs.google.com/document/d/1PooqydYeXbn9wQptF29B-J4rkod2oMgKLw2FuXaAHzo/edit",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d04e430b_c273a677",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -19,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "d04e430b_45bb202c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "Yes, in Context::makeCurrent we set mFramebufferMap[0] to the egl::Surface::getDefaultFramebuffer()",
+      "parentUuid": "d04e430b_c273a677",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d04e430b_4280f62d",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 4
@@ -30,6 +99,41 @@
       "writtenOn": "2016-09-22T20:09:45Z",
       "side": 1,
       "message": "Ditto here, does 0 need to be treated specially?",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_859a88bc",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "d04e430b_4280f62d",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_999c7b5f",
+        "filename": "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T20:26:41Z",
+      "side": 1,
+      "message": "nit: 2 could be GL_TRUE",
       "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
