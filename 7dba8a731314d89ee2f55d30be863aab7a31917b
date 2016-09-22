@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0be2f35_e37dd20c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T17:16:06Z",
+      "side": 1,
+      "message": "Should we have a check that makes sure the last copy of the data is not deleted?",
+      "revId": "7dba8a731314d89ee2f55d30be863aab7a31917b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
