@@ -380,11 +380,21 @@ TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(lhs.iConst >> rhs.iConst);
+            if (lhs.iConst < 0 || rhs.iConst < 0)
+            {
+                diag->error(line, "Undefined shift", ">>", "");
+                returnValue.setIConst(0);
+            }
+            else
+            {
+                returnValue.setIConst(lhs.iConst >> rhs.iConst);
+            }
             break;
+
         case EbtUInt:
             returnValue.setUConst(lhs.uConst >> rhs.uConst);
             break;
+
         default:
             UNREACHABLE();
     }
@@ -406,11 +416,21 @@ TConstantUnion TConstantUnion::lshift(const TConstantUnion &lhs,
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(lhs.iConst << rhs.iConst);
+            if (lhs.iConst < 0 || rhs.iConst < 0)
+            {
+                diag->error(line, "Undefined shift", "<<", "");
+                returnValue.setIConst(0);
+            }
+            else
+            {
+                returnValue.setIConst(lhs.iConst << rhs.iConst);
+            }
             break;
+
         case EbtUInt:
             returnValue.setUConst(lhs.uConst << rhs.uConst);
             break;
+
         default:
             UNREACHABLE();
     }

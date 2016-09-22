@@ -2433,6 +2433,42 @@ TEST_P(GLSLTest, FoldedIntDifferenceOutOfBounds)
     glDeleteProgram(program);
 }
 
+// Test that using an invalid constant right-shift produces an error.
+TEST_P(GLSLTest_ES3, FoldedInvalidRightShift)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " int diff = -100 >> -100;\n"
+        " color = vec4(float(diff));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
+// Test that using an invalid constant left-shift produces an error.
+TEST_P(GLSLTest_ES3, FoldedInvalidLeftShift)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " int diff = -100 << -100;\n"
+        " color = vec4(float(diff));\n"
+        "}\n";
+
+    GLuint program = CompileProgram(mSimpleVSSource, fragmentShader);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
