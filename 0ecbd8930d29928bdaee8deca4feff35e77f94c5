@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_5a21e50e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_ab233f6b",
+      "range": {
+        "startLine": 204,
+        "startChar": 11,
+        "endLine": 204,
+        "endChar": 48
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_4b288345",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "inactive",
+      "range": {
+        "startLine": 205,
+        "startChar": 48,
+        "endLine": 205,
+        "endChar": 56
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_3a2e29ff",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_4b288345",
       "range": {
         "startLine": 205,
         "startChar": 48,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_faf89167",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_6b2d4754",
+      "range": {
+        "startLine": 207,
+        "startChar": 20,
+        "endLine": 207,
+        "endChar": 23
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_eb18572c",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "what about blocks with some members that are unused?\n\nuniform whatever {\n  int i;\n  float f;\n} b;\n\nvoid main() {\n  gl_Position \u003d vec4(b.f);\n  // b.i is unused\n}",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 9
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_9a707d05",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "In OpenGL ES 3.0.4 spec, section 2.12.6 Uniform Variables has the following paragraph \"All members of a named uniform block declared with a shared or std140 layout qualifier are considered active, even if they are not referenced in any shader in the program. The uniform block itself is also considered active, even if no member of the block is referenced.\"\nIf the block is not std140 or shared, the spec has the following rule \u0027Active uniform blocks are those that contain\nactive uniforms after a program has been compiled and linked.\u0027",
+      "parentUuid": "70c1171d_eb18572c",
       "range": {
         "startLine": 867,
         "startChar": 8,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_7a56e15c",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_0b128b0f",
+      "range": {
+        "startLine": 135,
+        "startChar": 28,
+        "endLine": 135,
+        "endChar": 31
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_2b0f4fe9",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 2
@@ -128,6 +248,30 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "inactive",
+      "range": {
+        "startLine": 137,
+        "startChar": 25,
+        "endLine": 137,
+        "endChar": 33
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_5a53256b",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_2b0f4fe9",
       "range": {
         "startLine": 137,
         "startChar": 25,
@@ -157,6 +301,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_9ad4fde4",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_842f6caf",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_abed7ff0",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_da78351f",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_abed7ff0",
+      "range": {
+        "startLine": 51,
+        "startChar": 41,
+        "endLine": 51,
+        "endChar": 45
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_443964f5",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -191,6 +377,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "nit: visitChildren \u003d false here too;",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_ba7d790d",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_443964f5",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -225,6 +429,48 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "does this just insert statements like\n\n  block.memberName;\n\nJust wondering, is there anything to stop the compiler from optimizing out these statements?",
+      "range": {
+        "startLine": 74,
+        "startChar": 29,
+        "endLine": 74,
+        "endChar": 42
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_fa73f141",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "From the test result, Mac driver only consider the referenced member in  program as active. So it should be per-member granularity for optimizing.\nIn OpenGL ES 3.0.4 spec, section 2.12.6 Uniform Variables has the following paragraph \"All members of a named uniform block declared with a shared or std140 layout qualifier are considered active, even if they are not referenced in any shader in the program. The uniform block itself is also considered active, even if no member of the block is referenced.\"",
+      "parentUuid": "b09b8f32_240d384a",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_5a856506",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "In patch set 4, I insert statements like you said using \u0027block.memberName;\u0027 :)\n\nI have no idea how to stop the compiler optimizing these statements.",
+      "parentUuid": "70c1171d_abd6df14",
       "range": {
         "startLine": 74,
         "startChar": 29,
@@ -272,6 +518,42 @@
     },
     {
       "key": {
+        "uuid": "10045b97_1a8fed26",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_041b5c8a",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_fa9c115f",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_4bf2c3ce",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_8418cc89",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -283,6 +565,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "Structures containing arrays and arrays containing structures are not handled, I think interface blocks are allowed to contain at least one of the two.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_ba96993b",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "It\u0027s done in patch set 4.",
+      "parentUuid": "b09b8f32_8418cc89",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -306,6 +606,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_9a9bdd63",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "I copied some code from other files and didn\u0027t process it:(\nCorrect it in patch set 4.",
+      "parentUuid": "b09b8f32_a42708d3",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_c42494d0",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -317,6 +635,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "Ditto.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_7ab141e6",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_c42494d0",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -346,6 +682,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_daca7543",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Yes, have implemented this in patch set 4. I am not familiar with compiler part. So spent some time to look at how to define  struct and interfaceBlock type :)",
+      "parentUuid": "70c1171d_6bf787bd",
+      "range": {
+        "startLine": 128,
+        "startChar": 11,
+        "endLine": 128,
+        "endChar": 96
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_24345800",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 2
@@ -363,6 +723,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_bacfb951",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_24345800",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_c44b3478",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
         "patchSetId": 2
@@ -374,6 +752,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "nit: one line to describe what the file does.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_7aba61bc",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_c44b3478",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -403,6 +799,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_5ab7a5d2",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_cb347397",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 58
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_a44e2889",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
         "patchSetId": 2
@@ -414,6 +834,24 @@
       "writtenOn": "2016-09-20T14:57:51Z",
       "side": 1,
       "message": "nit: Comment comes from another file and doesn\u0027t apply there.",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_3ac4e931",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b09b8f32_a44e2889",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -443,6 +881,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_da4f15ba",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "It\u0027s necessary. Otherwise, the new added test case will fail.",
+      "parentUuid": "70c1171d_2bf98fac",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_642a60a2",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 2
@@ -460,6 +922,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_bae8d9a6",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Changed to 4.1 which is my test machine.",
+      "parentUuid": "b09b8f32_642a60a2",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_8bd19b20",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
@@ -471,6 +951,30 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "can you add a test where a block has mixed used and unused fields?",
+      "range": {
+        "startLine": 400,
+        "startChar": 26,
+        "endLine": 400,
+        "endChar": 50
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_7ae381ca",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_8bd19b20",
       "range": {
         "startLine": 400,
         "startChar": 26,
@@ -518,6 +1022,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_3add09fc",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_cb0553b8",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_4412c469",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
@@ -535,6 +1057,24 @@
     },
     {
       "key": {
+        "uuid": "10045b97_7a24a120",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Maybe you want to say \u0027unused blocks as inactive is correct\u0027?\nBut refer to the spec \"All members of a named uniform block declared with a shared or std140 layout qualifier are considered active, even if they are not referenced in any shader in the program. The uniform block itself is also considered active, even if no member of the block is referenced.\". The block with std140 and shared layout will be active even if no member of it is referenced.",
+      "parentUuid": "b09b8f32_4412c469",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_eb0297ad",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
@@ -546,6 +1086,30 @@
       "writtenOn": "2016-09-21T13:41:04Z",
       "side": 1,
       "message": "can you add a test for the active member names?",
+      "range": {
+        "startLine": 442,
+        "startChar": 0,
+        "endLine": 442,
+        "endChar": 1
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_1ada4d04",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-22T08:10:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_eb0297ad",
       "range": {
         "startLine": 442,
         "startChar": 0,
