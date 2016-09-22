@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10045b97_154c5e8f",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "this should be GetInterfaceBlockType, in util.cpp",
+      "range": {
+        "startLine": 124,
+        "startChar": 30,
+        "endLine": 124,
+        "endChar": 56
+      },
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_b53a2af3",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "good test - make sure you update your WebGL test too if you have one.",
+      "range": {
+        "startLine": 401,
+        "startChar": 26,
+        "endLine": 401,
+        "endChar": 52
+      },
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
