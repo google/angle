@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "706bd79b_7980872e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-22T21:12:51Z",
+      "side": 1,
+      "message": "nit: legazy (\u003d legacy + lazy?)",
+      "revId": "48eef2f9ea3332c4be45afe7a5e20cd395cf0eac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
