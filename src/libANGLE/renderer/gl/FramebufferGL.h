@@ -85,6 +85,18 @@ class FramebufferGL : public FramebufferImpl
     void syncClearState(GLbitfield mask);
     void syncClearBufferState(GLenum buffer, GLint drawBuffer);
 
+    gl::Error readPixelsRowByRowWorkaround(const gl::Rectangle &area,
+                                           GLenum format,
+                                           GLenum type,
+                                           const gl::PixelPackState &pack,
+                                           GLvoid *pixels) const;
+
+    gl::Error readPixelsPaddingWorkaround(const gl::Rectangle &area,
+                                          GLenum format,
+                                          GLenum type,
+                                          const gl::PixelPackState &pack,
+                                          GLvoid *pixels) const;
+
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
     const WorkaroundsGL &mWorkarounds;

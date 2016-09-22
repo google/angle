@@ -69,6 +69,8 @@ struct WorkaroundsGL
 
     // In the case of unpacking from a pixel unpack buffer, unpack overlapping rows row by row.
     bool unpackOverlappingRowsSeparatelyUnpackBuffer;
+    // In the case of packing to a pixel pack buffer, pack overlapping rows row by row.
+    bool packOverlappingRowsSeparatelyPackBuffer;
 
     // During initialization, assign the current vertex attributes to the spec-mandated defaults.
     bool initializeCurrentVertexAttributes;
@@ -94,6 +96,8 @@ struct WorkaroundsGL
     // The last pixel read will be A, but the driver will think it is B, causing it to generate an
     // error when the pixel buffer is just big enough.
     bool unpackLastRowSeparatelyForPaddingInclusion;
+    // Equivalent workaround when uploading data from a pixel pack buffer.
+    bool packLastRowSeparatelyForPaddingInclusion;
 };
 }
 

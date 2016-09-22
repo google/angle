@@ -900,13 +900,16 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->alwaysCallUseProgramAfterLink = true;
 
     workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer = vendor == VENDOR_ID_NVIDIA;
+    workarounds->packOverlappingRowsSeparatelyPackBuffer     = vendor == VENDOR_ID_NVIDIA;
 
     workarounds->initializeCurrentVertexAttributes = vendor == VENDOR_ID_NVIDIA;
 
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->unpackLastRowSeparatelyForPaddingInclusion = true;
+    workarounds->packLastRowSeparatelyForPaddingInclusion   = true;
 #else
     workarounds->unpackLastRowSeparatelyForPaddingInclusion = vendor == VENDOR_ID_NVIDIA;
+    workarounds->packLastRowSeparatelyForPaddingInclusion   = vendor == VENDOR_ID_NVIDIA;
 #endif
 }
 

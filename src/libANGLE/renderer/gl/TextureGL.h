@@ -120,13 +120,13 @@ class TextureGL : public TextureImpl
                                             const gl::PixelUnpackState &unpack,
                                             const uint8_t *pixels);
 
-    gl::Error setSubImageAlignmentWorkaround(GLenum target,
-                                             size_t level,
-                                             const gl::Box &area,
-                                             GLenum format,
-                                             GLenum type,
-                                             const gl::PixelUnpackState &unpack,
-                                             const uint8_t *pixels);
+    gl::Error setSubImagePaddingWorkaround(GLenum target,
+                                           size_t level,
+                                           const gl::Box &area,
+                                           GLenum format,
+                                           GLenum type,
+                                           const gl::PixelUnpackState &unpack,
+                                           const uint8_t *pixels);
 
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;
