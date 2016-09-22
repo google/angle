@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_b95a1f20",
+        "filename": "extensions/CHROMIUM_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:11:50Z",
+      "side": 1,
+      "message": "This one is actually from the chromium glext headers.  I\u0027m not sure where the original enum came from but I can put it in the ANGLE allocations if we want.",
+      "parentUuid": "d04e430b_e59fccb8",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d04e430b_e57eec71",
         "filename": "extensions/CHROMIUM_bind_generates_resource.txt",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_5954a3f0",
+        "filename": "extensions/CHROMIUM_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d04e430b_e57eec71",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d04e430b_05a5180f",
         "filename": "extensions/EGL_CHROMIUM_create_context_bind_generates_resource.txt",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2016-09-22T20:26:41Z",
       "side": 1,
       "message": "ditto: https://docs.google.com/document/d/1PooqydYeXbn9wQptF29B-J4rkod2oMgKLw2FuXaAHzo/edit",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_3970cf99",
+        "filename": "extensions/EGL_CHROMIUM_create_context_bind_generates_resource.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d04e430b_05a5180f",
       "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -123,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_d9a993eb",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:11:50Z",
+      "side": 1,
+      "message": "Yep, this one was actually a bug.  I had forgotten that the zero texture is per-context and not stored in the resource manager.  Added tests for binding the 0 object.",
+      "parentUuid": "d04e430b_859a88bc",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "706bd79b_999c7b5f",
         "filename": "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
         "patchSetId": 4
@@ -134,6 +206,24 @@
       "writtenOn": "2016-09-22T20:26:41Z",
       "side": 1,
       "message": "nit: 2 could be GL_TRUE",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_5922e3b4",
+        "filename": "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:11:50Z",
+      "side": 1,
+      "message": "I wanted a value that is out of range to make sure it gets written to.",
+      "parentUuid": "706bd79b_999c7b5f",
       "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
