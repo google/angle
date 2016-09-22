@@ -22,6 +22,53 @@
       "revId": "56cec46b754ab013af6dec41ae6dad004338c600",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_6256525d",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T18:51:18Z",
+      "side": 1,
+      "message": "seems good...",
+      "parentUuid": "10045b97_e0d57e0a",
+      "range": {
+        "startLine": 1116,
+        "startChar": 4,
+        "endLine": 1117,
+        "endChar": 79
+      },
+      "revId": "56cec46b754ab013af6dec41ae6dad004338c600",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_e24a62ac",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2458,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T18:51:18Z",
+      "side": 1,
+      "message": "nit: ANGLE_GL_PROGRAM(program, ... ... ), can remove the EXPECT_NE and glDeleteProgram",
+      "range": {
+        "startLine": 2456,
+        "startChar": 4,
+        "endLine": 2458,
+        "endChar": 29
+      },
+      "revId": "56cec46b754ab013af6dec41ae6dad004338c600",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
