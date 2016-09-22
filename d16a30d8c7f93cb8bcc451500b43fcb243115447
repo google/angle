@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_7919672e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T21:13:17Z",
+      "side": 1,
+      "message": "I added assertions that the maps have a 0 object.",
+      "parentUuid": "d04e430b_45bb202c",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d04e430b_4280f62d",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 4
