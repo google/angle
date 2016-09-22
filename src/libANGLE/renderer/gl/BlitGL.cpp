@@ -30,7 +30,7 @@ gl::Error CheckCompileStatus(const rx::FunctionsGL *functions, GLuint shader)
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to compile internal blit shader.");
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error CheckLinkStatus(const rx::FunctionsGL *functions, GLuint program)
@@ -43,7 +43,7 @@ gl::Error CheckLinkStatus(const rx::FunctionsGL *functions, GLuint program)
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to link internal blit program.");
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 } // anonymous namespace
@@ -130,11 +130,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
                                                       const gl::Rectangle &sourceArea,
                                                       const gl::Framebuffer *source)
 {
-    gl::Error error = initializeResources();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(initializeResources());
 
     // Blit the framebuffer to the first scratch texture
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
@@ -190,12 +186,18 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
 
     mFunctions->drawArrays(GL_TRIANGLES, 0, 6);
 
-    // Finally, copy the swizzled texture to the destination texture
+    // Copy the swizzled texture to the destination texture
     mStateManager->bindTexture(textureType, texture);
     mFunctions->copyTexSubImage2D(target, static_cast<GLint>(level), destOffset.x, destOffset.y, 0,
                                   0, sourceArea.width, sourceArea.height);
 
-    return gl::Error(GL_NO_ERROR);
+    // Finally orphan the scratch textures so they can be GCed by the driver.
+    mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[0]);
+    mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[1]);
+    mFunctions->texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    return gl::NoError();
 }
 
 gl::Error BlitGL::initializeResources()
@@ -229,15 +231,10 @@ gl::Error BlitGL::initializeResources()
         GLuint vs = mFunctions->createShader(GL_VERTEX_SHADER);
         mFunctions->shaderSource(vs, 1, &vsSource, nullptr);
         mFunctions->compileShader(vs);
-        gl::Error error = CheckCompileStatus(mFunctions, vs);
+        ANGLE_TRY(CheckCompileStatus(mFunctions, vs));
 
         mFunctions->attachShader(mBlitProgram, vs);
         mFunctions->deleteShader(vs);
-
-        if (error.isError())
-        {
-            return error;
-        }
 
         // Compile the vertex shader
         const char *fsSource =
@@ -254,22 +251,13 @@ gl::Error BlitGL::initializeResources()
         GLuint fs = mFunctions->createShader(GL_FRAGMENT_SHADER);
         mFunctions->shaderSource(fs, 1, &fsSource, nullptr);
         mFunctions->compileShader(fs);
-        error = CheckCompileStatus(mFunctions, fs);
+        ANGLE_TRY(CheckCompileStatus(mFunctions, fs));
 
         mFunctions->attachShader(mBlitProgram, fs);
         mFunctions->deleteShader(fs);
 
-        if (error.isError())
-        {
-            return error;
-        }
-
         mFunctions->linkProgram(mBlitProgram);
-        error = CheckLinkStatus(mFunctions, mBlitProgram);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(CheckLinkStatus(mFunctions, mBlitProgram));
 
         GLuint textureUniform = mFunctions->getUniformLocation(mBlitProgram, "u_source_texture");
         mStateManager->useProgram(mBlitProgram);
@@ -299,6 +287,6 @@ gl::Error BlitGL::initializeResources()
         mFunctions->genVertexArrays(1, &mVAO);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 }
