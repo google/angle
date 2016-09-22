@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0f62fe4_77e5d8fb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T17:17:58Z",
+      "side": 1,
+      "message": "nit: I think this check makes sense as an if-statement for readability",
+      "range": {
+        "startLine": 1022,
+        "startChar": 12,
+        "endLine": 1022,
+        "endChar": 86
+      },
+      "revId": "da5eedc20e771c5bb1d56ab9bc0b2bca5b6b69b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
