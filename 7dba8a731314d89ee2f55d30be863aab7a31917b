@@ -16,6 +16,24 @@
       "revId": "7dba8a731314d89ee2f55d30be863aab7a31917b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c1e3c3_e4967a3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T17:19:05Z",
+      "side": 1,
+      "message": "That check is just below (latestStorage). I have plans to do follow-up work at some point to cache latest storage so we don\u0027t have to iterate to find it.",
+      "parentUuid": "b0be2f35_e37dd20c",
+      "revId": "7dba8a731314d89ee2f55d30be863aab7a31917b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
