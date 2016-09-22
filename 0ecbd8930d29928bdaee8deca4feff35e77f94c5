@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_953f2ee3",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "yes.. this code does not reference any unreferenced uniforms in a block if other uniforms are referenced, which is why I was asking. do all these cases work on OSX without using libANGLE?",
+      "parentUuid": "10045b97_9a707d05",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 9
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_0b128b0f",
         "filename": "src/compiler/translator/Compiler.h",
         "patchSetId": 2
@@ -477,6 +501,24 @@
         "endLine": 74,
         "endChar": 42
       },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_5552d62f",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "If it works in OSX it\u0027s probably good enough.",
+      "parentUuid": "10045b97_fa73f141",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -905,6 +947,30 @@
     },
     {
       "key": {
+        "uuid": "10045b97_f529c2ac",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "OK, thanks for testing.",
+      "parentUuid": "10045b97_da4f15ba",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b09b8f32_642a60a2",
         "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
         "patchSetId": 2
@@ -934,6 +1000,24 @@
       "side": 1,
       "message": "Changed to 4.1 which is my test machine.",
       "parentUuid": "b09b8f32_642a60a2",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_d52ec6b2",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "(nit: technically this is any desktop OpenGL system lower than 4.5)",
+      "parentUuid": "10045b97_bae8d9a6",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -1069,6 +1153,24 @@
       "side": 1,
       "message": "Maybe you want to say \u0027unused blocks as inactive is correct\u0027?\nBut refer to the spec \"All members of a named uniform block declared with a shared or std140 layout qualifier are considered active, even if they are not referenced in any shader in the program. The uniform block itself is also considered active, even if no member of the block is referenced.\". The block with std140 and shared layout will be active even if no member of it is referenced.",
       "parentUuid": "b09b8f32_4412c469",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10045b97_b5334a19",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-22T13:48:49Z",
+      "side": 1,
+      "message": "No, what he meant is it\u0027s valid for the compiler to *not* optimize out unreferenced blocks. So your test should account for the case where the packed layout is still there, even though it\u0027s unreferenced, since it\u0027s correct with or without it. But I didn\u0027t verify this.",
+      "parentUuid": "10045b97_7a24a120",
       "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
