@@ -960,11 +960,11 @@ gl::ErrorOrResult<GLuint> InternalFormat::computeUnpackSize(
 
     CheckedNumeric<GLuint> depthMinusOne  = size.depth - 1;
     CheckedNumeric<GLuint> heightMinusOne = size.height - 1;
-    CheckedNumeric<GLuint> pixelBytes     = computePixelBytes(formatType);
+    CheckedNumeric<GLuint> bytes          = computePixelBytes(formatType);
 
     CheckedNumeric<GLuint> totalSize = depthMinusOne * depthPitch;
     totalSize += heightMinusOne * rowPitch;
-    totalSize += size.width * pixelBytes;
+    totalSize += size.width * bytes;
 
     ANGLE_TRY_CHECKED_MATH(totalSize);
 
