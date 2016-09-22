@@ -2433,6 +2433,29 @@ TEST_P(GLSLTest, FoldedIntDifferenceOutOfBounds)
     glDeleteProgram(program);
 }
 
+// Test that using a sampler2D and samplerExternalOES in the same shader works (anglebug.com/1534)
+TEST_P(GLSLTest, ExternalAnd2DSampler)
+{
+    if (!extensionEnabled("GL_OES_EGL_image_external"))
+    {
+        std::cout << "Test skipped because GL_OES_EGL_image_external is not available."
+                  << std::endl;
+        return;
+    }
+
+    const std::string fragmentShader =
+        "precision mediump float;\n"
+        "uniform samplerExternalOES tex0;\n"
+        "uniform sampler2D tex1;\n"
+        "void main(void)\n"
+        "{\n"
+        " vec2 uv = vec2(0.0, 0.0);"
+        " gl_FragColor = texture2D(tex0, uv) + texture2D(tex1, uv);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
 // Test that using an invalid constant right-shift produces an error.
 TEST_P(GLSLTest_ES3, FoldedInvalidRightShift)
 {
