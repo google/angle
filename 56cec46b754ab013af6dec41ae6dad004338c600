@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10045b97_e0d57e0a",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-22T17:04:35Z",
+      "side": 1,
+      "message": "No functional change here, just saw this refactorable code.",
+      "range": {
+        "startLine": 1116,
+        "startChar": 4,
+        "endLine": 1117,
+        "endChar": 79
+      },
+      "revId": "56cec46b754ab013af6dec41ae6dad004338c600",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
