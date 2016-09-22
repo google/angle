@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d04e430b_c273a677",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2106,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2016-09-22T20:09:45Z",
+      "side": 1,
+      "message": "Do we need to specifically handle 0, which should be OK to bind even if it\u0027s not generated?\n(sorry for the maybe stupid question, not familiar enough with the code - maybe a placeholder is added to the map at 0?)",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d04e430b_4280f62d",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2016-09-22T20:09:45Z",
+      "side": 1,
+      "message": "Ditto here, does 0 need to be treated specially?",
+      "revId": "d16a30d8c7f93cb8bcc451500b43fcb243115447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
