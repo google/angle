@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_0597153a",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-23T11:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d04e430b_bf11d365",
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10045b97_154c5e8f",
         "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
         "patchSetId": 6
@@ -30,6 +48,30 @@
       "writtenOn": "2016-09-22T13:48:49Z",
       "side": 1,
       "message": "this should be GetInterfaceBlockType, in util.cpp",
+      "range": {
+        "startLine": 124,
+        "startChar": 30,
+        "endLine": 124,
+        "endChar": 56
+      },
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_259c195a",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-23T11:20:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10045b97_154c5e8f",
       "range": {
         "startLine": 124,
         "startChar": 30,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_85ab2576",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-23T11:20:36Z",
+      "side": 1,
+      "message": "I think struct in arrays, arrays in structs and any number of nesting of them is processed by shader itself. We don\u0027t need to consider it.\nSee my updated case in UniformBufferTest.ActiveUniformNumberAndName\nstruct S {\n  highp ivec3 a;\n  mediump ivec2 b[4];\n};\nstruct T {\n  S c[2];\n};\nlayout(std140) uniform blockName0 {\n  S s0;\n  lowp vec2 v0;\n  T t0[2];\n  highp uint u0;\n};\n\nin main, the following statements are enough to reference all members in blockName0\ns0.a;\ns0.b\nv0;\nt0[0];\nt0[1];\nu0;\n\nI have tested it in Mac. This case can pass. So I think shader will implicitly process the situations like what you said.",
+      "parentUuid": "d04e430b_ff319bfa",
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10045b97_b53a2af3",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 6
@@ -70,6 +130,30 @@
       "writtenOn": "2016-09-22T13:48:49Z",
       "side": 1,
       "message": "good test - make sure you update your WebGL test too if you have one.",
+      "range": {
+        "startLine": 401,
+        "startChar": 26,
+        "endLine": 401,
+        "endChar": 52
+      },
+      "revId": "04ef97b51c100886894a9cb4cc8eadf8f99a5120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_a5a8297a",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-23T11:20:36Z",
+      "side": 1,
+      "message": "Thanks for prompt. I will do it later:)",
+      "parentUuid": "10045b97_b53a2af3",
       "range": {
         "startLine": 401,
         "startChar": 26,
