@@ -41,6 +41,7 @@ impl_classes = [
     'FenceSync',
     'Framebuffer',
     'Image',
+    'Path',
     'Program',
     'Query',
     'Renderbuffer',

@@ -45,6 +45,7 @@
                 'angle_enable_gl%': 1,
             }],
         ],
+        'angle_enable_null%': 1, # Available on all platforms
     },
     'includes':
     [

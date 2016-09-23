@@ -313,6 +313,9 @@ config("libANGLE_config") {
   if (angle_enable_vulkan) {
     defines += [ "ANGLE_ENABLE_VULKAN" ]
   }
+  if (angle_enable_null) {
+    defines += [ "ANGLE_ENABLE_NULL" ]
+  }
   defines += [
     "GL_GLEXT_PROTOTYPES",
     "EGL_EGLEXT_PROTOTYPES",
@@ -415,6 +418,10 @@ static_library("libANGLE") {
 
   if (angle_enable_vulkan) {
     sources += rebase_path(gles_gypi.libangle_vulkan_sources, ".", "src")
+  }
+
+  if (angle_enable_null) {
+    sources += rebase_path(gles_gypi.libangle_null_sources, ".", "src")
   }
 
   if (is_debug) {

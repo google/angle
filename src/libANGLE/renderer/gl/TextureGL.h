@@ -90,12 +90,6 @@ class TextureGL : public TextureImpl
     void syncState(size_t textureUnit) const;
     GLuint getTextureID() const;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
-                                        FramebufferAttachmentRenderTarget **rtOut) override
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Not supported on OpenGL");
-    }
-
     void setBaseLevel(GLuint) override {}
 
   private:

@@ -53,6 +53,7 @@ def generateWinRTProjects(generate_args, generation_dir, msvs_version, app_type_
     args.append('-Dangle_enable_d3d9=0')
     args.append('-Dangle_enable_gl=0')
     args.append('-Dangle_enable_vulkan=0')
+    args.append('-Dangle_enable_null=0')
     args.append('-Dangle_enable_essl=0')
     args.append('-Dangle_enable_glsl=0')
     # Add all.gyp as the main gyp file to be generated.

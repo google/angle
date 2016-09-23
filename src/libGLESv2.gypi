@@ -617,6 +617,47 @@
             'libANGLE/renderer/vulkan/VertexArrayVk.cpp',
             'libANGLE/renderer/vulkan/VertexArrayVk.h',
         ],
+        'libangle_null_sources':
+        [
+            'libANGLE/renderer/null/BufferNULL.cpp',
+            'libANGLE/renderer/null/BufferNULL.h',
+            'libANGLE/renderer/null/CompilerNULL.cpp',
+            'libANGLE/renderer/null/CompilerNULL.h',
+            'libANGLE/renderer/null/ContextNULL.cpp',
+            'libANGLE/renderer/null/ContextNULL.h',
+            'libANGLE/renderer/null/DeviceNULL.cpp',
+            'libANGLE/renderer/null/DeviceNULL.h',
+            'libANGLE/renderer/null/DisplayNULL.cpp',
+            'libANGLE/renderer/null/DisplayNULL.h',
+            'libANGLE/renderer/null/FenceNVNULL.cpp',
+            'libANGLE/renderer/null/FenceNVNULL.h',
+            'libANGLE/renderer/null/FenceSyncNULL.cpp',
+            'libANGLE/renderer/null/FenceSyncNULL.h',
+            'libANGLE/renderer/null/FramebufferNULL.cpp',
+            'libANGLE/renderer/null/FramebufferNULL.h',
+            'libANGLE/renderer/null/ImageNULL.cpp',
+            'libANGLE/renderer/null/ImageNULL.h',
+            'libANGLE/renderer/null/PathNULL.cpp',
+            'libANGLE/renderer/null/PathNULL.h',
+            'libANGLE/renderer/null/ProgramNULL.cpp',
+            'libANGLE/renderer/null/ProgramNULL.h',
+            'libANGLE/renderer/null/QueryNULL.cpp',
+            'libANGLE/renderer/null/QueryNULL.h',
+            'libANGLE/renderer/null/RenderbufferNULL.cpp',
+            'libANGLE/renderer/null/RenderbufferNULL.h',
+            'libANGLE/renderer/null/SamplerNULL.cpp',
+            'libANGLE/renderer/null/SamplerNULL.h',
+            'libANGLE/renderer/null/ShaderNULL.cpp',
+            'libANGLE/renderer/null/ShaderNULL.h',
+            'libANGLE/renderer/null/SurfaceNULL.cpp',
+            'libANGLE/renderer/null/SurfaceNULL.h',
+            'libANGLE/renderer/null/TextureNULL.cpp',
+            'libANGLE/renderer/null/TextureNULL.h',
+            'libANGLE/renderer/null/TransformFeedbackNULL.cpp',
+            'libANGLE/renderer/null/TransformFeedbackNULL.h',
+            'libANGLE/renderer/null/VertexArrayNULL.cpp',
+            'libANGLE/renderer/null/VertexArrayNULL.h',
+        ],
         'libglesv2_sources':
         [
             'common/angleutils.h',
@@ -959,6 +1000,17 @@
                     'defines':
                     [
                         'ANGLE_ENABLE_VULKAN',
+                    ],
+                }],
+                ['angle_enable_null==1',
+                {
+                    'sources':
+                    [
+                        '<@(libangle_null_sources)',
+                    ],
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_NULL',
                     ],
                 }],
                 ['angle_build_winrt==0 and OS=="win"',
