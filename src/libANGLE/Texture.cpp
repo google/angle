@@ -301,9 +301,13 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    if (baseImageDesc.format.info->depthBits > 0 && data.getClientMajorVersion() > 2)
+    if (baseImageDesc.format.info->depthBits > 0 && data.getClientMajorVersion() >= 3)
     {
-        if (samplerState.compareMode == GL_NONE)
+        // Note: we restrict this validation to sized types. For the OES_depth_textures
+        // extension, due to some underspecification problems, we must allow linear filtering
+        // for legacy compatibility with WebGL 1.
+        // See http://crbug.com/649200
+        if (samplerState.compareMode == GL_NONE && baseImageDesc.format.sized)
         {
             if ((samplerState.minFilter != GL_NEAREST &&
                  samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
