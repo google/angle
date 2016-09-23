@@ -1177,6 +1177,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_e5fdc155",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-09-23T11:20:36Z",
+      "side": 1,
+      "message": "For a block with packed layout, if none member of it is referenced, it will be inactive according to the spec. In this case, blockName3 is inactive since it\u0027s packed layout and its member is unreferenced. blockName2 is active since it\u0027s shared layout.\nIn summary, based on the spec, the compiler does *not* optimize out unreferenced blocks with std140/shared layout. But it optimizes out unreferenced blocks with packed layout.",
+      "parentUuid": "10045b97_b5334a19",
+      "revId": "0ecbd8930d29928bdaee8deca4feff35e77f94c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_eb0297ad",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 2
