@@ -197,6 +197,17 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                             }
                             break;
 
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+                            if (!clientExtensions.platformANGLENULL)
+                            {
+                                SetGlobalError(Error(EGL_BAD_ATTRIBUTE,
+                                                     "Display type "
+                                                     "EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE "
+                                                     "requires EGL_ANGLE_platform_angle_null."));
+                                return EGL_NO_DISPLAY;
+                            }
+                            break;
+
                         default:
                         SetGlobalError(Error(EGL_BAD_ATTRIBUTE));
                         return EGL_NO_DISPLAY;

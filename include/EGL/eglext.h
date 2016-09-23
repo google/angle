@@ -526,6 +526,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglQuerySurfacePointerANGLE (EGLDisplay dpy, EGLSu
 #define EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE 0x320E
 #endif /* EGL_ANGLE_platform_angle_opengl */
 
+#ifndef EGL_ANGLE_platform_angle_null
+#define EGL_ANGLE_platform_angle_null 1
+#define EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE 0x33AE
+#endif /* EGL_ANGLE_platform_angle_null */
+
 #ifndef EGL_ANGLE_window_fixed_size
 #define EGL_ANGLE_window_fixed_size 1
 #define EGL_FIXED_SIZE_ANGLE              0x3201

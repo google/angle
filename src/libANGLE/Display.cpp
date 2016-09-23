@@ -53,6 +53,10 @@
 #   endif
 #endif
 
+#if defined(ANGLE_ENABLE_NULL)
+#include "libANGLE/renderer/null/DisplayNULL.h"
+#endif
+
 namespace egl
 {
 
@@ -207,6 +211,12 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
         impl = nullptr;
 #endif
         break;
+#endif
+
+#if defined(ANGLE_ENABLE_NULL)
+      case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
+          impl = new rx::DisplayNULL();
+          break;
 #endif
 
       default:
@@ -872,6 +882,10 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_ENABLE_OPENGL)
     extensions.platformANGLEOpenGL = true;
+#endif
+
+#if defined(ANGLE_ENABLE_NULL)
+    extensions.platformANGLENULL = true;
 #endif
 
 #if defined(ANGLE_ENABLE_D3D11)
