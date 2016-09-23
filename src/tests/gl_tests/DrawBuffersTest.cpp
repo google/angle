@@ -256,6 +256,13 @@ TEST_P(DrawBuffersTest, Gaps)
         return;
     }
 
+    if (IsWindows() && IsAMD() && IsDesktopOpenGL())
+    {
+        // TODO(ynovikov): Investigate the failure (http://anglebug.com/1535)
+        std::cout << "Test disabled on Windows AMD OpenGL." << std::endl;
+        return;
+    }
+
     glBindTexture(GL_TEXTURE_2D, mTextures[0]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
 
