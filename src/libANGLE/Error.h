@@ -110,6 +110,11 @@ class Error final
     mutable std::unique_ptr<std::string> mMessage;
 };
 
+inline Error NoError()
+{
+    return Error(EGL_SUCCESS);
+}
+
 }  // namespace egl
 
 #define ANGLE_CONCAT1(x, y) x##y

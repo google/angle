@@ -9,6 +9,7 @@
 
 #include "angle_gl.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/Version.h"
 
 #include <map>
 #include <set>
@@ -18,6 +19,8 @@
 
 namespace gl
 {
+
+struct Extensions;
 
 typedef std::set<GLuint> SupportedSampleSet;
 
@@ -45,6 +48,10 @@ struct TextureCaps
     GLuint getNearestSamples(GLuint requestedSamples) const;
 };
 
+TextureCaps GenerateMinimumTextureCaps(GLenum internalFormat,
+                                       const Version &clientVersion,
+                                       const Extensions &extensions);
+
 class TextureCapsMap
 {
   public:
@@ -65,6 +72,9 @@ class TextureCapsMap
     typedef std::map<GLenum, TextureCaps> InternalFormatToCapsMap;
     InternalFormatToCapsMap mCapsMap;
 };
+
+TextureCapsMap GenerateMinimumTextureCapsMap(const Version &clientVersion,
+                                             const Extensions &extensions);
 
 struct Extensions
 {
@@ -374,11 +384,12 @@ struct TypePrecision
 
     void setIEEEFloat();
     void setTwosComplementInt(unsigned int bits);
+    void setSimulatedFloat(unsigned int range, unsigned int precision);
     void setSimulatedInt(unsigned int range);
 
     void get(GLint *returnRange, GLint *returnPrecision) const;
 
-    GLint range[2];
+    std::array<GLint, 2> range;
     GLint precision;
 };
 
@@ -510,6 +521,7 @@ struct Caps
     GLuint maxSamples;
 };
 
+Caps GenerateMinimumCaps(const Version &clientVersion);
 }
 
 namespace egl

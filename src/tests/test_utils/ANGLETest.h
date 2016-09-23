@@ -246,6 +246,7 @@ bool IsD3DSM3();
 bool IsDesktopOpenGL();
 bool IsOpenGLES();
 bool IsOpenGL();
+bool IsNULL();
 
 // Operating systems
 bool IsAndroid();

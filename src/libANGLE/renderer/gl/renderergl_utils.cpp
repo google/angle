@@ -162,7 +162,8 @@ static GLfloat QueryGLFloatRange(const FunctionsGL *functions, GLenum name, size
 static gl::TypePrecision QueryTypePrecision(const FunctionsGL *functions, GLenum shaderType, GLenum precisionType)
 {
     gl::TypePrecision precision;
-    functions->getShaderPrecisionFormat(shaderType, precisionType, precision.range, &precision.precision);
+    functions->getShaderPrecisionFormat(shaderType, precisionType, precision.range.data(),
+                                        &precision.precision);
     return precision;
 }
 
