@@ -792,3 +792,35 @@ TEST_F(ConstantFoldingTest, FoldNonSquareOuterProduct)
     std::vector<float> result(outputElements, outputElements + 6);
     ASSERT_TRUE(constantColumnMajorMatrixFoundInAST(result));
 }
+
+// Test that folding bit shift left with non-matching signedness works.
+TEST_F(ConstantFoldingTest, FoldBitShiftLeftDifferentSignedness)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    uint u = 0xffffffffu << 31;\n"
+        "    my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0x80000000u));
+}
+
+// Test that folding bit shift right with non-matching signedness works.
+TEST_F(ConstantFoldingTest, FoldBitShiftRightDifferentSignedness)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    uint u = 0xffffffffu >> 30;\n"
+        "    my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0x3u));
+}

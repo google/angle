@@ -2553,3 +2553,19 @@ TEST_F(MalformedShaderTest, VariableDeclarationWithInvariantAndLayoutQualifierES
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Bit shift with a rhs value > 31 has an undefined result in the GLSL spec. We disallow it.
+// ESSL 3.00.6 section 5.9.
+TEST_F(MalformedShaderTest, ShiftBy32)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "void main() {\n"
+        "   uint u = 1u << 32u;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
