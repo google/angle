@@ -49,6 +49,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_b33ce51d",
+        "filename": "src/compiler/preprocessor/Macro.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-26T16:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "706bd79b_d392394d",
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_ab7a5f4b",
         "filename": "src/compiler/preprocessor/MacroExpander.cpp",
         "patchSetId": 1
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_33c1b5f8",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-26T16:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70c1171d_ab7a5f4b",
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_0b604ba3",
         "filename": "src/compiler/preprocessor/MacroExpander.h",
         "patchSetId": 1
@@ -89,6 +125,24 @@
         "endLine": 23,
         "endChar": 34
       },
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_d339592d",
+        "filename": "src/compiler/preprocessor/MacroExpander.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-26T16:39:18Z",
+      "side": 1,
+      "message": "I was mindlessly changing PP_DISALLOW_COPY_AND_ASSIGN to angle::NonCopyable.\nDone.",
+      "parentUuid": "70c1171d_0b604ba3",
       "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
