@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_d392394d",
+        "filename": "src/compiler/preprocessor/Macro.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-26T16:25:54Z",
+      "side": 1,
+      "message": "Alternatively, make a templated helper function in common that does this pattern with the ostringstream.",
+      "parentUuid": "70c1171d_6b5b07f4",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 31
+      },
+      "revId": "4cda2790b5f70a71bcadf6454f7b0f761b55a803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70c1171d_ab7a5f4b",
         "filename": "src/compiler/preprocessor/MacroExpander.cpp",
         "patchSetId": 1
