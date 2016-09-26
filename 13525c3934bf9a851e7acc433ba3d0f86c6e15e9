@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "706bd79b_d34f9984",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-26T16:58:22Z",
+      "side": 1,
+      "message": "nit: a line explaining the context (for overlapping pack buffers) wouldn\u0027t hurt",
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_332ff5b0",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-26T16:58:22Z",
+      "side": 1,
+      "message": "does this share code with other parts of the validation/etc? I feel like it\u0027s similar to something in a prior CL.",
+      "range": {
+        "startLine": 35,
+        "startChar": 24,
+        "endLine": 35,
+        "endChar": 59
+      },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_931e0179",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-26T16:58:22Z",
+      "side": 1,
+      "message": "don\u0027t reassign to parameters - make new temporaries. this can lead to subtle nasty bugs.",
+      "range": {
+        "startLine": 284,
+        "startChar": 4,
+        "endLine": 284,
+        "endChar": 10
+      },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
