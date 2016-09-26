@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "706bd79b_b0ae9b85",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-26T14:05:44Z",
+      "side": 1,
+      "message": "this is undefined/implementation-dependent in c++, so I think we should disallow it.",
+      "parentUuid": "706bd79b_3079ab21",
+      "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "706bd79b_9c91b353",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-09-26T13:50:01Z",
       "side": 1,
       "message": "nit: return returnValue and dedent the else block.",
+      "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "706bd79b_30cb6b49",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-26T14:05:44Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "706bd79b_9c91b353",
       "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
