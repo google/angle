@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6556b716_4bc63943",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-26T14:28:28Z",
+      "side": 1,
+      "message": "Yep, it\u0027s implementation-dependent. http://stackoverflow.com/questions/1857928/right-shifting-negative-numbers-in-c",
+      "parentUuid": "706bd79b_b0ae9b85",
+      "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "706bd79b_9c91b353",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 1
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "2554bf0d_06127a65",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-26T14:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "706bd79b_9c91b353",
+      "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "706bd79b_b085bb09",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 1
@@ -100,6 +136,24 @@
       "writtenOn": "2016-09-26T13:50:01Z",
       "side": 1,
       "message": "Because there is no sign-extend I think both cases can be folded together.",
+      "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5850fca_62a7b613",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-26T14:28:28Z",
+      "side": 1,
+      "message": "As far as I remember accessing a different member through an union than the member that was last set is undefined. Better not to do it.",
+      "parentUuid": "706bd79b_9088b721",
       "revId": "236317a27d03262d6c976618cd7ab9a0a5d7e69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
