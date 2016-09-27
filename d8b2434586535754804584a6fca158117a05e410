@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ec8b0b_b3447b6f",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T17:39:14Z",
+      "side": 1,
+      "message": "can\u0027t you delete these?",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 12
+      },
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_337acbaf",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T17:39:14Z",
+      "side": 1,
+      "message": "confirmed with piman@ this is fine.",
+      "range": {
+        "startLine": 375,
+        "startChar": 24,
+        "endLine": 375,
+        "endChar": 33
+      },
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
