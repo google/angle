@@ -68,6 +68,29 @@
       "revId": "74886c72d1b0dc11bb61ab4b58029e4489c29ee0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_49635cd0",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-27T19:46:16Z",
+      "side": 1,
+      "message": "nit: already in the gl namespace (couple other instances of this too)",
+      "range": {
+        "startLine": 68,
+        "startChar": 53,
+        "endLine": 68,
+        "endChar": 57
+      },
+      "revId": "74886c72d1b0dc11bb61ab4b58029e4489c29ee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
