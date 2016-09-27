@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ec8b0b_fd441202",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T15:02:53Z",
+      "side": 1,
+      "message": "nit: can you open a bug for this and tag the description with BUG\u003dangleproject:####",
+      "revId": "25379548cf21cdda3e3311ff13ddb39ce8b52836",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
