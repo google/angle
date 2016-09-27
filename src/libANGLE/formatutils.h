@@ -49,39 +49,30 @@ struct InternalFormat
 
     GLuint computePixelBytes(GLenum formatType) const;
 
-    gl::ErrorOrResult<GLuint> computeRowPitch(GLenum formatType,
-                                              GLsizei width,
-                                              GLint alignment,
-                                              GLint rowLength) const;
-    gl::ErrorOrResult<GLuint> computeDepthPitch(GLenum formatType,
-                                                GLsizei width,
-                                                GLsizei height,
-                                                GLint alignment,
-                                                GLint rowLength,
-                                                GLint imageHeight) const;
-    gl::ErrorOrResult<GLuint> computeCompressedImageSize(GLenum formatType,
-                                                         const gl::Extents &size) const;
-    gl::ErrorOrResult<GLuint> computeSkipBytes(GLuint rowPitch,
-                                               GLuint depthPitch,
-                                               GLint skipImages,
-                                               GLint skipRows,
-                                               GLint skipPixels,
-                                               bool applySkipImages) const;
+    ErrorOrResult<GLuint> computeRowPitch(GLenum formatType,
+                                          GLsizei width,
+                                          GLint alignment,
+                                          GLint rowLength) const;
+    ErrorOrResult<GLuint> computeDepthPitch(GLenum formatType,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLint alignment,
+                                            GLint rowLength,
+                                            GLint imageHeight) const;
 
-    gl::ErrorOrResult<GLuint> computePackSize(GLenum formatType,
-                                              const gl::Extents &size,
-                                              const gl::PixelPackState &pack) const;
-    gl::ErrorOrResult<GLuint> computeUnpackSize(GLenum formatType,
-                                                const gl::Extents &size,
-                                                const gl::PixelUnpackState &unpack) const;
+    ErrorOrResult<GLuint> computeCompressedImageSize(GLenum formatType,
+                                                     const Extents &size) const;
 
-    gl::ErrorOrResult<GLuint> computePackEndByte(GLenum formatType,
-                                                 const gl::Extents &size,
-                                                 const gl::PixelPackState &pack) const;
-    gl::ErrorOrResult<GLuint> computeUnpackEndByte(GLenum formatType,
-                                                   const gl::Extents &size,
-                                                   const gl::PixelUnpackState &unpack,
-                                                   bool applySkipImages) const;
+    ErrorOrResult<GLuint> computeSkipBytes(GLuint rowPitch,
+                                           GLuint depthPitch,
+                                           const PixelStoreStateBase &state,
+                                           bool is3D) const;
+
+    ErrorOrResult<GLuint> computePackUnpackEndByte(GLenum formatType,
+                                                       const Extents &size,
+                                                       const PixelStoreStateBase &state,
+                                                       bool is3D) const;
+
     bool isLUMA() const;
     GLenum getReadPixelsFormat() const;
     GLenum getReadPixelsType() const;
@@ -282,7 +273,7 @@ enum VertexFormatType
     VERTEX_FORMAT_UINT210_INT,
 };
 
-typedef std::vector<gl::VertexFormatType> InputLayout;
+typedef std::vector<VertexFormatType> InputLayout;
 
 struct VertexFormat : angle::NonCopyable
 {

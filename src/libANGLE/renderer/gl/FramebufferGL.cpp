@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "platform/Platform.h"
 
 using namespace gl;
@@ -29,50 +30,6 @@ using angle::CheckedNumeric;
 
 namespace rx
 {
-
-namespace
-{
-gl::ErrorOrResult<bool> ShouldApplyLastRowPaddingWorkaround(const gl::Rectangle &area,
-                                                            const gl::PixelPackState &pack,
-                                                            GLenum format,
-                                                            GLenum type,
-                                                            const void *pixels)
-{
-    if (pack.pixelBuffer.get() == nullptr)
-    {
-        return false;
-    }
-
-    // We are using an pack buffer, compute what the driver thinks is going to be the last
-    // byte written. If it is past the end of the buffer, we will need to use the workaround
-    // otherwise the driver will generate INVALID_OPERATION.
-    CheckedNumeric<size_t> checkedEndByte;
-    CheckedNumeric<size_t> pixelBytes;
-    size_t rowPitch;
-
-    gl::Extents size(area.width, area.height, 1);
-    const gl::InternalFormat &glFormat =
-        gl::GetInternalFormatInfo(gl::GetSizedInternalFormat(format, type));
-    ANGLE_TRY_RESULT(glFormat.computePackEndByte(type, size, pack), checkedEndByte);
-    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
-                     rowPitch);
-    pixelBytes = glFormat.computePixelBytes(type);
-
-    checkedEndByte += reinterpret_cast<intptr_t>(pixels);
-
-    // At this point checkedEndByte is the actual last byte written.
-    // The driver adds an extra row padding (if any), mimic it.
-    ANGLE_TRY_CHECKED_MATH(pixelBytes);
-    if (pixelBytes.ValueOrDie() * size.width < rowPitch)
-    {
-        checkedEndByte += rowPitch - pixelBytes * size.width;
-    }
-
-    ANGLE_TRY_CHECKED_MATH(checkedEndByte);
-
-    return checkedEndByte.ValueOrDie() > static_cast<size_t>(pack.pixelBuffer->getSize());
-}
-}  // anonymous namespace
 
 FramebufferGL::FramebufferGL(const FramebufferState &state,
                              const FunctionsGL *functions,
@@ -294,10 +251,12 @@ Error FramebufferGL::readPixels(ContextImpl *context,
 
     if (mWorkarounds.packLastRowSeparatelyForPaddingInclusion)
     {
+        gl::Extents size(area.width, area.height, 1);
+
         bool apply;
-        ANGLE_TRY_RESULT(
-            ShouldApplyLastRowPaddingWorkaround(area, packState, readFormat, readType, pixels),
-            apply);
+        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(size, packState, readFormat, readType,
+                                                             false, pixels),
+                         apply);
 
         if (apply)
         {
@@ -476,9 +435,7 @@ gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Rectangle &area,
     ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
                      rowBytes);
     GLuint skipBytes = 0;
-    ANGLE_TRY_RESULT(
-        glFormat.computeSkipBytes(rowBytes, 0, 0, pack.skipRows, pack.skipPixels, false),
-        skipBytes);
+    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, pack, false), skipBytes);
 
     gl::PixelPackState directPack;
     directPack.pixelBuffer = pack.pixelBuffer;
@@ -509,9 +466,7 @@ gl::Error FramebufferGL::readPixelsPaddingWorkaround(const gl::Rectangle &area,
     ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
                      rowBytes);
     GLuint skipBytes = 0;
-    ANGLE_TRY_RESULT(
-        glFormat.computeSkipBytes(rowBytes, 0, 0, pack.skipRows, pack.skipPixels, false),
-        skipBytes);
+    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, pack, false), skipBytes);
 
     // Get all by the last row
     if (area.height > 1)

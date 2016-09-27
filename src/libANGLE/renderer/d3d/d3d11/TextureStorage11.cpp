@@ -630,8 +630,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
                      srcDepthPitch);
     GLuint srcSkipBytes = 0;
     ANGLE_TRY_RESULT(
-        internalFormatInfo.computeSkipBytes(srcRowPitch, srcDepthPitch, unpack.skipImages,
-                                            unpack.skipRows, unpack.skipPixels, index.is3D()),
+        internalFormatInfo.computeSkipBytes(srcRowPitch, srcDepthPitch, unpack, index.is3D()),
         srcSkipBytes);
 
     const d3d11::Format &d3d11Format =

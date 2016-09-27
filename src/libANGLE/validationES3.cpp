@@ -487,7 +487,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
         const auto &unpack = context->getGLState().getUnpackState();
 
         bool targetIs3D     = target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY;
-        auto endByteOrErr   = formatInfo.computeUnpackEndByte(type, size, unpack, targetIs3D);
+        auto endByteOrErr   = formatInfo.computePackUnpackEndByte(type, size, unpack, targetIs3D);
         if (endByteOrErr.isError())
         {
             context->handleError(endByteOrErr.getError());

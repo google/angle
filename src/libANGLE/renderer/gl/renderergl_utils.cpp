@@ -11,6 +11,8 @@
 
 #include <limits>
 
+#include "common/mathutil.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -19,6 +21,8 @@
 
 #include <algorithm>
 #include <sstream>
+
+using angle::CheckedNumeric;
 
 namespace rx
 {
@@ -967,5 +971,46 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
         UNREACHABLE();
         return nullptr;
     }
+}
+
+gl::ErrorOrResult<bool> ShouldApplyLastRowPaddingWorkaround(const gl::Extents &size,
+                                                            const gl::PixelStoreStateBase &state,
+                                                            GLenum format,
+                                                            GLenum type,
+                                                            bool is3D,
+                                                            const void *pixels)
+{
+    if (state.pixelBuffer.get() == nullptr)
+    {
+        return false;
+    }
+
+    // We are using an pack or unpack buffer, compute what the driver thinks is going to be the
+    // last byte read or written. If it is past the end of the buffer, we will need to use the
+    // workaround otherwise the driver will generate INVALID_OPERATION and not do the operation.
+    CheckedNumeric<size_t> checkedEndByte;
+    CheckedNumeric<size_t> pixelBytes;
+    size_t rowPitch;
+
+    const gl::InternalFormat &glFormat =
+        gl::GetInternalFormatInfo(gl::GetSizedInternalFormat(format, type));
+    ANGLE_TRY_RESULT(glFormat.computePackUnpackEndByte(type, size, state, is3D), checkedEndByte);
+    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, size.width, state.alignment, state.rowLength),
+                     rowPitch);
+    pixelBytes = glFormat.computePixelBytes(type);
+
+    checkedEndByte += reinterpret_cast<intptr_t>(pixels);
+
+    // At this point checkedEndByte is the actual last byte read.
+    // The driver adds an extra row padding (if any), mimic it.
+    ANGLE_TRY_CHECKED_MATH(pixelBytes);
+    if (pixelBytes.ValueOrDie() * size.width < rowPitch)
+    {
+        checkedEndByte += rowPitch - pixelBytes * size.width;
+    }
+
+    ANGLE_TRY_CHECKED_MATH(checkedEndByte);
+
+    return checkedEndByte.ValueOrDie() > static_cast<size_t>(state.pixelBuffer->getSize());
 }
 }

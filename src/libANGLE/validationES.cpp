@@ -1179,7 +1179,7 @@ bool ValidateReadPixels(ValidationContext *context,
         const gl::Extents size(width, height, 1);
         const auto &pack = context->getGLState().getPackState();
 
-        auto endByteOrErr = formatInfo.computePackEndByte(type, size, pack);
+        auto endByteOrErr = formatInfo.computePackUnpackEndByte(type, size, pack, false);
         if (endByteOrErr.isError())
         {
             context->handleError(endByteOrErr.getError());
@@ -1230,7 +1230,7 @@ bool ValidateReadnPixelsEXT(Context *context,
     const gl::Extents size(width, height, 1);
     const auto &pack = context->getGLState().getPackState();
 
-    auto endByteOrErr = formatInfo.computePackEndByte(type, size, pack);
+    auto endByteOrErr = formatInfo.computePackUnpackEndByte(type, size, pack, false);
     if (endByteOrErr.isError())
     {
         context->handleError(endByteOrErr.getError());

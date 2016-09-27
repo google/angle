@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "libANGLE/renderer/gl/renderergl_utils.h"
 
 using angle::CheckedNumeric;
 
@@ -89,50 +90,6 @@ LevelInfoGL GetLevelInfo(GLenum originalFormat, GLenum destinationFormat)
                        GetLUMAWorkaroundInfo(originalFormatInfo, destinationFormat));
 }
 
-gl::ErrorOrResult<bool> ShouldApplyLastRowPaddingWorkaround(const gl::Box &area,
-                                                            const gl::PixelUnpackState &unpack,
-                                                            GLenum format,
-                                                            GLenum type,
-                                                            bool useTexImage3D,
-                                                            const uint8_t *pixels)
-{
-    if (unpack.pixelBuffer.get() == nullptr)
-    {
-        return false;
-    }
-
-    // We are using an unpack buffer, compute what the driver thinks is going to be the last
-    // byte read. If it is past the end of the buffer, we will need to use the workaround
-    // otherwise the driver will generate INVALID_OPERATION and not do the texture specification
-    // and upload.
-    CheckedNumeric<size_t> checkedEndByte;
-    CheckedNumeric<size_t> pixelBytes;
-    size_t rowPitch;
-
-    gl::Extents size(area.width, area.height, area.depth);
-    const gl::InternalFormat &glFormat =
-        gl::GetInternalFormatInfo(gl::GetSizedInternalFormat(format, type));
-    ANGLE_TRY_RESULT(glFormat.computeUnpackEndByte(type, size, unpack, useTexImage3D),
-                     checkedEndByte);
-    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
-                     rowPitch);
-    pixelBytes = glFormat.computePixelBytes(type);
-
-    checkedEndByte += reinterpret_cast<intptr_t>(pixels);
-
-    // At this point checkedEndByte is the actual last byte read.
-    // The driver adds an extra row padding (if any), mimic it.
-    ANGLE_TRY_CHECKED_MATH(pixelBytes);
-    if (pixelBytes.ValueOrDie() * size.width < rowPitch)
-    {
-        checkedEndByte += rowPitch - pixelBytes * size.width;
-    }
-
-    ANGLE_TRY_CHECKED_MATH(checkedEndByte);
-
-    return checkedEndByte.ValueOrDie() > static_cast<size_t>(unpack.pixelBuffer->getSize());
-}
-
 }  // anonymous namespace
 
 LUMAWorkaroundGL::LUMAWorkaroundGL() : LUMAWorkaroundGL(false, GL_NONE)
@@ -185,8 +142,14 @@ TextureGL::~TextureGL()
     mTextureID = 0;
 }
 
-gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
-                              const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+gl::Error TextureGL::setImage(GLenum target,
+                              size_t level,
+                              GLenum internalFormat,
+                              const gl::Extents &size,
+                              GLenum format,
+                              GLenum type,
+                              const gl::PixelUnpackState &unpack,
+                              const uint8_t *pixels)
 {
     if (mWorkarounds.unpackOverlappingRowsSeparatelyUnpackBuffer && unpack.pixelBuffer.get() &&
         unpack.rowLength != 0 && unpack.rowLength < size.width)
@@ -207,8 +170,7 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
     if (mWorkarounds.unpackLastRowSeparatelyForPaddingInclusion)
     {
         bool apply;
-        gl::Box area(0, 0, 0, size.width, size.height, size.depth);
-        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(area, unpack, format, type,
+        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(size, unpack, format, type,
                                                              UseTexImage3D(mState.mTarget), pixels),
                          apply);
 
@@ -223,6 +185,7 @@ gl::Error TextureGL::setImage(GLenum target, size_t level, GLenum internalFormat
                 return gl::NoError();
             }
 
+            gl::Box area(0, 0, 0, size.width, size.height, size.depth);
             return setSubImagePaddingWorkaround(target, level, area, format, type, unpack, pixels);
         }
     }
@@ -303,8 +266,10 @@ gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &are
 
     if (mWorkarounds.unpackLastRowSeparatelyForPaddingInclusion)
     {
+        gl::Extents size(area.width, area.height, area.depth);
+
         bool apply;
-        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(area, unpack, format, type,
+        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(size, unpack, format, type,
                                                              UseTexImage3D(mState.mTarget), pixels),
                          apply);
 
@@ -359,8 +324,7 @@ gl::Error TextureGL::setSubImageRowByRowWorkaround(GLenum target,
                      imageBytes);
     bool useTexImage3D = UseTexImage3D(mState.mTarget);
     GLuint skipBytes   = 0;
-    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, imageBytes, unpack.skipImages,
-                                               unpack.skipRows, unpack.skipPixels, useTexImage3D),
+    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, imageBytes, unpack, useTexImage3D),
                      skipBytes);
 
     const uint8_t *pixelsWithSkip = pixels + skipBytes;
@@ -412,8 +376,7 @@ gl::Error TextureGL::setSubImagePaddingWorkaround(GLenum target,
                      imageBytes);
     bool useTexImage3D = UseTexImage3D(mState.mTarget);
     GLuint skipBytes   = 0;
-    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, imageBytes, unpack.skipImages,
-                                               unpack.skipRows, unpack.skipPixels, useTexImage3D),
+    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, imageBytes, unpack, useTexImage3D),
                      skipBytes);
 
     gl::PixelUnpackState directUnpack;
