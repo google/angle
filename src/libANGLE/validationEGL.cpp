@@ -1576,4 +1576,52 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
 
     return stream->validateD3D11NV12Texture(texture);
 }
+
+Error ValidateGetSyncValuesCHROMIUM(const Display *display,
+                                    const Surface *surface,
+                                    const EGLuint64KHR *ust,
+                                    const EGLuint64KHR *msc,
+                                    const EGLuint64KHR *sbc)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    if (!displayExtensions.getSyncValues)
+    {
+        return Error(EGL_BAD_ACCESS, "getSyncValues extension not active");
+    }
+
+    if (display->isDeviceLost())
+    {
+        return Error(EGL_CONTEXT_LOST, "Context is lost.");
+    }
+
+    if (surface == EGL_NO_SURFACE)
+    {
+        return Error(EGL_BAD_SURFACE, "getSyncValues surface cannot be EGL_NO_SURFACE");
+    }
+
+    if (!surface->directComposition())
+    {
+        return Error(EGL_BAD_SURFACE,
+                     "getSyncValues surface requires Direct Composition to be enabled");
+    }
+
+    if (ust == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "ust is null");
+    }
+
+    if (msc == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "msc is null");
+    }
+
+    if (sbc == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "sbc is null");
+    }
+
+    return Error(EGL_SUCCESS);
+}
 }  // namespace gl

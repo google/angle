@@ -35,6 +35,7 @@ class MockSurfaceImpl : public rx::SurfaceImpl
     MOCK_METHOD2(querySurfacePointerANGLE, egl::Error(EGLint, void**));
     MOCK_METHOD2(bindTexImage, egl::Error(gl::Texture*, EGLint));
     MOCK_METHOD1(releaseTexImage, egl::Error(EGLint));
+    MOCK_METHOD3(getSyncValues, egl::Error(EGLuint64KHR *, EGLuint64KHR *, EGLuint64KHR *));
     MOCK_METHOD1(setSwapInterval, void(EGLint));
     MOCK_CONST_METHOD0(getWidth, EGLint());
     MOCK_CONST_METHOD0(getHeight, EGLint());

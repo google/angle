@@ -601,6 +601,9 @@ struct DisplayExtensions
 
     // EGL_CHROMIUM_create_context_bind_generates_resource
     bool createContextBindGeneratesResource;
+
+    // EGL_CHROMIUM_get_sync_values
+    bool getSyncValues;
 };
 
 struct DeviceExtensions

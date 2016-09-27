@@ -95,6 +95,11 @@ egl::Error SurfaceD3D::releaseTexImage(EGLint)
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error SurfaceD3D::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
+{
+    return mSwapChain->getSyncValues(ust, msc, sbc);
+}
+
 egl::Error SurfaceD3D::resetSwapChain()
 {
     ASSERT(!mSwapChain);

@@ -12,9 +12,11 @@
 
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include <EGL/eglext.h>
 
 #include "common/angleutils.h"
 #include "common/platform.h"
+#include "libANGLE/Error.h"
 
 #if !defined(ANGLE_FORCE_VSYNC_OFF)
 #define ANGLE_FORCE_VSYNC_OFF 0
@@ -49,6 +51,8 @@ class SwapChainD3D : angle::NonCopyable
 
     HANDLE getShareHandle() { return mShareHandle; }
     virtual void *getKeyedMutex() = 0;
+
+    virtual egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) = 0;
 
   protected:
     const GLenum mOffscreenRenderTargetFormat;

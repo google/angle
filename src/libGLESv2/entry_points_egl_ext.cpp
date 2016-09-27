@@ -895,4 +895,36 @@ EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy,
     SetGlobalError(error);
     return EGL_TRUE;
 }
+
+EGLBoolean EGLAPIENTRY GetSyncValuesCHROMIUM(EGLDisplay dpy,
+                                             EGLSurface surface,
+                                             EGLuint64KHR *ust,
+                                             EGLuint64KHR *msc,
+                                             EGLuint64KHR *sbc)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLuint64KHR* ust = 0x%0.8p, "
+        "EGLuint64KHR* msc = 0x%0.8p, EGLuint64KHR* sbc = 0x%0.8p",
+        dpy, surface, ust, msc, sbc);
+
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
+
+    Error error = ValidateGetSyncValuesCHROMIUM(display, eglSurface, ust, msc, sbc);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    error = eglSurface->getSyncValues(ust, msc, sbc);
+    if (error.isError())
+    {
+        SetGlobalError(error);
+        return EGL_FALSE;
+    }
+
+    SetGlobalError(error);
+    return EGL_TRUE;
+}
 }

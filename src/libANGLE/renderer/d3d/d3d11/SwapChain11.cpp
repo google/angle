@@ -33,6 +33,12 @@ namespace rx
 
 namespace
 {
+// To avoid overflow in QPC to Microseconds calculations, since we multiply
+// by kMicrosecondsPerSecond, then the QPC value should not exceed
+// (2^63 - 1) / 1E6. If it exceeds that threshold, we divide then multiply.
+static constexpr int64_t kQPCOverflowThreshold  = 0x8637BD05AF7;
+static constexpr int64_t kMicrosecondsPerSecond = 1000000;
+
 bool NeedsOffscreenTexture(Renderer11 *renderer, NativeWindow11 *nativeWindow, EGLint orientation)
 {
     // We don't need an offscreen texture if either orientation = INVERT_Y,
@@ -82,6 +88,14 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
 {
     // Sanity check that if present path fast is active then we're using the default orientation
     ASSERT(!mRenderer->presentPathFastEnabled() || orientation == 0);
+
+    // Get the performance counter
+    LARGE_INTEGER counterFreqency = {};
+    BOOL success                  = QueryPerformanceFrequency(&counterFreqency);
+    UNUSED_ASSERTION_VARIABLE(success);
+    ASSERT(success);
+
+    mQPCFrequency = counterFreqency.QuadPart;
 }
 
 SwapChain11::~SwapChain11()
@@ -875,6 +889,43 @@ ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
 void SwapChain11::recreate()
 {
     // possibly should use this method instead of reset
+}
+
+egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
+{
+    DXGI_FRAME_STATISTICS stats = {};
+    HRESULT result              = mSwapChain->GetFrameStatistics(&stats);
+
+    if (FAILED(result))
+    {
+        return egl::Error(EGL_BAD_ALLOC, "Failed to get frame statistics, result: 0x%X", result);
+    }
+
+    // Conversion from DXGI_FRAME_STATISTICS to the output values:
+    // stats.SyncRefreshCount -> msc
+    // stats.PresentCount -> sbc
+    // stats.SyncQPCTime -> ust with conversion to microseconds via QueryPerformanceFrequency
+    *msc = stats.SyncRefreshCount;
+    *sbc = stats.PresentCount;
+
+    LONGLONG syncQPCValue = stats.SyncQPCTime.QuadPart;
+    // If the QPC Value is below the overflow threshold, we proceed with
+    // simple multiply and divide.
+    if (syncQPCValue < kQPCOverflowThreshold)
+    {
+        *ust = syncQPCValue * kMicrosecondsPerSecond / mQPCFrequency;
+    }
+    else
+    {
+        // Otherwise, calculate microseconds in a round about manner to avoid
+        // overflow and precision issues.
+        int64_t wholeSeconds  = syncQPCValue / mQPCFrequency;
+        int64_t leftoverTicks = syncQPCValue - (wholeSeconds * mQPCFrequency);
+        *ust                  = wholeSeconds * kMicrosecondsPerSecond +
+               leftoverTicks * kMicrosecondsPerSecond / mQPCFrequency;
+    }
+
+    return egl::Error(EGL_SUCCESS);
 }
 
 }  // namespace rx

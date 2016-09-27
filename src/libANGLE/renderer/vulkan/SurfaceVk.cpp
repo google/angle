@@ -64,6 +64,12 @@ egl::Error SurfaceVk::releaseTexImage(EGLint buffer)
     return egl::Error(EGL_BAD_ACCESS);
 }
 
+egl::Error SurfaceVk::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_ACCESS);
+}
+
 void SurfaceVk::setSwapInterval(EGLint interval)
 {
     UNIMPLEMENTED();
