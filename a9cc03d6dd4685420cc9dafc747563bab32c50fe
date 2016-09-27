@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ec8b0b_7d83823e",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T14:55:59Z",
+      "side": 1,
+      "message": "did you try using the tried and true x !\u003d x expression?",
+      "range": {
+        "startLine": 39,
+        "startChar": 41,
+        "endLine": 39,
+        "endChar": 87
+      },
+      "revId": "a9cc03d6dd4685420cc9dafc747563bab32c50fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_dd226e60",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T14:55:59Z",
+      "side": 1,
+      "message": "same for these",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 77
+      },
+      "revId": "a9cc03d6dd4685420cc9dafc747563bab32c50fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_bd27aa6e",
+        "filename": "src/libANGLE/renderer/d3d/WorkaroundsD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T14:55:59Z",
+      "side": 1,
+      "message": "nit: link to the crbug here",
+      "range": {
+        "startLine": 94,
+        "startChar": 58,
+        "endLine": 94,
+        "endChar": 63
+      },
+      "revId": "a9cc03d6dd4685420cc9dafc747563bab32c50fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
