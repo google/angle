@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ec8b0b_7d0a62dc",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T14:58:12Z",
+      "side": 1,
+      "message": "let\u0027s make this an error. I don\u0027t think we want to ever allow this kind of undefined folding.",
+      "range": {
+        "startLine": 1233,
+        "startChar": 45,
+        "endLine": 1233,
+        "endChar": 52
+      },
+      "revId": "09da4f2e7aee187189d89eab431c79255aafb192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
