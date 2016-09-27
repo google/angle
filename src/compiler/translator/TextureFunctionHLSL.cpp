@@ -393,41 +393,22 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
     {
         switch (textureFunction.sampler)
         {
-            case EbtSampler2D:
-                out << ", int2 offset";
-                break;
             case EbtSampler3D:
-                out << ", int3 offset";
-                break;
-            case EbtSampler2DArray:
-                out << ", int2 offset";
-                break;
-            case EbtISampler2D:
-                out << ", int2 offset";
-                break;
             case EbtISampler3D:
-                out << ", int3 offset";
-                break;
-            case EbtISampler2DArray:
-                out << ", int2 offset";
-                break;
-            case EbtUSampler2D:
-                out << ", int2 offset";
-                break;
             case EbtUSampler3D:
                 out << ", int3 offset";
                 break;
+            case EbtSampler2D:
+            case EbtSampler2DArray:
+            case EbtISampler2D:
+            case EbtISampler2DArray:
+            case EbtUSampler2D:
             case EbtUSampler2DArray:
-                out << ", int2 offset";
-                break;
             case EbtSampler2DShadow:
-                out << ", int2 offset";
-                break;
             case EbtSampler2DArrayShadow:
-                out << ", int2 offset";
-                break;
             case EbtSamplerExternalOES:
                 out << ", int2 offset";
+                break;
             default:
                 UNREACHABLE();
         }
