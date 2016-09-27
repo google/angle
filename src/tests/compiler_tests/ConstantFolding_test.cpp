@@ -843,3 +843,123 @@ TEST_F(ConstantFoldingTest, FoldDivideMinimumIntegerByMinusOne)
     compile(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x7fffffff) || constantFoundInAST(-0x7fffffff - 1));
 }
+
+// Test that folding an unsigned integer addition that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldUnsignedIntegerAddOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    uint u = 0xffffffffu + 43u;\n"
+        "    my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(42u));
+}
+
+// Test that folding a signed integer addition that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldSignedIntegerAddOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = 0x7fffffff + 4;\n"
+        "    my_FragColor = vec4(i);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(-0x7ffffffd));
+}
+
+// Test that folding an unsigned integer subtraction that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldUnsignedIntegerDiffOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    uint u = 0u - 5u;\n"
+        "    my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0xfffffffbu));
+}
+
+// Test that folding a signed integer subtraction that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldSignedIntegerDiffOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = -0x7fffffff - 7;\n"
+        "    my_FragColor = vec4(i);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0x7ffffffa));
+}
+
+// Test that folding an unsigned integer multiplication that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldUnsignedIntegerMultiplyOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    uint u = 0xffffffffu * 10u;\n"
+        "    my_FragColor = vec4(u);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0xfffffff6u));
+}
+
+// Test that folding a signed integer multiplication that overflows works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldSignedIntegerMultiplyOverflow)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = 0x7fffffff * 42;\n"
+        "    my_FragColor = vec4(i);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(-42));
+}
