@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "853acb53_21bb6edd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-27T16:54:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "706bd79b_d34f9984",
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "706bd79b_332ff5b0",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
         "endLine": 35,
         "endChar": 59
       },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "853acb53_41b8f2dd",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-27T16:54:53Z",
+      "side": 1,
+      "message": "Will make it shared in a follow-up commit, as it will need more refactors of formatutils.cpp",
+      "parentUuid": "706bd79b_332ff5b0",
       "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -106,6 +142,24 @@
         "endLine": 486,
         "endChar": 19
       },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "853acb53_e1a346ad",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-27T16:54:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85ec8b0b_ddd5ce3e",
       "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
