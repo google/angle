@@ -16,6 +16,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
@@ -35,11 +36,13 @@ FramebufferGL::FramebufferGL(const FramebufferState &state,
                              const FunctionsGL *functions,
                              StateManagerGL *stateManager,
                              const WorkaroundsGL &workarounds,
+                             BlitGL *blitter,
                              bool isDefault)
     : FramebufferImpl(state),
       mFunctions(functions),
       mStateManager(stateManager),
       mWorkarounds(workarounds),
+      mBlitter(blitter),
       mFramebufferID(0),
       mIsDefault(isDefault)
 {
@@ -53,11 +56,13 @@ FramebufferGL::FramebufferGL(GLuint id,
                              const FramebufferState &state,
                              const FunctionsGL *functions,
                              const WorkaroundsGL &workarounds,
+                             BlitGL *blitter,
                              StateManagerGL *stateManager)
     : FramebufferImpl(state),
       mFunctions(functions),
       mStateManager(stateManager),
       mWorkarounds(workarounds),
+      mBlitter(blitter),
       mFramebufferID(id),
       mIsDefault(true)
 {
@@ -276,15 +281,81 @@ Error FramebufferGL::blit(ContextImpl *context,
                           GLenum filter)
 {
     const Framebuffer *sourceFramebuffer     = context->getGLState().getReadFramebuffer();
-    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
+    const Framebuffer *destFramebuffer       = context->getGLState().getDrawFramebuffer();
 
+    bool needManualColorBlit = false;
+
+    // The manual SRGB blit is only needed to perform correct linear interpolation. We don't
+    // need to make sure there is SRGB conversion for NEAREST as the values will be copied.
+    if (filter != GL_NEAREST)
+    {
+
+        // Prior to OpenGL 4.4 BlitFramebuffer (section 18.3.1 of GL 4.3 core profile) reads:
+        //      When values are taken from the read buffer, no linearization is performed, even
+        //      if the format of the buffer is SRGB.
+        // Starting from OpenGL 4.4 (section 18.3.1) it reads:
+        //      When values are taken from the read buffer, if FRAMEBUFFER_SRGB is enabled and the
+        //      value of FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING for the framebuffer attachment
+        //      corresponding to the read buffer is SRGB, the red, green, and blue components are
+        //      converted from the non-linear sRGB color space according [...].
+        {
+            const FramebufferAttachment *readAttachment = sourceFramebuffer->getReadColorbuffer();
+            bool sourceSRGB =
+                readAttachment != nullptr && readAttachment->getColorEncoding() == GL_SRGB;
+            needManualColorBlit =
+                needManualColorBlit || (sourceSRGB && !mFunctions->isAtLeastGL(gl::Version(4, 4)));
+        }
+
+        // Prior to OpenGL 4.2 BlitFramebuffer (section 4.3.2 of GL 4.1 core profile) reads:
+        //      Blit operations bypass the fragment pipeline. The only fragment operations which
+        //      affect a blit are the pixel ownership test and scissor test.
+        // Starting from OpenGL 4.2 (section 4.3.2) it reads:
+        //      When values are written to the draw buffers, blit operations bypass the fragment
+        //      pipeline. The only fragment operations which affect a blit are the pixel ownership
+        //      test,  the scissor test and sRGB conversion.
+        if (!needManualColorBlit)
+        {
+            bool destSRGB = false;
+            for (size_t i = 0; i < destFramebuffer->getDrawbufferStateCount(); ++i)
+            {
+                const FramebufferAttachment *attachment = destFramebuffer->getDrawBuffer(i);
+                if (attachment && attachment->getColorEncoding() == GL_SRGB)
+                {
+                    destSRGB = true;
+                    break;
+                }
+            }
+
+            needManualColorBlit =
+                needManualColorBlit || (destSRGB && !mFunctions->isAtLeastGL(gl::Version(4, 2)));
+        }
+    }
+
+    // Enable FRAMEBUFFER_SRGB if needed
+    syncDrawState();
+
+    GLenum blitMask = mask;
+    if (needManualColorBlit && (mask & GL_COLOR_BUFFER_BIT))
+    {
+        ANGLE_TRY(mBlitter->blitColorBufferWithShader(sourceFramebuffer, destFramebuffer,
+                                                      sourceArea, destArea, filter));
+        blitMask &= ~GL_COLOR_BUFFER_BIT;
+    }
+
+    if (blitMask == 0)
+    {
+        return gl::NoError();
+    }
+
+    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(sourceFramebuffer);
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
     mStateManager->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebufferID);
 
     mFunctions->blitFramebuffer(sourceArea.x, sourceArea.y, sourceArea.x1(), sourceArea.y1(),
-                                destArea.x, destArea.y, destArea.x1(), destArea.y1(), mask, filter);
+                                destArea.x, destArea.y, destArea.x1(), destArea.y1(), blitMask,
+                                filter);
 
-    return Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 bool FramebufferGL::checkStatus() const
@@ -370,17 +441,17 @@ void FramebufferGL::syncClearState(GLbitfield mask)
         if (mWorkarounds.doesSRGBClearsOnLinearFramebufferAttachments &&
             (mask & GL_COLOR_BUFFER_BIT) != 0 && !mIsDefault)
         {
-            bool hasSRBAttachment = false;
+            bool hasSRGBAttachment = false;
             for (const auto &attachment : mState.getColorAttachments())
             {
                 if (attachment.isAttached() && attachment.getColorEncoding() == GL_SRGB)
                 {
-                    hasSRBAttachment = true;
+                    hasSRGBAttachment = true;
                     break;
                 }
             }
 
-            mStateManager->setFramebufferSRGBEnabled(hasSRBAttachment);
+            mStateManager->setFramebufferSRGBEnabled(hasSRGBAttachment);
         }
         else
         {

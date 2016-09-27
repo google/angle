@@ -44,6 +44,15 @@ struct Vector4
     float w;
 };
 
+struct Vector2
+{
+    Vector2() {}
+    Vector2(float x, float y) : x(x), y(y) {}
+
+    float x;
+    float y;
+};
+
 inline bool isPow2(int x)
 {
     return (x & (x - 1)) == 0 && (x != 0);
