@@ -22,6 +22,30 @@
       "revId": "09da4f2e7aee187189d89eab431c79255aafb192",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5faa7f1_9caba5de",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-27T15:20:36Z",
+      "side": 1,
+      "message": "I disagree with making this an error. The spec in this area looks largely up to interpretation, but it breaks some backwards compatibility to generate an error here. It will also increase risk of future backwards incompatibility. If the use of constant folding inside ANGLE is increased to cover more cases, some shaders that used to work before despite slight errors might start failing compilation if undefined cases like this generate errors.\n\nHowever, maybe we could consult the GLES working group about this, it would not hurt to clarify the spec language either (for example, what does a \"trap\" mean exactly in the context of shader compilation or execution).",
+      "parentUuid": "85ec8b0b_7d0a62dc",
+      "range": {
+        "startLine": 1233,
+        "startChar": 45,
+        "endLine": 1233,
+        "endChar": 52
+      },
+      "revId": "09da4f2e7aee187189d89eab431c79255aafb192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
