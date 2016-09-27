@@ -63,6 +63,10 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &data, const WorkaroundsD3D &workarou
     {
         mAdditionalOptions |= SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR;
     }
+    if (workarounds.emulateIsnanFloat)
+    {
+        mAdditionalOptions |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
+    }
 }
 
 ShaderD3D::~ShaderD3D()

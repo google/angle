@@ -65,6 +65,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_ADD_AND_TRUE_TO_LOOP_CONDITION;
     }
 
+    if (mWorkarounds.emulateIsnanFloat)
+    {
+        options |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
+    }
+
     return options;
 }
 

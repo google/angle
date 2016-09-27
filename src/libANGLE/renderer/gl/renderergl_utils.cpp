@@ -885,6 +885,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     workarounds->addAndTrueToLoopCondition = vendor == VENDOR_ID_INTEL;
 
+    workarounds->emulateIsnanFloat = vendor == VENDOR_ID_INTEL;
+
     workarounds->doesSRGBClearsOnLinearFramebufferAttachments =
         functions->standard == STANDARD_GL_DESKTOP &&
         (vendor == VENDOR_ID_INTEL || vendor == VENDOR_ID_AMD);

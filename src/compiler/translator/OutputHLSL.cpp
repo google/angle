@@ -161,6 +161,12 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
 
     BuiltInFunctionEmulator builtInFunctionEmulator;
     InitBuiltInFunctionEmulatorForHLSL(&builtInFunctionEmulator);
+    if ((mCompileOptions & SH_EMULATE_ISNAN_FLOAT_FUNCTION) != 0)
+    {
+        InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(&builtInFunctionEmulator,
+                                                           mShaderVersion);
+    }
+
     builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(treeRoot);
 
     // Now that we are done changing the AST, do the analyses need for HLSL generation
@@ -1299,9 +1305,12 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
           outputTriplet(out, visit, "frac(", "", ")");
           break;
       case EOpIsNan:
-          outputTriplet(out, visit, "isnan(", "", ")");
-        mRequiresIEEEStrictCompiling = true;
-        break;
+          if (node->getUseEmulatedFunction())
+              writeEmulatedFunctionTriplet(out, visit, "isnan(");
+          else
+              outputTriplet(out, visit, "isnan(", "", ")");
+          mRequiresIEEEStrictCompiling = true;
+          break;
       case EOpIsInf:
           outputTriplet(out, visit, "isinf(", "", ")");
           break;

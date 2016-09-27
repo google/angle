@@ -28,6 +28,11 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
         InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
     }
 
+    if (compileOptions & SH_EMULATE_ISNAN_FLOAT_FUNCTION)
+    {
+        InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(emu, getShaderVersion());
+    }
+
     int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
     InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
 }

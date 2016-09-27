@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 161
+#define ANGLE_SH_VERSION 162
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -203,6 +203,10 @@ const ShCompileOptions SH_ADD_AND_TRUE_TO_LOOP_CONDITION = UINT64_C(1) << 25;
 // This flag works around a bug in evaluating unary minus operator on integer on some INTEL
 // drivers. It works by translating -(int) into ~(int) + 1.
 const ShCompileOptions SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR = UINT64_C(1) << 26;
+
+// This flag works around a bug in evaluating isnan() on some INTEL D3D and Mac OSX drivers.
+// It works by using an expression to emulate this function.
+const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
 
 // Defines alternate strategies for implementing array index clamping.
 typedef enum {

@@ -89,6 +89,11 @@ struct WorkaroundsD3D
     // On some Intel drivers, evaluating unary minus operator on integer may get wrong answer in
     // vertex shaders. To work around this bug, we translate -(int) into ~(int)+1.
     bool rewriteUnaryMinusOperator = false;
+
+    // On some Intel drivers, using isnan() on highp float will get wrong answer. To work around
+    // this bug, we use an expression to emulate function isnan(). Tracking bug:
+    // https://crbug.com/650547
+    bool emulateIsnanFloat = false;
 };
 
 }  // namespace rx

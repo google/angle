@@ -1543,6 +1543,7 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     workarounds.preAddTexelFetchOffsets = (adapterDesc.VendorId == VENDOR_ID_INTEL);
     workarounds.disableB5G6R5Support    = (adapterDesc.VendorId == VENDOR_ID_INTEL);
     workarounds.rewriteUnaryMinusOperator = (adapterDesc.VendorId == VENDOR_ID_INTEL);
+    workarounds.emulateIsnanFloat         = (adapterDesc.VendorId == VENDOR_ID_INTEL);
 
     // TODO(jmadill): Disable when we have a fixed driver version.
     workarounds.emulateTinyStencilTextures = (adapterDesc.VendorId == VENDOR_ID_AMD);

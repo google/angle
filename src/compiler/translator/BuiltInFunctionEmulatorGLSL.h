@@ -18,6 +18,12 @@ void InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *e
                                                       sh::GLenum shaderType);
 
 //
+// This works around isnan() bug in Intel Mac drivers
+//
+void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu,
+                                                        int targetGLSLVersion);
+
+//
 // This function is emulating built-in functions missing from GLSL 1.30 and higher.
 //
 void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu, sh::GLenum shaderType,

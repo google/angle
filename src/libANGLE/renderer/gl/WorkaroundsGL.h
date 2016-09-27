@@ -23,7 +23,8 @@ struct WorkaroundsGL
           alwaysCallUseProgramAfterLink(false),
           unpackOverlappingRowsSeparatelyUnpackBuffer(false),
           emulateAbsIntFunction(false),
-          addAndTrueToLoopCondition(false)
+          addAndTrueToLoopCondition(false),
+          emulateIsnanFloat(false)
     {
     }
 
@@ -96,8 +97,14 @@ struct WorkaroundsGL
     // The last pixel read will be A, but the driver will think it is B, causing it to generate an
     // error when the pixel buffer is just big enough.
     bool unpackLastRowSeparatelyForPaddingInclusion;
+
     // Equivalent workaround when uploading data from a pixel pack buffer.
     bool packLastRowSeparatelyForPaddingInclusion;
+
+    // On some Intel drivers, using isnan() on highp float will get wrong answer. To work around
+    // this bug, we use an expression to emulate function isnan().
+    // Tracking bug: http://crbug.com/650547
+    bool emulateIsnanFloat;
 };
 }
 
