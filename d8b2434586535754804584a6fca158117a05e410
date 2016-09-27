@@ -45,6 +45,23 @@
       "revId": "d8b2434586535754804584a6fca158117a05e410",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_8905c422",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-09-27T19:31:51Z",
+      "side": 1,
+      "message": "nit: change this to be a bit more special than just 0, + 43u and check for 42?",
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
