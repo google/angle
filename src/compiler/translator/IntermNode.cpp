@@ -1204,14 +1204,42 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                     }
                     else
                     {
+                        int lhs     = leftArray[i].getIConst();
+                        int divisor = rightArray[i].getIConst();
                         if (op == EOpDiv)
                         {
-                            resultArray[i].setIConst(leftArray[i].getIConst() / rightArray[i].getIConst());
+                            // Check for the special case where the minimum representable number is
+                            // divided by -1. If left alone this leads to integer overflow in C++.
+                            // ESSL 3.00.6 section 4.1.3 Integers:
+                            // "However, for the case where the minimum representable value is
+                            // divided by -1, it is allowed to return either the minimum
+                            // representable value or the maximum representable value."
+                            if (lhs == -0x7fffffff - 1 && divisor == -1)
+                            {
+                                resultArray[i].setIConst(0x7fffffff);
+                            }
+                            else
+                            {
+                                resultArray[i].setIConst(lhs / divisor);
+                            }
                         }
                         else
                         {
                             ASSERT(op == EOpIMod);
-                            resultArray[i].setIConst(leftArray[i].getIConst() % rightArray[i].getIConst());
+                            if (lhs < 0 || divisor < 0)
+                            {
+                                // ESSL 3.00.6 section 5.9: Results of modulus are undefined when
+                                // either one of the operands is negative.
+                                diagnostics->warning(getLine(),
+                                                     "Negative modulus operator operand "
+                                                     "encountered during constant folding",
+                                                     "%", "");
+                                resultArray[i].setIConst(0);
+                            }
+                            else
+                            {
+                                resultArray[i].setIConst(lhs % divisor);
+                            }
                         }
                     }
                     break;

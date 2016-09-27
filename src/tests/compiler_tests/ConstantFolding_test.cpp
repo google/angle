@@ -824,3 +824,22 @@ TEST_F(ConstantFoldingTest, FoldBitShiftRightDifferentSignedness)
     compile(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x3u));
 }
+
+// Test that dividing the minimum signed integer by -1 works.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "However, for the case where the minimum representable value is divided by -1, it is allowed to
+// return either the minimum representable value or the maximum representable value."
+TEST_F(ConstantFoldingTest, FoldDivideMinimumIntegerByMinusOne)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = 0x80000000 / (-1);\n"
+        "    my_FragColor = vec4(i);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(0x7fffffff) || constantFoundInAST(-0x7fffffff - 1));
+}
