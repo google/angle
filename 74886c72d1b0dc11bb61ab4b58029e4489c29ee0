@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ec8b0b_8e314aa5",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T18:56:55Z",
+      "side": 1,
+      "message": "nit: PixelStoreStateBase",
+      "range": {
+        "startLine": 200,
+        "startChar": 7,
+        "endLine": 200,
+        "endChar": 26
+      },
+      "revId": "74886c72d1b0dc11bb61ab4b58029e4489c29ee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_4e2b6231",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T18:56:55Z",
+      "side": 1,
+      "message": "nit: don\u0027t need explicit if args !\u003d 1, but this was in the code before",
+      "range": {
+        "startLine": 215,
+        "startChar": 4,
+        "endLine": 215,
+        "endChar": 12
+      },
+      "revId": "74886c72d1b0dc11bb61ab4b58029e4489c29ee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_6e2e2643",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-27T18:56:55Z",
+      "side": 1,
+      "message": "nit: data after members.",
+      "range": {
+        "startLine": 224,
+        "startChar": 4,
+        "endLine": 224,
+        "endChar": 33
+      },
+      "revId": "74886c72d1b0dc11bb61ab4b58029e4489c29ee0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
