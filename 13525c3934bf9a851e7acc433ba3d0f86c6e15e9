@@ -62,6 +62,53 @@
       "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_5df31efb",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-27T14:40:58Z",
+      "side": 1,
+      "message": "+1, just pass the readPixelsFormat.x into the functions.",
+      "parentUuid": "706bd79b_931e0179",
+      "range": {
+        "startLine": 284,
+        "startChar": 4,
+        "endLine": 284,
+        "endChar": 10
+      },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85ec8b0b_ddd5ce3e",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-27T14:40:58Z",
+      "side": 1,
+      "message": "nit: Do the error checks first, before setting any state.",
+      "range": {
+        "startLine": 478,
+        "startChar": 4,
+        "endLine": 486,
+        "endChar": 19
+      },
+      "revId": "13525c3934bf9a851e7acc433ba3d0f86c6e15e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
