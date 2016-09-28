@@ -181,6 +181,13 @@ bool TIntermBranch::replaceChildNode(
     return false;
 }
 
+bool TIntermSwizzle::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+{
+    ASSERT(original->getAsTyped()->getType() == replacement->getAsTyped()->getType());
+    REPLACE_IF_IS(mOperand, TIntermTyped, original, replacement);
+    return false;
+}
+
 bool TIntermBinary::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
@@ -445,6 +452,13 @@ TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
     }
 }
 
+TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermTyped(node)
+{
+    TIntermTyped *operandCopy = node.mOperand->deepCopy();
+    ASSERT(operandCopy != nullptr);
+    mOperand = operandCopy;
+}
+
 TIntermBinary::TIntermBinary(const TIntermBinary &node)
     : TIntermOperator(node), mAddIndexClamp(node.mAddIndexClamp)
 {
@@ -682,6 +696,15 @@ void TIntermUnary::promote()
     }
 }
 
+TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzleOffsets)
+    : TIntermTyped(TType(EbtFloat, EbpUndefined)),
+      mOperand(operand),
+      mSwizzleOffsets(swizzleOffsets)
+{
+    ASSERT(mSwizzleOffsets.size() <= 4);
+    promote();
+}
+
 TIntermUnary::TIntermUnary(TOperator op, TIntermTyped *operand)
     : TIntermOperator(op), mOperand(operand), mUseEmulatedFunction(false)
 {
@@ -719,13 +742,57 @@ TQualifier TIntermTernary::DetermineQualifier(TIntermTyped *cond,
     return EvqTemporary;
 }
 
-//
-// Establishes the type of the resultant operation, as well as
-// makes the operator the correct one for the operands.
-//
-// For lots of operations it should already be established that the operand
-// combination is valid, but returns false if operator can't work on operands.
-//
+void TIntermSwizzle::promote()
+{
+    TQualifier resultQualifier = EvqTemporary;
+    if (mOperand->getQualifier() == EvqConst)
+        resultQualifier = EvqConst;
+
+    auto numFields = mSwizzleOffsets.size();
+    setType(TType(mOperand->getBasicType(), mOperand->getPrecision(), resultQualifier,
+                  static_cast<unsigned char>(numFields)));
+}
+
+bool TIntermSwizzle::hasDuplicateOffsets() const
+{
+    int offsetCount[4] = {0u, 0u, 0u, 0u};
+    for (const auto offset : mSwizzleOffsets)
+    {
+        offsetCount[offset]++;
+        if (offsetCount[offset] > 1)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void TIntermSwizzle::writeOffsetsAsXYZW(TInfoSinkBase *out) const
+{
+    for (const int offset : mSwizzleOffsets)
+    {
+        switch (offset)
+        {
+        case 0:
+            *out << "x";
+            break;
+        case 1:
+            *out << "y";
+            break;
+        case 2:
+            *out << "z";
+            break;
+        case 3:
+            *out << "w";
+            break;
+        default:
+            UNREACHABLE();
+        }
+    }
+}
+
+
+// Establishes the type of the result of the binary operation.
 void TIntermBinary::promote()
 {
     ASSERT(!isMultiplication() ||
@@ -781,13 +848,6 @@ void TIntermBinary::promote()
             const int i              = mRight->getAsConstantUnion()->getIConst(0);
             setType(*fields[i]->type());
             getTypePointer()->setQualifier(resultQualifier);
-            return;
-        }
-        case EOpVectorSwizzle:
-        {
-            auto numFields = mRight->getAsAggregate()->getSequence()->size();
-            setType(TType(mLeft->getBasicType(), mLeft->getPrecision(), resultQualifier,
-                          static_cast<unsigned char>(numFields)));
             return;
         }
         default:
@@ -925,7 +985,6 @@ void TIntermBinary::promote()
         case EOpIndexIndirect:
         case EOpIndexDirectInterfaceBlock:
         case EOpIndexDirectStruct:
-        case EOpVectorSwizzle:
             // These ops should be already fully handled.
             UNREACHABLE();
             break;
@@ -961,6 +1020,22 @@ const TConstantUnion *TIntermConstantUnion::foldIndexing(int index)
         UNREACHABLE();
         return nullptr;
     }
+}
+
+TIntermTyped *TIntermSwizzle::fold()
+{
+    TIntermConstantUnion *operandConstant = mOperand->getAsConstantUnion();
+    if (operandConstant == nullptr)
+    {
+        return nullptr;
+    }
+
+    TConstantUnion *constArray = new TConstantUnion[mSwizzleOffsets.size()];
+    for (size_t i = 0; i < mSwizzleOffsets.size(); ++i)
+    {
+        constArray[i] = *operandConstant->foldIndexing(mSwizzleOffsets.at(i));
+    }
+    return CreateFoldedNode(constArray, this, mType.getQualifier());
 }
 
 TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
@@ -1002,24 +1077,6 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
         case EOpIndexDirectInterfaceBlock:
             // Can never be constant folded.
             return nullptr;
-        case EOpVectorSwizzle:
-        {
-            if (leftConstant == nullptr)
-            {
-                return nullptr;
-            }
-            TIntermAggregate *fieldsAgg     = mRight->getAsAggregate();
-            TIntermSequence *fieldsSequence = fieldsAgg->getSequence();
-            size_t numFields                = fieldsSequence->size();
-
-            TConstantUnion *constArray = new TConstantUnion[numFields];
-            for (size_t i = 0; i < numFields; i++)
-            {
-                int fieldOffset = fieldsSequence->at(i)->getAsConstantUnion()->getIConst(0);
-                constArray[i]   = *leftConstant->foldIndexing(fieldOffset);
-            }
-            return CreateFoldedNode(constArray, this, mType.getQualifier());
-        }
         default:
         {
             if (leftConstant == nullptr || rightConstant == nullptr)

@@ -511,7 +511,7 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
     if (op == EOpInitialize && visit == InVisit)
         mDeclaringVariables = false;
 
-    if ((op == EOpIndexDirectStruct || op == EOpVectorSwizzle) && visit == InVisit)
+    if ((op == EOpIndexDirectStruct) && visit == InVisit)
         visitChildren = false;
 
     if (visit != PreVisit)

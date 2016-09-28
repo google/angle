@@ -280,6 +280,17 @@ void TOutputGLSLBase::visitConstantUnion(TIntermConstantUnion *node)
     writeConstantUnion(node->getType(), node->getUnionArrayPointer());
 }
 
+bool TOutputGLSLBase::visitSwizzle(Visit visit, TIntermSwizzle *node)
+{
+    TInfoSinkBase &out = objSink();
+    if (visit == PostVisit)
+    {
+        out << ".";
+        node->writeOffsetsAsXYZW(&out);
+    }
+    return true;
+}
+
 bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
 {
     bool visitChildren = true;
@@ -410,40 +421,6 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
               visitChildren = false;
           }
           break;
-      case EOpVectorSwizzle:
-        if (visit == InVisit)
-        {
-            out << ".";
-            TIntermAggregate *rightChild = node->getRight()->getAsAggregate();
-            TIntermSequence *sequence = rightChild->getSequence();
-            for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); ++sit)
-            {
-                TIntermConstantUnion *element = (*sit)->getAsConstantUnion();
-                ASSERT(element->getBasicType() == EbtInt);
-                ASSERT(element->getNominalSize() == 1);
-                const TConstantUnion& data = element->getUnionArrayPointer()[0];
-                ASSERT(data.getType() == EbtInt);
-                switch (data.getIConst())
-                {
-                  case 0:
-                    out << "x";
-                    break;
-                  case 1:
-                    out << "y";
-                    break;
-                  case 2:
-                    out << "z";
-                    break;
-                  case 3:
-                    out << "w";
-                    break;
-                  default:
-                    UNREACHABLE();
-                }
-            }
-            visitChildren = false;
-        }
-        break;
 
       case EOpAdd:
         writeTriplet(visit, "(", " + ", ")");

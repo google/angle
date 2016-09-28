@@ -304,25 +304,22 @@ TIntermConstantUnion *TIntermediate::addConstantUnion(const TConstantUnion *cons
     return node;
 }
 
-TIntermTyped *TIntermediate::addSwizzle(
-    TVectorFields &fields, const TSourceLoc &line)
+TIntermTyped *TIntermediate::AddSwizzle(TIntermTyped *baseExpression,
+                                        const TVectorFields &fields,
+                                        const TSourceLoc &dotLocation)
 {
-
-    TIntermAggregate *node = new TIntermAggregate(EOpSequence);
-    node->getTypePointer()->setQualifier(EvqConst);
-
-    node->setLine(line);
-    TIntermConstantUnion *constIntNode;
-    TIntermSequence *sequenceVector = node->getSequence();
-    TConstantUnion *unionArray;
-
-    for (int i = 0; i < fields.num; i++)
+    TVector<int> fieldsVector;
+    for (int i = 0; i < fields.num; ++i)
     {
-        unionArray = new TConstantUnion[1];
-        unionArray->setIConst(fields.offsets[i]);
-        constIntNode = addConstantUnion(
-            unionArray, TType(EbtInt, EbpUndefined, EvqConst), line);
-        sequenceVector->push_back(constIntNode);
+        fieldsVector.push_back(fields.offsets[i]);
+    }
+    TIntermSwizzle *node = new TIntermSwizzle(baseExpression, fieldsVector);
+    node->setLine(dotLocation);
+
+    TIntermTyped *folded = node->fold();
+    if (folded)
+    {
+        return folded;
     }
 
     return node;

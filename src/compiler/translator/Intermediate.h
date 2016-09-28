@@ -58,7 +58,9 @@ class TIntermediate
                          TIntermNode *, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, TIntermTyped *, const TSourceLoc &);
-    TIntermTyped *addSwizzle(TVectorFields &, const TSourceLoc &);
+    static TIntermTyped *AddSwizzle(TIntermTyped *baseExpression,
+                                    const TVectorFields &fields,
+                                    const TSourceLoc &dotLocation);
     static TIntermAggregate *PostProcess(TIntermNode *root);
 
     static void outputTree(TIntermNode *, TInfoSinkBase &);

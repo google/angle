@@ -31,6 +31,7 @@ class TDiagnostics;
 
 class TIntermTraverser;
 class TIntermAggregate;
+class TIntermSwizzle;
 class TIntermBinary;
 class TIntermUnary;
 class TIntermConstantUnion;
@@ -92,6 +93,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermTyped *getAsTyped() { return 0; }
     virtual TIntermConstantUnion *getAsConstantUnion() { return 0; }
     virtual TIntermAggregate *getAsAggregate() { return 0; }
+    virtual TIntermSwizzle *getAsSwizzleNode() { return nullptr; }
     virtual TIntermBinary *getAsBinaryNode() { return 0; }
     virtual TIntermUnary *getAsUnaryNode() { return 0; }
     virtual TIntermTernary *getAsTernaryNode() { return nullptr; }
@@ -410,6 +412,38 @@ class TIntermOperator : public TIntermTyped
     TOperator mOp;
 };
 
+// Node for vector swizzles.
+class TIntermSwizzle : public TIntermTyped
+{
+  public:
+    // This constructor determines the type of the node based on the operand.
+    TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzleOffsets);
+
+    TIntermTyped *deepCopy() const override { return new TIntermSwizzle(*this); }
+
+    TIntermSwizzle *getAsSwizzleNode() override { return this; };
+    void traverse(TIntermTraverser *it) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+
+    bool hasSideEffects() const override { return mOperand->hasSideEffects(); }
+
+    TIntermTyped *getOperand() { return mOperand; }
+    void writeOffsetsAsXYZW(TInfoSinkBase *out) const;
+
+    bool hasDuplicateOffsets() const;
+
+    TIntermTyped *fold();
+
+  protected:
+    TIntermTyped *mOperand;
+    TVector<int> mSwizzleOffsets;
+
+  private:
+    void promote();
+
+    TIntermSwizzle(const TIntermSwizzle &node);  // Note: not deleted, just private!
+};
+
 //
 // Nodes for all the basic binary math operators.
 //
@@ -707,6 +741,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void visitSymbol(TIntermSymbol *node) {}
     virtual void visitRaw(TIntermRaw *node) {}
     virtual void visitConstantUnion(TIntermConstantUnion *node) {}
+    virtual bool visitSwizzle(Visit visit, TIntermSwizzle *node) { return true; }
     virtual bool visitBinary(Visit visit, TIntermBinary *node) { return true; }
     virtual bool visitUnary(Visit visit, TIntermUnary *node) { return true; }
     virtual bool visitTernary(Visit visit, TIntermTernary *node) { return true; }
@@ -723,6 +758,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void traverseSymbol(TIntermSymbol *node);
     virtual void traverseRaw(TIntermRaw *node);
     virtual void traverseConstantUnion(TIntermConstantUnion *node);
+    virtual void traverseSwizzle(TIntermSwizzle *node);
     virtual void traverseBinary(TIntermBinary *node);
     virtual void traverseUnary(TIntermUnary *node);
     virtual void traverseTernary(TIntermTernary *node);

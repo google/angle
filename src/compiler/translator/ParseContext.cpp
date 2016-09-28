@@ -247,6 +247,18 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
 {
     TIntermSymbol *symNode    = node->getAsSymbolNode();
     TIntermBinary *binaryNode = node->getAsBinaryNode();
+    TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
+
+    if (swizzleNode)
+    {
+        bool ok = checkCanBeLValue(line, op, swizzleNode->getOperand());
+        if (ok && swizzleNode->hasDuplicateOffsets())
+        {
+            error(line, " l-value of swizzle cannot have duplicate components", op);
+            return false;
+        }
+        return ok;
+    }
 
     if (binaryNode)
     {
@@ -257,34 +269,10 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             case EOpIndexDirectStruct:
             case EOpIndexDirectInterfaceBlock:
                 return checkCanBeLValue(line, op, binaryNode->getLeft());
-            case EOpVectorSwizzle:
-            {
-                bool ok = checkCanBeLValue(line, op, binaryNode->getLeft());
-                if (ok)
-                {
-                    int offsetCount[4] = {0, 0, 0, 0};
-
-                    TIntermAggregate *swizzleOffsets = binaryNode->getRight()->getAsAggregate();
-
-                    for (const auto &offset : *swizzleOffsets->getSequence())
-                    {
-                        int value = offset->getAsTyped()->getAsConstantUnion()->getIConst(0);
-                        offsetCount[value]++;
-                        if (offsetCount[value] > 1)
-                        {
-                            error(line, " l-value of swizzle cannot have duplicate components", op);
-                            return false;
-                        }
-                    }
-                }
-
-                return ok;
-            }
             default:
                 break;
         }
         error(line, " l-value required", op);
-
         return false;
     }
 
@@ -2770,9 +2758,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             fields.offsets[0] = 0;
         }
 
-        TIntermTyped *index = intermediate.addSwizzle(fields, fieldLocation);
-        return intermediate.addIndex(EOpVectorSwizzle, baseExpression, index, dotLocation,
-                                     &mDiagnostics);
+        return TIntermediate::AddSwizzle(baseExpression, fields, dotLocation);
     }
     else if (baseExpression->getBasicType() == EbtStruct)
     {

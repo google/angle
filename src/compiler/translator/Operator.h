@@ -77,8 +77,6 @@ enum TOperator
     EOpIndexDirectStruct,
     EOpIndexDirectInterfaceBlock,
 
-    EOpVectorSwizzle,
-
     //
     // Built-in functions potentially mapped to operators
     //

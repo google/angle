@@ -42,6 +42,7 @@ class TOutputTraverser : public TIntermTraverser
   protected:
     void visitSymbol(TIntermSymbol *) override;
     void visitConstantUnion(TIntermConstantUnion *) override;
+    bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
     bool visitBinary(Visit visit, TIntermBinary *) override;
     bool visitUnary(Visit visit, TIntermUnary *) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
@@ -82,6 +83,14 @@ void TOutputTraverser::visitSymbol(TIntermSymbol *node)
 
     sink << "'" << node->getSymbol() << "' ";
     sink << "(" << node->getCompleteString() << ")\n";
+}
+
+bool TOutputTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
+{
+    TInfoSinkBase &out = sink;
+    OutputTreeText(out, node, mDepth);
+    out << "vector swizzle";
+    return true;
 }
 
 bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
@@ -152,9 +161,6 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
         break;
       case EOpIndexDirectInterfaceBlock:
         out << "direct index for interface block";
-        break;
-      case EOpVectorSwizzle:
-        out << "vector swizzle";
         break;
 
       case EOpAdd:

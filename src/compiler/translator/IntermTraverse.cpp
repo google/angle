@@ -23,6 +23,11 @@ void TIntermConstantUnion::traverse(TIntermTraverser *it)
     it->traverseConstantUnion(this);
 }
 
+void TIntermSwizzle::traverse(TIntermTraverser *it)
+{
+    it->traverseSwizzle(this);
+}
+
 void TIntermBinary::traverse(TIntermTraverser *it)
 {
     it->traverseBinary(this);
@@ -230,6 +235,26 @@ void TIntermTraverser::traverseSymbol(TIntermSymbol *node)
 void TIntermTraverser::traverseConstantUnion(TIntermConstantUnion *node)
 {
     visitConstantUnion(node);
+}
+
+void TIntermTraverser::traverseSwizzle(TIntermSwizzle *node)
+{
+    bool visit = true;
+
+    if (preVisit)
+        visit = visitSwizzle(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+
+        node->getOperand()->traverse(this);
+
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitSwizzle(PostVisit, node);
 }
 
 //

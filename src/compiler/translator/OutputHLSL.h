@@ -59,6 +59,7 @@ class OutputHLSL : public TIntermTraverser
     void visitSymbol(TIntermSymbol*);
     void visitRaw(TIntermRaw*);
     void visitConstantUnion(TIntermConstantUnion*);
+    bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
     bool visitBinary(Visit visit, TIntermBinary*);
     bool visitUnary(Visit visit, TIntermUnary*);
     bool visitTernary(Visit visit, TIntermTernary *);

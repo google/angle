@@ -848,6 +848,17 @@ bool OutputHLSL::ancestorEvaluatesToSamplerInStruct(Visit visit)
     return false;
 }
 
+bool OutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *node)
+{
+    TInfoSinkBase &out = getInfoSink();
+    if (visit == PostVisit)
+    {
+        out << ".";
+        node->writeOffsetsAsXYZW(&out);
+    }
+    return true;
+}
+
 bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
     TInfoSinkBase &out = getInfoSink();
@@ -1064,42 +1075,6 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             out << "." + Decorate(field->name());
 
             return false;
-        }
-        break;
-      case EOpVectorSwizzle:
-        if (visit == InVisit)
-        {
-            out << ".";
-
-            TIntermAggregate *swizzle = node->getRight()->getAsAggregate();
-
-            if (swizzle)
-            {
-                TIntermSequence *sequence = swizzle->getSequence();
-
-                for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
-                {
-                    TIntermConstantUnion *element = (*sit)->getAsConstantUnion();
-
-                    if (element)
-                    {
-                        int i = element->getIConst(0);
-
-                        switch (i)
-                        {
-                        case 0: out << "x"; break;
-                        case 1: out << "y"; break;
-                        case 2: out << "z"; break;
-                        case 3: out << "w"; break;
-                        default: UNREACHABLE();
-                        }
-                    }
-                    else UNREACHABLE();
-                }
-            }
-            else UNREACHABLE();
-
-            return false;   // Fully processed
         }
         break;
       case EOpAdd:
