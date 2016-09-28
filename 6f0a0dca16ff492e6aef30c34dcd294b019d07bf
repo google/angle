@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85dd6ba2_6bf090ed",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:18:36Z",
+      "side": 0,
+      "message": "for future reference, please split off entry points refactoring in two parts - one to move the code into Validation*, and the second to make the changes to the rest. Just makes life easier for reviewing.",
+      "range": {
+        "startLine": 1374,
+        "startChar": 13,
+        "endLine": 1374,
+        "endChar": 30
+      },
+      "revId": "6f0a0dca16ff492e6aef30c34dcd294b019d07bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
