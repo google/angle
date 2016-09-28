@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62086d1c_981c9576",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T17:09:42Z",
+      "side": 1,
+      "message": "Add ASSERT(qualifier \u003d\u003d EvqOut || qualifier \u003d\u003d EvqInOut). Same in below function.",
+      "revId": "69df7b7f63b18f8da7ba2f8123f531ad23b26524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82172137_b9851fbb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T17:09:42Z",
+      "side": 1,
+      "message": "This could probably be a static function?",
+      "revId": "69df7b7f63b18f8da7ba2f8123f531ad23b26524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2029df6_7c477978",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T17:09:42Z",
+      "side": 1,
+      "message": "Would be nice to call these two in an additional checkOutParameterIsNotOpaqueType() function.",
+      "revId": "69df7b7f63b18f8da7ba2f8123f531ad23b26524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25283f69_0612dabc",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T17:09:42Z",
+      "side": 1,
+      "message": "Make the newly added helper functions private to ParseContext in the cases where that is possible.",
+      "revId": "69df7b7f63b18f8da7ba2f8123f531ad23b26524",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
