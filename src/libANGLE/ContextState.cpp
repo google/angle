@@ -278,6 +278,14 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *type      = GL_INT;
             *numParams = 1;
             return true;
+        case GL_TEXTURE_BINDING_EXTERNAL_OES:
+            if (!getExtensions().eglStreamConsumerExternal && !getExtensions().eglImageExternal)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
     }
 
     if (getExtensions().debug)
