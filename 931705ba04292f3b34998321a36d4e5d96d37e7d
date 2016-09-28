@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_2b57b824",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1811,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T17:47:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_48eaf2c8",
+      "revId": "931705ba04292f3b34998321a36d4e5d96d37e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_688ff630",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 10
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_ab18c890",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T17:47:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_688ff630",
+      "revId": "931705ba04292f3b34998321a36d4e5d96d37e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_eb980070",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 10
@@ -47,6 +83,24 @@
       "writtenOn": "2016-09-28T17:22:09Z",
       "side": 1,
       "message": "Use ValidateTexImage2D?",
+      "revId": "931705ba04292f3b34998321a36d4e5d96d37e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_8b022417",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2017,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T17:47:11Z",
+      "side": 1,
+      "message": "I wanted to make sure the ValidateX functions have the same parameters as the entry points when possible.",
+      "parentUuid": "85dd6ba2_eb980070",
       "revId": "931705ba04292f3b34998321a36d4e5d96d37e7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
