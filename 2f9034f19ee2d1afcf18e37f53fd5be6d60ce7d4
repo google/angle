@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_a6c59fa1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_46ab0373",
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_0b88f47b",
         "filename": "extensions/ANGLE_robust_queries.txt",
         "patchSetId": 11
@@ -30,6 +48,30 @@
       "writtenOn": "2016-09-28T18:18:36Z",
       "side": 1,
       "message": "nit: I don\u0027t think this name is accurate - it also handles texture specification. GL_ANGLE_robust_pointers would maybe be better?",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 27
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_066e2bf4",
+        "filename": "extensions/ANGLE_robust_queries.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done, went with ANGLE_robust_client_memory",
+      "parentUuid": "85dd6ba2_0b88f47b",
       "range": {
         "startLine": 7,
         "startChar": 4,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_467023cf",
+        "filename": "extensions/ANGLE_robust_queries.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_2b3b38d6",
+      "range": {
+        "startLine": 15,
+        "startChar": 22,
+        "endLine": 15,
+        "endChar": 23
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_0b72b4a2",
         "filename": "extensions/ANGLE_robust_queries.txt",
         "patchSetId": 11
@@ -76,6 +142,30 @@
       "writtenOn": "2016-09-28T18:18:36Z",
       "side": 1,
       "message": "nit: to confirm, is this the number of bytes/size of the buffer, or number of ints/uints/etc? Could clarify this.",
+      "range": {
+        "startLine": 124,
+        "startChar": 38,
+        "endLine": 124,
+        "endChar": 44
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_c6189392",
+        "filename": "extensions/ANGLE_robust_queries.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "It is the number of ints/uints/etc.  I will add an issue about that, there doesn\u0027t seem to be any standard for this in GL so far.\n\nglGetnUniformuiv says that bufSize is bytes but for glGetSynciv bufSize is values.",
+      "parentUuid": "85dd6ba2_0b72b4a2",
       "range": {
         "startLine": 124,
         "startChar": 38,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_6608c73b",
+        "filename": "extensions/ANGLE_robust_queries.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_8b66a4de",
+      "range": {
+        "startLine": 127,
+        "startChar": 26,
+        "endLine": 127,
+        "endChar": 32
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_0bb1144e",
         "filename": "extensions/ANGLE_robust_queries.txt",
         "patchSetId": 11
@@ -122,6 +236,30 @@
       "writtenOn": "2016-09-28T18:18:36Z",
       "side": 1,
       "message": "You could phrase this more carefully, e.g., Calls to \"xRobustANGLE\" will generate errors under the same conditions as \"x\". Any instances of undefined behaviour in \"x\" will also be undefined in \"xRobustANGLE\". etc.",
+      "range": {
+        "startLine": 130,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 12
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_86ffbbf5",
+        "filename": "extensions/ANGLE_robust_queries.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_0bb1144e",
       "range": {
         "startLine": 130,
         "startChar": 4,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_46cdc3b0",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_8b9ce4bf",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_c69ed35b",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 11
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_068d8b8b",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1482,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "That\u0027s what I\u0027ve done.  Unless you mean you\u0027d prefer that numParams isn\u0027t in the ValidateGetProgramiv function.",
+      "parentUuid": "85dd6ba2_c69ed35b",
+      "range": {
+        "startLine": 1482,
+        "startChar": 13,
+        "endLine": 1482,
+        "endChar": 33
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_e6c03728",
         "filename": "src/tests/gl_tests/RobustQueriesTest.cpp",
         "patchSetId": 11
@@ -191,6 +377,30 @@
       "writtenOn": "2016-09-28T18:18:36Z",
       "side": 1,
       "message": "s/EXPECT_GL_NO_ERROR/ASSERT_GL_NO_ERROR/g",
+      "range": {
+        "startLine": 248,
+        "startChar": 4,
+        "endLine": 248,
+        "endChar": 22
+      },
+      "revId": "2f9034f19ee2d1afcf18e37f53fd5be6d60ce7d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_c64ff334",
+        "filename": "src/tests/gl_tests/RobustQueriesTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-09-28T18:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_e6c03728",
       "range": {
         "startLine": 248,
         "startChar": 4,
