@@ -16,6 +16,24 @@
       "revId": "a284dd7cba44017f0e080ca643a6a9ad32e15466",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_9569a78b",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-09-28T15:01:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_753513dc",
+      "revId": "a284dd7cba44017f0e080ca643a6a9ad32e15466",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
