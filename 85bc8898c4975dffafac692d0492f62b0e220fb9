@@ -1,0 +1,199 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85dd6ba2_e6e797d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "can you open a bug for this, add\n\nBUG\u003dangleproject:####\n\nAnd also give a second paragraph with a short explanation.",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_a6d63fe4",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "this should probably just return egl::Error. The other entry points are a bit outdated.",
+      "range": {
+        "startLine": 54,
+        "startChar": 12,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_a6359f47",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "nit: should be at the top of this file",
+      "range": {
+        "startLine": 888,
+        "startChar": 0,
+        "endLine": 895,
+        "endChar": 25
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_661287be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "can we resolve this before landing somehow?",
+      "range": {
+        "startLine": 907,
+        "startChar": 4,
+        "endLine": 907,
+        "endChar": 82
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_86097b8e",
+        "filename": "src/libANGLE/renderer/gl/SurfaceGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "if you don\u0027t want to implement all of these, a default implementation is acceptable.",
+      "range": {
+        "startLine": 32,
+        "startChar": 11,
+        "endLine": 32,
+        "endChar": 20
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_8637bb34",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "git cl format?",
+      "range": {
+        "startLine": 145,
+        "startChar": 8,
+        "endLine": 145,
+        "endChar": 11
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_6640c78a",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "be warned that ASSERT just returns from the current scope if it fails. It\u0027s OK because it\u0027s hard to work around, as long as you know.",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 26
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_6659e790",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_a663df37",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T18:25:07Z",
+      "side": 1,
+      "message": "nit: comment before each individual test.",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 6
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
