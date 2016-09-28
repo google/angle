@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85dd6ba2_1588177c",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T14:24:13Z",
+      "side": 1,
+      "message": "nit: use IsOSX()",
+      "range": {
+        "startLine": 405,
+        "startChar": 0,
+        "endLine": 405,
+        "endChar": 33
+      },
+      "revId": "498d263a3ef6080c0d00790ad15c1c8ddfdc6774",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_f58c6391",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-28T14:24:13Z",
+      "side": 1,
+      "message": "nit: use IsWindows()",
+      "range": {
+        "startLine": 413,
+        "startChar": 0,
+        "endLine": 413,
+        "endChar": 35
+      },
+      "revId": "498d263a3ef6080c0d00790ad15c1c8ddfdc6774",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
