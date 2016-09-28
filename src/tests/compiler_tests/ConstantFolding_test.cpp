@@ -963,3 +963,25 @@ TEST_F(ConstantFoldingTest, FoldSignedIntegerMultiplyOverflow)
     compile(shaderString);
     ASSERT_TRUE(constantFoundInAST(-42));
 }
+
+// Test that folding of negating the minimum representable integer works. Note that in the test
+// "0x80000000" is a negative literal, and the minus sign before it is the negation operator.
+// ESSL 3.00.6 section 4.1.3 Integers:
+// "For all precisions, operations resulting in overflow or underflow will not cause any exception,
+// nor will they saturate, rather they will 'wrap' to yield the low-order n bits of the result where
+// n is the size in bits of the integer."
+TEST_F(ConstantFoldingTest, FoldMinimumSignedIntegerNegation)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = -0x80000000;\n"
+        "    my_FragColor = vec4(i);\n"
+        "}\n";
+    compile(shaderString);
+    // Negating the minimum signed integer overflows the positive range, so it wraps back to itself.
+    ASSERT_TRUE(constantFoundInAST(-0x7fffffff - 1));
+}

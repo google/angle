@@ -1599,11 +1599,30 @@ TConstantUnion *TIntermConstantUnion::foldUnaryComponentWise(TOperator op,
                         resultArray[i].setFConst(-operandArray[i].getFConst());
                         break;
                     case EbtInt:
-                        resultArray[i].setIConst(-operandArray[i].getIConst());
+                        if (operandArray[i] == std::numeric_limits<int>::min())
+                        {
+                            // The minimum representable integer doesn't have a positive
+                            // counterpart, rather the negation overflows and in ESSL is supposed to
+                            // wrap back to the minimum representable integer. Make sure that we
+                            // don't actually let the negation overflow, which has undefined
+                            // behavior in C++.
+                            resultArray[i].setIConst(std::numeric_limits<int>::min());
+                        }
+                        else
+                        {
+                            resultArray[i].setIConst(-operandArray[i].getIConst());
+                        }
                         break;
                     case EbtUInt:
-                        resultArray[i].setUConst(static_cast<unsigned int>(
-                            -static_cast<int>(operandArray[i].getUConst())));
+                        if (operandArray[i] == 0x80000000u)
+                        {
+                            resultArray[i].setUConst(0x80000000u);
+                        }
+                        else
+                        {
+                            resultArray[i].setUConst(static_cast<unsigned int>(
+                                -static_cast<int>(operandArray[i].getUConst())));
+                        }
                         break;
                     default:
                         UNREACHABLE();
