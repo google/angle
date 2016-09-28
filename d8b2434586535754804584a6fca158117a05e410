@@ -25,6 +25,47 @@
     },
     {
       "key": {
+        "uuid": "c2ff5921_bba86774",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T09:30:45Z",
+      "side": 1,
+      "message": "Still being used for float multiplication.",
+      "parentUuid": "85ec8b0b_b3447b6f",
+      "range": {
+        "startLine": 49,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 12
+      },
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "420d292b_178174ff",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T09:30:45Z",
+      "side": 1,
+      "message": "Now that I reread this, it doesn\u0027t make sense - was supposed to be arithmetic modulo 2^n. Fixed.",
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85ec8b0b_337acbaf",
         "filename": "src/compiler/translator/ConstantUnion.cpp",
         "patchSetId": 2
@@ -48,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "02fa5131_1d9ab365",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T09:30:45Z",
+      "side": 1,
+      "message": "Great!",
+      "parentUuid": "85ec8b0b_337acbaf",
+      "range": {
+        "startLine": 375,
+        "startChar": 24,
+        "endLine": 375,
+        "endChar": 33
+      },
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85ec8b0b_8905c422",
         "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
         "patchSetId": 2
@@ -59,6 +124,24 @@
       "writtenOn": "2016-09-27T19:31:51Z",
       "side": 1,
       "message": "nit: change this to be a bit more special than just 0, + 43u and check for 42?",
+      "revId": "d8b2434586535754804584a6fca158117a05e410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2ff5921_dbab3370",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-28T09:30:45Z",
+      "side": 1,
+      "message": "Good suggestion, made the others more special as well.",
+      "parentUuid": "85ec8b0b_8905c422",
       "revId": "d8b2434586535754804584a6fca158117a05e410",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
