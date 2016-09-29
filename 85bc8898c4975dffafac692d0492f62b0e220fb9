@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_9a370b35",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "There is already a bug but I couldn\u0027t figure out how to put it in the bug description (and edit the description in general). I guess I\u0027ll have to do that during local commit (with --amend).",
+      "parentUuid": "85dd6ba2_e6e797d0",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_a6d63fe4",
         "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2016-09-28T18:25:07Z",
       "side": 1,
       "message": "this should probably just return egl::Error. The other entry points are a bit outdated.",
+      "range": {
+        "startLine": 54,
+        "startChar": 12,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_9ac70b8f",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_a6d63fe4",
       "range": {
         "startLine": 54,
         "startChar": 12,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_fa8d678f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_a6359f47",
+      "range": {
+        "startLine": 888,
+        "startChar": 0,
+        "endLine": 895,
+        "endChar": 25
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_661287be",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
@@ -76,6 +142,30 @@
       "writtenOn": "2016-09-28T18:25:07Z",
       "side": 1,
       "message": "can we resolve this before landing somehow?",
+      "range": {
+        "startLine": 907,
+        "startChar": 4,
+        "endLine": 907,
+        "endChar": 82
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_dae0631b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "The output values seem to be good actually. I\u0027ve successfully used this code from existing VSyncProvider implementation (that before was Linux only) and it seems to handle the output values just fine and produce realistic VSync interval and base time.\nI\u0027ve removed the TODO.",
+      "parentUuid": "85dd6ba2_661287be",
       "range": {
         "startLine": 907,
         "startChar": 4,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_3a69bfed",
+        "filename": "src/libANGLE/renderer/gl/SurfaceGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "I think that is OK. There are only two classes with this kind of implementation - SurfaceGL and SurfaceVK.",
+      "parentUuid": "85dd6ba2_86097b8e",
+      "range": {
+        "startLine": 32,
+        "startChar": 11,
+        "endLine": 32,
+        "endChar": 20
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_8637bb34",
         "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
         "patchSetId": 2
@@ -122,6 +236,30 @@
       "writtenOn": "2016-09-28T18:25:07Z",
       "side": 1,
       "message": "git cl format?",
+      "range": {
+        "startLine": 145,
+        "startChar": 8,
+        "endLine": 145,
+        "endChar": 11
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_da4fc334",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_8637bb34",
       "range": {
         "startLine": 145,
         "startChar": 8,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_7abb372e",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "I didn\u0027t quite understand your comment. So if the assert fails CreateWindowSurface would just exist without finishing initializing members below, right?",
+      "parentUuid": "85dd6ba2_6640c78a",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 26
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_6659e790",
         "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
         "patchSetId": 2
@@ -174,6 +336,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_1a603bce",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "OK, ran git cl format. It fixed this.",
+      "parentUuid": "85dd6ba2_6659e790",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_a663df37",
         "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
         "patchSetId": 2
@@ -185,6 +365,30 @@
       "writtenOn": "2016-09-28T18:25:07Z",
       "side": 1,
       "message": "nit: comment before each individual test.",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 6
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85dd6ba2_3a553fc6",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T01:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85dd6ba2_a663df37",
       "range": {
         "startLine": 188,
         "startChar": 0,
