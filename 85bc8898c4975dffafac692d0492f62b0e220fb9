@@ -148,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "85dd6ba2_a0b8dede",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T02:04:39Z",
+      "side": 1,
+      "message": "Yes, there was an error in the test initially when I failed to setup D3D11 with direct composition. I don\u0027t remember the error code because the VS 2015 debugger resolved the error code for me and gave the text. I think it was \nDXGI_ERROR_UNSUPPORTED - The requested functionality is not supported by the device or the driver.\n\nThe binding should prevent this from happening because the extension wouldn\u0027t be enabled without Direct Composition.",
+      "parentUuid": "85dd6ba2_2004eeed",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_661287be",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
