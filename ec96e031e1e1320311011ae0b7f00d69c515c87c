@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "623dcdbc_335a5227",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-29T17:11:51Z",
+      "side": 1,
+      "message": "nit: can you tag this with an issue? I think there was some work on external images that Geoff was using, maybe you could use that. (chromium:645532) or any other issue you like.",
+      "revId": "ec96e031e1e1320311011ae0b7f00d69c515c87c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "623dcdbc_93357ee0",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-29T17:11:51Z",
+      "side": 1,
+      "message": "nit: comment before each test (some of the tests in this file were added a long time ago, before this policy)",
+      "range": {
+        "startLine": 1199,
+        "startChar": 0,
+        "endLine": 1199,
+        "endChar": 6
+      },
+      "revId": "ec96e031e1e1320311011ae0b7f00d69c515c87c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
