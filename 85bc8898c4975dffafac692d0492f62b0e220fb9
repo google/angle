@@ -231,6 +231,30 @@
     },
     {
       "key": {
+        "uuid": "623dcdbc_f3084a3b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-29T17:07:01Z",
+      "side": 1,
+      "message": "sounds good.",
+      "parentUuid": "85dd6ba2_dae0631b",
+      "range": {
+        "startLine": 907,
+        "startChar": 4,
+        "endLine": 907,
+        "endChar": 82
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_86097b8e",
         "filename": "src/libANGLE/renderer/gl/SurfaceGL.cpp",
         "patchSetId": 2
@@ -360,6 +384,30 @@
       "side": 1,
       "message": "I didn\u0027t quite understand your comment. So if the assert fails CreateWindowSurface would just exist without finishing initializing members below, right?",
       "parentUuid": "85dd6ba2_6640c78a",
+      "range": {
+        "startLine": 151,
+        "startChar": 8,
+        "endLine": 151,
+        "endChar": 26
+      },
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "623dcdbc_73021a19",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-09-29T17:07:01Z",
+      "side": 1,
+      "message": "yep. it\u0027ll print an error and return from the scope, continuing any test code outside this function. Not a big deal, you can pretend it isn\u0027t an issue. :)",
+      "parentUuid": "85dd6ba2_7abb372e",
       "range": {
         "startLine": 151,
         "startChar": 8,
