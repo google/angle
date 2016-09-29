@@ -202,6 +202,24 @@
     },
     {
       "key": {
+        "uuid": "2254b50d_4ce89370",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2016-09-29T21:39:45Z",
+      "side": 1,
+      "message": "Yeah, I think checking in ValidateGetSyncValuesCHROMIUM would make sense.",
+      "parentUuid": "2254b50d_468d12e4",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_661287be",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
