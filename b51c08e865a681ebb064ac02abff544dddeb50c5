@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "420d292b_bad62de6",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-29T11:36:59Z",
+      "side": 1,
+      "message": "Could make this a different image type to cover more things in the test.",
+      "range": {
+        "startLine": 58,
+        "startChar": 49,
+        "endLine": 58,
+        "endChar": 56
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25283f69_06d01a4b",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-29T11:36:59Z",
+      "side": 1,
+      "message": "Would be better to use the image uniforms in main() so that there\u0027s no chance that they could be pruned in a future version of ANGLE.",
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "452ff370_07173655",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-29T11:36:59Z",
+      "side": 1,
+      "message": "Typo",
+      "range": {
+        "startLine": 78,
+        "startChar": 42,
+        "endLine": 78,
+        "endChar": 45
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25283f69_e6da1e6e",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-29T11:36:59Z",
+      "side": 1,
+      "message": "Typo",
+      "range": {
+        "startLine": 89,
+        "startChar": 43,
+        "endLine": 89,
+        "endChar": 46
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2029df6_5c1ddd25",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-09-29T11:36:59Z",
+      "side": 1,
+      "message": "Put the image load and image store tests to different test functions.",
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
