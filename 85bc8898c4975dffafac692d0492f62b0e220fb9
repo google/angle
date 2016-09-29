@@ -184,6 +184,24 @@
     },
     {
       "key": {
+        "uuid": "2254b50d_468d12e4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 900,
+      "author": {
+        "id": 1117489
+      },
+      "writtenOn": "2016-09-29T18:48:59Z",
+      "side": 1,
+      "message": "OK, so what is the right way to handle this? The extension is on the display level. The code that enables/disables the extension is at the display level and that doesn\u0027t look at the surface. So the only way to handle this is may be to look at EGL_DIRECT_COMPOSITION_ANGLE attribute here calling GetFrameStatistics and fail with a more descriptive error. Or another alternative is to do that check in ValidateGetSyncValuesCHROMIUM in validationEGL.cpp.",
+      "parentUuid": "85dd6ba2_60954642",
+      "revId": "85bc8898c4975dffafac692d0492f62b0e220fb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85dd6ba2_661287be",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 2
