@@ -110,6 +110,8 @@
             'compiler/translator/Types.h',
             'compiler/translator/UnfoldShortCircuitAST.cpp',
             'compiler/translator/UnfoldShortCircuitAST.h',
+            'compiler/translator/UseInterfaceBlockFields.cpp',
+            'compiler/translator/UseInterfaceBlockFields.h',
             'compiler/translator/ValidateGlobalInitializer.cpp',
             'compiler/translator/ValidateGlobalInitializer.h',
             'compiler/translator/ValidateLimitations.cpp',

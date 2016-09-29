@@ -26,6 +26,7 @@
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
+#include "compiler/translator/UseInterfaceBlockFields.h"
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
@@ -391,6 +392,10 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && shouldCollectVariables(compileOptions))
         {
             collectVariables(root);
+            if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
+            {
+                useAllMembersInUnusedStandardAndSharedBlocks(root);
+            }
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
             {
                 success = enforcePackingRestrictions();
@@ -851,6 +856,22 @@ void TCompiler::initializeGLPosition(TIntermNode* root)
     var.name = "gl_Position";
     list.push_back(var);
     InitializeVariables(root, list);
+}
+
+void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermNode *root)
+{
+    sh::InterfaceBlockList list;
+
+    for (auto block : interfaceBlocks)
+    {
+        if (!block.staticUse &&
+            (block.layout == sh::BLOCKLAYOUT_STANDARD || block.layout == sh::BLOCKLAYOUT_SHARED))
+        {
+            list.push_back(block);
+        }
+    }
+
+    sh::UseInterfaceBlockFields(root, list);
 }
 
 void TCompiler::initializeOutputVariables(TIntermNode *root)

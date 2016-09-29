@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -394,6 +395,158 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
     EXPECT_EQ(1, size);
     EXPECT_GLENUM_EQ(GL_FLOAT, type);
     EXPECT_EQ("blockName.f", std::string(&strBuffer[0]));
+}
+
+// Tests active uniforms and blocks when the layout is std140, shared and packed.
+TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
+{
+    // TODO(Jiajia): Figure out why this fails on Intel on Mac.
+    // This case can pass on Intel Mac-10.11/10.12. But it fails on Intel Mac-10.10.
+    if (IsIntel() && IsOSX())
+    {
+        std::cout << "Test skipped on Intel on Mac." << std::endl;
+        return;
+    }
+
+    if (IsAMD() && IsWindows())
+    {
+        std::cout << "Test skipped on AMD on Win." << std::endl;
+        return;
+    }
+
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec2 position;\n"
+        "out float v;\n"
+        "struct S {\n"
+        "  highp ivec3 a;\n"
+        "  mediump ivec2 b[4];\n"
+        "};\n"
+        "struct T {\n"
+        "  S c[2];\n"
+        "};\n"
+        "layout(std140) uniform blockName0 {\n"
+        "  S s0;\n"
+        "  lowp vec2 v0;\n"
+        "  T t0[2];\n"
+        "  highp uint u0;\n"
+        "};\n"
+        "layout(std140) uniform blockName1 {\n"
+        "  float f1;\n"
+        "  bool b1;\n"
+        "} instanceName1;\n"
+        "layout(shared) uniform blockName2 {\n"
+        "  float f2;\n"
+        "};\n"
+        "layout(packed) uniform blockName3 {\n"
+        "  float f3;\n"
+        "};\n"
+        "void main() {\n"
+        "  v = instanceName1.f1;\n"
+        "  gl_Position = vec4(position, 0, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "in float v;\n"
+        "out vec4 color;\n"
+        "void main() {\n"
+        "  color = vec4(v, 0, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    GLint activeUniforms;
+    glGetProgramiv(program.get(), GL_ACTIVE_UNIFORMS, &activeUniforms);
+
+    ASSERT_EQ(15, activeUniforms);
+
+    GLint activeUniformBlocks;
+    glGetProgramiv(program.get(), GL_ACTIVE_UNIFORM_BLOCKS, &activeUniformBlocks);
+
+    ASSERT_EQ(3, activeUniformBlocks);
+
+    GLint maxLength, size;
+    GLenum type;
+    GLsizei length;
+    glGetProgramiv(program.get(), GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
+    std::vector<GLchar> strBuffer(maxLength + 1, 0);
+
+    glGetActiveUniform(program.get(), 0, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("s0.a", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 1, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(4, size);
+    EXPECT_EQ("s0.b[0]", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 2, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("v0", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 3, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("t0[0].c[0].a", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 4, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(4, size);
+    EXPECT_EQ("t0[0].c[0].b[0]", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 5, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("t0[0].c[1].a", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 6, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(4, size);
+    EXPECT_EQ("t0[0].c[1].b[0]", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 7, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("t0[1].c[0].a", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 8, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(4, size);
+    EXPECT_EQ("t0[1].c[0].b[0]", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 9, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("t0[1].c[1].a", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 10, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(4, size);
+    EXPECT_EQ("t0[1].c[1].b[0]", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 11, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("u0", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 12, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("blockName1.f1", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 13, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("blockName1.b1", std::string(&strBuffer[0]));
+
+    glGetActiveUniform(program.get(), 14, maxLength, &length, &size, &type, &strBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_EQ("f2", std::string(&strBuffer[0]));
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

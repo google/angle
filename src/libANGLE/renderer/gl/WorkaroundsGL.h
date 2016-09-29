@@ -24,7 +24,8 @@ struct WorkaroundsGL
           unpackOverlappingRowsSeparatelyUnpackBuffer(false),
           emulateAbsIntFunction(false),
           addAndTrueToLoopCondition(false),
-          emulateIsnanFloat(false)
+          emulateIsnanFloat(false),
+          useUnusedBlocksWithStandardOrSharedLayout(false)
     {
     }
 
@@ -105,6 +106,11 @@ struct WorkaroundsGL
     // this bug, we use an expression to emulate function isnan().
     // Tracking bug: http://crbug.com/650547
     bool emulateIsnanFloat;
+
+    // On Mac with OpenGL version 4.1, unused std140 or shared uniform blocks will be
+    // treated as inactive which is not consistent with WebGL2.0 spec. Reference all members in a
+    // unused std140 or shared uniform block at the beginning of main to work around it.
+    bool useUnusedBlocksWithStandardOrSharedLayout;
 };
 }
 
