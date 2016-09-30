@@ -96,21 +96,20 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     int uniqueId = texelFetchSymbol->getUniqueId();
 
     // Create new node that represents the call of function texelFetch.
+    // Its argument list will be: texelFetch(sampler, Position+offset, lod).
     TIntermAggregate *texelFetchNode = new TIntermAggregate(EOpFunctionCall);
     texelFetchNode->setName(newName);
     texelFetchNode->setFunctionId(uniqueId);
     texelFetchNode->setType(node->getType());
     texelFetchNode->setLine(node->getLine());
 
-    // Create argument List of texelFetch(sampler, Position+offset, lod).
-    TIntermSequence newsequence;
-
     // sampler
-    newsequence.push_back(sequence->at(0));
+    texelFetchNode->getSequence()->push_back(sequence->at(0));
 
     // Position
     TIntermTyped *texCoordNode = sequence->at(1)->getAsTyped();
     ASSERT(texCoordNode);
+
     // offset
     TIntermTyped *offsetNode = nullptr;
     ASSERT(sequence->at(3)->getAsTyped());
@@ -122,16 +121,14 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         constructIVec3Node->setLine(texCoordNode->getLine());
         constructIVec3Node->setType(texCoordNode->getType());
 
-        TIntermSequence ivec3Sequence;
-        ivec3Sequence.push_back(sequence->at(3)->getAsTyped());
+        constructIVec3Node->getSequence()->push_back(sequence->at(3)->getAsTyped());
 
         TConstantUnion *zero = new TConstantUnion();
         zero->setIConst(0);
         TType *intType = new TType(EbtInt);
 
         TIntermConstantUnion *zeroNode = new TIntermConstantUnion(zero, *intType);
-        ivec3Sequence.push_back(zeroNode);
-        constructIVec3Node->insertChildNodes(0, ivec3Sequence);
+        constructIVec3Node->getSequence()->push_back(zeroNode);
 
         offsetNode = constructIVec3Node;
     }
@@ -143,11 +140,12 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     // Position+offset
     TIntermBinary *add = new TIntermBinary(EOpAdd, texCoordNode, offsetNode);
     add->setLine(texCoordNode->getLine());
-    newsequence.push_back(add);
+    texelFetchNode->getSequence()->push_back(add);
 
     // lod
-    newsequence.push_back(sequence->at(2));
-    texelFetchNode->insertChildNodes(0, newsequence);
+    texelFetchNode->getSequence()->push_back(sequence->at(2));
+
+    ASSERT(texelFetchNode->getSequence()->size() == 3u);
 
     // Replace the old node by this new node.
     queueReplacement(node, texelFetchNode, OriginalNode::IS_DROPPED);

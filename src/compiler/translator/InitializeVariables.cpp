@@ -45,8 +45,6 @@ bool VariableInitializer::visitAggregate(Visit visit, TIntermAggregate *node)
     bool visitChildren = !mCodeInserted;
     switch (node->getOp())
     {
-      case EOpSequence:
-        break;
       case EOpFunction:
       {
         // Function definition.
@@ -55,7 +53,7 @@ bool VariableInitializer::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TIntermSequence *sequence = node->getSequence();
             ASSERT(sequence->size() == 2);
-            TIntermAggregate *body = (*sequence)[1]->getAsAggregate();
+            TIntermBlock *body = (*sequence)[1]->getAsBlock();
             ASSERT(body);
             insertInitCode(body->getSequence());
             mCodeInserted = true;

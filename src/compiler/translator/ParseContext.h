@@ -94,8 +94,8 @@ class TParseContext : angle::NonCopyable
                          const char *token,
                          const char *extraInfo = "");
 
-    TIntermNode *getTreeRoot() const { return mTreeRoot; }
-    void setTreeRoot(TIntermNode *treeRoot) { mTreeRoot = treeRoot; }
+    TIntermBlock *getTreeRoot() const { return mTreeRoot; }
+    void setTreeRoot(TIntermBlock *treeRoot) { mTreeRoot = treeRoot; }
 
     bool getFragmentPrecisionHigh() const
     {
@@ -268,7 +268,7 @@ class TParseContext : angle::NonCopyable
                                                       const TSourceLoc &location);
     TIntermAggregate *addFunctionDefinition(const TFunction &function,
                                             TIntermAggregate *functionPrototype,
-                                            TIntermAggregate *functionBody,
+                                            TIntermBlock *functionBody,
                                             const TSourceLoc &location);
     void parseFunctionPrototype(const TSourceLoc &location,
                                 TFunction *function,
@@ -335,7 +335,9 @@ class TParseContext : angle::NonCopyable
 
     void checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field);
 
-    TIntermSwitch *addSwitch(TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &loc);
+    TIntermSwitch *addSwitch(TIntermTyped *init,
+                             TIntermBlock *statementList,
+                             const TSourceLoc &loc);
     TIntermCase *addCase(TIntermTyped *condition, const TSourceLoc &loc);
     TIntermCase *addDefault(const TSourceLoc &loc);
 
@@ -410,7 +412,7 @@ class TParseContext : angle::NonCopyable
     ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES2 or WebGL.
     ShCompileOptions mCompileOptions;  // Options passed to TCompiler
     int mShaderVersion;
-    TIntermNode *mTreeRoot;      // root of parse tree being created
+    TIntermBlock *mTreeRoot;     // root of parse tree being created
     int mLoopNestingLevel;       // 0 if outside all loops
     int mStructNestingLevel;     // incremented while parsing a struct declaration
     int mSwitchNestingLevel;     // 0 if outside all switch statements

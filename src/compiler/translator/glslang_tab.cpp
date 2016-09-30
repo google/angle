@@ -291,6 +291,7 @@ union YYSTYPE
             TIntermNodePair nodePair;
             TIntermTyped* intermTypedNode;
             TIntermAggregate* intermAggregate;
+            TIntermBlock* intermBlock;
             TIntermSwitch* intermSwitch;
             TIntermCase* intermCase;
         };
@@ -713,33 +714,33 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   236,   236,   237,   240,   250,   253,   258,   263,   268,
-     273,   279,   282,   285,   288,   291,   294,   300,   307,   318,
-     322,   330,   333,   339,   343,   350,   356,   365,   373,   379,
-     385,   394,   397,   400,   403,   413,   414,   415,   416,   424,
-     425,   428,   431,   438,   439,   442,   448,   449,   453,   460,
-     461,   464,   467,   470,   476,   477,   480,   486,   487,   494,
-     495,   502,   503,   510,   511,   517,   518,   524,   525,   531,
-     532,   538,   539,   546,   547,   548,   549,   553,   554,   555,
-     559,   563,   567,   571,   578,   581,   587,   594,   601,   604,
-     610,   619,   623,   627,   631,   635,   642,   649,   652,   659,
-     667,   687,   697,   705,   730,   734,   738,   742,   749,   756,
-     759,   763,   767,   772,   777,   784,   788,   792,   796,   801,
-     806,   813,   823,   829,   832,   838,   842,   849,   855,   862,
-     866,   869,   872,   881,   887,   895,   898,   918,   937,   944,
-     948,   955,   965,   968,   971,   977,   984,   987,   993,   996,
-     999,  1005,  1008,  1013,  1024,  1027,  1030,  1033,  1036,  1039,
-    1043,  1047,  1051,  1055,  1059,  1063,  1067,  1071,  1075,  1079,
-    1083,  1087,  1091,  1095,  1099,  1103,  1107,  1111,  1115,  1119,
-    1123,  1126,  1129,  1132,  1135,  1138,  1141,  1144,  1147,  1150,
-    1153,  1156,  1159,  1162,  1165,  1168,  1175,  1181,  1184,  1196,
-    1196,  1199,  1199,  1205,  1208,  1223,  1226,  1233,  1237,  1243,
-    1249,  1261,  1265,  1269,  1270,  1276,  1277,  1278,  1279,  1280,
-    1281,  1282,  1286,  1287,  1287,  1287,  1297,  1298,  1302,  1302,
-    1303,  1303,  1308,  1311,  1321,  1324,  1330,  1331,  1335,  1342,
-    1346,  1353,  1353,  1360,  1363,  1370,  1374,  1387,  1387,  1392,
-    1392,  1398,  1398,  1406,  1409,  1415,  1418,  1424,  1428,  1435,
-    1438,  1441,  1444,  1447,  1456,  1460,  1467,  1470,  1476,  1476
+       0,   237,   237,   238,   241,   251,   254,   259,   264,   269,
+     274,   280,   283,   286,   289,   292,   295,   301,   308,   319,
+     323,   331,   334,   340,   344,   351,   357,   366,   374,   380,
+     386,   395,   398,   401,   404,   414,   415,   416,   417,   425,
+     426,   429,   432,   439,   440,   443,   449,   450,   454,   461,
+     462,   465,   468,   471,   477,   478,   481,   487,   488,   495,
+     496,   503,   504,   511,   512,   518,   519,   525,   526,   532,
+     533,   539,   540,   547,   548,   549,   550,   554,   555,   556,
+     560,   564,   568,   572,   579,   582,   588,   595,   602,   605,
+     611,   620,   624,   628,   632,   636,   643,   650,   653,   660,
+     668,   688,   698,   706,   731,   735,   739,   743,   750,   757,
+     760,   764,   768,   773,   778,   785,   789,   793,   797,   802,
+     807,   814,   824,   830,   833,   839,   843,   850,   856,   863,
+     867,   870,   873,   882,   888,   896,   899,   919,   938,   945,
+     949,   956,   966,   969,   972,   978,   985,   988,   994,   997,
+    1000,  1006,  1009,  1014,  1025,  1028,  1031,  1034,  1037,  1040,
+    1044,  1048,  1052,  1056,  1060,  1064,  1068,  1072,  1076,  1080,
+    1084,  1088,  1092,  1096,  1100,  1104,  1108,  1112,  1116,  1120,
+    1124,  1127,  1130,  1133,  1136,  1139,  1142,  1145,  1148,  1151,
+    1154,  1157,  1160,  1163,  1166,  1169,  1176,  1182,  1185,  1197,
+    1197,  1200,  1200,  1206,  1209,  1224,  1227,  1234,  1238,  1244,
+    1250,  1262,  1266,  1270,  1271,  1277,  1278,  1279,  1280,  1281,
+    1282,  1283,  1287,  1288,  1288,  1288,  1297,  1298,  1302,  1302,
+    1303,  1303,  1308,  1311,  1320,  1325,  1332,  1333,  1337,  1344,
+    1348,  1355,  1355,  1362,  1365,  1372,  1376,  1389,  1389,  1394,
+    1394,  1400,  1400,  1408,  1411,  1417,  1420,  1426,  1430,  1437,
+    1440,  1443,  1446,  1449,  1458,  1464,  1470,  1473,  1479,  1479
 };
 #endif
 
@@ -4230,7 +4231,7 @@ yyreduce:
 
   case 213:
 
-    { (yyval.interm.intermNode) = (yyvsp[0].interm.intermAggregate); }
+    { (yyval.interm.intermNode) = (yyvsp[0].interm.intermBlock); }
 
     break;
 
@@ -4284,7 +4285,7 @@ yyreduce:
 
   case 222:
 
-    { (yyval.interm.intermAggregate) = 0; }
+    { (yyval.interm.intermBlock) = 0; }
 
     break;
 
@@ -4303,18 +4304,17 @@ yyreduce:
   case 225:
 
     {
-        if ((yyvsp[-2].interm.intermAggregate) != 0) {
-            (yyvsp[-2].interm.intermAggregate)->setOp(EOpSequence);
-            (yyvsp[-2].interm.intermAggregate)->setLine((yyloc));
+        if ((yyvsp[-2].interm.intermBlock) != 0) {
+            (yyvsp[-2].interm.intermBlock)->setLine((yyloc));
         }
-        (yyval.interm.intermAggregate) = (yyvsp[-2].interm.intermAggregate);
+        (yyval.interm.intermBlock) = (yyvsp[-2].interm.intermBlock);
     }
 
     break;
 
   case 226:
 
-    { (yyval.interm.intermNode) = (yyvsp[0].interm.intermAggregate); }
+    { (yyval.interm.intermNode) = (yyvsp[0].interm.intermBlock); }
 
     break;
 
@@ -4332,7 +4332,7 @@ yyreduce:
 
   case 229:
 
-    { context->symbolTable.pop(); (yyval.interm.intermNode) = (yyvsp[0].interm.intermAggregate); }
+    { context->symbolTable.pop(); (yyval.interm.intermNode) = (yyvsp[0].interm.intermBlock); }
 
     break;
 
@@ -4351,7 +4351,7 @@ yyreduce:
   case 232:
 
     {
-        (yyval.interm.intermAggregate) = 0;
+        (yyval.interm.intermBlock) = 0;
     }
 
     break;
@@ -4359,11 +4359,10 @@ yyreduce:
   case 233:
 
     {
-        if ((yyvsp[-1].interm.intermAggregate)) {
-            (yyvsp[-1].interm.intermAggregate)->setOp(EOpSequence);
-            (yyvsp[-1].interm.intermAggregate)->setLine((yyloc));
+        if ((yyvsp[-1].interm.intermBlock)) {
+            (yyvsp[-1].interm.intermBlock)->setLine((yyloc));
         }
-        (yyval.interm.intermAggregate) = (yyvsp[-1].interm.intermAggregate);
+        (yyval.interm.intermBlock) = (yyvsp[-1].interm.intermBlock);
     }
 
     break;
@@ -4371,7 +4370,9 @@ yyreduce:
   case 234:
 
     {
-        (yyval.interm.intermAggregate) = TIntermediate::MakeAggregate((yyvsp[0].interm.intermNode), (yyloc));
+        (yyval.interm.intermBlock) = new TIntermBlock();
+        (yyval.interm.intermBlock)->setLine((yyloc));
+        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
     }
 
     break;
@@ -4379,7 +4380,8 @@ yyreduce:
   case 235:
 
     {
-        (yyval.interm.intermAggregate) = context->intermediate.growAggregate((yyvsp[-1].interm.intermAggregate), (yyvsp[0].interm.intermNode), (yyloc));
+        (yyval.interm.intermBlock) = (yyvsp[-1].interm.intermBlock);
+        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
     }
 
     break;
@@ -4432,7 +4434,7 @@ yyreduce:
   case 242:
 
     {
-        (yyval.interm.intermSwitch) = context->addSwitch((yyvsp[-3].interm.intermTypedNode), (yyvsp[0].interm.intermAggregate), (yylsp[-5]));
+        (yyval.interm.intermSwitch) = context->addSwitch((yyvsp[-3].interm.intermTypedNode), (yyvsp[0].interm.intermBlock), (yylsp[-5]));
         context->decrSwitchNestingLevel();
     }
 
@@ -4621,8 +4623,10 @@ yyreduce:
   case 264:
 
     {
-        (yyval.interm.intermNode) = (yyvsp[0].interm.intermNode);
-        context->setTreeRoot((yyval.interm.intermNode));
+        (yyval.interm.intermBlock) = new TIntermBlock();
+        (yyval.interm.intermBlock)->setLine((yyloc));
+        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
+        context->setTreeRoot((yyval.interm.intermBlock));
     }
 
     break;
@@ -4630,8 +4634,7 @@ yyreduce:
   case 265:
 
     {
-        (yyval.interm.intermNode) = context->intermediate.growAggregate((yyvsp[-1].interm.intermNode), (yyvsp[0].interm.intermNode), (yyloc));
-        context->setTreeRoot((yyval.interm.intermNode));
+        (yyval.interm.intermBlock)->appendStatement((yyvsp[0].interm.intermNode));
     }
 
     break;
@@ -4663,7 +4666,7 @@ yyreduce:
   case 269:
 
     {
-        (yyval.interm.intermNode) = context->addFunctionDefinition(*((yyvsp[-2].interm).function), (yyvsp[-2].interm).intermAggregate, (yyvsp[0].interm.intermAggregate), (yylsp[-2]));
+        (yyval.interm.intermNode) = context->addFunctionDefinition(*((yyvsp[-2].interm).function), (yyvsp[-2].interm).intermAggregate, (yyvsp[0].interm.intermBlock), (yylsp[-2]));
     }
 
     break;

@@ -58,8 +58,8 @@ bool SeparateArrayInitTraverser::visitAggregate(Visit, TIntermAggregate *node)
                 // We rely on that array declarations have been isolated to single declarations.
                 ASSERT(sequence->size() == 1);
                 TIntermTyped *symbol = initNode->getLeft();
-                TIntermAggregate *parentAgg = getParentNode()->getAsAggregate();
-                ASSERT(parentAgg != nullptr);
+                TIntermBlock *parentBlock = getParentNode()->getAsBlock();
+                ASSERT(parentBlock != nullptr);
 
                 TIntermSequence replacements;
 
@@ -74,7 +74,8 @@ bool SeparateArrayInitTraverser::visitAggregate(Visit, TIntermAggregate *node)
                 replacementAssignment->setLine(symbol->getLine());
                 replacements.push_back(replacementAssignment);
 
-                mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(parentAgg, node, replacements));
+                mMultiReplacements.push_back(
+                    NodeReplaceWithMultipleEntry(parentBlock, node, replacements));
             }
         }
         return false;

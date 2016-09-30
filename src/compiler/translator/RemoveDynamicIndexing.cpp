@@ -217,7 +217,7 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
     }
     indexingFunction->getSequence()->push_back(paramsNode);
 
-    TIntermAggregate *statementList = new TIntermAggregate(EOpSequence);
+    TIntermBlock *statementList = new TIntermBlock();
     for (int i = 0; i < numCases; ++i)
     {
         TIntermCase *caseNode = new TIntermCase(CreateIntConstantNode(i));
@@ -247,7 +247,7 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
 
     TIntermSwitch *switchNode = new TIntermSwitch(CreateIndexSymbol(), statementList);
 
-    TIntermAggregate *bodyNode = new TIntermAggregate(EOpSequence);
+    TIntermBlock *bodyNode = new TIntermBlock();
     bodyNode->getSequence()->push_back(switchNode);
 
     TIntermBinary *cond =
@@ -256,8 +256,8 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
 
     // Two blocks: one accesses (either reads or writes) the first element and returns,
     // the other accesses the last element.
-    TIntermAggregate *useFirstBlock = new TIntermAggregate(EOpSequence);
-    TIntermAggregate *useLastBlock = new TIntermAggregate(EOpSequence);
+    TIntermBlock *useFirstBlock = new TIntermBlock();
+    TIntermBlock *useLastBlock  = new TIntermBlock();
     TIntermBinary *indexFirstNode =
         CreateIndexDirectBaseSymbolNode(type, fieldType, 0, baseQualifier);
     TIntermBinary *indexLastNode =
@@ -327,8 +327,8 @@ RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(const TSymbolTabl
 
 void RemoveDynamicIndexingTraverser::insertHelperDefinitions(TIntermNode *root)
 {
-    TIntermAggregate *rootAgg = root->getAsAggregate();
-    ASSERT(rootAgg != nullptr && rootAgg->getOp() == EOpSequence);
+    TIntermBlock *rootBlock = root->getAsBlock();
+    ASSERT(rootBlock != nullptr);
     TIntermSequence insertions;
     for (TType type : mIndexedVecAndMatrixTypes)
     {
@@ -338,7 +338,7 @@ void RemoveDynamicIndexingTraverser::insertHelperDefinitions(TIntermNode *root)
     {
         insertions.push_back(GetIndexFunctionDefinition(type, true));
     }
-    mInsertions.push_back(NodeInsertMultipleEntry(rootAgg, 0, insertions, TIntermSequence()));
+    mInsertions.push_back(NodeInsertMultipleEntry(rootBlock, 0, insertions, TIntermSequence()));
 }
 
 // Create a call to dyn_index_*() based on an indirect indexing op node

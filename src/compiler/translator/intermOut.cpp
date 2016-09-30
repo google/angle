@@ -48,6 +48,7 @@ class TOutputTraverser : public TIntermTraverser
     bool visitTernary(Visit visit, TIntermTernary *node) override;
     bool visitIfElse(Visit visit, TIntermIfElse *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
+    bool visitBlock(Visit visit, TIntermBlock *) override;
     bool visitLoop(Visit visit, TIntermLoop *) override;
     bool visitBranch(Visit visit, TIntermBranch *) override;
     // TODO: Add missing visit functions
@@ -374,18 +375,18 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = sink;
 
+    OutputTreeText(out, node, mDepth);
+
     if (node->getOp() == EOpNull)
     {
         out.prefix(EPrefixError);
-        out << "node is still EOpNull!";
+        out << "node is still EOpNull!\n";
         return true;
     }
 
-    OutputTreeText(out, node, mDepth);
 
     switch (node->getOp())
     {
-      case EOpSequence:      out << "Sequence\n"; return true;
       case EOpComma:         out << "Comma\n"; return true;
       case EOpFunction:      OutputFunction(out, "Function Definition", node); break;
       case EOpFunctionCall:  OutputFunction(out, "Function Call", node); break;
@@ -457,10 +458,20 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         out << "Bad aggregation op";
     }
 
-    if (node->getOp() != EOpSequence && node->getOp() != EOpParameters)
+    if (node->getOp() != EOpParameters)
         out << " (" << node->getCompleteString() << ")";
 
     out << "\n";
+
+    return true;
+}
+
+bool TOutputTraverser::visitBlock(Visit visit, TIntermBlock *node)
+{
+    TInfoSinkBase &out = sink;
+
+    OutputTreeText(out, node, mDepth);
+    out << "Code block\n";
 
     return true;
 }

@@ -31,11 +31,6 @@
 namespace
 {
 
-bool IsSequence(TIntermNode *node)
-{
-    return node->getAsAggregate() != nullptr && node->getAsAggregate()->getOp() == EOpSequence;
-}
-
 void WriteSingleConstant(TInfoSinkBase &out, const TConstantUnion *const constUnion)
 {
     ASSERT(constUnion != nullptr);
@@ -1418,44 +1413,48 @@ TString OutputHLSL::samplerNamePrefixFromStruct(TIntermTyped *node)
     }
 }
 
+bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
+{
+    TInfoSinkBase &out = getInfoSink();
+
+    if (mInsideFunction)
+    {
+        outputLineDirective(out, node->getLine().first_line);
+        out << "{\n";
+    }
+
+    for (TIntermSequence::iterator sit = node->getSequence()->begin();
+         sit != node->getSequence()->end(); sit++)
+    {
+        outputLineDirective(out, (*sit)->getLine().first_line);
+
+        (*sit)->traverse(this);
+
+        // Don't output ; after case labels, they're terminated by :
+        // This is needed especially since outputting a ; after a case statement would turn empty
+        // case statements into non-empty case statements, disallowing fall-through from them.
+        // Also no need to output ; after if statements or sequences. This is done just for
+        // code clarity.
+        if ((*sit)->getAsCaseNode() == nullptr && (*sit)->getAsIfElseNode() == nullptr &&
+            (*sit)->getAsBlock() == nullptr)
+            out << ";\n";
+    }
+
+    if (mInsideFunction)
+    {
+        outputLineDirective(out, node->getLine().last_line);
+        out << "}\n";
+    }
+
+    return false;
+}
+
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
     switch (node->getOp())
     {
-        case EOpSequence:
-        {
-            if (mInsideFunction)
-            {
-                outputLineDirective(out, node->getLine().first_line);
-                out << "{\n";
-            }
-
-            for (TIntermSequence::iterator sit = node->getSequence()->begin(); sit != node->getSequence()->end(); sit++)
-            {
-                outputLineDirective(out, (*sit)->getLine().first_line);
-
-                (*sit)->traverse(this);
-
-                // Don't output ; after case labels, they're terminated by :
-                // This is needed especially since outputting a ; after a case statement would turn empty
-                // case statements into non-empty case statements, disallowing fall-through from them.
-                // Also no need to output ; after if statements or sequences. This is done just for
-                // code clarity.
-                if ((*sit)->getAsCaseNode() == nullptr && (*sit)->getAsIfElseNode() == nullptr &&
-                    !IsSequence(*sit))
-                    out << ";\n";
-            }
-
-            if (mInsideFunction)
-            {
-                outputLineDirective(out, node->getLine().last_line);
-                out << "}\n";
-            }
-
-            return false;
-        }
         case EOpDeclaration:
             if (visit == PreVisit)
             {
@@ -1629,7 +1628,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             ASSERT(sequence->size() == 2);
             TIntermNode *body = (*sequence)[1];
             // The function body node will output braces.
-            ASSERT(IsSequence(body));
+            ASSERT(body->getAsBlock() != nullptr);
             body->traverse(this);
             mInsideFunction = false;
 
@@ -1928,8 +1927,6 @@ void OutputHLSL::writeIfElse(TInfoSinkBase &out, TIntermIfElse *node)
     if (node->getTrueBlock())
     {
         // The trueBlock child node will output braces.
-        ASSERT(IsSequence(node->getTrueBlock()));
-
         node->getTrueBlock()->traverse(this);
 
         // Detect true discard
@@ -1951,8 +1948,6 @@ void OutputHLSL::writeIfElse(TInfoSinkBase &out, TIntermIfElse *node)
         outputLineDirective(out, node->getFalseBlock()->getLine().first_line);
 
         // The falseBlock child node will output braces.
-        ASSERT(IsSequence(node->getFalseBlock()));
-
         node->getFalseBlock()->traverse(this);
 
         outputLineDirective(out, node->getFalseBlock()->getLine().first_line);
@@ -2092,7 +2087,6 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     if (node->getBody())
     {
         // The loop body node will output braces.
-        ASSERT(IsSequence(node->getBody()));
         node->getBody()->traverse(this);
     }
     else
@@ -2182,15 +2176,15 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 
 bool OutputHLSL::isSingleStatement(TIntermNode *node)
 {
-    TIntermAggregate *aggregate = node->getAsAggregate();
+    if (node->getAsBlock())
+    {
+        return false;
+    }
 
+    TIntermAggregate *aggregate = node->getAsAggregate();
     if (aggregate)
     {
-        if (aggregate->getOp() == EOpSequence)
-        {
-            return false;
-        }
-        else if (aggregate->getOp() == EOpDeclaration)
+        if (aggregate->getOp() == EOpDeclaration)
         {
             // Declaring multiple comma-separated variables must be considered multiple statements
             // because each individual declaration has side effects which are visible in the next.

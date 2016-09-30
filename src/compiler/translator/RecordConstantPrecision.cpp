@@ -45,7 +45,7 @@ RecordConstantPrecisionTraverser::RecordConstantPrecisionTraverser()
 
 bool RecordConstantPrecisionTraverser::operandAffectsParentOperationPrecision(TIntermTyped *operand)
 {
-    if (getParentNode()->getAsCaseNode())
+    if (getParentNode()->getAsCaseNode() || getParentNode()->getAsBlock())
     {
         return false;
     }

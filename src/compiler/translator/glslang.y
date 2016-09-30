@@ -76,6 +76,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TIntermNodePair nodePair;
             TIntermTyped* intermTypedNode;
             TIntermAggregate* intermAggregate;
+            TIntermBlock* intermBlock;
             TIntermSwitch* intermSwitch;
             TIntermCase* intermCase;
         };
@@ -195,9 +196,9 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %type <interm.intermTypedNode> shift_expression and_expression exclusive_or_expression inclusive_or_expression
 %type <interm.intermTypedNode> function_call initializer condition conditionopt
 
-%type <interm.intermNode> translation_unit function_definition
-%type <interm.intermNode> statement simple_statement
-%type <interm.intermAggregate>  statement_list compound_statement compound_statement_no_new_scope
+%type <interm.intermBlock> translation_unit
+%type <interm.intermNode> function_definition statement simple_statement
+%type <interm.intermBlock> statement_list compound_statement compound_statement_no_new_scope
 %type <interm.intermNode> declaration_statement selection_statement expression_statement
 %type <interm.intermNode> declaration external_declaration
 %type <interm.intermNode> for_init_statement
@@ -1286,7 +1287,6 @@ compound_statement
     : LEFT_BRACE RIGHT_BRACE { $$ = 0; }
     | LEFT_BRACE { context->symbolTable.push(); } statement_list { context->symbolTable.pop(); } RIGHT_BRACE {
         if ($3 != 0) {
-            $3->setOp(EOpSequence);
             $3->setLine(@$);
         }
         $$ = $3;
@@ -1310,7 +1310,6 @@ compound_statement_no_new_scope
     }
     | LEFT_BRACE statement_list RIGHT_BRACE {
         if ($2) {
-            $2->setOp(EOpSequence);
             $2->setLine(@$);
         }
         $$ = $2;
@@ -1319,10 +1318,13 @@ compound_statement_no_new_scope
 
 statement_list
     : statement {
-        $$ = TIntermediate::MakeAggregate($1, @$);
+        $$ = new TIntermBlock();
+        $$->setLine(@$);
+        $$->appendStatement($1);
     }
     | statement_list statement {
-        $$ = context->intermediate.growAggregate($1, $2, @$);
+        $$ = $1;
+        $$->appendStatement($2);
     }
     ;
 
@@ -1454,12 +1456,13 @@ jump_statement
 
 translation_unit
     : external_declaration {
-        $$ = $1;
+        $$ = new TIntermBlock();
+        $$->setLine(@$);
+        $$->appendStatement($1);
         context->setTreeRoot($$);
     }
     | translation_unit external_declaration {
-        $$ = context->intermediate.growAggregate($1, $2, @$);
-        context->setTreeRoot($$);
+        $$->appendStatement($2);
     }
     ;
 

@@ -2060,7 +2060,7 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
 
 TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function,
                                                        TIntermAggregate *functionPrototype,
-                                                       TIntermAggregate *functionBody,
+                                                       TIntermBlock *functionBody,
                                                        const TSourceLoc &location)
 {
     // Check that non-void functions have at least one return statement.
@@ -2077,7 +2077,7 @@ TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function
 
     if (functionBody == nullptr)
     {
-        functionBody = new TIntermAggregate(EOpSequence);
+        functionBody = new TIntermBlock();
         functionBody->setLine(location);
     }
     functionNode->getSequence()->push_back(functionBody);
@@ -3085,7 +3085,7 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
 }
 
 TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
-                                        TIntermAggregate *statementList,
+                                        TIntermBlock *statementList,
                                         const TSourceLoc &loc)
 {
     TBasicType switchType = init->getBasicType();

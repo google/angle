@@ -62,16 +62,12 @@ TIntermTyped *TIntermediate::addIndex(TOperator op,
     return node;
 }
 
-//
 // This is the safe way to change the operator on an aggregate, as it
 // does lots of error checking and fixing.  Especially for establishing
-// a function call's operation on it's set of parameters.  Sequences
-// of instructions are also aggregates, but they just direnctly set
-// their operator to EOpSequence.
+// a function call's operation on it's set of parameters.
 //
 // Returns an aggregate node, which could be the one passed in if
 // it was already an aggregate but no operator was set.
-//
 TIntermAggregate *TIntermediate::setAggregateOperator(
     TIntermNode *node, TOperator op, const TSourceLoc &line)
 {
@@ -156,19 +152,20 @@ TIntermAggregate *TIntermediate::MakeAggregate(TIntermNode *node, const TSourceL
 }
 
 // If the input node is nullptr, return nullptr.
-// If the input node is a sequence (block) node, return it.
-// If the input node is not a sequence node, put it inside a sequence node and return that.
-TIntermAggregate *TIntermediate::EnsureSequence(TIntermNode *node)
+// If the input node is a block node, return it.
+// If the input node is not a block node, put it inside a block node and return that.
+TIntermBlock *TIntermediate::EnsureBlock(TIntermNode *node)
 {
     if (node == nullptr)
         return nullptr;
-    TIntermAggregate *aggNode = node->getAsAggregate();
-    if (aggNode != nullptr && aggNode->getOp() == EOpSequence)
-        return aggNode;
+    TIntermBlock *blockNode = node->getAsBlock();
+    if (blockNode != nullptr)
+        return blockNode;
 
-    aggNode = MakeAggregate(node, node->getLine());
-    aggNode->setOp(EOpSequence);
-    return aggNode;
+    blockNode = new TIntermBlock();
+    blockNode->setLine(node->getLine());
+    blockNode->getSequence()->push_back(node);
+    return blockNode;
 }
 
 // For "if" test nodes.  There are three children; a condition,
@@ -186,20 +183,16 @@ TIntermNode *TIntermediate::addIfElse(TIntermTyped *cond,
     {
         if (cond->getAsConstantUnion()->getBConst(0) == true)
         {
-            return nodePair.node1 ? setAggregateOperator(nodePair.node1, EOpSequence,
-                                                         nodePair.node1->getLine())
-                                  : nullptr;
+            return EnsureBlock(nodePair.node1);
         }
         else
         {
-            return nodePair.node2 ? setAggregateOperator(nodePair.node2, EOpSequence,
-                                                         nodePair.node2->getLine())
-                                  : nullptr;
+            return EnsureBlock(nodePair.node2);
         }
     }
 
     TIntermIfElse *node =
-        new TIntermIfElse(cond, EnsureSequence(nodePair.node1), EnsureSequence(nodePair.node2));
+        new TIntermIfElse(cond, EnsureBlock(nodePair.node1), EnsureBlock(nodePair.node2));
     node->setLine(line);
 
     return node;
@@ -269,8 +262,9 @@ TIntermTyped *TIntermediate::AddTernarySelection(TIntermTyped *cond,
     return node;
 }
 
-TIntermSwitch *TIntermediate::addSwitch(
-    TIntermTyped *init, TIntermAggregate *statementList, const TSourceLoc &line)
+TIntermSwitch *TIntermediate::addSwitch(TIntermTyped *init,
+                                        TIntermBlock *statementList,
+                                        const TSourceLoc &line)
 {
     TIntermSwitch *node = new TIntermSwitch(init, statementList);
     node->setLine(line);
@@ -331,7 +325,7 @@ TIntermNode *TIntermediate::addLoop(
     TLoopType type, TIntermNode *init, TIntermTyped *cond, TIntermTyped *expr,
     TIntermNode *body, const TSourceLoc &line)
 {
-    TIntermNode *node = new TIntermLoop(type, init, cond, expr, EnsureSequence(body));
+    TIntermNode *node = new TIntermLoop(type, init, cond, expr, EnsureBlock(body));
     node->setLine(line);
 
     return node;
@@ -353,33 +347,6 @@ TIntermBranch* TIntermediate::addBranch(
     node->setLine(line);
 
     return node;
-}
-
-//
-// This is to be executed once the final root is put on top by the parsing
-// process.
-//
-TIntermAggregate *TIntermediate::PostProcess(TIntermNode *root)
-{
-    if (root == nullptr)
-        return nullptr;
-
-    //
-    // Finish off the top level sequence, if any
-    //
-    TIntermAggregate *aggRoot = root->getAsAggregate();
-    if (aggRoot != nullptr && aggRoot->getOp() == EOpNull)
-    {
-        aggRoot->setOp(EOpSequence);
-    }
-    else if (aggRoot == nullptr || aggRoot->getOp() != EOpSequence)
-    {
-        aggRoot = new TIntermAggregate(EOpSequence);
-        aggRoot->setLine(root->getLine());
-        aggRoot->getSequence()->push_back(root);
-    }
-
-    return aggRoot;
 }
 
 TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate,

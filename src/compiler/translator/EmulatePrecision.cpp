@@ -467,14 +467,15 @@ bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
         return false;
     }
 
-    TIntermAggregate *aggParent = parent->getAsAggregate();
-    // If the parent's op is EOpSequence, the result is not assigned anywhere,
+    TIntermBlock *blockParent = parent->getAsBlock();
+    // If the parent is a block, the result is not assigned anywhere,
     // so rounding it is not needed. In particular, this can avoid a lot of
     // unnecessary rounding of unused return values of assignment.
-    if (aggParent && aggParent->getOp() == EOpSequence)
+    if (blockParent)
     {
         return false;
     }
+    TIntermAggregate *aggParent = parent->getAsAggregate();
     if (aggParent && aggParent->getOp() == EOpComma && (aggParent->getSequence()->back() != node))
     {
         return false;
@@ -602,7 +603,6 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
     bool visitChildren = true;
     switch (node->getOp())
     {
-      case EOpSequence:
       case EOpConstructStruct:
       case EOpFunction:
         break;

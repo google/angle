@@ -60,25 +60,6 @@ bool ScalarizeVecAndMatConstructorArgs::visitAggregate(Visit visit, TIntermAggre
     {
         switch (node->getOp())
         {
-          case EOpSequence:
-            mSequenceStack.push_back(TIntermSequence());
-            {
-                for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
-                     iter != node->getSequence()->end(); ++iter)
-                {
-                    TIntermNode *child = *iter;
-                    ASSERT(child != NULL);
-                    child->traverse(this);
-                    mSequenceStack.back().push_back(child);
-                }
-            }
-            if (mSequenceStack.back().size() > node->getSequence()->size())
-            {
-                node->getSequence()->clear();
-                *(node->getSequence()) = mSequenceStack.back();
-            }
-            mSequenceStack.pop_back();
-            return false;
           case EOpConstructVec2:
           case EOpConstructVec3:
           case EOpConstructVec4:
@@ -108,6 +89,26 @@ bool ScalarizeVecAndMatConstructorArgs::visitAggregate(Visit visit, TIntermAggre
         }
     }
     return true;
+}
+
+bool ScalarizeVecAndMatConstructorArgs::visitBlock(Visit visit, TIntermBlock *node)
+{
+    mBlockStack.push_back(TIntermSequence());
+    {
+        for (TIntermNode *child : *node->getSequence())
+        {
+            ASSERT(child != nullptr);
+            child->traverse(this);
+            mBlockStack.back().push_back(child);
+        }
+    }
+    if (mBlockStack.back().size() > node->getSequence()->size())
+    {
+        node->getSequence()->clear();
+        *(node->getSequence()) = mBlockStack.back();
+    }
+    mBlockStack.pop_back();
+    return false;
 }
 
 void ScalarizeVecAndMatConstructorArgs::scalarizeArgs(
@@ -267,8 +268,8 @@ TString ScalarizeVecAndMatConstructorArgs::createTempVariable(TIntermTyped *orig
     TIntermAggregate *decl = new TIntermAggregate(EOpDeclaration);
     decl->getSequence()->push_back(init);
 
-    ASSERT(mSequenceStack.size() > 0);
-    TIntermSequence &sequence = mSequenceStack.back();
+    ASSERT(mBlockStack.size() > 0);
+    TIntermSequence &sequence = mBlockStack.back();
     sequence.push_back(decl);
 
     return tempVarName;

@@ -8,8 +8,10 @@
 
 #include "compiler/translator/ParseContext.h"
 
-bool ValidateSwitch::validate(TBasicType switchType, TParseContext *context,
-    TIntermAggregate *statementList, const TSourceLoc &loc)
+bool ValidateSwitch::validate(TBasicType switchType,
+                              TParseContext *context,
+                              TIntermBlock *statementList,
+                              const TSourceLoc &loc)
 {
     ValidateSwitch validate(switchType, context);
     ASSERT(statementList);

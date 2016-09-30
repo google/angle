@@ -136,15 +136,16 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
                 // Cases 2 to 4 are already converted to simpler cases by SeparateExpressionsReturningArrays, so we
                 // only need to worry about the case where a function call returning an array forms an expression by
                 // itself.
-                TIntermAggregate *parentAgg = getParentNode()->getAsAggregate();
-                if (parentAgg != nullptr && parentAgg->getOp() == EOpSequence)
+                TIntermBlock *parentBlock = getParentNode()->getAsBlock();
+                if (parentBlock)
                 {
                     nextTemporaryIndex();
                     TIntermSequence replacements;
                     replacements.push_back(createTempDeclaration(node->getType()));
                     TIntermSymbol *returnSymbol = createTempSymbol(node->getType());
                     replacements.push_back(CreateReplacementCall(node, returnSymbol));
-                    mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(parentAgg, node, replacements));
+                    mMultiReplacements.push_back(
+                        NodeReplaceWithMultipleEntry(parentBlock, node, replacements));
                 }
                 return false;
             }
@@ -179,7 +180,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitBranch(Visit visit, TIntermBr
         replacementBranch->setLine(node->getLine());
         replacements.push_back(replacementBranch);
 
-        mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(getParentNode()->getAsAggregate(), node, replacements));
+        mMultiReplacements.push_back(
+            NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(), node, replacements));
     }
     return false;
 }

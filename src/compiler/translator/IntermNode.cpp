@@ -170,7 +170,7 @@ bool TIntermLoop::replaceChildNode(
     REPLACE_IF_IS(mInit, TIntermNode, original, replacement);
     REPLACE_IF_IS(mCond, TIntermTyped, original, replacement);
     REPLACE_IF_IS(mExpr, TIntermTyped, original, replacement);
-    REPLACE_IF_IS(mBody, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mBody, TIntermBlock, original, replacement);
     return false;
 }
 
@@ -207,35 +207,47 @@ bool TIntermUnary::replaceChildNode(
 bool TIntermAggregate::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
-    for (size_t ii = 0; ii < mSequence.size(); ++ii)
+    return replaceChildNodeInternal(original, replacement);
+}
+
+bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+{
+    return replaceChildNodeInternal(original, replacement);
+}
+
+bool TIntermAggregateBase::replaceChildNodeInternal(TIntermNode *original, TIntermNode *replacement)
+{
+    for (size_t ii = 0; ii < getSequence()->size(); ++ii)
     {
-        REPLACE_IF_IS(mSequence[ii], TIntermNode, original, replacement);
+        REPLACE_IF_IS((*getSequence())[ii], TIntermNode, original, replacement);
     }
     return false;
 }
 
-bool TIntermAggregate::replaceChildNodeWithMultiple(TIntermNode *original, TIntermSequence replacements)
+bool TIntermAggregateBase::replaceChildNodeWithMultiple(TIntermNode *original,
+                                                        const TIntermSequence &replacements)
 {
-    for (auto it = mSequence.begin(); it < mSequence.end(); ++it)
+    for (auto it = getSequence()->begin(); it < getSequence()->end(); ++it)
     {
         if (*it == original)
         {
-            it = mSequence.erase(it);
-            mSequence.insert(it, replacements.begin(), replacements.end());
+            it = getSequence()->erase(it);
+            getSequence()->insert(it, replacements.begin(), replacements.end());
             return true;
         }
     }
     return false;
 }
 
-bool TIntermAggregate::insertChildNodes(TIntermSequence::size_type position, TIntermSequence insertions)
+bool TIntermAggregateBase::insertChildNodes(TIntermSequence::size_type position,
+                                            const TIntermSequence &insertions)
 {
-    if (position > mSequence.size())
+    if (position > getSequence()->size())
     {
         return false;
     }
-    auto it = mSequence.begin() + position;
-    mSequence.insert(it, insertions.begin(), insertions.end());
+    auto it = getSequence()->begin() + position;
+    getSequence()->insert(it, insertions.begin(), insertions.end());
     return true;
 }
 
@@ -299,6 +311,14 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
         mType.setPrecision(precision);
 }
 
+void TIntermBlock::appendStatement(TIntermNode *statement)
+{
+    if (statement != nullptr)
+    {
+        mStatements.push_back(statement);
+    }
+}
+
 bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
@@ -310,8 +330,8 @@ bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replac
 bool TIntermIfElse::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
-    REPLACE_IF_IS(mTrueBlock, TIntermAggregate, original, replacement);
-    REPLACE_IF_IS(mFalseBlock, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mTrueBlock, TIntermBlock, original, replacement);
+    REPLACE_IF_IS(mFalseBlock, TIntermBlock, original, replacement);
     return false;
 }
 
@@ -319,7 +339,7 @@ bool TIntermSwitch::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mInit, TIntermTyped, original, replacement);
-    REPLACE_IF_IS(mStatementList, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mStatementList, TIntermBlock, original, replacement);
     return false;
 }
 

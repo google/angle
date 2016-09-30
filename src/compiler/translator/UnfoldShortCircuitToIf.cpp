@@ -75,7 +75,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
           ASSERT(node->getLeft()->getType() == boolType);
           insertions.push_back(createTempInitDeclaration(node->getLeft()));
 
-          TIntermAggregate *assignRightBlock = new TIntermAggregate(EOpSequence);
+          TIntermBlock *assignRightBlock = new TIntermBlock();
           ASSERT(node->getRight()->getType() == boolType);
           assignRightBlock->getSequence()->push_back(createTempAssignment(node->getRight()));
 
@@ -99,7 +99,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
           ASSERT(node->getLeft()->getType() == boolType);
           insertions.push_back(createTempInitDeclaration(node->getLeft()));
 
-          TIntermAggregate *assignRightBlock = new TIntermAggregate(EOpSequence);
+          TIntermBlock *assignRightBlock = new TIntermBlock();
           ASSERT(node->getRight()->getType() == boolType);
           assignRightBlock->getSequence()->push_back(createTempAssignment(node->getRight()));
 
@@ -139,11 +139,11 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
     tempDeclaration->getSequence()->push_back(tempSymbol);
     insertions.push_back(tempDeclaration);
 
-    TIntermAggregate *trueBlock   = new TIntermAggregate(EOpSequence);
+    TIntermBlock *trueBlock       = new TIntermBlock();
     TIntermBinary *trueAssignment = createTempAssignment(node->getTrueExpression());
     trueBlock->getSequence()->push_back(trueAssignment);
 
-    TIntermAggregate *falseBlock   = new TIntermAggregate(EOpSequence);
+    TIntermBlock *falseBlock       = new TIntermBlock();
     TIntermBinary *falseAssignment = createTempAssignment(node->getFalseExpression());
     falseBlock->getSequence()->push_back(falseAssignment);
 

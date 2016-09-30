@@ -39,7 +39,7 @@ class AddDefaultReturnStatementsTraverser : private TIntermTraverser
             return false;
         }
 
-        TIntermAggregate *bodyNode = node->getSequence()->back()->getAsAggregate();
+        TIntermBlock *bodyNode = node->getSequence()->back()->getAsBlock();
         ASSERT(bodyNode);
         TIntermBranch *returnNode = bodyNode->getSequence()->back()->getAsBranchNode();
         if (returnNode != nullptr && returnNode->getFlowOp() == EOpReturn)
@@ -58,7 +58,7 @@ class AddDefaultReturnStatementsTraverser : private TIntermTraverser
             TIntermBranch *branch =
                 new TIntermBranch(EOpReturn, TIntermTyped::CreateZero(returnType));
 
-            TIntermAggregate *bodyNode = node->getSequence()->back()->getAsAggregate();
+            TIntermBlock *bodyNode = node->getSequence()->back()->getAsBlock();
             bodyNode->getSequence()->push_back(branch);
 
             return false;

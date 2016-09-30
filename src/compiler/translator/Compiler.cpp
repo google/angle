@@ -232,16 +232,16 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     return true;
 }
 
-TIntermNode *TCompiler::compileTreeForTesting(const char *const shaderStrings[],
-                                              size_t numStrings,
-                                              ShCompileOptions compileOptions)
+TIntermBlock *TCompiler::compileTreeForTesting(const char *const shaderStrings[],
+                                               size_t numStrings,
+                                               ShCompileOptions compileOptions)
 {
     return compileTreeImpl(shaderStrings, numStrings, compileOptions);
 }
 
-TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
-                                        size_t numStrings,
-                                        const ShCompileOptions compileOptions)
+TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
+                                         size_t numStrings,
+                                         const ShCompileOptions compileOptions)
 {
     clearResults();
 
@@ -282,7 +282,7 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         success = false;
     }
 
-    TIntermNode *root = nullptr;
+    TIntermBlock *root = nullptr;
 
     if (success)
     {
@@ -293,7 +293,6 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
         root = parseContext.getTreeRoot();
-        root = TIntermediate::PostProcess(root);
 
         // Highp might have been auto-enabled based on shader version
         fragmentPrecisionHigh = parseContext.getFragmentPrecisionHigh();
@@ -473,7 +472,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
     }
 
     TScopedPoolAllocator scopedAlloc(&allocator);
-    TIntermNode *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
+    TIntermBlock *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
 
     if (root)
     {
@@ -787,13 +786,10 @@ class TCompiler::UnusedPredicate
     const std::vector<FunctionMetadata> *mMetadatas;
 };
 
-bool TCompiler::pruneUnusedFunctions(TIntermNode *root)
+bool TCompiler::pruneUnusedFunctions(TIntermBlock *root)
 {
-    TIntermAggregate *rootNode = root->getAsAggregate();
-    ASSERT(rootNode != nullptr);
-
     UnusedPredicate isUnused(&mCallDag, &functionMetadata);
-    TIntermSequence *sequence = rootNode->getSequence();
+    TIntermSequence *sequence = root->getSequence();
 
     if (!sequence->empty())
     {

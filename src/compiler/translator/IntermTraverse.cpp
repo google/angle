@@ -58,6 +58,11 @@ void TIntermCase::traverse(TIntermTraverser *it)
     it->traverseCase(this);
 }
 
+void TIntermBlock::traverse(TIntermTraverser *it)
+{
+    it->traverseBlock(this);
+}
+
 void TIntermAggregate::traverse(TIntermTraverser *it)
 {
     it->traverseAggregate(this);
@@ -88,7 +93,7 @@ TIntermTraverser::~TIntermTraverser()
 {
 }
 
-void TIntermTraverser::pushParentBlock(TIntermAggregate *node)
+void TIntermTraverser::pushParentBlock(TIntermBlock *node)
 {
     mParentBlockStack.push_back(ParentBlock(node, 0));
 }
@@ -418,9 +423,42 @@ void TLValueTrackingTraverser::traverseUnary(TIntermUnary *node)
         visitUnary(PostVisit, node);
 }
 
-//
+// Traverse a block node.
+void TIntermTraverser::traverseBlock(TIntermBlock *node)
+{
+    bool visit = true;
+
+    TIntermSequence *sequence = node->getSequence();
+
+    if (preVisit)
+        visit = visitBlock(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+        pushParentBlock(node);
+
+        for (auto *child : *sequence)
+        {
+            child->traverse(this);
+            if (visit && inVisit)
+            {
+                if (child != sequence->back())
+                    visit = visitBlock(InVisit, node);
+            }
+
+            incrementParentBlockPos();
+        }
+
+        popParentBlock();
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitBlock(PostVisit, node);
+}
+
 // Traverse an aggregate node.  Same comments in binary node apply here.
-//
 void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 {
     bool visit = true;
@@ -434,9 +472,7 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
     {
         incrementDepth(node);
 
-        if (node->getOp() == EOpSequence)
-            pushParentBlock(node);
-        else if (node->getOp() == EOpFunction)
+        if (node->getOp() == EOpFunction)
             mInGlobalScope = false;
 
         for (auto *child : *sequence)
@@ -447,14 +483,9 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
                 if (child != sequence->back())
                     visit = visitAggregate(InVisit, node);
             }
-
-            if (node->getOp() == EOpSequence)
-                incrementParentBlockPos();
         }
 
-        if (node->getOp() == EOpSequence)
-            popParentBlock();
-        else if (node->getOp() == EOpFunction)
+        if (node->getOp() == EOpFunction)
             mInGlobalScope = true;
 
         decrementDepth();
@@ -529,9 +560,7 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
         }
         else
         {
-            if (node->getOp() == EOpSequence)
-                pushParentBlock(node);
-            else if (node->getOp() == EOpFunction)
+            if (node->getOp() == EOpFunction)
                 mInGlobalScope = false;
 
             // Find the built-in function corresponding to this op so that we can determine the
@@ -575,17 +604,12 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
                         visit = visitAggregate(InVisit, node);
                 }
 
-                if (node->getOp() == EOpSequence)
-                    incrementParentBlockPos();
-
                 ++paramIndex;
             }
 
             setInFunctionCallOutParameter(false);
 
-            if (node->getOp() == EOpSequence)
-                popParentBlock();
-            else if (node->getOp() == EOpFunction)
+            if (node->getOp() == EOpFunction)
                 mInGlobalScope = true;
         }
 

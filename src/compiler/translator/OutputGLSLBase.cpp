@@ -24,8 +24,11 @@ bool isSingleStatement(TIntermNode *node)
 {
     if (const TIntermAggregate *aggregate = node->getAsAggregate())
     {
-        return (aggregate->getOp() != EOpFunction) &&
-               (aggregate->getOp() != EOpSequence);
+        return (aggregate->getOp() != EOpFunction);
+    }
+    else if (node->getAsBlock())
+    {
+        return false;
     }
     else if (node->getAsIfElseNode())
     {
@@ -753,6 +756,36 @@ bool TOutputGLSLBase::visitCase(Visit visit, TIntermCase *node)
     }
 }
 
+bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
+{
+    TInfoSinkBase &out = objSink();
+    // Scope the blocks except when at the global scope.
+    if (mDepth > 0)
+    {
+        out << "{\n";
+    }
+
+    incrementDepth(node);
+    for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
+         iter != node->getSequence()->end(); ++iter)
+    {
+        TIntermNode *curNode = *iter;
+        ASSERT(curNode != nullptr);
+        curNode->traverse(this);
+
+        if (isSingleStatement(curNode))
+            out << ";\n";
+    }
+    decrementDepth();
+
+    // Scope the blocks except when at the global scope.
+    if (mDepth > 0)
+    {
+        out << "}\n";
+    }
+    return false;
+}
+
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
@@ -760,33 +793,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
     bool useEmulatedFunction = (visit == PreVisit && node->getUseEmulatedFunction());
     switch (node->getOp())
     {
-      case EOpSequence:
-        // Scope the sequences except when at the global scope.
-        if (mDepth > 0)
-        {
-            out << "{\n";
-        }
-
-        incrementDepth(node);
-        for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
-             iter != node->getSequence()->end(); ++iter)
-        {
-            TIntermNode *curNode = *iter;
-            ASSERT(curNode != NULL);
-            curNode->traverse(this);
-
-            if (isSingleStatement(curNode))
-                out << ";\n";
-        }
-        decrementDepth();
-
-        // Scope the sequences except when at the global scope.
-        if (mDepth > 0)
-        {
-            out << "}\n";
-        }
-        visitChildren = false;
-        break;
       case EOpPrototype:
         // Function declaration.
         ASSERT(visit == PreVisit);
@@ -830,7 +836,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         params->traverse(this);
 
         // Traverse function body.
-        TIntermAggregate *body = sequence[1]->getAsAggregate();
+        TIntermBlock *body = sequence[1]->getAsBlock();
         visitCodeBlock(body);
         decrementDepth();
 
@@ -1106,7 +1112,7 @@ bool TOutputGLSLBase::visitBranch(Visit visit, TIntermBranch *node)
     return true;
 }
 
-void TOutputGLSLBase::visitCodeBlock(TIntermNode *node)
+void TOutputGLSLBase::visitCodeBlock(TIntermBlock *node)
 {
     TInfoSinkBase &out = objSink();
     if (node != NULL)

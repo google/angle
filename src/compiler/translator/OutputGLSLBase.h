@@ -50,10 +50,11 @@ class TOutputGLSLBase : public TIntermTraverser
     bool visitSwitch(Visit visit, TIntermSwitch *node) override;
     bool visitCase(Visit visit, TIntermCase *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitBlock(Visit visit, TIntermBlock *node) override;
     bool visitLoop(Visit visit, TIntermLoop *node) override;
     bool visitBranch(Visit visit, TIntermBranch *node) override;
 
-    void visitCodeBlock(TIntermNode *node);
+    void visitCodeBlock(TIntermBlock *node);
 
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name.

@@ -85,7 +85,7 @@ bool GLFragColorBroadcastTraverser::visitAggregate(Visit visit, TIntermAggregate
             {
                 TIntermSequence *sequence = node->getSequence();
                 ASSERT(sequence->size() == 2);
-                TIntermAggregate *body = (*sequence)[1]->getAsAggregate();
+                TIntermBlock *body = (*sequence)[1]->getAsBlock();
                 ASSERT(body);
                 mMainSequence = body->getSequence();
             }

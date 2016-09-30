@@ -72,10 +72,10 @@ class TCompiler : public TShHandleBase
 
     // compileTreeForTesting should be used only when tests require access to
     // the AST. Users of this function need to manually manage the global pool
-    // allocator. Returns NULL whenever there are compilation errors.
-    TIntermNode *compileTreeForTesting(const char *const shaderStrings[],
-                                       size_t numStrings,
-                                       ShCompileOptions compileOptions);
+    // allocator. Returns nullptr whenever there are compilation errors.
+    TIntermBlock *compileTreeForTesting(const char *const shaderStrings[],
+                                        size_t numStrings,
+                                        ShCompileOptions compileOptions);
 
     bool compile(const char *const shaderStrings[],
                  size_t numStrings,
@@ -181,11 +181,11 @@ class TCompiler : public TShHandleBase
 
     // Removes unused function declarations and prototypes from the AST
     class UnusedPredicate;
-    bool pruneUnusedFunctions(TIntermNode *root);
+    bool pruneUnusedFunctions(TIntermBlock *root);
 
-    TIntermNode *compileTreeImpl(const char *const shaderStrings[],
-                                 size_t numStrings,
-                                 const ShCompileOptions compileOptions);
+    TIntermBlock *compileTreeImpl(const char *const shaderStrings[],
+                                  size_t numStrings,
+                                  const ShCompileOptions compileOptions);
 
     sh::GLenum shaderType;
     ShShaderSpec shaderSpec;
