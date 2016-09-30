@@ -180,6 +180,137 @@ bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsiz
     return true;
 }
 
+bool ValidateReadPixelsBase(ValidationContext *context,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height,
+                            GLenum format,
+                            GLenum type,
+                            GLsizei bufSize,
+                            GLsizei *length,
+                            GLvoid *pixels)
+{
+    if (length != nullptr)
+    {
+        *length = 0;
+    }
+
+    if (width < 0 || height < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "width and height must be positive"));
+        return false;
+    }
+
+    auto readFramebuffer = context->getGLState().getReadFramebuffer();
+
+    if (readFramebuffer->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        context->handleError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
+        return false;
+    }
+
+    if (readFramebuffer->id() != 0 && readFramebuffer->getSamples(context->getContextState()) != 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    const Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
+    ASSERT(framebuffer);
+
+    if (framebuffer->getReadBufferState() == GL_NONE)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Read buffer is GL_NONE"));
+        return false;
+    }
+
+    const FramebufferAttachment *readBuffer = framebuffer->getReadColorbuffer();
+    if (!readBuffer)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    GLenum currentFormat         = framebuffer->getImplementationColorReadFormat();
+    GLenum currentType           = framebuffer->getImplementationColorReadType();
+    GLenum currentInternalFormat = readBuffer->getFormat().asSized();
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(currentInternalFormat);
+    bool validFormatTypeCombination =
+        ValidReadPixelsFormatType(context, internalFormatInfo.componentType, format, type);
+
+    if (!(currentFormat == format && currentType == type) && !validFormatTypeCombination)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // Check for pixel pack buffer related API errors
+    gl::Buffer *pixelPackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
+    if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped())
+    {
+        // ...the buffer object's data store is currently mapped.
+        context->handleError(Error(GL_INVALID_OPERATION, "Pixel pack buffer is mapped."));
+        return false;
+    }
+
+    // ..  the data would be packed to the buffer object such that the memory writes required
+    // would exceed the data store size.
+    GLenum sizedInternalFormat       = GetSizedInternalFormat(format, type);
+    const InternalFormat &formatInfo = GetInternalFormatInfo(sizedInternalFormat);
+    const gl::Extents size(width, height, 1);
+    const auto &pack = context->getGLState().getPackState();
+
+    auto endByteOrErr = formatInfo.computePackUnpackEndByte(type, size, pack, false);
+    if (endByteOrErr.isError())
+    {
+        context->handleError(endByteOrErr.getError());
+        return false;
+    }
+
+    size_t endByte = endByteOrErr.getResult();
+    if (bufSize >= 0)
+    {
+
+        if (static_cast<size_t>(bufSize) < endByte)
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "bufSize must be at least %u bytes.", endByte));
+            return false;
+        }
+    }
+
+    if (pixelPackBuffer != nullptr)
+    {
+        CheckedNumeric<size_t> checkedEndByte(endByte);
+        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
+        checkedEndByte += checkedOffset;
+
+        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
+        {
+            // Overflow past the end of the buffer
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Writes would overflow the pixel pack buffer."));
+            return false;
+        }
+    }
+
+    if (length != nullptr)
+    {
+        if (endByte > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "length would overflow GLsizei.", endByte));
+            return false;
+        }
+
+        *length = static_cast<GLsizei>(endByte);
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -1202,92 +1333,34 @@ bool ValidateReadPixels(ValidationContext *context,
                         GLenum type,
                         GLvoid *pixels)
 {
-    if (width < 0 || height < 0)
+    return ValidateReadPixelsBase(context, x, y, width, height, format, type, -1, nullptr, pixels);
+}
+
+bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
+                                   GLint x,
+                                   GLint y,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLenum format,
+                                   GLenum type,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLvoid *pixels)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
     {
-        context->handleError(Error(GL_INVALID_VALUE, "width and height must be positive"));
         return false;
     }
 
-    auto readFramebuffer = context->getGLState().getReadFramebuffer();
-
-    if (readFramebuffer->checkStatus(context->getContextState()) != GL_FRAMEBUFFER_COMPLETE)
+    if (!ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, length,
+                                pixels))
     {
-        context->handleError(Error(GL_INVALID_FRAMEBUFFER_OPERATION));
         return false;
     }
 
-    if (readFramebuffer->id() != 0 && readFramebuffer->getSamples(context->getContextState()) != 0)
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
         return false;
-    }
-
-    const Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
-    ASSERT(framebuffer);
-
-    if (framebuffer->getReadBufferState() == GL_NONE)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION, "Read buffer is GL_NONE"));
-        return false;
-    }
-
-    const FramebufferAttachment *readBuffer = framebuffer->getReadColorbuffer();
-    if (!readBuffer)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    GLenum currentFormat = framebuffer->getImplementationColorReadFormat();
-    GLenum currentType = framebuffer->getImplementationColorReadType();
-    GLenum currentInternalFormat = readBuffer->getFormat().asSized();
-
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(currentInternalFormat);
-    bool validFormatTypeCombination =
-        ValidReadPixelsFormatType(context, internalFormatInfo.componentType, format, type);
-
-    if (!(currentFormat == format && currentType == type) && !validFormatTypeCombination)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    // Check for pixel pack buffer related API errors
-    gl::Buffer *pixelPackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_PACK_BUFFER);
-    if (pixelPackBuffer != nullptr)
-    {
-        // ..  the data would be packed to the buffer object such that the memory writes required
-        // would exceed the data store size.
-        GLenum sizedInternalFormat       = GetSizedInternalFormat(format, type);
-        const InternalFormat &formatInfo = GetInternalFormatInfo(sizedInternalFormat);
-        const gl::Extents size(width, height, 1);
-        const auto &pack = context->getGLState().getPackState();
-
-        auto endByteOrErr = formatInfo.computePackUnpackEndByte(type, size, pack, false);
-        if (endByteOrErr.isError())
-        {
-            context->handleError(endByteOrErr.getError());
-            return false;
-        }
-
-        CheckedNumeric<size_t> checkedEndByte(endByteOrErr.getResult());
-        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
-        checkedEndByte += checkedOffset;
-
-        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
-        {
-            // Overflow past the end of the buffer
-            context->handleError(
-                Error(GL_INVALID_OPERATION, "Writes would overflow the pixel pack buffer."));
-            return false;
-        }
-
-        // ...the buffer object's data store is currently mapped.
-        if (pixelPackBuffer->isMapped())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Pixel pack buffer is mapped."));
-            return false;
-        }
     }
 
     return true;
@@ -1309,25 +1382,37 @@ bool ValidateReadnPixelsEXT(Context *context,
         return false;
     }
 
-    GLenum sizedInternalFormat = GetSizedInternalFormat(format, type);
-    const InternalFormat &formatInfo = GetInternalFormatInfo(sizedInternalFormat);
-    const gl::Extents size(width, height, 1);
-    const auto &pack = context->getGLState().getPackState();
+    return ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, nullptr,
+                                  pixels);
+}
 
-    auto endByteOrErr = formatInfo.computePackUnpackEndByte(type, size, pack, false);
-    if (endByteOrErr.isError())
+bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
+                                    GLint x,
+                                    GLint y,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLenum format,
+                                    GLenum type,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLvoid *data)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
     {
-        context->handleError(endByteOrErr.getError());
         return false;
     }
 
-    if (endByteOrErr.getResult() > static_cast<GLuint>(bufSize))
+    if (!ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, length, data))
     {
-        context->handleError(Error(GL_INVALID_OPERATION, "Writes would overflow past bufSize."));
         return false;
     }
 
-    return ValidateReadPixels(context, x, y, width, height, format, type, pixels);
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n)

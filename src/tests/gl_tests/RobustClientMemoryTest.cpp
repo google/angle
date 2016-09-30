@@ -334,6 +334,39 @@ TEST_P(RobustClientMemoryTest, TexImage2D)
     }
 }
 
+// Test basic usage and validation of glReadPixelsRobustANGLE
+TEST_P(RobustClientMemoryTest, ReadPixels)
+{
+    if (!extensionsPresent())
+    {
+        return;
+    }
+
+    GLsizei dataDimension = 16;
+    std::vector<GLubyte> rgbaData(dataDimension * dataDimension * 4);
+
+    // Test the regular case
+    GLsizei length = 0;
+    glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                            static_cast<GLsizei>(rgbaData.size()), &length, rgbaData.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(static_cast<GLsizei>(rgbaData.size()), length);
+
+    // Test with a data size that is too small
+    glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                            static_cast<GLsizei>(rgbaData.size()) - 1, &length, rgbaData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (getClientMajorVersion() >= 3)
+    {
+        // Set a pack parameter that would cause the driver to write past the end of the buffer
+        glPixelStorei(GL_PACK_ROW_LENGTH, dataDimension + 1);
+        glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                                static_cast<GLsizei>(rgbaData.size()), &length, rgbaData.data());
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(RobustClientMemoryTest,
