@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 163
+#define ANGLE_SH_VERSION 162
 
 typedef enum {
     SH_GLES2_SPEC,
@@ -207,14 +207,6 @@ const ShCompileOptions SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR = UINT64_C(1) << 
 // This flag works around a bug in evaluating isnan() on some INTEL D3D and Mac OSX drivers.
 // It works by using an expression to emulate this function.
 const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
-
-// This flag will use all uniforms of unused std140 and shared uniform blocks at the
-// beginning of the vertex/fragment shader's main(). It is intended as a workaround for Mac
-// drivers with shader version 4.10. In those drivers, they will treat unused
-// std140 and shared uniform blocks' members as inactive. However, WebGL2.0 based on
-// OpenGL ES3.0.4 requires all members of a named uniform block declared with a shared or std140
-// layout qualifier to be considered active. The uniform block itself is also considered active.
-const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
 
 // Defines alternate strategies for implementing array index clamping.
 typedef enum {

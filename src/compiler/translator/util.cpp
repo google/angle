@@ -278,38 +278,10 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
     }
 }
 
-TType GetInterfaceBlockType(const sh::InterfaceBlock &block)
-{
-    TType type;
-    TFieldList *fields = new TFieldList;
-    TSourceLoc loc;
-    for (const auto &field : block.fields)
-    {
-        TType *fieldType = new TType(GetShaderVariableType(field));
-        fields->push_back(new TField(fieldType, new TString(field.name.c_str()), loc));
-    }
-
-    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
-        new TString(block.name.c_str()), fields, new TString(block.instanceName.c_str()),
-        block.arraySize, TLayoutQualifier::create());
-
-    type.setBasicType(EbtInterfaceBlock);
-    type.setInterfaceBlock(interfaceBlock);
-    return type;
-}
-
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
 {
     switch (var.type)
     {
-        case GL_BOOL:
-            return TType(EbtBool);
-        case GL_BOOL_VEC2:
-            return TType(EbtBool, 2);
-        case GL_BOOL_VEC3:
-            return TType(EbtBool, 3);
-        case GL_BOOL_VEC4:
-            return TType(EbtBool, 4);
         case GL_FLOAT:
             return TType(EbtFloat);
         case GL_FLOAT_VEC2:
