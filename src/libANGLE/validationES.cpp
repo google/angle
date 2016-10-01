@@ -1735,12 +1735,10 @@ bool ValidateStateQuery(ValidationContext *context,
       case GL_TEXTURE_BINDING_2D_ARRAY:
         break;
       case GL_TEXTURE_BINDING_EXTERNAL_OES:
-          if (!context->getExtensions().eglStreamConsumerExternal &&
-              !context->getExtensions().eglImageExternal)
+          if (!context->getExtensions().eglStreamConsumerExternal)
           {
-              context->handleError(Error(GL_INVALID_ENUM,
-                                         "Neither NV_EGL_stream_consumer_external nor "
-                                         "GL_OES_EGL_image_external extensions enabled"));
+              context->handleError(
+                  Error(GL_INVALID_ENUM, "NV_EGL_stream_consumer_external extension not enabled"));
               return false;
           }
           break;

@@ -1196,30 +1196,6 @@ TEST_P(Texture2DTest, NegativeAPISubImage)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-// Test that querying GL_TEXTURE_BINDING* doesn't cause an unexpected error.
-TEST_P(Texture2DTest, QueryBinding)
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
-    EXPECT_GL_ERROR(GL_NO_ERROR);
-
-    GLint textureBinding;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &textureBinding);
-    EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(0, textureBinding);
-
-    glGetIntegerv(GL_TEXTURE_BINDING_EXTERNAL_OES, &textureBinding);
-    if (extensionEnabled("GL_OES_EGL_image_external") ||
-        extensionEnabled("GL_NV_EGL_stream_consumer_external"))
-    {
-        EXPECT_GL_NO_ERROR();
-        EXPECT_EQ(0, textureBinding);
-    }
-    else
-    {
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    }
-}
-
 TEST_P(Texture2DTest, ZeroSizedUploads)
 {
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
