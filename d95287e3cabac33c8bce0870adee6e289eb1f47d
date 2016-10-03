@@ -93,6 +93,30 @@
       "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_a7afc895",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T16:45:48Z",
+      "side": 1,
+      "message": "Isn\u0027t it more of an issue for when buffers are bound at offsets and we arn\u0027t able to bind them at offsets?  In that case we\u0027d want to create buffers of the full size if we don\u0027t have to.",
+      "parentUuid": "22e115e5_47dc443b",
+      "range": {
+        "startLine": 1043,
+        "startChar": 12,
+        "endLine": 1046,
+        "endChar": 99
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
