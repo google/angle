@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "22e115e5_67f860aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T16:42:53Z",
+      "side": 1,
+      "message": "Correct. The flag you need to use is D3D11_MAP_WRITE_DISCARD (or NO_OVERWRITE), as is referenced in the comment below. You can see this gets called correctly if you step through the code.",
+      "parentUuid": "22e115e5_67222063",
+      "range": {
+        "startLine": 901,
+        "startChar": 54,
+        "endLine": 901,
+        "endChar": 82
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22e115e5_c70854e3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-03T16:31:22Z",
       "side": 1,
       "message": "I think this check was here because Buffer11::getConstantBufferRange would ask for a subset of the buffer depending on supportsConstantBufferOffsets and needs to limit the size if binding at offsets is not possible.",
+      "range": {
+        "startLine": 1043,
+        "startChar": 12,
+        "endLine": 1046,
+        "endChar": 99
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_47dc443b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T16:42:53Z",
+      "side": 1,
+      "message": "Not sure about constant buffer offsets, I think they behave the same for resource limits for both ways, so I guess I disagree.\n\nI put in the check originally because the docs specify you can only create constant buffers up to the maximum size specified by D3D11_REQ_MAX_CONSTANT_BUFFER_SIZE. See: https://msdn.microsoft.com/en-us/library/windows/desktop/ff476501(v\u003dvs.85).aspx . But I think this is not true in practice.\n\nIf this becomes a problem on some systems, I can go and fix the behaviour which I intended to have, which was to silently ignore the end large buffers when making UBOs.",
+      "parentUuid": "22e115e5_c70854e3",
       "range": {
         "startLine": 1043,
         "startChar": 12,
