@@ -889,45 +889,42 @@ gl::ErrorOrResult<CopyResult> Buffer11::NativeStorage::copyFromStorage(BufferSto
     bool createBuffer   = !mNativeStorage || mBufferSize < requiredSize;
 
     // (Re)initialize D3D buffer if needed
+    bool preserveData = (destOffset > 0);
     if (createBuffer)
     {
-        bool preserveData = (destOffset > 0);
         resize(requiredSize, preserveData);
+    }
+
+    size_t clampedSize = size;
+    if (mUsage == BUFFER_USAGE_UNIFORM)
+    {
+        clampedSize = std::min(clampedSize, mBufferSize - destOffset);
     }
 
     if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
         source->getUsage() == BUFFER_USAGE_SYSTEM_MEMORY)
     {
-        ASSERT(source->isMappable(GL_MAP_READ_BIT));
+        ASSERT(source->isMappable(GL_MAP_READ_BIT) && isMappable(GL_MAP_WRITE_BIT));
+
+        // Uniform buffers must be mapped with write/discard.
+        ASSERT(!(preserveData && mUsage == BUFFER_USAGE_UNIFORM));
 
         uint8_t *sourcePointer = nullptr;
-        ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourcePointer));
+        ANGLE_TRY(source->map(sourceOffset, clampedSize, GL_MAP_READ_BIT, &sourcePointer));
 
-        D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT hr = context->Map(mNativeStorage, 0, D3D11_MAP_WRITE, 0, &mappedResource);
-        ASSERT(SUCCEEDED(hr));
-        if (FAILED(hr))
-        {
-            source->unmap();
-            return gl::Error(
-                GL_OUT_OF_MEMORY,
-                "Failed to map native storage in Buffer11::NativeStorage::copyFromStorage");
-        }
+        uint8_t *destPointer = nullptr;
+        ANGLE_TRY(map(destOffset, clampedSize, GL_MAP_WRITE_BIT, &destPointer));
 
-        uint8_t *destPointer = static_cast<uint8_t *>(mappedResource.pData) + destOffset;
+        memcpy(destPointer, sourcePointer, clampedSize);
 
-        // Offset bounds are validated at the API layer
-        ASSERT(sourceOffset + size <= destOffset + mBufferSize);
-        memcpy(destPointer, sourcePointer, size);
-
-        context->Unmap(mNativeStorage, 0);
+        unmap();
         source->unmap();
     }
     else
     {
         D3D11_BOX srcBox;
         srcBox.left   = static_cast<unsigned int>(sourceOffset);
-        srcBox.right  = static_cast<unsigned int>(sourceOffset + size);
+        srcBox.right  = static_cast<unsigned int>(sourceOffset + clampedSize);
         srcBox.top    = 0;
         srcBox.bottom = 1;
         srcBox.front  = 0;
@@ -1045,6 +1042,9 @@ void Buffer11::NativeStorage::FillBufferDesc(D3D11_BUFFER_DESC *bufferDesc,
             // Constant buffers must be of a limited size, and aligned to 16 byte boundaries
             // For our purposes we ignore any buffer data past the maximum constant buffer size
             bufferDesc->ByteWidth = roundUp(bufferDesc->ByteWidth, 16u);
+
+            // Note: it seems that D3D11 allows larger buffers on some platforms, but not all.
+            // (Windows 10 seems to allow larger constant buffers, but not Windows 7)
             bufferDesc->ByteWidth =
                 std::min<UINT>(bufferDesc->ByteWidth,
                                static_cast<UINT>(renderer->getNativeCaps().maxUniformBlockSize));

@@ -396,6 +396,27 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
     EXPECT_EQ("blockName.f", std::string(&strBuffer[0]));
 }
 
+// Test that using a very large buffer to back a small uniform block works OK.
+TEST_P(UniformBufferTest, VeryLarge)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
+
+    GLsizei bigSize = 4096 * 64;
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, bigSize, nullptr, GL_STATIC_DRAW);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4, floatData);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+
+    glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
+    drawQuad(mProgram, "position", 0.5f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),
