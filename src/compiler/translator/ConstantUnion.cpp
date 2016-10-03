@@ -8,6 +8,7 @@
 #include "compiler/translator/ConstantUnion.h"
 
 #include "base/numerics/safe_math.h"
+#include "common/mathutil.h"
 #include "compiler/translator/Diagnostics.h"
 
 namespace
@@ -59,38 +60,6 @@ T CheckedMul(base::CheckedNumeric<T> lhs,
         return 0;
     }
     return result.ValueOrDefault(0);
-}
-
-// Unsigned types are defined to do arithmetic modulo 2^n in C++. For signed types, overflow
-// behavior is undefined.
-
-template <typename T>
-T WrappingSum(T lhs, T rhs)
-{
-    uint32_t lhsUnsigned = static_cast<uint32_t>(lhs);
-    uint32_t rhsUnsigned = static_cast<uint32_t>(rhs);
-    return static_cast<T>(lhsUnsigned + rhsUnsigned);
-}
-
-template <typename T>
-T WrappingDiff(T lhs, T rhs)
-{
-    uint32_t lhsUnsigned = static_cast<uint32_t>(lhs);
-    uint32_t rhsUnsigned = static_cast<uint32_t>(rhs);
-    return static_cast<T>(lhsUnsigned - rhsUnsigned);
-}
-
-int32_t WrappingMul(int32_t lhs, int32_t rhs)
-{
-    int64_t lhsWide = static_cast<int64_t>(lhs);
-    int64_t rhsWide = static_cast<int64_t>(rhs);
-    // The multiplication is guaranteed not to overflow.
-    int64_t resultWide = lhsWide * rhsWide;
-    // Implement the desired wrapping behavior by masking out the high-order 32 bits.
-    resultWide = resultWide & 0xffffffffll;
-    // Casting to a narrower signed type is fine since the casted value is representable in the
-    // narrower type.
-    return static_cast<int32_t>(resultWide);
 }
 
 }  // anonymous namespace
@@ -315,10 +284,10 @@ TConstantUnion TConstantUnion::add(const TConstantUnion &lhs,
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(WrappingSum<int>(lhs.iConst, rhs.iConst));
+            returnValue.setIConst(gl::WrappingSum<int>(lhs.iConst, rhs.iConst));
             break;
         case EbtUInt:
-            returnValue.setUConst(WrappingSum<unsigned int>(lhs.uConst, rhs.uConst));
+            returnValue.setUConst(gl::WrappingSum<unsigned int>(lhs.uConst, rhs.uConst));
             break;
         case EbtFloat:
             returnValue.setFConst(CheckedSum<float>(lhs.fConst, rhs.fConst, diag, line));
@@ -341,10 +310,10 @@ TConstantUnion TConstantUnion::sub(const TConstantUnion &lhs,
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(WrappingDiff<int>(lhs.iConst, rhs.iConst));
+            returnValue.setIConst(gl::WrappingDiff<int>(lhs.iConst, rhs.iConst));
             break;
         case EbtUInt:
-            returnValue.setUConst(WrappingDiff<unsigned int>(lhs.uConst, rhs.uConst));
+            returnValue.setUConst(gl::WrappingDiff<unsigned int>(lhs.uConst, rhs.uConst));
             break;
         case EbtFloat:
             returnValue.setFConst(CheckedDiff<float>(lhs.fConst, rhs.fConst, diag, line));
@@ -367,7 +336,7 @@ TConstantUnion TConstantUnion::mul(const TConstantUnion &lhs,
     switch (lhs.type)
     {
         case EbtInt:
-            returnValue.setIConst(WrappingMul(lhs.iConst, rhs.iConst));
+            returnValue.setIConst(gl::WrappingMul(lhs.iConst, rhs.iConst));
             break;
         case EbtUInt:
             // Unsigned integer math in C++ is defined to be done in modulo 2^n, so we rely on that

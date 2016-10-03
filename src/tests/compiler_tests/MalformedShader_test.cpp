@@ -1701,26 +1701,6 @@ TEST_F(MalformedShaderTest, LineDirectiveNegativeShift)
     }
 }
 
-// Covers a bug in our parsing of malformed shift preprocessor expressions.
-TEST_F(MalformedShaderTest, IfDirectiveNegativeLeftShift)
-{
-    const std::string &shaderString = "#if -1 << 1";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
-    }
-}
-
-// Covers a bug in our parsing of malformed shift preprocessor expressions.
-TEST_F(MalformedShaderTest, IfDirectiveNegativeRightShift)
-{
-    const std::string &shaderString = "#if -1 >> 1";
-    if (compile(shaderString))
-    {
-        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
-    }
-}
-
 // gl_MaxImageUnits is only available in ES 3.1 shaders.
 TEST_F(MalformedShaderTest, MaxImageUnitsInES3Shader)
 {
