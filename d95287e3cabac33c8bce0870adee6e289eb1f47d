@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22e115e5_67222063",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T16:31:22Z",
+      "side": 1,
+      "message": "I recall that this returned true but the driver could not map a buffer with D3D11_USAGE_DYNAMIC using D3D11_MAP_WRITE",
+      "range": {
+        "startLine": 901,
+        "startChar": 54,
+        "endLine": 901,
+        "endChar": 82
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_c70854e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T16:31:22Z",
+      "side": 1,
+      "message": "I think this check was here because Buffer11::getConstantBufferRange would ask for a subset of the buffer depending on supportsConstantBufferOffsets and needs to limit the size if binding at offsets is not possible.",
+      "range": {
+        "startLine": 1043,
+        "startChar": 12,
+        "endLine": 1046,
+        "endChar": 99
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
