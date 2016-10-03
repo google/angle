@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22e115e5_ed0b71ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 910,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-03T19:27:24Z",
+      "side": 1,
+      "message": "ultra-nit: !(preserveData \u0026\u0026 mUsage \u003d\u003d BUFFER_USAGE_UNIFORM) I had trouble understanding the condition.",
+      "revId": "d4755604bcccb518747a6408faee1f8fb82e6187",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
