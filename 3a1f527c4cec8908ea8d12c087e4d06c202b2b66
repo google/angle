@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22e115e5_724740a6",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T17:11:12Z",
+      "side": 1,
+      "message": "Yep, noop is the right call.",
+      "range": {
+        "startLine": 250,
+        "startChar": 8,
+        "endLine": 250,
+        "endChar": 48
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_5269641b",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T17:11:12Z",
+      "side": 1,
+      "message": "nit: loop over the array? prone to bugs if we change the size.",
+      "range": {
+        "startLine": 463,
+        "startChar": 4,
+        "endLine": 466,
+        "endChar": 99
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
