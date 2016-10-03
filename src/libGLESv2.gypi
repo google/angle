@@ -153,6 +153,7 @@
             'libANGLE/angletypes.h',
             'libANGLE/angletypes.inl',
             'libANGLE/features.h',
+            'libANGLE/format_map_autogen.cpp',
             'libANGLE/formatutils.cpp',
             'libANGLE/formatutils.h',
             'libANGLE/histogram_macros.h',
