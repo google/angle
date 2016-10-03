@@ -2063,22 +2063,31 @@ TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function
                                                        TIntermAggregate *functionBody,
                                                        const TSourceLoc &location)
 {
-    //?? Check that all paths return a value if return type != void ?
-    //   May be best done as post process phase on intermediate code
+    // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
         error(location, "function does not return a value:", "", function.getName().c_str());
     }
 
-    TIntermAggregate *aggregate =
-        intermediate.growAggregate(functionPrototype, functionBody, location);
-    intermediate.setAggregateOperator(aggregate, EOpFunction, location);
-    aggregate->setName(function.getMangledName().c_str());
-    aggregate->setType(function.getReturnType());
-    aggregate->setFunctionId(function.getUniqueId());
+    TIntermAggregate *functionNode = new TIntermAggregate(EOpFunction);
+    functionNode->setLine(location);
+
+    ASSERT(functionPrototype != nullptr);
+    functionNode->getSequence()->push_back(functionPrototype);
+
+    if (functionBody == nullptr)
+    {
+        functionBody = new TIntermAggregate(EOpSequence);
+        functionBody->setLine(location);
+    }
+    functionNode->getSequence()->push_back(functionBody);
+
+    functionNode->setName(function.getMangledName().c_str());
+    functionNode->setType(function.getReturnType());
+    functionNode->setFunctionId(function.getUniqueId());
 
     symbolTable.pop();
-    return aggregate;
+    return functionNode;
 }
 
 void TParseContext::parseFunctionPrototype(const TSourceLoc &location,

@@ -818,22 +818,19 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         out << " " << hashFunctionNameIfNeeded(node->getNameObj());
 
         incrementDepth(node);
-        // Function definition node contains one or two children nodes
-        // representing function parameters and function body. The latter
-        // is not present in case of empty function bodies.
+        // Function definition node contains two child nodes representing the function parameters
+        // and the function body.
         const TIntermSequence &sequence = *(node->getSequence());
-        ASSERT((sequence.size() == 1) || (sequence.size() == 2));
-        TIntermSequence::const_iterator seqIter = sequence.begin();
+        ASSERT(sequence.size() == 2);
 
         // Traverse function parameters.
-        TIntermAggregate *params = (*seqIter)->getAsAggregate();
+        TIntermAggregate *params = sequence[0]->getAsAggregate();
         ASSERT(params != NULL);
         ASSERT(params->getOp() == EOpParameters);
         params->traverse(this);
 
         // Traverse function body.
-        TIntermAggregate *body = ++seqIter != sequence.end() ?
-            (*seqIter)->getAsAggregate() : NULL;
+        TIntermAggregate *body = sequence[1]->getAsAggregate();
         visitCodeBlock(body);
         decrementDepth();
 

@@ -1618,19 +1618,13 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             out << ")\n";
 
-            if (sequence->size() > 1)
-            {
-                mInsideFunction = true;
-                TIntermNode *body = (*sequence)[1];
-                // The function body node will output braces.
-                ASSERT(IsSequence(body));
-                body->traverse(this);
-                mInsideFunction = false;
-            }
-            else
-            {
-                out << "{}\n";
-            }
+            mInsideFunction = true;
+            ASSERT(sequence->size() == 2);
+            TIntermNode *body = (*sequence)[1];
+            // The function body node will output braces.
+            ASSERT(IsSequence(body));
+            body->traverse(this);
+            mInsideFunction = false;
 
             mCurrentFunctionMetadata = nullptr;
 

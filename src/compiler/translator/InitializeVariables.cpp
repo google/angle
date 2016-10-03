@@ -54,17 +54,8 @@ bool VariableInitializer::visitAggregate(Visit visit, TIntermAggregate *node)
         if (node->getName() == "main(")
         {
             TIntermSequence *sequence = node->getSequence();
-            ASSERT((sequence->size() == 1) || (sequence->size() == 2));
-            TIntermAggregate *body = NULL;
-            if (sequence->size() == 1)
-            {
-                body = new TIntermAggregate(EOpSequence);
-                sequence->push_back(body);
-            }
-            else
-            {
-                body = (*sequence)[1]->getAsAggregate();
-            }
+            ASSERT(sequence->size() == 2);
+            TIntermAggregate *body = (*sequence)[1]->getAsAggregate();
             ASSERT(body);
             insertInitCode(body->getSequence());
             mCodeInserted = true;
