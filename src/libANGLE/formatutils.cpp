@@ -880,6 +880,19 @@ ErrorOrResult<GLuint> InternalFormat::computeRowPitch(GLenum formatType,
     return aligned.ValueOrDie();
 }
 
+ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLsizei height,
+                                                        GLint imageHeight,
+                                                        GLuint rowPitch) const
+{
+    GLuint rows =
+        (imageHeight > 0 ? static_cast<GLuint>(imageHeight) : static_cast<GLuint>(height));
+    CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
+
+    auto depthPitch = checkedRowPitch * rows;
+    ANGLE_TRY_CHECKED_MATH(depthPitch);
+    return depthPitch.ValueOrDie();
+}
+
 ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
                                                             GLsizei width,
                                                             GLsizei height,
@@ -887,15 +900,9 @@ ErrorOrResult<GLuint> InternalFormat::computeDepthPitch(GLenum formatType,
                                                             GLint rowLength,
                                                             GLint imageHeight) const
 {
-    GLuint rows =
-        (imageHeight > 0 ? static_cast<GLuint>(imageHeight) : static_cast<GLuint>(height));
     GLuint rowPitch = 0;
     ANGLE_TRY_RESULT(computeRowPitch(formatType, width, alignment, rowLength), rowPitch);
-
-    CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
-    auto depthPitch = checkedRowPitch * rows;
-    ANGLE_TRY_CHECKED_MATH(depthPitch);
-    return depthPitch.ValueOrDie();
+    return computeDepthPitch(height, imageHeight, rowPitch);
 }
 
 ErrorOrResult<GLuint> InternalFormat::computeCompressedImageSize(GLenum formatType,
@@ -943,17 +950,15 @@ ErrorOrResult<GLuint> InternalFormat::computePackUnpackEndByte(
     const PixelStoreStateBase &state,
     bool is3D) const
 {
-    GLuint depthPitch = 0;
-    if (is3D)
-    {
-        ANGLE_TRY_RESULT(computeDepthPitch(formatType, size.width, size.height, state.alignment,
-                                           state.rowLength, state.imageHeight),
-                         depthPitch);
-    }
-
     GLuint rowPitch = 0;
     ANGLE_TRY_RESULT(computeRowPitch(formatType, size.width, state.alignment, state.rowLength),
                      rowPitch);
+
+    GLuint depthPitch = 0;
+    if (is3D)
+    {
+        ANGLE_TRY_RESULT(computeDepthPitch(size.height, state.imageHeight, rowPitch), depthPitch);
+    }
 
     CheckedNumeric<GLuint> checkedCopyBytes = 0;
     if (compressed)

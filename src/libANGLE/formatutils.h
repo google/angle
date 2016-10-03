@@ -53,6 +53,9 @@ struct InternalFormat
                                           GLsizei width,
                                           GLint alignment,
                                           GLint rowLength) const;
+    ErrorOrResult<GLuint> computeDepthPitch(GLsizei height,
+                                            GLint imageHeight,
+                                            GLuint rowPitch) const;
     ErrorOrResult<GLuint> computeDepthPitch(GLenum formatType,
                                             GLsizei width,
                                             GLsizei height,

@@ -525,9 +525,8 @@ gl::Error Image9::loadCompressedData(const gl::Box &area, const void *input)
     GLsizei inputRowPitch                = 0;
     ANGLE_TRY_RESULT(formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0), inputRowPitch);
     GLsizei inputDepthPitch = 0;
-    ANGLE_TRY_RESULT(
-        formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0),
-        inputDepthPitch);
+    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(area.height, 0, inputDepthPitch),
+                     inputDepthPitch);
 
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
 

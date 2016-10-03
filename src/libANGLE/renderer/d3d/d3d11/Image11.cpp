@@ -257,8 +257,7 @@ gl::Error Image11::loadData(const gl::Box &area,
         formatInfo.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
         inputRowPitch);
     GLuint inputDepthPitch = 0;
-    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(type, area.width, area.height, unpack.alignment,
-                                                  unpack.rowLength, unpack.imageHeight),
+    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(area.height, unpack.imageHeight, inputRowPitch),
                      inputDepthPitch);
     GLuint inputSkipBytes = 0;
     ANGLE_TRY_RESULT(
@@ -295,9 +294,7 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
     GLsizei inputRowPitch                = 0;
     ANGLE_TRY_RESULT(formatInfo.computeRowPitch(GL_UNSIGNED_BYTE, area.width, 1, 0), inputRowPitch);
     GLsizei inputDepthPitch = 0;
-    ANGLE_TRY_RESULT(
-        formatInfo.computeDepthPitch(GL_UNSIGNED_BYTE, area.width, area.height, 1, 0, 0),
-        inputDepthPitch);
+    ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(area.height, 0, inputRowPitch), inputDepthPitch);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(mDXGIFormat);
     GLuint outputPixelSize = dxgiFormatInfo.pixelBytes;

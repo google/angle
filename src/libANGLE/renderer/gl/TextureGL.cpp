@@ -319,8 +319,7 @@ gl::Error TextureGL::setSubImageRowByRowWorkaround(GLenum target,
     ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
                      rowBytes);
     GLuint imageBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeDepthPitch(type, area.width, area.height, unpack.alignment,
-                                                unpack.rowLength, unpack.imageHeight),
+    ANGLE_TRY_RESULT(glFormat.computeDepthPitch(area.height, unpack.imageHeight, rowBytes),
                      imageBytes);
     bool useTexImage3D = UseTexImage3D(mState.mTarget);
     GLuint skipBytes   = 0;
@@ -371,8 +370,7 @@ gl::Error TextureGL::setSubImagePaddingWorkaround(GLenum target,
     ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, unpack.alignment, unpack.rowLength),
                      rowBytes);
     GLuint imageBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeDepthPitch(type, area.width, area.height, unpack.alignment,
-                                                unpack.rowLength, unpack.imageHeight),
+    ANGLE_TRY_RESULT(glFormat.computeDepthPitch(area.height, unpack.imageHeight, rowBytes),
                      imageBytes);
     bool useTexImage3D = UseTexImage3D(mState.mTarget);
     GLuint skipBytes   = 0;
