@@ -141,6 +141,30 @@
       "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_b285480d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T16:50:09Z",
+      "side": 1,
+      "message": "If you look at Buffer11::getConstantBufferRangeStorage, it doesn\u0027t allocate the \"full\" size for every child buffer, only the required bound size for each. So I think it\u0027s OK.",
+      "parentUuid": "22e115e5_27a578b3",
+      "range": {
+        "startLine": 1043,
+        "startChar": 12,
+        "endLine": 1046,
+        "endChar": 99
+      },
+      "revId": "d95287e3cabac33c8bce0870adee6e289eb1f47d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
