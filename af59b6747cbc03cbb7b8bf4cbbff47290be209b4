@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82a001a7_54dde2d4",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1606,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T21:44:25Z",
+      "side": 1,
+      "message": "nit: looks like it needs one last git cl format.",
+      "range": {
+        "startLine": 1606,
+        "startChar": 100,
+        "endLine": 1606,
+        "endChar": 105
+      },
+      "revId": "af59b6747cbc03cbb7b8bf4cbbff47290be209b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82a001a7_f4edf67b",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T21:44:25Z",
+      "side": 1,
+      "message": "Requires a final SetGlobalError(error).  EGL entry points are supposed to set the global error every time.",
+      "revId": "af59b6747cbc03cbb7b8bf4cbbff47290be209b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
