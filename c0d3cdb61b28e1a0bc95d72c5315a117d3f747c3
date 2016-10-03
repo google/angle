@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "82a001a7_91eafcc4",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T21:23:36Z",
+      "side": 1,
+      "message": "It should be pulled from the .gyp file right?  It\u0027s enabled by default there.",
+      "parentUuid": "22e115e5_b2af0896",
+      "revId": "c0d3cdb61b28e1a0bc95d72c5315a117d3f747c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22e115e5_ad40898b",
         "filename": "scripts/generate_new_renderer.py",
         "patchSetId": 3
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "82a001a7_149b5a6d",
+        "filename": "scripts/generate_new_renderer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T21:23:36Z",
+      "side": 1,
+      "message": "The issue is that the TextureImpl class has some non-pure virtuals.  It\u0027s not so easily fixable, I will try to update the script so that it either looks for tags in the base class (\"// impl interface begin, // impl interface end) or have it be more robust in it\u0027s search for methods (only match methods between \u0027virtual and \u0027 \u003d 0\u0027)",
+      "parentUuid": "22e115e5_ad40898b",
+      "range": {
+        "startLine": 44,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "c0d3cdb61b28e1a0bc95d72c5315a117d3f747c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22e115e5_12e27cec",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 3
@@ -53,6 +95,24 @@
       "writtenOn": "2016-10-03T18:13:28Z",
       "side": 1,
       "message": "This entry is duplicated.",
+      "revId": "c0d3cdb61b28e1a0bc95d72c5315a117d3f747c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82a001a7_94ae6a81",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-03T21:23:36Z",
+      "side": 1,
+      "message": "Derp, fixed.",
+      "parentUuid": "22e115e5_12e27cec",
       "revId": "c0d3cdb61b28e1a0bc95d72c5315a117d3f747c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
