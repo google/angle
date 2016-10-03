@@ -20,6 +20,8 @@
 #include "libANGLE/renderer/gl/wgl/WindowSurfaceWGL.h"
 #include "libANGLE/renderer/gl/wgl/wgl_utils.h"
 
+#include "platform/Platform.h"
+
 #include <EGL/eglext.h>
 #include <string>
 #include <sstream>
@@ -60,7 +62,7 @@ DisplayWGL::DisplayWGL()
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mFunctionsGL(nullptr),
-      mHasARBCreateContextRobustness(false),
+      mHasRobustness(false),
       mWindowClass(0),
       mWindow(nullptr),
       mDeviceContext(nullptr),
@@ -175,7 +177,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     // Reinitialize the wgl functions to grab the extensions
     mFunctionsWGL->initialize(mOpenGLModule, dummyDeviceContext);
 
-    mHasARBCreateContextRobustness =
+    bool hasWGLCreateContextRobustness =
         mFunctionsWGL->hasExtension("WGL_ARB_create_context_robustness");
 
     // Destroy the dummy window and context
@@ -264,7 +266,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
         std::vector<int> contextCreationAttributes;
 
-        if (mHasARBCreateContextRobustness)
+        if (hasWGLCreateContextRobustness)
         {
             contextCreationAttributes.push_back(WGL_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB);
             contextCreationAttributes.push_back(WGL_LOSE_CONTEXT_ON_RESET_ARB);
@@ -339,6 +341,14 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize();
+
+    mHasRobustness = mFunctionsGL->getGraphicsResetStatus != nullptr;
+    if (hasWGLCreateContextRobustness != mHasRobustness)
+    {
+        ANGLEPlatformCurrent()->logWarning(
+            "WGL_ARB_create_context_robustness exists but unable to OpenGL context with "
+            "robustness.");
+    }
 
     // Intel OpenGL ES drivers are not currently supported due to bugs in the driver and ANGLE
     VendorID vendor = GetVendorID(mFunctionsGL);
@@ -553,7 +563,7 @@ egl::ConfigSet DisplayWGL::generateConfigs()
 
 bool DisplayWGL::testDeviceLost()
 {
-    if (mHasARBCreateContextRobustness)
+    if (mHasRobustness)
     {
         return getRenderer()->getResetStatus() != GL_NO_ERROR;
     }
@@ -633,7 +643,7 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->postSubBuffer      = mUseDXGISwapChains;
     outExtensions->surfaceOrientation = mUseDXGISwapChains;
 
-    outExtensions->createContextRobustness = mHasARBCreateContextRobustness;
+    outExtensions->createContextRobustness = mHasRobustness;
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const

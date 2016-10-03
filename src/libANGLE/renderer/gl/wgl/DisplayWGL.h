@@ -78,7 +78,7 @@ class DisplayWGL : public DisplayGL
     FunctionsWGL *mFunctionsWGL;
     FunctionsGL *mFunctionsGL;
 
-    bool mHasARBCreateContextRobustness;
+    bool mHasRobustness;
 
     ATOM mWindowClass;
     HWND mWindow;
