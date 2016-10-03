@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "22e115e5_d23bb4d1",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T17:49:08Z",
+      "side": 1,
+      "message": "can you rephrase this/fix grammar?",
+      "range": {
+        "startLine": 258,
+        "startChar": 26,
+        "endLine": 258,
+        "endChar": 88
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_5255e4f6",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T17:49:08Z",
+      "side": 1,
+      "message": "slight confusion: how can something be in (0, 1), and negative?",
+      "range": {
+        "startLine": 266,
+        "startChar": 56,
+        "endLine": 266,
+        "endChar": 90
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22e115e5_5269641b",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 11
@@ -41,6 +87,52 @@
         "startChar": 4,
         "endLine": 466,
         "endChar": 99
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_32793888",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T17:49:08Z",
+      "side": 1,
+      "message": "not sure if this is a raw pointer, but if it\u0027s a fixed size array, you can use a range-for",
+      "range": {
+        "startLine": 471,
+        "startChar": 4,
+        "endLine": 471,
+        "endChar": 60
+      },
+      "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22e115e5_7273c0a7",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T17:49:08Z",
+      "side": 1,
+      "message": "micro-nit: TODO(cwallez):\n\nalso not clear what you\u0027re referring to",
+      "range": {
+        "startLine": 288,
+        "startChar": 4,
+        "endLine": 288,
+        "endChar": 56
       },
       "revId": "3a1f527c4cec8908ea8d12c087e4d06c202b2b66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
