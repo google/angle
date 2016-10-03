@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "82a001a7_34f3fed1",
+        "filename": "scripts/generate_new_renderer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-03T21:54:17Z",
+      "side": 1,
+      "message": "OK thanks. The \u003d 0 sounds good to me.",
+      "parentUuid": "82a001a7_149b5a6d",
+      "range": {
+        "startLine": 44,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "c0d3cdb61b28e1a0bc95d72c5315a117d3f747c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "22e115e5_12e27cec",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 3
