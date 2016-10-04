@@ -310,8 +310,8 @@ bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replac
 bool TIntermIfElse::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mCondition, TIntermTyped, original, replacement);
-    REPLACE_IF_IS(mTrueBlock, TIntermNode, original, replacement);
-    REPLACE_IF_IS(mFalseBlock, TIntermNode, original, replacement);
+    REPLACE_IF_IS(mTrueBlock, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mFalseBlock, TIntermAggregate, original, replacement);
     return false;
 }
 

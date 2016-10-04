@@ -641,7 +641,7 @@ class TIntermTernary : public TIntermTyped
 class TIntermIfElse : public TIntermNode
 {
   public:
-    TIntermIfElse(TIntermTyped *cond, TIntermNode *trueB, TIntermNode *falseB)
+    TIntermIfElse(TIntermTyped *cond, TIntermAggregate *trueB, TIntermAggregate *falseB)
         : TIntermNode(), mCondition(cond), mTrueBlock(trueB), mFalseBlock(falseB)
     {
     }
@@ -650,14 +650,14 @@ class TIntermIfElse : public TIntermNode
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
     TIntermTyped *getCondition() const { return mCondition; }
-    TIntermNode *getTrueBlock() const { return mTrueBlock; }
-    TIntermNode *getFalseBlock() const { return mFalseBlock; }
+    TIntermAggregate *getTrueBlock() const { return mTrueBlock; }
+    TIntermAggregate *getFalseBlock() const { return mFalseBlock; }
     TIntermIfElse *getAsIfElseNode() override { return this; }
 
   protected:
     TIntermTyped *mCondition;
-    TIntermNode *mTrueBlock;
-    TIntermNode *mFalseBlock;
+    TIntermAggregate *mTrueBlock;
+    TIntermAggregate *mFalseBlock;
 };
 
 //

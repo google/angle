@@ -351,7 +351,7 @@ function_call_header_with_parameters
         const TType *type = new TType($2->getType());
         $1->addParameter(TConstParameter(type));
         $$.function = $1;
-        $$.nodePair.node1 = context->intermediate.makeAggregate($2, @2);
+        $$.nodePair.node1 = TIntermediate::MakeAggregate($2, @2);
     }
     | function_call_header_with_parameters COMMA assignment_expression {
         const TType *type = new TType($3->getType());
@@ -1319,7 +1319,7 @@ compound_statement_no_new_scope
 
 statement_list
     : statement {
-        $$ = context->intermediate.makeAggregate($1, @$);
+        $$ = TIntermediate::MakeAggregate($1, @$);
     }
     | statement_list statement {
         $$ = context->intermediate.growAggregate($1, $2, @$);

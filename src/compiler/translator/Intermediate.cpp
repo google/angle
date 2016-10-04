@@ -142,11 +142,10 @@ TIntermAggregate *TIntermediate::growAggregate(
 //
 // Returns an aggregate, unless NULL was passed in for the existing node.
 //
-TIntermAggregate *TIntermediate::makeAggregate(
-    TIntermNode *node, const TSourceLoc &line)
+TIntermAggregate *TIntermediate::MakeAggregate(TIntermNode *node, const TSourceLoc &line)
 {
-    if (node == NULL)
-        return NULL;
+    if (node == nullptr)
+        return nullptr;
 
     TIntermAggregate *aggNode = new TIntermAggregate;
     aggNode->getSequence()->push_back(node);
@@ -159,7 +158,7 @@ TIntermAggregate *TIntermediate::makeAggregate(
 // If the input node is nullptr, return nullptr.
 // If the input node is a sequence (block) node, return it.
 // If the input node is not a sequence node, put it inside a sequence node and return that.
-TIntermAggregate *TIntermediate::ensureSequence(TIntermNode *node)
+TIntermAggregate *TIntermediate::EnsureSequence(TIntermNode *node)
 {
     if (node == nullptr)
         return nullptr;
@@ -167,7 +166,7 @@ TIntermAggregate *TIntermediate::ensureSequence(TIntermNode *node)
     if (aggNode != nullptr && aggNode->getOp() == EOpSequence)
         return aggNode;
 
-    aggNode = makeAggregate(node, node->getLine());
+    aggNode = MakeAggregate(node, node->getLine());
     aggNode->setOp(EOpSequence);
     return aggNode;
 }
@@ -200,7 +199,7 @@ TIntermNode *TIntermediate::addIfElse(TIntermTyped *cond,
     }
 
     TIntermIfElse *node =
-        new TIntermIfElse(cond, ensureSequence(nodePair.node1), ensureSequence(nodePair.node2));
+        new TIntermIfElse(cond, EnsureSequence(nodePair.node1), EnsureSequence(nodePair.node2));
     node->setLine(line);
 
     return node;
@@ -332,7 +331,7 @@ TIntermNode *TIntermediate::addLoop(
     TLoopType type, TIntermNode *init, TIntermTyped *cond, TIntermTyped *expr,
     TIntermNode *body, const TSourceLoc &line)
 {
-    TIntermNode *node = new TIntermLoop(type, init, cond, expr, ensureSequence(body));
+    TIntermNode *node = new TIntermLoop(type, init, cond, expr, EnsureSequence(body));
     node->setLine(line);
 
     return node;

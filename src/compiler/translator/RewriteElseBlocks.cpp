@@ -8,6 +8,8 @@
 //
 
 #include "compiler/translator/RewriteElseBlocks.h"
+
+#include "compiler/translator/Intermediate.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -49,16 +51,7 @@ bool ElseBlockRewriter::visitAggregate(Visit visit, TIntermAggregate *node)
                 TIntermIfElse *ifElse  = statement->getAsIfElseNode();
                 if (ifElse && ifElse->getFalseBlock() != nullptr)
                 {
-                    // Check for if / else if
-                    TIntermIfElse *elseIfBranch = ifElse->getFalseBlock()->getAsIfElseNode();
-                    if (elseIfBranch)
-                    {
-                        ifElse->replaceChildNode(elseIfBranch, rewriteIfElse(elseIfBranch));
-                        delete elseIfBranch;
-                    }
-
                     (*node->getSequence())[statementIndex] = rewriteIfElse(ifElse);
-                    delete ifElse;
                 }
             }
         }
@@ -84,7 +77,7 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
     TIntermTyped *typedCondition     = ifElse->getCondition()->getAsTyped();
     TIntermAggregate *storeCondition = createTempInitDeclaration(typedCondition);
 
-    TIntermIfElse *falseBlock = nullptr;
+    TIntermAggregate *falseBlock = nullptr;
 
     TType boolType(EbtBool, EbpUndefined, EvqTemporary);
 
@@ -107,7 +100,9 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 
         TIntermSymbol *conditionSymbolElse = createTempSymbol(boolType);
         TIntermUnary *negatedCondition     = new TIntermUnary(EOpLogicalNot, conditionSymbolElse);
-        falseBlock = new TIntermIfElse(negatedCondition, ifElse->getFalseBlock(), negatedElse);
+        TIntermIfElse *falseIfElse =
+            new TIntermIfElse(negatedCondition, ifElse->getFalseBlock(), negatedElse);
+        falseBlock = TIntermediate::EnsureSequence(falseIfElse);
     }
 
     TIntermSymbol *conditionSymbolSel = createTempSymbol(boolType);

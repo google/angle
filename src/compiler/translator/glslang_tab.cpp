@@ -2546,7 +2546,7 @@ yyreduce:
         const TType *type = new TType((yyvsp[0].interm.intermTypedNode)->getType());
         (yyvsp[-1].interm.function)->addParameter(TConstParameter(type));
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).nodePair.node1 = context->intermediate.makeAggregate((yyvsp[0].interm.intermTypedNode), (yylsp[0]));
+        (yyval.interm).nodePair.node1 = TIntermediate::MakeAggregate((yyvsp[0].interm.intermTypedNode), (yylsp[0]));
     }
 
     break;
@@ -4371,7 +4371,7 @@ yyreduce:
   case 234:
 
     {
-        (yyval.interm.intermAggregate) = context->intermediate.makeAggregate((yyvsp[0].interm.intermNode), (yyloc));
+        (yyval.interm.intermAggregate) = TIntermediate::MakeAggregate((yyvsp[0].interm.intermNode), (yyloc));
     }
 
     break;

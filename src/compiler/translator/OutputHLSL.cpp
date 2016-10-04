@@ -1944,9 +1944,8 @@ void OutputHLSL::writeIfElse(TInfoSinkBase &out, TIntermIfElse *node)
 
         outputLineDirective(out, node->getFalseBlock()->getLine().first_line);
 
-        // Either this is "else if" or the falseBlock child node will output braces.
-        ASSERT(IsSequence(node->getFalseBlock()) ||
-               node->getFalseBlock()->getAsIfElseNode() != nullptr);
+        // The falseBlock child node will output braces.
+        ASSERT(IsSequence(node->getFalseBlock()));
 
         node->getFalseBlock()->traverse(this);
 

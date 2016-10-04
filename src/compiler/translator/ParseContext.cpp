@@ -1588,7 +1588,7 @@ TIntermAggregate *TParseContext::parseSingleDeclaration(TPublicType &publicType,
             symbol->setId(variable->getUniqueId());
     }
 
-    return intermediate.makeAggregate(symbol, identifierOrTypeLocation);
+    return TIntermediate::MakeAggregate(symbol, identifierOrTypeLocation);
 }
 
 TIntermAggregate *TParseContext::parseSingleArrayDeclaration(TPublicType &publicType,
@@ -1619,7 +1619,7 @@ TIntermAggregate *TParseContext::parseSingleArrayDeclaration(TPublicType &public
     if (variable && symbol)
         symbol->setId(variable->getUniqueId());
 
-    return intermediate.makeAggregate(symbol, identifierLocation);
+    return TIntermediate::MakeAggregate(symbol, identifierLocation);
 }
 
 TIntermAggregate *TParseContext::parseSingleInitDeclaration(const TPublicType &publicType,
@@ -1638,7 +1638,7 @@ TIntermAggregate *TParseContext::parseSingleInitDeclaration(const TPublicType &p
         //
         // Build intermediate representation
         //
-        return intermNode ? intermediate.makeAggregate(intermNode, initLocation) : nullptr;
+        return intermNode ? TIntermediate::MakeAggregate(intermNode, initLocation) : nullptr;
     }
     else
     {
@@ -1678,7 +1678,7 @@ TIntermAggregate *TParseContext::parseSingleArrayInitDeclaration(
     TIntermNode *initNode = nullptr;
     if (!executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
     {
-        return initNode ? intermediate.makeAggregate(initNode, initLocation) : nullptr;
+        return initNode ? TIntermediate::MakeAggregate(initNode, initLocation) : nullptr;
     }
     else
     {
@@ -1735,7 +1735,7 @@ TIntermAggregate *TParseContext::parseInvariantDeclaration(
     TIntermSymbol *intermSymbol =
         intermediate.addSymbol(variable->getUniqueId(), *identifier, type, identifierLoc);
 
-    TIntermAggregate *aggregate = intermediate.makeAggregate(intermSymbol, identifierLoc);
+    TIntermAggregate *aggregate = TIntermediate::MakeAggregate(intermSymbol, identifierLoc);
     aggregate->setOp(EOpInvariantDeclaration);
     return aggregate;
 }
@@ -2537,7 +2537,7 @@ TIntermAggregate *TParseContext::addInterfaceBlock(
         symbolName = instanceTypeDef->getName();
     }
 
-    TIntermAggregate *aggregate = intermediate.makeAggregate(
+    TIntermAggregate *aggregate = TIntermediate::MakeAggregate(
         intermediate.addSymbol(symbolId, symbolName, interfaceBlockType, typeQualifier.line),
         nameLine);
     aggregate->setOp(EOpDeclaration);
