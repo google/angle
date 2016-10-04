@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "629f8d7a_540d2c96",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-04T14:56:53Z",
+      "side": 1,
+      "message": "is this a re-land? shouldn\u0027t it be \n\nRe-land \"Fix ...\"\n\nFixed blah ...\n\n.. normal description..",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 3
+      },
+      "revId": "76633a7b1ac7ff19592a88176f0b9219082e480d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
