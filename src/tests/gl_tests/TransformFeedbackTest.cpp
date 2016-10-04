@@ -823,6 +823,69 @@ TEST_P(TransformFeedbackTest, OptimizedVaryings)
     ASSERT_NE(0u, mProgram);
 }
 
+// Test an edge case where two varyings are unreferenced in the frag shader.
+TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
+{
+    // TODO(jmadill): With points and rasterizer discard?
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec3 position;\n"
+        "out vec3 outAttrib1;\n"
+        "out vec3 outAttrib2;\n"
+        "void main() {"
+        "  outAttrib1 = position;\n"
+        "  outAttrib2 = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "in vec3 outAttrib1;\n"
+        "in vec3 outAttrib2;\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outAttrib1");
+    tfVaryings.push_back("outAttrib2");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(Vector3) * 2 * 6, nullptr, GL_STREAM_DRAW);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f);
+    glEndTransformFeedback();
+    glUseProgram(0);
+    ASSERT_GL_NO_ERROR();
+
+    const GLvoid *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector2) * 2 * 6, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    const Vector3 *vecPointer = static_cast<const Vector3 *>(mapPointer);
+    for (unsigned int vectorIndex = 0; vectorIndex < 3; ++vectorIndex)
+    {
+        unsigned int stream1Index = vectorIndex * 2;
+        unsigned int stream2Index = vectorIndex * 2 + 1;
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream1Index]);
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream2Index]);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
 class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 {
   protected:

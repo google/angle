@@ -60,6 +60,8 @@ ANGLE_EXPORT Vector3 operator/(const Vector3 &a, const Vector3 &b);
 ANGLE_EXPORT Vector3 operator/(const Vector3 &a, const float &b);
 ANGLE_EXPORT Vector3 operator+(const Vector3 &a, const Vector3 &b);
 ANGLE_EXPORT Vector3 operator-(const Vector3 &a, const Vector3 &b);
+ANGLE_EXPORT bool operator==(const Vector3 &a, const Vector3 &b);
+ANGLE_EXPORT bool operator!=(const Vector3 &a, const Vector3 &b);
 
 struct ANGLE_EXPORT Vector4
 {
