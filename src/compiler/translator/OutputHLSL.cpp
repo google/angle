@@ -1449,6 +1449,70 @@ bool OutputHLSL::visitBlock(Visit visit, TIntermBlock *node)
     return false;
 }
 
+bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
+{
+    TInfoSinkBase &out = getInfoSink();
+
+    ASSERT(mCurrentFunctionMetadata == nullptr);
+
+    size_t index = mCallDag.findIndex(node->getFunctionSymbolInfo());
+    ASSERT(index != CallDAG::InvalidIndex);
+    mCurrentFunctionMetadata = &mASTMetadataList[index];
+
+    out << TypeString(node->getType()) << " ";
+
+    TIntermSequence *parameters = node->getFunctionParameters()->getSequence();
+
+    if (node->getFunctionSymbolInfo()->isMain())
+    {
+        out << "gl_main(";
+    }
+    else
+    {
+        out << DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj())
+            << DisambiguateFunctionName(parameters) << (mOutputLod0Function ? "Lod0(" : "(");
+    }
+
+    for (unsigned int i = 0; i < parameters->size(); i++)
+    {
+        TIntermSymbol *symbol = (*parameters)[i]->getAsSymbolNode();
+
+        if (symbol)
+        {
+            ensureStructDefined(symbol->getType());
+
+            out << argumentString(symbol);
+
+            if (i < parameters->size() - 1)
+            {
+                out << ", ";
+            }
+        }
+        else
+            UNREACHABLE();
+    }
+
+    out << ")\n";
+
+    mInsideFunction = true;
+    // The function body node will output braces.
+    node->getBody()->traverse(this);
+    mInsideFunction = false;
+
+    mCurrentFunctionMetadata = nullptr;
+
+    bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
+    if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
+    {
+        ASSERT(!node->getFunctionSymbolInfo()->isMain());
+        mOutputLod0Function = true;
+        node->traverse(this);
+        mOutputLod0Function = false;
+    }
+
+    return false;
+}
+
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = getInfoSink();
@@ -1581,70 +1645,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpComma:
             outputTriplet(out, visit, "(", ", ", ")");
             break;
-        case EOpFunction:
-        {
-            ASSERT(mCurrentFunctionMetadata == nullptr);
-
-            size_t index = mCallDag.findIndex(node->getFunctionSymbolInfo());
-            ASSERT(index != CallDAG::InvalidIndex);
-            mCurrentFunctionMetadata = &mASTMetadataList[index];
-
-            out << TypeString(node->getType()) << " ";
-
-            TIntermSequence *sequence  = node->getSequence();
-            TIntermSequence *arguments = (*sequence)[0]->getAsAggregate()->getSequence();
-
-            if (node->getFunctionSymbolInfo()->isMain())
-            {
-                out << "gl_main(";
-            }
-            else
-            {
-                out << DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj())
-                    << DisambiguateFunctionName(arguments) << (mOutputLod0Function ? "Lod0(" : "(");
-            }
-
-            for (unsigned int i = 0; i < arguments->size(); i++)
-            {
-                TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
-
-                if (symbol)
-                {
-                    ensureStructDefined(symbol->getType());
-
-                    out << argumentString(symbol);
-
-                    if (i < arguments->size() - 1)
-                    {
-                        out << ", ";
-                    }
-                }
-                else UNREACHABLE();
-            }
-
-            out << ")\n";
-
-            mInsideFunction = true;
-            ASSERT(sequence->size() == 2);
-            TIntermNode *body = (*sequence)[1];
-            // The function body node will output braces.
-            ASSERT(body->getAsBlock() != nullptr);
-            body->traverse(this);
-            mInsideFunction = false;
-
-            mCurrentFunctionMetadata = nullptr;
-
-            bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
-            if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
-            {
-                ASSERT(!node->getFunctionSymbolInfo()->isMain());
-                mOutputLod0Function = true;
-                node->traverse(this);
-                mOutputLod0Function = false;
-            }
-
-            return false;
-        }
         case EOpFunctionCall:
         {
             TIntermSequence *arguments = node->getSequence();

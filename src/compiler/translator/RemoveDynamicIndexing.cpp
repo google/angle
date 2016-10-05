@@ -172,7 +172,7 @@ TType GetFieldType(const TType &indexedType)
 //    base[1] = value;
 // }
 // Note that else is not used in above functions to avoid the RewriteElseBlocks transformation.
-TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
+TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type, bool write)
 {
     ASSERT(!type.isArray());
     // Conservatively use highp here, even if the indexed type is not highp. That way the code can't
@@ -180,8 +180,6 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
     // highp values are being indexed in the shader. For HLSL precision doesn't matter, but in
     // principle this code could be used with multiple backends.
     type.setPrecision(EbpHigh);
-    TIntermAggregate *indexingFunction = new TIntermAggregate(EOpFunction);
-    indexingFunction->getFunctionSymbolInfo()->setNameObj(GetIndexFunctionName(type, write));
 
     TType fieldType = GetFieldType(type);
     int numCases = 0;
@@ -192,14 +190,6 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
     else
     {
         numCases = type.getNominalSize();
-    }
-    if (write)
-    {
-        indexingFunction->setType(TType(EbtVoid));
-    }
-    else
-    {
-        indexingFunction->setType(fieldType);
     }
 
     TIntermAggregate *paramsNode = new TIntermAggregate(EOpParameters);
@@ -215,7 +205,6 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
         TIntermSymbol *valueParam = CreateValueSymbol(fieldType);
         paramsNode->getSequence()->push_back(valueParam);
     }
-    indexingFunction->getSequence()->push_back(paramsNode);
 
     TIntermBlock *statementList = new TIntermBlock();
     for (int i = 0; i < numCases; ++i)
@@ -284,8 +273,16 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
     bodyNode->getSequence()->push_back(ifNode);
     bodyNode->getSequence()->push_back(useLastBlock);
 
-    indexingFunction->getSequence()->push_back(bodyNode);
-
+    TIntermFunctionDefinition *indexingFunction = nullptr;
+    if (write)
+    {
+        indexingFunction = new TIntermFunctionDefinition(TType(EbtVoid), paramsNode, bodyNode);
+    }
+    else
+    {
+        indexingFunction = new TIntermFunctionDefinition(fieldType, paramsNode, bodyNode);
+    }
+    indexingFunction->getFunctionSymbolInfo()->setNameObj(GetIndexFunctionName(type, write));
     return indexingFunction;
 }
 

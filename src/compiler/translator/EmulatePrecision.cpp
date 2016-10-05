@@ -604,7 +604,6 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
     switch (node->getOp())
     {
       case EOpConstructStruct:
-      case EOpFunction:
         break;
       case EOpPrototype:
         visitChildren = false;

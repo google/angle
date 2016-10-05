@@ -28,7 +28,8 @@ class UseUniformBlockMembers : public TIntermTraverser
     }
 
   protected:
-    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitAggregate(Visit visit, TIntermAggregate *node) override { return !mCodeInserted; }
+    bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
 
   private:
     void insertUseCode(TIntermSequence *sequence);
@@ -38,31 +39,18 @@ class UseUniformBlockMembers : public TIntermTraverser
     bool mCodeInserted;
 };
 
-bool UseUniformBlockMembers::visitAggregate(Visit visit, TIntermAggregate *node)
+bool UseUniformBlockMembers::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
-    bool visitChildren = !mCodeInserted;
-    switch (node->getOp())
+    ASSERT(visit == PreVisit);
+    if (node->getFunctionSymbolInfo()->isMain())
     {
-        case EOpFunction:
-        {
-            ASSERT(visit == PreVisit);
-            if (node->getFunctionSymbolInfo()->isMain())
-            {
-                TIntermSequence *sequence = node->getSequence();
-                ASSERT(sequence->size() == 2);
-                TIntermBlock *body = (*sequence)[1]->getAsBlock();
-                ASSERT(body);
-                insertUseCode(body->getSequence());
-                mCodeInserted = true;
-                visitChildren = false;
-            }
-            break;
-        }
-        default:
-            visitChildren = false;
-            break;
+        TIntermBlock *body = node->getBody();
+        ASSERT(body);
+        insertUseCode(body->getSequence());
+        mCodeInserted = true;
+        return false;
     }
-    return visitChildren;
+    return !mCodeInserted;
 }
 
 void UseUniformBlockMembers::AddFieldUseStatements(const ShaderVariable &var,

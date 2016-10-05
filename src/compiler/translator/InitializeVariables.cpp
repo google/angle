@@ -28,8 +28,9 @@ class VariableInitializer : public TIntermTraverser
     bool visitIfElse(Visit, TIntermIfElse *node) override { return false; }
     bool visitLoop(Visit, TIntermLoop *node) override { return false; }
     bool visitBranch(Visit, TIntermBranch *node) override { return false; }
+    bool visitAggregate(Visit, TIntermAggregate *node) override { return false; }
 
-    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
 
   private:
     void insertInitCode(TIntermSequence *sequence);
@@ -40,31 +41,17 @@ class VariableInitializer : public TIntermTraverser
 
 // VariableInitializer implementation.
 
-bool VariableInitializer::visitAggregate(Visit visit, TIntermAggregate *node)
+bool VariableInitializer::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
-    bool visitChildren = !mCodeInserted;
-    switch (node->getOp())
+    // Function definition.
+    ASSERT(visit == PreVisit);
+    if (node->getFunctionSymbolInfo()->isMain())
     {
-      case EOpFunction:
-      {
-        // Function definition.
-        ASSERT(visit == PreVisit);
-        if (node->getFunctionSymbolInfo()->isMain())
-        {
-            TIntermSequence *sequence = node->getSequence();
-            ASSERT(sequence->size() == 2);
-            TIntermBlock *body = (*sequence)[1]->getAsBlock();
-            ASSERT(body);
-            insertInitCode(body->getSequence());
-            mCodeInserted = true;
-        }
-        break;
-      }
-      default:
-        visitChildren = false;
-        break;
+        TIntermBlock *body = node->getBody();
+        insertInitCode(body->getSequence());
+        mCodeInserted = true;
     }
-    return visitChildren;
+    return false;
 }
 
 void VariableInitializer::insertInitCode(TIntermSequence *sequence)

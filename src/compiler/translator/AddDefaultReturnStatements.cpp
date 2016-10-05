@@ -31,16 +31,15 @@ class AddDefaultReturnStatementsTraverser : private TIntermTraverser
   private:
     AddDefaultReturnStatementsTraverser() : TIntermTraverser(true, false, false) {}
 
-    static bool IsFunctionWithoutReturnStatement(TIntermAggregate *node, TType *returnType)
+    static bool IsFunctionWithoutReturnStatement(TIntermFunctionDefinition *node, TType *returnType)
     {
         *returnType = node->getType();
-        if (node->getOp() != EOpFunction || node->getType().getBasicType() == EbtVoid)
+        if (node->getType().getBasicType() == EbtVoid)
         {
             return false;
         }
 
-        TIntermBlock *bodyNode = node->getSequence()->back()->getAsBlock();
-        ASSERT(bodyNode);
+        TIntermBlock *bodyNode    = node->getBody();
         TIntermBranch *returnNode = bodyNode->getSequence()->back()->getAsBranchNode();
         if (returnNode != nullptr && returnNode->getFlowOp() == EOpReturn)
         {
@@ -50,7 +49,7 @@ class AddDefaultReturnStatementsTraverser : private TIntermTraverser
         return true;
     }
 
-    bool visitAggregate(Visit, TIntermAggregate *node) override
+    bool visitFunctionDefinition(Visit, TIntermFunctionDefinition *node) override
     {
         TType returnType;
         if (IsFunctionWithoutReturnStatement(node, &returnType))
@@ -58,7 +57,7 @@ class AddDefaultReturnStatementsTraverser : private TIntermTraverser
             TIntermBranch *branch =
                 new TIntermBranch(EOpReturn, TIntermTyped::CreateZero(returnType));
 
-            TIntermBlock *bodyNode = node->getSequence()->back()->getAsBlock();
+            TIntermBlock *bodyNode = node->getBody();
             bodyNode->getSequence()->push_back(branch);
 
             return false;

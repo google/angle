@@ -41,7 +41,7 @@ class CallDAG : angle::NonCopyable
     struct Record
     {
         std::string name;
-        TIntermAggregate *node;
+        TIntermFunctionDefinition *node;
         std::vector<int> callees;
     };
 

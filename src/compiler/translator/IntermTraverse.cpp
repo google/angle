@@ -58,6 +58,11 @@ void TIntermCase::traverse(TIntermTraverser *it)
     it->traverseCase(this);
 }
 
+void TIntermFunctionDefinition::traverse(TIntermTraverser *it)
+{
+    it->traverseFunctionDefinition(this);
+}
+
 void TIntermBlock::traverse(TIntermTraverser *it)
 {
     it->traverseBlock(this);
@@ -424,6 +429,32 @@ void TLValueTrackingTraverser::traverseUnary(TIntermUnary *node)
         visitUnary(PostVisit, node);
 }
 
+// Traverse a function definition node.
+void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *node)
+{
+    bool visit = true;
+
+    if (preVisit)
+        visit = visitFunctionDefinition(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+        mInGlobalScope = false;
+
+        node->getFunctionParameters()->traverse(this);
+        if (inVisit)
+            visit = visitFunctionDefinition(InVisit, node);
+        node->getBody()->traverse(this);
+
+        mInGlobalScope = true;
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitFunctionDefinition(PostVisit, node);
+}
+
 // Traverse a block node.
 void TIntermTraverser::traverseBlock(TIntermBlock *node)
 {
@@ -473,9 +504,6 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
     {
         incrementDepth(node);
 
-        if (node->getOp() == EOpFunction)
-            mInGlobalScope = false;
-
         for (auto *child : *sequence)
         {
             child->traverse(this);
@@ -486,9 +514,6 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
             }
         }
 
-        if (node->getOp() == EOpFunction)
-            mInGlobalScope = true;
-
         decrementDepth();
     }
 
@@ -496,26 +521,24 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
         visitAggregate(PostVisit, node);
 }
 
+void TLValueTrackingTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *node)
+{
+    TIntermAggregate *params = node->getFunctionParameters();
+    ASSERT(params != nullptr);
+    ASSERT(params->getOp() == EOpParameters);
+    addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), params->getSequence());
+
+    TIntermTraverser::traverseFunctionDefinition(node);
+}
+
 void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 {
     bool visit = true;
 
     TIntermSequence *sequence = node->getSequence();
-    switch (node->getOp())
+    if (node->getOp() == EOpPrototype)
     {
-        case EOpFunction:
-        {
-            TIntermAggregate *params = sequence->front()->getAsAggregate();
-            ASSERT(params != nullptr);
-            ASSERT(params->getOp() == EOpParameters);
-            addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), params->getSequence());
-            break;
-        }
-        case EOpPrototype:
-            addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), sequence);
-            break;
-        default:
-            break;
+        addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), sequence);
     }
 
     if (preVisit)
@@ -561,9 +584,6 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
         }
         else
         {
-            if (node->getOp() == EOpFunction)
-                mInGlobalScope = false;
-
             // Find the built-in function corresponding to this op so that we can determine the
             // in/out qualifiers of its parameters.
             TFunction *builtInFunc = nullptr;
@@ -609,9 +629,6 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             }
 
             setInFunctionCallOutParameter(false);
-
-            if (node->getOp() == EOpFunction)
-                mInGlobalScope = true;
         }
 
         decrementDepth();

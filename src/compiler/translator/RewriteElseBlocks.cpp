@@ -25,7 +25,7 @@ class ElseBlockRewriter : public TIntermTraverser
     ElseBlockRewriter();
 
   protected:
-    bool visitAggregate(Visit visit, TIntermAggregate *aggregate) override;
+    bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *aggregate) override;
     bool visitBlock(Visit visit, TIntermBlock *block) override;
 
   private:
@@ -39,13 +39,10 @@ ElseBlockRewriter::ElseBlockRewriter()
       mFunctionType(NULL)
 {}
 
-bool ElseBlockRewriter::visitAggregate(Visit visit, TIntermAggregate *node)
+bool ElseBlockRewriter::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
-    if (node->getOp() == EOpFunction)
-    {
-        // Store the current function context (see comment below)
-        mFunctionType = ((visit == PreVisit) ? &node->getType() : nullptr);
-    }
+    // Store the current function context (see comment below)
+    mFunctionType = ((visit == PreVisit) ? &node->getType() : nullptr);
     return true;
 }
 

@@ -34,7 +34,7 @@ class GLFragColorBroadcastTraverser : public TIntermTraverser
 
   protected:
     void visitSymbol(TIntermSymbol *node) override;
-    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
 
     TIntermBinary *constructGLFragDataNode(int index) const;
     TIntermBinary *constructGLFragDataAssignNode(int index) const;
@@ -74,24 +74,15 @@ void GLFragColorBroadcastTraverser::visitSymbol(TIntermSymbol *node)
     }
 }
 
-bool GLFragColorBroadcastTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
+bool GLFragColorBroadcastTraverser::visitFunctionDefinition(Visit visit,
+                                                            TIntermFunctionDefinition *node)
 {
-    switch (node->getOp())
+    ASSERT(visit == PreVisit);
+    if (node->getFunctionSymbolInfo()->isMain())
     {
-        case EOpFunction:
-            // Function definition.
-            ASSERT(visit == PreVisit);
-            if (node->getFunctionSymbolInfo()->isMain())
-            {
-                TIntermSequence *sequence = node->getSequence();
-                ASSERT(sequence->size() == 2);
-                TIntermBlock *body = (*sequence)[1]->getAsBlock();
-                ASSERT(body);
-                mMainSequence = body->getSequence();
-            }
-            break;
-        default:
-            break;
+        TIntermBlock *body = node->getBody();
+        ASSERT(body);
+        mMainSequence = body->getSequence();
     }
     return true;
 }

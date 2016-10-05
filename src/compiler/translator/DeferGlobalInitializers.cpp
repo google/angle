@@ -38,18 +38,16 @@ TIntermAggregate *CreateFunctionPrototypeNode(const char *name, const int functi
     return functionNode;
 }
 
-TIntermAggregate *CreateFunctionDefinitionNode(const char *name,
-                                               TIntermBlock *functionBody,
-                                               const int functionId)
+TIntermFunctionDefinition *CreateFunctionDefinitionNode(const char *name,
+                                                        TIntermBlock *functionBody,
+                                                        const int functionId)
 {
-    TIntermAggregate *functionNode = new TIntermAggregate(EOpFunction);
+    TType returnType(EbtVoid);
     TIntermAggregate *paramsNode = new TIntermAggregate(EOpParameters);
-    functionNode->getSequence()->push_back(paramsNode);
-    functionNode->getSequence()->push_back(functionBody);
+    TIntermFunctionDefinition *functionNode =
+        new TIntermFunctionDefinition(returnType, paramsNode, functionBody);
 
     SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
-    TType returnType(EbtVoid);
-    functionNode->setType(returnType);
     functionNode->getFunctionSymbolInfo()->setId(functionId);
     return functionNode;
 }
@@ -156,25 +154,22 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     {
         functionBody->push_back(deferredInit);
     }
-    TIntermAggregate *functionDefinition =
+    TIntermFunctionDefinition *functionDefinition =
         CreateFunctionDefinitionNode(functionName, functionBodyNode, initFunctionId);
     root->getSequence()->push_back(functionDefinition);
 
     // Insert call into main function
     for (TIntermNode *node : *root->getSequence())
     {
-        TIntermAggregate *nodeAgg = node->getAsAggregate();
-        if (nodeAgg != nullptr && nodeAgg->getOp() == EOpFunction &&
-            nodeAgg->getFunctionSymbolInfo()->isMain())
+        TIntermFunctionDefinition *nodeFunction = node->getAsFunctionDefinition();
+        if (nodeFunction != nullptr && nodeFunction->getFunctionSymbolInfo()->isMain())
         {
             TIntermAggregate *functionCallNode =
                 CreateFunctionCallNode(functionName, initFunctionId);
 
-            TIntermNode *mainBody       = nodeAgg->getSequence()->back();
-            TIntermBlock *mainBodyBlock = mainBody->getAsBlock();
-            ASSERT(mainBodyBlock != nullptr);
-            mainBodyBlock->getSequence()->insert(mainBodyBlock->getSequence()->begin(),
-                                                 functionCallNode);
+            TIntermBlock *mainBody = nodeFunction->getBody();
+            ASSERT(mainBody != nullptr);
+            mainBody->getSequence()->insert(mainBody->getSequence()->begin(), functionCallNode);
         }
     }
 }

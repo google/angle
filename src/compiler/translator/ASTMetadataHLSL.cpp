@@ -31,7 +31,7 @@ class PullGradient : public TIntermTraverser
         ASSERT(index < metadataList->size());
     }
 
-    void traverse(TIntermAggregate *node)
+    void traverse(TIntermFunctionDefinition *node)
     {
         node->traverse(this);
         ASSERT(mParents.empty());
@@ -158,7 +158,7 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
     {
     }
 
-    void traverse(TIntermAggregate *node)
+    void traverse(TIntermFunctionDefinition *node)
     {
         node->traverse(this);
         ASSERT(mLoopsAndSwitches.empty());
@@ -328,7 +328,7 @@ class PushDiscontinuousLoops : public TIntermTraverser
     {
     }
 
-    void traverse(TIntermAggregate *node)
+    void traverse(TIntermFunctionDefinition *node)
     {
         node->traverse(this);
         ASSERT(mNestedDiscont == (mMetadata->mCalledInDiscontinuousLoop ? 1 : 0));

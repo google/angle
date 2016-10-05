@@ -204,6 +204,13 @@ bool TIntermUnary::replaceChildNode(
     return false;
 }
 
+bool TIntermFunctionDefinition::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(mParameters, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mBody, TIntermBlock, original, replacement);
+    return false;
+}
+
 bool TIntermAggregate::replaceChildNode(
     TIntermNode *original, TIntermNode *replacement)
 {

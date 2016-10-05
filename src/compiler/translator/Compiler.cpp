@@ -763,22 +763,31 @@ class TCompiler::UnusedPredicate
     bool operator ()(TIntermNode *node)
     {
         const TIntermAggregate *asAggregate = node->getAsAggregate();
+        const TIntermFunctionDefinition *asFunction = node->getAsFunctionDefinition();
 
-        if (asAggregate == nullptr)
+        const TFunctionSymbolInfo *functionInfo = nullptr;
+
+        if (asFunction)
+        {
+            functionInfo = asFunction->getFunctionSymbolInfo();
+        }
+        else if (asAggregate)
+        {
+            if (asAggregate->getOp() == EOpPrototype)
+            {
+                functionInfo = asAggregate->getFunctionSymbolInfo();
+            }
+        }
+        if (functionInfo == nullptr)
         {
             return false;
         }
 
-        if (!(asAggregate->getOp() == EOpFunction || asAggregate->getOp() == EOpPrototype))
-        {
-            return false;
-        }
-
-        size_t callDagIndex = mCallDag->findIndex(asAggregate->getFunctionSymbolInfo());
+        size_t callDagIndex = mCallDag->findIndex(functionInfo);
         if (callDagIndex == CallDAG::InvalidIndex)
         {
             // This happens only for unimplemented prototypes which are thus unused
-            ASSERT(asAggregate->getOp() == EOpPrototype);
+            ASSERT(asAggregate && asAggregate->getOp() == EOpPrototype);
             return true;
         }
 

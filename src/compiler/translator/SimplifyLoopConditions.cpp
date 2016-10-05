@@ -94,7 +94,7 @@ bool SimplifyLoopConditionsTraverser::visitAggregate(Visit visit, TIntermAggrega
 
     // If we're outside a loop condition, we only need to traverse nodes that may contain loops.
     if (!mInsideLoopConditionOrExpression)
-        return (node->getOp() == EOpFunction);
+        return false;
 
     mFoundLoopToChange = mConditionsToSimplify.match(node, getParentNode());
     return !mFoundLoopToChange;

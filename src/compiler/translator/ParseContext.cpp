@@ -2059,10 +2059,11 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
     return prototype;
 }
 
-TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function,
-                                                       TIntermAggregate *functionPrototype,
-                                                       TIntermBlock *functionBody,
-                                                       const TSourceLoc &location)
+TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
+    const TFunction &function,
+    TIntermAggregate *functionParameters,
+    TIntermBlock *functionBody,
+    const TSourceLoc &location)
 {
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
@@ -2070,21 +2071,16 @@ TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function
         error(location, "function does not return a value:", "", function.getName().c_str());
     }
 
-    TIntermAggregate *functionNode = new TIntermAggregate(EOpFunction);
-    functionNode->setLine(location);
-
-    ASSERT(functionPrototype != nullptr);
-    functionNode->getSequence()->push_back(functionPrototype);
-
     if (functionBody == nullptr)
     {
         functionBody = new TIntermBlock();
         functionBody->setLine(location);
     }
-    functionNode->getSequence()->push_back(functionBody);
+    TIntermFunctionDefinition *functionNode =
+        new TIntermFunctionDefinition(function.getReturnType(), functionParameters, functionBody);
+    functionNode->setLine(location);
 
     functionNode->getFunctionSymbolInfo()->setFromFunction(function);
-    functionNode->setType(function.getReturnType());
 
     symbolTable.pop();
     return functionNode;

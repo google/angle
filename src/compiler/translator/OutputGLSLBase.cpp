@@ -22,9 +22,9 @@ TString arrayBrackets(const TType &type)
 
 bool isSingleStatement(TIntermNode *node)
 {
-    if (const TIntermAggregate *aggregate = node->getAsAggregate())
+    if (node->getAsFunctionDefinition())
     {
-        return (aggregate->getOp() != EOpFunction);
+        return false;
     }
     else if (node->getAsBlock())
     {
@@ -786,6 +786,35 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
     return false;
 }
 
+bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
+{
+    TInfoSinkBase &out = objSink();
+
+    ASSERT(visit == PreVisit);
+    {
+        const TType &type = node->getType();
+        writeVariableType(type);
+        if (type.isArray())
+            out << arrayBrackets(type);
+    }
+
+    out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+
+    incrementDepth(node);
+
+    // Traverse function parameters.
+    TIntermAggregate *params = node->getFunctionParameters()->getAsAggregate();
+    ASSERT(params->getOp() == EOpParameters);
+    params->traverse(this);
+
+    // Traverse function body.
+    visitCodeBlock(node->getBody());
+    decrementDepth();
+
+    // Fully processed; no need to visit children.
+    return false;
+}
+
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
@@ -811,39 +840,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 
         visitChildren = false;
         break;
-      case EOpFunction: {
-        // Function definition.
-        ASSERT(visit == PreVisit);
-        {
-            const TType &type = node->getType();
-            writeVariableType(type);
-            if (type.isArray())
-                out << arrayBrackets(type);
-        }
-
-        out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
-
-        incrementDepth(node);
-        // Function definition node contains two child nodes representing the function parameters
-        // and the function body.
-        const TIntermSequence &sequence = *(node->getSequence());
-        ASSERT(sequence.size() == 2);
-
-        // Traverse function parameters.
-        TIntermAggregate *params = sequence[0]->getAsAggregate();
-        ASSERT(params != NULL);
-        ASSERT(params->getOp() == EOpParameters);
-        params->traverse(this);
-
-        // Traverse function body.
-        TIntermBlock *body = sequence[1]->getAsBlock();
-        visitCodeBlock(body);
-        decrementDepth();
-
-        // Fully processed; no need to visit children.
-        visitChildren = false;
-        break;
-      }
       case EOpFunctionCall:
         // Function call.
         if (visit == PreVisit)
