@@ -25,20 +25,11 @@ struct Renderer11DeviceCaps;
 namespace d3d11
 {
 
-typedef bool (*NativeMipmapGenerationSupportFunction)(D3D_FEATURE_LEVEL);
-
-struct DXGIFormat
-{
-    DXGIFormat();
-
-    NativeMipmapGenerationSupportFunction nativeMipmapSupport;
-};
-
-// This structure is problematic because a resource is associated with multiple DXGI formats.
-// For example, a texture might be stored as DXGI_FORMAT_R16_TYPELESS but store integer components,
+// A texture might be stored as DXGI_FORMAT_R16_TYPELESS but store integer components,
 // which are accessed through an DXGI_FORMAT_R16_SINT view. It's easy to write code which queries
 // information about the wrong format. Therefore, use of this should be avoided where possible.
-const DXGIFormat &GetDXGIFormatInfo(DXGI_FORMAT format);
+
+bool SupportsMipGen(DXGI_FORMAT dxgiFormat, D3D_FEATURE_LEVEL featureLevel);
 
 struct DXGIFormatSize
 {

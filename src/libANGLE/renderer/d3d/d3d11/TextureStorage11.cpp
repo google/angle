@@ -110,9 +110,7 @@ DWORD TextureStorage11::GetTextureMiscFlags(GLenum internalFormat,
     const d3d11::Format &formatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
     if (renderTarget && levels > 1)
     {
-        const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(formatInfo.texFormat);
-
-        if (dxgiFormatInfo.nativeMipmapSupport(renderer11DeviceCaps.featureLevel))
+        if (d3d11::SupportsMipGen(formatInfo.texFormat, renderer11DeviceCaps.featureLevel))
         {
             miscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
         }
