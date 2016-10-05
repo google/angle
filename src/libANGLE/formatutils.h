@@ -293,6 +293,11 @@ VertexFormatType GetVertexFormatType(const VertexAttribute &attrib);
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib, GLenum currentValueType);
 const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType);
 
+// Implemented in format_map_autogen.cpp
+bool ValidES3Format(GLenum format);
+bool ValidES3Type(GLenum type);
+bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat);
+
 }  // namespace gl
 
 #endif // LIBANGLE_FORMATUTILS_H_
