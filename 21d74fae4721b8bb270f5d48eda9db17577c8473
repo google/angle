@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1f262cad_36e478cd",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_3bfbd7e4",
+      "range": {
+        "startLine": 914,
+        "startChar": 11,
+        "endLine": 914,
+        "endChar": 16
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_dbd2eb54",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2016-08-03T19:23:57Z",
       "side": 1,
       "message": "instead of using const_cast, get a mutable impl pointer from the parent texture. merge the two impl getters into a single const version that returns a mutable pointer - this is what we do for most objects now.",
+      "range": {
+        "startLine": 3142,
+        "startChar": 14,
+        "endLine": 3142,
+        "endChar": 49
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f262cad_361fd8cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_dbd2eb54",
       "range": {
         "startLine": 3142,
         "startChar": 14,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "1f262cad_f62840f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3156,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_1bcd33b6",
+      "range": {
+        "startLine": 3156,
+        "startChar": 15,
+        "endLine": 3156,
+        "endChar": 20
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_9b54e3cc",
         "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
         "patchSetId": 11
@@ -82,6 +154,30 @@
       "writtenOn": "2016-08-03T19:23:57Z",
       "side": 1,
       "message": "ASSERT_NE",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f262cad_76fc3057",
+        "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_9b54e3cc",
       "range": {
         "startLine": 48,
         "startChar": 8,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "1f262cad_566c942f",
+        "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Can\u0027t use assert in helper functions.",
+      "parentUuid": "54d23e19_fb624fb1",
+      "range": {
+        "startLine": 76,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54d23e19_1b60d3a7",
         "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
         "patchSetId": 11
@@ -128,6 +248,30 @@
       "writtenOn": "2016-08-03T19:23:57Z",
       "side": 1,
       "message": "all these should be ASSERT",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 22
+      },
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f262cad_3648f8b5",
+        "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_1b60d3a7",
       "range": {
         "startLine": 137,
         "startChar": 4,
@@ -192,6 +336,24 @@
       "side": 1,
       "message": "I didn\u0027t look through the tests but it rarely hurts to have too many.",
       "parentUuid": "54d23e19_3b23d7c5",
+      "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f262cad_d6e78436",
+        "filename": "src/tests/gl_tests/CopyCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-05T18:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54d23e19_bb7fe742",
       "revId": "21d74fae4721b8bb270f5d48eda9db17577c8473",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
