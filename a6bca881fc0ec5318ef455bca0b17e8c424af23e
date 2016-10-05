@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff50781d_054dd2c5",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-05T21:10:47Z",
+      "side": 1,
+      "message": "this bind texture will be done inside of TextureGL::syncImplState.\n\nAlso TextureGL::syncImplState asserts that it has at least one bit dirty, which might not be the case here if we are moving it to another texture unit.",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff50781d_e5ccf632",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-05T21:10:47Z",
+      "side": 1,
+      "message": "nit: LevelWorkarounds to make it a bit more precise?",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
