@@ -405,7 +405,6 @@ const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(const ShHandl
 
     return translator->getUniformRegisterMap();
 #else
-    static std::map<std::string, unsigned int> map;
-    return &map;
+    return nullptr;
 #endif  // ANGLE_ENABLE_HLSL
 }
