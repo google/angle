@@ -217,7 +217,7 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
     // 1. the drop stencil workaround is enabled.
     bool workaround = mRenderer->getWorkarounds().emulateTinyStencilTextures;
     // 2. this is a stencil texture.
-    bool hasStencil = (d3d11::GetDXGIFormatInfo(mFormatInfo.dsvFormat).stencilBits > 0);
+    bool hasStencil = (mFormatInfo.format.stencilBits > 0);
     // 3. the texture has a 1x1 or 2x2 mip.
     bool hasSmallMips = (getLevelWidth(mMipLevels - 1) <= 2 || getLevelHeight(mMipLevels - 1) <= 2);
 
@@ -249,8 +249,7 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key,
 
     if (key.swizzle)
     {
-        ASSERT(!key.dropStencil ||
-               d3d11::GetDXGIFormatInfo(mFormatInfo.swizzle.dsvFormat).stencilBits == 0);
+        ASSERT(!key.dropStencil || mFormatInfo.swizzle.format.stencilBits == 0);
         ANGLE_TRY(getSwizzleTexture(&texture));
         format = mFormatInfo.swizzle.srvFormat;
     }

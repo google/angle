@@ -24,166 +24,9 @@ namespace rx
 namespace d3d11
 {
 
-struct DXGIColorFormatInfo
-{
-    size_t redBits;
-    size_t greenBits;
-    size_t blueBits;
-
-    size_t luminanceBits;
-
-    size_t alphaBits;
-    size_t sharedBits;
-};
-
-typedef std::map<DXGI_FORMAT, DXGIColorFormatInfo> ColorFormatInfoMap;
-typedef std::pair<DXGI_FORMAT, DXGIColorFormatInfo> ColorFormatInfoPair;
-
-static inline void InsertDXGIColorFormatInfo(ColorFormatInfoMap *map, DXGI_FORMAT format, size_t redBits, size_t greenBits,
-                                             size_t blueBits, size_t alphaBits, size_t sharedBits)
-{
-    DXGIColorFormatInfo info;
-    info.redBits = redBits;
-    info.greenBits = greenBits;
-    info.blueBits = blueBits;
-    info.alphaBits = alphaBits;
-    info.sharedBits = sharedBits;
-
-    map->insert(std::make_pair(format, info));
-}
-
-static ColorFormatInfoMap BuildColorFormatInfoMap()
-{
-    ColorFormatInfoMap map;
-
-    // clang-format off
-    //                             | DXGI format                         | R | G | B | A | S |
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_A8_UNORM,                  0,  0,  0,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_UNORM,                  8,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_UNORM,                8,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UNORM,            8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,       8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_B8G8R8A8_UNORM,            8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_UNORM,                16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_UNORM,             16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_UNORM,       16, 16, 16, 16,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_SNORM,                  8,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_SNORM,                8,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_SNORM,            8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_SNORM,                16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_SNORM,             16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_SNORM,       16, 16, 16, 16,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_UINT,                   8,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_UINT,                 16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_UINT,                 32,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_UINT,                 8,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_UINT,              16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_UINT,              32, 32,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_UINT,           32, 32, 32,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_UINT,             8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_UINT,        16, 16, 16, 16,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_UINT,        32, 32, 32, 32,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_SINT,                   8,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_SINT,                 16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_SINT,                 32,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_SINT,                 8,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_SINT,              16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_SINT,              32, 32,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_SINT,           32, 32, 32,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_SINT,             8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_SINT,        16, 16, 16, 16,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_SINT,        32, 32, 32, 32,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R10G10B10A2_TYPELESS,     10, 10, 10,  2,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R10G10B10A2_UNORM,        10, 10, 10,  2,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R10G10B10A2_UINT,         10, 10, 10,  2,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_FLOAT,                16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_FLOAT,             16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_FLOAT,       16, 16, 16, 16,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_FLOAT,                32,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_FLOAT,             32, 32,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_FLOAT,          32, 32, 32,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_FLOAT,       32, 32, 32, 32,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R9G9B9E5_SHAREDEXP,        9,  9,  9,  0,  5);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R11G11B10_FLOAT,          11, 11, 10,  0,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_B5G6R5_UNORM,              5,  6,  5,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_B4G4R4A4_UNORM,            4,  4,  4,  4,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_B5G5R5A1_UNORM,            5,  5,  5,  1,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8_TYPELESS,               8,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16_TYPELESS,             16,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_TYPELESS,             32,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8_TYPELESS,             8,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16_TYPELESS,          16, 16,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32_TYPELESS,          32, 32,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32_TYPELESS,       32, 32, 32,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R8G8B8A8_TYPELESS,         8,  8,  8,  8,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R16G16B16A16_TYPELESS,    16, 16, 16, 16,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G32B32A32_TYPELESS,    32, 32, 32, 32,  0);
-
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R24G8_TYPELESS,           24,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    24,  0,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32G8X24_TYPELESS,        32,  8,  0,  0,  0);
-    InsertDXGIColorFormatInfo(&map, DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, 32,  0,  0,  0,  0);
-    // clang-format on
-
-    return map;
-}
-
-struct DXGIDepthStencilInfo
-{
-    unsigned int depthBits;
-    unsigned int stencilBits;
-};
-
-typedef std::map<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoMap;
-typedef std::pair<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoPair;
-
-static inline void InsertDXGIDepthStencilInfo(DepthStencilInfoMap *map,
-                                              DXGI_FORMAT format,
-                                              unsigned int depthBits,
-                                              unsigned int stencilBits)
-{
-    DXGIDepthStencilInfo info;
-    info.depthBits = depthBits;
-    info.stencilBits = stencilBits;
-
-    map->insert(std::make_pair(format, info));
-}
-
-static DepthStencilInfoMap BuildDepthStencilInfoMap()
-{
-    DepthStencilInfoMap map;
-
-    // clang-format off
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D16_UNORM,                16, 0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D24_UNORM_S8_UINT,        24, 8);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT,                32, 0);
-    InsertDXGIDepthStencilInfo(&map, DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     32, 8);
-    // clang-format on
-
-    return map;
-}
-
 typedef std::map<DXGI_FORMAT, DXGIFormat> DXGIFormatInfoMap;
 
-DXGIFormat::DXGIFormat()
-    : redBits(0),
-      greenBits(0),
-      blueBits(0),
-      alphaBits(0),
-      sharedBits(0),
-      depthBits(0),
-      stencilBits(0),
-      componentType(GL_NONE),
-      nativeMipmapSupport(NULL)
+DXGIFormat::DXGIFormat() : componentType(GL_NONE), nativeMipmapSupport(NULL)
 {
 }
 
@@ -204,27 +47,6 @@ void AddDXGIFormat(DXGIFormatInfoMap *map,
                    NativeMipmapGenerationSupportFunction nativeMipmapSupport)
 {
     DXGIFormat info;
-
-    static const ColorFormatInfoMap colorInfoMap = BuildColorFormatInfoMap();
-    ColorFormatInfoMap::const_iterator colorInfoIter = colorInfoMap.find(dxgiFormat);
-    if (colorInfoIter != colorInfoMap.end())
-    {
-        const DXGIColorFormatInfo &colorInfo = colorInfoIter->second;
-        info.redBits                         = static_cast<GLuint>(colorInfo.redBits);
-        info.greenBits                       = static_cast<GLuint>(colorInfo.greenBits);
-        info.blueBits                        = static_cast<GLuint>(colorInfo.blueBits);
-        info.alphaBits                       = static_cast<GLuint>(colorInfo.alphaBits);
-        info.sharedBits                      = static_cast<GLuint>(colorInfo.sharedBits);
-    }
-
-    static const DepthStencilInfoMap dsInfoMap = BuildDepthStencilInfoMap();
-    DepthStencilInfoMap::const_iterator dsInfoIter = dsInfoMap.find(dxgiFormat);
-    if (dsInfoIter != dsInfoMap.end())
-    {
-        const DXGIDepthStencilInfo &dsInfo = dsInfoIter->second;
-        info.depthBits = dsInfo.depthBits;
-        info.stencilBits = dsInfo.stencilBits;
-    }
 
     info.componentType = componentType;
     info.nativeMipmapSupport = nativeMipmapSupport;
@@ -1151,6 +973,6 @@ const VertexFormat &GetVertexFormatInfo(gl::VertexFormatType vertexFormatType, D
     }
 }
 
-}
+}  // namespace d3d11
 
-}
+}  // namespace rx

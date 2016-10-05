@@ -29,7 +29,8 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA16F_EXT,
                                      GL_ALPHA16F_EXT,
                                      GenerateMip<A16F>,
-                                     ReadColor<A16F, GLfloat>);
+                                     ReadColor<A16F, GLfloat>,
+                                     0, 0, 0, 16, 0, 0);
             return info;
         }
         case ID::A32_FLOAT:
@@ -38,7 +39,8 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA32F_EXT,
                                      GL_ALPHA32F_EXT,
                                      GenerateMip<A32F>,
-                                     ReadColor<A32F, GLfloat>);
+                                     ReadColor<A32F, GLfloat>,
+                                     0, 0, 0, 32, 0, 0);
             return info;
         }
         case ID::A8_UNORM:
@@ -47,7 +49,8 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA8_EXT,
                                      GL_ALPHA8_EXT,
                                      GenerateMip<A8>,
-                                     ReadColor<A8, GLfloat>);
+                                     ReadColor<A8, GLfloat>,
+                                     0, 0, 0, 8, 0, 0);
             return info;
         }
         case ID::ASTC_10x10_SRGB_BLOCK:
@@ -56,7 +59,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x10_UNORM_BLOCK:
@@ -65,7 +69,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x5_SRGB_BLOCK:
@@ -74,7 +79,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x5_UNORM_BLOCK:
@@ -83,7 +89,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x6_SRGB_BLOCK:
@@ -92,7 +99,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x6_UNORM_BLOCK:
@@ -101,7 +109,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x8_SRGB_BLOCK:
@@ -110,7 +119,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_10x8_UNORM_BLOCK:
@@ -119,7 +129,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_12x10_SRGB_BLOCK:
@@ -128,7 +139,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_12x10_UNORM_BLOCK:
@@ -137,7 +149,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_12x12_SRGB_BLOCK:
@@ -146,7 +159,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_12x12_UNORM_BLOCK:
@@ -155,7 +169,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_4x4_SRGB_BLOCK:
@@ -164,7 +179,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_4x4_UNORM_BLOCK:
@@ -173,7 +189,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_5x4_SRGB_BLOCK:
@@ -182,7 +199,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_5x4_UNORM_BLOCK:
@@ -191,7 +209,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_5x5_SRGB_BLOCK:
@@ -200,7 +219,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_5x5_UNORM_BLOCK:
@@ -209,7 +229,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_6x5_SRGB_BLOCK:
@@ -218,7 +239,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_6x5_UNORM_BLOCK:
@@ -227,7 +249,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_6x6_SRGB_BLOCK:
@@ -236,7 +259,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_6x6_UNORM_BLOCK:
@@ -245,7 +269,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x5_SRGB_BLOCK:
@@ -254,7 +279,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x5_UNORM_BLOCK:
@@ -263,7 +289,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x6_SRGB_BLOCK:
@@ -272,7 +299,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x6_UNORM_BLOCK:
@@ -281,7 +309,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x8_SRGB_BLOCK:
@@ -290,7 +319,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ASTC_8x8_UNORM_BLOCK:
@@ -299,7 +329,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
                                      GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::B4G4R4A4_UNORM:
@@ -308,7 +339,8 @@ const Format &Format::Get(ID id)
                                      GL_BGRA4_ANGLEX,
                                      GL_RGBA4,
                                      GenerateMip<A4R4G4B4>,
-                                     ReadColor<A4R4G4B4, GLfloat>);
+                                     ReadColor<A4R4G4B4, GLfloat>,
+                                     4, 4, 4, 4, 0, 0);
             return info;
         }
         case ID::B5G5R5A1_UNORM:
@@ -317,7 +349,8 @@ const Format &Format::Get(ID id)
                                      GL_BGR5_A1_ANGLEX,
                                      GL_RGB5_A1,
                                      GenerateMip<A1R5G5B5>,
-                                     ReadColor<A1R5G5B5, GLfloat>);
+                                     ReadColor<A1R5G5B5, GLfloat>,
+                                     5, 5, 5, 1, 0, 0);
             return info;
         }
         case ID::B5G6R5_UNORM:
@@ -326,7 +359,8 @@ const Format &Format::Get(ID id)
                                      GL_BGR565_ANGLEX,
                                      GL_RGB565,
                                      GenerateMip<B5G6R5>,
-                                     ReadColor<B5G6R5, GLfloat>);
+                                     ReadColor<B5G6R5, GLfloat>,
+                                     5, 6, 5, 0, 0, 0);
             return info;
         }
         case ID::B8G8R8A8_UNORM:
@@ -335,7 +369,8 @@ const Format &Format::Get(ID id)
                                      GL_BGRA8_EXT,
                                      GL_BGRA8_EXT,
                                      GenerateMip<B8G8R8A8>,
-                                     ReadColor<B8G8R8A8, GLfloat>);
+                                     ReadColor<B8G8R8A8, GLfloat>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::B8G8R8X8_UNORM:
@@ -344,7 +379,8 @@ const Format &Format::Get(ID id)
                                      GL_BGRA8_EXT,
                                      GL_BGRA8_EXT,
                                      GenerateMip<B8G8R8X8>,
-                                     ReadColor<B8G8R8X8, GLfloat>);
+                                     ReadColor<B8G8R8X8, GLfloat>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::BC1_RGBA_UNORM_BLOCK:
@@ -353,7 +389,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
                                      GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::BC1_RGB_UNORM_BLOCK:
@@ -362,7 +399,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
                                      GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::BC2_RGBA_UNORM_BLOCK:
@@ -371,7 +409,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
                                      GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::BC3_RGBA_UNORM_BLOCK:
@@ -380,7 +419,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
                                      GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::D16_UNORM:
@@ -389,7 +429,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT16,
                                      GL_DEPTH_COMPONENT16,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 16, 0);
             return info;
         }
         case ID::D24_UNORM:
@@ -398,7 +439,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT24,
                                      GL_DEPTH_COMPONENT24,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 24, 0);
             return info;
         }
         case ID::D24_UNORM_S8_UINT:
@@ -407,7 +449,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH24_STENCIL8,
                                      GL_DEPTH24_STENCIL8,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 24, 8);
             return info;
         }
         case ID::D32_FLOAT:
@@ -416,7 +459,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT32F,
                                      GL_DEPTH_COMPONENT32F,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 32, 0);
             return info;
         }
         case ID::D32_FLOAT_S8X24_UINT:
@@ -425,7 +469,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH32F_STENCIL8,
                                      GL_DEPTH32F_STENCIL8,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 32, 8);
             return info;
         }
         case ID::D32_UNORM:
@@ -434,7 +479,8 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT32_OES,
                                      GL_DEPTH_COMPONENT32_OES,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 32, 0);
             return info;
         }
         case ID::EAC_R11G11_SNORM_BLOCK:
@@ -443,7 +489,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SIGNED_RG11_EAC,
                                      GL_COMPRESSED_SIGNED_RG11_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     11, 11, 0, 0, 0, 0);
             return info;
         }
         case ID::EAC_R11G11_UNORM_BLOCK:
@@ -452,7 +499,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RG11_EAC,
                                      GL_COMPRESSED_RG11_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     11, 11, 0, 0, 0, 0);
             return info;
         }
         case ID::EAC_R11_SNORM_BLOCK:
@@ -461,7 +509,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SIGNED_R11_EAC,
                                      GL_COMPRESSED_SIGNED_R11_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     11, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::EAC_R11_UNORM_BLOCK:
@@ -470,7 +519,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_R11_EAC,
                                      GL_COMPRESSED_R11_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     11, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8A1_SRGB_BLOCK:
@@ -479,7 +529,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 1, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8A1_UNORM_BLOCK:
@@ -488,7 +539,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 1, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8A8_SRGB_BLOCK:
@@ -497,7 +549,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
                                      GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8A8_UNORM_BLOCK:
@@ -506,7 +559,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA8_ETC2_EAC,
                                      GL_COMPRESSED_RGBA8_ETC2_EAC,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8_SRGB_BLOCK:
@@ -515,7 +569,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ETC2,
                                      GL_COMPRESSED_SRGB8_ETC2,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::ETC2_R8G8B8_UNORM_BLOCK:
@@ -524,7 +579,8 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB8_ETC2,
                                      GL_COMPRESSED_RGB8_ETC2,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::L16A16_FLOAT:
@@ -533,7 +589,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE_ALPHA16F_EXT,
                                      GL_LUMINANCE_ALPHA16F_EXT,
                                      GenerateMip<L16A16F>,
-                                     ReadColor<L16A16F, GLfloat>);
+                                     ReadColor<L16A16F, GLfloat>,
+                                     0, 0, 0, 16, 0, 0);
             return info;
         }
         case ID::L16_FLOAT:
@@ -542,7 +599,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE16F_EXT,
                                      GL_LUMINANCE16F_EXT,
                                      GenerateMip<L16F>,
-                                     ReadColor<L16F, GLfloat>);
+                                     ReadColor<L16F, GLfloat>,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::L32A32_FLOAT:
@@ -551,7 +609,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE_ALPHA32F_EXT,
                                      GL_LUMINANCE_ALPHA32F_EXT,
                                      GenerateMip<L32A32F>,
-                                     ReadColor<L32A32F, GLfloat>);
+                                     ReadColor<L32A32F, GLfloat>,
+                                     0, 0, 0, 32, 0, 0);
             return info;
         }
         case ID::L32_FLOAT:
@@ -560,7 +619,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE32F_EXT,
                                      GL_LUMINANCE32F_EXT,
                                      GenerateMip<L32F>,
-                                     ReadColor<L32F, GLfloat>);
+                                     ReadColor<L32F, GLfloat>,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::L8A8_UNORM:
@@ -569,7 +629,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE8_ALPHA8_EXT,
                                      GL_LUMINANCE8_ALPHA8_EXT,
                                      GenerateMip<L8A8>,
-                                     ReadColor<L8A8, GLfloat>);
+                                     ReadColor<L8A8, GLfloat>,
+                                     0, 0, 0, 8, 0, 0);
             return info;
         }
         case ID::L8_UNORM:
@@ -578,7 +639,8 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE8_EXT,
                                      GL_LUMINANCE8_EXT,
                                      GenerateMip<L8>,
-                                     ReadColor<L8, GLfloat>);
+                                     ReadColor<L8, GLfloat>,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::NONE:
@@ -587,7 +649,8 @@ const Format &Format::Get(ID id)
                                      GL_NONE,
                                      GL_NONE,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R10G10B10A2_UINT:
@@ -596,7 +659,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB10_A2UI,
                                      GL_RGB10_A2UI,
                                      GenerateMip<R10G10B10A2>,
-                                     ReadColor<R10G10B10A2, GLuint>);
+                                     ReadColor<R10G10B10A2, GLuint>,
+                                     10, 10, 10, 2, 0, 0);
             return info;
         }
         case ID::R10G10B10A2_UNORM:
@@ -605,7 +669,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB10_A2,
                                      GL_RGB10_A2,
                                      GenerateMip<R10G10B10A2>,
-                                     ReadColor<R10G10B10A2, GLfloat>);
+                                     ReadColor<R10G10B10A2, GLfloat>,
+                                     10, 10, 10, 2, 0, 0);
             return info;
         }
         case ID::R11G11B10_FLOAT:
@@ -614,7 +679,8 @@ const Format &Format::Get(ID id)
                                      GL_R11F_G11F_B10F,
                                      GL_R11F_G11F_B10F,
                                      GenerateMip<R11G11B10F>,
-                                     ReadColor<R11G11B10F, GLfloat>);
+                                     ReadColor<R11G11B10F, GLfloat>,
+                                     11, 11, 10, 0, 0, 0);
             return info;
         }
         case ID::R16G16B16A16_FLOAT:
@@ -623,7 +689,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16F,
                                      GL_RGBA16F,
                                      GenerateMip<R16G16B16A16F>,
-                                     ReadColor<R16G16B16A16F, GLfloat>);
+                                     ReadColor<R16G16B16A16F, GLfloat>,
+                                     16, 16, 16, 16, 0, 0);
             return info;
         }
         case ID::R16G16B16A16_SINT:
@@ -632,7 +699,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16I,
                                      GL_RGBA16I,
                                      GenerateMip<R16G16B16A16S>,
-                                     ReadColor<R16G16B16A16S, GLint>);
+                                     ReadColor<R16G16B16A16S, GLint>,
+                                     16, 16, 16, 16, 0, 0);
             return info;
         }
         case ID::R16G16B16A16_SNORM:
@@ -641,7 +709,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16_SNORM_EXT,
                                      GL_RGBA16_SNORM_EXT,
                                      GenerateMip<R16G16B16A16S>,
-                                     ReadColor<R16G16B16A16S, GLfloat>);
+                                     ReadColor<R16G16B16A16S, GLfloat>,
+                                     16, 16, 16, 16, 0, 0);
             return info;
         }
         case ID::R16G16B16A16_UINT:
@@ -650,7 +719,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16UI,
                                      GL_RGBA16UI,
                                      GenerateMip<R16G16B16A16>,
-                                     ReadColor<R16G16B16A16, GLuint>);
+                                     ReadColor<R16G16B16A16, GLuint>,
+                                     16, 16, 16, 16, 0, 0);
             return info;
         }
         case ID::R16G16B16A16_UNORM:
@@ -659,7 +729,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16_EXT,
                                      GL_RGBA16_EXT,
                                      GenerateMip<R16G16B16A16>,
-                                     ReadColor<R16G16B16A16, GLfloat>);
+                                     ReadColor<R16G16B16A16, GLfloat>,
+                                     16, 16, 16, 16, 0, 0);
             return info;
         }
         case ID::R16G16B16_FLOAT:
@@ -668,7 +739,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB16F,
                                      GL_RGB16F,
                                      GenerateMip<R16G16B16F>,
-                                     ReadColor<R16G16B16F, GLfloat>);
+                                     ReadColor<R16G16B16F, GLfloat>,
+                                     16, 16, 16, 0, 0, 0);
             return info;
         }
         case ID::R16G16B16_SINT:
@@ -677,7 +749,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB16I,
                                      GL_RGB16I,
                                      GenerateMip<R16G16B16S>,
-                                     ReadColor<R16G16B16S, GLint>);
+                                     ReadColor<R16G16B16S, GLint>,
+                                     16, 16, 16, 0, 0, 0);
             return info;
         }
         case ID::R16G16B16_SNORM:
@@ -686,7 +759,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB16_SNORM_EXT,
                                      GL_RGB16_SNORM_EXT,
                                      GenerateMip<R16G16B16S>,
-                                     ReadColor<R16G16B16S, GLfloat>);
+                                     ReadColor<R16G16B16S, GLfloat>,
+                                     16, 16, 16, 0, 0, 0);
             return info;
         }
         case ID::R16G16B16_UINT:
@@ -695,7 +769,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB16UI,
                                      GL_RGB16UI,
                                      GenerateMip<R16G16B16>,
-                                     ReadColor<R16G16B16, GLuint>);
+                                     ReadColor<R16G16B16, GLuint>,
+                                     16, 16, 16, 0, 0, 0);
             return info;
         }
         case ID::R16G16B16_UNORM:
@@ -704,7 +779,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB16_EXT,
                                      GL_RGB16_EXT,
                                      GenerateMip<R16G16B16>,
-                                     ReadColor<R16G16B16, GLfloat>);
+                                     ReadColor<R16G16B16, GLfloat>,
+                                     16, 16, 16, 0, 0, 0);
             return info;
         }
         case ID::R16G16_FLOAT:
@@ -713,7 +789,8 @@ const Format &Format::Get(ID id)
                                      GL_RG16F,
                                      GL_RG16F,
                                      GenerateMip<R16G16F>,
-                                     ReadColor<R16G16F, GLfloat>);
+                                     ReadColor<R16G16F, GLfloat>,
+                                     16, 16, 0, 0, 0, 0);
             return info;
         }
         case ID::R16G16_SINT:
@@ -722,7 +799,8 @@ const Format &Format::Get(ID id)
                                      GL_RG16I,
                                      GL_RG16I,
                                      GenerateMip<R16G16S>,
-                                     ReadColor<R16G16S, GLint>);
+                                     ReadColor<R16G16S, GLint>,
+                                     16, 16, 0, 0, 0, 0);
             return info;
         }
         case ID::R16G16_SNORM:
@@ -731,7 +809,8 @@ const Format &Format::Get(ID id)
                                      GL_RG16_SNORM_EXT,
                                      GL_RG16_SNORM_EXT,
                                      GenerateMip<R16G16S>,
-                                     ReadColor<R16G16S, GLfloat>);
+                                     ReadColor<R16G16S, GLfloat>,
+                                     16, 16, 0, 0, 0, 0);
             return info;
         }
         case ID::R16G16_UINT:
@@ -740,7 +819,8 @@ const Format &Format::Get(ID id)
                                      GL_RG16UI,
                                      GL_RG16UI,
                                      GenerateMip<R16G16>,
-                                     ReadColor<R16G16, GLuint>);
+                                     ReadColor<R16G16, GLuint>,
+                                     16, 16, 0, 0, 0, 0);
             return info;
         }
         case ID::R16G16_UNORM:
@@ -749,7 +829,8 @@ const Format &Format::Get(ID id)
                                      GL_RG16_EXT,
                                      GL_RG16_EXT,
                                      GenerateMip<R16G16>,
-                                     ReadColor<R16G16, GLfloat>);
+                                     ReadColor<R16G16, GLfloat>,
+                                     16, 16, 0, 0, 0, 0);
             return info;
         }
         case ID::R16_FLOAT:
@@ -758,7 +839,8 @@ const Format &Format::Get(ID id)
                                      GL_R16F,
                                      GL_R16F,
                                      GenerateMip<R16F>,
-                                     ReadColor<R16F, GLfloat>);
+                                     ReadColor<R16F, GLfloat>,
+                                     16, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R16_SINT:
@@ -767,7 +849,8 @@ const Format &Format::Get(ID id)
                                      GL_R16I,
                                      GL_R16I,
                                      GenerateMip<R16S>,
-                                     ReadColor<R16S, GLint>);
+                                     ReadColor<R16S, GLint>,
+                                     16, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R16_SNORM:
@@ -776,7 +859,8 @@ const Format &Format::Get(ID id)
                                      GL_R16_SNORM_EXT,
                                      GL_R16_SNORM_EXT,
                                      GenerateMip<R16S>,
-                                     ReadColor<R16S, GLfloat>);
+                                     ReadColor<R16S, GLfloat>,
+                                     16, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R16_UINT:
@@ -785,7 +869,8 @@ const Format &Format::Get(ID id)
                                      GL_R16UI,
                                      GL_R16UI,
                                      GenerateMip<R16>,
-                                     ReadColor<R16, GLuint>);
+                                     ReadColor<R16, GLuint>,
+                                     16, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R16_UNORM:
@@ -794,7 +879,8 @@ const Format &Format::Get(ID id)
                                      GL_R16_EXT,
                                      GL_R16_EXT,
                                      GenerateMip<R16>,
-                                     ReadColor<R16, GLfloat>);
+                                     ReadColor<R16, GLfloat>,
+                                     16, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R32G32B32A32_FLOAT:
@@ -803,7 +889,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32F,
                                      GL_RGBA32F,
                                      GenerateMip<R32G32B32A32F>,
-                                     ReadColor<R32G32B32A32F, GLfloat>);
+                                     ReadColor<R32G32B32A32F, GLfloat>,
+                                     32, 32, 32, 32, 0, 0);
             return info;
         }
         case ID::R32G32B32A32_SINT:
@@ -812,7 +899,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32I,
                                      GL_RGBA32I,
                                      GenerateMip<R32G32B32A32S>,
-                                     ReadColor<R32G32B32A32S, GLint>);
+                                     ReadColor<R32G32B32A32S, GLint>,
+                                     32, 32, 32, 32, 0, 0);
             return info;
         }
         case ID::R32G32B32A32_UINT:
@@ -821,7 +909,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32UI,
                                      GL_RGBA32UI,
                                      GenerateMip<R32G32B32A32>,
-                                     ReadColor<R32G32B32A32, GLuint>);
+                                     ReadColor<R32G32B32A32, GLuint>,
+                                     32, 32, 32, 32, 0, 0);
             return info;
         }
         case ID::R32G32B32_FLOAT:
@@ -830,7 +919,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB32F,
                                      GL_RGB32F,
                                      GenerateMip<R32G32B32F>,
-                                     ReadColor<R32G32B32F, GLfloat>);
+                                     ReadColor<R32G32B32F, GLfloat>,
+                                     32, 32, 32, 0, 0, 0);
             return info;
         }
         case ID::R32G32B32_SINT:
@@ -839,7 +929,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB32I,
                                      GL_RGB32I,
                                      GenerateMip<R32G32B32S>,
-                                     ReadColor<R32G32B32S, GLint>);
+                                     ReadColor<R32G32B32S, GLint>,
+                                     32, 32, 32, 0, 0, 0);
             return info;
         }
         case ID::R32G32B32_UINT:
@@ -848,7 +939,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB32UI,
                                      GL_RGB32UI,
                                      GenerateMip<R32G32B32>,
-                                     ReadColor<R32G32B32, GLuint>);
+                                     ReadColor<R32G32B32, GLuint>,
+                                     32, 32, 32, 0, 0, 0);
             return info;
         }
         case ID::R32G32_FLOAT:
@@ -857,7 +949,8 @@ const Format &Format::Get(ID id)
                                      GL_RG32F,
                                      GL_RG32F,
                                      GenerateMip<R32G32F>,
-                                     ReadColor<R32G32F, GLfloat>);
+                                     ReadColor<R32G32F, GLfloat>,
+                                     32, 32, 0, 0, 0, 0);
             return info;
         }
         case ID::R32G32_SINT:
@@ -866,7 +959,8 @@ const Format &Format::Get(ID id)
                                      GL_RG32I,
                                      GL_RG32I,
                                      GenerateMip<R32G32S>,
-                                     ReadColor<R32G32S, GLint>);
+                                     ReadColor<R32G32S, GLint>,
+                                     32, 32, 0, 0, 0, 0);
             return info;
         }
         case ID::R32G32_UINT:
@@ -875,7 +969,8 @@ const Format &Format::Get(ID id)
                                      GL_RG32UI,
                                      GL_RG32UI,
                                      GenerateMip<R32G32>,
-                                     ReadColor<R32G32, GLuint>);
+                                     ReadColor<R32G32, GLuint>,
+                                     32, 32, 0, 0, 0, 0);
             return info;
         }
         case ID::R32_FLOAT:
@@ -884,7 +979,8 @@ const Format &Format::Get(ID id)
                                      GL_R32F,
                                      GL_R32F,
                                      GenerateMip<R32F>,
-                                     ReadColor<R32F, GLfloat>);
+                                     ReadColor<R32F, GLfloat>,
+                                     32, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R32_SINT:
@@ -893,7 +989,8 @@ const Format &Format::Get(ID id)
                                      GL_R32I,
                                      GL_R32I,
                                      GenerateMip<R32S>,
-                                     ReadColor<R32S, GLint>);
+                                     ReadColor<R32S, GLint>,
+                                     32, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R32_UINT:
@@ -902,7 +999,8 @@ const Format &Format::Get(ID id)
                                      GL_R32UI,
                                      GL_R32UI,
                                      GenerateMip<R32>,
-                                     ReadColor<R32, GLuint>);
+                                     ReadColor<R32, GLuint>,
+                                     32, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R4G4B4A4_UNORM:
@@ -911,7 +1009,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA4,
                                      GL_RGBA4,
                                      GenerateMip<R4G4B4A4>,
-                                     ReadColor<R4G4B4A4, GLfloat>);
+                                     ReadColor<R4G4B4A4, GLfloat>,
+                                     4, 4, 4, 4, 0, 0);
             return info;
         }
         case ID::R5G5B5A1_UNORM:
@@ -920,7 +1019,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB5_A1,
                                      GL_RGB5_A1,
                                      GenerateMip<R5G5B5A1>,
-                                     ReadColor<R5G5B5A1, GLfloat>);
+                                     ReadColor<R5G5B5A1, GLfloat>,
+                                     5, 5, 5, 1, 0, 0);
             return info;
         }
         case ID::R5G6B5_UNORM:
@@ -929,7 +1029,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB565,
                                      GL_RGB565,
                                      GenerateMip<R5G6B5>,
-                                     ReadColor<R5G6B5, GLfloat>);
+                                     ReadColor<R5G6B5, GLfloat>,
+                                     5, 6, 5, 0, 0, 0);
             return info;
         }
         case ID::R8G8B8A8_SINT:
@@ -938,7 +1039,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8I,
                                      GL_RGBA8I,
                                      GenerateMip<R8G8B8A8S>,
-                                     ReadColor<R8G8B8A8S, GLint>);
+                                     ReadColor<R8G8B8A8S, GLint>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::R8G8B8A8_SNORM:
@@ -947,7 +1049,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8_SNORM,
                                      GL_RGBA8_SNORM,
                                      GenerateMip<R8G8B8A8S>,
-                                     ReadColor<R8G8B8A8S, GLfloat>);
+                                     ReadColor<R8G8B8A8S, GLfloat>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::R8G8B8A8_UINT:
@@ -956,7 +1059,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8UI,
                                      GL_RGBA8UI,
                                      GenerateMip<R8G8B8A8>,
-                                     ReadColor<R8G8B8A8, GLuint>);
+                                     ReadColor<R8G8B8A8, GLuint>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::R8G8B8A8_UNORM:
@@ -965,7 +1069,8 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8,
                                      GL_RGBA8,
                                      GenerateMip<R8G8B8A8>,
-                                     ReadColor<R8G8B8A8, GLfloat>);
+                                     ReadColor<R8G8B8A8, GLfloat>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::R8G8B8A8_UNORM_SRGB:
@@ -974,7 +1079,8 @@ const Format &Format::Get(ID id)
                                      GL_SRGB8_ALPHA8,
                                      GL_SRGB8_ALPHA8,
                                      GenerateMip<R8G8B8A8>,
-                                     ReadColor<R8G8B8A8, GLfloat>);
+                                     ReadColor<R8G8B8A8, GLfloat>,
+                                     8, 8, 8, 8, 0, 0);
             return info;
         }
         case ID::R8G8B8_SINT:
@@ -983,7 +1089,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB8I,
                                      GL_RGB8I,
                                      GenerateMip<R8G8B8S>,
-                                     ReadColor<R8G8B8S, GLint>);
+                                     ReadColor<R8G8B8S, GLint>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::R8G8B8_SNORM:
@@ -992,7 +1099,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB8_SNORM,
                                      GL_RGB8_SNORM,
                                      GenerateMip<R8G8B8S>,
-                                     ReadColor<R8G8B8S, GLfloat>);
+                                     ReadColor<R8G8B8S, GLfloat>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::R8G8B8_UINT:
@@ -1001,7 +1109,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB8UI,
                                      GL_RGB8UI,
                                      GenerateMip<R8G8B8>,
-                                     ReadColor<R8G8B8, GLuint>);
+                                     ReadColor<R8G8B8, GLuint>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::R8G8B8_UNORM:
@@ -1010,7 +1119,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB8,
                                      GL_RGB8,
                                      GenerateMip<R8G8B8>,
-                                     ReadColor<R8G8B8, GLfloat>);
+                                     ReadColor<R8G8B8, GLfloat>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::R8G8B8_UNORM_SRGB:
@@ -1019,7 +1129,8 @@ const Format &Format::Get(ID id)
                                      GL_SRGB8,
                                      GL_SRGB8,
                                      GenerateMip<R8G8B8>,
-                                     ReadColor<R8G8B8, GLfloat>);
+                                     ReadColor<R8G8B8, GLfloat>,
+                                     8, 8, 8, 0, 0, 0);
             return info;
         }
         case ID::R8G8_SINT:
@@ -1028,7 +1139,8 @@ const Format &Format::Get(ID id)
                                      GL_RG8I,
                                      GL_RG8I,
                                      GenerateMip<R8G8S>,
-                                     ReadColor<R8G8S, GLint>);
+                                     ReadColor<R8G8S, GLint>,
+                                     8, 8, 0, 0, 0, 0);
             return info;
         }
         case ID::R8G8_SNORM:
@@ -1037,7 +1149,8 @@ const Format &Format::Get(ID id)
                                      GL_RG8_SNORM,
                                      GL_RG8_SNORM,
                                      GenerateMip<R8G8S>,
-                                     ReadColor<R8G8S, GLfloat>);
+                                     ReadColor<R8G8S, GLfloat>,
+                                     8, 8, 0, 0, 0, 0);
             return info;
         }
         case ID::R8G8_UINT:
@@ -1046,7 +1159,8 @@ const Format &Format::Get(ID id)
                                      GL_RG8UI,
                                      GL_RG8UI,
                                      GenerateMip<R8G8>,
-                                     ReadColor<R8G8, GLuint>);
+                                     ReadColor<R8G8, GLuint>,
+                                     8, 8, 0, 0, 0, 0);
             return info;
         }
         case ID::R8G8_UNORM:
@@ -1055,7 +1169,8 @@ const Format &Format::Get(ID id)
                                      GL_RG8,
                                      GL_RG8,
                                      GenerateMip<R8G8>,
-                                     ReadColor<R8G8, GLfloat>);
+                                     ReadColor<R8G8, GLfloat>,
+                                     8, 8, 0, 0, 0, 0);
             return info;
         }
         case ID::R8_SINT:
@@ -1064,7 +1179,8 @@ const Format &Format::Get(ID id)
                                      GL_R8I,
                                      GL_R8I,
                                      GenerateMip<R8S>,
-                                     ReadColor<R8S, GLint>);
+                                     ReadColor<R8S, GLint>,
+                                     8, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R8_SNORM:
@@ -1073,7 +1189,8 @@ const Format &Format::Get(ID id)
                                      GL_R8_SNORM,
                                      GL_R8_SNORM,
                                      GenerateMip<R8S>,
-                                     ReadColor<R8S, GLfloat>);
+                                     ReadColor<R8S, GLfloat>,
+                                     8, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R8_UINT:
@@ -1082,7 +1199,8 @@ const Format &Format::Get(ID id)
                                      GL_R8UI,
                                      GL_R8UI,
                                      GenerateMip<R8>,
-                                     ReadColor<R8, GLuint>);
+                                     ReadColor<R8, GLuint>,
+                                     8, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R8_UNORM:
@@ -1091,7 +1209,8 @@ const Format &Format::Get(ID id)
                                      GL_R8,
                                      GL_R8,
                                      GenerateMip<R8>,
-                                     ReadColor<R8, GLfloat>);
+                                     ReadColor<R8, GLfloat>,
+                                     8, 0, 0, 0, 0, 0);
             return info;
         }
         case ID::R9G9B9E5_SHAREDEXP:
@@ -1100,7 +1219,8 @@ const Format &Format::Get(ID id)
                                      GL_RGB9_E5,
                                      GL_RGB9_E5,
                                      GenerateMip<R9G9B9E5>,
-                                     ReadColor<R9G9B9E5, GLfloat>);
+                                     ReadColor<R9G9B9E5, GLfloat>,
+                                     9, 9, 9, 0, 0, 0);
             return info;
         }
         case ID::S8_UINT:
@@ -1109,7 +1229,8 @@ const Format &Format::Get(ID id)
                                      GL_STENCIL_INDEX8,
                                      GL_STENCIL_INDEX8,
                                      nullptr,
-                                     nullptr);
+                                     nullptr,
+                                     0, 0, 0, 0, 0, 8);
             return info;
         }
 
@@ -1119,7 +1240,7 @@ const Format &Format::Get(ID id)
     }
     // clang-format on
 
-    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr);
+    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, 0, 0, 0, 0, 0, 0);
     return noneInfo;
 }
 

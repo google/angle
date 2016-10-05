@@ -1459,26 +1459,26 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
                                        const gl::Rectangle *scissor,
                                        bool stencilOnly)
 {
-    auto srcFormat             = source.getFormat();
-    const auto &srcSizeInfo    = d3d11::GetDXGIFormatSizeInfo(srcFormat);
+    auto srcDXGIFormat         = source.getFormat();
+    const auto &srcSizeInfo    = d3d11::GetDXGIFormatSizeInfo(srcDXGIFormat);
     unsigned int srcPixelSize  = srcSizeInfo.pixelBytes;
-    unsigned int copyOffset = 0;
+    unsigned int copyOffset    = 0;
     unsigned int copySize      = srcPixelSize;
-    auto destFormat            = dest.getFormat();
-    const auto &destSizeInfo   = d3d11::GetDXGIFormatSizeInfo(destFormat);
+    auto destDXGIFormat        = dest.getFormat();
+    const auto &destSizeInfo   = d3d11::GetDXGIFormatSizeInfo(destDXGIFormat);
     unsigned int destPixelSize = destSizeInfo.pixelBytes;
 
-    ASSERT(srcFormat == destFormat || destFormat == DXGI_FORMAT_R32_TYPELESS);
+    ASSERT(srcDXGIFormat == destDXGIFormat || destDXGIFormat == DXGI_FORMAT_R32_TYPELESS);
 
     if (stencilOnly)
     {
-        const d3d11::DXGIFormat &srcDXGIFormat = d3d11::GetDXGIFormatInfo(srcFormat);
+        const auto &srcFormat = source.getFormatSet().format;
 
         // Stencil channel should be right after the depth channel. Some views to depth/stencil
         // resources have red channel for depth, in which case the depth channel bit width is in
         // redBits.
-        ASSERT((srcDXGIFormat.redBits != 0) != (srcDXGIFormat.depthBits != 0));
-        GLuint depthBits = srcDXGIFormat.redBits + srcDXGIFormat.depthBits;
+        ASSERT((srcFormat.redBits != 0) != (srcFormat.depthBits != 0));
+        GLuint depthBits = srcFormat.redBits + srcFormat.depthBits;
         // Known formats have either 24 or 32 bits of depth.
         ASSERT(depthBits == 24 || depthBits == 32);
         copyOffset = depthBits / 8;
@@ -1487,9 +1487,9 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
         copySize = 1;
     }
 
-    if (srcFormat != destFormat)
+    if (srcDXGIFormat != destDXGIFormat)
     {
-        if (srcFormat == DXGI_FORMAT_R24G8_TYPELESS)
+        if (srcDXGIFormat == DXGI_FORMAT_R24G8_TYPELESS)
         {
             ASSERT(sourceArea == destArea && sourceSize == destSize && scissor == nullptr);
             return copyAndConvert(source, sourceSubresource, sourceArea, sourceSize, dest,
@@ -1497,7 +1497,7 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
                                   copyOffset, copySize, srcPixelSize, destPixelSize,
                                   BlitD24S8ToD32F);
         }
-        ASSERT(srcFormat == DXGI_FORMAT_R32G8X24_TYPELESS);
+        ASSERT(srcDXGIFormat == DXGI_FORMAT_R32G8X24_TYPELESS);
         return copyAndConvert(source, sourceSubresource, sourceArea, sourceSize, dest,
                               destSubresource, destArea, destSize, scissor, copyOffset, copyOffset,
                               copySize, srcPixelSize, destPixelSize, BlitD32FS8ToD32F);

@@ -26,7 +26,13 @@ struct Format final : angle::NonCopyable
            GLenum glFormat,
            GLenum fboFormat,
            rx::MipGenerationFunction mipGen,
-           rx::ColorReadFunction colorRead);
+           rx::ColorReadFunction colorRead,
+           GLuint redBits,
+           GLuint greenBits,
+           GLuint blueBits,
+           GLuint alphaBits,
+           GLuint depthBits,
+           GLuint stencilBits);
 
     static const Format &Get(ID id);
 
@@ -46,6 +52,13 @@ struct Format final : angle::NonCopyable
 
     // A map from a gl::FormatType to a fast pixel copy function for this format.
     rx::FastCopyFunctionMap fastCopyFunctions;
+
+    GLuint redBits;
+    GLuint greenBits;
+    GLuint blueBits;
+    GLuint alphaBits;
+    GLuint depthBits;
+    GLuint stencilBits;
 };
 
 }  // namespace angle

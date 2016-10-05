@@ -67,7 +67,7 @@ const Format &Format::Get(ID id)
     }}
     // clang-format on
 
-    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr);
+    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, 0, 0, 0, 0, 0, 0);
     return noneInfo;
 }}
 
@@ -128,7 +128,8 @@ format_entry_template = """{space}{{
 {space}                             {glInternalFormat},
 {space}                             {fboImplementationInternalFormat},
 {space}                             {mipGenerationFunction},
-{space}                             {colorReadFunction});
+{space}                             {colorReadFunction},
+{space}                             {R}, {G}, {B}, {A}, {D}, {S});
 {space}    return info;
 {space}}}
 """
@@ -204,6 +205,12 @@ def json_to_table_data(format_id, json, angle_to_gl):
     # Derived values.
     parsed["mipGenerationFunction"] = get_mip_generation_function(parsed)
     parsed["colorReadFunction"] = get_color_read_function(parsed)
+
+    for channel in "ABDGLRS":
+        if parsed["bits"] != None and channel in parsed["bits"]:
+            parsed[channel] = parsed["bits"][channel]
+        else:
+            parsed[channel] = "0"
 
     return format_entry_template.format(**parsed)
 

@@ -3931,21 +3931,20 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     const auto &destFormatInfo = gl::GetInternalFormatInfo(drawRenderTarget->getInternalFormat());
     const auto &srcFormatInfo  = gl::GetInternalFormatInfo(readRenderTarget->getInternalFormat());
     const auto &formatSet      = drawRenderTarget11->getFormatSet();
-    const DXGI_FORMAT drawDXGIFormat = colorBlit ? formatSet.rtvFormat : formatSet.dsvFormat;
-    const auto &dxgiFormatInfo       = d3d11::GetDXGIFormatInfo(drawDXGIFormat);
+    const auto &nativeFormat   = formatSet.format;
 
     // Some blits require masking off emulated texture channels. eg: from RGBA8 to RGB8, we
     // emulate RGB8 with RGBA8, so we need to mask off the alpha channel when we copy.
 
     gl::Color<bool> colorMask;
-    colorMask.red = (srcFormatInfo.redBits > 0) && (destFormatInfo.redBits == 0) &&
-                    (dxgiFormatInfo.redBits > 0);
+    colorMask.red =
+        (srcFormatInfo.redBits > 0) && (destFormatInfo.redBits == 0) && (nativeFormat.redBits > 0);
     colorMask.green = (srcFormatInfo.greenBits > 0) && (destFormatInfo.greenBits == 0) &&
-                      (dxgiFormatInfo.greenBits > 0);
+                      (nativeFormat.greenBits > 0);
     colorMask.blue = (srcFormatInfo.blueBits > 0) && (destFormatInfo.blueBits == 0) &&
-                     (dxgiFormatInfo.blueBits > 0);
+                     (nativeFormat.blueBits > 0);
     colorMask.alpha = (srcFormatInfo.alphaBits > 0) && (destFormatInfo.alphaBits == 0) &&
-                      (dxgiFormatInfo.alphaBits > 0);
+                      (nativeFormat.alphaBits > 0);
 
     // We only currently support masking off the alpha channel.
     bool colorMaskingNeeded = colorMask.alpha;
@@ -3966,7 +3965,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
                        drawRect.x < 0 || drawRect.x + drawRect.width > drawSize.width ||
                        drawRect.y < 0 || drawRect.y + drawRect.height > drawSize.height;
 
-    bool partialDSBlit = (dxgiFormatInfo.depthBits > 0 && depthBlit) != (dxgiFormatInfo.stencilBits > 0 && stencilBlit);
+    bool partialDSBlit =
+        (nativeFormat.depthBits > 0 && depthBlit) != (nativeFormat.stencilBits > 0 && stencilBlit);
 
     if (readRenderTarget11->getFormatSet().format.id ==
             drawRenderTarget11->getFormatSet().format.id &&

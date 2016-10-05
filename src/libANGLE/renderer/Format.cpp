@@ -47,13 +47,25 @@ Format::Format(ID id,
                GLenum glFormat,
                GLenum fboFormat,
                MipGenerationFunction mipGen,
-               ColorReadFunction colorRead)
+               ColorReadFunction colorRead,
+               GLuint redBits,
+               GLuint greenBits,
+               GLuint blueBits,
+               GLuint alphaBits,
+               GLuint depthBits,
+               GLuint stencilBits)
     : id(id),
       glInternalFormat(glFormat),
       fboImplementationInternalFormat(fboFormat),
       mipGenerationFunction(mipGen),
       colorReadFunction(colorRead),
-      fastCopyFunctions(GetFastCopyFunctionsMap(id))
+      fastCopyFunctions(GetFastCopyFunctionsMap(id)),
+      redBits(redBits),
+      greenBits(greenBits),
+      blueBits(blueBits),
+      alphaBits(alphaBits),
+      depthBits(depthBits),
+      stencilBits(stencilBits)
 {
 }
 

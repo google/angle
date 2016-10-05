@@ -331,27 +331,26 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                     return gl::Error(GL_OUT_OF_MEMORY, "Internal render target view pointer unexpectedly null.");
                 }
 
-                const auto &dxgiFormatInfo =
-                    d3d11::GetDXGIFormatInfo(renderTarget->getFormatSet().rtvFormat);
+                const auto &nativeFormat = renderTarget->getFormatSet().format;
 
                 // Check if the actual format has a channel that the internal format does not and set them to the
                 // default values
                 float clearValues[4] = {
-                    ((formatInfo.redBits == 0 && dxgiFormatInfo.redBits > 0)
+                    ((formatInfo.redBits == 0 && nativeFormat.redBits > 0)
                          ? 0.0f
                          : clearParams.colorFClearValue.red),
-                    ((formatInfo.greenBits == 0 && dxgiFormatInfo.greenBits > 0)
+                    ((formatInfo.greenBits == 0 && nativeFormat.greenBits > 0)
                          ? 0.0f
                          : clearParams.colorFClearValue.green),
-                    ((formatInfo.blueBits == 0 && dxgiFormatInfo.blueBits > 0)
+                    ((formatInfo.blueBits == 0 && nativeFormat.blueBits > 0)
                          ? 0.0f
                          : clearParams.colorFClearValue.blue),
-                    ((formatInfo.alphaBits == 0 && dxgiFormatInfo.alphaBits > 0)
+                    ((formatInfo.alphaBits == 0 && nativeFormat.alphaBits > 0)
                          ? 1.0f
                          : clearParams.colorFClearValue.alpha),
                 };
 
-                if (dxgiFormatInfo.alphaBits == 1)
+                if (formatInfo.alphaBits == 1)
                 {
                     // Some drivers do not correctly handle calling Clear() on a format with 1-bit alpha.
                     // They can incorrectly round all non-zero values up to 1.0f. Note that WARP does not do this.
@@ -392,10 +391,10 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             return error;
         }
 
-        const auto &dxgiFormatInfo =
-            d3d11::GetDXGIFormatInfo(renderTarget->getFormatSet().dsvFormat);
+        const auto &nativeFormat = renderTarget->getFormatSet().format;
 
-        unsigned int stencilUnmasked = (stencilAttachment != nullptr) ? (1 << dxgiFormatInfo.stencilBits) - 1 : 0;
+        unsigned int stencilUnmasked =
+            (stencilAttachment != nullptr) ? (1 << nativeFormat.stencilBits) - 1 : 0;
         bool needMaskedStencilClear = clearParams.clearStencil && (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
 
         if (needScissoredClear || needMaskedStencilClear)
