@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2ff5921_1bcbdb68",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-05T16:40:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "420d292b_bad62de6",
+      "range": {
+        "startLine": 58,
+        "startChar": 49,
+        "endLine": 58,
+        "endChar": 56
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25283f69_06d01a4b",
         "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
         "patchSetId": 11
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "62086d1c_fb570b5c",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-05T16:40:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25283f69_06d01a4b",
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "452ff370_07173655",
         "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
         "patchSetId": 11
@@ -53,6 +95,30 @@
       "writtenOn": "2016-09-29T11:36:59Z",
       "side": 1,
       "message": "Typo",
+      "range": {
+        "startLine": 78,
+        "startChar": 42,
+        "endLine": 78,
+        "endChar": 45
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "25283f69_c66b627c",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-05T16:40:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "452ff370_07173655",
       "range": {
         "startLine": 78,
         "startChar": 42,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "e2029df6_bc2e213f",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-05T16:40:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25283f69_e6da1e6e",
+      "range": {
+        "startLine": 89,
+        "startChar": 43,
+        "endLine": 89,
+        "endChar": 46
+      },
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2029df6_5c1ddd25",
         "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
         "patchSetId": 11
@@ -99,6 +189,24 @@
       "writtenOn": "2016-09-29T11:36:59Z",
       "side": 1,
       "message": "Put the image load and image store tests to different test functions.",
+      "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0225f190_a5aaded7",
+        "filename": "src/tests/compiler_tests/ShaderImage_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-05T16:40:58Z",
+      "side": 1,
+      "message": "Done.\nActually, I moved most of the verification code to static functions to avoid repetition.",
+      "parentUuid": "e2029df6_5c1ddd25",
       "revId": "b51c08e865a681ebb064ac02abff544dddeb50c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
