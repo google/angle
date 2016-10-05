@@ -343,102 +343,110 @@ bool ValidateES3TexImage3DParameters(Context *context,
 
 struct EffectiveInternalFormatInfo
 {
-    GLenum mEffectiveFormat;
-    GLenum mDestFormat;
-    GLuint mMinRedBits;
-    GLuint mMaxRedBits;
-    GLuint mMinGreenBits;
-    GLuint mMaxGreenBits;
-    GLuint mMinBlueBits;
-    GLuint mMaxBlueBits;
-    GLuint mMinAlphaBits;
-    GLuint mMaxAlphaBits;
-
-    EffectiveInternalFormatInfo(GLenum effectiveFormat, GLenum destFormat, GLuint minRedBits, GLuint maxRedBits,
-                                GLuint minGreenBits, GLuint maxGreenBits, GLuint minBlueBits, GLuint maxBlueBits,
-                                GLuint minAlphaBits, GLuint maxAlphaBits)
-        : mEffectiveFormat(effectiveFormat), mDestFormat(destFormat), mMinRedBits(minRedBits),
-          mMaxRedBits(maxRedBits), mMinGreenBits(minGreenBits), mMaxGreenBits(maxGreenBits),
-          mMinBlueBits(minBlueBits), mMaxBlueBits(maxBlueBits), mMinAlphaBits(minAlphaBits),
-          mMaxAlphaBits(maxAlphaBits) {};
+    GLenum effectiveFormat;
+    GLenum destFormat;
+    GLuint minRedBits;
+    GLuint maxRedBits;
+    GLuint minGreenBits;
+    GLuint maxGreenBits;
+    GLuint minBlueBits;
+    GLuint maxBlueBits;
+    GLuint minAlphaBits;
+    GLuint maxAlphaBits;
 };
 
-typedef std::vector<EffectiveInternalFormatInfo> EffectiveInternalFormatList;
-
-static EffectiveInternalFormatList BuildSizedEffectiveInternalFormatList()
+static bool QueryEffectiveFormatList(const InternalFormat &srcFormat,
+                                     GLenum targetFormat,
+                                     const EffectiveInternalFormatInfo *list,
+                                     size_t size,
+                                     GLenum *outEffectiveFormat)
 {
-    EffectiveInternalFormatList list;
+    for (size_t curFormat = 0; curFormat < size; ++curFormat)
+    {
+        const EffectiveInternalFormatInfo &formatInfo = list[curFormat];
+        if ((formatInfo.destFormat == targetFormat) &&
+            (formatInfo.minRedBits <= srcFormat.redBits &&
+             formatInfo.maxRedBits >= srcFormat.redBits) &&
+            (formatInfo.minGreenBits <= srcFormat.greenBits &&
+             formatInfo.maxGreenBits >= srcFormat.greenBits) &&
+            (formatInfo.minBlueBits <= srcFormat.blueBits &&
+             formatInfo.maxBlueBits >= srcFormat.blueBits) &&
+            (formatInfo.minAlphaBits <= srcFormat.alphaBits &&
+             formatInfo.maxAlphaBits >= srcFormat.alphaBits))
+        {
+            *outEffectiveFormat = formatInfo.effectiveFormat;
+            return true;
+        }
+    }
 
-    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
-    //                                                    linear source buffer component sizes.
-    //                                                                            | Source channel min/max sizes |
-    //                                         Effective Internal Format |  N/A   |  R   |  G   |  B   |  A      |
-    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_NONE, 0,  0, 0,  0, 0,  0, 1, 8));
-    list.push_back(EffectiveInternalFormatInfo(GL_R8,                      GL_NONE, 1,  8, 0,  0, 0,  0, 0, 0));
-    list.push_back(EffectiveInternalFormatInfo(GL_RG8,                     GL_NONE, 1,  8, 1,  8, 0,  0, 0, 0));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_NONE, 1,  5, 1,  6, 1,  5, 0, 0));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_NONE, 6,  8, 7,  8, 6,  8, 0, 0));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_NONE, 1,  4, 1,  4, 1,  4, 1, 4));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_NONE, 5,  5, 5,  5, 5,  5, 1, 1));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_NONE, 5,  8, 5,  8, 5,  8, 2, 8));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB10_A2,                GL_NONE, 9, 10, 9, 10, 9, 10, 2, 2));
-
-    return list;
+    *outEffectiveFormat = GL_NONE;
+    return false;
 }
 
-static EffectiveInternalFormatList BuildUnsizedEffectiveInternalFormatList()
+bool GetSizedEffectiveInternalFormatInfo(const InternalFormat &srcFormat,
+                                         GLenum *outEffectiveFormat)
 {
-    EffectiveInternalFormatList list;
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141:
+    // Effective internal format coresponding to destination internal format and linear source
+    // buffer component sizes.
+    //                                       | Source channel min/max sizes |
+    //   Effective Internal Format   |  N/A  |  R   |  G   |  B   |  A      |
+    // clang-format off
+    constexpr EffectiveInternalFormatInfo list[] = {
+        { GL_ALPHA8_EXT,              GL_NONE, 0,  0, 0,  0, 0,  0, 1, 8 },
+        { GL_R8,                      GL_NONE, 1,  8, 0,  0, 0,  0, 0, 0 },
+        { GL_RG8,                     GL_NONE, 1,  8, 1,  8, 0,  0, 0, 0 },
+        { GL_RGB565,                  GL_NONE, 1,  5, 1,  6, 1,  5, 0, 0 },
+        { GL_RGB8,                    GL_NONE, 6,  8, 7,  8, 6,  8, 0, 0 },
+        { GL_RGBA4,                   GL_NONE, 1,  4, 1,  4, 1,  4, 1, 4 },
+        { GL_RGB5_A1,                 GL_NONE, 5,  5, 5,  5, 5,  5, 1, 1 },
+        { GL_RGBA8,                   GL_NONE, 5,  8, 5,  8, 5,  8, 2, 8 },
+        { GL_RGB10_A2,                GL_NONE, 9, 10, 9, 10, 9, 10, 2, 2 },
+    };
+    // clang-format on
 
-    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141: Effective internal format coresponding to destination internal format and
-    //                                                    linear source buffer component sizes.
-    //                                                                                        |          Source channel min/max sizes            |
-    //                                         Effective Internal Format |    Dest Format     |     R     |      G     |      B     |      A     |
-    list.push_back(EffectiveInternalFormatInfo(GL_ALPHA8_EXT,              GL_ALPHA,           0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
-    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_EXT,          GL_LUMINANCE,       1,        8, 0, UINT_MAX, 0, UINT_MAX, 0, UINT_MAX));
-    list.push_back(EffectiveInternalFormatInfo(GL_LUMINANCE8_ALPHA8_EXT,   GL_LUMINANCE_ALPHA, 1,        8, 0, UINT_MAX, 0, UINT_MAX, 1,        8));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB565,                  GL_RGB,             1,        5, 1,        6, 1,        5, 0, UINT_MAX));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB8,                    GL_RGB,             6,        8, 7,        8, 6,        8, 0, UINT_MAX));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGBA4,                   GL_RGBA,            1,        4, 1,        4, 1,        4, 1,        4));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGB5_A1,                 GL_RGBA,            5,        5, 5,        5, 5,        5, 1,        1));
-    list.push_back(EffectiveInternalFormatInfo(GL_RGBA8,                   GL_RGBA,            5,        8, 5,        8, 5,        8, 5,        8));
+    return QueryEffectiveFormatList(srcFormat, GL_NONE, list, ArraySize(list), outEffectiveFormat);
+}
 
-    return list;
+bool GetUnsizedEffectiveInternalFormatInfo(const InternalFormat &srcFormat,
+                                           const InternalFormat &destFormat,
+                                           GLenum *outEffectiveFormat)
+{
+    constexpr GLuint umax = UINT_MAX;
+
+    // OpenGL ES 3.0.3 Specification, Table 3.17, pg 141:
+    // Effective internal format coresponding to destination internal format andlinear source buffer
+    // component sizes.
+    //                                                   |   Source channel min/max sizes   |
+    //     Effective Internal Format |   Dest Format     |   R   |    G   |    B   |    A   |
+    // clang-format off
+    constexpr EffectiveInternalFormatInfo list[] = {
+        { GL_ALPHA8_EXT,             GL_ALPHA,           0, umax, 0, umax, 0, umax, 1,    8 },
+        { GL_LUMINANCE8_EXT,         GL_LUMINANCE,       1,    8, 0, umax, 0, umax, 0, umax },
+        { GL_LUMINANCE8_ALPHA8_EXT,  GL_LUMINANCE_ALPHA, 1,    8, 0, umax, 0, umax, 1,    8 },
+        { GL_RGB565,                 GL_RGB,             1,    5, 1,    6, 1,    5, 0, umax },
+        { GL_RGB8,                   GL_RGB,             6,    8, 7,    8, 6,    8, 0, umax },
+        { GL_RGBA4,                  GL_RGBA,            1,    4, 1,    4, 1,    4, 1,    4 },
+        { GL_RGB5_A1,                GL_RGBA,            5,    5, 5,    5, 5,    5, 1,    1 },
+        { GL_RGBA8,                  GL_RGBA,            5,    8, 5,    8, 5,    8, 5,    8 },
+    };
+    // clang-format on
+
+    return QueryEffectiveFormatList(srcFormat, destFormat.format, list, ArraySize(list),
+                                    outEffectiveFormat);
 }
 
 static bool GetEffectiveInternalFormat(const InternalFormat &srcFormat, const InternalFormat &destFormat,
                                        GLenum *outEffectiveFormat)
 {
-    const EffectiveInternalFormatList *list = NULL;
-    GLenum targetFormat = GL_NONE;
-
     if (destFormat.pixelBytes > 0)
     {
-        static const EffectiveInternalFormatList sizedList = BuildSizedEffectiveInternalFormatList();
-        list = &sizedList;
+        return GetSizedEffectiveInternalFormatInfo(srcFormat, outEffectiveFormat);
     }
     else
     {
-        static const EffectiveInternalFormatList unsizedList = BuildUnsizedEffectiveInternalFormatList();
-        list = &unsizedList;
-        targetFormat = destFormat.format;
+        return GetUnsizedEffectiveInternalFormatInfo(srcFormat, destFormat, outEffectiveFormat);
     }
-
-    for (size_t curFormat = 0; curFormat < list->size(); ++curFormat)
-    {
-        const EffectiveInternalFormatInfo& formatInfo = list->at(curFormat);
-        if ((formatInfo.mDestFormat == targetFormat) &&
-            (formatInfo.mMinRedBits   <= srcFormat.redBits   && formatInfo.mMaxRedBits   >= srcFormat.redBits)   &&
-            (formatInfo.mMinGreenBits <= srcFormat.greenBits && formatInfo.mMaxGreenBits >= srcFormat.greenBits) &&
-            (formatInfo.mMinBlueBits  <= srcFormat.blueBits  && formatInfo.mMaxBlueBits  >= srcFormat.blueBits)  &&
-            (formatInfo.mMinAlphaBits <= srcFormat.alphaBits && formatInfo.mMaxAlphaBits >= srcFormat.alphaBits))
-        {
-            *outEffectiveFormat = formatInfo.mEffectiveFormat;
-            return true;
-        }
-    }
-
-    return false;
 }
 
 struct CopyConversion
