@@ -45,6 +45,11 @@ RecordConstantPrecisionTraverser::RecordConstantPrecisionTraverser()
 
 bool RecordConstantPrecisionTraverser::operandAffectsParentOperationPrecision(TIntermTyped *operand)
 {
+    if (getParentNode()->getAsCaseNode())
+    {
+        return false;
+    }
+
     const TIntermBinary *parentAsBinary = getParentNode()->getAsBinaryNode();
     if (parentAsBinary != nullptr)
     {

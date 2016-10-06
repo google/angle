@@ -680,7 +680,11 @@ void TIntermTraverser::traverseCase(TIntermCase *node)
         visit = visitCase(PreVisit, node);
 
     if (visit && node->getCondition())
+    {
+        incrementDepth(node);
         node->getCondition()->traverse(this);
+        decrementDepth();
+    }
 
     if (visit && postVisit)
         visitCase(PostVisit, node);
