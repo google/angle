@@ -31,8 +31,6 @@ struct DXGIFormat
 {
     DXGIFormat();
 
-    GLenum componentType;
-
     NativeMipmapGenerationSupportFunction nativeMipmapSupport;
 };
 
@@ -65,6 +63,9 @@ struct VertexFormat
 };
 const VertexFormat &GetVertexFormatInfo(gl::VertexFormatType vertexFormatType,
                                         D3D_FEATURE_LEVEL featureLevel);
+
+// Auto-generated in dxgi_format_map_autogen.cpp.
+GLenum GetComponentType(DXGI_FORMAT dxgiFormat);
 
 }  // namespace d3d11
 

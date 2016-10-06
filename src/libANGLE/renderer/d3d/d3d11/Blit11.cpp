@@ -1022,8 +1022,7 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
-    GLenum componentType                    = dxgiFormatInfo.componentType;
+    GLenum componentType = d3d11::GetComponentType(sourceSRVDesc.Format);
     if (componentType == GL_NONE)
     {
         // We're swizzling the depth component of a depth-stencil texture.
@@ -1183,8 +1182,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
 
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(sourceSRVDesc.Format);
-    GLenum componentType                    = dxgiFormatInfo.componentType;
+    GLenum componentType = d3d11::GetComponentType(sourceSRVDesc.Format);
 
     ASSERT(componentType != GL_NONE);
     ASSERT(componentType != GL_SIGNED_NORMALIZED);

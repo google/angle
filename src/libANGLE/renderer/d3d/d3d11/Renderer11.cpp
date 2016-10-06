@@ -4174,7 +4174,9 @@ VertexConversionType Renderer11::getVertexConversionType(gl::VertexFormatType ve
 
 GLenum Renderer11::getVertexComponentType(gl::VertexFormatType vertexFormatType) const
 {
-    return d3d11::GetDXGIFormatInfo(d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel).nativeFormat).componentType;
+    const auto &format =
+        d3d11::GetVertexFormatInfo(vertexFormatType, mRenderer11DeviceCaps.featureLevel);
+    return d3d11::GetComponentType(format.nativeFormat);
 }
 
 gl::ErrorOrResult<unsigned int> Renderer11::getVertexSpaceRequired(

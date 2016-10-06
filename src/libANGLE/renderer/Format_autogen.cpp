@@ -30,6 +30,7 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA16F_EXT,
                                      GenerateMip<A16F>,
                                      ReadColor<A16F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 16, 0, 0);
             return info;
         }
@@ -40,6 +41,7 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA32F_EXT,
                                      GenerateMip<A32F>,
                                      ReadColor<A32F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 32, 0, 0);
             return info;
         }
@@ -50,6 +52,7 @@ const Format &Format::Get(ID id)
                                      GL_ALPHA8_EXT,
                                      GenerateMip<A8>,
                                      ReadColor<A8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 8, 0, 0);
             return info;
         }
@@ -60,6 +63,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -70,6 +74,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x10_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -80,6 +85,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -90,6 +96,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -100,6 +107,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -110,6 +118,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -120,6 +129,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -130,6 +140,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_10x8_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -140,6 +151,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -150,6 +162,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_12x10_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -160,6 +173,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -170,6 +184,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_12x12_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -180,6 +195,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -190,6 +206,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_4x4_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -200,6 +217,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -210,6 +228,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_5x4_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -220,6 +239,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -230,6 +250,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_5x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -240,6 +261,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -250,6 +272,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_6x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -260,6 +283,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -270,6 +294,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_6x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -280,6 +305,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -290,6 +316,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x5_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -300,6 +327,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -310,6 +338,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x6_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -320,6 +349,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -330,6 +360,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_ASTC_8x8_KHR,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -340,6 +371,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA4,
                                      GenerateMip<A4R4G4B4>,
                                      ReadColor<A4R4G4B4, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      4, 4, 4, 4, 0, 0);
             return info;
         }
@@ -350,6 +382,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB5_A1,
                                      GenerateMip<A1R5G5B5>,
                                      ReadColor<A1R5G5B5, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      5, 5, 5, 1, 0, 0);
             return info;
         }
@@ -360,6 +393,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB565,
                                      GenerateMip<B5G6R5>,
                                      ReadColor<B5G6R5, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      5, 6, 5, 0, 0, 0);
             return info;
         }
@@ -370,6 +404,7 @@ const Format &Format::Get(ID id)
                                      GL_BGRA8_EXT,
                                      GenerateMip<B8G8R8A8>,
                                      ReadColor<B8G8R8A8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -380,6 +415,7 @@ const Format &Format::Get(ID id)
                                      GL_BGRA8_EXT,
                                      GenerateMip<B8G8R8X8>,
                                      ReadColor<B8G8R8X8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -390,6 +426,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -400,6 +437,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -410,6 +448,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -420,6 +459,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -430,6 +470,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT16,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 16, 0);
             return info;
         }
@@ -440,6 +481,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT24,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 24, 0);
             return info;
         }
@@ -450,6 +492,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH24_STENCIL8,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 24, 8);
             return info;
         }
@@ -460,6 +503,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT32F,
                                      nullptr,
                                      nullptr,
+                                     GL_FLOAT,
                                      0, 0, 0, 0, 32, 0);
             return info;
         }
@@ -470,6 +514,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH32F_STENCIL8,
                                      nullptr,
                                      nullptr,
+                                     GL_FLOAT,
                                      0, 0, 0, 0, 32, 8);
             return info;
         }
@@ -480,6 +525,7 @@ const Format &Format::Get(ID id)
                                      GL_DEPTH_COMPONENT32_OES,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 32, 0);
             return info;
         }
@@ -490,6 +536,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SIGNED_RG11_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_SIGNED_NORMALIZED,
                                      11, 11, 0, 0, 0, 0);
             return info;
         }
@@ -500,6 +547,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RG11_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      11, 11, 0, 0, 0, 0);
             return info;
         }
@@ -510,6 +558,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SIGNED_R11_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_SIGNED_NORMALIZED,
                                      11, 0, 0, 0, 0, 0);
             return info;
         }
@@ -520,6 +569,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_R11_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      11, 0, 0, 0, 0, 0);
             return info;
         }
@@ -530,6 +580,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 1, 0, 0);
             return info;
         }
@@ -540,6 +591,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 1, 0, 0);
             return info;
         }
@@ -550,6 +602,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -560,6 +613,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGBA8_ETC2_EAC,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -570,6 +624,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_SRGB8_ETC2,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -580,6 +635,7 @@ const Format &Format::Get(ID id)
                                      GL_COMPRESSED_RGB8_ETC2,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -590,6 +646,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE_ALPHA16F_EXT,
                                      GenerateMip<L16A16F>,
                                      ReadColor<L16A16F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 16, 0, 0);
             return info;
         }
@@ -600,6 +657,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE16F_EXT,
                                      GenerateMip<L16F>,
                                      ReadColor<L16F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -610,6 +668,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE_ALPHA32F_EXT,
                                      GenerateMip<L32A32F>,
                                      ReadColor<L32A32F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 32, 0, 0);
             return info;
         }
@@ -620,6 +679,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE32F_EXT,
                                      GenerateMip<L32F>,
                                      ReadColor<L32F, GLfloat>,
+                                     GL_FLOAT,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -630,6 +690,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE8_ALPHA8_EXT,
                                      GenerateMip<L8A8>,
                                      ReadColor<L8A8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 8, 0, 0);
             return info;
         }
@@ -640,6 +701,7 @@ const Format &Format::Get(ID id)
                                      GL_LUMINANCE8_EXT,
                                      GenerateMip<L8>,
                                      ReadColor<L8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -650,6 +712,7 @@ const Format &Format::Get(ID id)
                                      GL_NONE,
                                      nullptr,
                                      nullptr,
+                                     GL_NONE,
                                      0, 0, 0, 0, 0, 0);
             return info;
         }
@@ -660,6 +723,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB10_A2UI,
                                      GenerateMip<R10G10B10A2>,
                                      ReadColor<R10G10B10A2, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      10, 10, 10, 2, 0, 0);
             return info;
         }
@@ -670,6 +734,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB10_A2,
                                      GenerateMip<R10G10B10A2>,
                                      ReadColor<R10G10B10A2, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      10, 10, 10, 2, 0, 0);
             return info;
         }
@@ -680,6 +745,7 @@ const Format &Format::Get(ID id)
                                      GL_R11F_G11F_B10F,
                                      GenerateMip<R11G11B10F>,
                                      ReadColor<R11G11B10F, GLfloat>,
+                                     GL_FLOAT,
                                      11, 11, 10, 0, 0, 0);
             return info;
         }
@@ -690,6 +756,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16F,
                                      GenerateMip<R16G16B16A16F>,
                                      ReadColor<R16G16B16A16F, GLfloat>,
+                                     GL_FLOAT,
                                      16, 16, 16, 16, 0, 0);
             return info;
         }
@@ -700,6 +767,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16I,
                                      GenerateMip<R16G16B16A16S>,
                                      ReadColor<R16G16B16A16S, GLint>,
+                                     GL_INT,
                                      16, 16, 16, 16, 0, 0);
             return info;
         }
@@ -710,6 +778,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16_SNORM_EXT,
                                      GenerateMip<R16G16B16A16S>,
                                      ReadColor<R16G16B16A16S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      16, 16, 16, 16, 0, 0);
             return info;
         }
@@ -720,6 +789,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16UI,
                                      GenerateMip<R16G16B16A16>,
                                      ReadColor<R16G16B16A16, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      16, 16, 16, 16, 0, 0);
             return info;
         }
@@ -730,6 +800,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA16_EXT,
                                      GenerateMip<R16G16B16A16>,
                                      ReadColor<R16G16B16A16, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      16, 16, 16, 16, 0, 0);
             return info;
         }
@@ -740,6 +811,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB16F,
                                      GenerateMip<R16G16B16F>,
                                      ReadColor<R16G16B16F, GLfloat>,
+                                     GL_FLOAT,
                                      16, 16, 16, 0, 0, 0);
             return info;
         }
@@ -750,6 +822,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB16I,
                                      GenerateMip<R16G16B16S>,
                                      ReadColor<R16G16B16S, GLint>,
+                                     GL_INT,
                                      16, 16, 16, 0, 0, 0);
             return info;
         }
@@ -760,6 +833,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB16_SNORM_EXT,
                                      GenerateMip<R16G16B16S>,
                                      ReadColor<R16G16B16S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      16, 16, 16, 0, 0, 0);
             return info;
         }
@@ -770,6 +844,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB16UI,
                                      GenerateMip<R16G16B16>,
                                      ReadColor<R16G16B16, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      16, 16, 16, 0, 0, 0);
             return info;
         }
@@ -780,6 +855,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB16_EXT,
                                      GenerateMip<R16G16B16>,
                                      ReadColor<R16G16B16, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      16, 16, 16, 0, 0, 0);
             return info;
         }
@@ -790,6 +866,7 @@ const Format &Format::Get(ID id)
                                      GL_RG16F,
                                      GenerateMip<R16G16F>,
                                      ReadColor<R16G16F, GLfloat>,
+                                     GL_FLOAT,
                                      16, 16, 0, 0, 0, 0);
             return info;
         }
@@ -800,6 +877,7 @@ const Format &Format::Get(ID id)
                                      GL_RG16I,
                                      GenerateMip<R16G16S>,
                                      ReadColor<R16G16S, GLint>,
+                                     GL_INT,
                                      16, 16, 0, 0, 0, 0);
             return info;
         }
@@ -810,6 +888,7 @@ const Format &Format::Get(ID id)
                                      GL_RG16_SNORM_EXT,
                                      GenerateMip<R16G16S>,
                                      ReadColor<R16G16S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      16, 16, 0, 0, 0, 0);
             return info;
         }
@@ -820,6 +899,7 @@ const Format &Format::Get(ID id)
                                      GL_RG16UI,
                                      GenerateMip<R16G16>,
                                      ReadColor<R16G16, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      16, 16, 0, 0, 0, 0);
             return info;
         }
@@ -830,6 +910,7 @@ const Format &Format::Get(ID id)
                                      GL_RG16_EXT,
                                      GenerateMip<R16G16>,
                                      ReadColor<R16G16, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      16, 16, 0, 0, 0, 0);
             return info;
         }
@@ -840,6 +921,7 @@ const Format &Format::Get(ID id)
                                      GL_R16F,
                                      GenerateMip<R16F>,
                                      ReadColor<R16F, GLfloat>,
+                                     GL_FLOAT,
                                      16, 0, 0, 0, 0, 0);
             return info;
         }
@@ -850,6 +932,7 @@ const Format &Format::Get(ID id)
                                      GL_R16I,
                                      GenerateMip<R16S>,
                                      ReadColor<R16S, GLint>,
+                                     GL_INT,
                                      16, 0, 0, 0, 0, 0);
             return info;
         }
@@ -860,6 +943,7 @@ const Format &Format::Get(ID id)
                                      GL_R16_SNORM_EXT,
                                      GenerateMip<R16S>,
                                      ReadColor<R16S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      16, 0, 0, 0, 0, 0);
             return info;
         }
@@ -870,6 +954,7 @@ const Format &Format::Get(ID id)
                                      GL_R16UI,
                                      GenerateMip<R16>,
                                      ReadColor<R16, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      16, 0, 0, 0, 0, 0);
             return info;
         }
@@ -880,6 +965,7 @@ const Format &Format::Get(ID id)
                                      GL_R16_EXT,
                                      GenerateMip<R16>,
                                      ReadColor<R16, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      16, 0, 0, 0, 0, 0);
             return info;
         }
@@ -890,6 +976,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32F,
                                      GenerateMip<R32G32B32A32F>,
                                      ReadColor<R32G32B32A32F, GLfloat>,
+                                     GL_FLOAT,
                                      32, 32, 32, 32, 0, 0);
             return info;
         }
@@ -900,6 +987,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32I,
                                      GenerateMip<R32G32B32A32S>,
                                      ReadColor<R32G32B32A32S, GLint>,
+                                     GL_INT,
                                      32, 32, 32, 32, 0, 0);
             return info;
         }
@@ -910,6 +998,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA32UI,
                                      GenerateMip<R32G32B32A32>,
                                      ReadColor<R32G32B32A32, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      32, 32, 32, 32, 0, 0);
             return info;
         }
@@ -920,6 +1009,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB32F,
                                      GenerateMip<R32G32B32F>,
                                      ReadColor<R32G32B32F, GLfloat>,
+                                     GL_FLOAT,
                                      32, 32, 32, 0, 0, 0);
             return info;
         }
@@ -930,6 +1020,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB32I,
                                      GenerateMip<R32G32B32S>,
                                      ReadColor<R32G32B32S, GLint>,
+                                     GL_INT,
                                      32, 32, 32, 0, 0, 0);
             return info;
         }
@@ -940,6 +1031,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB32UI,
                                      GenerateMip<R32G32B32>,
                                      ReadColor<R32G32B32, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      32, 32, 32, 0, 0, 0);
             return info;
         }
@@ -950,6 +1042,7 @@ const Format &Format::Get(ID id)
                                      GL_RG32F,
                                      GenerateMip<R32G32F>,
                                      ReadColor<R32G32F, GLfloat>,
+                                     GL_FLOAT,
                                      32, 32, 0, 0, 0, 0);
             return info;
         }
@@ -960,6 +1053,7 @@ const Format &Format::Get(ID id)
                                      GL_RG32I,
                                      GenerateMip<R32G32S>,
                                      ReadColor<R32G32S, GLint>,
+                                     GL_INT,
                                      32, 32, 0, 0, 0, 0);
             return info;
         }
@@ -970,6 +1064,7 @@ const Format &Format::Get(ID id)
                                      GL_RG32UI,
                                      GenerateMip<R32G32>,
                                      ReadColor<R32G32, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      32, 32, 0, 0, 0, 0);
             return info;
         }
@@ -980,6 +1075,7 @@ const Format &Format::Get(ID id)
                                      GL_R32F,
                                      GenerateMip<R32F>,
                                      ReadColor<R32F, GLfloat>,
+                                     GL_FLOAT,
                                      32, 0, 0, 0, 0, 0);
             return info;
         }
@@ -990,6 +1086,7 @@ const Format &Format::Get(ID id)
                                      GL_R32I,
                                      GenerateMip<R32S>,
                                      ReadColor<R32S, GLint>,
+                                     GL_INT,
                                      32, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1000,6 +1097,7 @@ const Format &Format::Get(ID id)
                                      GL_R32UI,
                                      GenerateMip<R32>,
                                      ReadColor<R32, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      32, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1010,6 +1108,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA4,
                                      GenerateMip<R4G4B4A4>,
                                      ReadColor<R4G4B4A4, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      4, 4, 4, 4, 0, 0);
             return info;
         }
@@ -1020,6 +1119,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB5_A1,
                                      GenerateMip<R5G5B5A1>,
                                      ReadColor<R5G5B5A1, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      5, 5, 5, 1, 0, 0);
             return info;
         }
@@ -1030,6 +1130,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB565,
                                      GenerateMip<R5G6B5>,
                                      ReadColor<R5G6B5, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      5, 6, 5, 0, 0, 0);
             return info;
         }
@@ -1040,6 +1141,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8I,
                                      GenerateMip<R8G8B8A8S>,
                                      ReadColor<R8G8B8A8S, GLint>,
+                                     GL_INT,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -1050,6 +1152,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8_SNORM,
                                      GenerateMip<R8G8B8A8S>,
                                      ReadColor<R8G8B8A8S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -1060,6 +1163,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8UI,
                                      GenerateMip<R8G8B8A8>,
                                      ReadColor<R8G8B8A8, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -1070,6 +1174,7 @@ const Format &Format::Get(ID id)
                                      GL_RGBA8,
                                      GenerateMip<R8G8B8A8>,
                                      ReadColor<R8G8B8A8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -1080,6 +1185,7 @@ const Format &Format::Get(ID id)
                                      GL_SRGB8_ALPHA8,
                                      GenerateMip<R8G8B8A8>,
                                      ReadColor<R8G8B8A8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 8, 0, 0);
             return info;
         }
@@ -1090,6 +1196,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB8I,
                                      GenerateMip<R8G8B8S>,
                                      ReadColor<R8G8B8S, GLint>,
+                                     GL_INT,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -1100,6 +1207,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB8_SNORM,
                                      GenerateMip<R8G8B8S>,
                                      ReadColor<R8G8B8S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -1110,6 +1218,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB8UI,
                                      GenerateMip<R8G8B8>,
                                      ReadColor<R8G8B8, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -1120,6 +1229,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB8,
                                      GenerateMip<R8G8B8>,
                                      ReadColor<R8G8B8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -1130,6 +1240,7 @@ const Format &Format::Get(ID id)
                                      GL_SRGB8,
                                      GenerateMip<R8G8B8>,
                                      ReadColor<R8G8B8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 8, 0, 0, 0);
             return info;
         }
@@ -1140,6 +1251,7 @@ const Format &Format::Get(ID id)
                                      GL_RG8I,
                                      GenerateMip<R8G8S>,
                                      ReadColor<R8G8S, GLint>,
+                                     GL_INT,
                                      8, 8, 0, 0, 0, 0);
             return info;
         }
@@ -1150,6 +1262,7 @@ const Format &Format::Get(ID id)
                                      GL_RG8_SNORM,
                                      GenerateMip<R8G8S>,
                                      ReadColor<R8G8S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      8, 8, 0, 0, 0, 0);
             return info;
         }
@@ -1160,6 +1273,7 @@ const Format &Format::Get(ID id)
                                      GL_RG8UI,
                                      GenerateMip<R8G8>,
                                      ReadColor<R8G8, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      8, 8, 0, 0, 0, 0);
             return info;
         }
@@ -1170,6 +1284,7 @@ const Format &Format::Get(ID id)
                                      GL_RG8,
                                      GenerateMip<R8G8>,
                                      ReadColor<R8G8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 8, 0, 0, 0, 0);
             return info;
         }
@@ -1180,6 +1295,7 @@ const Format &Format::Get(ID id)
                                      GL_R8I,
                                      GenerateMip<R8S>,
                                      ReadColor<R8S, GLint>,
+                                     GL_INT,
                                      8, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1190,6 +1306,7 @@ const Format &Format::Get(ID id)
                                      GL_R8_SNORM,
                                      GenerateMip<R8S>,
                                      ReadColor<R8S, GLfloat>,
+                                     GL_SIGNED_NORMALIZED,
                                      8, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1200,6 +1317,7 @@ const Format &Format::Get(ID id)
                                      GL_R8UI,
                                      GenerateMip<R8>,
                                      ReadColor<R8, GLuint>,
+                                     GL_UNSIGNED_INT,
                                      8, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1210,6 +1328,7 @@ const Format &Format::Get(ID id)
                                      GL_R8,
                                      GenerateMip<R8>,
                                      ReadColor<R8, GLfloat>,
+                                     GL_UNSIGNED_NORMALIZED,
                                      8, 0, 0, 0, 0, 0);
             return info;
         }
@@ -1220,6 +1339,7 @@ const Format &Format::Get(ID id)
                                      GL_RGB9_E5,
                                      GenerateMip<R9G9B9E5>,
                                      ReadColor<R9G9B9E5, GLfloat>,
+                                     GL_FLOAT,
                                      9, 9, 9, 0, 0, 0);
             return info;
         }
@@ -1230,6 +1350,7 @@ const Format &Format::Get(ID id)
                                      GL_STENCIL_INDEX8,
                                      nullptr,
                                      nullptr,
+                                     GL_UNSIGNED_INT,
                                      0, 0, 0, 0, 0, 8);
             return info;
         }
@@ -1240,7 +1361,8 @@ const Format &Format::Get(ID id)
     }
     // clang-format on
 
-    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, 0, 0, 0, 0, 0, 0);
+    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, GL_NONE, 0, 0, 0, 0,
+                                 0, 0);
     return noneInfo;
 }
 

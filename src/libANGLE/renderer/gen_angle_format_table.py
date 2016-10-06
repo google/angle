@@ -67,7 +67,7 @@ const Format &Format::Get(ID id)
     }}
     // clang-format on
 
-    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, 0, 0, 0, 0, 0, 0);
+    static const Format noneInfo(ID::NONE, GL_NONE, GL_NONE, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0);
     return noneInfo;
 }}
 
@@ -129,6 +129,7 @@ format_entry_template = """{space}{{
 {space}                             {fboImplementationInternalFormat},
 {space}                             {mipGenerationFunction},
 {space}                             {colorReadFunction},
+{space}                             {namedComponentType},
 {space}                             {R}, {G}, {B}, {A}, {D}, {S});
 {space}    return info;
 {space}}}
@@ -175,6 +176,22 @@ def get_bits(format_id):
         bits[token[0]] = int(token[1:])
     return bits
 
+def get_named_component_type(component_type):
+    if component_type == "snorm":
+        return "GL_SIGNED_NORMALIZED"
+    elif component_type == "unorm":
+        return "GL_UNSIGNED_NORMALIZED"
+    elif component_type == "float":
+        return "GL_FLOAT"
+    elif component_type == "uint":
+        return "GL_UNSIGNED_INT"
+    elif component_type == "int":
+        return "GL_INT"
+    elif component_type == "none":
+        return "GL_NONE"
+    else:
+        raise ValueError("Unknown component type for " + component_type)
+
 def json_to_table_data(format_id, json, angle_to_gl):
 
     table_data = ""
@@ -211,6 +228,8 @@ def json_to_table_data(format_id, json, angle_to_gl):
             parsed[channel] = parsed["bits"][channel]
         else:
             parsed[channel] = "0"
+
+    parsed["namedComponentType"] = get_named_component_type(parsed["componentType"])
 
     return format_entry_template.format(**parsed)
 

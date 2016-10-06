@@ -2403,8 +2403,8 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
 
     // Unnormalized integer cube maps are not supported by DX11; we emulate them as an array of six
     // 2D textures
-    const d3d11::DXGIFormat &dxgiFormatInfo = d3d11::GetDXGIFormatInfo(format);
-    if (dxgiFormatInfo.componentType == GL_INT || dxgiFormatInfo.componentType == GL_UNSIGNED_INT)
+    const GLenum componentType = d3d11::GetComponentType(format);
+    if (componentType == GL_INT || componentType == GL_UNSIGNED_INT)
     {
         srvDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
         srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;

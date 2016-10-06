@@ -27,6 +27,7 @@ struct Format final : angle::NonCopyable
            GLenum fboFormat,
            rx::MipGenerationFunction mipGen,
            rx::ColorReadFunction colorRead,
+           GLenum componentType,
            GLuint redBits,
            GLuint greenBits,
            GLuint blueBits,
@@ -52,6 +53,8 @@ struct Format final : angle::NonCopyable
 
     // A map from a gl::FormatType to a fast pixel copy function for this format.
     rx::FastCopyFunctionMap fastCopyFunctions;
+
+    GLenum componentType;
 
     GLuint redBits;
     GLuint greenBits;
