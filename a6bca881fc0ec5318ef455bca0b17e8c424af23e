@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f73a8d0_a81e036c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-06T15:41:14Z",
+      "side": 1,
+      "message": "This is calling the gl::Texture::syncImplState which only calls the impl sync state if there were any dirty bits so the texture won\u0027t always be bound there.",
+      "parentUuid": "ff50781d_054dd2c5",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff50781d_e5ccf632",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-10-05T21:10:47Z",
       "side": 1,
       "message": "nit: LevelWorkarounds to make it a bit more precise?",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_480647fb",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-06T15:41:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff50781d_e5ccf632",
       "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
