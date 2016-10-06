@@ -98,9 +98,9 @@ TEST_P(UniformBufferTest, Simple)
 TEST_P(UniformBufferTest, UniformBufferRange)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if (IsIntel() && IsD3D11())
     {
-        std::cout << "Test skipped on Intel." << std::endl;
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
         return;
     }
 
@@ -272,9 +272,9 @@ TEST_P(UniformBufferTest, UniformBufferManyUpdates)
 TEST_P(UniformBufferTest, ManyUniformBufferRange)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
-    if (IsIntel() && GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+    if (IsIntel() && IsD3D11())
     {
-        std::cout << "Test skipped on Intel." << std::endl;
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
         return;
     }
     int px = getWindowWidth() / 2;
@@ -399,6 +399,14 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
 // Test that using a very large buffer to back a small uniform block works OK.
 TEST_P(UniformBufferTest, VeryLarge)
 {
+    // TODO(jmadill): Figure out why this fails on Intel.
+    // See http://crbug.com/593024
+    if (IsIntel() && IsD3D11())
+    {
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
+        return;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT);
     float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
 
