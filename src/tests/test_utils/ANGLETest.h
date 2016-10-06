@@ -252,6 +252,10 @@ bool IsLinux();
 bool IsOSX();
 bool IsWindows();
 
+// Debug/Release
+bool IsDebug();
+bool IsRelease();
+
 // Negative tests may trigger expected errors/warnings in the ANGLE Platform.
 void IgnoreANGLEPlatformMessages();
 
