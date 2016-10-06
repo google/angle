@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "7f73a8d0_534d9cc4",
+        "filename": "src/libANGLE/Workarounds.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-06T16:18:13Z",
+      "side": 1,
+      "message": "Agreed on this, the workaround structs probably don\u0027t need to know about each other.",
+      "parentUuid": "7f73a8d0_080ccff6",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 2
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f73a8d0_a8184331",
         "filename": "src/libANGLE/Workarounds.h",
         "patchSetId": 2
