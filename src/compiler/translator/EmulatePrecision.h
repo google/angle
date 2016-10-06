@@ -32,6 +32,8 @@ class EmulatePrecision : public TLValueTrackingTraverser
                                const int shaderVersion,
                                const ShShaderOutput outputLanguage);
 
+    static bool SupportedInLanguage(const ShShaderOutput outputLanguage);
+
   private:
     struct TypePair
     {

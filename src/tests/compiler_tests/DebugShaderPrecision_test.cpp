@@ -1023,3 +1023,23 @@ TEST_F(DebugShaderPrecisionTest, ModfOutParameter)
     ASSERT_TRUE(foundInAllGLSLCode("modf(angle_frm(u), o)"));
     ASSERT_TRUE(foundInHLSLCode("modf(angle_frm(_u), _o)"));
 }
+
+#if defined(ANGLE_ENABLE_HLSL)
+// Tests precision emulation with HLSL 3.0 output -- should error gracefully.
+TEST(DebugShaderPrecisionNegativeTest, HLSL3Unsupported)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform float u;\n"
+        "void main() {\n"
+        "   gl_FragColor = vec4(u);\n"
+        "}\n";
+    std::string infoLog;
+    std::string translatedCode;
+    ShBuiltInResources resources;
+    ShInitBuiltInResources(&resources);
+    resources.WEBGL_debug_shader_precision = 1;
+    ASSERT_FALSE(compileTestShader(GL_FRAGMENT_SHADER, SH_GLES3_SPEC, SH_HLSL_3_0_OUTPUT,
+                                   shaderString, &resources, 0, &translatedCode, &infoLog));
+}
+#endif  // defined(ANGLE_ENABLE_HLSL)

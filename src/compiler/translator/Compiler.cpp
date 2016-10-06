@@ -15,6 +15,7 @@
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
+#include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/ForLoopUnroll.h"
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeParseContext.h"
@@ -328,6 +329,18 @@ TIntermNode *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
             success = validateLimitations(root);
+
+        // Fail compilation if precision emulation not supported.
+        if (success && getResources().WEBGL_debug_shader_precision &&
+            getPragma().debugShaderPrecision)
+        {
+            if (!EmulatePrecision::SupportedInLanguage(outputType))
+            {
+                infoSink.info.prefix(EPrefixError);
+                infoSink.info << "Precision emulation not supported for this output type.";
+                success = false;
+            }
+        }
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))

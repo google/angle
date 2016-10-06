@@ -91,6 +91,7 @@ class RoundingHelperWriterHLSL : public RoundingHelperWriter
 
 RoundingHelperWriter *RoundingHelperWriter::createHelperWriter(const ShShaderOutput outputLanguage)
 {
+    ASSERT(EmulatePrecision::SupportedInLanguage(outputLanguage));
     switch (outputLanguage)
     {
         case SH_HLSL_4_1_OUTPUT:
@@ -98,9 +99,6 @@ RoundingHelperWriter *RoundingHelperWriter::createHelperWriter(const ShShaderOut
         case SH_ESSL_OUTPUT:
             return new RoundingHelperWriterESSL(outputLanguage);
         default:
-            // Other languages not yet supported
-            ASSERT(outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
-                   IsGLSL130OrNewer(outputLanguage));
             return new RoundingHelperWriterGLSL(outputLanguage);
     }
 }
@@ -705,3 +703,17 @@ void EmulatePrecision::writeEmulationHelpers(TInfoSinkBase &sink,
         roundingHelperWriter->writeCompoundAssignmentHelper(sink, it->lType, it->rType, "*", "mul");
 }
 
+// static
+bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
+{
+    switch (outputLanguage)
+    {
+        case SH_HLSL_4_1_OUTPUT:
+        case SH_ESSL_OUTPUT:
+            return true;
+        default:
+            // Other languages not yet supported
+            return (outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
+                    IsGLSL130OrNewer(outputLanguage));
+    }
+}
