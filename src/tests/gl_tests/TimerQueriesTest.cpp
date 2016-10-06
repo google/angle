@@ -112,6 +112,13 @@ TEST_P(TimerQueriesTest, TimeElapsed)
         return;
     }
 
+    if (IsAMD() && IsOpenGL() && IsWindows() && IsDebug())
+    {
+        // TODO(jmadill): Figure out why this test is flaky on Win/AMD/OpenGL/Debug.
+        std::cout << "Test skipped on Windows AMD OpenGL Debug." << std::endl;
+        return;
+    }
+
     GLint queryTimeElapsedBits = 0;
     glGetQueryivEXT(GL_TIME_ELAPSED_EXT, GL_QUERY_COUNTER_BITS_EXT, &queryTimeElapsedBits);
     ASSERT_GL_NO_ERROR();
