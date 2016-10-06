@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7f73a8d0_8820df5b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-06T15:50:09Z",
+      "side": 1,
+      "message": "Thanks for the explanation, I got confused between texture and textureGL.",
+      "parentUuid": "7f73a8d0_a81e036c",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff50781d_e5ccf632",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 2
