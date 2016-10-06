@@ -367,7 +367,6 @@ GLenum GetSizedFormatInternal(GLenum format, GLenum type)
             break;
     }
 
-    UNREACHABLE();
     return GL_NONE;
 }
 

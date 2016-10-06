@@ -104,24 +104,25 @@ bool DebugAnnotationsActive();
 #undef ANGLE_TRACE_ENABLED
 #endif
 
+#if defined(COMPILER_GCC) || __clang__
+#define ANGLE_CRASH() __builtin_trap()
+#else
+#define ANGLE_CRASH() ((void)(*(volatile char *)0 = 0))
+#endif
+
 #if !defined(NDEBUG)
 #define ANGLE_ASSERT_IMPL(expression) assert(expression)
 #else
 // TODO(jmadill): Detect if debugger is attached and break.
-#define ANGLE_ASSERT_IMPL(expression) abort()
+#define ANGLE_ASSERT_IMPL(expression) ANGLE_CRASH()
 #endif  // !defined(NDEBUG)
 
 // A macro asserting a condition and outputting failures to the debug log
 #if defined(ANGLE_ENABLE_ASSERTS)
-#define ASSERT(expression)                                                                 \
-    {                                                                                      \
-        if (!(expression))                                                                 \
-        {                                                                                  \
-            ERR("\t! Assert failed in %s(%d): %s\n", __FUNCTION__, __LINE__, #expression); \
-            ANGLE_ASSERT_IMPL(expression);                                                 \
-        }                                                                                  \
-    }                                                                                      \
-    ANGLE_EMPTY_STATEMENT
+#define ASSERT(expression)                                                                        \
+    (expression ? static_cast<void>(0)                                                            \
+                : (ERR("\t! Assert failed in %s(%d): %s\n", __FUNCTION__, __LINE__, #expression), \
+                   ANGLE_ASSERT_IMPL(expression)))
 #define UNUSED_ASSERTION_VARIABLE(variable)
 #else
 #define ASSERT(expression) (void(0))
@@ -136,27 +137,20 @@ bool DebugAnnotationsActive();
 #define NOASSERT_UNIMPLEMENTED 1
 #endif
 
-// Define NOASSERT_UNIMPLEMENTED to non zero to skip the assert fail in the unimplemented checks
 // This will allow us to test with some automated test suites (eg dEQP) without crashing
 #ifndef NOASSERT_UNIMPLEMENTED
 #define NOASSERT_UNIMPLEMENTED 0
 #endif
 
-#if !defined(NDEBUG)
-#define UNIMPLEMENTED() { \
-    FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__); \
-    assert(NOASSERT_UNIMPLEMENTED); \
-    } ANGLE_EMPTY_STATEMENT
-#else
-    #define UNIMPLEMENTED() FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__)
-#endif
+#define UNIMPLEMENTED()                                               \
+    {                                                                 \
+        FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__); \
+        ASSERT(NOASSERT_UNIMPLEMENTED);                               \
+    }                                                                 \
+    ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
-#if !defined(NDEBUG)
 #define UNREACHABLE() \
-    ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__), assert(false)
-#else
-    #define UNREACHABLE() ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__)
-#endif
+    (ERR("\t! Unreachable reached: %s(%d)\n", __FUNCTION__, __LINE__), ASSERT(false))
 
 #endif   // COMMON_DEBUG_H_
