@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f73a8d0_482ac73b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1930,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "nit: GLenum is probably ok to use explicitly, since it\u0027s POD and very succinct.",
+      "range": {
+        "startLine": 1930,
+        "startChar": 8,
+        "endLine": 1930,
+        "endChar": 12
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_681b0b34",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "run git cl format to fix the style",
+      "range": {
+        "startLine": 1932,
+        "startChar": 83,
+        "endLine": 1932,
+        "endChar": 84
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_080ccff6",
+        "filename": "src/libANGLE/Workarounds.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "I was thinking we would place this in the gl namespace, and not inherit from it in the D3D / RendererGL workarounds. It\u0027s okay that we have gl::Workarounds and rx::WorkaroundsGL. They don\u0027t need to know about each other, since they\u0027re in totally different layers.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 2
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_a8184331",
+        "filename": "src/libANGLE/Workarounds.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "nit: closing namespace comment ( // namespace blah )",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 1
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_c81577f8",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "I don\u0027t think we need to consolidate the workarounds here - we can keep the Context-specific workarounds separate.",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 58
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f73a8d0_484167ef",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 923,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T15:55:24Z",
+      "side": 1,
+      "message": "under what circumstances is this workaround enabled in Chromium? is it on all platforms, always? I\u0027m fine with leaving this as-is for now - it might affect mozilla and other vendor adoption. We can use the angle::Platform to determine if a workaround should be enabled for this use case.",
+      "range": {
+        "startLine": 921,
+        "startChar": 0,
+        "endLine": 923,
+        "endChar": 49
+      },
+      "revId": "eed7d33165cee096a0b314285c2dfad2b46ef29a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
