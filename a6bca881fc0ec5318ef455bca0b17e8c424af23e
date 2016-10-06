@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "ff50781d_45b74a8a",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "can remove this - it\u0027s GL-layer scoped only.",
+      "range": {
+        "startLine": 519,
+        "startChar": 4,
+        "endLine": 519,
+        "endChar": 36
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffacf86f_a51b7e7b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "this arg is redundant, can you remove it? it is available in the state structure.",
+      "range": {
+        "startLine": 695,
+        "startChar": 31,
+        "endLine": 695,
+        "endChar": 61
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fd8503a_bf96f74b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "having a set member and a dirty bit for base level seems like a design flaw - can you take on the follow up work of removing the impl member?\n\nI think the work would consist of syncing the base level dirty bit before each texStorage/texImage/copyImage call, then moving the D3D implementation of the tex storage deletion to the dirty bit handling.",
+      "range": {
+        "startLine": 695,
+        "startChar": 8,
+        "endLine": 695,
+        "endChar": 30
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff50781d_857782c3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "per offline discussion - this appears to be spec. I suggest for clarity purposes you also referenced the spec language in 3.0.4 section 3.8.10 pg 158:  \"For immutable-format textures,levelbaseis clamped to the range[0;levels1],levelmaxis then clamped to the range[levelbase;levels1]. \" This implies a state change of mImmutableFormat triggers a state change in the min/max level.",
+      "range": {
+        "startLine": 938,
+        "startChar": 0,
+        "endLine": 939,
+        "endChar": 40
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff50781d_c5a21a47",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "nit: can remove",
+      "range": {
+        "startLine": 91,
+        "startChar": 33,
+        "endLine": 91,
+        "endChar": 36
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff50781d_859c220d",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "nit: TODO(geofflang) (it\u0027s fine if you don\u0027t ever want to do this, just a marker that you made the TODO)",
+      "range": {
+        "startLine": 668,
+        "startChar": 0,
+        "endLine": 668,
+        "endChar": 1
+      },
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff50781d_054dd2c5",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 2
@@ -55,6 +193,24 @@
     },
     {
       "key": {
+        "uuid": "3fd8503a_8280fcfd",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "You should TODO this to move it out of here once you implement the bindings sync, as this is a layering violation. This should get called in the Context/GL layer. See State::syncDirtyObjects.",
+      "parentUuid": "7f73a8d0_8820df5b",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff50781d_e5ccf632",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 2
@@ -84,6 +240,29 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "ff50781d_e5ccf632",
+      "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff50781d_056cb2fc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-06T18:02:39Z",
+      "side": 1,
+      "message": "nit: you can make this UNIMPLEMENTED()",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 1
+      },
       "revId": "a6bca881fc0ec5318ef455bca0b17e8c424af23e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
