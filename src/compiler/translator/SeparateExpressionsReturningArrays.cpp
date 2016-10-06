@@ -59,12 +59,11 @@ TIntermAggregate *CopyAggregateNode(TIntermAggregate *node)
     TIntermSequence *copySeq = copyNode->getSequence();
     copySeq->insert(copySeq->begin(), node->getSequence()->begin(), node->getSequence()->end());
     copyNode->setType(node->getType());
-    copyNode->setFunctionId(node->getFunctionId());
+    *copyNode->getFunctionSymbolInfo() = *node->getFunctionSymbolInfo();
     if (node->isUserDefined())
     {
         copyNode->setUserDefined();
     }
-    copyNode->setNameObj(node->getNameObj());
     return copyNode;
 }
 

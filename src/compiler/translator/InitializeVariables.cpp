@@ -49,7 +49,7 @@ bool VariableInitializer::visitAggregate(Visit visit, TIntermAggregate *node)
       {
         // Function definition.
         ASSERT(visit == PreVisit);
-        if (node->getName() == "main(")
+        if (node->getFunctionSymbolInfo()->isMain())
         {
             TIntermSequence *sequence = node->getSequence();
             ASSERT(sequence->size() == 2);

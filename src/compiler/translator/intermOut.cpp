@@ -12,8 +12,9 @@ namespace
 
 void OutputFunction(TInfoSinkBase &out, const char *str, TIntermAggregate *node)
 {
-    const char *internal = node->getNameObj().isInternal() ? " (internal function)" : "";
-    out << str << internal << ": " << node->getNameObj().getString();
+    const char *internal =
+        node->getFunctionSymbolInfo()->getNameObj().isInternal() ? " (internal function)" : "";
+    out << str << internal << ": " << node->getFunctionSymbolInfo()->getNameObj().getString();
 }
 
 //

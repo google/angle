@@ -305,7 +305,7 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
     }
     // ESSL 3.0 spec section 8: textureSize always gets highp precision.
     // All other functions that take a sampler are assumed to be texture functions.
-    if (mName.getString().find("textureSize") == 0)
+    if (mFunctionInfo.getName().find("textureSize") == 0)
         mType.setPrecision(EbpHigh);
     else
         mType.setPrecision(precision);
@@ -455,13 +455,18 @@ TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : T
     mUnionArrayPointer = node.mUnionArrayPointer;
 }
 
+void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
+{
+    setName(function.getMangledName());
+    setId(function.getUniqueId());
+}
+
 TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
     : TIntermOperator(node),
-      mName(node.mName),
       mUserDefined(node.mUserDefined),
-      mFunctionId(node.mFunctionId),
       mUseEmulatedFunction(node.mUseEmulatedFunction),
-      mGotPrecisionFromChildren(node.mGotPrecisionFromChildren)
+      mGotPrecisionFromChildren(node.mGotPrecisionFromChildren),
+      mFunctionInfo(node.mFunctionInfo)
 {
     for (TIntermNode *child : node.mSequence)
     {

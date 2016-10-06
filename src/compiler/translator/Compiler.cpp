@@ -769,7 +769,7 @@ class TCompiler::UnusedPredicate
             return false;
         }
 
-        size_t callDagIndex = mCallDag->findIndex(asAggregate);
+        size_t callDagIndex = mCallDag->findIndex(asAggregate->getFunctionSymbolInfo());
         if (callDagIndex == CallDAG::InvalidIndex)
         {
             // This happens only for unimplemented prototypes which are thus unused

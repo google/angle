@@ -49,6 +49,7 @@ class TIntermRaw;
 class TIntermBranch;
 
 class TSymbolTable;
+class TFunction;
 
 // Encapsulate an identifier string and track whether it is coming from the original shader code
 // (not internal) or from ANGLE (internal). Usually internal names shouldn't be decorated or hashed.
@@ -524,6 +525,31 @@ class TIntermUnary : public TIntermOperator
     TIntermUnary(const TIntermUnary &node);  // note: not deleted, just private!
 };
 
+class TFunctionSymbolInfo
+{
+  public:
+    POOL_ALLOCATOR_NEW_DELETE();
+    TFunctionSymbolInfo() : mId(0) {}
+
+    TFunctionSymbolInfo(const TFunctionSymbolInfo &) = default;
+    TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &) = default;
+
+    void setFromFunction(const TFunction &function);
+
+    void setNameObj(const TName &name) { mName = name; }
+    const TName &getNameObj() const { return mName; }
+
+    const TString &getName() const { return mName.getString(); }
+    void setName(const TString &name) { mName.setString(name); }
+    bool isMain() const { return mName.getString() == "main("; }
+
+    void setId(int functionId) { mId = functionId; }
+    int getId() const { return mId; }
+  private:
+    TName mName;
+    int mId;
+};
+
 typedef TVector<TIntermNode *> TIntermSequence;
 typedef TVector<int> TQualifierList;
 
@@ -554,7 +580,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermAggregate()
         : TIntermOperator(EOpNull),
           mUserDefined(false),
-          mFunctionId(0),
           mUseEmulatedFunction(false),
           mGotPrecisionFromChildren(false)
     {
@@ -562,7 +587,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermAggregate(TOperator op)
         : TIntermOperator(op),
           mUserDefined(false),
-          mFunctionId(0),
           mUseEmulatedFunction(false),
           mGotPrecisionFromChildren(false)
     {
@@ -585,17 +609,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermSequence *getSequence() override { return &mSequence; }
     const TIntermSequence *getSequence() const override { return &mSequence; }
 
-    void setNameObj(const TName &name) { mName = name; }
-    const TName &getNameObj() const { return mName; }
-
-    void setName(const TString &name) { mName.setString(name); }
-    const TString &getName() const { return mName.getString(); }
-
     void setUserDefined() { mUserDefined = true; }
     bool isUserDefined() const { return mUserDefined; }
-
-    void setFunctionId(int functionId) { mFunctionId = functionId; }
-    int getFunctionId() const { return mFunctionId; }
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
@@ -607,17 +622,20 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     // Returns true if changing parameter precision may affect the return value.
     bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
 
+    TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
+    const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
+
   protected:
     TIntermSequence mSequence;
-    TName mName;
     bool mUserDefined; // used for user defined function names
-    int mFunctionId;
 
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs.
     bool mUseEmulatedFunction;
 
     bool mGotPrecisionFromChildren;
+
+    TFunctionSymbolInfo mFunctionInfo;
 
   private:
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!

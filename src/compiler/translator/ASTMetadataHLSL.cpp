@@ -103,7 +103,7 @@ class PullGradient : public TIntermTraverser
             {
                 if (node->isUserDefined())
                 {
-                    size_t calleeIndex = mDag.findIndex(node);
+                    size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
                     ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
                     UNUSED_ASSERTION_VARIABLE(mIndex);
 
@@ -113,7 +113,8 @@ class PullGradient : public TIntermTraverser
                 }
                 else
                 {
-                    TString name = TFunction::unmangleName(node->getName());
+                    TString name =
+                        TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
 
                     if (name == "texture2D" ||
                         name == "texture2DProj" ||
@@ -275,7 +276,7 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
         {
             if (node->isUserDefined())
             {
-                size_t calleeIndex = mDag.findIndex(node);
+                size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
                 ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
                 UNUSED_ASSERTION_VARIABLE(mIndex);
 
@@ -356,7 +357,7 @@ class PushDiscontinuousLoops : public TIntermTraverser
           case EOpFunctionCall:
             if (visit == PreVisit && node->isUserDefined() && mNestedDiscont > 0)
             {
-                size_t calleeIndex = mDag.findIndex(node);
+                size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
                 ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
                 UNUSED_ASSERTION_VARIABLE(mIndex);
 

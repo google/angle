@@ -803,7 +803,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << arrayBrackets(type);
         }
 
-        out << " " << hashFunctionNameIfNeeded(node->getNameObj());
+        out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
 
         out << "(";
         writeFunctionParameters(*(node->getSequence()));
@@ -821,7 +821,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << arrayBrackets(type);
         }
 
-        out << " " << hashFunctionNameIfNeeded(node->getNameObj());
+        out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
 
         incrementDepth(node);
         // Function definition node contains two child nodes representing the function parameters
@@ -847,7 +847,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpFunctionCall:
         // Function call.
         if (visit == PreVisit)
-            out << hashFunctionNameIfNeeded(node->getNameObj()) << "(";
+            out << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";
         else if (visit == InVisit)
             out << ", ";
         else

@@ -18,23 +18,23 @@
 namespace
 {
 
-void SetInternalFunctionName(TIntermAggregate *functionNode, const char *name)
+void SetInternalFunctionName(TFunctionSymbolInfo *functionInfo, const char *name)
 {
     TString nameStr(name);
     nameStr = TFunction::mangleName(nameStr);
     TName nameObj(nameStr);
     nameObj.setInternal(true);
-    functionNode->setNameObj(nameObj);
+    functionInfo->setNameObj(nameObj);
 }
 
 TIntermAggregate *CreateFunctionPrototypeNode(const char *name, const int functionId)
 {
     TIntermAggregate *functionNode = new TIntermAggregate(EOpPrototype);
 
-    SetInternalFunctionName(functionNode, name);
+    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
-    functionNode->setFunctionId(functionId);
+    functionNode->getFunctionSymbolInfo()->setId(functionId);
     return functionNode;
 }
 
@@ -47,10 +47,10 @@ TIntermAggregate *CreateFunctionDefinitionNode(const char *name,
     functionNode->getSequence()->push_back(paramsNode);
     functionNode->getSequence()->push_back(functionBody);
 
-    SetInternalFunctionName(functionNode, name);
+    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
-    functionNode->setFunctionId(functionId);
+    functionNode->getFunctionSymbolInfo()->setId(functionId);
     return functionNode;
 }
 
@@ -59,10 +59,10 @@ TIntermAggregate *CreateFunctionCallNode(const char *name, const int functionId)
     TIntermAggregate *functionNode = new TIntermAggregate(EOpFunctionCall);
 
     functionNode->setUserDefined();
-    SetInternalFunctionName(functionNode, name);
+    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
     TType returnType(EbtVoid);
     functionNode->setType(returnType);
-    functionNode->setFunctionId(functionId);
+    functionNode->getFunctionSymbolInfo()->setId(functionId);
     return functionNode;
 }
 
@@ -165,7 +165,7 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     {
         TIntermAggregate *nodeAgg = node->getAsAggregate();
         if (nodeAgg != nullptr && nodeAgg->getOp() == EOpFunction &&
-            TFunction::unmangleName(nodeAgg->getName()) == "main")
+            nodeAgg->getFunctionSymbolInfo()->isMain())
         {
             TIntermAggregate *functionCallNode =
                 CreateFunctionCallNode(functionName, initFunctionId);

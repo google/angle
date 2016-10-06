@@ -81,7 +81,7 @@ bool GLFragColorBroadcastTraverser::visitAggregate(Visit visit, TIntermAggregate
         case EOpFunction:
             // Function definition.
             ASSERT(visit == PreVisit);
-            if (node->getName() == "main(")
+            if (node->getFunctionSymbolInfo()->isMain())
             {
                 TIntermSequence *sequence = node->getSequence();
                 ASSERT(sequence->size() == 2);

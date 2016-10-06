@@ -2026,8 +2026,7 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
     // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
     // point to the data that already exists in the symbol table.
     prototype->setType(function->getReturnType());
-    prototype->setName(function->getMangledName());
-    prototype->setFunctionId(function->getUniqueId());
+    prototype->getFunctionSymbolInfo()->setFromFunction(*function);
 
     for (size_t i = 0; i < function->getParamCount(); i++)
     {
@@ -2084,9 +2083,8 @@ TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function
     }
     functionNode->getSequence()->push_back(functionBody);
 
-    functionNode->setName(function.getMangledName().c_str());
+    functionNode->getFunctionSymbolInfo()->setFromFunction(function);
     functionNode->setType(function.getReturnType());
-    functionNode->setFunctionId(function.getUniqueId());
 
     symbolTable.pop();
     return functionNode;
@@ -3688,7 +3686,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
 void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
     ASSERT(!functionCall->isUserDefined());
-    const TString &name        = functionCall->getName();
+    const TString &name        = functionCall->getFunctionSymbolInfo()->getName();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
     if (name.compare(0, 16, "texelFetchOffset") == 0 ||
@@ -3877,10 +3875,9 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                 // if builtIn == true, it's definitely a builtIn function with EOpNull
                 if (!builtIn)
                     aggregate->setUserDefined();
-                aggregate->setName(fnCandidate->getMangledName());
-                aggregate->setFunctionId(fnCandidate->getUniqueId());
+                aggregate->getFunctionSymbolInfo()->setFromFunction(*fnCandidate);
 
-                // This needs to happen after the name is set
+                // This needs to happen after the function info including name is set
                 if (builtIn)
                 {
                     aggregate->setBuiltInFunctionPrecision();

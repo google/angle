@@ -181,7 +181,7 @@ TIntermAggregate *GetIndexFunctionDefinition(TType type, bool write)
     // principle this code could be used with multiple backends.
     type.setPrecision(EbpHigh);
     TIntermAggregate *indexingFunction = new TIntermAggregate(EOpFunction);
-    indexingFunction->setNameObj(GetIndexFunctionName(type, write));
+    indexingFunction->getFunctionSymbolInfo()->setNameObj(GetIndexFunctionName(type, write));
 
     TType fieldType = GetFieldType(type);
     int numCases = 0;
@@ -350,7 +350,8 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
     TIntermAggregate *indexingCall = new TIntermAggregate(EOpFunctionCall);
     indexingCall->setLine(node->getLine());
     indexingCall->setUserDefined();
-    indexingCall->setNameObj(GetIndexFunctionName(indexedNode->getType(), false));
+    indexingCall->getFunctionSymbolInfo()->setNameObj(
+        GetIndexFunctionName(indexedNode->getType(), false));
     indexingCall->getSequence()->push_back(indexedNode);
     indexingCall->getSequence()->push_back(index);
 
@@ -368,7 +369,8 @@ TIntermAggregate *CreateIndexedWriteFunctionCall(TIntermBinary *node,
     ASSERT(leftCopy != nullptr && leftCopy->getAsTyped() != nullptr);
     TIntermAggregate *indexedWriteCall =
         CreateIndexFunctionCall(node, leftCopy->getAsTyped(), index);
-    indexedWriteCall->setNameObj(GetIndexFunctionName(node->getLeft()->getType(), true));
+    indexedWriteCall->getFunctionSymbolInfo()->setNameObj(
+        GetIndexFunctionName(node->getLeft()->getType(), true));
     indexedWriteCall->setType(TType(EbtVoid));
     indexedWriteCall->getSequence()->push_back(writtenValue);
     return indexedWriteCall;
