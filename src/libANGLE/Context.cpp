@@ -35,6 +35,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/Workarounds.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/EGLImplFactory.h"
 #include "libANGLE/queryconversions.h"
@@ -247,6 +248,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mHasBeenCurrent(false),
       mContextLost(false),
       mResetStatus(GL_NO_ERROR),
+      mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
       mCurrentSurface(nullptr),
@@ -255,6 +257,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     ASSERT(!mRobustAccess);  // Unimplemented
 
     initCaps(GetWebGLContext(attribs));
+    initWorkarounds();
 
     mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs),
                         GetBindGeneratesResource(attribs));
@@ -1916,7 +1919,12 @@ void Context::handleError(const Error &error)
 {
     if (error.isError())
     {
-        mErrors.insert(error.getCode());
+        GLenum code = error.getCode();
+        mErrors.insert(code);
+        if (code == GL_OUT_OF_MEMORY && getWorkarounds().loseContextOnOutOfMemory)
+        {
+            markContextLost();
+        }
 
         if (!error.getMessage().empty())
         {
@@ -1947,7 +1955,10 @@ GLenum Context::getError()
 void Context::markContextLost()
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
+    {
         mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
+        mContextLostForced = true;
+    }
     mContextLost     = true;
 }
 
@@ -1986,8 +1997,11 @@ GLenum Context::getResetStatus()
             mContextLost = true;
         }
     }
-    else if (mResetStatus != GL_NO_ERROR)
+    else if (!mContextLostForced && mResetStatus != GL_NO_ERROR)
     {
+        // If markContextLost was used to mark the context lost then
+        // assume that is not recoverable, and continue to report the
+        // lost reset status for the lifetime of this context.
         mResetStatus = mImplementation->getResetStatus();
     }
 
@@ -2468,6 +2482,13 @@ void Context::updateCaps()
 
         mTextureCaps.insert(format, formatCaps);
     }
+}
+
+void Context::initWorkarounds()
+{
+    // Lose the context upon out of memory error if the application is
+    // expecting to watch for those events.
+    mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
 void Context::syncRendererState()
@@ -3555,6 +3576,11 @@ void Context::attachShader(GLuint program, GLuint shader)
     auto shaderObject  = mResourceManager->getShader(shader);
     ASSERT(programObject && shaderObject);
     programObject->attachShader(shaderObject);
+}
+
+const Workarounds &Context::getWorkarounds() const
+{
+    return mWorkarounds;
 }
 
 }  // namespace gl

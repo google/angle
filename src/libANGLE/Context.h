@@ -22,6 +22,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/VertexAttribute.h"
+#include "libANGLE/Workarounds.h"
 #include "libANGLE/angletypes.h"
 
 namespace rx
@@ -595,6 +596,7 @@ class Context final : public ValidationContext
     size_t getExtensionStringCount() const;
 
     rx::ContextImpl *getImplementation() const { return mImplementation.get(); }
+    const Workarounds &getWorkarounds() const;
 
   private:
     void syncRendererState();
@@ -620,6 +622,7 @@ class Context final : public ValidationContext
 
     void initCaps(bool webGLContext);
     void updateCaps();
+    void initWorkarounds();
 
     LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
     LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
@@ -672,6 +675,7 @@ class Context final : public ValidationContext
     bool mHasBeenCurrent;
     bool mContextLost;
     GLenum mResetStatus;
+    bool mContextLostForced;
     GLenum mResetStrategy;
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;
@@ -686,6 +690,8 @@ class Context final : public ValidationContext
     State::DirtyObjects mClearDirtyObjects;
     State::DirtyBits mBlitDirtyBits;
     State::DirtyObjects mBlitDirtyObjects;
+
+    Workarounds mWorkarounds;
 };
 
 }  // namespace gl
