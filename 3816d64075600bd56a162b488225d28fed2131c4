@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f73a8d0_b3643843",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-06T16:17:19Z",
+      "side": 1,
+      "message": "A lot of these went from returning GL_NONE to UNREACHABLE, is that intended?",
+      "range": {
+        "startLine": 261,
+        "startChar": 4,
+        "endLine": 261,
+        "endChar": 18
+      },
+      "revId": "3816d64075600bd56a162b488225d28fed2131c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
