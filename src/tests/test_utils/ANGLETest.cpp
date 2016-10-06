@@ -786,20 +786,6 @@ bool IsWindows()
 #endif
 }
 
-bool IsDebug()
-{
-#if !defined(NDEBUG)
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool IsRelease()
-{
-    return !IsDebug();
-}
-
 EGLint ANGLETest::getPlatformRenderer() const
 {
     assert(mEGLWindow);
