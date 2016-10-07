@@ -1424,7 +1424,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
     switch (node->getOp())
     {
-      case EOpSequence:
+        case EOpSequence:
         {
             if (mInsideFunction)
             {
@@ -1456,125 +1456,132 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             return false;
         }
-      case EOpDeclaration:
-        if (visit == PreVisit)
-        {
-            TIntermSequence *sequence = node->getSequence();
-            TIntermTyped *variable = (*sequence)[0]->getAsTyped();
-            ASSERT(sequence->size() == 1);
-
-            if (variable &&
-                (variable->getQualifier() == EvqTemporary ||
-                 variable->getQualifier() == EvqGlobal || variable->getQualifier() == EvqConst))
+        case EOpDeclaration:
+            if (visit == PreVisit)
             {
-                ensureStructDefined(variable->getType());
+                TIntermSequence *sequence = node->getSequence();
+                TIntermTyped *variable    = (*sequence)[0]->getAsTyped();
+                ASSERT(sequence->size() == 1);
 
-                if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
+                if (variable &&
+                    (variable->getQualifier() == EvqTemporary ||
+                     variable->getQualifier() == EvqGlobal || variable->getQualifier() == EvqConst))
                 {
-                    if (!mInsideFunction)
+                    ensureStructDefined(variable->getType());
+
+                    if (!variable->getAsSymbolNode() ||
+                        variable->getAsSymbolNode()->getSymbol() != "")  // Variable declaration
                     {
-                        out << "static ";
+                        if (!mInsideFunction)
+                        {
+                            out << "static ";
+                        }
+
+                        out << TypeString(variable->getType()) + " ";
+
+                        TIntermSymbol *symbol = variable->getAsSymbolNode();
+
+                        if (symbol)
+                        {
+                            symbol->traverse(this);
+                            out << ArrayString(symbol->getType());
+                            out << " = " + initializer(symbol->getType());
+                        }
+                        else
+                        {
+                            variable->traverse(this);
+                        }
                     }
-
-                    out << TypeString(variable->getType()) + " ";
-
-                    TIntermSymbol *symbol = variable->getAsSymbolNode();
-
-                    if (symbol)
+                    else if (variable->getAsSymbolNode() &&
+                             variable->getAsSymbolNode()->getSymbol() ==
+                                 "")  // Type (struct) declaration
                     {
-                        symbol->traverse(this);
-                        out << ArrayString(symbol->getType());
-                        out << " = " + initializer(symbol->getType());
+                        // Already added to constructor map
                     }
                     else
-                    {
-                        variable->traverse(this);
-                    }
+                        UNREACHABLE();
                 }
-                else if (variable->getAsSymbolNode() && variable->getAsSymbolNode()->getSymbol() == "")   // Type (struct) declaration
+                else if (variable && IsVaryingOut(variable->getQualifier()))
                 {
-                    // Already added to constructor map
-                }
-                else UNREACHABLE();
-            }
-            else if (variable && IsVaryingOut(variable->getQualifier()))
-            {
-                for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
-                {
-                    TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
+                    for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end();
+                         sit++)
+                    {
+                        TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
 
-                    if (symbol)
-                    {
-                        // Vertex (output) varyings which are declared but not written to should still be declared to allow successful linking
-                        mReferencedVaryings[symbol->getSymbol()] = symbol;
-                    }
-                    else
-                    {
-                        (*sit)->traverse(this);
+                        if (symbol)
+                        {
+                            // Vertex (output) varyings which are declared but not written to should
+                            // still be declared to allow successful linking
+                            mReferencedVaryings[symbol->getSymbol()] = symbol;
+                        }
+                        else
+                        {
+                            (*sit)->traverse(this);
+                        }
                     }
                 }
-            }
 
-            return false;
-        }
-        else if (visit == InVisit)
-        {
-            out << ", ";
-        }
-        break;
-      case EOpInvariantDeclaration:
-        // Do not do any translation
-        return false;
-      case EOpPrototype:
-        if (visit == PreVisit)
-        {
-            size_t index = mCallDag.findIndex(node);
-            // Skip the prototype if it is not implemented (and thus not used)
-            if (index == CallDAG::InvalidIndex)
-            {
                 return false;
             }
-
-            TIntermSequence *arguments = node->getSequence();
-
-            TString name = DecorateFunctionIfNeeded(node->getNameObj());
-            out << TypeString(node->getType()) << " " << name << DisambiguateFunctionName(arguments)
-                << (mOutputLod0Function ? "Lod0(" : "(");
-
-            for (unsigned int i = 0; i < arguments->size(); i++)
+            else if (visit == InVisit)
             {
-                TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
-
-                if (symbol)
-                {
-                    out << argumentString(symbol);
-
-                    if (i < arguments->size() - 1)
-                    {
-                        out << ", ";
-                    }
-                }
-                else UNREACHABLE();
+                out << ", ";
             }
-
-            out << ");\n";
-
-            // Also prototype the Lod0 variant if needed
-            bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
-            if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
-            {
-                mOutputLod0Function = true;
-                node->traverse(this);
-                mOutputLod0Function = false;
-            }
-
+            break;
+        case EOpInvariantDeclaration:
+            // Do not do any translation
             return false;
-        }
-        break;
-      case EOpComma:
-          outputTriplet(out, visit, "(", ", ", ")");
-          break;
-      case EOpFunction:
+        case EOpPrototype:
+            if (visit == PreVisit)
+            {
+                size_t index = mCallDag.findIndex(node);
+                // Skip the prototype if it is not implemented (and thus not used)
+                if (index == CallDAG::InvalidIndex)
+                {
+                    return false;
+                }
+
+                TIntermSequence *arguments = node->getSequence();
+
+                TString name = DecorateFunctionIfNeeded(node->getNameObj());
+                out << TypeString(node->getType()) << " " << name
+                    << DisambiguateFunctionName(arguments) << (mOutputLod0Function ? "Lod0(" : "(");
+
+                for (unsigned int i = 0; i < arguments->size(); i++)
+                {
+                    TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
+
+                    if (symbol)
+                    {
+                        out << argumentString(symbol);
+
+                        if (i < arguments->size() - 1)
+                        {
+                            out << ", ";
+                        }
+                    }
+                    else
+                        UNREACHABLE();
+                }
+
+                out << ");\n";
+
+                // Also prototype the Lod0 variant if needed
+                bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
+                if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
+                {
+                    mOutputLod0Function = true;
+                    node->traverse(this);
+                    mOutputLod0Function = false;
+                }
+
+                return false;
+            }
+            break;
+        case EOpComma:
+            outputTriplet(out, visit, "(", ", ", ")");
+            break;
+        case EOpFunction:
         {
             ASSERT(mCurrentFunctionMetadata == nullptr);
             TString name = TFunction::unmangleName(node->getNameObj().getString());
@@ -1639,8 +1646,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             return false;
         }
-        break;
-      case EOpFunctionCall:
+        case EOpFunctionCall:
         {
             TIntermSequence *arguments = node->getSequence();
 
@@ -1721,7 +1727,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             return false;
         }
-        break;
         case EOpParameters:
             outputTriplet(out, visit, "(", ", ", ")\n{\n");
             break;
@@ -1800,7 +1805,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpConstructMat4:
             outputConstructor(out, visit, node->getType(), "mat4", node->getSequence());
             break;
-      case EOpConstructStruct:
+        case EOpConstructStruct:
         {
             if (node->getType().isArray())
             {
@@ -1829,31 +1834,31 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpVectorNotEqual:
             outputTriplet(out, visit, "(", " != ", ")");
             break;
-      case EOpMod:
-        ASSERT(node->getUseEmulatedFunction());
-        writeEmulatedFunctionTriplet(out, visit, "mod(");
-        break;
-      case EOpModf:
-          outputTriplet(out, visit, "modf(", ", ", ")");
-          break;
-      case EOpPow:
-          outputTriplet(out, visit, "pow(", ", ", ")");
-          break;
-      case EOpAtan:
-        ASSERT(node->getSequence()->size() == 2);   // atan(x) is a unary operator
-        ASSERT(node->getUseEmulatedFunction());
-        writeEmulatedFunctionTriplet(out, visit, "atan(");
-        break;
-      case EOpMin:
-          outputTriplet(out, visit, "min(", ", ", ")");
-          break;
-      case EOpMax:
-          outputTriplet(out, visit, "max(", ", ", ")");
-          break;
-      case EOpClamp:
-          outputTriplet(out, visit, "clamp(", ", ", ")");
-          break;
-      case EOpMix:
+        case EOpMod:
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, "mod(");
+            break;
+        case EOpModf:
+            outputTriplet(out, visit, "modf(", ", ", ")");
+            break;
+        case EOpPow:
+            outputTriplet(out, visit, "pow(", ", ", ")");
+            break;
+        case EOpAtan:
+            ASSERT(node->getSequence()->size() == 2);  // atan(x) is a unary operator
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, "atan(");
+            break;
+        case EOpMin:
+            outputTriplet(out, visit, "min(", ", ", ")");
+            break;
+        case EOpMax:
+            outputTriplet(out, visit, "max(", ", ", ")");
+            break;
+        case EOpClamp:
+            outputTriplet(out, visit, "clamp(", ", ", ")");
+            break;
+        case EOpMix:
         {
             TIntermTyped *lastParamNode = (*(node->getSequence()))[2]->getAsTyped();
             if (lastParamNode->getType().getBasicType() == EbtBool)
@@ -1867,8 +1872,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 outputTriplet(out, visit, "lerp(", ", ", ")");
             }
+            break;
         }
-        break;
         case EOpStep:
             outputTriplet(out, visit, "step(", ", ", ")");
             break;
@@ -1884,24 +1889,25 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpCross:
             outputTriplet(out, visit, "cross(", ", ", ")");
             break;
-      case EOpFaceForward:
-        ASSERT(node->getUseEmulatedFunction());
-        writeEmulatedFunctionTriplet(out, visit, "faceforward(");
-        break;
-      case EOpReflect:
-          outputTriplet(out, visit, "reflect(", ", ", ")");
-          break;
-      case EOpRefract:
-          outputTriplet(out, visit, "refract(", ", ", ")");
-          break;
-      case EOpOuterProduct:
-        ASSERT(node->getUseEmulatedFunction());
-        writeEmulatedFunctionTriplet(out, visit, "outerProduct(");
-        break;
-      case EOpMul:
-          outputTriplet(out, visit, "(", " * ", ")");
-          break;
-      default: UNREACHABLE();
+        case EOpFaceForward:
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, "faceforward(");
+            break;
+        case EOpReflect:
+            outputTriplet(out, visit, "reflect(", ", ", ")");
+            break;
+        case EOpRefract:
+            outputTriplet(out, visit, "refract(", ", ", ")");
+            break;
+        case EOpOuterProduct:
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, "outerProduct(");
+            break;
+        case EOpMul:
+            outputTriplet(out, visit, "(", " * ", ")");
+            break;
+        default:
+            UNREACHABLE();
     }
 
     return true;
