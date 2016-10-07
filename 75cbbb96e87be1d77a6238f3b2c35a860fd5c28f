@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dff9f4d6_640aca37",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2785,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-07T19:00:53Z",
+      "side": 1,
+      "message": "note: need to validate bufSize is not negative",
+      "range": {
+        "startLine": 2785,
+        "startChar": 8,
+        "endLine": 2785,
+        "endChar": 36
+      },
+      "revId": "75cbbb96e87be1d77a6238f3b2c35a860fd5c28f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
