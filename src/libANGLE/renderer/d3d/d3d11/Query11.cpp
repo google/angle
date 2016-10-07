@@ -96,17 +96,11 @@ template <typename T>
 gl::Error Query11::getResultBase(T *params)
 {
     ASSERT(mActiveQuery->query == nullptr);
-
-    gl::Error error = flush(true);
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(flush(true));
     ASSERT(mPendingQueries.empty());
     *params = static_cast<T>(mResultSum);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Query11::getResult(GLint *params)
@@ -131,14 +125,10 @@ gl::Error Query11::getResult(GLuint64 *params)
 
 gl::Error Query11::isResultAvailable(bool *available)
 {
-    gl::Error error = flush(false);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(flush(false));
 
     *available = mPendingQueries.empty();
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Query11::pause()
@@ -167,11 +157,7 @@ gl::Error Query11::resume()
 {
     if (mActiveQuery->query == nullptr)
     {
-        gl::Error error = flush(false);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(flush(false));
 
         GLenum queryType         = getType();
         D3D11_QUERY d3dQueryType = gl_d3d11::ConvertQueryType(queryType);
@@ -234,11 +220,7 @@ gl::Error Query11::flush(bool force)
 
         do
         {
-            gl::Error error = testQuery(query);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(testQuery(query));
             if (!query->finished && !force)
             {
                 return gl::Error(GL_NO_ERROR);
@@ -249,7 +231,7 @@ gl::Error Query11::flush(bool force)
         mPendingQueries.pop_front();
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Query11::testQuery(QueryState *queryState)
@@ -408,7 +390,7 @@ gl::Error Query11::testQuery(QueryState *queryState)
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
-}
+}  // namespace rx

@@ -275,11 +275,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             drawBufferStates[colorAttachmentIndex] != GL_NONE)
         {
             RenderTarget11 *renderTarget = nullptr;
-            gl::Error error = attachment.getRenderTarget(&renderTarget);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(attachment.getRenderTarget(&renderTarget));
 
             const gl::InternalFormat &formatInfo = *attachment.getFormat().info;
 
@@ -385,11 +381,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         ASSERT(attachment != nullptr);
 
         RenderTarget11 *renderTarget = nullptr;
-        gl::Error error = attachment->getRenderTarget(&renderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(attachment->getRenderTarget(&renderTarget));
 
         const auto &nativeFormat = renderTarget->getFormatSet().format;
 

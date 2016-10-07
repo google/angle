@@ -92,11 +92,7 @@ gl::Error FenceNV11::finish()
     while (finished != GL_TRUE)
     {
         loopCount++;
-        gl::Error error = FenceTestHelper(this, true, &finished);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(FenceTestHelper(this, true, &finished));
 
         if (loopCount % kDeviceLostCheckPeriod == 0 && mRenderer->testDeviceLost())
         {
@@ -107,7 +103,7 @@ gl::Error FenceNV11::finish()
         ScheduleYield();
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 //

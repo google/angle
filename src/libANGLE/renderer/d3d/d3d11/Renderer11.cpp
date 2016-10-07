@@ -551,11 +551,7 @@ egl::Error Renderer11::initialize()
 {
     HRESULT result = S_OK;
 
-    egl::Error error = initializeD3DDevice();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(initializeD3DDevice());
 
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 #if !ANGLE_SKIP_DXGI_1_2_CHECK
@@ -777,11 +773,7 @@ egl::Error Renderer11::initializeD3DDevice()
     {
         // We should use the inputted D3D11 device instead
         void *device     = nullptr;
-        egl::Error error = mEGLDevice->getDevice(&device);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(mEGLDevice->getDevice(&device));
 
         ID3D11Device *d3dDevice = reinterpret_cast<ID3D11Device *>(device);
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
@@ -1212,21 +1204,13 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
         ASSERT(textureD3D);
 
         TextureStorage *texStorage = nullptr;
-        gl::Error error = textureD3D->getNativeTexture(&texStorage);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(textureD3D->getNativeTexture(&texStorage));
 
         if (texStorage)
         {
             TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
             const gl::TextureState &textureState = texture->getTextureState();
-            error = storage11->generateSwizzles(textureState.getSwizzleState());
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(storage11->generateSwizzles(textureState.getSwizzleState()));
         }
     }
 
@@ -1272,11 +1256,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
     TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
 
     TextureStorage *storage = nullptr;
-    gl::Error error = textureD3D->getNativeTexture(&storage);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(textureD3D->getNativeTexture(&storage));
 
     // Storage should exist, texture should be complete
     ASSERT(storage);
@@ -1294,11 +1274,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != NULL);
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
@@ -1318,11 +1294,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = NULL;
-            error = mStateCache.getSamplerState(samplerState, &dxSamplerState);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != NULL);
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
@@ -1339,7 +1311,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
     ASSERT(metadata != nullptr);
     metadata->update(index, *texture);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
@@ -1351,11 +1323,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
         TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = nullptr;
-        gl::Error error = textureImpl->getNativeTexture(&texStorage);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(textureImpl->getNativeTexture(&texStorage));
 
         // Texture should be complete and have a storage
         ASSERT(texStorage);
@@ -1600,18 +1568,10 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
     const auto &vertexArray = state.getVertexArray();
     auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
 
-    gl::Error error = vertexArray11->updateDirtyAndDynamicAttribs(mVertexDataManager, state, first,
-                                                                  count, instances);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(mVertexDataManager, state, first, count,
+                                                          instances));
 
-    error = mStateManager.updateCurrentValueAttribs(state, mVertexDataManager);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mStateManager.updateCurrentValueAttribs(state, mVertexDataManager));
 
     // If index information is passed, mark it with the current changed status.
     if (indexInfo)
@@ -1745,12 +1705,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
         }
 
         rx::ShaderExecutableD3D *pixelExe = nullptr;
-        gl::Error error =
-            programD3D->getPixelExecutableForFramebuffer(glState.getDrawFramebuffer(), &pixelExe);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(
+            programD3D->getPixelExecutableForFramebuffer(glState.getDrawFramebuffer(), &pixelExe));
 
         // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
         if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
@@ -1764,12 +1720,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
 
         // Retrieve the geometry shader.
         rx::ShaderExecutableD3D *geometryExe = nullptr;
-        error =
-            programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(
+            programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr));
 
         ID3D11GeometryShader *geometryShader =
             (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
@@ -1931,11 +1883,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
 
         const uint8_t *bufferData = NULL;
-        gl::Error error = storage->getData(&bufferData);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(storage->getData(&bufferData));
 
         indices = bufferData + offset;
     }
@@ -1964,29 +1912,17 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
 
     unsigned int spaceNeeded =
         static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
-    gl::Error error = mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
 
     void* mappedMemory = NULL;
     unsigned int offset;
-    error = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset));
 
     // Copy over the converted index data.
     memcpy(mappedMemory, &mScratchIndexDataBuffer[0],
            sizeof(GLuint) * mScratchIndexDataBuffer.size());
 
-    error = mLineLoopIB->unmapBuffer();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mLineLoopIB->unmapBuffer());
 
     IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(mLineLoopIB->getIndexBuffer());
     ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
@@ -2013,7 +1949,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
         mDeviceContext->DrawIndexed(indexCount, 0, baseVertexLocation);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
@@ -2035,11 +1971,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
 
         const uint8_t *bufferData = NULL;
-        gl::Error error = storage->getData(&bufferData);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(storage->getData(&bufferData));
 
         indexPointer = bufferData + offset;
     }
@@ -2070,27 +2002,15 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
 
     const unsigned int spaceNeeded =
         static_cast<unsigned int>(mScratchIndexDataBuffer.size() * sizeof(unsigned int));
-    gl::Error error = mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
 
     void *mappedMemory = nullptr;
     unsigned int offset;
-    error = mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory, &offset);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory, &offset));
 
     memcpy(mappedMemory, &mScratchIndexDataBuffer[0], spaceNeeded);
 
-    error = mTriangleFanIB->unmapBuffer();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mTriangleFanIB->unmapBuffer());
 
     IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(mTriangleFanIB->getIndexBuffer());
     ID3D11Buffer *d3dIndexBuffer = indexBuffer->getBuffer();
@@ -2116,7 +2036,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
         mDeviceContext->DrawIndexed(indexCount, 0, -minIndex);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode)
@@ -3313,12 +3233,8 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
     ASSERT(source != nullptr);
 
     RenderTargetD3D *newRT = nullptr;
-    gl::Error error = createRenderTarget(source->getWidth(), source->getHeight(),
-                                         source->getInternalFormat(), source->getSamples(), &newRT);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(createRenderTarget(source->getWidth(), source->getHeight(),
+                                 source->getInternalFormat(), source->getSamples(), &newRT));
 
     RenderTarget11 *source11 = GetAs<RenderTarget11>(source);
     RenderTarget11 *dest11   = GetAs<RenderTarget11>(newRT);
@@ -3480,11 +3396,8 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
 
     ID3DBlob *binary = NULL;
     std::string debugInfo;
-    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, loopMacros, &binary, &debugInfo);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, loopMacros, &binary,
+                                        &debugInfo));
 
     // It's possible that binary is NULL if the compiler failed in all configurations.  Set the executable to NULL
     // and return GL_NO_ERROR to signify that there was a link error but the internal state is still OK.
@@ -3494,8 +3407,8 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
         return gl::Error(GL_NO_ERROR);
     }
 
-    error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
-                           streamOutVaryings, separatedOutputBuffers, outExectuable);
+    gl::Error error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
+                                     streamOutVaryings, separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
     if (error.isError())
@@ -3508,7 +3421,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
         (*outExectuable)->appendDebugInfo(debugInfo);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 UniformStorageD3D *Renderer11::createUniformStorage(size_t storageSize)
