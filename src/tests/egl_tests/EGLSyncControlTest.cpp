@@ -190,6 +190,9 @@ class EGLSyncControlTest : public testing::Test
 // can be called on DX11 with direct composition and that it returns reasonable enough values.
 TEST_F(EGLSyncControlTest, SyncValuesTest)
 {
+    static const DWORD kPollInterval    = 10;
+    static const int kNumPollIterations = 500;
+
     if (!mD3D11Available)
     {
         std::cout << "D3D11 not available, skipping test" << std::endl;
@@ -229,9 +232,9 @@ TEST_F(EGLSyncControlTest, SyncValuesTest)
     ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mSurface));
 
     // Poll until sbc value increases. Normally it should change within 16-17 ms.
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < kNumPollIterations; i++)
     {
-        ::Sleep(1);
+        ::Sleep(kPollInterval);
         ASSERT_EGL_TRUE(eglGetSyncValuesCHROMIUM(mDisplay, mSurface, &ust, &msc, &sbc));
         if (sbc > 0)
             break;
@@ -251,9 +254,9 @@ TEST_F(EGLSyncControlTest, SyncValuesTest)
 
     // Poll until sbc value increases. Normally it should change within 16-17 ms.
     EGLuint64KHR ust2 = 0, msc2 = 0, sbc2 = 0;
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < kNumPollIterations; i++)
     {
-        ::Sleep(1);
+        ::Sleep(kPollInterval);
         ASSERT_EGL_TRUE(eglGetSyncValuesCHROMIUM(mDisplay, mSurface, &ust2, &msc2, &sbc2));
         if (sbc2 > sbc)
             break;
