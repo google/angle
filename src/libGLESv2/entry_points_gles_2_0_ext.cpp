@@ -2172,7 +2172,21 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum targe
         "(GLenum target = 0x%X, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLint* params = 0x%0.8p)",
         target, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetRenderbufferParameterivRobustANGLE(context, target, pname, bufSize,
+                                                           &numParams, params))
+        {
+            return;
+        }
+
+        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
+        QueryRenderbufferiv(renderbuffer, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY

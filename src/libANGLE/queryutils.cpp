@@ -11,6 +11,7 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/Renderbuffer.h"
 
 namespace gl
 {
@@ -195,6 +196,48 @@ void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
             break;
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
             *params = program->getBinaryRetrievableHint();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *params)
+{
+    ASSERT(renderbuffer != nullptr);
+
+    switch (pname)
+    {
+        case GL_RENDERBUFFER_WIDTH:
+            *params = renderbuffer->getWidth();
+            break;
+        case GL_RENDERBUFFER_HEIGHT:
+            *params = renderbuffer->getHeight();
+            break;
+        case GL_RENDERBUFFER_INTERNAL_FORMAT:
+            *params = renderbuffer->getFormat().info->internalFormat;
+            break;
+        case GL_RENDERBUFFER_RED_SIZE:
+            *params = renderbuffer->getRedSize();
+            break;
+        case GL_RENDERBUFFER_GREEN_SIZE:
+            *params = renderbuffer->getGreenSize();
+            break;
+        case GL_RENDERBUFFER_BLUE_SIZE:
+            *params = renderbuffer->getBlueSize();
+            break;
+        case GL_RENDERBUFFER_ALPHA_SIZE:
+            *params = renderbuffer->getAlphaSize();
+            break;
+        case GL_RENDERBUFFER_DEPTH_SIZE:
+            *params = renderbuffer->getDepthSize();
+            break;
+        case GL_RENDERBUFFER_STENCIL_SIZE:
+            *params = renderbuffer->getStencilSize();
+            break;
+        case GL_RENDERBUFFER_SAMPLES_ANGLE:
+            *params = renderbuffer->getSamples();
             break;
         default:
             UNREACHABLE();

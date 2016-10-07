@@ -1520,64 +1520,14 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (target != GL_RENDERBUFFER)
+        if (!context->skipValidation() &&
+            !ValidateGetRenderbufferParameteriv(context, target, pname, params))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        if (context->getGLState().getRenderbufferId() == 0)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        Renderbuffer *renderbuffer =
-            context->getRenderbuffer(context->getGLState().getRenderbufferId());
-
-        switch (pname)
-        {
-            case GL_RENDERBUFFER_WIDTH:
-                *params = renderbuffer->getWidth();
-                break;
-            case GL_RENDERBUFFER_HEIGHT:
-                *params = renderbuffer->getHeight();
-                break;
-            case GL_RENDERBUFFER_INTERNAL_FORMAT:
-                *params = renderbuffer->getFormat().info->internalFormat;
-                break;
-            case GL_RENDERBUFFER_RED_SIZE:
-                *params = renderbuffer->getRedSize();
-                break;
-            case GL_RENDERBUFFER_GREEN_SIZE:
-                *params = renderbuffer->getGreenSize();
-                break;
-            case GL_RENDERBUFFER_BLUE_SIZE:
-                *params = renderbuffer->getBlueSize();
-                break;
-            case GL_RENDERBUFFER_ALPHA_SIZE:
-                *params = renderbuffer->getAlphaSize();
-                break;
-            case GL_RENDERBUFFER_DEPTH_SIZE:
-                *params = renderbuffer->getDepthSize();
-                break;
-            case GL_RENDERBUFFER_STENCIL_SIZE:
-                *params = renderbuffer->getStencilSize();
-                break;
-
-            case GL_RENDERBUFFER_SAMPLES_ANGLE:
-                if (!context->getExtensions().framebufferMultisample)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = renderbuffer->getSamples();
-                break;
-
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return;
-        }
+        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
+        QueryRenderbufferiv(renderbuffer, pname, params);
     }
 }
 

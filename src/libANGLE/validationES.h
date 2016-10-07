@@ -340,6 +340,17 @@ bool ValidateGetProgramivRobustANGLE(Context *context,
                                      GLsizei bufSize,
                                      GLsizei *numParams);
 
+bool ValidateGetRenderbufferParameteriv(Context *context,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLint *params);
+bool ValidateGetRenderbufferParameterivRobustANGLE(Context *context,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLint *params);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl

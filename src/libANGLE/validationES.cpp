@@ -311,6 +311,63 @@ bool ValidateReadPixelsBase(ValidationContext *context,
     return true;
 }
 
+bool ValidateGetRenderbufferParameterivBase(Context *context,
+                                            GLenum target,
+                                            GLenum pname,
+                                            GLsizei *length)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (target != GL_RENDERBUFFER)
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid target."));
+        return false;
+    }
+
+    Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
+    if (renderbuffer == nullptr)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "No renderbuffer bound."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_RENDERBUFFER_WIDTH:
+        case GL_RENDERBUFFER_HEIGHT:
+        case GL_RENDERBUFFER_INTERNAL_FORMAT:
+        case GL_RENDERBUFFER_RED_SIZE:
+        case GL_RENDERBUFFER_GREEN_SIZE:
+        case GL_RENDERBUFFER_BLUE_SIZE:
+        case GL_RENDERBUFFER_ALPHA_SIZE:
+        case GL_RENDERBUFFER_DEPTH_SIZE:
+        case GL_RENDERBUFFER_STENCIL_SIZE:
+            break;
+
+        case GL_RENDERBUFFER_SAMPLES_ANGLE:
+            if (!context->getExtensions().framebufferMultisample)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_ANGLE_framebuffer_multisample is not enabled."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
+    }
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -3800,6 +3857,39 @@ bool ValidateGetProgramivRobustANGLE(Context *context,
     }
 
     if (!ValidateRobustBufferSize(context, bufSize, *numParams))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetRenderbufferParameteriv(Context *context,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLint *params)
+{
+    return ValidateGetRenderbufferParameterivBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetRenderbufferParameterivRobustANGLE(Context *context,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetRenderbufferParameterivBase(context, target, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
     {
         return false;
     }
