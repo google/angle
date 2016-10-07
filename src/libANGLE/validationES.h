@@ -228,6 +228,24 @@ bool ValidateGetUniformfv(Context *context, GLuint program, GLint location, GLfl
 bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLint* params);
 bool ValidateGetnUniformfvEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params);
 bool ValidateGetnUniformivEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params);
+bool ValidateGetUniformfvRobustANGLE(Context *context,
+                                     GLuint program,
+                                     GLint location,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLfloat *params);
+bool ValidateGetUniformivRobustANGLE(Context *context,
+                                     GLuint program,
+                                     GLint location,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLint *params);
+bool ValidateGetUniformuivRobustANGLE(Context *context,
+                                      GLuint program,
+                                      GLint location,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLuint *params);
 
 bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei numAttachments,
                                     const GLenum *attachments, bool defaultFramebuffer);

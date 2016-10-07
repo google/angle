@@ -2248,7 +2248,23 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
         "(GLuint program = %d, GLint location = %d, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLfloat* params = 0x%0.8p)",
         program, location, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetUniformfvRobustANGLE(context, program, location, bufSize, &writeLength,
+                                             params))
+        {
+            return;
+        }
+
+        Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+
+        programObject->getUniformfv(location, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
@@ -2261,7 +2277,23 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
         "(GLuint program = %d, GLint location = %d, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLint* params = 0x%0.8p)",
         program, location, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetUniformivRobustANGLE(context, program, location, bufSize, &writeLength,
+                                             params))
+        {
+            return;
+        }
+
+        Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+
+        programObject->getUniformiv(location, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
@@ -2525,7 +2557,23 @@ ANGLE_EXPORT void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
         "(GLuint program = %u, GLint location = %d, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLuint* params = 0x%0.8p)",
         program, location, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetUniformuivRobustANGLE(context, program, location, bufSize, &writeLength,
+                                              params))
+        {
+            return;
+        }
+
+        Program *programObject = context->getProgram(program);
+        ASSERT(programObject);
+
+        programObject->getUniformuiv(location, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,

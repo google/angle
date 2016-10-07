@@ -2674,10 +2674,25 @@ bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLin
     return ValidateGetUniformBase(context, program, location);
 }
 
-static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint location, GLsizei bufSize)
+static bool ValidateSizedGetUniform(Context *context,
+                                    GLuint program,
+                                    GLint location,
+                                    GLsizei bufSize,
+                                    GLsizei *length)
 {
+    if (length)
+    {
+        *length = 0;
+    }
+
     if (!ValidateGetUniformBase(context, program, location))
     {
+        return false;
+    }
+
+    if (bufSize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufSize cannot be negative."));
         return false;
     }
 
@@ -2689,8 +2704,15 @@ static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint loca
     size_t requiredBytes = VariableExternalSize(uniform.type);
     if (static_cast<size_t>(bufSize) < requiredBytes)
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "bufSize of at least %u is required.", requiredBytes));
         return false;
+    }
+
+    if (length)
+    {
+        // Cast is safe because of comparison to bufSize.
+        *length = static_cast<GLsizei>(requiredBytes);
     }
 
     return true;
@@ -2698,12 +2720,67 @@ static bool ValidateSizedGetUniform(Context *context, GLuint program, GLint loca
 
 bool ValidateGetnUniformfvEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
 {
-    return ValidateSizedGetUniform(context, program, location, bufSize);
+    return ValidateSizedGetUniform(context, program, location, bufSize, nullptr);
 }
 
 bool ValidateGetnUniformivEXT(Context *context, GLuint program, GLint location, GLsizei bufSize, GLint* params)
 {
-    return ValidateSizedGetUniform(context, program, location, bufSize);
+    return ValidateSizedGetUniform(context, program, location, bufSize, nullptr);
+}
+
+bool ValidateGetUniformfvRobustANGLE(Context *context,
+                                     GLuint program,
+                                     GLint location,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    // bufSize is validated in ValidateSizedGetUniform
+    return ValidateSizedGetUniform(context, program, location, bufSize, length);
+}
+
+bool ValidateGetUniformivRobustANGLE(Context *context,
+                                     GLuint program,
+                                     GLint location,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    // bufSize is validated in ValidateSizedGetUniform
+    return ValidateSizedGetUniform(context, program, location, bufSize, length);
+}
+
+bool ValidateGetUniformuivRobustANGLE(Context *context,
+                                      GLuint program,
+                                      GLint location,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLuint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Entry point requires at least OpenGL ES 3.0."));
+        return false;
+    }
+
+    // bufSize is validated in ValidateSizedGetUniform
+    return ValidateSizedGetUniform(context, program, location, bufSize, length);
 }
 
 bool ValidateDiscardFramebufferBase(Context *context, GLenum target, GLsizei numAttachments,
