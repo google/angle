@@ -185,8 +185,8 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
 {
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
-    bool swizzleRequired   = textureState.swizzleRequired();
-    bool mipmapping = gl::IsMipmapFiltered(textureState.getSamplerState());
+    bool swizzleRequired            = textureState.swizzleRequired();
+    bool mipmapping                 = gl::IsMipmapFiltered(textureState.getSamplerState());
     unsigned int mipLevels =
         mipmapping ? (textureState.getEffectiveMaxLevel() - effectiveBaseLevel + 1) : 1;
 
@@ -426,7 +426,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
     if (!fullCopy && mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
-        Blit11 *blitter = mRenderer->getBlitter();
+        Blit11 *blitter        = mRenderer->getBlitter();
         TextureHelper11 source = TextureHelper11::MakeAndReference(srcTexture, getFormatSet());
         TextureHelper11 dest   = TextureHelper11::MakeAndReference(dstTexture, getFormatSet());
         return blitter->copyDepthStencil(source, sourceSubresource, copyArea, texSize, dest,
@@ -516,7 +516,7 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
 
     ID3D11ShaderResourceView *sourceSRV =
         GetAs<RenderTarget11>(source)->getBlitShaderResourceView();
-    ID3D11RenderTargetView *destRTV     = GetAs<RenderTarget11>(dest)->getRenderTargetView();
+    ID3D11RenderTargetView *destRTV = GetAs<RenderTarget11>(dest)->getRenderTargetView();
 
     gl::Box sourceArea(0, 0, 0, source->getWidth(), source->getHeight(), source->getDepth());
     gl::Extents sourceSize(source->getWidth(), source->getHeight(), source->getDepth());
@@ -614,9 +614,9 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     // with compressed formats in the calling logic.
     ASSERT(!internalFormatInfo.compressed);
 
-    const int width  = destBox ? destBox->width : static_cast<int>(image->getWidth());
-    const int height = destBox ? destBox->height : static_cast<int>(image->getHeight());
-    const int depth = destBox ? destBox->depth : static_cast<int>(image->getDepth());
+    const int width    = destBox ? destBox->width : static_cast<int>(image->getWidth());
+    const int height   = destBox ? destBox->height : static_cast<int>(image->getHeight());
+    const int depth    = destBox ? destBox->depth : static_cast<int>(image->getDepth());
     GLuint srcRowPitch = 0;
     ANGLE_TRY_RESULT(
         internalFormatInfo.computeRowPitch(type, width, unpack.alignment, unpack.rowLength),
@@ -1349,15 +1349,15 @@ TextureStorage11_External::TextureStorage11_External(
     ASSERT(stream->getProducerType() == egl::Stream::ProducerType::D3D11TextureNV12);
     StreamProducerNV12 *producer = static_cast<StreamProducerNV12 *>(stream->getImplementation());
     mTexture                     = producer->getD3DTexture();
-    mSubresourceIndex = producer->getArraySlice();
+    mSubresourceIndex            = producer->getArraySlice();
     mTexture->AddRef();
     mMipLevels = 1;
 
     D3D11_TEXTURE2D_DESC desc;
     mTexture->GetDesc(&desc);
-    mTextureWidth   = desc.Width;
-    mTextureHeight  = desc.Height;
-    mTextureDepth   = 1;
+    mTextureWidth  = desc.Width;
+    mTextureHeight = desc.Height;
+    mTextureDepth  = 1;
     mHasKeyedMutex = (desc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_KEYEDMUTEX) != 0;
 }
 
@@ -1501,10 +1501,10 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
 {
     mCurrentRenderTarget = reinterpret_cast<uintptr_t>(renderTarget11);
 
-    mMipLevels      = 1;
-    mTextureWidth   = renderTarget11->getWidth();
-    mTextureHeight  = renderTarget11->getHeight();
-    mTextureDepth   = 1;
+    mMipLevels     = 1;
+    mTextureWidth  = renderTarget11->getWidth();
+    mTextureHeight = renderTarget11->getHeight();
+    mTextureDepth  = 1;
 }
 
 TextureStorage11_EGLImage::~TextureStorage11_EGLImage()
@@ -2795,7 +2795,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             ANGLE_TRY(getResource(&texture));
 
             // TODO, what kind of SRV is expected here?
-            ID3D11ShaderResourceView *srv = nullptr;
+            ID3D11ShaderResourceView *srv     = nullptr;
             ID3D11ShaderResourceView *blitSRV = nullptr;
 
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
