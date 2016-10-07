@@ -74,12 +74,12 @@ const DXGISupport &GetDXGISupport_9_3(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B4G4R4A4_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G5R5A1_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G6R5_UNORM:
@@ -554,7 +554,7 @@ const DXGISupport &GetDXGISupport_9_3(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_R8G8_UNORM:
         {
-            static const DXGISupport info(0, F_DS, F_MS);
+            static const DXGISupport info(0, F_DS, F_MS | F_RT | F_SAMPLE);
             return info;
         }
         case DXGI_FORMAT_R8_SINT:
@@ -579,7 +579,7 @@ const DXGISupport &GetDXGISupport_9_3(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_R8_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS, F_MS);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_R9G9B9E5_SHAREDEXP:
@@ -667,12 +667,12 @@ const DXGISupport &GetDXGISupport_10_0(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B4G4R4A4_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G5R5A1_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G6R5_UNORM:
@@ -1260,12 +1260,12 @@ const DXGISupport &GetDXGISupport_10_1(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B4G4R4A4_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G5R5A1_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G6R5_UNORM:
@@ -1853,12 +1853,12 @@ const DXGISupport &GetDXGISupport_11_0(DXGI_FORMAT dxgiFormat)
         }
         case DXGI_FORMAT_B4G4R4A4_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G5R5A1_UNORM:
         {
-            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_SAMPLE, F_DS | F_MIPGEN, F_MS | F_RT);
+            static const DXGISupport info(F_2D | F_3D | F_CUBE | F_MIPGEN | F_SAMPLE, F_DS, F_MS | F_RT);
             return info;
         }
         case DXGI_FORMAT_B5G6R5_UNORM:
