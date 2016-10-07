@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f1ee4a6_8b3e3111",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-07T14:56:19Z",
+      "side": 1,
+      "message": "This line is now redundant (MSVS build actually errors on this)",
+      "revId": "5a9e6876ab7627305c77896ce6337f37a7ab44bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f1ee4a6_a86dfbc2",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-07T14:56:19Z",
+      "side": 1,
+      "message": "Remember to clean up these.",
+      "revId": "5a9e6876ab7627305c77896ce6337f37a7ab44bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f1ee4a6_6bcdbd5e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2908,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-07T14:56:19Z",
+      "side": 1,
+      "message": "Can you add a test for a global layout qualifier as well (layout(rgba32f) uniform;)?",
+      "revId": "5a9e6876ab7627305c77896ce6337f37a7ab44bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
