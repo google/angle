@@ -1717,153 +1717,14 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+        if (!context->skipValidation() &&
+            !ValidateGetTexParameterfv(context, target, pname, params))
         {
-            context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
             return;
         }
 
         Texture *texture = context->getTargetTexture(target);
-
-        if (!texture)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_TEXTURE_MAG_FILTER:
-              *params = (GLfloat)texture->getMagFilter();
-              break;
-          case GL_TEXTURE_MIN_FILTER:
-              *params = (GLfloat)texture->getMinFilter();
-              break;
-          case GL_TEXTURE_WRAP_S:
-              *params = (GLfloat)texture->getWrapS();
-              break;
-          case GL_TEXTURE_WRAP_T:
-              *params = (GLfloat)texture->getWrapT();
-              break;
-          case GL_TEXTURE_WRAP_R:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getWrapR();
-              break;
-          case GL_TEXTURE_IMMUTABLE_FORMAT:
-              // Exposed to ES2.0 through EXT_texture_storage, no client version validation.
-              *params = (GLfloat)(texture->getImmutableFormat() ? GL_TRUE : GL_FALSE);
-              break;
-          case GL_TEXTURE_IMMUTABLE_LEVELS:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getImmutableLevels();
-              break;
-          case GL_TEXTURE_USAGE_ANGLE:
-              *params = (GLfloat)texture->getUsage();
-              break;
-          case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-              if (!context->getExtensions().textureFilterAnisotropic)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getMaxAnisotropy();
-              break;
-          case GL_TEXTURE_SWIZZLE_R:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getSwizzleRed();
-              break;
-          case GL_TEXTURE_SWIZZLE_G:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getSwizzleGreen();
-              break;
-          case GL_TEXTURE_SWIZZLE_B:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getSwizzleBlue();
-              break;
-          case GL_TEXTURE_SWIZZLE_A:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getSwizzleAlpha();
-              break;
-          case GL_TEXTURE_BASE_LEVEL:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getBaseLevel();
-              break;
-          case GL_TEXTURE_MAX_LEVEL:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = (GLfloat)texture->getMaxLevel();
-              break;
-          case GL_TEXTURE_MIN_LOD:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = texture->getSamplerState().minLod;
-              break;
-          case GL_TEXTURE_MAX_LOD:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(Error(GL_INVALID_ENUM));
-                  return;
-              }
-              *params = texture->getSamplerState().maxLod;
-              break;
-          case GL_TEXTURE_COMPARE_MODE:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(
-                      Error(GL_INVALID_ENUM,
-                            "GL_TEXTURE_COMPARE_MODE not available in ES versions < 3.0"));
-                  return;
-              }
-              *params = static_cast<GLfloat>(texture->getCompareMode());
-              break;
-          case GL_TEXTURE_COMPARE_FUNC:
-              if (context->getClientMajorVersion() < 3)
-              {
-                  context->handleError(
-                      Error(GL_INVALID_ENUM,
-                            "GL_TEXTURE_COMPARE_FUNC not available in ES versions < 3.0"));
-                  return;
-              }
-              *params = static_cast<GLfloat>(texture->getCompareFunc());
-              break;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-              return;
-        }
+        QueryTexParameterfv(texture, pname, params);
     }
 }
 
@@ -1874,153 +1735,14 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+        if (!context->skipValidation() &&
+            !ValidateGetTexParameteriv(context, target, pname, params))
         {
-            context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
             return;
         }
 
         Texture *texture = context->getTargetTexture(target);
-
-        if (!texture)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        switch (pname)
-        {
-            case GL_TEXTURE_MAG_FILTER:
-                *params = texture->getSamplerState().magFilter;
-                break;
-            case GL_TEXTURE_MIN_FILTER:
-                *params = texture->getSamplerState().minFilter;
-                break;
-            case GL_TEXTURE_WRAP_S:
-                *params = texture->getSamplerState().wrapS;
-                break;
-            case GL_TEXTURE_WRAP_T:
-                *params = texture->getSamplerState().wrapT;
-                break;
-            case GL_TEXTURE_WRAP_R:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getSamplerState().wrapR;
-                break;
-            case GL_TEXTURE_IMMUTABLE_FORMAT:
-                // Exposed to ES2.0 through EXT_texture_storage, no client version validation.
-                *params = texture->getImmutableFormat() ? GL_TRUE : GL_FALSE;
-                break;
-            case GL_TEXTURE_IMMUTABLE_LEVELS:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = static_cast<GLint>(texture->getImmutableLevels());
-                break;
-            case GL_TEXTURE_USAGE_ANGLE:
-                *params = texture->getUsage();
-                break;
-            case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-                if (!context->getExtensions().textureFilterAnisotropic)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = (GLint)texture->getMaxAnisotropy();
-                break;
-            case GL_TEXTURE_SWIZZLE_R:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getSwizzleRed();
-                break;
-            case GL_TEXTURE_SWIZZLE_G:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getSwizzleGreen();
-                break;
-            case GL_TEXTURE_SWIZZLE_B:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getSwizzleBlue();
-                break;
-            case GL_TEXTURE_SWIZZLE_A:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getSwizzleAlpha();
-                break;
-            case GL_TEXTURE_BASE_LEVEL:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getBaseLevel();
-                break;
-            case GL_TEXTURE_MAX_LEVEL:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = texture->getMaxLevel();
-                break;
-            case GL_TEXTURE_MIN_LOD:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = iround<GLint>(texture->getMinLod());
-                break;
-            case GL_TEXTURE_MAX_LOD:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                *params = iround<GLint>(texture->getMaxLod());
-                break;
-            case GL_TEXTURE_COMPARE_MODE:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(
-                        Error(GL_INVALID_ENUM,
-                              "GL_TEXTURE_COMPARE_MODE not available in ES versions < 3.0"));
-                    return;
-                }
-                *params = texture->getCompareMode();
-                break;
-            case GL_TEXTURE_COMPARE_FUNC:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(
-                        Error(GL_INVALID_ENUM,
-                              "GL_TEXTURE_COMPARE_FUNC not available in ES versions < 3.0"));
-                    return;
-                }
-                *params = texture->getCompareFunc();
-                break;
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return;
-        }
+        QueryTexParameteriv(texture, pname, params);
     }
 }
 
@@ -2804,54 +2526,32 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
-        {
-            context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
-            return;
-        }
-
-        if (!ValidateTexParamParameters(context, target, pname, static_cast<GLint>(param)))
+        if (!context->skipValidation() && !ValidateTexParameterf(context, target, pname, param))
         {
             return;
         }
 
         Texture *texture = context->getTargetTexture(target);
-
-        if (!texture)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        // clang-format off
-        switch (pname)
-        {
-          case GL_TEXTURE_WRAP_S:               texture->setWrapS(uiround<GLenum>(param));        break;
-          case GL_TEXTURE_WRAP_T:               texture->setWrapT(uiround<GLenum>(param));        break;
-          case GL_TEXTURE_WRAP_R:               texture->setWrapR(uiround<GLenum>(param));        break;
-          case GL_TEXTURE_MIN_FILTER:           texture->setMinFilter(uiround<GLenum>(param));    break;
-          case GL_TEXTURE_MAG_FILTER:           texture->setMagFilter(uiround<GLenum>(param));    break;
-          case GL_TEXTURE_USAGE_ANGLE:          texture->setUsage(uiround<GLenum>(param));        break;
-          case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(std::min(param, context->getExtensions().maxTextureAnisotropy)); break;
-          case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode(uiround<GLenum>(param));  break;
-          case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc(uiround<GLenum>(param));  break;
-          case GL_TEXTURE_SWIZZLE_R:            texture->setSwizzleRed(uiround<GLenum>(param));   break;
-          case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen(uiround<GLenum>(param)); break;
-          case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue(uiround<GLenum>(param));  break;
-          case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha(uiround<GLenum>(param)); break;
-          case GL_TEXTURE_BASE_LEVEL:           texture->setBaseLevel(uiround<GLuint>(param));    break;
-          case GL_TEXTURE_MAX_LEVEL:            texture->setMaxLevel(uiround<GLuint>(param));     break;
-          case GL_TEXTURE_MIN_LOD:              texture->setMinLod(param);                        break;
-          case GL_TEXTURE_MAX_LOD:              texture->setMaxLod(param);                        break;
-          default: UNREACHABLE(); break;
-        }
-        // clang-format on
+        SetTexParameterf(texture, pname, param);
     }
 }
 
-void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat* params)
+void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
-    TexParameterf(target, pname, (GLfloat)*params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLfloat* params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateTexParameterfv(context, target, pname, params))
+        {
+            return;
+        }
+
+        Texture *texture = context->getTargetTexture(target);
+        SetTexParameterfv(texture, pname, params);
+    }
 }
 
 void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
@@ -2861,54 +2561,32 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
-        {
-            context->handleError(Error(GL_INVALID_ENUM, "Invalid Texture target"));
-            return;
-        }
-
-        if (!ValidateTexParamParameters(context, target, pname, param))
+        if (!context->skipValidation() && !ValidateTexParameteri(context, target, pname, param))
         {
             return;
         }
 
         Texture *texture = context->getTargetTexture(target);
-
-        if (!texture)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        // clang-format off
-        switch (pname)
-        {
-          case GL_TEXTURE_WRAP_S:               texture->setWrapS(static_cast<GLenum>(param));        break;
-          case GL_TEXTURE_WRAP_T:               texture->setWrapT(static_cast<GLenum>(param));        break;
-          case GL_TEXTURE_WRAP_R:               texture->setWrapR(static_cast<GLenum>(param));        break;
-          case GL_TEXTURE_MIN_FILTER:           texture->setMinFilter(static_cast<GLenum>(param));    break;
-          case GL_TEXTURE_MAG_FILTER:           texture->setMagFilter(static_cast<GLenum>(param));    break;
-          case GL_TEXTURE_USAGE_ANGLE:          texture->setUsage(static_cast<GLenum>(param));        break;
-          case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(std::min(static_cast<GLfloat>(param), context->getExtensions().maxTextureAnisotropy)); break;
-          case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode(static_cast<GLenum>(param));  break;
-          case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc(static_cast<GLenum>(param));  break;
-          case GL_TEXTURE_SWIZZLE_R:            texture->setSwizzleRed(static_cast<GLenum>(param));   break;
-          case GL_TEXTURE_SWIZZLE_G:            texture->setSwizzleGreen(static_cast<GLenum>(param)); break;
-          case GL_TEXTURE_SWIZZLE_B:            texture->setSwizzleBlue(static_cast<GLenum>(param));  break;
-          case GL_TEXTURE_SWIZZLE_A:            texture->setSwizzleAlpha(static_cast<GLenum>(param)); break;
-          case GL_TEXTURE_BASE_LEVEL:           texture->setBaseLevel(static_cast<GLuint>(param));    break;
-          case GL_TEXTURE_MAX_LEVEL:            texture->setMaxLevel(static_cast<GLuint>(param));     break;
-          case GL_TEXTURE_MIN_LOD:              texture->setMinLod(static_cast<GLfloat>(param));      break;
-          case GL_TEXTURE_MAX_LOD:              texture->setMaxLod(static_cast<GLfloat>(param));      break;
-          default: UNREACHABLE(); break;
-        }
-        // clang-format on
+        SetTexParameteri(texture, pname, param);
     }
 }
 
-void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint* params)
+void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
-    TexParameteri(target, pname, *params);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, const GLint* params = 0x%0.8p)", target,
+          pname, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateTexParameteriv(context, target, pname, params))
+        {
+            return;
+        }
+
+        Texture *texture = context->getTargetTexture(target);
+        SetTexParameteriv(texture, pname, params);
+    }
 }
 
 void GL_APIENTRY TexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,

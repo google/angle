@@ -8,14 +8,239 @@
 
 #include "libANGLE/queryutils.h"
 
+#include "common/utilities.h"
+
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/Texture.h"
 
 namespace gl
 {
+
+namespace
+{
+template <typename ParamType>
+void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *params)
+{
+    ASSERT(texture != nullptr);
+
+    switch (pname)
+    {
+        case GL_TEXTURE_MAG_FILTER:
+            *params = ConvertFromGLenum<ParamType>(texture->getMagFilter());
+            break;
+        case GL_TEXTURE_MIN_FILTER:
+            *params = ConvertFromGLenum<ParamType>(texture->getMinFilter());
+            break;
+        case GL_TEXTURE_WRAP_S:
+            *params = ConvertFromGLenum<ParamType>(texture->getWrapS());
+            break;
+        case GL_TEXTURE_WRAP_T:
+            *params = ConvertFromGLenum<ParamType>(texture->getWrapT());
+            break;
+        case GL_TEXTURE_WRAP_R:
+            *params = ConvertFromGLenum<ParamType>(texture->getWrapR());
+            break;
+        case GL_TEXTURE_IMMUTABLE_FORMAT:
+            *params = ConvertFromGLboolean<ParamType>(texture->getImmutableFormat());
+            break;
+        case GL_TEXTURE_IMMUTABLE_LEVELS:
+            *params = ConvertFromGLuint<ParamType>(texture->getImmutableLevels());
+            break;
+        case GL_TEXTURE_USAGE_ANGLE:
+            *params = ConvertFromGLenum<ParamType>(texture->getUsage());
+            break;
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            *params = ConvertFromGLfloat<ParamType>(texture->getMaxAnisotropy());
+            break;
+        case GL_TEXTURE_SWIZZLE_R:
+            *params = ConvertFromGLenum<ParamType>(texture->getSwizzleRed());
+            break;
+        case GL_TEXTURE_SWIZZLE_G:
+            *params = ConvertFromGLenum<ParamType>(texture->getSwizzleGreen());
+            break;
+        case GL_TEXTURE_SWIZZLE_B:
+            *params = ConvertFromGLenum<ParamType>(texture->getSwizzleBlue());
+            break;
+        case GL_TEXTURE_SWIZZLE_A:
+            *params = ConvertFromGLenum<ParamType>(texture->getSwizzleAlpha());
+            break;
+        case GL_TEXTURE_BASE_LEVEL:
+            *params = ConvertFromGLuint<ParamType>(texture->getBaseLevel());
+            break;
+        case GL_TEXTURE_MAX_LEVEL:
+            *params = ConvertFromGLuint<ParamType>(texture->getMaxLevel());
+            break;
+        case GL_TEXTURE_MIN_LOD:
+            *params = ConvertFromGLfloat<ParamType>(texture->getSamplerState().minLod);
+            break;
+        case GL_TEXTURE_MAX_LOD:
+            *params = ConvertFromGLfloat<ParamType>(texture->getSamplerState().maxLod);
+            break;
+        case GL_TEXTURE_COMPARE_MODE:
+            *params = ConvertFromGLenum<ParamType>(texture->getCompareMode());
+            break;
+        case GL_TEXTURE_COMPARE_FUNC:
+            *params = ConvertFromGLenum<ParamType>(texture->getCompareFunc());
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+template <typename ParamType>
+void SetTexParameterBase(Texture *texture, GLenum pname, const ParamType *params)
+{
+    ASSERT(texture != nullptr);
+
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_S:
+            texture->setWrapS(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_WRAP_T:
+            texture->setWrapT(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_WRAP_R:
+            texture->setWrapR(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MIN_FILTER:
+            texture->setMinFilter(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MAG_FILTER:
+            texture->setMagFilter(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_USAGE_ANGLE:
+            texture->setUsage(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            texture->setMaxAnisotropy(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_COMPARE_MODE:
+            texture->setCompareMode(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_COMPARE_FUNC:
+            texture->setCompareFunc(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_SWIZZLE_R:
+            texture->setSwizzleRed(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_SWIZZLE_G:
+            texture->setSwizzleGreen(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_SWIZZLE_B:
+            texture->setSwizzleBlue(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_SWIZZLE_A:
+            texture->setSwizzleAlpha(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_BASE_LEVEL:
+            texture->setBaseLevel(ConvertToGLuint(params[0]));
+            break;
+        case GL_TEXTURE_MAX_LEVEL:
+            texture->setMaxLevel(ConvertToGLuint(params[0]));
+            break;
+        case GL_TEXTURE_MIN_LOD:
+            texture->setMinLod(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_MAX_LOD:
+            texture->setMaxLod(ConvertToGLfloat(params[0]));
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+template <typename ParamType>
+void QuerySamplerParameterBase(const Sampler *sampler, GLenum pname, ParamType *params)
+{
+    switch (pname)
+    {
+        case GL_TEXTURE_MIN_FILTER:
+            *params = ConvertFromGLenum<ParamType>(sampler->getMinFilter());
+            break;
+        case GL_TEXTURE_MAG_FILTER:
+            *params = ConvertFromGLenum<ParamType>(sampler->getMagFilter());
+            break;
+        case GL_TEXTURE_WRAP_S:
+            *params = ConvertFromGLenum<ParamType>(sampler->getWrapS());
+            break;
+        case GL_TEXTURE_WRAP_T:
+            *params = ConvertFromGLenum<ParamType>(sampler->getWrapT());
+            break;
+        case GL_TEXTURE_WRAP_R:
+            *params = ConvertFromGLenum<ParamType>(sampler->getWrapR());
+            break;
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            *params = ConvertFromGLfloat<ParamType>(sampler->getMaxAnisotropy());
+            break;
+        case GL_TEXTURE_MIN_LOD:
+            *params = ConvertFromGLfloat<ParamType>(sampler->getMinLod());
+            break;
+        case GL_TEXTURE_MAX_LOD:
+            *params = ConvertFromGLfloat<ParamType>(sampler->getMaxLod());
+            break;
+        case GL_TEXTURE_COMPARE_MODE:
+            *params = ConvertFromGLenum<ParamType>(sampler->getCompareMode());
+            break;
+        case GL_TEXTURE_COMPARE_FUNC:
+            *params = ConvertFromGLenum<ParamType>(sampler->getCompareFunc());
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+template <typename ParamType>
+void SetSamplerParameterBase(Sampler *sampler, GLenum pname, const ParamType *params)
+{
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_S:
+            sampler->setWrapS(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_WRAP_T:
+            sampler->setWrapT(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_WRAP_R:
+            sampler->setWrapR(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MIN_FILTER:
+            sampler->setMinFilter(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MAG_FILTER:
+            sampler->setMagFilter(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            sampler->setMaxAnisotropy(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_COMPARE_MODE:
+            sampler->setCompareMode(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_COMPARE_FUNC:
+            sampler->setCompareFunc(ConvertToGLenum(params[0]));
+            break;
+        case GL_TEXTURE_MIN_LOD:
+            sampler->setMinLod(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_MAX_LOD:
+            sampler->setMaxLod(ConvertToGLfloat(params[0]));
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+}  // anonymous namespace
+
 void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
                                            GLenum attachment,
                                            GLenum pname,
@@ -274,5 +499,65 @@ void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params)
             UNREACHABLE();
             break;
     }
+}
+
+void QueryTexParameterfv(const Texture *texture, GLenum pname, GLfloat *params)
+{
+    QueryTexParameterBase(texture, pname, params);
+}
+
+void QueryTexParameteriv(const Texture *texture, GLenum pname, GLint *params)
+{
+    QueryTexParameterBase(texture, pname, params);
+}
+
+void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params)
+{
+    QuerySamplerParameterBase(sampler, pname, params);
+}
+
+void QuerySamplerParameteriv(const Sampler *sampler, GLenum pname, GLint *params)
+{
+    QuerySamplerParameterBase(sampler, pname, params);
+}
+
+void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)
+{
+    SetTexParameterBase(texture, pname, &param);
+}
+
+void SetTexParameterfv(Texture *texture, GLenum pname, const GLfloat *params)
+{
+    SetTexParameterBase(texture, pname, params);
+}
+
+void SetTexParameteri(Texture *texture, GLenum pname, GLint param)
+{
+    SetTexParameterBase(texture, pname, &param);
+}
+
+void SetTexParameteriv(Texture *texture, GLenum pname, const GLint *params)
+{
+    SetTexParameterBase(texture, pname, params);
+}
+
+void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param)
+{
+    SetSamplerParameterBase(sampler, pname, &param);
+}
+
+void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params)
+{
+    SetSamplerParameterBase(sampler, pname, params);
+}
+
+void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param)
+{
+    SetSamplerParameterBase(sampler, pname, &param);
+}
+
+void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params)
+{
+    SetSamplerParameterBase(sampler, pname, params);
 }
 }

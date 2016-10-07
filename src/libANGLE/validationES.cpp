@@ -410,6 +410,522 @@ bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsi
     return true;
 }
 
+bool ValidateGetTexParameterBase(Context *context, GLenum target, GLenum pname, GLsizei *length)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+        return false;
+    }
+
+    if (context->getTargetTexture(target) == nullptr)
+    {
+        // Should only be possible for external textures
+        context->handleError(Error(GL_INVALID_ENUM, "No texture bound."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_MAG_FILTER:
+        case GL_TEXTURE_MIN_FILTER:
+        case GL_TEXTURE_WRAP_S:
+        case GL_TEXTURE_WRAP_T:
+            break;
+
+        case GL_TEXTURE_USAGE_ANGLE:
+            if (!context->getExtensions().textureUsage)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_ANGLE_texture_usage is not enabled."));
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            if (!context->getExtensions().textureFilterAnisotropic)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_EXT_texture_filter_anisotropic is not enabled."));
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_IMMUTABLE_FORMAT:
+            if (context->getClientMajorVersion() < 3 && !context->getExtensions().textureStorage)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_EXT_texture_storage is not enabled."));
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_WRAP_R:
+        case GL_TEXTURE_IMMUTABLE_LEVELS:
+        case GL_TEXTURE_SWIZZLE_R:
+        case GL_TEXTURE_SWIZZLE_G:
+        case GL_TEXTURE_SWIZZLE_B:
+        case GL_TEXTURE_SWIZZLE_A:
+        case GL_TEXTURE_BASE_LEVEL:
+        case GL_TEXTURE_MAX_LEVEL:
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+        case GL_TEXTURE_COMPARE_MODE:
+        case GL_TEXTURE_COMPARE_FUNC:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
+    }
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool isExternalTextureTarget)
+{
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_CLAMP_TO_EDGE:
+            break;
+
+        case GL_REPEAT:
+        case GL_MIRRORED_REPEAT:
+            if (isExternalTextureTarget)
+            {
+                // OES_EGL_image_external specifies this error.
+                context->handleError(Error(
+                    GL_INVALID_ENUM, "external textures only support CLAMP_TO_EDGE wrap mode"));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureMinFilterValue(Context *context,
+                                   ParamType *params,
+                                   bool isExternalTextureTarget)
+{
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_NEAREST:
+        case GL_LINEAR:
+            break;
+
+        case GL_NEAREST_MIPMAP_NEAREST:
+        case GL_LINEAR_MIPMAP_NEAREST:
+        case GL_NEAREST_MIPMAP_LINEAR:
+        case GL_LINEAR_MIPMAP_LINEAR:
+            if (isExternalTextureTarget)
+            {
+                // OES_EGL_image_external specifies this error.
+                context->handleError(
+                    Error(GL_INVALID_ENUM,
+                          "external textures only support NEAREST and LINEAR filtering"));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureMagFilterValue(Context *context, ParamType *params)
+{
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_NEAREST:
+        case GL_LINEAR:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureCompareModeValue(Context *context, ParamType *params)
+{
+    // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_NONE:
+        case GL_COMPARE_REF_TO_TEXTURE:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureCompareFuncValue(Context *context, ParamType *params)
+{
+    // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_LEQUAL:
+        case GL_GEQUAL:
+        case GL_LESS:
+        case GL_GREATER:
+        case GL_EQUAL:
+        case GL_NOTEQUAL:
+        case GL_ALWAYS:
+        case GL_NEVER:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTexParameterBase(Context *context,
+                              GLenum target,
+                              GLenum pname,
+                              GLsizei bufSize,
+                              ParamType *params)
+{
+    if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+        return false;
+    }
+
+    if (context->getTargetTexture(target) == nullptr)
+    {
+        // Should only be possible for external textures
+        context->handleError(Error(GL_INVALID_ENUM, "No texture bound."));
+        return false;
+    }
+
+    const GLsizei minBufSize = 1;
+    if (bufSize >= 0 && bufSize < minBufSize)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "bufSize must be at least %i.", minBufSize));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_R:
+        case GL_TEXTURE_SWIZZLE_R:
+        case GL_TEXTURE_SWIZZLE_G:
+        case GL_TEXTURE_SWIZZLE_B:
+        case GL_TEXTURE_SWIZZLE_A:
+        case GL_TEXTURE_BASE_LEVEL:
+        case GL_TEXTURE_MAX_LEVEL:
+        case GL_TEXTURE_COMPARE_MODE:
+        case GL_TEXTURE_COMPARE_FUNC:
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0."));
+                return false;
+            }
+            if (target == GL_TEXTURE_EXTERNAL_OES &&
+                !context->getExtensions().eglImageExternalEssl3)
+            {
+                context->handleError(Error(GL_INVALID_ENUM,
+                                           "ES3 texture parameters are not available without "
+                                           "GL_OES_EGL_image_external_essl3."));
+                return false;
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_S:
+        case GL_TEXTURE_WRAP_T:
+        case GL_TEXTURE_WRAP_R:
+            if (!ValidateTextureWrapModeValue(context, params, target == GL_TEXTURE_EXTERNAL_OES))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MIN_FILTER:
+            if (!ValidateTextureMinFilterValue(context, params, target == GL_TEXTURE_EXTERNAL_OES))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MAG_FILTER:
+            if (!ValidateTextureMagFilterValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_USAGE_ANGLE:
+            switch (ConvertToGLenum(params[0]))
+            {
+                case GL_NONE:
+                case GL_FRAMEBUFFER_ATTACHMENT_ANGLE:
+                    break;
+
+                default:
+                    context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+                    return false;
+            }
+            break;
+
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            if (!context->getExtensions().textureFilterAnisotropic)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_EXT_texture_anisotropic is not enabled."));
+                return false;
+            }
+
+            // we assume the parameter passed to this validation method is truncated, not rounded
+            if (params[0] < 1)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Max anisotropy must be at least 1."));
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+            // any value is permissible
+            break;
+
+        case GL_TEXTURE_COMPARE_MODE:
+            if (!ValidateTextureCompareModeValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_COMPARE_FUNC:
+            if (!ValidateTextureCompareFuncValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_SWIZZLE_R:
+        case GL_TEXTURE_SWIZZLE_G:
+        case GL_TEXTURE_SWIZZLE_B:
+        case GL_TEXTURE_SWIZZLE_A:
+            switch (ConvertToGLenum(params[0]))
+            {
+                case GL_RED:
+                case GL_GREEN:
+                case GL_BLUE:
+                case GL_ALPHA:
+                case GL_ZERO:
+                case GL_ONE:
+                    break;
+
+                default:
+                    context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+                    return false;
+            }
+            break;
+
+        case GL_TEXTURE_BASE_LEVEL:
+            if (params[0] < 0)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Base level must be at least 0."));
+                return false;
+            }
+            if (target == GL_TEXTURE_EXTERNAL_OES && static_cast<GLuint>(params[0]) != 0)
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Base level must be 0 for external textures."));
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MAX_LEVEL:
+            if (params[0] < 0)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Max level must be at least 0."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateSamplerParameterBase(Context *context,
+                                  GLuint sampler,
+                                  GLenum pname,
+                                  GLsizei bufSize,
+                                  ParamType *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Context does not support OpenGL ES 3.0."));
+        return false;
+    }
+
+    if (!context->isSampler(sampler))
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Sampler is not valid."));
+        return false;
+    }
+
+    const GLsizei minBufSize = 1;
+    if (bufSize >= 0 && bufSize < minBufSize)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "bufSize must be at least %i.", minBufSize));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_S:
+        case GL_TEXTURE_WRAP_T:
+        case GL_TEXTURE_WRAP_R:
+            if (!ValidateTextureWrapModeValue(context, params, false))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MIN_FILTER:
+            if (!ValidateTextureMinFilterValue(context, params, false))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MAG_FILTER:
+            if (!ValidateTextureMagFilterValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+            // any value is permissible
+            break;
+
+        case GL_TEXTURE_COMPARE_MODE:
+            if (!ValidateTextureCompareModeValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_COMPARE_FUNC:
+            if (!ValidateTextureCompareFuncValue(context, params))
+            {
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetSamplerParameterBase(Context *context,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     GLsizei *length)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Context does not support OpenGL ES 3.0."));
+        return false;
+    }
+
+    if (!context->isSampler(sampler))
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Sampler is not valid."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_TEXTURE_WRAP_S:
+        case GL_TEXTURE_WRAP_T:
+        case GL_TEXTURE_WRAP_R:
+        case GL_TEXTURE_MIN_FILTER:
+        case GL_TEXTURE_MAG_FILTER:
+        case GL_TEXTURE_MIN_LOD:
+        case GL_TEXTURE_MAX_LOD:
+        case GL_TEXTURE_COMPARE_MODE:
+        case GL_TEXTURE_COMPARE_FUNC:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
+    }
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -1196,230 +1712,6 @@ bool ValidateGetVertexAttribParameters(Context *context, GLenum pname)
       default:
           context->handleError(Error(GL_INVALID_ENUM));
           return false;
-    }
-}
-
-bool ValidateTexParamParameters(gl::Context *context, GLenum target, GLenum pname, GLint param)
-{
-    switch (pname)
-    {
-      case GL_TEXTURE_WRAP_R:
-      case GL_TEXTURE_SWIZZLE_R:
-      case GL_TEXTURE_SWIZZLE_G:
-      case GL_TEXTURE_SWIZZLE_B:
-      case GL_TEXTURE_SWIZZLE_A:
-      case GL_TEXTURE_BASE_LEVEL:
-      case GL_TEXTURE_MAX_LEVEL:
-      case GL_TEXTURE_COMPARE_MODE:
-      case GL_TEXTURE_COMPARE_FUNC:
-      case GL_TEXTURE_MIN_LOD:
-      case GL_TEXTURE_MAX_LOD:
-          if (context->getClientMajorVersion() < 3)
-          {
-              context->handleError(Error(GL_INVALID_ENUM));
-              return false;
-          }
-          if (target == GL_TEXTURE_EXTERNAL_OES && !context->getExtensions().eglImageExternalEssl3)
-          {
-              context->handleError(Error(GL_INVALID_ENUM,
-                                         "ES3 texture parameters are not available without "
-                                         "GL_OES_EGL_image_external_essl3."));
-              return false;
-          }
-          break;
-
-      default: break;
-    }
-
-    switch (pname)
-    {
-      case GL_TEXTURE_WRAP_S:
-      case GL_TEXTURE_WRAP_T:
-      case GL_TEXTURE_WRAP_R:
-        switch (param)
-        {
-          case GL_CLAMP_TO_EDGE:
-              return true;
-          case GL_REPEAT:
-          case GL_MIRRORED_REPEAT:
-              if (target == GL_TEXTURE_EXTERNAL_OES)
-              {
-                  // OES_EGL_image_external specifies this error.
-                  context->handleError(Error(
-                      GL_INVALID_ENUM, "external textures only support CLAMP_TO_EDGE wrap mode"));
-                  return false;
-              }
-              return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-
-      case GL_TEXTURE_MIN_FILTER:
-        switch (param)
-        {
-          case GL_NEAREST:
-          case GL_LINEAR:
-              return true;
-          case GL_NEAREST_MIPMAP_NEAREST:
-          case GL_LINEAR_MIPMAP_NEAREST:
-          case GL_NEAREST_MIPMAP_LINEAR:
-          case GL_LINEAR_MIPMAP_LINEAR:
-              if (target == GL_TEXTURE_EXTERNAL_OES)
-              {
-                  // OES_EGL_image_external specifies this error.
-                  context->handleError(
-                      Error(GL_INVALID_ENUM,
-                            "external textures only support NEAREST and LINEAR filtering"));
-                  return false;
-              }
-              return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_MAG_FILTER:
-        switch (param)
-        {
-          case GL_NEAREST:
-          case GL_LINEAR:
-            return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_USAGE_ANGLE:
-        switch (param)
-        {
-          case GL_NONE:
-          case GL_FRAMEBUFFER_ATTACHMENT_ANGLE:
-            return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-        if (!context->getExtensions().textureFilterAnisotropic)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-
-        // we assume the parameter passed to this validation method is truncated, not rounded
-        if (param < 1)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return false;
-        }
-        return true;
-
-      case GL_TEXTURE_MIN_LOD:
-      case GL_TEXTURE_MAX_LOD:
-        // any value is permissible
-        return true;
-
-      case GL_TEXTURE_COMPARE_MODE:
-        // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
-        switch (param)
-        {
-          case GL_NONE:
-          case GL_COMPARE_REF_TO_TEXTURE:
-            return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_COMPARE_FUNC:
-        // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
-        switch (param)
-        {
-          case GL_LEQUAL:
-          case GL_GEQUAL:
-          case GL_LESS:
-          case GL_GREATER:
-          case GL_EQUAL:
-          case GL_NOTEQUAL:
-          case GL_ALWAYS:
-          case GL_NEVER:
-            return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_SWIZZLE_R:
-      case GL_TEXTURE_SWIZZLE_G:
-      case GL_TEXTURE_SWIZZLE_B:
-      case GL_TEXTURE_SWIZZLE_A:
-        switch (param)
-        {
-          case GL_RED:
-          case GL_GREEN:
-          case GL_BLUE:
-          case GL_ALPHA:
-          case GL_ZERO:
-          case GL_ONE:
-            return true;
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return false;
-        }
-        break;
-
-      case GL_TEXTURE_BASE_LEVEL:
-          if (param < 0)
-          {
-              context->handleError(Error(GL_INVALID_VALUE));
-              return false;
-          }
-          if (target == GL_TEXTURE_EXTERNAL_OES && param != 0)
-          {
-              context->handleError(
-                  Error(GL_INVALID_OPERATION, "Base level must be 0 for external textures."));
-              return false;
-          }
-          return true;
-
-      case GL_TEXTURE_MAX_LEVEL:
-          if (param < 0)
-          {
-              context->handleError(Error(GL_INVALID_VALUE));
-              return false;
-          }
-          return true;
-      default:
-          context->handleError(Error(GL_INVALID_ENUM));
-          return false;
-    }
-}
-
-bool ValidateSamplerObjectParameter(gl::Context *context, GLenum pname)
-{
-    switch (pname)
-    {
-      case GL_TEXTURE_MIN_FILTER:
-      case GL_TEXTURE_MAG_FILTER:
-      case GL_TEXTURE_WRAP_S:
-      case GL_TEXTURE_WRAP_T:
-      case GL_TEXTURE_WRAP_R:
-      case GL_TEXTURE_MIN_LOD:
-      case GL_TEXTURE_MAX_LOD:
-      case GL_TEXTURE_COMPARE_MODE:
-      case GL_TEXTURE_COMPARE_FUNC:
-        return true;
-
-      default:
-          context->handleError(Error(GL_INVALID_ENUM));
-        return false;
     }
 }
 
@@ -4044,6 +4336,225 @@ bool ValidateGetShaderivRobustANGLE(Context *context,
     }
 
     return true;
+}
+
+bool ValidateGetTexParameterfv(Context *context, GLenum target, GLenum pname, GLfloat *params)
+{
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetTexParameterfvRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetTexParameterBase(context, target, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetTexParameteriv(Context *context, GLenum target, GLenum pname, GLint *params)
+{
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetTexParameterivRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetTexParameterBase(context, target, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTexParameterf(Context *context, GLenum target, GLenum pname, GLfloat param)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, &param);
+}
+
+bool ValidateTexParameterfv(Context *context, GLenum target, GLenum pname, const GLfloat *params)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, params);
+}
+
+bool ValidateTexParameterfvRobustANGLE(Context *context,
+                                       GLenum target,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       const GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateTexParameterBase(context, target, pname, bufSize, params);
+}
+
+bool ValidateTexParameteri(Context *context, GLenum target, GLenum pname, GLint param)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, &param);
+}
+
+bool ValidateTexParameteriv(Context *context, GLenum target, GLenum pname, const GLint *params)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, params);
+}
+
+bool ValidateTexParameterivRobustANGLE(Context *context,
+                                       GLenum target,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       const GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateTexParameterBase(context, target, pname, bufSize, params);
+}
+
+bool ValidateGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params)
+{
+    return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
+}
+
+bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
+                                              GLuint sampler,
+                                              GLenum pname,
+                                              GLuint bufSize,
+                                              GLsizei *length,
+                                              GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetSamplerParameterBase(context, sampler, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params)
+{
+    return ValidateGetSamplerParameterBase(context, sampler, pname, nullptr);
+}
+
+bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
+                                              GLuint sampler,
+                                              GLenum pname,
+                                              GLuint bufSize,
+                                              GLsizei *length,
+                                              GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetSamplerParameterBase(context, sampler, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param)
+{
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, &param);
+}
+
+bool ValidateSamplerParameterfv(Context *context,
+                                GLuint sampler,
+                                GLenum pname,
+                                const GLfloat *params)
+{
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, params);
+}
+
+bool ValidateSamplerParameterfvRobustANGLE(Context *context,
+                                           GLuint sampler,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           const GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateSamplerParameterBase(context, sampler, pname, bufSize, params);
+}
+
+bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param)
+{
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, &param);
+}
+
+bool ValidateSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, const GLint *params)
+{
+    return ValidateSamplerParameterBase(context, sampler, pname, -1, params);
+}
+
+bool ValidateSamplerParameterivRobustANGLE(Context *context,
+                                           GLuint sampler,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           const GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateSamplerParameterBase(context, sampler, pname, bufSize, params);
 }
 
 }  // namespace gl

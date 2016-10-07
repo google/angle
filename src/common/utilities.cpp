@@ -644,6 +644,29 @@ std::string ParseUniformName(const std::string &name, size_t *outSubscript)
     return name.substr(0, open);
 }
 
+template <>
+GLuint ConvertToGLuint(GLfloat param)
+{
+    return uiround<GLuint>(param);
+}
+
+template <>
+GLint ConvertToGLint(GLfloat param)
+{
+    return iround<GLint>(param);
+}
+
+template <>
+GLint ConvertFromGLfloat(GLfloat param)
+{
+    return iround<GLint>(param);
+}
+template <>
+GLuint ConvertFromGLfloat(GLfloat param)
+{
+    return uiround<GLuint>(param);
+}
+
 unsigned int ParseAndStripArrayIndex(std::string *name)
 {
     unsigned int subscript = GL_INVALID_INDEX;

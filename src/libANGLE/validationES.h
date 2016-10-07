@@ -95,10 +95,6 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
 
 bool ValidateGetVertexAttribParameters(Context *context, GLenum pname);
 
-bool ValidateTexParamParameters(Context *context, GLenum target, GLenum pname, GLint param);
-
-bool ValidateSamplerObjectParameter(Context *context, GLenum pname);
-
 bool ValidateReadPixels(ValidationContext *context,
                         GLint x,
                         GLint y,
@@ -376,6 +372,72 @@ bool ValidateGetShaderivRobustANGLE(Context *context,
                                     GLsizei bufSize,
                                     GLsizei *length,
                                     GLint *params);
+
+bool ValidateGetTexParameterfv(Context *context, GLenum target, GLenum pname, GLfloat *params);
+bool ValidateGetTexParameterfvRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLfloat *params);
+bool ValidateGetTexParameteriv(Context *context, GLenum target, GLenum pname, GLint *params);
+bool ValidateGetTexParameterivRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *params);
+
+bool ValidateTexParameterf(Context *context, GLenum target, GLenum pname, GLfloat param);
+bool ValidateTexParameterfv(Context *context, GLenum target, GLenum pname, const GLfloat *params);
+bool ValidateTexParameterfvRobustANGLE(Context *context,
+                                       GLenum target,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       const GLfloat *params);
+bool ValidateTexParameteri(Context *context, GLenum target, GLenum pname, GLint param);
+bool ValidateTexParameteriv(Context *context, GLenum target, GLenum pname, const GLint *params);
+bool ValidateTexParameterivRobustANGLE(Context *context,
+                                       GLenum target,
+                                       GLenum pname,
+                                       GLsizei bufSize,
+                                       const GLint *params);
+
+bool ValidateGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params);
+bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
+                                              GLuint sampler,
+                                              GLenum pname,
+                                              GLuint bufSize,
+                                              GLsizei *length,
+                                              GLfloat *params);
+bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params);
+bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
+                                              GLuint sampler,
+                                              GLenum pname,
+                                              GLuint bufSize,
+                                              GLsizei *length,
+                                              GLint *params);
+
+bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
+bool ValidateSamplerParameterfv(Context *context,
+                                GLuint sampler,
+                                GLenum pname,
+                                const GLfloat *params);
+bool ValidateSamplerParameterfvRobustANGLE(Context *context,
+                                           GLuint sampler,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           const GLfloat *params);
+bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
+bool ValidateSamplerParameteriv(Context *context,
+                                GLuint sampler,
+                                GLenum pname,
+                                const GLint *params);
+bool ValidateSamplerParameterivRobustANGLE(Context *context,
+                                           GLuint sampler,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           const GLint *params);
 
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;

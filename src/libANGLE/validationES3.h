@@ -291,9 +291,6 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count);
 
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 
-bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
-bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
-
 bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params);
 bool ValidateUnmapBuffer(Context *context, GLenum target);
 bool ValidateMapBufferRange(Context *context,

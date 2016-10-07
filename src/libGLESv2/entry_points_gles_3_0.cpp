@@ -22,6 +22,7 @@
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/queryconversions.h"
+#include "libANGLE/queryutils.h"
 
 #include "common/debug.h"
 
@@ -2271,7 +2272,20 @@ void GL_APIENTRY SamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 
 void GL_APIENTRY SamplerParameteriv(GLuint sampler, GLenum pname, const GLint* param)
 {
-    SamplerParameteri(sampler, pname, *param);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint* params = 0x%0.8p)", sampler,
+          pname, param);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateSamplerParameteriv(context, sampler, pname, param))
+        {
+            return;
+        }
+
+        context->samplerParameteriv(sampler, pname, param);
+    }
 }
 
 void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
@@ -2293,34 +2307,37 @@ void GL_APIENTRY SamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
 void GL_APIENTRY SamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat* param)
 {
-    SamplerParameterf(sampler, pname, *param);
-}
-
-void GL_APIENTRY GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
-{
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", sampler, pname, params);
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLfloat* params = 0x%0.8p)", sampler,
+          pname, param);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateSamplerObjectParameter(context, pname))
+        if (!context->skipValidation() &&
+            !ValidateSamplerParameterfv(context, sampler, pname, param))
         {
             return;
         }
 
-        if (!context->isSampler(sampler))
+        context->samplerParameterfv(sampler, pname, param);
+    }
+}
+
+void GL_APIENTRY GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", sampler, pname,
+          params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateGetSamplerParameteriv(context, sampler, pname, params))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        *params = context->getSamplerParameteri(sampler, pname);
+        context->getSamplerParameteriv(sampler, pname, params);
     }
 }
 
@@ -2331,24 +2348,13 @@ void GL_APIENTRY GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateSamplerObjectParameter(context, pname))
+        if (!context->skipValidation() &&
+            !ValidateGetSamplerParameterfv(context, sampler, pname, params))
         {
             return;
         }
 
-        if (!context->isSampler(sampler))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        *params = context->getSamplerParameterf(sampler, pname);
+        context->getSamplerParameterfv(sampler, pname, params);
     }
 }
 
