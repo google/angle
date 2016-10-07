@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd23843_fba42711",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-07T16:48:55Z",
+      "side": 1,
+      "message": "usually GL doesn\u0027t modify parameters if validation failed .. these entry points behave differently? would be nice if they could leave them untouched.",
+      "range": {
+        "startLine": 2293,
+        "startChar": 8,
+        "endLine": 2293,
+        "endChar": 40
+      },
+      "revId": "237d3b9338b074404ec32956d2a6657a30600672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd23843_c90ac12f",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-07T16:48:55Z",
+      "side": 1,
+      "message": "it\u0027s too bad we\u0027re adding technical debt by making it harder to autogenerate these stubs. ideally we could implement something like caching the end byte in gl::State or even in some temporary cache structure in Context so we can re-use values calculated in the Validation.",
+      "range": {
+        "startLine": 2295,
+        "startChar": 8,
+        "endLine": 2304,
+        "endChar": 50
+      },
+      "revId": "237d3b9338b074404ec32956d2a6657a30600672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd23843_893cc9cb",
+        "filename": "src/tests/gl_tests/RobustClientMemoryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-07T16:48:55Z",
+      "side": 1,
+      "message": "nit: reversed?",
+      "range": {
+        "startLine": 354,
+        "startChar": 4,
+        "endLine": 354,
+        "endChar": 61
+      },
+      "revId": "237d3b9338b074404ec32956d2a6657a30600672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd23843_0928b98b",
+        "filename": "src/tests/gl_tests/RobustClientMemoryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-07T16:48:55Z",
+      "side": 1,
+      "message": "nit: reversed?",
+      "range": {
+        "startLine": 360,
+        "startChar": 4,
+        "endLine": 360,
+        "endChar": 25
+      },
+      "revId": "237d3b9338b074404ec32956d2a6657a30600672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ffd23843_09531914",
+        "filename": "src/tests/gl_tests/RobustClientMemoryTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-07T16:48:55Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 369,
+        "startChar": 8,
+        "endLine": 369,
+        "endChar": 29
+      },
+      "revId": "237d3b9338b074404ec32956d2a6657a30600672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
