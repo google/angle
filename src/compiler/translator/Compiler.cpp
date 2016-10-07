@@ -476,6 +476,17 @@ bool TCompiler::compile(const char *const shaderStrings[],
         compileOptions |= SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL;
     }
 
+    ShCompileOptions unrollFlags =
+        SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX | SH_UNROLL_FOR_LOOP_WITH_SAMPLER_ARRAY_INDEX;
+    if ((compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION) != 0 &&
+        (compileOptions & unrollFlags) != 0)
+    {
+        infoSink.info.prefix(EPrefixError);
+        infoSink.info
+            << "Unsupported compile flag combination: unroll & ADD_TRUE_TO_LOOP_CONDITION";
+        return false;
+    }
+
     TScopedPoolAllocator scopedAlloc(&allocator);
     TIntermBlock *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
 
