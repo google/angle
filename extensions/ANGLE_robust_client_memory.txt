@@ -20,7 +20,7 @@ Status
 
 Version
 
-    Version 1, September 26, 2016
+    Version 3, October 7, 2016
 
 Number
 
@@ -125,7 +125,7 @@ Additions to the OpenGL ES Specification:
     to the provided buffer.  INVALID_OPERATION is generated if <bufSize> is not
     large enough.  The optional <length> specifies an address of a variable to
     recieve the number of values written to the buffer.  When an error is
-    generated 0 will be written to <length>.
+    generated nothing will be written to <length>.
 
     Calls to "xRobustANGLE" will generate errors under the same conditions as
     "x". Any instances of undefined behaviour in "x" will also be undefined in
@@ -154,6 +154,10 @@ Issues
        specify data by void* such as TexImage2DRobustANGLE treat the client
        data as bytes.
 
+    4) Should <length> be written to if an error is generated?
+
+       RESOLVED: No, using the prescedent set by glGetSynciv.
+
 Revision History
 
     Rev.    Date         Author     Changes
@@ -161,3 +165,4 @@ Revision History
       1   Sept 26, 2016  geofflang  Initial version
       2   Sept 28, 2016  geofflang  Changed name from ANGLE_robust_queries to
                                     ANGLE_robust_client_memory, added issue 3.
+      3   Oct 7, 2016    geofflang  Added and resolved issue 4.

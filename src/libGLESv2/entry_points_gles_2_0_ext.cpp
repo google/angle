@@ -1998,8 +1998,6 @@ ANGLE_EXPORT void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLenum nativeType;
         unsigned int numParams = 0;
         if (!ValidateRobustStateQuery(context, pname, bufSize, &nativeType, &numParams))
@@ -2032,8 +2030,6 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLsizei numParams = 0;
         if (!ValidateGetBufferParameteriv(context, target, pname, &numParams))
         {
@@ -2060,8 +2056,6 @@ ANGLE_EXPORT void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLenum nativeType;
         unsigned int numParams = 0;
         if (!ValidateRobustStateQuery(context, pname, bufSize, &nativeType, &numParams))
@@ -2097,8 +2091,6 @@ ANGLE_EXPORT void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLe
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLsizei numParams = 0;
         if (!ValidateGetFramebufferAttachmentParameterivRobustANGLE(context, target, attachment,
                                                                     pname, bufSize, &numParams))
@@ -2125,8 +2117,6 @@ ANGLE_EXPORT void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLenum nativeType;
         unsigned int numParams = 0;
         if (!ValidateRobustStateQuery(context, pname, bufSize, &nativeType, &numParams))
@@ -2160,8 +2150,6 @@ ANGLE_EXPORT void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        SetRobustLengthParam(length, 0);
-
         GLsizei numParams = 0;
         if (!ValidateGetProgramivRobustANGLE(context, program, pname, bufSize, &numParams))
         {

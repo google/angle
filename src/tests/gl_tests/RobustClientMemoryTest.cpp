@@ -272,7 +272,6 @@ TEST_P(RobustClientMemoryTest, GetInteger)
         glGetIntegervRobustANGLE(GL_COMPRESSED_TEXTURE_FORMATS, numCompressedFormats - 1, &length,
                                  resultBuf.data());
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_EQ(0, length);
         EXPECT_TRUE(std::all_of(resultBuf.begin(), resultBuf.end(),
                                 [](GLint value) { return value == 0; }));
 
