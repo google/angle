@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd23843_3594f042",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-10-07T04:57:55Z",
+      "side": 1,
+      "message": "\"git cl format\" made this change because I touched this file in the earlier patch set. Let me know if you want me to undo it.",
+      "range": {
+        "startLine": 504,
+        "startChar": 0,
+        "endLine": 504,
+        "endChar": 30
+      },
+      "revId": "27dac97736dac82e7664a3c8f43e7a1a5d2e752e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
