@@ -243,9 +243,13 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     rx::ProgramImpl *getImplementation() const { return mProgram; }
 
-    bool attachShader(Shader *shader);
+    void attachShader(Shader *shader);
     bool detachShader(Shader *shader);
     int getAttachedShadersCount() const;
+
+    const Shader *getAttachedVertexShader() const { return mState.mAttachedVertexShader; }
+    const Shader *getAttachedFragmentShader() const { return mState.mAttachedFragmentShader; }
+    const Shader *getAttachedComputeShader() const { return mState.mAttachedComputeShader; }
 
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(GLuint index, const char *name);

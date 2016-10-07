@@ -309,7 +309,7 @@ Buffer *ResourceManager::getBuffer(unsigned int handle)
     }
 }
 
-Shader *ResourceManager::getShader(unsigned int handle)
+Shader *ResourceManager::getShader(unsigned int handle) const
 {
     auto shader = mShaderMap.find(handle);
 

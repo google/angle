@@ -341,6 +341,9 @@ bool ValidateBufferSubData(ValidationContext *context,
 
 bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name);
 
+bool ValidateActiveTexture(ValidationContext *context, GLenum texture);
+bool ValidateAttachShader(ValidationContext *context, GLuint program, GLuint shader);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

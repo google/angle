@@ -576,4 +576,14 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
     return false;
 }
 
+Program *ValidationContext::getProgram(GLuint handle) const
+{
+    return mState.mResourceManager->getProgram(handle);
+}
+
+Shader *ValidationContext::getShader(GLuint handle) const
+{
+    return mState.mResourceManager->getShader(handle);
+}
+
 }  // namespace gl

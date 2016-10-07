@@ -65,12 +65,12 @@ bool ValidQueryType(const Context *context, GLenum queryType);
 // Returns valid program if id is a valid program name
 // Errors INVALID_OPERATION if valid shader is given and returns NULL
 // Errors INVALID_VALUE otherwise and returns NULL
-Program *GetValidProgram(Context *context, GLuint id);
+Program *GetValidProgram(ValidationContext *context, GLuint id);
 
 // Returns valid shader if id is a valid shader name
 // Errors INVALID_OPERATION if valid program is given and returns NULL
 // Errors INVALID_VALUE otherwise and returns NULL
-Shader *GetValidShader(Context *context, GLuint id);
+Shader *GetValidShader(ValidationContext *context, GLuint id);
 
 bool ValidateAttachmentTarget(Context *context, GLenum attachment);
 bool ValidateRenderbufferStorageParametersBase(Context *context, GLenum target, GLsizei samples,

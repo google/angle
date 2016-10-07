@@ -165,8 +165,6 @@ class Context final : public ValidationContext
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
     FenceSync *getFenceSync(GLsync handle) const;
-    Shader *getShader(GLuint handle) const;
-    Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle) const;
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle) const;
@@ -576,6 +574,7 @@ class Context final : public ValidationContext
 
     void bufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
     void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
+    void attachShader(GLuint program, GLuint shader);
 
     void handleError(const Error &error) override;
 

@@ -110,6 +110,9 @@ class ValidationContext : angle::NonCopyable
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
     bool getIndexedQueryParameterInfo(GLenum target, GLenum *type, unsigned int *numParams);
 
+    Program *getProgram(GLuint handle) const;
+    Shader *getShader(GLuint handle) const;
+
   protected:
     ContextState mState;
     bool mSkipValidation;

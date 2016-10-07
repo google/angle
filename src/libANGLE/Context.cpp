@@ -817,16 +817,6 @@ Buffer *Context::getBuffer(GLuint handle) const
     return mResourceManager->getBuffer(handle);
 }
 
-Shader *Context::getShader(GLuint handle) const
-{
-    return mResourceManager->getShader(handle);
-}
-
-Program *Context::getProgram(GLuint handle) const
-{
-    return mResourceManager->getProgram(handle);
-}
-
 Texture *Context::getTexture(GLuint handle) const
 {
     return mResourceManager->getTexture(handle);
@@ -3557,6 +3547,14 @@ void Context::bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, con
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
     handleError(buffer->bufferSubData(target, data, size, offset));
+}
+
+void Context::attachShader(GLuint program, GLuint shader)
+{
+    auto programObject = mResourceManager->getProgram(program);
+    auto shaderObject  = mResourceManager->getShader(shader);
+    ASSERT(programObject && shaderObject);
+    programObject->attachShader(shaderObject);
 }
 
 }  // namespace gl

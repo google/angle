@@ -64,7 +64,7 @@ class ResourceManager : angle::NonCopyable
     void deletePaths(GLuint first, GLsizei range);
 
     Buffer *getBuffer(GLuint handle);
-    Shader *getShader(GLuint handle);
+    Shader *getShader(GLuint handle) const;
     Program *getProgram(GLuint handle) const;
     Texture *getTexture(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);

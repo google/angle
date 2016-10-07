@@ -10,19 +10,19 @@
 
 #include <cstdint>
 
-#include "libANGLE/validationES.h"
-#include "libANGLE/validationES3.h"
-#include "libANGLE/Context.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Uniform.h"
-
 #include "common/mathutil.h"
 #include "common/string_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/Framebuffer.h"
+#include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Shader.h"
+#include "libANGLE/Uniform.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/validationES.h"
+#include "libANGLE/validationES3.h"
 
 namespace gl
 {
@@ -3521,6 +3521,69 @@ bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Extension %s is not enableable.", name));
         return false;
+    }
+
+    return true;
+}
+
+bool ValidateActiveTexture(ValidationContext *context, GLenum texture)
+{
+    if (texture < GL_TEXTURE0 ||
+        texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
+    {
+        context->handleError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateAttachShader(ValidationContext *context, GLuint program, GLuint shader)
+{
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    Shader *shaderObject = GetValidShader(context, shader);
+    if (!shaderObject)
+    {
+        return false;
+    }
+
+    switch (shaderObject->getType())
+    {
+        case GL_VERTEX_SHADER:
+        {
+            if (programObject->getAttachedVertexShader())
+            {
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+            break;
+        }
+        case GL_FRAGMENT_SHADER:
+        {
+            if (programObject->getAttachedFragmentShader())
+            {
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+            break;
+        }
+        case GL_COMPUTE_SHADER:
+        {
+            if (programObject->getAttachedComputeShader())
+            {
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+            }
+            break;
+        }
+        default:
+            UNREACHABLE();
+            break;
     }
 
     return true;

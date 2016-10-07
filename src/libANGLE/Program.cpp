@@ -377,39 +377,27 @@ const std::string &Program::getLabel() const
     return mState.mLabel;
 }
 
-bool Program::attachShader(Shader *shader)
+void Program::attachShader(Shader *shader)
 {
     switch (shader->getType())
     {
         case GL_VERTEX_SHADER:
         {
-            if (mState.mAttachedVertexShader)
-            {
-                return false;
-            }
-
+            ASSERT(!mState.mAttachedVertexShader);
             mState.mAttachedVertexShader = shader;
             mState.mAttachedVertexShader->addRef();
             break;
         }
         case GL_FRAGMENT_SHADER:
         {
-            if (mState.mAttachedFragmentShader)
-            {
-                return false;
-            }
-
+            ASSERT(!mState.mAttachedFragmentShader);
             mState.mAttachedFragmentShader = shader;
             mState.mAttachedFragmentShader->addRef();
             break;
         }
         case GL_COMPUTE_SHADER:
         {
-            if (mState.mAttachedComputeShader)
-            {
-                return false;
-            }
-
+            ASSERT(!mState.mAttachedComputeShader);
             mState.mAttachedComputeShader = shader;
             mState.mAttachedComputeShader->addRef();
             break;
@@ -417,8 +405,6 @@ bool Program::attachShader(Shader *shader)
         default:
             UNREACHABLE();
     }
-
-    return true;
 }
 
 bool Program::detachShader(Shader *shader)

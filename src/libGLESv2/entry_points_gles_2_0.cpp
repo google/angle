@@ -44,9 +44,8 @@ void GL_APIENTRY ActiveTexture(GLenum texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (texture < GL_TEXTURE0 || texture > GL_TEXTURE0 + context->getCaps().maxCombinedTextureImageUnits - 1)
+        if (!context->skipValidation() && !ValidateActiveTexture(context, texture))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
@@ -61,23 +60,12 @@ void GL_APIENTRY AttachShader(GLuint program, GLuint shader)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Program *programObject = GetValidProgram(context, program);
-        if (!programObject)
+        if (!context->skipValidation() && !ValidateAttachShader(context, program, shader))
         {
             return;
         }
 
-        Shader *shaderObject = GetValidShader(context, shader);
-        if (!shaderObject)
-        {
-            return;
-        }
-
-        if (!programObject->attachShader(shaderObject))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
+        context->attachShader(program, shader);
     }
 }
 
