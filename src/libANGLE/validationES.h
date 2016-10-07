@@ -351,6 +351,14 @@ bool ValidateGetRenderbufferParameterivRobustANGLE(Context *context,
                                                    GLsizei *length,
                                                    GLint *params);
 
+bool ValidateGetShaderiv(Context *context, GLuint shader, GLenum pname, GLint *params);
+bool ValidateGetShaderivRobustANGLE(Context *context,
+                                    GLuint shader,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLint *params);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl

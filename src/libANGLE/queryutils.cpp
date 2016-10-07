@@ -12,6 +12,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Shader.h"
 
 namespace gl
 {
@@ -239,6 +240,36 @@ void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *
         case GL_RENDERBUFFER_SAMPLES_ANGLE:
             *params = renderbuffer->getSamples();
             break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params)
+{
+    ASSERT(shader != nullptr);
+
+    switch (pname)
+    {
+        case GL_SHADER_TYPE:
+            *params = shader->getType();
+            return;
+        case GL_DELETE_STATUS:
+            *params = shader->isFlaggedForDeletion();
+            return;
+        case GL_COMPILE_STATUS:
+            *params = shader->isCompiled() ? GL_TRUE : GL_FALSE;
+            return;
+        case GL_INFO_LOG_LENGTH:
+            *params = shader->getInfoLogLength();
+            return;
+        case GL_SHADER_SOURCE_LENGTH:
+            *params = shader->getSourceLength();
+            return;
+        case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
+            *params = shader->getTranslatedSourceWithDebugInfoLength();
+            return;
         default:
             UNREACHABLE();
             break;

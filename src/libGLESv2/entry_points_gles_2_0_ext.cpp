@@ -2196,7 +2196,20 @@ GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *le
         "(GLuint shader = %d, GLenum pname = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLint* params = 0x%0.8p)",
         shader, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetShaderivRobustANGLE(context, shader, pname, bufSize, &numParams, params))
+        {
+            return;
+        }
+
+        Shader *shaderObject = context->getShader(shader);
+        QueryShaderiv(shaderObject, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,

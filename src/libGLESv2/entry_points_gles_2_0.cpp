@@ -1526,37 +1526,13 @@ void GL_APIENTRY GetShaderiv(GLuint shader, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Shader *shaderObject = GetValidShader(context, shader);
-        if (!shaderObject)
+        if (!context->skipValidation() && !ValidateGetShaderiv(context, shader, pname, params))
         {
             return;
         }
 
-        switch (pname)
-        {
-          case GL_SHADER_TYPE:
-            *params = shaderObject->getType();
-            return;
-          case GL_DELETE_STATUS:
-            *params = shaderObject->isFlaggedForDeletion();
-            return;
-          case GL_COMPILE_STATUS:
-            *params = shaderObject->isCompiled() ? GL_TRUE : GL_FALSE;
-            return;
-          case GL_INFO_LOG_LENGTH:
-            *params = shaderObject->getInfoLogLength();
-            return;
-          case GL_SHADER_SOURCE_LENGTH:
-            *params = shaderObject->getSourceLength();
-            return;
-          case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
-            *params = shaderObject->getTranslatedSourceWithDebugInfoLength();
-            return;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
+        Shader *shaderObject = context->getShader(shader);
+        QueryShaderiv(shaderObject, pname, params);
     }
 }
 

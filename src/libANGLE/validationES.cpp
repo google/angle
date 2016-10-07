@@ -368,6 +368,48 @@ bool ValidateGetRenderbufferParameterivBase(Context *context,
     return true;
 }
 
+bool ValidateGetShaderivBase(Context *context, GLuint shader, GLenum pname, GLsizei *length)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (GetValidShader(context, shader) == nullptr)
+    {
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_SHADER_TYPE:
+        case GL_DELETE_STATUS:
+        case GL_COMPILE_STATUS:
+        case GL_INFO_LOG_LENGTH:
+        case GL_SHADER_SOURCE_LENGTH:
+            break;
+
+        case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
+            if (!context->getExtensions().translatedShaderSource)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_ANGLE_translated_shader_source is not enabled."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
+    }
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -3885,6 +3927,36 @@ bool ValidateGetRenderbufferParameterivRobustANGLE(Context *context,
     }
 
     if (!ValidateGetRenderbufferParameterivBase(context, target, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetShaderiv(Context *context, GLuint shader, GLenum pname, GLint *params)
+{
+    return ValidateGetShaderivBase(context, shader, pname, nullptr);
+}
+
+bool ValidateGetShaderivRobustANGLE(Context *context,
+                                    GLuint shader,
+                                    GLenum pname,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetShaderivBase(context, shader, pname, length))
     {
         return false;
     }

@@ -18,6 +18,7 @@ class Buffer;
 class Framebuffer;
 class Program;
 class Renderbuffer;
+class Shader;
 
 void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
                                            GLenum attachment,
@@ -26,6 +27,7 @@ void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
 void QueryBufferParameteriv(const Buffer *buffer, GLenum pname, GLint *params);
 void QueryProgramiv(const Program *program, GLenum pname, GLint *params);
 void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *params);
+void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params);
 }
 
 #endif  // LIBANGLE_QUERYUTILS_H_
