@@ -132,6 +132,10 @@ class TCompiler : public TShHandleBase
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
     // Appendix A, section 7, the shader does not use too many uniforms.
     bool enforcePackingRestrictions();
+    // Insert statements to reference all members in unused uniform blocks with standard and shared
+    // layout. This is to work around a Mac driver that treats unused standard/shared
+    // uniform blocks as inactive.
+    void useAllMembersInUnusedStandardAndSharedBlocks(TIntermNode *root);
     // Insert statements to initialize output variables in the beginning of main().
     // This is to avoid undefined behaviors.
     void initializeOutputVariables(TIntermNode *root);
