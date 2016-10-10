@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fcee4f0_4e2a0798",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-10T21:11:17Z",
+      "side": 1,
+      "message": "nit: Maybe rename this something like \"mContextLostForced\"",
+      "range": {
+        "startLine": 678,
+        "startChar": 9,
+        "endLine": 678,
+        "endChar": 44
+      },
+      "revId": "8217eab1536d6186eb0071b185ef4b21166b1530",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
