@@ -531,6 +531,8 @@ typedef TVector<int> TQualifierList;
 class TIntermAggregateBase
 {
   public:
+    virtual ~TIntermAggregateBase() {}
+
     virtual TIntermSequence *getSequence()             = 0;
     virtual const TIntermSequence *getSequence() const = 0;
 
