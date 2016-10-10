@@ -22,6 +22,30 @@
       "revId": "6d40bbdd9c61a654c707445ccddc0cb7e620d737",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f1424d4_3b62c336",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-10T13:11:18Z",
+      "side": 1,
+      "message": "I\u0027ll submit a fix in a few minutes.",
+      "parentUuid": "df13b40f_14a3f44c",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 2
+      },
+      "revId": "6d40bbdd9c61a654c707445ccddc0cb7e620d737",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
