@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ff54cfe_fe38e1f2",
+        "filename": "src/common/debug.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-10T15:34:37Z",
+      "side": 1,
+      "message": "This seems to be causing a compilation error under gcc 5.4 linux.\nCan you change it to defined(__clang__) ?",
+      "range": {
+        "startLine": 107,
+        "startChar": 29,
+        "endLine": 107,
+        "endChar": 37
+      },
+      "revId": "873d00f46e80c30c8fa5a130a02657186c7fabb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
