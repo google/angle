@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df13b40f_14a3f44c",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-10T13:06:41Z",
+      "side": 1,
+      "message": "The build fails on Linux with GCC due to an accessible non-virtual destructor.",
+      "range": {
+        "startLine": 531,
+        "startChar": 0,
+        "endLine": 544,
+        "endChar": 2
+      },
+      "revId": "6d40bbdd9c61a654c707445ccddc0cb7e620d737",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
