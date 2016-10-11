@@ -582,8 +582,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     bool hasSideEffects() const override { return true; }
     TIntermTyped *fold(TDiagnostics *diagnostics);
 
-    TIntermSequence *getSequence() { return &mSequence; }
-    const TIntermSequence *getSequence() const { return &mSequence; }
+    TIntermSequence *getSequence() override { return &mSequence; }
+    const TIntermSequence *getSequence() const override { return &mSequence; }
 
     void setNameObj(const TName &name) { mName = name; }
     const TName &getNameObj() const { return mName; }
