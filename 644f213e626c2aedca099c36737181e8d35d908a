@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f34dcbf_ca3d23ea",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-11T14:05:07Z",
+      "side": 1,
+      "message": "It would be simpler if it was 0xffffffff \u003c\u003c (31 - shiftOffset), is it UB in C++?",
+      "revId": "644f213e626c2aedca099c36737181e8d35d908a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
