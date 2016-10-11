@@ -119,6 +119,7 @@ class EGLSyncControlTest : public testing::Test
         // Create an OS Window
         mOSWindow = CreateOSWindow();
         mOSWindow->initialize("EGLSyncControlTest", 64, 64);
+        mOSWindow->setVisible(true);
 
         // Create an EGLDisplay using the EGLDevice
         mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
@@ -188,10 +189,10 @@ class EGLSyncControlTest : public testing::Test
 
 // Basic test for eglGetSyncValuesCHROMIUM extension. Verifies that eglGetSyncValuesCHROMIUM
 // can be called on DX11 with direct composition and that it returns reasonable enough values.
-TEST_F(EGLSyncControlTest, DISABLED_SyncValuesTest)
+TEST_F(EGLSyncControlTest, SyncValuesTest)
 {
     static const DWORD kPollInterval    = 10;
-    static const int kNumPollIterations = 500;
+    static const int kNumPollIterations = 100;
 
     if (!mD3D11Available)
     {
