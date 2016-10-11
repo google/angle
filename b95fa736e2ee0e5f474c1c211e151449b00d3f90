@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df9654c8_56a3944b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-11T17:36:30Z",
+      "side": 1,
+      "message": "The nature of this diff caused git cl format to think that these lines were altered by the patch and it should format them.",
+      "range": {
+        "startLine": 987,
+        "startChar": 0,
+        "endLine": 1310,
+        "endChar": 1
+      },
+      "revId": "b95fa736e2ee0e5f474c1c211e151449b00d3f90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
