@@ -16,6 +16,24 @@
       "revId": "644f213e626c2aedca099c36737181e8d35d908a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f34dcbf_4ac3f39e",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-11T15:58:35Z",
+      "side": 1,
+      "message": "Yep, that\u0027s exactly the case we\u0027re trying to avoid here. Though actually static_cast\u003cint\u003e(0xffffffffu \u003c\u003c (31 - shiftOffset)) works, I think. It\u0027s implementation-defined instead of UB, and we\u0027re already relying on unsigned-to-signed conversions elsewhere. Changed to that.",
+      "parentUuid": "9f34dcbf_ca3d23ea",
+      "revId": "644f213e626c2aedca099c36737181e8d35d908a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
