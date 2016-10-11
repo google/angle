@@ -4658,7 +4658,7 @@ yyreduce:
   case 268:
 
     {
-        context->parseFunctionPrototype((yylsp[0]), (yyvsp[0].interm).function, &(yyvsp[0].interm).intermAggregate);
+        context->parseFunctionDefinitionHeader((yylsp[0]), &((yyvsp[0].interm).function), &(yyvsp[0].interm).intermAggregate);
     }
 
     break;

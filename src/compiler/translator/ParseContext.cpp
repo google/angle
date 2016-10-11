@@ -2006,30 +2006,32 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
     }
 }
 
-TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction &function,
+TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
                                                                  const TSourceLoc &location)
 {
-    // Note: symbolTableFunction could be the same as function if this is the first declaration.
-    // Either way the instance in the symbol table is used to track whether the function is declared
-    // multiple times.
-    TFunction *symbolTableFunction =
-        static_cast<TFunction *>(symbolTable.find(function.getMangledName(), getShaderVersion()));
-    if (symbolTableFunction->hasPrototypeDeclaration() && mShaderVersion == 100)
+    // Note: function found from the symbol table could be the same as parsedFunction if this is the
+    // first declaration. Either way the instance in the symbol table is used to track whether the
+    // function is declared multiple times.
+    TFunction *function = static_cast<TFunction *>(
+        symbolTable.find(parsedFunction.getMangledName(), getShaderVersion()));
+    if (function->hasPrototypeDeclaration() && mShaderVersion == 100)
     {
         // ESSL 1.00.17 section 4.2.7.
         // Doesn't apply to ESSL 3.00.4: see section 4.2.3.
         error(location, "duplicate function prototype declarations are not allowed", "function");
     }
-    symbolTableFunction->setHasPrototypeDeclaration();
+    function->setHasPrototypeDeclaration();
 
     TIntermAggregate *prototype = new TIntermAggregate;
-    prototype->setType(function.getReturnType());
-    prototype->setName(function.getMangledName());
-    prototype->setFunctionId(function.getUniqueId());
+    // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
+    // point to the data that already exists in the symbol table.
+    prototype->setType(function->getReturnType());
+    prototype->setName(function->getMangledName());
+    prototype->setFunctionId(function->getUniqueId());
 
-    for (size_t i = 0; i < function.getParamCount(); i++)
+    for (size_t i = 0; i < function->getParamCount(); i++)
     {
-        const TConstParameter &param = function.getParam(i);
+        const TConstParameter &param = function->getParam(i);
         if (param.name != 0)
         {
             TVariable variable(param.name, *param.type);
@@ -2090,48 +2092,56 @@ TIntermAggregate *TParseContext::addFunctionDefinition(const TFunction &function
     return functionNode;
 }
 
-void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
-                                           TFunction *function,
-                                           TIntermAggregate **aggregateOut)
+void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
+                                                  TFunction **function,
+                                                  TIntermAggregate **aggregateOut)
 {
+    ASSERT(function);
+    ASSERT(*function);
     const TSymbol *builtIn =
-        symbolTable.findBuiltIn(function->getMangledName(), getShaderVersion());
+        symbolTable.findBuiltIn((*function)->getMangledName(), getShaderVersion());
 
     if (builtIn)
     {
-        error(location, "built-in functions cannot be redefined", function->getName().c_str());
+        error(location, "built-in functions cannot be redefined", (*function)->getName().c_str());
     }
-
-    TFunction *prevDec =
-        static_cast<TFunction *>(symbolTable.find(function->getMangledName(), getShaderVersion()));
-    //
-    // Note:  'prevDec' could be 'function' if this is the first time we've seen function
-    // as it would have just been put in the symbol table.  Otherwise, we're looking up
-    // an earlier occurance.
-    //
-    if (prevDec->isDefined())
+    else
     {
-        // Then this function already has a body.
-        error(location, "function already has a body", function->getName().c_str());
+        TFunction *prevDec = static_cast<TFunction *>(
+            symbolTable.find((*function)->getMangledName(), getShaderVersion()));
+
+        // Note: 'prevDec' could be 'function' if this is the first time we've seen function as it
+        // would have just been put in the symbol table. Otherwise, we're looking up an earlier
+        // occurance.
+        if (*function != prevDec)
+        {
+            // Swap the parameters of the previous declaration to the parameters of the function
+            // definition (parameter names may differ).
+            prevDec->swapParameters(**function);
+
+            // The function definition will share the same symbol as any previous declaration.
+            *function = prevDec;
+        }
+
+        if ((*function)->isDefined())
+        {
+            error(location, "function already has a body", (*function)->getName().c_str());
+        }
+
+        (*function)->setDefined();
     }
-    prevDec->setDefined();
-    //
-    // Overload the unique ID of the definition to be the same unique ID as the declaration.
-    // Eventually we will probably want to have only a single definition and just swap the
-    // arguments to be the definition's arguments.
-    //
-    function->setUniqueId(prevDec->getUniqueId());
 
     // Raise error message if main function takes any parameters or return anything other than void
-    if (function->getName() == "main")
+    if ((*function)->getName() == "main")
     {
-        if (function->getParamCount() > 0)
+        if ((*function)->getParamCount() > 0)
         {
-            error(location, "function cannot take any parameter(s)", function->getName().c_str());
+            error(location, "function cannot take any parameter(s)",
+                  (*function)->getName().c_str());
         }
-        if (function->getReturnType().getBasicType() != EbtVoid)
+        if ((*function)->getReturnType().getBasicType() != EbtVoid)
         {
-            error(location, "", function->getReturnType().getBasicString(),
+            error(location, "", (*function)->getReturnType().getBasicString(),
                   "main function cannot return a value");
         }
     }
@@ -2139,7 +2149,7 @@ void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
     //
     // Remember the return type for later checking for RETURN statements.
     //
-    mCurrentFunctionType  = &(prevDec->getReturnType());
+    mCurrentFunctionType  = &((*function)->getReturnType());
     mFunctionReturnsValue = false;
 
     //
@@ -2151,9 +2161,9 @@ void TParseContext::parseFunctionPrototype(const TSourceLoc &location,
     // knows where to find parameters.
     //
     TIntermAggregate *paramNodes = new TIntermAggregate;
-    for (size_t i = 0; i < function->getParamCount(); i++)
+    for (size_t i = 0; i < (*function)->getParamCount(); i++)
     {
-        const TConstParameter &param = function->getParam(i);
+        const TConstParameter &param = (*function)->getParam(i);
         if (param.name != 0)
         {
             TVariable *variable = new TVariable(param.name, *param.type);
@@ -2211,7 +2221,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     {
         if (prevDec->getReturnType() != function->getReturnType())
         {
-            error(location, "overloaded functions must have the same return type",
+            error(location, "function must have the same return type in all of its declarations",
                   function->getReturnType().getBasicString());
         }
         for (size_t i = 0; i < prevDec->getParamCount(); ++i)
@@ -2219,7 +2229,8 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
             if (prevDec->getParam(i).type->getQualifier() !=
                 function->getParam(i).type->getQualifier())
             {
-                error(location, "overloaded functions must have the same parameter qualifiers",
+                error(location,
+                      "function must have the same parameter qualifiers in all of its declarations",
                       function->getParam(i).type->getQualifierString());
             }
         }
@@ -2239,9 +2250,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     else
     {
         // Insert the unmangled name to detect potential future redefinition as a variable.
-        TFunction *newFunction =
-            new TFunction(NewPoolTString(function->getName().c_str()), &function->getReturnType());
-        symbolTable.getOuterLevel()->insertUnmangled(newFunction);
+        symbolTable.getOuterLevel()->insertUnmangled(function);
     }
 
     // We're at the inner scope level of the function's arguments and body statement.

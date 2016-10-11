@@ -43,11 +43,8 @@ class TSymbol : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(const TString *n)
-        : uniqueId(0),
-          name(n)
-    {
-    }
+    TSymbol(const TString *n);
+
     virtual ~TSymbol()
     {
         // don't delete name, it's from the pool
@@ -69,10 +66,6 @@ class TSymbol : angle::NonCopyable
     {
         return false;
     }
-    void setUniqueId(int id)
-    {
-        uniqueId = id;
-    }
     int getUniqueId() const
     {
         return uniqueId;
@@ -87,7 +80,7 @@ class TSymbol : angle::NonCopyable
     }
 
   private:
-    int uniqueId; // For real comparing during code generation
+    const int uniqueId;
     const TString *name;
     TString extension;
 };
@@ -229,6 +222,8 @@ class TFunction : public TSymbol
         mangledName = nullptr;
     }
 
+    void swapParameters(const TFunction &parametersSource);
+
     const TString &getMangledName() const override
     {
         if (mangledName == nullptr)
@@ -262,6 +257,8 @@ class TFunction : public TSymbol
     }
 
   private:
+    void clearParameters();
+
     const TString *buildMangledName() const;
 
     typedef TVector<TConstParameter> TParamList;
