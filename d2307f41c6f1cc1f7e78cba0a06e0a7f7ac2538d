@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df9654c8_df217fa7",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-10-11T02:08:48Z",
+      "side": 1,
+      "message": "If EGLClientBuffer is typedefed to a void*, then static_cast is the one you should be using here.",
+      "range": {
+        "startLine": 57,
+        "startChar": 27,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df9654c8_df697f88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-10-11T02:08:48Z",
+      "side": 1,
+      "message": "Edge currently uses BGRA8 because, earlier in the summer, that was the only thing we could use with the shared handle feature.  If this limitation has since been fixed, then RGBA8 should be fine.",
+      "range": {
+        "startLine": 1214,
+        "startChar": 1,
+        "endLine": 1215,
+        "endChar": 23
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df9654c8_bf9033a6",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-10-11T02:08:48Z",
+      "side": 1,
+      "message": "Nit: Mind if we do this QI first instead of IDirect3DSurface9 since more people will use the 11 runtime instead of the 9 runtime.\n\n[Edge will never use the 9 runtime.  I know you already wrote all of the code to support it but if you want to remove it and simplify life, go right ahead.  :-) ]",
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "df9654c8_9fa45711",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2016-10-11T02:08:48Z",
+      "side": 1,
+      "message": "You should not need to cast to go from anything* to void*",
+      "range": {
+        "startLine": 164,
+        "startChar": 48,
+        "endLine": 164,
+        "endChar": 81
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
