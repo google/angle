@@ -92,6 +92,7 @@ class TextureGL : public TextureImpl
     void setBaseLevel(GLuint) override {}
 
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
+    bool hasAnyDirtyBit() const;
 
   private:
     void setImageHelper(GLenum target,

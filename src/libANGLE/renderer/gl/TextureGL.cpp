@@ -800,7 +800,11 @@ gl::Error TextureGL::setEGLImageTarget(GLenum target, egl::Image *image)
 
 void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
 {
-    ASSERT(dirtyBits.any());
+    if (dirtyBits.none() && mLocalDirtyBits.none())
+    {
+        return;
+    }
+
     mStateManager->bindTexture(mState.mTarget, mTextureID);
 
     if (dirtyBits[gl::Texture::DIRTY_BIT_BASE_LEVEL] || dirtyBits[gl::Texture::DIRTY_BIT_MAX_LEVEL])
@@ -889,6 +893,11 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
     }
 
     mLocalDirtyBits.reset();
+}
+
+bool TextureGL::hasAnyDirtyBit() const
+{
+    return mLocalDirtyBits.any();
 }
 
 void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions, GLenum name, GLenum value)
@@ -1009,11 +1018,8 @@ void TextureGL::setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL 
     ASSERT(levelCount > 0 && level + levelCount < mLevelInfo.size());
 
     GLuint baseLevel              = mState.getEffectiveBaseLevel();
-    const auto &prevBaseLevelInfo = mLevelInfo[baseLevel];
-    bool needsResync =
-        level <= baseLevel && level + levelCount >= baseLevel &&
-        (prevBaseLevelInfo.depthStencilWorkaround != levelInfo.depthStencilWorkaround ||
-         prevBaseLevelInfo.lumaWorkaround.enabled != levelInfo.lumaWorkaround.enabled);
+    bool needsResync              = level <= baseLevel && level + levelCount >= baseLevel &&
+                       (levelInfo.depthStencilWorkaround || levelInfo.lumaWorkaround.enabled);
     if (needsResync)
     {
         mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();

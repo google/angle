@@ -749,7 +749,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
                 const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
                 if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID() ||
-                    texture->hasAnyDirtyBit())
+                    texture->hasAnyDirtyBit() || textureGL->hasAnyDirtyBit())
                 {
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, textureGL->getTextureID());

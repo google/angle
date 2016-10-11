@@ -1131,11 +1131,8 @@ GLuint Texture::getId() const
 
 void Texture::syncImplState()
 {
-    if (mDirtyBits.any())
-    {
-        mTexture->syncState(mDirtyBits);
-        mDirtyBits.reset();
-    }
+    mTexture->syncState(mDirtyBits);
+    mDirtyBits.reset();
 }
 
 rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
