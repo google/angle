@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c73b6d0_5f29238e",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-12T20:08:30Z",
+      "side": 1,
+      "message": "QueryTex and SetTex are used directly by the entrypoints, should the call go through context like for samplers?",
+      "revId": "a39df744197f913e53985cc7cd620c6797303015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
