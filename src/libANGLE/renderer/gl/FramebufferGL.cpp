@@ -303,7 +303,7 @@ Error FramebufferGL::blit(ContextImpl *context,
             bool sourceSRGB =
                 readAttachment != nullptr && readAttachment->getColorEncoding() == GL_SRGB;
             needManualColorBlit =
-                needManualColorBlit || (sourceSRGB && !mFunctions->isAtLeastGL(gl::Version(4, 4)));
+                needManualColorBlit || (sourceSRGB && mFunctions->isAtMostGL(gl::Version(4, 3)));
         }
 
         // Prior to OpenGL 4.2 BlitFramebuffer (section 4.3.2 of GL 4.1 core profile) reads:
@@ -327,7 +327,7 @@ Error FramebufferGL::blit(ContextImpl *context,
             }
 
             needManualColorBlit =
-                needManualColorBlit || (destSRGB && !mFunctions->isAtLeastGL(gl::Version(4, 2)));
+                needManualColorBlit || (destSRGB && mFunctions->isAtMostGL(gl::Version(4, 1)));
         }
     }
 
