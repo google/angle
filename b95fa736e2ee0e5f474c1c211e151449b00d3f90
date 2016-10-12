@@ -22,6 +22,23 @@
       "revId": "b95fa736e2ee0e5f474c1c211e151449b00d3f90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c73b6d0_5fe1238f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1316,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-12T20:08:30Z",
+      "side": 1,
+      "message": "Could the three following functions go in the first d3d11_gl namespace?",
+      "revId": "b95fa736e2ee0e5f474c1c211e151449b00d3f90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
