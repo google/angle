@@ -16,6 +16,24 @@
       "revId": "a39df744197f913e53985cc7cd620c6797303015",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c99da37_d2bc54b1",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-12T20:55:19Z",
+      "side": 1,
+      "message": "I think they will eventually but I just kept all the entry points in the same place for now.",
+      "parentUuid": "7c73b6d0_5f29238e",
+      "revId": "a39df744197f913e53985cc7cd620c6797303015",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
