@@ -48,12 +48,13 @@ class TOutputTraverser : public TIntermTraverser
     bool visitUnary(Visit visit, TIntermUnary *) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
     bool visitIfElse(Visit visit, TIntermIfElse *node) override;
+    bool visitSwitch(Visit visit, TIntermSwitch *node) override;
+    bool visitCase(Visit visit, TIntermCase *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
     bool visitBlock(Visit visit, TIntermBlock *) override;
     bool visitLoop(Visit visit, TIntermLoop *) override;
     bool visitBranch(Visit visit, TIntermBranch *) override;
-    // TODO: Add missing visit functions
 };
 
 //
@@ -558,6 +559,35 @@ bool TOutputTraverser::visitIfElse(Visit visit, TIntermIfElse *node)
     --mDepth;
 
     return false;
+}
+
+bool TOutputTraverser::visitSwitch(Visit visit, TIntermSwitch *node)
+{
+    TInfoSinkBase &out = sink;
+
+    OutputTreeText(out, node, mDepth);
+
+    out << "Switch\n";
+
+    return true;
+}
+
+bool TOutputTraverser::visitCase(Visit visit, TIntermCase *node)
+{
+    TInfoSinkBase &out = sink;
+
+    OutputTreeText(out, node, mDepth);
+
+    if (node->getCondition() == nullptr)
+    {
+        out << "Default\n";
+    }
+    else
+    {
+        out << "Case\n";
+    }
+
+    return true;
 }
 
 void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
