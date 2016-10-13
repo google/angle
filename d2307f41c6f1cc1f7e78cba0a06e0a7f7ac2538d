@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1c8f1a3f_c35834fb",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-13T16:21:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df9654c8_df217fa7",
+      "range": {
+        "startLine": 57,
+        "startChar": 27,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df9654c8_df697f88",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-11T02:08:48Z",
       "side": 1,
       "message": "Edge currently uses BGRA8 because, earlier in the summer, that was the only thing we could use with the shared handle feature.  If this limitation has since been fixed, then RGBA8 should be fine.",
+      "range": {
+        "startLine": 1214,
+        "startChar": 1,
+        "endLine": 1215,
+        "endChar": 23
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c9e567e_e101266d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-13T16:21:23Z",
+      "side": 1,
+      "message": "I added a simple switch that allows BGRA or RGBA.  I can add more formats as needed until we have a proper solution.",
+      "parentUuid": "df9654c8_df697f88",
       "range": {
         "startLine": 1214,
         "startChar": 1,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "1c8f1a3f_e37e1038",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-13T16:21:23Z",
+      "side": 1,
+      "message": "Flipped the cases around.  The D3D9 and WGL stuff will be useful for Chrome eventually I think.  It will allow the desktop GL backend to interop with the windows video decoder.",
+      "parentUuid": "df9654c8_bf9033a6",
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df9654c8_9fa45711",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 7
@@ -76,6 +142,30 @@
       "writtenOn": "2016-10-11T02:08:48Z",
       "side": 1,
       "message": "You should not need to cast to go from anything* to void*",
+      "range": {
+        "startLine": 164,
+        "startChar": 48,
+        "endLine": 164,
+        "endChar": 81
+      },
+      "revId": "d2307f41c6f1cc1f7e78cba0a06e0a7f7ac2538d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c8f1a3f_e36530b0",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-13T16:21:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df9654c8_9fa45711",
       "range": {
         "startLine": 164,
         "startChar": 48,
