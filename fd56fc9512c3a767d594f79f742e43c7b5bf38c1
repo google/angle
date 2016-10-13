@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cec960a_f719d83a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4616,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-13T20:51:37Z",
+      "side": 1,
+      "message": "Same as below, for Attribfv and Attribiv",
+      "revId": "fd56fc9512c3a767d594f79f742e43c7b5bf38c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7cec960a_7785e843",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4706,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-13T20:51:37Z",
+      "side": 1,
+      "message": "I don\u0027t see a difference AttribIiv and AttribIuiv methods, maybe we could merge them? (have one call the other with a reinterpret_cast)",
+      "revId": "fd56fc9512c3a767d594f79f742e43c7b5bf38c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
