@@ -926,6 +926,96 @@ bool ValidateGetSamplerParameterBase(Context *context,
     return true;
 }
 
+bool ValidateGetVertexAttribBase(Context *context,
+                                 GLuint index,
+                                 GLenum pname,
+                                 GLsizei *length,
+                                 bool pointer,
+                                 bool pureIntegerEntryPoint)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (pureIntegerEntryPoint && context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Context does not support OpenGL ES 3.0."));
+        return false;
+    }
+
+    if (index >= context->getCaps().maxVertexAttributes)
+    {
+        context->handleError(Error(
+            GL_INVALID_VALUE, "index must be less than the value of GL_MAX_VERTEX_ATTRIBUTES."));
+        return false;
+    }
+
+    if (pointer)
+    {
+        if (pname != GL_VERTEX_ATTRIB_ARRAY_POINTER)
+        {
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+        }
+    }
+    else
+    {
+        switch (pname)
+        {
+            case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+            case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+            case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+            case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+            case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+            case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+            case GL_CURRENT_VERTEX_ATTRIB:
+                break;
+
+            case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+                static_assert(
+                    GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE,
+                    "ANGLE extension enums not equal to GL enums.");
+                if (context->getClientMajorVersion() < 3 &&
+                    !context->getExtensions().instancedArrays)
+                {
+                    context->handleError(Error(GL_INVALID_ENUM,
+                                               "GL_VERTEX_ATTRIB_ARRAY_DIVISOR requires OpenGL ES "
+                                               "3.0 or GL_ANGLE_instanced_arrays."));
+                    return false;
+                }
+                break;
+
+            case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
+                if (context->getClientMajorVersion() < 3)
+                {
+                    context->handleError(Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0."));
+                    return false;
+                }
+                break;
+
+            default:
+                context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+                return false;
+        }
+    }
+
+    if (length)
+    {
+        if (pname == GL_CURRENT_VERTEX_ATTRIB)
+        {
+            *length = 4;
+        }
+        else
+        {
+            *length = 1;
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -1679,40 +1769,6 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
     }
 
     return true;
-}
-
-bool ValidateGetVertexAttribParameters(Context *context, GLenum pname)
-{
-    switch (pname)
-    {
-      case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-      case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-      case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
-      case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-      case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-      case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-      case GL_CURRENT_VERTEX_ATTRIB:
-          return true;
-
-      case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
-          // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
-          // the same constant.
-          static_assert(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE,
-                        "ANGLE extension enums not equal to GL enums.");
-          return true;
-
-      case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
-          if (context->getClientMajorVersion() < 3)
-          {
-              context->handleError(Error(GL_INVALID_ENUM));
-              return false;
-          }
-          return true;
-
-      default:
-          context->handleError(Error(GL_INVALID_ENUM));
-          return false;
-    }
 }
 
 bool ValidateReadPixels(ValidationContext *context,
@@ -4555,6 +4611,156 @@ bool ValidateSamplerParameterivRobustANGLE(Context *context,
     }
 
     return ValidateSamplerParameterBase(context, sampler, pname, bufSize, params);
+}
+
+bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, false);
+}
+
+bool ValidateGetVertexAttribfvRobustANGLE(Context *context,
+                                          GLuint index,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLfloat *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetVertexAttribBase(context, index, pname, length, false, false))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetVertexAttribiv(Context *context, GLuint index, GLenum pname, GLint *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, false);
+}
+
+bool ValidateGetVertexAttribivRobustANGLE(Context *context,
+                                          GLuint index,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetVertexAttribBase(context, index, pname, length, false, false))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetVertexAttribPointerv(Context *context, GLuint index, GLenum pname, void **pointer)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, true, false);
+}
+
+bool ValidateGetVertexAttribPointervRobustANGLE(Context *context,
+                                                GLuint index,
+                                                GLenum pname,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                void **pointer)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetVertexAttribBase(context, index, pname, length, true, false))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, true);
+}
+
+bool ValidateGetVertexAttribIivRobustANGLE(Context *context,
+                                           GLuint index,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetVertexAttribBase(context, index, pname, length, false, true))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, true);
+}
+
+bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
+                                            GLuint index,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLuint *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetVertexAttribBase(context, index, pname, length, false, true))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace gl

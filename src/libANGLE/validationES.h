@@ -93,8 +93,6 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                                        GLbitfield mask,
                                        GLenum filter);
 
-bool ValidateGetVertexAttribParameters(Context *context, GLenum pname);
-
 bool ValidateReadPixels(ValidationContext *context,
                         GLint x,
                         GLint y,
@@ -438,6 +436,46 @@ bool ValidateSamplerParameterivRobustANGLE(Context *context,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLint *params);
+
+bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params);
+bool ValidateGetVertexAttribfvRobustANGLE(Context *context,
+                                          GLuint index,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLfloat *params);
+
+bool ValidateGetVertexAttribiv(Context *context, GLuint index, GLenum pname, GLint *params);
+bool ValidateGetVertexAttribivRobustANGLE(Context *context,
+                                          GLuint index,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *params);
+
+bool ValidateGetVertexAttribPointerv(Context *context, GLuint index, GLenum pname, void **pointer);
+bool ValidateGetVertexAttribPointervRobustANGLE(Context *context,
+                                                GLuint index,
+                                                GLenum pname,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                void **pointer);
+
+bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params);
+bool ValidateGetVertexAttribIivRobustANGLE(Context *context,
+                                           GLuint index,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint *params);
+
+bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params);
+bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
+                                            GLuint index,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLuint *params);
 
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;

@@ -18,6 +18,7 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/VertexArray.h"
 
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES2.h"
@@ -2334,7 +2335,24 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
         "(GLuint index = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLfloat* params = 0x%0.8p)",
         index, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetVertexAttribfvRobustANGLE(context, index, pname, bufSize, &writeLength,
+                                                  params))
+        {
+            return;
+        }
+
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribfv(attrib, currentValues, pname, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
@@ -2347,7 +2365,24 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
         "(GLuint index = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLint* params = 0x%0.8p)",
         index, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetVertexAttribivRobustANGLE(context, index, pname, bufSize, &writeLength,
+                                                  params))
+        {
+            return;
+        }
+
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribiv(attrib, currentValues, pname, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
@@ -2360,7 +2395,22 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
         "(GLuint index = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLvoid** pointer = 0x%0.8p)",
         index, pname, bufSize, length, pointer);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetVertexAttribPointervRobustANGLE(context, index, pname, bufSize,
+                                                        &writeLength, pointer))
+        {
+            return;
+        }
+
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribPointerv(attrib, pname, pointer);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
@@ -2581,7 +2631,24 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
         "(GLuint index = %u, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLint* params = 0x%0.8p)",
         index, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetVertexAttribIivRobustANGLE(context, index, pname, bufSize, &writeLength,
+                                                   params))
+        {
+            return;
+        }
+
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribIiv(attrib, currentValues, pname, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
@@ -2594,7 +2661,24 @@ ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
         "(GLuint index = %u, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLuint* params = 0x%0.8p)",
         index, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetVertexAttribIuivRobustANGLE(context, index, pname, bufSize, &writeLength,
+                                                    params))
+        {
+            return;
+        }
+
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribIuiv(attrib, currentValues, pname, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,

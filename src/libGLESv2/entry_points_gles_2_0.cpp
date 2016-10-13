@@ -1822,32 +1822,16 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (!ValidateGetVertexAttribParameters(context, pname))
+        if (!context->skipValidation() && !ValidateGetVertexAttribfv(context, index, pname, params))
         {
             return;
         }
 
-        if (pname == GL_CURRENT_VERTEX_ATTRIB)
-        {
-            const VertexAttribCurrentValueData &currentValueData =
-                context->getGLState().getVertexAttribCurrentValue(index);
-            for (int i = 0; i < 4; ++i)
-            {
-                params[i] = currentValueData.FloatValues[i];
-            }
-        }
-        else
-        {
-            const VertexAttribute &attribState =
-                context->getGLState().getVertexArray()->getVertexAttribute(index);
-            *params = QuerySingleVertexAttributeParameter<GLfloat>(attribState, pname);
-        }
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribfv(attrib, currentValues, pname, params);
     }
 }
 
@@ -1858,33 +1842,16 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (!ValidateGetVertexAttribParameters(context, pname))
+        if (!context->skipValidation() && !ValidateGetVertexAttribiv(context, index, pname, params))
         {
             return;
         }
 
-        if (pname == GL_CURRENT_VERTEX_ATTRIB)
-        {
-            const VertexAttribCurrentValueData &currentValueData =
-                context->getGLState().getVertexAttribCurrentValue(index);
-            for (int i = 0; i < 4; ++i)
-            {
-                float currentValue = currentValueData.FloatValues[i];
-                params[i] = iround<GLint>(currentValue);
-            }
-        }
-        else
-        {
-            const VertexAttribute &attribState =
-                context->getGLState().getVertexArray()->getVertexAttribute(index);
-            *params = QuerySingleVertexAttributeParameter<GLint>(attribState, pname);
-        }
+        const VertexAttribCurrentValueData &currentValues =
+            context->getGLState().getVertexAttribCurrentValue(index);
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribiv(attrib, currentValues, pname, params);
     }
 }
 
@@ -1895,19 +1862,15 @@ void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (index >= MAX_VERTEX_ATTRIBS)
+        if (!context->skipValidation() &&
+            !ValidateGetVertexAttribPointerv(context, index, pname, pointer))
         {
-            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
-        if (pname != GL_VERTEX_ATTRIB_ARRAY_POINTER)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        *pointer = const_cast<GLvoid *>(context->getGLState().getVertexAttribPointer(index));
+        const VertexAttribute &attrib =
+            context->getGLState().getVertexArray()->getVertexAttribute(index);
+        QueryVertexAttribPointerv(attrib, pname, pointer);
     }
 }
 

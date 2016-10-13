@@ -17,6 +17,7 @@
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/VertexAttribute.h"
 
 namespace gl
 {
@@ -232,6 +233,62 @@ void SetSamplerParameterBase(Sampler *sampler, GLenum pname, const ParamType *pa
             break;
         case GL_TEXTURE_MAX_LOD:
             sampler->setMaxLod(ConvertToGLfloat(params[0]));
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+template <typename ParamType, typename CurrentDataType>
+ParamType ConvertCurrentValue(CurrentDataType currentValue)
+{
+    return static_cast<ParamType>(currentValue);
+}
+
+template <>
+GLint ConvertCurrentValue(GLfloat currentValue)
+{
+    return iround<GLint>(currentValue);
+}
+
+template <typename ParamType, typename CurrentDataType, size_t CurrentValueCount>
+void QueryVertexAttribBase(const VertexAttribute &attrib,
+                           const CurrentDataType (&currentValueData)[CurrentValueCount],
+                           GLenum pname,
+                           ParamType *params)
+{
+    switch (pname)
+    {
+        case GL_CURRENT_VERTEX_ATTRIB:
+            for (size_t i = 0; i < CurrentValueCount; ++i)
+            {
+                params[i] = ConvertCurrentValue<ParamType>(currentValueData[i]);
+            }
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+            *params = ConvertFromGLboolean<ParamType>(attrib.enabled);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+            *params = ConvertFromGLuint<ParamType>(attrib.size);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+            *params = ConvertFromGLuint<ParamType>(attrib.stride);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+            *params = ConvertFromGLenum<ParamType>(attrib.type);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+            *params = ConvertFromGLboolean<ParamType>(attrib.normalized);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+            *params = ConvertFromGLuint<ParamType>(attrib.buffer.id());
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+            *params = ConvertFromGLuint<ParamType>(attrib.divisor);
+            break;
+        case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
+            *params = ConvertFromGLboolean<ParamType>(attrib.pureInteger);
             break;
         default:
             UNREACHABLE();
@@ -519,6 +576,52 @@ void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *para
 void QuerySamplerParameteriv(const Sampler *sampler, GLenum pname, GLint *params)
 {
     QuerySamplerParameterBase(sampler, pname, params);
+}
+
+void QueryVertexAttribfv(const VertexAttribute &attrib,
+                         const VertexAttribCurrentValueData &currentValueData,
+                         GLenum pname,
+                         GLfloat *params)
+{
+    QueryVertexAttribBase(attrib, currentValueData.FloatValues, pname, params);
+}
+
+void QueryVertexAttribiv(const VertexAttribute &attrib,
+                         const VertexAttribCurrentValueData &currentValueData,
+                         GLenum pname,
+                         GLint *params)
+{
+    QueryVertexAttribBase(attrib, currentValueData.FloatValues, pname, params);
+}
+
+void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, GLvoid **pointer)
+{
+    switch (pname)
+    {
+        case GL_VERTEX_ATTRIB_ARRAY_POINTER:
+            *pointer = const_cast<GLvoid *>(attrib.pointer);
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void QueryVertexAttribIiv(const VertexAttribute &attrib,
+                          const VertexAttribCurrentValueData &currentValueData,
+                          GLenum pname,
+                          GLint *params)
+{
+    QueryVertexAttribBase(attrib, currentValueData.IntValues, pname, params);
+}
+
+void QueryVertexAttribIuiv(const VertexAttribute &attrib,
+                           const VertexAttribCurrentValueData &currentValueData,
+                           GLenum pname,
+                           GLuint *params)
+{
+    QueryVertexAttribBase(attrib, currentValueData.UnsignedIntValues, pname, params);
 }
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)
