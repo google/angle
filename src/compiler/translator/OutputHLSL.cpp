@@ -867,133 +867,139 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
     switch (node->getOp())
     {
-      case EOpAssign:
-        if (node->getLeft()->isArray())
-        {
-            TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
-            if (rightAgg != nullptr && rightAgg->isConstructor())
+        case EOpComma:
+            outputTriplet(out, visit, "(", ", ", ")");
+            break;
+        case EOpAssign:
+            if (node->getLeft()->isArray())
             {
-                const TString &functionName = addArrayConstructIntoFunction(node->getType());
-                out << functionName << "(";
-                node->getLeft()->traverse(this);
-                TIntermSequence *seq = rightAgg->getSequence();
-                for (auto &arrayElement : *seq)
+                TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
+                if (rightAgg != nullptr && rightAgg->isConstructor())
                 {
-                    out << ", ";
-                    arrayElement->traverse(this);
+                    const TString &functionName = addArrayConstructIntoFunction(node->getType());
+                    out << functionName << "(";
+                    node->getLeft()->traverse(this);
+                    TIntermSequence *seq = rightAgg->getSequence();
+                    for (auto &arrayElement : *seq)
+                    {
+                        out << ", ";
+                        arrayElement->traverse(this);
+                    }
+                    out << ")";
+                    return false;
                 }
-                out << ")";
-                return false;
+                // ArrayReturnValueToOutParameter should have eliminated expressions where a
+                // function call is assigned.
+                ASSERT(rightAgg == nullptr || rightAgg->getOp() != EOpFunctionCall);
+
+                const TString &functionName = addArrayAssignmentFunction(node->getType());
+                outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
             }
-            // ArrayReturnValueToOutParameter should have eliminated expressions where a function call is assigned.
-            ASSERT(rightAgg == nullptr || rightAgg->getOp() != EOpFunctionCall);
-
-            const TString &functionName = addArrayAssignmentFunction(node->getType());
-            outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
-        }
-        else
-        {
-            outputTriplet(out, visit, "(", " = ", ")");
-        }
-        break;
-      case EOpInitialize:
-        if (visit == PreVisit)
-        {
-            TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
-            ASSERT(symbolNode);
-            TIntermTyped *expression = node->getRight();
-
-            // Global initializers must be constant at this point.
-            ASSERT(symbolNode->getQualifier() != EvqGlobal || canWriteAsHLSLLiteral(expression));
-
-            // GLSL allows to write things like "float x = x;" where a new variable x is defined
-            // and the value of an existing variable x is assigned. HLSL uses C semantics (the
-            // new variable is created before the assignment is evaluated), so we need to convert
-            // this to "float t = x, x = t;".
-            if (writeSameSymbolInitializer(out, symbolNode, expression))
+            else
             {
-                // Skip initializing the rest of the expression
-                return false;
+                outputTriplet(out, visit, "(", " = ", ")");
             }
-            else if (writeConstantInitialization(out, symbolNode, expression))
+            break;
+        case EOpInitialize:
+            if (visit == PreVisit)
             {
-                return false;
+                TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
+                ASSERT(symbolNode);
+                TIntermTyped *expression = node->getRight();
+
+                // Global initializers must be constant at this point.
+                ASSERT(symbolNode->getQualifier() != EvqGlobal ||
+                       canWriteAsHLSLLiteral(expression));
+
+                // GLSL allows to write things like "float x = x;" where a new variable x is defined
+                // and the value of an existing variable x is assigned. HLSL uses C semantics (the
+                // new variable is created before the assignment is evaluated), so we need to
+                // convert
+                // this to "float t = x, x = t;".
+                if (writeSameSymbolInitializer(out, symbolNode, expression))
+                {
+                    // Skip initializing the rest of the expression
+                    return false;
+                }
+                else if (writeConstantInitialization(out, symbolNode, expression))
+                {
+                    return false;
+                }
             }
-        }
-        else if (visit == InVisit)
-        {
-            out << " = ";
-        }
-        break;
-      case EOpAddAssign:
-          outputTriplet(out, visit, "(", " += ", ")");
-          break;
-      case EOpSubAssign:
-          outputTriplet(out, visit, "(", " -= ", ")");
-          break;
-      case EOpMulAssign:
-          outputTriplet(out, visit, "(", " *= ", ")");
-          break;
-      case EOpVectorTimesScalarAssign:
-          outputTriplet(out, visit, "(", " *= ", ")");
-          break;
-      case EOpMatrixTimesScalarAssign:
-          outputTriplet(out, visit, "(", " *= ", ")");
-          break;
-      case EOpVectorTimesMatrixAssign:
-        if (visit == PreVisit)
-        {
-            out << "(";
-        }
-        else if (visit == InVisit)
-        {
-            out << " = mul(";
-            node->getLeft()->traverse(this);
-            out << ", transpose(";
-        }
-        else
-        {
-            out << ")))";
-        }
-        break;
-      case EOpMatrixTimesMatrixAssign:
-        if (visit == PreVisit)
-        {
-            out << "(";
-        }
-        else if (visit == InVisit)
-        {
-            out << " = transpose(mul(transpose(";
-            node->getLeft()->traverse(this);
-            out << "), transpose(";
-        }
-        else
-        {
-            out << "))))";
-        }
-        break;
-      case EOpDivAssign:
-          outputTriplet(out, visit, "(", " /= ", ")");
-          break;
-      case EOpIModAssign:
-          outputTriplet(out, visit, "(", " %= ", ")");
-          break;
-      case EOpBitShiftLeftAssign:
-          outputTriplet(out, visit, "(", " <<= ", ")");
-          break;
-      case EOpBitShiftRightAssign:
-          outputTriplet(out, visit, "(", " >>= ", ")");
-          break;
-      case EOpBitwiseAndAssign:
-          outputTriplet(out, visit, "(", " &= ", ")");
-          break;
-      case EOpBitwiseXorAssign:
-          outputTriplet(out, visit, "(", " ^= ", ")");
-          break;
-      case EOpBitwiseOrAssign:
-          outputTriplet(out, visit, "(", " |= ", ")");
-          break;
-      case EOpIndexDirect:
+            else if (visit == InVisit)
+            {
+                out << " = ";
+            }
+            break;
+        case EOpAddAssign:
+            outputTriplet(out, visit, "(", " += ", ")");
+            break;
+        case EOpSubAssign:
+            outputTriplet(out, visit, "(", " -= ", ")");
+            break;
+        case EOpMulAssign:
+            outputTriplet(out, visit, "(", " *= ", ")");
+            break;
+        case EOpVectorTimesScalarAssign:
+            outputTriplet(out, visit, "(", " *= ", ")");
+            break;
+        case EOpMatrixTimesScalarAssign:
+            outputTriplet(out, visit, "(", " *= ", ")");
+            break;
+        case EOpVectorTimesMatrixAssign:
+            if (visit == PreVisit)
+            {
+                out << "(";
+            }
+            else if (visit == InVisit)
+            {
+                out << " = mul(";
+                node->getLeft()->traverse(this);
+                out << ", transpose(";
+            }
+            else
+            {
+                out << ")))";
+            }
+            break;
+        case EOpMatrixTimesMatrixAssign:
+            if (visit == PreVisit)
+            {
+                out << "(";
+            }
+            else if (visit == InVisit)
+            {
+                out << " = transpose(mul(transpose(";
+                node->getLeft()->traverse(this);
+                out << "), transpose(";
+            }
+            else
+            {
+                out << "))))";
+            }
+            break;
+        case EOpDivAssign:
+            outputTriplet(out, visit, "(", " /= ", ")");
+            break;
+        case EOpIModAssign:
+            outputTriplet(out, visit, "(", " %= ", ")");
+            break;
+        case EOpBitShiftLeftAssign:
+            outputTriplet(out, visit, "(", " <<= ", ")");
+            break;
+        case EOpBitShiftRightAssign:
+            outputTriplet(out, visit, "(", " >>= ", ")");
+            break;
+        case EOpBitwiseAndAssign:
+            outputTriplet(out, visit, "(", " &= ", ")");
+            break;
+        case EOpBitwiseXorAssign:
+            outputTriplet(out, visit, "(", " ^= ", ")");
+            break;
+        case EOpBitwiseOrAssign:
+            outputTriplet(out, visit, "(", " |= ", ")");
+            break;
+        case EOpIndexDirect:
         {
             const TType& leftType = node->getLeft()->getType();
             if (leftType.isInterfaceBlock())
@@ -1641,9 +1647,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 return false;
             }
-            break;
-        case EOpComma:
-            outputTriplet(out, visit, "(", ", ", ")");
             break;
         case EOpFunctionCall:
         {

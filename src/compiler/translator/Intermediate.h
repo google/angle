@@ -48,10 +48,10 @@ class TIntermediate
                              const TSourceLoc &line);
     TIntermCase *addCase(
         TIntermTyped *condition, const TSourceLoc &line);
-    TIntermTyped *addComma(TIntermTyped *left,
-                           TIntermTyped *right,
-                           const TSourceLoc &line,
-                           int shaderVersion);
+    static TIntermTyped *AddComma(TIntermTyped *left,
+                                  TIntermTyped *right,
+                                  const TSourceLoc &line,
+                                  int shaderVersion);
     TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
                                            const TType &type,
                                            const TSourceLoc &line);

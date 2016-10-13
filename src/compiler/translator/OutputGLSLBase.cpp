@@ -300,201 +300,205 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
     TInfoSinkBase &out = objSink();
     switch (node->getOp())
     {
-      case EOpInitialize:
-        if (visit == InVisit)
-        {
-            out << " = ";
-            // RHS of initialize is not being declared.
-            mDeclaringVariables = false;
-        }
-        break;
-      case EOpAssign:
-        writeTriplet(visit, "(", " = ", ")");
-        break;
-      case EOpAddAssign:
-        writeTriplet(visit, "(", " += ", ")");
-        break;
-      case EOpSubAssign:
-        writeTriplet(visit, "(", " -= ", ")");
-        break;
-      case EOpDivAssign:
-        writeTriplet(visit, "(", " /= ", ")");
-        break;
-      case EOpIModAssign:
-        writeTriplet(visit, "(", " %= ", ")");
-        break;
-      // Notice the fall-through.
-      case EOpMulAssign:
-      case EOpVectorTimesMatrixAssign:
-      case EOpVectorTimesScalarAssign:
-      case EOpMatrixTimesScalarAssign:
-      case EOpMatrixTimesMatrixAssign:
-        writeTriplet(visit, "(", " *= ", ")");
-        break;
-      case EOpBitShiftLeftAssign:
-        writeTriplet(visit, "(", " <<= ", ")");
-        break;
-      case EOpBitShiftRightAssign:
-        writeTriplet(visit, "(", " >>= ", ")");
-        break;
-      case EOpBitwiseAndAssign:
-        writeTriplet(visit, "(", " &= ", ")");
-        break;
-      case EOpBitwiseXorAssign:
-        writeTriplet(visit, "(", " ^= ", ")");
-        break;
-      case EOpBitwiseOrAssign:
-        writeTriplet(visit, "(", " |= ", ")");
-        break;
-
-      case EOpIndexDirect:
-        writeTriplet(visit, NULL, "[", "]");
-        break;
-      case EOpIndexIndirect:
-        if (node->getAddIndexClamp())
-        {
+        case EOpComma:
+            writeTriplet(visit, "(", ", ", ")");
+            break;
+        case EOpInitialize:
             if (visit == InVisit)
             {
-                if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
-                    out << "[int(clamp(float(";
-                else
-                    out << "[webgl_int_clamp(";
+                out << " = ";
+                // RHS of initialize is not being declared.
+                mDeclaringVariables = false;
             }
-            else if (visit == PostVisit)
-            {
-                int maxSize;
-                TIntermTyped *left = node->getLeft();
-                TType leftType = left->getType();
+            break;
+        case EOpAssign:
+            writeTriplet(visit, "(", " = ", ")");
+            break;
+        case EOpAddAssign:
+            writeTriplet(visit, "(", " += ", ")");
+            break;
+        case EOpSubAssign:
+            writeTriplet(visit, "(", " -= ", ")");
+            break;
+        case EOpDivAssign:
+            writeTriplet(visit, "(", " /= ", ")");
+            break;
+        case EOpIModAssign:
+            writeTriplet(visit, "(", " %= ", ")");
+            break;
+        // Notice the fall-through.
+        case EOpMulAssign:
+        case EOpVectorTimesMatrixAssign:
+        case EOpVectorTimesScalarAssign:
+        case EOpMatrixTimesScalarAssign:
+        case EOpMatrixTimesMatrixAssign:
+            writeTriplet(visit, "(", " *= ", ")");
+            break;
+        case EOpBitShiftLeftAssign:
+            writeTriplet(visit, "(", " <<= ", ")");
+            break;
+        case EOpBitShiftRightAssign:
+            writeTriplet(visit, "(", " >>= ", ")");
+            break;
+        case EOpBitwiseAndAssign:
+            writeTriplet(visit, "(", " &= ", ")");
+            break;
+        case EOpBitwiseXorAssign:
+            writeTriplet(visit, "(", " ^= ", ")");
+            break;
+        case EOpBitwiseOrAssign:
+            writeTriplet(visit, "(", " |= ", ")");
+            break;
 
-                if (left->isArray())
-                {
-                    // The shader will fail validation if the array length is not > 0.
-                    maxSize = static_cast<int>(leftType.getArraySize()) - 1;
-                }
-                else
-                {
-                    maxSize = leftType.getNominalSize() - 1;
-                }
-
-                if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
-                    out << "), 0.0, float(" << maxSize << ")))]";
-                else
-                    out << ", 0, " << maxSize << ")]";
-            }
-        }
-        else
-        {
+        case EOpIndexDirect:
             writeTriplet(visit, NULL, "[", "]");
-        }
-        break;
-      case EOpIndexDirectStruct:
-        if (visit == InVisit)
-        {
-            // Here we are writing out "foo.bar", where "foo" is struct
-            // and "bar" is field. In AST, it is represented as a binary
-            // node, where left child represents "foo" and right child "bar".
-            // The node itself represents ".". The struct field "bar" is
-            // actually stored as an index into TStructure::fields.
-            out << ".";
-            const TStructure *structure = node->getLeft()->getType().getStruct();
-            const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
-            const TField *field = structure->fields()[index->getIConst(0)];
+            break;
+        case EOpIndexIndirect:
+            if (node->getAddIndexClamp())
+            {
+                if (visit == InVisit)
+                {
+                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
+                        out << "[int(clamp(float(";
+                    else
+                        out << "[webgl_int_clamp(";
+                }
+                else if (visit == PostVisit)
+                {
+                    int maxSize;
+                    TIntermTyped *left = node->getLeft();
+                    TType leftType     = left->getType();
 
-            TString fieldName = field->name();
-            if (!mSymbolTable.findBuiltIn(structure->name(), mShaderVersion))
+                    if (left->isArray())
+                    {
+                        // The shader will fail validation if the array length is not > 0.
+                        maxSize = static_cast<int>(leftType.getArraySize()) - 1;
+                    }
+                    else
+                    {
+                        maxSize = leftType.getNominalSize() - 1;
+                    }
+
+                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC)
+                        out << "), 0.0, float(" << maxSize << ")))]";
+                    else
+                        out << ", 0, " << maxSize << ")]";
+                }
+            }
+            else
+            {
+                writeTriplet(visit, NULL, "[", "]");
+            }
+            break;
+        case EOpIndexDirectStruct:
+            if (visit == InVisit)
+            {
+                // Here we are writing out "foo.bar", where "foo" is struct
+                // and "bar" is field. In AST, it is represented as a binary
+                // node, where left child represents "foo" and right child "bar".
+                // The node itself represents ".". The struct field "bar" is
+                // actually stored as an index into TStructure::fields.
+                out << ".";
+                const TStructure *structure       = node->getLeft()->getType().getStruct();
+                const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
+                const TField *field               = structure->fields()[index->getIConst(0)];
+
+                TString fieldName = field->name();
+                if (!mSymbolTable.findBuiltIn(structure->name(), mShaderVersion))
+                    fieldName = hashName(fieldName);
+
+                out << fieldName;
+                visitChildren = false;
+            }
+            break;
+        case EOpIndexDirectInterfaceBlock:
+            if (visit == InVisit)
+            {
+                out << ".";
+                const TInterfaceBlock *interfaceBlock =
+                    node->getLeft()->getType().getInterfaceBlock();
+                const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
+                const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
+
+                TString fieldName = field->name();
+                ASSERT(!mSymbolTable.findBuiltIn(interfaceBlock->name(), mShaderVersion));
                 fieldName = hashName(fieldName);
 
-            out << fieldName;
-            visitChildren = false;
-        }
-        break;
-      case EOpIndexDirectInterfaceBlock:
-          if (visit == InVisit)
-          {
-              out << ".";
-              const TInterfaceBlock *interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
-              const TIntermConstantUnion *index = node->getRight()->getAsConstantUnion();
-              const TField *field = interfaceBlock->fields()[index->getIConst(0)];
+                out << fieldName;
+                visitChildren = false;
+            }
+            break;
 
-              TString fieldName = field->name();
-              ASSERT(!mSymbolTable.findBuiltIn(interfaceBlock->name(), mShaderVersion));
-              fieldName = hashName(fieldName);
+        case EOpAdd:
+            writeTriplet(visit, "(", " + ", ")");
+            break;
+        case EOpSub:
+            writeTriplet(visit, "(", " - ", ")");
+            break;
+        case EOpMul:
+            writeTriplet(visit, "(", " * ", ")");
+            break;
+        case EOpDiv:
+            writeTriplet(visit, "(", " / ", ")");
+            break;
+        case EOpIMod:
+            writeTriplet(visit, "(", " % ", ")");
+            break;
+        case EOpBitShiftLeft:
+            writeTriplet(visit, "(", " << ", ")");
+            break;
+        case EOpBitShiftRight:
+            writeTriplet(visit, "(", " >> ", ")");
+            break;
+        case EOpBitwiseAnd:
+            writeTriplet(visit, "(", " & ", ")");
+            break;
+        case EOpBitwiseXor:
+            writeTriplet(visit, "(", " ^ ", ")");
+            break;
+        case EOpBitwiseOr:
+            writeTriplet(visit, "(", " | ", ")");
+            break;
 
-              out << fieldName;
-              visitChildren = false;
-          }
-          break;
+        case EOpEqual:
+            writeTriplet(visit, "(", " == ", ")");
+            break;
+        case EOpNotEqual:
+            writeTriplet(visit, "(", " != ", ")");
+            break;
+        case EOpLessThan:
+            writeTriplet(visit, "(", " < ", ")");
+            break;
+        case EOpGreaterThan:
+            writeTriplet(visit, "(", " > ", ")");
+            break;
+        case EOpLessThanEqual:
+            writeTriplet(visit, "(", " <= ", ")");
+            break;
+        case EOpGreaterThanEqual:
+            writeTriplet(visit, "(", " >= ", ")");
+            break;
 
-      case EOpAdd:
-        writeTriplet(visit, "(", " + ", ")");
-        break;
-      case EOpSub:
-        writeTriplet(visit, "(", " - ", ")");
-        break;
-      case EOpMul:
-        writeTriplet(visit, "(", " * ", ")");
-        break;
-      case EOpDiv:
-        writeTriplet(visit, "(", " / ", ")");
-        break;
-      case EOpIMod:
-        writeTriplet(visit, "(", " % ", ")");
-        break;
-      case EOpBitShiftLeft:
-        writeTriplet(visit, "(", " << ", ")");
-        break;
-      case EOpBitShiftRight:
-        writeTriplet(visit, "(", " >> ", ")");
-        break;
-      case EOpBitwiseAnd:
-        writeTriplet(visit, "(", " & ", ")");
-        break;
-      case EOpBitwiseXor:
-        writeTriplet(visit, "(", " ^ ", ")");
-        break;
-      case EOpBitwiseOr:
-        writeTriplet(visit, "(", " | ", ")");
-        break;
+        // Notice the fall-through.
+        case EOpVectorTimesScalar:
+        case EOpVectorTimesMatrix:
+        case EOpMatrixTimesVector:
+        case EOpMatrixTimesScalar:
+        case EOpMatrixTimesMatrix:
+            writeTriplet(visit, "(", " * ", ")");
+            break;
 
-      case EOpEqual:
-        writeTriplet(visit, "(", " == ", ")");
-        break;
-      case EOpNotEqual:
-        writeTriplet(visit, "(", " != ", ")");
-        break;
-      case EOpLessThan:
-        writeTriplet(visit, "(", " < ", ")");
-        break;
-      case EOpGreaterThan:
-        writeTriplet(visit, "(", " > ", ")");
-        break;
-      case EOpLessThanEqual:
-        writeTriplet(visit, "(", " <= ", ")");
-        break;
-      case EOpGreaterThanEqual:
-        writeTriplet(visit, "(", " >= ", ")");
-        break;
-
-      // Notice the fall-through.
-      case EOpVectorTimesScalar:
-      case EOpVectorTimesMatrix:
-      case EOpMatrixTimesVector:
-      case EOpMatrixTimesScalar:
-      case EOpMatrixTimesMatrix:
-        writeTriplet(visit, "(", " * ", ")");
-        break;
-
-      case EOpLogicalOr:
-        writeTriplet(visit, "(", " || ", ")");
-        break;
-      case EOpLogicalXor:
-        writeTriplet(visit, "(", " ^^ ", ")");
-        break;
-      case EOpLogicalAnd:
-        writeTriplet(visit, "(", " && ", ")");
-        break;
-      default:
-        UNREACHABLE();
+        case EOpLogicalOr:
+            writeTriplet(visit, "(", " || ", ")");
+            break;
+        case EOpLogicalXor:
+            writeTriplet(visit, "(", " ^^ ", ")");
+            break;
+        case EOpLogicalAnd:
+            writeTriplet(visit, "(", " && ", ")");
+            break;
+        default:
+            UNREACHABLE();
     }
 
     return visitChildren;
@@ -940,9 +944,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpVectorNotEqual:
         writeBuiltInFunctionTriplet(visit, "notEqual(", useEmulatedFunction);
-        break;
-      case EOpComma:
-        writeTriplet(visit, "(", ", ", ")");
         break;
 
       case EOpMod:

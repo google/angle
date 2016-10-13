@@ -462,6 +462,9 @@ class TIntermBinary : public TIntermOperator
 
     static TOperator GetMulOpBasedOnOperands(const TType &left, const TType &right);
     static TOperator GetMulAssignOpBasedOnOperands(const TType &left, const TType &right);
+    static TQualifier GetCommaQualifier(int shaderVersion,
+                                        const TIntermTyped *left,
+                                        const TIntermTyped *right);
 
     TIntermBinary *getAsBinaryNode() override { return this; };
     void traverse(TIntermTraverser *it) override;

@@ -3630,7 +3630,7 @@ TIntermTyped *TParseContext::addComma(TIntermTyped *left,
               ",");
     }
 
-    return intermediate.addComma(left, right, loc, mShaderVersion);
+    return TIntermediate::AddComma(left, right, loc, mShaderVersion);
 }
 
 TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)

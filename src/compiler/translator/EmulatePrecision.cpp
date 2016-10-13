@@ -475,8 +475,8 @@ bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
     {
         return false;
     }
-    TIntermAggregate *aggParent = parent->getAsAggregate();
-    if (aggParent && aggParent->getOp() == EOpComma && (aggParent->getSequence()->back() != node))
+    TIntermBinary *binaryParent = parent->getAsBinaryNode();
+    if (binaryParent && binaryParent->getOp() == EOpComma && (binaryParent->getRight() != node))
     {
         return false;
     }

@@ -823,12 +823,31 @@ void TIntermSwizzle::writeOffsetsAsXYZW(TInfoSinkBase *out) const
     }
 }
 
+TQualifier TIntermBinary::GetCommaQualifier(int shaderVersion,
+                                            const TIntermTyped *left,
+                                            const TIntermTyped *right)
+{
+    // ESSL3.00 section 12.43: The result of a sequence operator is not a constant-expression.
+    if (shaderVersion >= 300 || left->getQualifier() != EvqConst ||
+        right->getQualifier() != EvqConst)
+    {
+        return EvqTemporary;
+    }
+    return EvqConst;
+}
 
 // Establishes the type of the result of the binary operation.
 void TIntermBinary::promote()
 {
     ASSERT(!isMultiplication() ||
            mOp == GetMulOpBasedOnOperands(mLeft->getType(), mRight->getType()));
+
+    // Comma is handled as a special case.
+    if (mOp == EOpComma)
+    {
+        setType(mRight->getType());
+        return;
+    }
 
     // Base assumption:  just make the type the same as the left
     // operand.  Then only deviations from this need be coded.

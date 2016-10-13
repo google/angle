@@ -105,145 +105,148 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
     switch (node->getOp())
     {
-      case EOpAssign:
-        out << "move second child to first child";
-        break;
-      case EOpInitialize:
-        out << "initialize first child with second child";
-        break;
-      case EOpAddAssign:
-        out << "add second child into first child";
-        break;
-      case EOpSubAssign:
-        out << "subtract second child into first child";
-        break;
-      case EOpMulAssign:
-        out << "multiply second child into first child";
-        break;
-      case EOpVectorTimesMatrixAssign:
-        out << "matrix mult second child into first child";
-        break;
-      case EOpVectorTimesScalarAssign:
-        out << "vector scale second child into first child";
-        break;
-      case EOpMatrixTimesScalarAssign:
-        out << "matrix scale second child into first child";
-        break;
-      case EOpMatrixTimesMatrixAssign:
-        out << "matrix mult second child into first child";
-        break;
-      case EOpDivAssign:
-        out << "divide second child into first child";
-        break;
-      case EOpIModAssign:
-        out << "modulo second child into first child";
-        break;
-      case EOpBitShiftLeftAssign:
-        out << "bit-wise shift first child left by second child";
-        break;
-      case EOpBitShiftRightAssign:
-        out << "bit-wise shift first child right by second child";
-        break;
-      case EOpBitwiseAndAssign:
-        out << "bit-wise and second child into first child";
-        break;
-      case EOpBitwiseXorAssign:
-        out << "bit-wise xor second child into first child";
-        break;
-      case EOpBitwiseOrAssign:
-        out << "bit-wise or second child into first child";
-        break;
+        case EOpComma:
+            out << "comma";
+            break;
+        case EOpAssign:
+            out << "move second child to first child";
+            break;
+        case EOpInitialize:
+            out << "initialize first child with second child";
+            break;
+        case EOpAddAssign:
+            out << "add second child into first child";
+            break;
+        case EOpSubAssign:
+            out << "subtract second child into first child";
+            break;
+        case EOpMulAssign:
+            out << "multiply second child into first child";
+            break;
+        case EOpVectorTimesMatrixAssign:
+            out << "matrix mult second child into first child";
+            break;
+        case EOpVectorTimesScalarAssign:
+            out << "vector scale second child into first child";
+            break;
+        case EOpMatrixTimesScalarAssign:
+            out << "matrix scale second child into first child";
+            break;
+        case EOpMatrixTimesMatrixAssign:
+            out << "matrix mult second child into first child";
+            break;
+        case EOpDivAssign:
+            out << "divide second child into first child";
+            break;
+        case EOpIModAssign:
+            out << "modulo second child into first child";
+            break;
+        case EOpBitShiftLeftAssign:
+            out << "bit-wise shift first child left by second child";
+            break;
+        case EOpBitShiftRightAssign:
+            out << "bit-wise shift first child right by second child";
+            break;
+        case EOpBitwiseAndAssign:
+            out << "bit-wise and second child into first child";
+            break;
+        case EOpBitwiseXorAssign:
+            out << "bit-wise xor second child into first child";
+            break;
+        case EOpBitwiseOrAssign:
+            out << "bit-wise or second child into first child";
+            break;
 
-      case EOpIndexDirect:
-        out << "direct index";
-        break;
-      case EOpIndexIndirect:
-        out << "indirect index";
-        break;
-      case EOpIndexDirectStruct:
-        out << "direct index for structure";
-        break;
-      case EOpIndexDirectInterfaceBlock:
-        out << "direct index for interface block";
-        break;
+        case EOpIndexDirect:
+            out << "direct index";
+            break;
+        case EOpIndexIndirect:
+            out << "indirect index";
+            break;
+        case EOpIndexDirectStruct:
+            out << "direct index for structure";
+            break;
+        case EOpIndexDirectInterfaceBlock:
+            out << "direct index for interface block";
+            break;
 
-      case EOpAdd:
-        out << "add";
-        break;
-      case EOpSub:
-        out << "subtract";
-        break;
-      case EOpMul:
-        out << "component-wise multiply";
-        break;
-      case EOpDiv:
-        out << "divide";
-        break;
-      case EOpIMod:
-        out << "modulo";
-        break;
-      case EOpBitShiftLeft:
-        out << "bit-wise shift left";
-        break;
-      case EOpBitShiftRight:
-        out << "bit-wise shift right";
-        break;
-      case EOpBitwiseAnd:
-        out << "bit-wise and";
-        break;
-      case EOpBitwiseXor:
-        out << "bit-wise xor";
-        break;
-      case EOpBitwiseOr:
-        out << "bit-wise or";
-        break;
+        case EOpAdd:
+            out << "add";
+            break;
+        case EOpSub:
+            out << "subtract";
+            break;
+        case EOpMul:
+            out << "component-wise multiply";
+            break;
+        case EOpDiv:
+            out << "divide";
+            break;
+        case EOpIMod:
+            out << "modulo";
+            break;
+        case EOpBitShiftLeft:
+            out << "bit-wise shift left";
+            break;
+        case EOpBitShiftRight:
+            out << "bit-wise shift right";
+            break;
+        case EOpBitwiseAnd:
+            out << "bit-wise and";
+            break;
+        case EOpBitwiseXor:
+            out << "bit-wise xor";
+            break;
+        case EOpBitwiseOr:
+            out << "bit-wise or";
+            break;
 
-      case EOpEqual:
-        out << "Compare Equal";
-        break;
-      case EOpNotEqual:
-        out << "Compare Not Equal";
-        break;
-      case EOpLessThan:
-        out << "Compare Less Than";
-        break;
-      case EOpGreaterThan:
-        out << "Compare Greater Than";
-        break;
-      case EOpLessThanEqual:
-        out << "Compare Less Than or Equal";
-        break;
-      case EOpGreaterThanEqual:
-        out << "Compare Greater Than or Equal";
-        break;
+        case EOpEqual:
+            out << "Compare Equal";
+            break;
+        case EOpNotEqual:
+            out << "Compare Not Equal";
+            break;
+        case EOpLessThan:
+            out << "Compare Less Than";
+            break;
+        case EOpGreaterThan:
+            out << "Compare Greater Than";
+            break;
+        case EOpLessThanEqual:
+            out << "Compare Less Than or Equal";
+            break;
+        case EOpGreaterThanEqual:
+            out << "Compare Greater Than or Equal";
+            break;
 
-      case EOpVectorTimesScalar:
-        out << "vector-scale";
-        break;
-      case EOpVectorTimesMatrix:
-        out << "vector-times-matrix";
-        break;
-      case EOpMatrixTimesVector:
-        out << "matrix-times-vector";
-        break;
-      case EOpMatrixTimesScalar:
-        out << "matrix-scale";
-        break;
-      case EOpMatrixTimesMatrix:
-        out << "matrix-multiply";
-        break;
+        case EOpVectorTimesScalar:
+            out << "vector-scale";
+            break;
+        case EOpVectorTimesMatrix:
+            out << "vector-times-matrix";
+            break;
+        case EOpMatrixTimesVector:
+            out << "matrix-times-vector";
+            break;
+        case EOpMatrixTimesScalar:
+            out << "matrix-scale";
+            break;
+        case EOpMatrixTimesMatrix:
+            out << "matrix-multiply";
+            break;
 
-      case EOpLogicalOr:
-        out << "logical-or";
-        break;
-      case EOpLogicalXor:
-        out << "logical-xor";
-        break;
-      case EOpLogicalAnd:
-        out << "logical-and";
-        break;
-      default:
-        out << "<unknown op>";
+        case EOpLogicalOr:
+            out << "logical-or";
+            break;
+        case EOpLogicalXor:
+            out << "logical-xor";
+            break;
+        case EOpLogicalAnd:
+            out << "logical-and";
+            break;
+        default:
+            out << "<unknown op>";
     }
 
     out << " (" << node->getCompleteString() << ")";
@@ -399,7 +402,6 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     switch (node->getOp())
     {
-      case EOpComma:         out << "Comma\n"; return true;
       case EOpFunctionCall:
           OutputFunction(out, "Function Call", node->getFunctionSymbolInfo());
           break;
