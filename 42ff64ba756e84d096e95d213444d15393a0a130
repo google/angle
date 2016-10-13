@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c693ee5_66c26033",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-13T14:55:55Z",
+      "side": 1,
+      "message": "Could be made a bit simpler with\nif (asFunction) { assign functionInfo}\nif (asAggregate \u0026\u0026 is prototype) {assign functionInfo}\nif (functionInfo \u003d\u003d nullptr) {return false}",
+      "revId": "42ff64ba756e84d096e95d213444d15393a0a130",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
