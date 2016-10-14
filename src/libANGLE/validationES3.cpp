@@ -328,6 +328,7 @@ bool ValidateES3TexImage3DParameters(Context *context,
                                      GLint border,
                                      GLenum format,
                                      GLenum type,
+                                     GLsizei bufSize,
                                      const GLvoid *pixels)
 {
     if (!ValidTexture3DDestinationTarget(context, target))
@@ -338,7 +339,7 @@ bool ValidateES3TexImage3DParameters(Context *context,
 
     return ValidateES3TexImageParametersBase(context, target, level, internalformat, isCompressed,
                                              isSubImage, xoffset, yoffset, zoffset, width, height,
-                                             depth, border, format, type, -1, pixels);
+                                             depth, border, format, type, bufSize, pixels);
 }
 
 struct EffectiveInternalFormatInfo
@@ -1269,7 +1270,8 @@ bool ValidateCompressedTexImage3D(Context *context,
 
     // validateES3TexImageFormat sets the error code if there is an error
     if (!ValidateES3TexImage3DParameters(context, target, level, internalformat, true, false, 0, 0,
-                                         0, width, height, depth, border, GL_NONE, GL_NONE, data))
+                                         0, width, height, depth, border, GL_NONE, GL_NONE, -1,
+                                         data))
     {
         return false;
     }
@@ -1547,8 +1549,37 @@ bool ValidateTexImage3D(Context *context,
     }
 
     return ValidateES3TexImage3DParameters(context, target, level, internalformat, false, false, 0,
-                                           0, 0, width, height, depth, border, format, type,
+                                           0, 0, width, height, depth, border, format, type, -1,
                                            pixels);
+}
+
+bool ValidateTexImage3DRobustANGLE(Context *context,
+                                   GLenum target,
+                                   GLint level,
+                                   GLint internalformat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLsizei depth,
+                                   GLint border,
+                                   GLenum format,
+                                   GLenum type,
+                                   GLsizei bufSize,
+                                   const GLvoid *pixels)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateES3TexImage3DParameters(context, target, level, internalformat, false, false, 0,
+                                           0, 0, width, height, depth, border, format, type,
+                                           bufSize, pixels);
 }
 
 bool ValidateTexSubImage3D(Context *context,
@@ -1572,7 +1603,37 @@ bool ValidateTexSubImage3D(Context *context,
 
     return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
                                            yoffset, zoffset, width, height, depth, 0, format, type,
-                                           pixels);
+                                           -1, pixels);
+}
+
+bool ValidateTexSubImage3DRobustANGLE(Context *context,
+                                      GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLint zoffset,
+                                      GLsizei width,
+                                      GLsizei height,
+                                      GLsizei depth,
+                                      GLenum format,
+                                      GLenum type,
+                                      GLsizei bufSize,
+                                      const GLvoid *pixels)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, zoffset, width, height, depth, 0, format, type,
+                                           bufSize, pixels);
 }
 
 bool ValidateCompressedTexSubImage3D(Context *context,
@@ -1615,7 +1676,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
     }
 
     return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, 0, 0, 0,
-                                           width, height, depth, 0, GL_NONE, GL_NONE, data);
+                                           width, height, depth, 0, GL_NONE, GL_NONE, -1, data);
 }
 
 bool ValidateGenQueries(Context *context, GLint n, GLuint *)

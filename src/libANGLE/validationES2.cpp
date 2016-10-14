@@ -2043,6 +2043,36 @@ bool ValidateTexSubImage2D(Context *context,
                                            pixels);
 }
 
+bool ValidateTexSubImage2DRobustANGLE(Context *context,
+                                      GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLsizei width,
+                                      GLsizei height,
+                                      GLenum format,
+                                      GLenum type,
+                                      GLsizei bufSize,
+                                      const GLvoid *pixels)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexImageParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                             yoffset, width, height, 0, format, type, bufSize,
+                                             pixels);
+    }
+
+    ASSERT(context->getClientMajorVersion() >= 3);
+    return ValidateES3TexImage2DParameters(context, target, level, GL_NONE, false, true, xoffset,
+                                           yoffset, 0, width, height, 1, 0, format, type, bufSize,
+                                           pixels);
+}
+
 bool ValidateCompressedTexImage2D(Context *context,
                                   GLenum target,
                                   GLint level,
