@@ -322,6 +322,7 @@ bool ValidateDisable(Context *context, GLenum cap);
 bool ValidateIsEnabled(Context *context, GLenum cap);
 
 bool ValidateRobustEntryPoint(ValidationContext *context, GLsizei bufSize);
+bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsizei numParams);
 
 bool ValidateGetFramebufferAttachmentParameteriv(ValidationContext *context,
                                                  GLenum target,

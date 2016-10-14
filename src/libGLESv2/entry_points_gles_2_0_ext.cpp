@@ -23,6 +23,7 @@
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
+#include "libANGLE/validationES31.h"
 
 #include "common/debug.h"
 #include "common/utilities.h"
@@ -2733,7 +2734,27 @@ ANGLE_EXPORT void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
         "(GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLint64* params = "
         "0x%0.8p)",
         pname, bufSize, length, data);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLenum nativeType;
+        unsigned int numParams = 0;
+        if (!ValidateRobustStateQuery(context, pname, bufSize, &nativeType, &numParams))
+        {
+            return;
+        }
+
+        if (nativeType == GL_INT_64_ANGLEX)
+        {
+            context->getInteger64v(pname, data);
+        }
+        else
+        {
+            CastStateValues(context, nativeType, pname, numParams, data);
+        }
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
@@ -2746,7 +2767,19 @@ ANGLE_EXPORT void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
         "(GLenum target = 0x%X, GLuint index = %u, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLint64* data = 0x%0.8p)",
         target, index, bufSize, length, data);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetInteger64i_vRobustANGLE(context, target, index, bufSize, &numParams, data))
+        {
+            return;
+        }
+
+        context->getInteger64i_v(target, index, data);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
@@ -2893,7 +2926,18 @@ ANGLE_EXPORT void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
         "(GLenum target = 0x%X, GLuint index = %u, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLboolean* data = 0x%0.8p)",
         target, index, bufSize, length, data);
-    UNIMPLEMENTED();
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetBooleani_vRobustANGLE(context, target, index, bufSize, &numParams, data))
+        {
+            return;
+        }
+
+        context->getBooleani_v(target, index, data);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetMultisamplefvRobustANGLE(GLenum pname,

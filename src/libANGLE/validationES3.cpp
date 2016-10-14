@@ -1779,8 +1779,16 @@ bool ValidateFlushMappedBufferRange(Context *context,
     return ValidateFlushMappedBufferRangeBase(context, target, offset, length);
 }
 
-bool ValidateIndexedStateQuery(ValidationContext *context, GLenum pname, GLuint index)
+bool ValidateIndexedStateQuery(ValidationContext *context,
+                               GLenum pname,
+                               GLuint index,
+                               GLsizei *length)
 {
+    if (length)
+    {
+        *length = 0;
+    }
+
     GLenum nativeType;
     unsigned int numParams;
     if (!context->getIndexedQueryParameterInfo(pname, &nativeType, &numParams))
@@ -1824,10 +1832,9 @@ bool ValidateIndexedStateQuery(ValidationContext *context, GLenum pname, GLuint 
             return false;
     }
 
-    // pname is valid, but there are no parameters to return
-    if (numParams == 0)
+    if (length)
     {
-        return false;
+        *length = 1;
     }
 
     return true;
@@ -1840,7 +1847,7 @@ bool ValidateGetIntegeri_v(ValidationContext *context, GLenum target, GLuint ind
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;
     }
-    return ValidateIndexedStateQuery(context, target, index);
+    return ValidateIndexedStateQuery(context, target, index, nullptr);
 }
 
 bool ValidateGetInteger64i_v(ValidationContext *context, GLenum target, GLuint index, GLint64 *data)
@@ -1850,7 +1857,38 @@ bool ValidateGetInteger64i_v(ValidationContext *context, GLenum target, GLuint i
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;
     }
-    return ValidateIndexedStateQuery(context, target, index);
+    return ValidateIndexedStateQuery(context, target, index, nullptr);
+}
+
+bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
+                                        GLenum target,
+                                        GLuint index,
+                                        GLsizei bufSize,
+                                        GLsizei *length,
+                                        GLint64 *data)
+{
+    if (!context->getGLVersion().isES3OrGreater())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateIndexedStateQuery(context, target, index, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace gl

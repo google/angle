@@ -167,19 +167,6 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
     }
 }
 
-bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsizei numParams)
-{
-    if (bufSize < numParams)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION,
-                                   "%u parameters are required but %i were provided.", numParams,
-                                   bufSize));
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateReadPixelsBase(ValidationContext *context,
                             GLint x,
                             GLint y,
@@ -3940,6 +3927,19 @@ bool ValidateRobustEntryPoint(ValidationContext *context, GLsizei bufSize)
     if (bufSize < 0)
     {
         context->handleError(Error(GL_INVALID_VALUE, "bufSize cannot be negative."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateRobustBufferSize(ValidationContext *context, GLsizei bufSize, GLsizei numParams)
+{
+    if (bufSize < numParams)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION,
+                                   "%u parameters are required but %i were provided.", numParams,
+                                   bufSize));
         return false;
     }
 
