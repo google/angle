@@ -1624,43 +1624,14 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateGetActiveUniformBlockiv(context, program, uniformBlockIndex, pname, params))
         {
             return;
         }
 
-        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_UNIFORM_BLOCK_BINDING:
-            *params = static_cast<GLint>(programObject->getUniformBlockBinding(uniformBlockIndex));
-            break;
-
-          case GL_UNIFORM_BLOCK_DATA_SIZE:
-          case GL_UNIFORM_BLOCK_NAME_LENGTH:
-          case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-          case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-          case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
-          case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-            programObject->getActiveUniformBlockiv(uniformBlockIndex, pname, params);
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
+        const Program *programObject = context->getProgram(program);
+        QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
     }
 }
 

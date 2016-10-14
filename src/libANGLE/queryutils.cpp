@@ -17,6 +17,7 @@
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/Uniform.h"
 #include "libANGLE/VertexAttribute.h"
 
 namespace gl
@@ -622,6 +623,46 @@ void QueryVertexAttribIuiv(const VertexAttribute &attrib,
                            GLuint *params)
 {
     QueryVertexAttribBase(attrib, currentValueData.UnsignedIntValues, pname, params);
+}
+
+void QueryActiveUniformBlockiv(const Program *program,
+                               GLuint uniformBlockIndex,
+                               GLenum pname,
+                               GLint *params)
+{
+    const UniformBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
+    switch (pname)
+    {
+        case GL_UNIFORM_BLOCK_BINDING:
+            *params = ConvertToGLint(program->getUniformBlockBinding(uniformBlockIndex));
+            break;
+        case GL_UNIFORM_BLOCK_DATA_SIZE:
+            *params = ConvertToGLint(uniformBlock.dataSize);
+            break;
+        case GL_UNIFORM_BLOCK_NAME_LENGTH:
+            *params = ConvertToGLint(uniformBlock.nameWithArrayIndex().size() + 1);
+            break;
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+            *params = ConvertToGLint(uniformBlock.memberUniformIndexes.size());
+            break;
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+            for (size_t blockMemberIndex = 0;
+                 blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
+            {
+                params[blockMemberIndex] =
+                    ConvertToGLint(uniformBlock.memberUniformIndexes[blockMemberIndex]);
+            }
+            break;
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+            *params = ConvertToGLint(uniformBlock.vertexStaticUse);
+            break;
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+            *params = ConvertToGLint(uniformBlock.fragmentStaticUse);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)

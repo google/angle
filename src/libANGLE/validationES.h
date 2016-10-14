@@ -511,6 +511,19 @@ bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
                                             GLsizei *length,
                                             GLuint *params);
 
+bool ValidateGetActiveUniformBlockiv(Context *context,
+                                     GLuint program,
+                                     GLuint uniformBlockIndex,
+                                     GLenum pname,
+                                     GLint *params);
+bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
+                                                GLuint program,
+                                                GLuint uniformBlockIndex,
+                                                GLenum pname,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLint *params);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl

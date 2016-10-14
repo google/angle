@@ -327,7 +327,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     void getUniformuiv(GLint location, GLuint *params) const;
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
-    void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
     GLuint getActiveUniformBlockCount() const;
     GLint getActiveUniformBlockMaxLength() const;
 

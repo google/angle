@@ -1619,44 +1619,6 @@ void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSiz
     }
 }
 
-void Program::getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const
-{
-    ASSERT(
-        uniformBlockIndex <
-        mState.mUniformBlocks.size());  // index must be smaller than getActiveUniformBlockCount()
-
-    const UniformBlock &uniformBlock = mState.mUniformBlocks[uniformBlockIndex];
-
-    switch (pname)
-    {
-      case GL_UNIFORM_BLOCK_DATA_SIZE:
-        *params = static_cast<GLint>(uniformBlock.dataSize);
-        break;
-      case GL_UNIFORM_BLOCK_NAME_LENGTH:
-          *params =
-              static_cast<GLint>(uniformBlock.name.size() + 1 + (uniformBlock.isArray ? 3 : 0));
-        break;
-      case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-        *params = static_cast<GLint>(uniformBlock.memberUniformIndexes.size());
-        break;
-      case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-        {
-            for (unsigned int blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
-            {
-                params[blockMemberIndex] = static_cast<GLint>(uniformBlock.memberUniformIndexes[blockMemberIndex]);
-            }
-        }
-        break;
-      case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
-          *params = static_cast<GLint>(uniformBlock.vertexStaticUse);
-        break;
-      case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-          *params = static_cast<GLint>(uniformBlock.fragmentStaticUse);
-        break;
-      default: UNREACHABLE();
-    }
-}
-
 GLint Program::getActiveUniformBlockMaxLength() const
 {
     int maxLength = 0;

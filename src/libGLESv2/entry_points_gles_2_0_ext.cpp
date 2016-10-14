@@ -2770,7 +2770,21 @@ ANGLE_EXPORT void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,
         "(GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = 0x%X, GLsizei bufsize "
         "= %d, GLsizei* length = 0x%0.8p, GLint* params = 0x%0.8p)",
         program, uniformBlockIndex, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei writeLength = 0;
+        if (!ValidateGetActiveUniformBlockivRobustANGLE(context, program, uniformBlockIndex, pname,
+                                                        bufSize, &writeLength, params))
+        {
+            return;
+        }
+
+        const Program *programObject = context->getProgram(program);
+        QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
+        SetRobustLengthParam(length, writeLength);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
