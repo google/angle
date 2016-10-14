@@ -138,13 +138,46 @@ bool ValidateBeginQueryEXT(Context *context, GLenum target, GLuint id);
 bool ValidateEndQueryBase(Context *context, GLenum target);
 bool ValidateEndQueryEXT(Context *context, GLenum target);
 bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target);
-bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname);
+bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsizei *numParams);
 bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint *params);
-bool ValidateGetQueryObjectValueBase(Context *context, GLenum target, GLenum pname);
+bool ValidateGetQueryivRobustANGLE(Context *context,
+                                   GLenum target,
+                                   GLenum pname,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLint *params);
+bool ValidateGetQueryObjectValueBase(Context *context,
+                                     GLenum target,
+                                     GLenum pname,
+                                     GLsizei *numParams);
 bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLint *params);
+bool ValidateGetQueryObjectivRobustANGLE(Context *context,
+                                         GLuint id,
+                                         GLenum pname,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLint *params);
 bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params);
+bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
+                                          GLuint id,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLuint *params);
 bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params);
+bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
+                                           GLuint id,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint64 *params);
 bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params);
+bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
+                                            GLuint id,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLuint64 *params);
 
 bool ValidateUniform(Context *context, GLenum uniformType, GLint location, GLsizei count);
 bool ValidateUniformMatrix(Context *context, GLenum matrixType, GLint location, GLsizei count,

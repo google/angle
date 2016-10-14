@@ -310,12 +310,7 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
             return;
         }
 
-        Error error = context->getQueryObjectuiv(id, pname, params);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getQueryObjectuiv(id, pname, params);
     }
 }
 

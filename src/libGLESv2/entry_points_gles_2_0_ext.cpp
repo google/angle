@@ -187,12 +187,7 @@ void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
             return;
         }
 
-        Error error = context->getQueryObjectiv(id, pname, params);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getQueryObjectiv(id, pname, params);
     }
 }
 
@@ -208,12 +203,7 @@ void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
             return;
         }
 
-        Error error = context->getQueryObjectuiv(id, pname, params);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getQueryObjectuiv(id, pname, params);
     }
 }
 
@@ -229,12 +219,7 @@ void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
             return;
         }
 
-        Error error = context->getQueryObjecti64v(id, pname, params);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getQueryObjecti64v(id, pname, params);
     }
 }
 
@@ -250,12 +235,7 @@ void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *param
             return;
         }
 
-        Error error = context->getQueryObjectui64v(id, pname, params);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getQueryObjectui64v(id, pname, params);
     }
 }
 
@@ -2584,7 +2564,19 @@ GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *len
         "(GLenum target = 0x%X, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLint* params = 0x%0.8p)",
         target, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetQueryivRobustANGLE(context, target, pname, bufSize, &numParams, params))
+        {
+            return;
+        }
+
+        context->getQueryiv(target, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
@@ -2597,7 +2589,19 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
         "(GLuint id = %u, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLint* params = 0x%0.8p)",
         id, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetQueryObjectuivRobustANGLE(context, id, pname, bufSize, &numParams, params))
+        {
+            return;
+        }
+
+        context->getQueryObjectuiv(id, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
@@ -3174,7 +3178,19 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
         "(GLuint id = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLuint *params = 0x%0.8p)",
         id, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetQueryObjectivRobustANGLE(context, id, pname, bufSize, &numParams, params))
+        {
+            return;
+        }
+
+        context->getQueryObjectiv(id, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
@@ -3187,7 +3203,19 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
         "(GLuint id = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLint64 *params = 0x%0.8p)",
         id, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetQueryObjecti64vRobustANGLE(context, id, pname, bufSize, &numParams, params))
+        {
+            return;
+        }
+
+        context->getQueryObjecti64v(id, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
@@ -3200,7 +3228,20 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
         "(GLuint id = %d, GLenum pname = 0x%X, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
         "GLuint64 *params = 0x%0.8p)",
         id, pname, bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetQueryObjectui64vRobustANGLE(context, id, pname, bufSize, &numParams,
+                                                    params))
+        {
+            return;
+        }
+
+        context->getQueryObjectui64v(id, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 }  // gl

@@ -2001,8 +2001,13 @@ bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
     return true;
 }
 
-bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname)
+bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsizei *numParams)
 {
+    if (numParams)
+    {
+        *numParams = 0;
+    }
+
     if (!ValidQueryType(context, target) && target != GL_TIMESTAMP_EXT)
     {
         context->handleError(Error(GL_INVALID_ENUM, "Invalid query type"));
@@ -2032,6 +2037,12 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname)
             return false;
     }
 
+    if (numParams)
+    {
+        // All queries return only one value
+        *numParams = 1;
+    }
+
     return true;
 }
 
@@ -2044,11 +2055,41 @@ bool ValidateGetQueryivEXT(Context *context, GLenum target, GLenum pname, GLint 
         return false;
     }
 
-    return ValidateGetQueryivBase(context, target, pname);
+    return ValidateGetQueryivBase(context, target, pname, nullptr);
 }
 
-bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname)
+bool ValidateGetQueryivRobustANGLE(Context *context,
+                                   GLenum target,
+                                   GLenum pname,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLint *params)
 {
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetQueryivBase(context, target, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, GLsizei *numParams)
+{
+    if (numParams)
+    {
+        *numParams = 0;
+    }
+
     Query *queryObject = context->getQuery(id, false, GL_NONE);
 
     if (!queryObject)
@@ -2074,6 +2115,11 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname)
             return false;
     }
 
+    if (numParams)
+    {
+        *numParams = 1;
+    }
+
     return true;
 }
 
@@ -2084,7 +2130,38 @@ bool ValidateGetQueryObjectivEXT(Context *context, GLuint id, GLenum pname, GLin
         context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
         return false;
     }
-    return ValidateGetQueryObjectValueBase(context, id, pname);
+    return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
+}
+
+bool ValidateGetQueryObjectivRobustANGLE(Context *context,
+                                         GLuint id,
+                                         GLenum pname,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLint *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetQueryObjectValueBase(context, id, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLuint *params)
@@ -2095,7 +2172,39 @@ bool ValidateGetQueryObjectuivEXT(Context *context, GLuint id, GLenum pname, GLu
         context->handleError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
         return false;
     }
-    return ValidateGetQueryObjectValueBase(context, id, pname);
+    return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
+}
+
+bool ValidateGetQueryObjectuivRobustANGLE(Context *context,
+                                          GLuint id,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLuint *params)
+{
+    if (!context->getExtensions().disjointTimerQuery &&
+        !context->getExtensions().occlusionQueryBoolean && !context->getExtensions().syncQuery)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Query extension not enabled"));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetQueryObjectValueBase(context, id, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GLint64 *params)
@@ -2105,7 +2214,38 @@ bool ValidateGetQueryObjecti64vEXT(Context *context, GLuint id, GLenum pname, GL
         context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
         return false;
     }
-    return ValidateGetQueryObjectValueBase(context, id, pname);
+    return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
+}
+
+bool ValidateGetQueryObjecti64vRobustANGLE(Context *context,
+                                           GLuint id,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint64 *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetQueryObjectValueBase(context, id, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, GLuint64 *params)
@@ -2115,7 +2255,38 @@ bool ValidateGetQueryObjectui64vEXT(Context *context, GLuint id, GLenum pname, G
         context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
         return false;
     }
-    return ValidateGetQueryObjectValueBase(context, id, pname);
+    return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
+}
+
+bool ValidateGetQueryObjectui64vRobustANGLE(Context *context,
+                                            GLuint id,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLuint64 *params)
+{
+    if (!context->getExtensions().disjointTimerQuery)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Timer query extension not enabled"));
+        return false;
+    }
+
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetQueryObjectValueBase(context, id, pname, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 static bool ValidateUniformCommonBase(gl::Context *context,

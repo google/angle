@@ -149,10 +149,10 @@ class Context final : public ValidationContext
     Error endQuery(GLenum target);
     Error queryCounter(GLuint id, GLenum target);
     void getQueryiv(GLenum target, GLenum pname, GLint *params);
-    Error getQueryObjectiv(GLuint id, GLenum pname, GLint *params);
-    Error getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params);
-    Error getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params);
-    Error getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params);
+    void getQueryObjectiv(GLuint id, GLenum pname, GLint *params);
+    void getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params);
+    void getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params);
+    void getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params);
 
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
 

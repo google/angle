@@ -945,7 +945,7 @@ bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *pa
         return false;
     }
 
-    return ValidateGetQueryivBase(context, target, pname);
+    return ValidateGetQueryivBase(context, target, pname, nullptr);
 }
 
 bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params)
@@ -956,7 +956,7 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
         return false;
     }
 
-    return ValidateGetQueryObjectValueBase(context, id, pname);
+    return ValidateGetQueryObjectValueBase(context, id, pname, nullptr);
 }
 
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,

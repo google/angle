@@ -97,22 +97,21 @@ std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
 }
 
 template <typename T>
-gl::Error GetQueryObjectParameter(gl::Context *context, GLuint id, GLenum pname, T *params)
+gl::Error GetQueryObjectParameter(gl::Query *query, GLenum pname, T *params)
 {
-    gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
-    ASSERT(queryObject != nullptr);
+    ASSERT(query != nullptr);
 
     switch (pname)
     {
         case GL_QUERY_RESULT_EXT:
-            return queryObject->getResult(params);
+            return query->getResult(params);
         case GL_QUERY_RESULT_AVAILABLE_EXT:
         {
             bool available;
-            gl::Error error = queryObject->isResultAvailable(&available);
+            gl::Error error = query->isResultAvailable(&available);
             if (!error.isError())
             {
-                *params = static_cast<T>(available ? GL_TRUE : GL_FALSE);
+                *params = gl::ConvertFromGLboolean<T>(available);
             }
             return error;
         }
@@ -1133,24 +1132,24 @@ void Context::getQueryiv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-Error Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
+void Context::getQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
-    return GetQueryObjectParameter(this, id, pname, params);
+    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
 }
 
-Error Context::getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
+void Context::getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
-    return GetQueryObjectParameter(this, id, pname, params);
+    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
 }
 
-Error Context::getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
+void Context::getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params)
 {
-    return GetQueryObjectParameter(this, id, pname, params);
+    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
 }
 
-Error Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
+void Context::getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params)
 {
-    return GetQueryObjectParameter(this, id, pname, params);
+    handleError(GetQueryObjectParameter(getQuery(id), pname, params));
 }
 
 Framebuffer *Context::getFramebuffer(unsigned int handle) const
