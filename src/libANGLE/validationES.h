@@ -372,12 +372,24 @@ bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(ValidationContext *c
 bool ValidateGetBufferParameteriv(ValidationContext *context,
                                   GLenum target,
                                   GLenum pname,
-                                  GLsizei *numParams);
+                                  GLint *params);
 bool ValidateGetBufferParameterivRobustANGLE(ValidationContext *context,
                                              GLenum target,
                                              GLenum pname,
                                              GLsizei bufSize,
-                                             GLsizei *numParams);
+                                             GLsizei *length,
+                                             GLint *params);
+
+bool ValidateGetBufferParameteri64v(ValidationContext *context,
+                                    GLenum target,
+                                    GLenum pname,
+                                    GLint64 *params);
+bool ValidateGetBufferParameteri64vRobustANGLE(ValidationContext *context,
+                                               GLenum target,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLint64 *params);
 
 bool ValidateGetProgramiv(Context *context, GLuint program, GLenum pname, GLsizei *numParams);
 bool ValidateGetProgramivRobustANGLE(Context *context,

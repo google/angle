@@ -2013,14 +2013,14 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
     if (context)
     {
         GLsizei numParams = 0;
-        if (!ValidateGetBufferParameteriv(context, target, pname, &numParams))
+        if (!ValidateGetBufferParameterivRobustANGLE(context, target, pname, bufSize, &numParams,
+                                                     params))
         {
             return;
         }
 
         Buffer *buffer = context->getGLState().getTargetBuffer(target);
         QueryBufferParameteriv(buffer, pname, params);
-
         SetRobustLengthParam(length, numParams);
     }
 }
@@ -2852,7 +2852,21 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint64* params = 0x%0.8p)", target, pname,
           bufSize, length, params);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetBufferParameteri64vRobustANGLE(context, target, pname, bufSize, &numParams,
+                                                       params))
+        {
+            return;
+        }
+
+        Buffer *buffer = context->getGLState().getTargetBuffer(target);
+        QueryBufferParameteri64v(buffer, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,

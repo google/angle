@@ -1067,6 +1067,95 @@ bool ValidateGetActiveUniformBlockivBase(Context *context,
     return true;
 }
 
+bool ValidateGetBufferParameterBase(ValidationContext *context,
+                                    GLenum target,
+                                    GLenum pname,
+                                    bool pointerVersion,
+                                    GLsizei *numParams)
+{
+    if (numParams)
+    {
+        *numParams = 0;
+    }
+
+    if (!ValidBufferTarget(context, target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid buffer target."));
+        return false;
+    }
+
+    const Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    if (!buffer)
+    {
+        // A null buffer means that "0" is bound to the requested buffer target
+        context->handleError(Error(GL_INVALID_OPERATION, "No buffer bound."));
+        return false;
+    }
+
+    const Extensions &extensions = context->getExtensions();
+
+    switch (pname)
+    {
+        case GL_BUFFER_USAGE:
+        case GL_BUFFER_SIZE:
+            break;
+
+        case GL_BUFFER_ACCESS_OES:
+            if (!extensions.mapBuffer)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0 or GL_OES_map_buffer."));
+                return false;
+            }
+            break;
+
+        case GL_BUFFER_MAPPED:
+            static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
+            if (context->getClientMajorVersion() < 3 && !extensions.mapBuffer &&
+                !extensions.mapBufferRange)
+            {
+                context->handleError(Error(
+                    GL_INVALID_ENUM,
+                    "pname requires OpenGL ES 3.0, GL_OES_map_buffer or GL_EXT_map_buffer_range."));
+                return false;
+            }
+            break;
+
+        case GL_BUFFER_MAP_POINTER:
+            if (!pointerVersion)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM,
+                          "GL_BUFFER_MAP_POINTER can only be queried with GetBufferPointerv."));
+                return false;
+            }
+            break;
+
+        case GL_BUFFER_ACCESS_FLAGS:
+        case GL_BUFFER_MAP_OFFSET:
+        case GL_BUFFER_MAP_LENGTH:
+            if (context->getClientMajorVersion() < 3 && !extensions.mapBufferRange)
+            {
+                context->handleError(Error(
+                    GL_INVALID_ENUM, "pname requires OpenGL ES 3.0 or GL_EXT_map_buffer_range."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
+
+    // All buffer parameter queries return one value.
+    if (numParams)
+    {
+        *numParams = 1;
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -1186,39 +1275,6 @@ bool ValidBufferTarget(const ValidationContext *context, GLenum target)
       case GL_TRANSFORM_FEEDBACK_BUFFER:
       case GL_UNIFORM_BUFFER:
           return (context->getClientMajorVersion() >= 3);
-
-      default:
-        return false;
-    }
-}
-
-bool ValidBufferParameter(const ValidationContext *context, GLenum pname, GLsizei *numParams)
-{
-    // All buffer parameter queries return one value.
-    *numParams = 1;
-
-    const Extensions &extensions = context->getExtensions();
-
-    switch (pname)
-    {
-      case GL_BUFFER_USAGE:
-      case GL_BUFFER_SIZE:
-        return true;
-
-      case GL_BUFFER_ACCESS_OES:
-        return extensions.mapBuffer;
-
-      case GL_BUFFER_MAPPED:
-        static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
-        return (context->getClientMajorVersion() >= 3) || extensions.mapBuffer ||
-               extensions.mapBufferRange;
-
-      // GL_BUFFER_MAP_POINTER is a special case, and may only be
-      // queried with GetBufferPointerv
-      case GL_BUFFER_ACCESS_FLAGS:
-      case GL_BUFFER_MAP_OFFSET:
-      case GL_BUFFER_MAP_LENGTH:
-          return (context->getClientMajorVersion() >= 3) || extensions.mapBufferRange;
 
       default:
         return false;
@@ -4436,50 +4492,62 @@ bool ValidateGetFramebufferAttachmentParameterivRobustANGLE(ValidationContext *c
 bool ValidateGetBufferParameteriv(ValidationContext *context,
                                   GLenum target,
                                   GLenum pname,
-                                  GLsizei *numParams)
+                                  GLint *params)
 {
-    // Initialize result
-    *numParams = 0;
-
-    if (!ValidBufferTarget(context, target))
-    {
-        context->handleError(Error(GL_INVALID_ENUM));
-        return false;
-    }
-
-    if (!ValidBufferParameter(context, pname, numParams))
-    {
-        context->handleError(Error(GL_INVALID_ENUM));
-        return false;
-    }
-
-    if (context->getGLState().getTargetBuffer(target) == nullptr)
-    {
-        // A null buffer means that "0" is bound to the requested buffer target
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    return true;
+    return ValidateGetBufferParameterBase(context, target, pname, false, nullptr);
 }
 
 bool ValidateGetBufferParameterivRobustANGLE(ValidationContext *context,
                                              GLenum target,
                                              GLenum pname,
                                              GLsizei bufSize,
-                                             GLsizei *numParams)
+                                             GLsizei *length,
+                                             GLint *params)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
     {
         return false;
     }
 
-    if (!ValidateGetBufferParameteriv(context, target, pname, numParams))
+    if (!ValidateGetBufferParameterBase(context, target, pname, false, length))
     {
         return false;
     }
 
-    if (!ValidateRobustBufferSize(context, bufSize, *numParams))
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetBufferParameteri64v(ValidationContext *context,
+                                    GLenum target,
+                                    GLenum pname,
+                                    GLint64 *params)
+{
+    return ValidateGetBufferParameterBase(context, target, pname, false, nullptr);
+}
+
+bool ValidateGetBufferParameteri64vRobustANGLE(ValidationContext *context,
+                                               GLenum target,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLint64 *params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
+    {
+        return false;
+    }
+
+    if (!ValidateGetBufferParameterBase(context, target, pname, false, length))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
     {
         return false;
     }

@@ -2038,56 +2038,14 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateGetBufferParameteri64v(context, target, pname, params))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidBufferTarget(context, target))
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        GLsizei numParams = 0;
-        if (!ValidBufferParameter(context, pname, &numParams))
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
         Buffer *buffer = context->getGLState().getTargetBuffer(target);
-
-        if (!buffer)
-        {
-            // A null buffer means that "0" is bound to the requested buffer target
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_BUFFER_USAGE:
-            *params = static_cast<GLint64>(buffer->getUsage());
-            break;
-          case GL_BUFFER_SIZE:
-            *params = buffer->getSize();
-            break;
-          case GL_BUFFER_ACCESS_FLAGS:
-            *params = static_cast<GLint64>(buffer->getAccessFlags());
-            break;
-          case GL_BUFFER_MAPPED:
-            *params = static_cast<GLint64>(buffer->isMapped());
-            break;
-          case GL_BUFFER_MAP_OFFSET:
-            *params = buffer->getMapOffset();
-            break;
-          case GL_BUFFER_MAP_LENGTH:
-            *params = buffer->getMapLength();
-            break;
-          default: UNREACHABLE(); break;
-        }
+        QueryBufferParameteri64v(buffer, pname, params);
     }
 }
 

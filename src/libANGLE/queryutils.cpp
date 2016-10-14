@@ -297,6 +297,40 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
     }
 }
 
+template <typename ParamType>
+void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *params)
+{
+    ASSERT(buffer != nullptr);
+
+    switch (pname)
+    {
+        case GL_BUFFER_USAGE:
+            *params = ConvertFromGLenum<ParamType>(buffer->getUsage());
+            break;
+        case GL_BUFFER_SIZE:
+            *params = ConvertFromGLint64<ParamType>(buffer->getSize());
+            break;
+        case GL_BUFFER_ACCESS_FLAGS:
+            *params = ConvertFromGLuint<ParamType>(buffer->getAccessFlags());
+            break;
+        case GL_BUFFER_ACCESS_OES:
+            *params = ConvertFromGLenum<ParamType>(buffer->getAccess());
+            break;
+        case GL_BUFFER_MAPPED:
+            *params = ConvertFromGLboolean<ParamType>(buffer->isMapped());
+            break;
+        case GL_BUFFER_MAP_OFFSET:
+            *params = ConvertFromGLint64<ParamType>(buffer->getMapOffset());
+            break;
+        case GL_BUFFER_MAP_LENGTH:
+            *params = ConvertFromGLint64<ParamType>(buffer->getMapLength());
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 }  // anonymous namespace
 
 void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
@@ -396,35 +430,12 @@ void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
 
 void QueryBufferParameteriv(const Buffer *buffer, GLenum pname, GLint *params)
 {
-    ASSERT(buffer != nullptr);
+    QueryBufferParameterBase(buffer, pname, params);
+}
 
-    switch (pname)
-    {
-        case GL_BUFFER_USAGE:
-            *params = static_cast<GLint>(buffer->getUsage());
-            break;
-        case GL_BUFFER_SIZE:
-            *params = clampCast<GLint>(buffer->getSize());
-            break;
-        case GL_BUFFER_ACCESS_FLAGS:
-            *params = buffer->getAccessFlags();
-            break;
-        case GL_BUFFER_ACCESS_OES:
-            *params = buffer->getAccess();
-            break;
-        case GL_BUFFER_MAPPED:
-            *params = static_cast<GLint>(buffer->isMapped());
-            break;
-        case GL_BUFFER_MAP_OFFSET:
-            *params = clampCast<GLint>(buffer->getMapOffset());
-            break;
-        case GL_BUFFER_MAP_LENGTH:
-            *params = clampCast<GLint>(buffer->getMapLength());
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
+void QueryBufferParameteri64v(const Buffer *buffer, GLenum pname, GLint64 *params)
+{
+    QueryBufferParameterBase(buffer, pname, params);
 }
 
 void QueryProgramiv(const Program *program, GLenum pname, GLint *params)

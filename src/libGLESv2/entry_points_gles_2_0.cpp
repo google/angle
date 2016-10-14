@@ -1360,9 +1360,8 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint* params
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        GLsizei numParams = 0;
         if (!context->skipValidation() &&
-            !ValidateGetBufferParameteriv(context, target, pname, &numParams))
+            !ValidateGetBufferParameteriv(context, target, pname, params))
         {
             return;
         }

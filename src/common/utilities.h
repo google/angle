@@ -132,6 +132,12 @@ ParamType ConvertFromGLboolean(GLboolean param)
     return static_cast<ParamType>(param ? GL_TRUE : GL_FALSE);
 }
 
+template <typename ParamType>
+ParamType ConvertFromGLint64(GLint64 param)
+{
+    return clampCast<ParamType>(param);
+}
+
 unsigned int ParseAndStripArrayIndex(std::string *name);
 
 }  // namespace gl
