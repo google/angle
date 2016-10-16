@@ -213,8 +213,8 @@ int ValidateLimitations::validateForLoopInit(TIntermLoop *node)
     // init-declaration has the form:
     //     type-specifier identifier = constant-expression
     //
-    TIntermAggregate *decl = init->getAsAggregate();
-    if ((decl == NULL) || (decl->getOp() != EOpDeclaration))
+    TIntermDeclaration *decl = init->getAsDeclarationNode();
+    if (decl == nullptr)
     {
         error(init->getLine(), "Invalid init declaration", "for");
         return -1;

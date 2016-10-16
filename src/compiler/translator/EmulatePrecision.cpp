@@ -598,6 +598,24 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
     return visitChildren;
 }
 
+bool EmulatePrecision::visitDeclaration(Visit visit, TIntermDeclaration *node)
+{
+    // Variable or interface block declaration.
+    if (visit == PreVisit)
+    {
+        mDeclaringVariables = true;
+    }
+    else if (visit == InVisit)
+    {
+        mDeclaringVariables = true;
+    }
+    else
+    {
+        mDeclaringVariables = false;
+    }
+    return true;
+}
+
 bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
@@ -613,21 +631,6 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpInvariantDeclaration:
         visitChildren = false;
-        break;
-      case EOpDeclaration:
-        // Variable declaration.
-        if (visit == PreVisit)
-        {
-            mDeclaringVariables = true;
-        }
-        else if (visit == InVisit)
-        {
-            mDeclaringVariables = true;
-        }
-        else
-        {
-            mDeclaringVariables = false;
-        }
         break;
       case EOpFunctionCall:
       {

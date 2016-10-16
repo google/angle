@@ -390,7 +390,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
             // Now v_expr[s0] can be safely executed several times without unintended side effects.
 
             // Init the temp variable holding the index
-            TIntermAggregate *initIndex = createTempInitDeclaration(node->getRight());
+            TIntermDeclaration *initIndex = createTempInitDeclaration(node->getRight());
             insertStatementInParentBlock(initIndex);
             mUsedTreeInsertion = true;
 
@@ -441,7 +441,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
 
                 // Store the index in a temporary signed int variable.
                 TIntermTyped *indexInitializer = EnsureSignedInt(node->getRight());
-                TIntermAggregate *initIndex = createTempInitDeclaration(indexInitializer);
+                TIntermDeclaration *initIndex  = createTempInitDeclaration(indexInitializer);
                 initIndex->setLine(node->getLine());
                 insertionsBefore.push_back(initIndex);
 

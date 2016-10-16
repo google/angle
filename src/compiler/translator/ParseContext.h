@@ -202,66 +202,66 @@ class TParseContext : angle::NonCopyable
                             const TString &identifier,
                             const TPublicType &pType,
                             TIntermTyped *initializer,
-                            TIntermNode **intermNode);
+                            TIntermBinary **initNode);
 
     TPublicType addFullySpecifiedType(const TTypeQualifierBuilder &typeQualifierBuilder,
                                       const TPublicType &typeSpecifier);
 
-    TIntermAggregate *parseSingleDeclaration(TPublicType &publicType,
-                                             const TSourceLoc &identifierOrTypeLocation,
-                                             const TString &identifier);
-    TIntermAggregate *parseSingleArrayDeclaration(TPublicType &publicType,
-                                                  const TSourceLoc &identifierLocation,
-                                                  const TString &identifier,
-                                                  const TSourceLoc &indexLocation,
-                                                  TIntermTyped *indexExpression);
-    TIntermAggregate *parseSingleInitDeclaration(const TPublicType &publicType,
-                                                 const TSourceLoc &identifierLocation,
-                                                 const TString &identifier,
-                                                 const TSourceLoc &initLocation,
-                                                 TIntermTyped *initializer);
+    TIntermDeclaration *parseSingleDeclaration(TPublicType &publicType,
+                                               const TSourceLoc &identifierOrTypeLocation,
+                                               const TString &identifier);
+    TIntermDeclaration *parseSingleArrayDeclaration(TPublicType &publicType,
+                                                    const TSourceLoc &identifierLocation,
+                                                    const TString &identifier,
+                                                    const TSourceLoc &indexLocation,
+                                                    TIntermTyped *indexExpression);
+    TIntermDeclaration *parseSingleInitDeclaration(const TPublicType &publicType,
+                                                   const TSourceLoc &identifierLocation,
+                                                   const TString &identifier,
+                                                   const TSourceLoc &initLocation,
+                                                   TIntermTyped *initializer);
 
     // Parse a declaration like "type a[n] = initializer"
     // Note that this does not apply to declarations like "type[n] a = initializer"
-    TIntermAggregate *parseSingleArrayInitDeclaration(TPublicType &publicType,
-                                                      const TSourceLoc &identifierLocation,
-                                                      const TString &identifier,
-                                                      const TSourceLoc &indexLocation,
-                                                      TIntermTyped *indexExpression,
-                                                      const TSourceLoc &initLocation,
-                                                      TIntermTyped *initializer);
+    TIntermDeclaration *parseSingleArrayInitDeclaration(TPublicType &publicType,
+                                                        const TSourceLoc &identifierLocation,
+                                                        const TString &identifier,
+                                                        const TSourceLoc &indexLocation,
+                                                        TIntermTyped *indexExpression,
+                                                        const TSourceLoc &initLocation,
+                                                        TIntermTyped *initializer);
 
     TIntermAggregate *parseInvariantDeclaration(const TTypeQualifierBuilder &typeQualifierBuilder,
                                                 const TSourceLoc &identifierLoc,
                                                 const TString *identifier,
                                                 const TSymbol *symbol);
 
-    TIntermAggregate *parseDeclarator(TPublicType &publicType,
-                                      TIntermAggregate *aggregateDeclaration,
-                                      const TSourceLoc &identifierLocation,
-                                      const TString &identifier);
-    TIntermAggregate *parseArrayDeclarator(TPublicType &publicType,
-                                           TIntermAggregate *aggregateDeclaration,
-                                           const TSourceLoc &identifierLocation,
-                                           const TString &identifier,
-                                           const TSourceLoc &arrayLocation,
-                                           TIntermTyped *indexExpression);
-    TIntermAggregate *parseInitDeclarator(const TPublicType &publicType,
-                                          TIntermAggregate *aggregateDeclaration,
-                                          const TSourceLoc &identifierLocation,
-                                          const TString &identifier,
-                                          const TSourceLoc &initLocation,
-                                          TIntermTyped *initializer);
+    void parseDeclarator(TPublicType &publicType,
+                         const TSourceLoc &identifierLocation,
+                         const TString &identifier,
+                         TIntermDeclaration *declarationOut);
+    void parseArrayDeclarator(TPublicType &publicType,
+                              const TSourceLoc &identifierLocation,
+                              const TString &identifier,
+                              const TSourceLoc &arrayLocation,
+                              TIntermTyped *indexExpression,
+                              TIntermDeclaration *declarationOut);
+    void parseInitDeclarator(const TPublicType &publicType,
+                             const TSourceLoc &identifierLocation,
+                             const TString &identifier,
+                             const TSourceLoc &initLocation,
+                             TIntermTyped *initializer,
+                             TIntermDeclaration *declarationOut);
 
     // Parse a declarator like "a[n] = initializer"
-    TIntermAggregate *parseArrayInitDeclarator(const TPublicType &publicType,
-                                               TIntermAggregate *aggregateDeclaration,
-                                               const TSourceLoc &identifierLocation,
-                                               const TString &identifier,
-                                               const TSourceLoc &indexLocation,
-                                               TIntermTyped *indexExpression,
-                                               const TSourceLoc &initLocation,
-                                               TIntermTyped *initializer);
+    void parseArrayInitDeclarator(const TPublicType &publicType,
+                                  const TSourceLoc &identifierLocation,
+                                  const TString &identifier,
+                                  const TSourceLoc &indexLocation,
+                                  TIntermTyped *indexExpression,
+                                  const TSourceLoc &initLocation,
+                                  TIntermTyped *initializer,
+                                  TIntermDeclaration *declarationOut);
 
     void parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder);
     TIntermAggregate *addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
@@ -302,14 +302,14 @@ class TParseContext : angle::NonCopyable
                                         const TString *structName,
                                         TFieldList *fieldList);
 
-    TIntermAggregate *addInterfaceBlock(const TTypeQualifierBuilder &typeQualifierBuilder,
-                                        const TSourceLoc &nameLine,
-                                        const TString &blockName,
-                                        TFieldList *fieldList,
-                                        const TString *instanceName,
-                                        const TSourceLoc &instanceLine,
-                                        TIntermTyped *arrayIndex,
-                                        const TSourceLoc &arrayIndexLine);
+    TIntermDeclaration *addInterfaceBlock(const TTypeQualifierBuilder &typeQualifierBuilder,
+                                          const TSourceLoc &nameLine,
+                                          const TString &blockName,
+                                          TFieldList *fieldList,
+                                          const TString *instanceName,
+                                          const TSourceLoc &instanceLine,
+                                          TIntermTyped *arrayIndex,
+                                          const TSourceLoc &arrayIndexLine);
 
     void parseLocalSize(const TString &qualifierType,
                         const TSourceLoc &qualifierTypeLine,
@@ -409,8 +409,10 @@ class TParseContext : angle::NonCopyable
 
     TIntermTyped *addBinaryMathInternal(
         TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
-    TIntermTyped *createAssign(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
+    TIntermBinary *createAssign(TOperator op,
+                                TIntermTyped *left,
+                                TIntermTyped *right,
+                                const TSourceLoc &loc);
     // The funcReturnType parameter is expected to be non-null when the operation is a built-in function.
     // It is expected to be null for other unary operators.
     TIntermTyped *createUnaryMath(

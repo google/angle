@@ -222,6 +222,11 @@ bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return replaceChildNodeInternal(original, replacement);
 }
 
+bool TIntermDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+{
+    return replaceChildNodeInternal(original, replacement);
+}
+
 bool TIntermAggregateBase::replaceChildNodeInternal(TIntermNode *original, TIntermNode *replacement)
 {
     for (size_t ii = 0; ii < getSequence()->size(); ++ii)
@@ -320,10 +325,24 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
 
 void TIntermBlock::appendStatement(TIntermNode *statement)
 {
-    if (statement != nullptr)
+    // Declaration nodes with no children can appear if all the declarators just added constants to
+    // the symbol table instead of generating code. They're no-ops so they aren't added to blocks.
+    if (statement != nullptr && (statement->getAsDeclarationNode() == nullptr ||
+                                 !statement->getAsDeclarationNode()->getSequence()->empty()))
     {
         mStatements.push_back(statement);
     }
+}
+
+void TIntermDeclaration::appendDeclarator(TIntermTyped *declarator)
+{
+    ASSERT(declarator != nullptr);
+    ASSERT(declarator->getAsSymbolNode() != nullptr ||
+           (declarator->getAsBinaryNode() != nullptr &&
+            declarator->getAsBinaryNode()->getOp() == EOpInitialize));
+    ASSERT(mDeclarators.empty() ||
+           declarator->getType().sameElementType(mDeclarators.back()->getAsTyped()->getType()));
+    mDeclarators.push_back(declarator);
 }
 
 bool TIntermTernary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)

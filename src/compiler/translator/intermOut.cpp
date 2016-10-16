@@ -53,6 +53,7 @@ class TOutputTraverser : public TIntermTraverser
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
     bool visitBlock(Visit visit, TIntermBlock *) override;
+    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
     bool visitLoop(Visit visit, TIntermLoop *) override;
     bool visitBranch(Visit visit, TIntermBranch *) override;
 };
@@ -467,7 +468,6 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
       case EOpOuterProduct:  out << "outer product";   break;
 
-      case EOpDeclaration:   out << "Declaration: ";   break;
       case EOpInvariantDeclaration: out << "Invariant Declaration: "; break;
 
       default:
@@ -489,6 +489,16 @@ bool TOutputTraverser::visitBlock(Visit visit, TIntermBlock *node)
 
     OutputTreeText(out, node, mDepth);
     out << "Code block\n";
+
+    return true;
+}
+
+bool TOutputTraverser::visitDeclaration(Visit visit, TIntermDeclaration *node)
+{
+    TInfoSinkBase &out = sink;
+
+    OutputTreeText(out, node, mDepth);
+    out << "Declaration\n";
 
     return true;
 }

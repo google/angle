@@ -306,6 +306,7 @@ union YYSTYPE
             TIntermTyped* intermTypedNode;
             TIntermAggregate* intermAggregate;
             TIntermBlock* intermBlock;
+            TIntermDeclaration* intermDeclaration;
             TIntermSwitch* intermSwitch;
             TIntermCase* intermCase;
         };
@@ -729,35 +730,35 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   240,   240,   241,   244,   254,   257,   262,   267,   272,
-     277,   283,   286,   289,   292,   295,   298,   304,   311,   322,
-     326,   334,   337,   343,   347,   354,   360,   369,   377,   383,
-     389,   398,   401,   404,   407,   417,   418,   419,   420,   428,
-     429,   432,   435,   442,   443,   446,   452,   453,   457,   464,
-     465,   468,   471,   474,   480,   481,   484,   490,   491,   498,
-     499,   506,   507,   514,   515,   521,   522,   528,   529,   535,
-     536,   542,   543,   550,   551,   552,   553,   557,   558,   559,
-     563,   567,   571,   575,   582,   585,   591,   598,   605,   608,
-     614,   623,   627,   631,   635,   639,   646,   653,   656,   663,
-     671,   691,   701,   709,   734,   738,   742,   746,   753,   760,
-     763,   767,   771,   776,   781,   788,   792,   796,   800,   805,
-     810,   817,   827,   833,   836,   842,   846,   853,   859,   863,
-     867,   870,   873,   882,   888,   896,   899,   919,   938,   945,
-     949,   953,   956,   962,   972,   975,   978,   984,   991,   994,
-    1000,  1003,  1006,  1012,  1015,  1020,  1031,  1034,  1037,  1040,
-    1043,  1046,  1050,  1054,  1058,  1062,  1066,  1070,  1074,  1078,
-    1082,  1086,  1090,  1094,  1098,  1102,  1106,  1110,  1114,  1118,
-    1122,  1126,  1130,  1133,  1136,  1139,  1142,  1145,  1148,  1151,
-    1154,  1157,  1160,  1163,  1166,  1169,  1172,  1175,  1182,  1188,
-    1191,  1194,  1197,  1200,  1203,  1206,  1209,  1212,  1215,  1218,
-    1221,  1224,  1227,  1239,  1239,  1242,  1242,  1248,  1251,  1266,
-    1269,  1276,  1280,  1286,  1292,  1304,  1308,  1312,  1313,  1319,
-    1320,  1321,  1322,  1323,  1324,  1325,  1329,  1330,  1330,  1330,
-    1339,  1340,  1344,  1344,  1345,  1345,  1350,  1353,  1362,  1367,
-    1374,  1375,  1379,  1386,  1390,  1397,  1397,  1404,  1407,  1414,
-    1418,  1431,  1431,  1436,  1436,  1442,  1442,  1450,  1453,  1459,
-    1462,  1468,  1472,  1479,  1482,  1485,  1488,  1491,  1500,  1506,
-    1512,  1515,  1521,  1521
+       0,   241,   241,   242,   245,   255,   258,   263,   268,   273,
+     278,   284,   287,   290,   293,   296,   299,   305,   312,   323,
+     327,   335,   338,   344,   348,   355,   361,   370,   378,   384,
+     390,   399,   402,   405,   408,   418,   419,   420,   421,   429,
+     430,   433,   436,   443,   444,   447,   453,   454,   458,   465,
+     466,   469,   472,   475,   481,   482,   485,   491,   492,   499,
+     500,   507,   508,   515,   516,   522,   523,   529,   530,   536,
+     537,   543,   544,   551,   552,   553,   554,   558,   559,   560,
+     564,   568,   572,   576,   583,   586,   592,   599,   606,   609,
+     612,   621,   625,   629,   633,   637,   644,   651,   654,   661,
+     669,   689,   699,   707,   732,   736,   740,   744,   751,   758,
+     761,   765,   769,   774,   779,   786,   790,   794,   798,   803,
+     808,   815,   825,   831,   834,   840,   844,   851,   857,   861,
+     865,   868,   871,   880,   886,   894,   897,   917,   936,   943,
+     947,   951,   954,   960,   970,   973,   976,   982,   989,   992,
+     998,  1001,  1004,  1010,  1013,  1018,  1029,  1032,  1035,  1038,
+    1041,  1044,  1048,  1052,  1056,  1060,  1064,  1068,  1072,  1076,
+    1080,  1084,  1088,  1092,  1096,  1100,  1104,  1108,  1112,  1116,
+    1120,  1124,  1128,  1131,  1134,  1137,  1140,  1143,  1146,  1149,
+    1152,  1155,  1158,  1161,  1164,  1167,  1170,  1173,  1180,  1186,
+    1189,  1192,  1195,  1198,  1201,  1204,  1207,  1210,  1213,  1216,
+    1219,  1222,  1225,  1237,  1237,  1240,  1240,  1246,  1249,  1264,
+    1267,  1274,  1278,  1284,  1290,  1302,  1306,  1310,  1311,  1317,
+    1318,  1319,  1320,  1321,  1322,  1323,  1327,  1328,  1328,  1328,
+    1337,  1338,  1342,  1342,  1343,  1343,  1348,  1351,  1360,  1365,
+    1372,  1373,  1377,  1384,  1388,  1395,  1395,  1402,  1405,  1412,
+    1416,  1429,  1429,  1434,  1434,  1440,  1440,  1448,  1451,  1457,
+    1460,  1466,  1470,  1477,  1480,  1483,  1486,  1489,  1498,  1504,
+    1510,  1513,  1519,  1519
 };
 #endif
 
@@ -3143,10 +3144,7 @@ yyreduce:
   case 89:
 
     {
-        TIntermAggregate *aggNode = (yyvsp[-1].interm).intermAggregate;
-        if (aggNode && aggNode->getOp() == EOpNull)
-            aggNode->setOp(EOpDeclaration);
-        (yyval.interm.intermNode) = aggNode;
+        (yyval.interm.intermNode) = (yyvsp[-1].interm).intermDeclaration;
     }
 
     break;
@@ -3369,7 +3367,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-2].interm);
-        (yyval.interm).intermAggregate = context->parseDeclarator((yyval.interm).type, (yyvsp[-2].interm).intermAggregate, (yylsp[0]), *(yyvsp[0].lex).string);
+        context->parseDeclarator((yyval.interm).type, (yylsp[0]), *(yyvsp[0].lex).string, (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3378,7 +3376,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-5].interm);
-        (yyval.interm).intermAggregate = context->parseArrayDeclarator((yyval.interm).type, (yyvsp[-5].interm).intermAggregate, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), (yyvsp[-1].interm.intermTypedNode));
+        context->parseArrayDeclarator((yyval.interm).type, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), (yyvsp[-1].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3388,7 +3386,7 @@ yyreduce:
     {
         ES3_OR_NEWER("[]", (yylsp[-4]), "implicitly sized array");
         (yyval.interm) = (yyvsp[-6].interm);
-        (yyval.interm).intermAggregate = context->parseArrayInitDeclarator((yyval.interm).type, (yyvsp[-6].interm).intermAggregate, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        context->parseArrayInitDeclarator((yyval.interm).type, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3398,7 +3396,7 @@ yyreduce:
     {
         ES3_OR_NEWER("=", (yylsp[-1]), "first-class arrays (array initializer)");
         (yyval.interm) = (yyvsp[-7].interm);
-        (yyval.interm).intermAggregate = context->parseArrayInitDeclarator((yyval.interm).type, (yyvsp[-7].interm).intermAggregate, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        context->parseArrayInitDeclarator((yyval.interm).type, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3407,7 +3405,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[-4].interm);
-        (yyval.interm).intermAggregate = context->parseInitDeclarator((yyval.interm).type, (yyvsp[-4].interm).intermAggregate, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        context->parseInitDeclarator((yyval.interm).type, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode), (yyval.interm).intermDeclaration);
     }
 
     break;
@@ -3416,7 +3414,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[0].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), "");
+        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), "");
     }
 
     break;
@@ -3425,7 +3423,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-1].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), *(yyvsp[0].lex).string);
+        (yyval.interm).intermDeclaration = context->parseSingleDeclaration((yyval.interm).type, (yylsp[0]), *(yyvsp[0].lex).string);
     }
 
     break;
@@ -3434,7 +3432,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-4].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleArrayDeclaration((yyval.interm).type, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), (yyvsp[-1].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleArrayDeclaration((yyval.interm).type, (yylsp[-3]), *(yyvsp[-3].lex).string, (yylsp[-2]), (yyvsp[-1].interm.intermTypedNode));
     }
 
     break;
@@ -3444,7 +3442,7 @@ yyreduce:
     {
         ES3_OR_NEWER("[]", (yylsp[-3]), "implicitly sized array");
         (yyval.interm).type = (yyvsp[-5].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-4]), *(yyvsp[-4].lex).string, (yylsp[-3]), nullptr, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -3454,7 +3452,7 @@ yyreduce:
     {
         ES3_OR_NEWER("=", (yylsp[-1]), "first-class arrays (array initializer)");
         (yyval.interm).type = (yyvsp[-6].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleArrayInitDeclaration((yyval.interm).type, (yylsp[-5]), *(yyvsp[-5].lex).string, (yylsp[-4]), (yyvsp[-3].interm.intermTypedNode), (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -3463,7 +3461,7 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[-3].interm.type);
-        (yyval.interm).intermAggregate = context->parseSingleInitDeclaration((yyval.interm).type, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).intermDeclaration = context->parseSingleInitDeclaration((yyval.interm).type, (yylsp[-2]), *(yyvsp[-2].lex).string, (yylsp[-1]), (yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -4672,10 +4670,10 @@ yyreduce:
   case 260:
 
     {
-        TIntermNode *intermNode;
+        TIntermBinary *initNode = nullptr;
         context->checkIsScalarBool((yylsp[-2]), (yyvsp[-3].interm.type));
 
-        if (!context->executeInitializer((yylsp[-2]), *(yyvsp[-2].lex).string, (yyvsp[-3].interm.type), (yyvsp[0].interm.intermTypedNode), &intermNode))
+        if (!context->executeInitializer((yylsp[-2]), *(yyvsp[-2].lex).string, (yyvsp[-3].interm.type), (yyvsp[0].interm.intermTypedNode), &initNode))
             (yyval.interm.intermTypedNode) = (yyvsp[0].interm.intermTypedNode);
         else {
             (yyval.interm.intermTypedNode) = 0;

@@ -70,8 +70,7 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 
     nextTemporaryIndex();
 
-    TIntermTyped *typedCondition     = ifElse->getCondition()->getAsTyped();
-    TIntermAggregate *storeCondition = createTempInitDeclaration(typedCondition);
+    TIntermDeclaration *storeCondition = createTempInitDeclaration(ifElse->getCondition());
 
     TIntermBlock *falseBlock = nullptr;
 

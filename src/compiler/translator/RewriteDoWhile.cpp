@@ -67,7 +67,7 @@ class DoWhileRewriter : public TIntermTraverser
             TType boolType = TType(EbtBool);
 
             // bool temp = false;
-            TIntermAggregate *tempDeclaration = nullptr;
+            TIntermDeclaration *tempDeclaration = nullptr;
             {
                 TConstantUnion *falseConstant = new TConstantUnion();
                 falseConstant->setBConst(false);

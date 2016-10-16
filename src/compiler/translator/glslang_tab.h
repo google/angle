@@ -219,6 +219,7 @@ union YYSTYPE
             TIntermTyped* intermTypedNode;
             TIntermAggregate* intermAggregate;
             TIntermBlock *intermBlock;
+            TIntermDeclaration *intermDeclaration;
             TIntermSwitch* intermSwitch;
             TIntermCase* intermCase;
         };

@@ -77,6 +77,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TIntermTyped* intermTypedNode;
             TIntermAggregate* intermAggregate;
             TIntermBlock* intermBlock;
+            TIntermDeclaration* intermDeclaration;
             TIntermSwitch* intermSwitch;
             TIntermCase* intermCase;
         };
@@ -606,10 +607,7 @@ declaration
         $$ = context->addFunctionPrototypeDeclaration(*($1.function), @1);
     }
     | init_declarator_list SEMICOLON {
-        TIntermAggregate *aggNode = $1.intermAggregate;
-        if (aggNode && aggNode->getOp() == EOpNull)
-            aggNode->setOp(EOpDeclaration);
-        $$ = aggNode;
+        $$ = $1.intermDeclaration;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
         if (($2 == EbpHigh) && (context->getShaderType() == GL_FRAGMENT_SHADER) && !context->getFragmentPrecisionHigh()) {
@@ -762,54 +760,54 @@ init_declarator_list
     }
     | init_declarator_list COMMA identifier {
         $$ = $1;
-        $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, @3, *$3.string);
+        context->parseDeclarator($$.type, @3, *$3.string, $$.intermDeclaration);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
-        $$.intermAggregate = context->parseArrayDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
+        context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $5, $$.intermDeclaration);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
         ES3_OR_NEWER("[]", @3, "implicitly sized array");
         $$ = $1;
-        $$.intermAggregate = context->parseArrayInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, nullptr, @6, $7);
+        context->parseArrayInitDeclarator($$.type, @3, *$3.string, @4, nullptr, @6, $7, $$.intermDeclaration);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
         ES3_OR_NEWER("=", @7, "first-class arrays (array initializer)");
         $$ = $1;
-        $$.intermAggregate = context->parseArrayInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5, @7, $8);
+        context->parseArrayInitDeclarator($$.type, @3, *$3.string, @4, $5, @7, $8, $$.intermDeclaration);
     }
     | init_declarator_list COMMA identifier EQUAL initializer {
         $$ = $1;
-        $$.intermAggregate = context->parseInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
+        context->parseInitDeclarator($$.type, @3, *$3.string, @4, $5, $$.intermDeclaration);
     }
     ;
 
 single_declaration
     : fully_specified_type {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, @1, "");
+        $$.intermDeclaration = context->parseSingleDeclaration($$.type, @1, "");
     }
     | fully_specified_type identifier {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, @2, *$2.string);
+        $$.intermDeclaration = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
+        $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
     }
     | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
         ES3_OR_NEWER("[]", @3, "implicitly sized array");
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, nullptr, @5, $6);
+        $$.intermDeclaration = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, nullptr, @5, $6);
     }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
         ES3_OR_NEWER("=", @6, "first-class arrays (array initializer)");
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, $4, @6, $7);
+        $$.intermDeclaration = context->parseSingleArrayInitDeclaration($$.type, @2, *$2.string, @3, $4, @6, $7);
     }
     | fully_specified_type identifier EQUAL initializer {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleInitDeclaration($$.type, @2, *$2.string, @3, $4);
+        $$.intermDeclaration = context->parseSingleInitDeclaration($$.type, @2, *$2.string, @3, $4);
     }
     ;
 
@@ -1416,10 +1414,10 @@ condition
         context->checkIsScalarBool($1->getLine(), $1);
     }
     | fully_specified_type identifier EQUAL initializer {
-        TIntermNode *intermNode;
+        TIntermBinary *initNode = nullptr;
         context->checkIsScalarBool(@2, $1);
 
-        if (!context->executeInitializer(@2, *$2.string, $1, $4, &intermNode))
+        if (!context->executeInitializer(@2, *$2.string, $1, $4, &initNode))
             $$ = $4;
         else {
             $$ = 0;

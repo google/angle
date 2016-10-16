@@ -265,8 +265,8 @@ TString ScalarizeVecAndMatConstructorArgs::createTempVariable(TIntermTyped *orig
     TIntermSymbol *symbolNode = new TIntermSymbol(-1, tempVarName, type);
     TIntermBinary *init       = new TIntermBinary(EOpInitialize, symbolNode, original);
 
-    TIntermAggregate *decl = new TIntermAggregate(EOpDeclaration);
-    decl->getSequence()->push_back(init);
+    TIntermDeclaration *decl = new TIntermDeclaration();
+    decl->appendDeclarator(init);
 
     ASSERT(mBlockStack.size() > 0);
     TIntermSequence &sequence = mBlockStack.back();

@@ -32,6 +32,7 @@ class TDiagnostics;
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBlock;
+class TIntermDeclaration;
 class TIntermFunctionDefinition;
 class TIntermSwizzle;
 class TIntermBinary;
@@ -98,6 +99,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermFunctionDefinition *getAsFunctionDefinition() { return nullptr; }
     virtual TIntermAggregate *getAsAggregate() { return 0; }
     virtual TIntermBlock *getAsBlock() { return nullptr; }
+    virtual TIntermDeclaration *getAsDeclarationNode() { return nullptr; }
     virtual TIntermSwizzle *getAsSwizzleNode() { return nullptr; }
     virtual TIntermBinary *getAsBinaryNode() { return 0; }
     virtual TIntermUnary *getAsUnaryNode() { return 0; }
@@ -710,6 +712,28 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
     TIntermSequence mStatements;
 };
 
+// Struct, interface block or variable declaration. Can contain multiple variable declarators.
+class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
+{
+  public:
+    TIntermDeclaration() : TIntermNode() {}
+    ~TIntermDeclaration() {}
+
+    TIntermDeclaration *getAsDeclarationNode() override { return this; }
+    void traverse(TIntermTraverser *it) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+
+    // Only intended for initially building the declaration.
+    // The declarator node should be either TIntermSymbol or TIntermBinary with op set to
+    // EOpInitialize.
+    void appendDeclarator(TIntermTyped *declarator);
+
+    TIntermSequence *getSequence() override { return &mDeclarators; }
+    const TIntermSequence *getSequence() const override { return &mDeclarators; }
+  protected:
+    TIntermSequence mDeclarators;
+};
+
 // For ternary operators like a ? b : c.
 class TIntermTernary : public TIntermTyped
 {
@@ -858,6 +882,7 @@ class TIntermTraverser : angle::NonCopyable
     }
     virtual bool visitAggregate(Visit visit, TIntermAggregate *node) { return true; }
     virtual bool visitBlock(Visit visit, TIntermBlock *node) { return true; }
+    virtual bool visitDeclaration(Visit visit, TIntermDeclaration *node) { return true; }
     virtual bool visitLoop(Visit visit, TIntermLoop *node) { return true; }
     virtual bool visitBranch(Visit visit, TIntermBranch *node) { return true; }
 
@@ -877,6 +902,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void traverseFunctionDefinition(TIntermFunctionDefinition *node);
     virtual void traverseAggregate(TIntermAggregate *node);
     virtual void traverseBlock(TIntermBlock *node);
+    virtual void traverseDeclaration(TIntermDeclaration *node);
     virtual void traverseLoop(TIntermLoop *node);
     virtual void traverseBranch(TIntermBranch *node);
 
@@ -987,11 +1013,11 @@ class TIntermTraverser : angle::NonCopyable
     // Helper to create a temporary symbol node.
     TIntermSymbol *createTempSymbol(const TType &type);
     // Create a node that declares but doesn't initialize a temporary symbol.
-    TIntermAggregate *createTempDeclaration(const TType &type);
+    TIntermDeclaration *createTempDeclaration(const TType &type);
     // Create a node that initializes the current temporary symbol with initializer having the given qualifier.
-    TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier);
+    TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier);
     // Create a node that initializes the current temporary symbol with initializer.
-    TIntermAggregate *createTempInitDeclaration(TIntermTyped *initializer);
+    TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer);
     // Create a node that assigns rightNode to the current temporary symbol.
     TIntermBinary *createTempAssignment(TIntermTyped *rightNode);
     // Increment temporary symbol index.

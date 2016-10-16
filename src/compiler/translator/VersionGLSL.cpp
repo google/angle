@@ -62,21 +62,22 @@ void TVersionGLSL::visitSymbol(TIntermSymbol *node)
     }
 }
 
+bool TVersionGLSL::visitDeclaration(Visit, TIntermDeclaration *node)
+{
+    const TIntermSequence &sequence = *(node->getSequence());
+    if (sequence.front()->getAsTyped()->getType().isInvariant())
+    {
+        ensureVersionIsAtLeast(GLSL_VERSION_120);
+    }
+    return true;
+}
+
 bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
 
     switch (node->getOp())
     {
-      case EOpDeclaration:
-        {
-            const TIntermSequence &sequence = *(node->getSequence());
-            if (sequence.front()->getAsTyped()->getType().isInvariant())
-            {
-                ensureVersionIsAtLeast(GLSL_VERSION_120);
-            }
-            break;
-        }
       case EOpInvariantDeclaration:
         ensureVersionIsAtLeast(GLSL_VERSION_120);
         break;

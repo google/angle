@@ -68,6 +68,11 @@ void TIntermBlock::traverse(TIntermTraverser *it)
     it->traverseBlock(this);
 }
 
+void TIntermDeclaration::traverse(TIntermTraverser *it)
+{
+    it->traverseDeclaration(this);
+}
+
 void TIntermAggregate::traverse(TIntermTraverser *it)
 {
     it->traverseAggregate(this);
@@ -155,24 +160,25 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type)
     return createTempSymbol(type, EvqTemporary);
 }
 
-TIntermAggregate *TIntermTraverser::createTempDeclaration(const TType &type)
+TIntermDeclaration *TIntermTraverser::createTempDeclaration(const TType &type)
 {
-    TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
-    tempDeclaration->getSequence()->push_back(createTempSymbol(type));
+    TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
+    tempDeclaration->appendDeclarator(createTempSymbol(type));
     return tempDeclaration;
 }
 
-TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier)
+TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer,
+                                                                TQualifier qualifier)
 {
     ASSERT(initializer != nullptr);
     TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType(), qualifier);
-    TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
+    TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
     TIntermBinary *tempInit           = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
-    tempDeclaration->getSequence()->push_back(tempInit);
+    tempDeclaration->appendDeclarator(tempInit);
     return tempDeclaration;
 }
 
-TIntermAggregate *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
+TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *initializer)
 {
     return createTempInitDeclaration(initializer, EvqTemporary);
 }
@@ -488,6 +494,37 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 
     if (visit && postVisit)
         visitBlock(PostVisit, node);
+}
+
+// Traverse a declaration node.
+void TIntermTraverser::traverseDeclaration(TIntermDeclaration *node)
+{
+    bool visit = true;
+
+    TIntermSequence *sequence = node->getSequence();
+
+    if (preVisit)
+        visit = visitDeclaration(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+
+        for (auto *child : *sequence)
+        {
+            child->traverse(this);
+            if (visit && inVisit)
+            {
+                if (child != sequence->back())
+                    visit = visitDeclaration(InVisit, node);
+            }
+        }
+
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitDeclaration(PostVisit, node);
 }
 
 // Traverse an aggregate node.  Same comments in binary node apply here.

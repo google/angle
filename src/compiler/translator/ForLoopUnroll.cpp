@@ -51,7 +51,7 @@ bool ForLoopUnrollMarker::visitLoop(Visit, TIntermLoop *node)
         // Check if loop index type is integer.
         // This is called after ValidateLimitations pass, so the loop has the limited form specified
         // in ESSL 1.00 appendix A.
-        TIntermSequence *declSeq = node->getInit()->getAsAggregate()->getSequence();
+        TIntermSequence *declSeq = node->getInit()->getAsDeclarationNode()->getSequence();
         TIntermSymbol *symbol = (*declSeq)[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
         if (symbol->getBasicType() == EbtInt)
             node->setUnrollFlag(true);

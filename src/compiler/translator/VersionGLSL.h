@@ -58,6 +58,7 @@ class TVersionGLSL : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *) override;
     bool visitAggregate(Visit, TIntermAggregate *) override;
+    bool visitDeclaration(Visit, TIntermDeclaration *node) override;
 
   private:
     void ensureVersionIsAtLeast(int version);

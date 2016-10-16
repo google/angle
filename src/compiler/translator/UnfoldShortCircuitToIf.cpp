@@ -134,9 +134,7 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
     // Unfold "b ? x : y" into "type s; if(b) s = x; else s = y;"
     TIntermSequence insertions;
 
-    TIntermSymbol *tempSymbol         = createTempSymbol(node->getType());
-    TIntermAggregate *tempDeclaration = new TIntermAggregate(EOpDeclaration);
-    tempDeclaration->getSequence()->push_back(tempSymbol);
+    TIntermDeclaration *tempDeclaration = createTempDeclaration(node->getType());
     insertions.push_back(tempDeclaration);
 
     TIntermBlock *trueBlock       = new TIntermBlock();

@@ -111,7 +111,7 @@ bool DeferGlobalInitializersTraverser::visitBinary(Visit visit, TIntermBinary *n
             if (symbolNode->getQualifier() == EvqConst)
             {
                 // All of the siblings in the same declaration need to have consistent qualifiers.
-                auto *siblings = getParentNode()->getAsAggregate()->getSequence();
+                auto *siblings = getParentNode()->getAsDeclarationNode()->getSequence();
                 for (TIntermNode *siblingNode : *siblings)
                 {
                     TIntermBinary *siblingBinary = siblingNode->getAsBinaryNode();

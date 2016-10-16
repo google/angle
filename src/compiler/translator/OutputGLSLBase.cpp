@@ -916,27 +916,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         out << ")";
         visitChildren = false;
         break;
-      case EOpDeclaration:
-        // Variable declaration.
-        if (visit == PreVisit)
-        {
-            const TIntermSequence &sequence = *(node->getSequence());
-            const TIntermTyped *variable = sequence.front()->getAsTyped();
-            writeLayoutQualifier(variable->getType());
-            writeVariableType(variable->getType());
-            out << " ";
-            mDeclaringVariables = true;
-        }
-        else if (visit == InVisit)
-        {
-            out << ", ";
-            mDeclaringVariables = true;
-        }
-        else
-        {
-            mDeclaringVariables = false;
-        }
-        break;
       case EOpInvariantDeclaration:
         // Invariant declaration.
         ASSERT(visit == PreVisit);
@@ -1059,6 +1038,32 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
     return visitChildren;
 }
 
+bool TOutputGLSLBase::visitDeclaration(Visit visit, TIntermDeclaration *node)
+{
+    TInfoSinkBase &out = objSink();
+
+    // Variable declaration.
+    if (visit == PreVisit)
+    {
+        const TIntermSequence &sequence = *(node->getSequence());
+        const TIntermTyped *variable    = sequence.front()->getAsTyped();
+        writeLayoutQualifier(variable->getType());
+        writeVariableType(variable->getType());
+        out << " ";
+        mDeclaringVariables = true;
+    }
+    else if (visit == InVisit)
+    {
+        out << ", ";
+        mDeclaringVariables = true;
+    }
+    else
+    {
+        mDeclaringVariables = false;
+    }
+    return true;
+}
+
 bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
 {
     TInfoSinkBase &out = objSink();
@@ -1092,8 +1097,7 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
         else
         {
             // Need to put a one-iteration loop here to handle break.
-            TIntermSequence *declSeq =
-                node->getInit()->getAsAggregate()->getSequence();
+            TIntermSequence *declSeq = node->getInit()->getAsDeclarationNode()->getSequence();
             TIntermSymbol *indexSymbol =
                 (*declSeq)[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
             TString name = hashVariableName(indexSymbol->getSymbol());
