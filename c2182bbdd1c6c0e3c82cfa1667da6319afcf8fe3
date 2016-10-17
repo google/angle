@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc9bc331_ca6fbb17",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T04:01:12Z",
+      "side": 1,
+      "message": "We are going to expand driver and hardware detection soon, I think it would make sense to put VendorID and IntelDeviceIDs in a new header such as \"versiondetection.h\".\nOther reviewers, what do you think?",
+      "revId": "c2182bbdd1c6c0e3c82cfa1667da6319afcf8fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_0a660346",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T04:01:12Z",
+      "side": 1,
+      "message": "nit: these could use a helper \"DeviceIdInList(uiint32_t id, uint32_t *list, size_t size)\".\nnit: can we make use of the ArraySize macro instead of sizeof() / sizeof()?\nnit: Standalone function names are CamelCase.",
+      "revId": "c2182bbdd1c6c0e3c82cfa1667da6319afcf8fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
