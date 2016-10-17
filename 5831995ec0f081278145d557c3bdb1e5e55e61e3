@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "dc9bc331_87968927",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T16:36:00Z",
+      "side": 1,
+      "message": "Could be worth having TPublicType::initializeBasicType() that does all of what\u0027s below to avoid missing setting memoryQualifier.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_c48b2f38",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -13,6 +30,24 @@
       "writtenOn": "2016-10-17T15:58:58Z",
       "side": 1,
       "message": "I don\u0027t think that the spec actually forbids images in structs. The test should be changed to the opposite - it should include a \"uniform myStruct S;\" as well.\n\nYou could of course add another test for that a shader can\u0027t declare an instance of a struct that contains an image with other qualifiers than \"uniform\".",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_872a09ae",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2838,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T16:36:00Z",
+      "side": 1,
+      "message": "The spec forbids it, see page 32 of https://www.khronos.org/registry/gles/specs/3.1/GLSL_ES_Specification_3.10.withchanges.pdf",
+      "parentUuid": "dc9bc331_c48b2f38",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -42,6 +77,24 @@
     },
     {
       "key": {
+        "uuid": "dc9bc331_6729fdb6",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T16:36:00Z",
+      "side": 1,
+      "message": "+1 on removing the qualifier, the test should still fail.",
+      "parentUuid": "dc9bc331_243d3384",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_e4366ba5",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -53,6 +106,23 @@
       "writtenOn": "2016-10-17T15:58:58Z",
       "side": 1,
       "message": "This test could use a reference to the spec.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_8711a979",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2894,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-17T16:36:00Z",
+      "side": 1,
+      "message": "The test should be passing if the invariant or the readonly qualifiers were removed which doesn\u0027t seem to be the case here.",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
