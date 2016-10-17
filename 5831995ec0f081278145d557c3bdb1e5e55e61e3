@@ -1,0 +1,112 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc9bc331_c48b2f38",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2838,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "I don\u0027t think that the spec actually forbids images in structs. The test should be changed to the opposite - it should include a \"uniform myStruct S;\" as well.\n\nYou could of course add another test for that a shader can\u0027t declare an instance of a struct that contains an image with other qualifiers than \"uniform\".",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_243d3384",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "This incorrect qualifier is what\u0027s making the shader fail, not the fact that there\u0027s an image in the struct.",
+      "range": {
+        "startLine": 2845,
+        "startChar": 40,
+        "endLine": 2845,
+        "endChar": 47
+      },
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_e4366ba5",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2855,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "This test could use a reference to the spec.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_04fd97c4",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "FunctionCallFinder.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_24fa13cd",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "Check for mOp \u003d\u003d EOpFunctionCall.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc9bc331_c406cff8",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T15:58:58Z",
+      "side": 1,
+      "message": "Change the name to FindFunctionCallNode, as it is specifically used to find function calls, not function definitions for example. Add a comment that functionName is the mangled function name.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
