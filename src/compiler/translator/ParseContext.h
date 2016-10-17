@@ -53,7 +53,7 @@ class TParseContext : angle::NonCopyable
           mChecksPrecisionErrors(checksPrecErrors),
           mFragmentPrecisionHighOnESSL1(false),
           mDefaultMatrixPacking(EmpColumnMajor),
-          mDefaultBlockStorage(EbsShared),
+          mDefaultBlockStorage(IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
           mDiagnostics(is),
           mDirectiveHandler(ext,
                             mDiagnostics,
