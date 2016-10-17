@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "dc9bc331_a772a5c5",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2838,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-17T16:42:37Z",
+      "side": 1,
+      "message": "Aha, I was still looking at revision 3. In that case just remove \"uniform\" from the test, make sure that the test fails, and add a reference to the spec in a comment.",
+      "parentUuid": "dc9bc331_872a09ae",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_243d3384",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
