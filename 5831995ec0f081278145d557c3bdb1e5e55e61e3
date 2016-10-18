@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5ccef2f0_2bad0588",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Actually, it doesn\u0027t make sense for the memory qualifier to be initialized.\nI will roll back the code.",
+      "parentUuid": "dc9bc331_87968927",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_c48b2f38",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "7c82d683_8777aac3",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2838,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc9bc331_a772a5c5",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_243d3384",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -113,6 +149,24 @@
     },
     {
       "key": {
+        "uuid": "bca52e1d_eb3c917d",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done. There was an actual bug since there was no check for images in struct. Thanks for noticing.",
+      "parentUuid": "dc9bc331_6729fdb6",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_e4366ba5",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -124,6 +178,24 @@
       "writtenOn": "2016-10-17T15:58:58Z",
       "side": 1,
       "message": "This test could use a reference to the spec.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ccef2f0_4b8b191e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2855,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done.\nAlso, removed the uniform.",
+      "parentUuid": "dc9bc331_e4366ba5",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -147,6 +219,24 @@
     },
     {
       "key": {
+        "uuid": "5ccef2f0_ab98d56e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2894,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "When I remove \"readonly\", the shader does compile.\nRemoving the invariant should lead to a compilation error.",
+      "parentUuid": "dc9bc331_8711a979",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_04fd97c4",
         "filename": "src/tests/test_utils/compiler_test.cpp",
         "patchSetId": 14
@@ -158,6 +248,24 @@
       "writtenOn": "2016-10-17T15:58:58Z",
       "side": 1,
       "message": "FunctionCallFinder.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c82d683_a744ae75",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc9bc331_04fd97c4",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -181,6 +289,24 @@
     },
     {
       "key": {
+        "uuid": "5ccef2f0_8b9d115f",
+        "filename": "src/tests/test_utils/compiler_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "dc9bc331_24fa13cd",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_c406cff8",
         "filename": "src/tests/test_utils/compiler_test.h",
         "patchSetId": 14
@@ -192,6 +318,24 @@
       "writtenOn": "2016-10-17T15:58:58Z",
       "side": 1,
       "message": "Change the name to FindFunctionCallNode, as it is specifically used to find function calls, not function definitions for example. Add a comment that functionName is the mangled function name.",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bca52e1d_8bf06dc3",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-18T08:37:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc9bc331_c406cff8",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
