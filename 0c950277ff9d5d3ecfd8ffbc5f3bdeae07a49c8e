@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cf3ffac_9515a3b4",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2617,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-18T15:47:16Z",
+      "side": 1,
+      "message": "Good catch, didn\u0027t notice this.",
+      "range": {
+        "startLine": 2617,
+        "startChar": 41,
+        "endLine": 2617,
+        "endChar": 51
+      },
+      "revId": "0c950277ff9d5d3ecfd8ffbc5f3bdeae07a49c8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
