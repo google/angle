@@ -33,6 +33,24 @@
       "revId": "c2182bbdd1c6c0e3c82cfa1667da6319afcf8fe3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_15e893c7",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-18T16:58:24Z",
+      "side": 1,
+      "message": "Can also refactor the loop a bit:\n\n  return std::find(std::begin(Kabylake), std::end(Kabylake), DeviceId) !\u003d std::end(Kabylake);",
+      "parentUuid": "dc9bc331_0a660346",
+      "revId": "c2182bbdd1c6c0e3c82cfa1667da6319afcf8fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
