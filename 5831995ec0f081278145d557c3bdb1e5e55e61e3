@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "3cf3ffac_d5a9eb67",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-18T15:47:16Z",
+      "side": 1,
+      "message": "It would be nicer if the memory qualifier had some defined state, even if it is not used. I agree with Corentin\u0027s suggestion.",
+      "parentUuid": "5ccef2f0_2bad0588",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_c48b2f38",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
@@ -231,6 +249,24 @@
       "side": 1,
       "message": "When I remove \"readonly\", the shader does compile.\nRemoving the invariant should lead to a compilation error.",
       "parentUuid": "dc9bc331_8711a979",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_95c76330",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2894,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-18T15:47:16Z",
+      "side": 1,
+      "message": "Agreed with Martin, I don\u0027t see a problem here.",
+      "parentUuid": "5ccef2f0_ab98d56e",
       "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
