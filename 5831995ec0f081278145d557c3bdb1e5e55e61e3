@@ -273,6 +273,24 @@
     },
     {
       "key": {
+        "uuid": "3cf3ffac_b51b7fe3",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2894,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-18T15:48:32Z",
+      "side": 1,
+      "message": "I hadn\u0027t realized you could give qualifiers after declaration in GLSL, test looks good.",
+      "parentUuid": "3cf3ffac_95c76330",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_04fd97c4",
         "filename": "src/tests/test_utils/compiler_test.cpp",
         "patchSetId": 14
