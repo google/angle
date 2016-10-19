@@ -62,6 +62,9 @@ class Sampler final : public RefCountObject, public LabeledObject
     void setCompareFunc(GLenum compareFunc);
     GLenum getCompareFunc() const;
 
+    void setSRGBDecode(GLenum sRGBDecode);
+    GLenum getSRGBDecode() const;
+
     const SamplerState &getSamplerState() const;
 
     rx::SamplerImpl *getImplementation() const;

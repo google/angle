@@ -871,6 +871,20 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         functions->isAtLeastGLES(gl::Version(3, 1));
 
     extensions->pathRendering = canEnableGLPathRendering || canEnableESPathRendering;
+
+    extensions->textureSRGBDecode = functions->hasGLExtension("GL_EXT_texture_sRGB_decode") ||
+                                    functions->hasGLESExtension("GL_EXT_texture_sRGB_decode");
+
+#if defined(ANGLE_PLATFORM_APPLE)
+    VendorID vendor = GetVendorID(functions);
+    if ((vendor == VENDOR_ID_AMD || vendor == VENDOR_ID_INTEL) &&
+        *maxSupportedESVersion >= gl::Version(3, 0))
+    {
+        // Apple Intel/AMD drivers do not correctly use the TEXTURE_SRGB_DECODE property of sampler
+        // states.  Disable this extension when we would advertise any ES version that has samplers.
+        extensions->textureSRGBDecode = false;
+    }
+#endif
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

@@ -192,6 +192,8 @@ struct SamplerState
 
     GLenum compareMode;
     GLenum compareFunc;
+
+    GLenum sRGBDecode;
 };
 
 bool operator==(const SamplerState &a, const SamplerState &b);

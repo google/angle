@@ -217,6 +217,9 @@ class Texture final : public egl::ImageSibling,
     void setCompareFunc(GLenum compareFunc);
     GLenum getCompareFunc() const;
 
+    void setSRGBDecode(GLenum sRGBDecode);
+    GLenum getSRGBDecode() const;
+
     const SamplerState &getSamplerState() const;
 
     void setBaseLevel(GLuint baseLevel);
@@ -330,6 +333,7 @@ class Texture final : public egl::ImageSibling,
         DIRTY_BIT_MAX_LOD,
         DIRTY_BIT_COMPARE_MODE,
         DIRTY_BIT_COMPARE_FUNC,
+        DIRTY_BIT_SRGB_DECODE,
 
         // Texture state
         DIRTY_BIT_SWIZZLE_RED,

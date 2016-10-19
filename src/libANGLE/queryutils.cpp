@@ -89,6 +89,9 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
         case GL_TEXTURE_COMPARE_FUNC:
             *params = ConvertFromGLenum<ParamType>(texture->getCompareFunc());
             break;
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            *params = ConvertFromGLenum<ParamType>(texture->getSRGBDecode());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -153,6 +156,9 @@ void SetTexParameterBase(Texture *texture, GLenum pname, const ParamType *params
         case GL_TEXTURE_MAX_LOD:
             texture->setMaxLod(ConvertToGLfloat(params[0]));
             break;
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            texture->setSRGBDecode(ConvertToGLenum(params[0]));
+            break;
         default:
             UNREACHABLE();
             break;
@@ -194,6 +200,9 @@ void QuerySamplerParameterBase(const Sampler *sampler, GLenum pname, ParamType *
         case GL_TEXTURE_COMPARE_FUNC:
             *params = ConvertFromGLenum<ParamType>(sampler->getCompareFunc());
             break;
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            *params = ConvertFromGLenum<ParamType>(sampler->getSRGBDecode());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -234,6 +243,9 @@ void SetSamplerParameterBase(Sampler *sampler, GLenum pname, const ParamType *pa
             break;
         case GL_TEXTURE_MAX_LOD:
             sampler->setMaxLod(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            sampler->setSRGBDecode(ConvertToGLenum(params[0]));
             break;
         default:
             UNREACHABLE();

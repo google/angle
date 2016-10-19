@@ -683,6 +683,17 @@ GLenum Texture::getCompareFunc() const
     return mState.mSamplerState.compareFunc;
 }
 
+void Texture::setSRGBDecode(GLenum sRGBDecode)
+{
+    mState.mSamplerState.sRGBDecode = sRGBDecode;
+    mDirtyBits.set(DIRTY_BIT_SRGB_DECODE);
+}
+
+GLenum Texture::getSRGBDecode() const
+{
+    return mState.mSamplerState.sRGBDecode;
+}
+
 const SamplerState &Texture::getSamplerState() const
 {
     return mState.mSamplerState;

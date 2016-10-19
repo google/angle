@@ -858,6 +858,10 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_COMPARE_FUNC,
                                           mState.getSamplerState().compareFunc);
                 break;
+            case gl::Texture::DIRTY_BIT_SRGB_DECODE:
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_SRGB_DECODE_EXT,
+                                          mState.getSamplerState().sRGBDecode);
+                break;
 
             // Texture state
             case gl::Texture::DIRTY_BIT_SWIZZLE_RED:

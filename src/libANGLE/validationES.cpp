@@ -471,6 +471,15 @@ bool ValidateGetTexParameterBase(Context *context, GLenum target, GLenum pname, 
             }
             break;
 
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            if (!context->getExtensions().textureSRGBDecode)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_EXT_texture_sRGB_decode is not enabled."));
+                return false;
+            }
+            break;
+
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
             return false;
@@ -592,6 +601,29 @@ bool ValidateTextureCompareFuncValue(Context *context, ParamType *params)
         case GL_NOTEQUAL:
         case GL_ALWAYS:
         case GL_NEVER:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown param value."));
+            return false;
+    }
+
+    return true;
+}
+
+template <typename ParamType>
+bool ValidateTextureSRGBDecodeValue(Context *context, ParamType *params)
+{
+    if (!context->getExtensions().textureSRGBDecode)
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "GL_EXT_texture_sRGB_decode is not enabled."));
+        return false;
+    }
+
+    switch (ConvertToGLenum(params[0]))
+    {
+        case GL_DECODE_EXT:
+        case GL_SKIP_DECODE_EXT:
             break;
 
         default:
@@ -777,6 +809,13 @@ bool ValidateTexParameterBase(Context *context,
             }
             break;
 
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            if (!ValidateTextureSRGBDecodeValue(context, params))
+            {
+                return false;
+            }
+            break;
+
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
             return false;
@@ -857,6 +896,13 @@ bool ValidateSamplerParameterBase(Context *context,
             }
             break;
 
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            if (!ValidateTextureSRGBDecodeValue(context, params))
+            {
+                return false;
+            }
+            break;
+
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
             return false;
@@ -899,6 +945,15 @@ bool ValidateGetSamplerParameterBase(Context *context,
         case GL_TEXTURE_MAX_LOD:
         case GL_TEXTURE_COMPARE_MODE:
         case GL_TEXTURE_COMPARE_FUNC:
+            break;
+
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            if (!context->getExtensions().textureSRGBDecode)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_EXT_texture_sRGB_decode is not enabled."));
+                return false;
+            }
             break;
 
         default:

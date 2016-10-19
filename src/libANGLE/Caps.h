@@ -305,6 +305,9 @@ struct Extensions
     // GL_ANGLE_robust_client_memory
     bool robustClientMemory;
 
+    // GL_EXT_texture_sRGB_decode
+    bool textureSRGBDecode;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float
