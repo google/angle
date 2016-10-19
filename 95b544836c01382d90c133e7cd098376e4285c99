@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c894b41_9d33f357",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-10-19T23:14:55Z",
+      "side": 1,
+      "message": "It\u0027s unfortunate that both this change and the RemoveInvariantDeclaration AST traverser are needed. It would be great if both could be handled in one way. I remember that modifying the types of variables is tricky though since they\u0027re stored in hash tables.",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 4
+      },
+      "revId": "95b544836c01382d90c133e7cd098376e4285c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
