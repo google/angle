@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "3cf3ffac_d684465b",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-19T18:19:17Z",
+      "side": 1,
+      "message": "Can you move this file to \"src/libANGLE/renderer/drivers/intel.h\" (and .cpp)",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_96cabea6",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-19T18:19:17Z",
+      "side": 1,
+      "message": "This should be the full path.  ie LIBANGLE_RENDERER_DRIVERS_INTEL_H_",
+      "range": {
+        "startLine": 1,
+        "startChar": 8,
+        "endLine": 1,
+        "endChar": 32
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_76463270",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-19T18:19:17Z",
+      "side": 1,
+      "message": "Include as \"libANGLE/angletypes.h\"",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 29
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_a5a7c2a2",
         "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
         "patchSetId": 7
@@ -13,6 +76,52 @@
       "writtenOn": "2016-10-19T15:50:40Z",
       "side": 1,
       "message": "nit: move this namespace inside IntelDriver.cpp",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_567216c8",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-19T18:19:17Z",
+      "side": 1,
+      "message": "No need to include this here, just include in renderer11_utils.cpp",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 47
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_96a11ee1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1858,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-19T18:19:17Z",
+      "side": 1,
+      "message": "nit: no need for \"rx::\" (and below)",
+      "range": {
+        "startLine": 1858,
+        "startChar": 9,
+        "endLine": 1858,
+        "endChar": 13
+      },
       "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
