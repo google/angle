@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cf3ffac_2587529d",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-10-19T10:31:18Z",
+      "side": 1,
+      "message": "add \"  // LIBANGLE_INTEL_DRIVER_H_\" after endif",
+      "revId": "81a0b8198e73319c08d0837a3c8460b73b1fcc07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
