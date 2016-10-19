@@ -352,7 +352,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     // Intel OpenGL ES drivers are not currently supported due to bugs in the driver and ANGLE
     VendorID vendor = GetVendorID(mFunctionsGL);
-    if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE && vendor == VENDOR_ID_INTEL)
+    if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE && IsIntel(vendor))
     {
         return egl::Error(EGL_NOT_INITIALIZED, "Intel OpenGL ES drivers are not supported.");
     }
@@ -368,7 +368,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         GetWindowThreadProcessId(nativeWindow, &windowProcessId);
 
         // AMD drivers advertise the WGL_NV_DX_interop and WGL_NV_DX_interop2 extensions but fail
-        mUseDXGISwapChains = vendor != VENDOR_ID_AMD && (currentProcessId != windowProcessId);
+        mUseDXGISwapChains = !IsAMD(vendor) && (currentProcessId != windowProcessId);
     }
     else
     {

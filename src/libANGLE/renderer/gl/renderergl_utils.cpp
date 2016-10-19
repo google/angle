@@ -877,8 +877,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
 #if defined(ANGLE_PLATFORM_APPLE)
     VendorID vendor = GetVendorID(functions);
-    if ((vendor == VENDOR_ID_AMD || vendor == VENDOR_ID_INTEL) &&
-        *maxSupportedESVersion >= gl::Version(3, 0))
+    if ((IsAMD(vendor) || IsIntel(vendor)) && *maxSupportedESVersion >= gl::Version(3, 0))
     {
         // Apple Intel/AMD drivers do not correctly use the TEXTURE_SRGB_DECODE property of sampler
         // states.  Disable this extension when we would advertise any ES version that has samplers.
@@ -893,21 +892,19 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     // Don't use 1-bit alpha formats on desktop GL with AMD or Intel drivers.
     workarounds->avoid1BitAlphaTextureFormats =
-        functions->standard == STANDARD_GL_DESKTOP &&
-        (vendor == VENDOR_ID_AMD || vendor == VENDOR_ID_INTEL);
+        functions->standard == STANDARD_GL_DESKTOP && (IsAMD(vendor) || IsIntel(vendor));
 
     workarounds->rgba4IsNotSupportedForColorRendering =
-        functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_INTEL;
+        functions->standard == STANDARD_GL_DESKTOP && IsIntel(vendor);
 
-    workarounds->emulateAbsIntFunction = vendor == VENDOR_ID_INTEL;
+    workarounds->emulateAbsIntFunction = IsIntel(vendor);
 
-    workarounds->addAndTrueToLoopCondition = vendor == VENDOR_ID_INTEL;
+    workarounds->addAndTrueToLoopCondition = IsIntel(vendor);
 
-    workarounds->emulateIsnanFloat = vendor == VENDOR_ID_INTEL;
+    workarounds->emulateIsnanFloat = IsIntel(vendor);
 
     workarounds->doesSRGBClearsOnLinearFramebufferAttachments =
-        functions->standard == STANDARD_GL_DESKTOP &&
-        (vendor == VENDOR_ID_INTEL || vendor == VENDOR_ID_AMD);
+        functions->standard == STANDARD_GL_DESKTOP && (IsIntel(vendor) || IsAMD(vendor));
 
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->doWhileGLSLCausesGPUHang = true;
@@ -915,22 +912,22 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 #endif
 
     workarounds->finishDoesNotCauseQueriesToBeAvailable =
-        functions->standard == STANDARD_GL_DESKTOP && vendor == VENDOR_ID_NVIDIA;
+        functions->standard == STANDARD_GL_DESKTOP && IsNvidia(vendor);
 
     // TODO(cwallez): Disable this workaround for MacOSX versions 10.9 or later.
     workarounds->alwaysCallUseProgramAfterLink = true;
 
-    workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer = vendor == VENDOR_ID_NVIDIA;
-    workarounds->packOverlappingRowsSeparatelyPackBuffer     = vendor == VENDOR_ID_NVIDIA;
+    workarounds->unpackOverlappingRowsSeparatelyUnpackBuffer = IsNvidia(vendor);
+    workarounds->packOverlappingRowsSeparatelyPackBuffer     = IsNvidia(vendor);
 
-    workarounds->initializeCurrentVertexAttributes = vendor == VENDOR_ID_NVIDIA;
+    workarounds->initializeCurrentVertexAttributes = IsNvidia(vendor);
 
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->unpackLastRowSeparatelyForPaddingInclusion = true;
     workarounds->packLastRowSeparatelyForPaddingInclusion   = true;
 #else
-    workarounds->unpackLastRowSeparatelyForPaddingInclusion = vendor == VENDOR_ID_NVIDIA;
-    workarounds->packLastRowSeparatelyForPaddingInclusion   = vendor == VENDOR_ID_NVIDIA;
+    workarounds->unpackLastRowSeparatelyForPaddingInclusion = IsNvidia(vendor);
+    workarounds->packLastRowSeparatelyForPaddingInclusion   = IsNvidia(vendor);
 #endif
 }
 

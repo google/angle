@@ -165,6 +165,8 @@
             'libANGLE/renderer/CompilerImpl.h',
             'libANGLE/renderer/ContextImpl.cpp',
             'libANGLE/renderer/ContextImpl.h',
+            'libANGLE/renderer/driver_utils.cpp',
+            'libANGLE/renderer/driver_utils.h',
             'libANGLE/renderer/DeviceImpl.cpp',
             'libANGLE/renderer/DeviceImpl.h',
             'libANGLE/renderer/DisplayImpl.cpp',

@@ -12,6 +12,7 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
 #include <string>

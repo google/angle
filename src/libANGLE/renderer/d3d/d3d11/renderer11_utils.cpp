@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "libANGLE/renderer/driver_utils.h"
 
 namespace rx
 {
@@ -1829,7 +1830,7 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     workarounds.useInstancedPointSpriteEmulation = is9_3;
 
     // TODO(jmadill): Narrow problematic driver range.
-    if (adapterDesc.VendorId == VENDOR_ID_NVIDIA)
+    if (IsNvidia(adapterDesc.VendorId))
     {
         if (deviceCaps.driverVersion.valid())
         {
@@ -1848,16 +1849,19 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     // TODO(jmadill): Disable workaround when we have a fixed compiler DLL.
     workarounds.expandIntegerPowExpressions = true;
 
-    workarounds.flushAfterEndingTransformFeedback = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
-    workarounds.getDimensionsIgnoresBaseLevel     = (adapterDesc.VendorId == VENDOR_ID_NVIDIA);
+    workarounds.flushAfterEndingTransformFeedback = IsNvidia(adapterDesc.VendorId);
+    workarounds.getDimensionsIgnoresBaseLevel     = IsNvidia(adapterDesc.VendorId);
 
-    workarounds.preAddTexelFetchOffsets = (adapterDesc.VendorId == VENDOR_ID_INTEL);
-    workarounds.disableB5G6R5Support    = (adapterDesc.VendorId == VENDOR_ID_INTEL);
-    workarounds.rewriteUnaryMinusOperator = (adapterDesc.VendorId == VENDOR_ID_INTEL);
-    workarounds.emulateIsnanFloat         = (adapterDesc.VendorId == VENDOR_ID_INTEL);
+    workarounds.preAddTexelFetchOffsets = IsIntel(adapterDesc.VendorId);
+    workarounds.disableB5G6R5Support    = IsIntel(adapterDesc.VendorId);
+    workarounds.rewriteUnaryMinusOperator =
+        IsIntel(adapterDesc.VendorId) &&
+        (IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId));
+    workarounds.emulateIsnanFloat =
+        IsIntel(adapterDesc.VendorId) && IsSkylake(adapterDesc.DeviceId);
 
     // TODO(jmadill): Disable when we have a fixed driver version.
-    workarounds.emulateTinyStencilTextures = (adapterDesc.VendorId == VENDOR_ID_AMD);
+    workarounds.emulateTinyStencilTextures = IsAMD(adapterDesc.VendorId);
 
     // The tiny stencil texture workaround involves using CopySubresource or UpdateSubresource on a
     // depth stencil texture.  This is not allowed until feature level 10.1 but since it is not

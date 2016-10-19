@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/d3d/d3d9/ShaderCache.h"
 #include "libANGLE/renderer/d3d/d3d9/VertexDeclarationCache.h"
 #include "libANGLE/renderer/d3d/d3d9/StateManager9.h"
+#include "libANGLE/renderer/driver_utils.h"
 
 namespace gl
 {
