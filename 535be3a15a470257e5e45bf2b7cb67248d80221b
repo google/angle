@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c894b41_32c23622",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-19T13:49:07Z",
+      "side": 1,
+      "message": "No need for inline, can be put in the anonymous namespace.",
+      "revId": "535be3a15a470257e5e45bf2b7cb67248d80221b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c894b41_f2a09e78",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-19T13:49:07Z",
+      "side": 1,
+      "message": "nit: almost never uses C-style comments.",
+      "revId": "535be3a15a470257e5e45bf2b7cb67248d80221b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c894b41_12bd32a1",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-19T13:49:07Z",
+      "side": 1,
+      "message": "Since these tables are only used by the functions defined in IntelDriver.h you could move them in there, in an anonymous namespace.\nAlso these being std::sets will cause them to be initialized at  runtime and we are currently trying to remove all such type of initialization. I suggest having the tables as arrays and do a linear search as the data size is small.",
+      "revId": "535be3a15a470257e5e45bf2b7cb67248d80221b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
