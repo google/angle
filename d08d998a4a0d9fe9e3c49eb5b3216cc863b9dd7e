@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cf3ffac_a5a7c2a2",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-19T15:50:40Z",
+      "side": 1,
+      "message": "nit: move this namespace inside IntelDriver.cpp",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
