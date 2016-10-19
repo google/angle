@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "3cf3ffac_11ad38d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-19T19:22:32Z",
+      "side": 1,
+      "message": "nit: can you associate this with a bug?",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_91a128e1",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-19T19:22:32Z",
+      "side": 1,
+      "message": "missing the license and top level comment in this file",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_d684465b",
         "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
         "patchSetId": 7
@@ -13,6 +53,24 @@
       "writtenOn": "2016-10-19T18:19:17Z",
       "side": 1,
       "message": "Can you move this file to \"src/libANGLE/renderer/drivers/intel.h\" (and .cpp)",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_d1b29032",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-19T19:22:32Z",
+      "side": 1,
+      "message": "or src/libANGLE/renderer/driver_utils.h, I don\u0027t know if we\u0027ll really need a subfolder for drivers.",
+      "parentUuid": "3cf3ffac_d684465b",
       "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -98,6 +156,29 @@
         "startChar": 0,
         "endLine": 14,
         "endChar": 47
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cf3ffac_510ea017",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-19T19:22:32Z",
+      "side": 1,
+      "message": "maybe we could wrap this in a IsIntel helper function?",
+      "range": {
+        "startLine": 1854,
+        "startChar": 42,
+        "endLine": 1854,
+        "endChar": 83
       },
       "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
