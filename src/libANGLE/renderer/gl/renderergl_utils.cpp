@@ -884,6 +884,18 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         extensions->textureSRGBDecode = false;
     }
 #endif
+
+    extensions->sRGBWriteControl = functions->isAtLeastGL(gl::Version(3, 0)) ||
+                                   functions->hasGLExtension("GL_EXT_framebuffer_sRGB") ||
+                                   functions->hasGLExtension("GL_ARB_framebuffer_sRGB") ||
+                                   functions->hasGLESExtension("GL_EXT_sRGB_write_control");
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // SRGB blending does not appear to work correctly on the Nexus 5. Writing to an SRGB
+    // framebuffer with GL_FRAMEBUFFER_SRGB enabled and then reading back returns the same value.
+    // Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
+    extensions->sRGBWriteControl = false;
+#endif
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

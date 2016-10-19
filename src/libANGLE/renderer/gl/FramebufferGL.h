@@ -80,9 +80,8 @@ class FramebufferGL : public FramebufferImpl
 
     void syncState(const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
-    void syncDrawState() const;
-
     GLuint getFramebufferID() const;
+    bool isDefault() const;
 
   private:
     void syncClearState(GLbitfield mask);

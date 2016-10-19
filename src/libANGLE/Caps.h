@@ -308,6 +308,9 @@ struct Extensions
     // GL_EXT_texture_sRGB_decode
     bool textureSRGBDecode;
 
+    // GL_EXT_sRGB_write_control
+    bool sRGBWriteControl;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

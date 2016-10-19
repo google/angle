@@ -60,7 +60,8 @@ State::State()
       mActiveSampler(0),
       mPrimitiveRestart(false),
       mMultiSampling(false),
-      mSampleAlphaToOne(false)
+      mSampleAlphaToOne(false),
+      mFramebufferSRGB(true)
 {
 }
 
@@ -637,6 +638,9 @@ void State::setEnableFeature(GLenum feature, bool enabled)
       case GL_DEBUG_OUTPUT:
           mDebug.setOutputEnabled(enabled);
           break;
+      case GL_FRAMEBUFFER_SRGB_EXT:
+          setFramebufferSRGB(enabled);
+          break;
       default:                               UNREACHABLE();
     }
 }
@@ -664,6 +668,8 @@ bool State::getEnableFeature(GLenum feature) const
           return mDebug.isOutputEnabled();
       case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
           return isBindGeneratesResourceEnabled();
+      case GL_FRAMEBUFFER_SRGB_EXT:
+          return getFramebufferSRGB();
       default:                               UNREACHABLE(); return false;
     }
 }
@@ -1456,6 +1462,17 @@ GLuint State::getPathStencilMask() const
     return mPathStencilMask;
 }
 
+void State::setFramebufferSRGB(bool sRGB)
+{
+    mFramebufferSRGB = sRGB;
+    mDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_SRGB);
+}
+
+bool State::getFramebufferSRGB() const
+{
+    return mFramebufferSRGB;
+}
+
 void State::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
@@ -1499,6 +1516,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
           break;
       case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
           *params = isBindGeneratesResourceEnabled() ? GL_TRUE : GL_FALSE;
+          break;
+      case GL_FRAMEBUFFER_SRGB_EXT:
+          *params = getFramebufferSRGB() ? GL_TRUE : GL_FALSE;
           break;
       default:
         UNREACHABLE();

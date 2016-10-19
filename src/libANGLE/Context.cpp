@@ -370,6 +370,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
     mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR_TEST_ENABLED);
     mBlitDirtyBits.set(State::DIRTY_BIT_SCISSOR);
+    mBlitDirtyBits.set(State::DIRTY_BIT_FRAMEBUFFER_SRGB);
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_READ_FRAMEBUFFER);
     mBlitDirtyObjects.set(State::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
 

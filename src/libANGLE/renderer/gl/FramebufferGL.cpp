@@ -332,7 +332,7 @@ Error FramebufferGL::blit(ContextImpl *context,
     }
 
     // Enable FRAMEBUFFER_SRGB if needed
-    syncDrawState();
+    mStateManager->setFramebufferSRGBEnabledForFramebuffer(true, this);
 
     GLenum blitMask = mask;
     if (needManualColorBlit && (mask & GL_COLOR_BUFFER_BIT))
@@ -421,17 +421,9 @@ GLuint FramebufferGL::getFramebufferID() const
     return mFramebufferID;
 }
 
-void FramebufferGL::syncDrawState() const
+bool FramebufferGL::isDefault() const
 {
-    if (mFunctions->standard == STANDARD_GL_DESKTOP)
-    {
-        // Enable SRGB blending for all framebuffers except the default framebuffer on Desktop
-        // OpenGL.
-        // When SRGB blending is enabled, only SRGB capable formats will use it but the default
-        // framebuffer will always use it if it is enabled.
-        // TODO(geofflang): Update this when the framebuffer binding dirty changes, when it exists.
-        mStateManager->setFramebufferSRGBEnabled(!mIsDefault);
-    }
+    return mIsDefault;
 }
 
 void FramebufferGL::syncClearState(GLbitfield mask)

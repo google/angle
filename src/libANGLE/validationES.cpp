@@ -162,6 +162,9 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
             return queryOnly && context->getExtensions().bindGeneratesResource;
 
+        case GL_FRAMEBUFFER_SRGB_EXT:
+            return context->getExtensions().sRGBWriteControl;
+
         default:
             return false;
     }
