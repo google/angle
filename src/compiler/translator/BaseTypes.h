@@ -528,18 +528,4 @@ inline const char* getBlockStorageString(TLayoutBlockStorage bsq)
     }
 }
 
-inline const char* getInterpolationString(TQualifier q)
-{
-    switch(q)
-    {
-        case EvqSmoothOut:      return "smooth";
-        case EvqCentroidOut:    return "smooth centroid";
-        case EvqFlatOut:        return "flat";
-        case EvqSmoothIn:       return "smooth";
-        case EvqCentroidIn:     return "smooth centroid";
-        case EvqFlatIn:         return "flat";
-        default: UNREACHABLE(); return "unknown interpolation";
-    }
-}
-
 #endif // COMPILER_TRANSLATOR_BASETYPES_H_
