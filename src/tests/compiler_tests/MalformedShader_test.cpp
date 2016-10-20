@@ -2563,3 +2563,24 @@ TEST_F(MalformedShaderTest, DeferGlobalVariableInitWithEmptyMain)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Test that pruning empty declarations from loop init expression works.
+TEST_F(MalformedShaderTest, EmptyDeclarationAsLoopInit)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = 0;\n"
+        "    for (int; i < 3; i++)\n"
+        "    {\n"
+        "        my_FragColor = vec4(i);\n"
+        "    }\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}

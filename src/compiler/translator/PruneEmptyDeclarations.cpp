@@ -63,9 +63,17 @@ bool PruneEmptyDeclarationsTraverser::visitAggregate(Visit, TIntermAggregate *no
                     // float;
                     TIntermSequence emptyReplacement;
                     TIntermBlock *parentAsBlock = getParentNode()->getAsBlock();
-                    ASSERT(parentAsBlock != nullptr);
-                    mMultiReplacements.push_back(
-                        NodeReplaceWithMultipleEntry(parentAsBlock, node, emptyReplacement));
+                    // The declaration may be inside a block or in a loop init expression.
+                    ASSERT(parentAsBlock != nullptr || getParentNode()->getAsLoopNode() != nullptr);
+                    if (parentAsBlock)
+                    {
+                        mMultiReplacements.push_back(
+                            NodeReplaceWithMultipleEntry(parentAsBlock, node, emptyReplacement));
+                    }
+                    else
+                    {
+                        queueReplacement(node, nullptr, OriginalNode::IS_DROPPED);
+                    }
                 }
                 else if (sym->getType().getQualifier() != EvqGlobal &&
                          sym->getType().getQualifier() != EvqTemporary)
