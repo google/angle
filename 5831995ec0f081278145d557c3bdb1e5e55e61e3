@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "7ced7706_7383baeb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-20T12:28:45Z",
+      "side": 1,
+      "message": "I added a function to initialize the fields. There isn\u0027t a proper value to set for all of the fields however.",
+      "parentUuid": "3cf3ffac_d5a9eb67",
+      "revId": "5831995ec0f081278145d557c3bdb1e5e55e61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dc9bc331_c48b2f38",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 14
