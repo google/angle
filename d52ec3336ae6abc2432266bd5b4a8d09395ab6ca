@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c89f776_85e11017",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-20T16:24:08Z",
+      "side": 1,
+      "message": "This call asserts unreachable and returns an error. How about doing here instead?",
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c89f776_4520085f",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-20T16:24:08Z",
+      "side": 1,
+      "message": "nit:ditto",
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
