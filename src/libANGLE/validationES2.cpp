@@ -2170,13 +2170,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
 
 bool ValidateGetBufferPointervOES(Context *context, GLenum target, GLenum pname, void **params)
 {
-    if (!context->getExtensions().mapBuffer)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION, "Map buffer extension not available."));
-        return false;
-    }
-
-    return ValidateGetBufferPointervBase(context, target, pname, params);
+    return ValidateGetBufferPointervBase(context, target, pname, nullptr, params);
 }
 
 bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)

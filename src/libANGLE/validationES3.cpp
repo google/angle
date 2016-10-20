@@ -1791,13 +1791,32 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
 
 bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params)
 {
-    if (context->getClientMajorVersion() < 3)
+    return ValidateGetBufferPointervBase(context, target, pname, nullptr, params);
+}
+
+bool ValidateGetBufferPointervRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLvoid **params)
+{
+    if (!ValidateRobustEntryPoint(context, bufSize))
     {
-        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3."));
         return false;
     }
 
-    return ValidateGetBufferPointervBase(context, target, pname, params);
+    if (!ValidateGetBufferPointervBase(context, target, pname, length, params))
+    {
+        return false;
+    }
+
+    if (!ValidateRobustBufferSize(context, bufSize, *length))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateUnmapBuffer(Context *context, GLenum target)

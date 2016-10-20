@@ -3033,19 +3033,12 @@ void Context::compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
     handleError(destTexture->copyCompressedTexture(sourceTexture));
 }
 
-void Context::getBufferPointerv(GLenum target, GLenum /*pname*/, void **params)
+void Context::getBufferPointerv(GLenum target, GLenum pname, void **params)
 {
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
 
-    if (!buffer->isMapped())
-    {
-        *params = nullptr;
-    }
-    else
-    {
-        *params = buffer->getMapPointer();
-    }
+    QueryBufferPointerv(buffer, pname, params);
 }
 
 GLvoid *Context::mapBuffer(GLenum target, GLenum access)

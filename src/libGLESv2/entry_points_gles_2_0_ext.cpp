@@ -2658,6 +2658,20 @@ ANGLE_EXPORT void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
         "(GLenum target = 0x%X, GLenum pname = 0x%X,  GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLvoid** params = 0x%0.8p)",
         target, pname, bufSize, length, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetBufferPointervRobustANGLE(context, target, pname, bufSize, &numParams,
+                                                  params))
+        {
+            return;
+        }
+
+        context->getBufferPointerv(target, pname, params);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY

@@ -3921,30 +3921,54 @@ bool ValidateCopyTexSubImage2D(Context *context,
                                                yoffset, 0, x, y, width, height, 0);
 }
 
-bool ValidateGetBufferPointervBase(Context *context, GLenum target, GLenum pname, void **params)
+bool ValidateGetBufferPointervBase(Context *context,
+                                   GLenum target,
+                                   GLenum pname,
+                                   GLsizei *length,
+                                   void **params)
 {
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (context->getClientMajorVersion() < 3 && !context->getExtensions().mapBuffer)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Context does not support OpenGL ES 3.0 or GL_OES_map_buffer is not enabled."));
+        return false;
+    }
+
     if (!ValidBufferTarget(context, target))
     {
         context->handleError(Error(GL_INVALID_ENUM, "Buffer target not valid: 0x%X", target));
         return false;
     }
 
-    if (pname != GL_BUFFER_MAP_POINTER)
+    switch (pname)
     {
-        context->handleError(Error(GL_INVALID_ENUM, "pname not valid: 0x%X", pname));
-        return false;
-    }
+        case GL_BUFFER_MAP_POINTER:
+            break;
 
-    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown pname."));
+            return false;
+    }
 
     // GLES 3.0 section 2.10.1: "Attempts to attempts to modify or query buffer object state for a
     // target bound to zero generate an INVALID_OPERATION error."
     // GLES 3.1 section 6.6 explicitly specifies this error.
-    if (!buffer)
+    if (context->getGLState().getTargetBuffer(target) == nullptr)
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Can not get pointer for reserved buffer name zero."));
         return false;
+    }
+
+    if (length)
+    {
+        *length = 1;
     }
 
     return true;

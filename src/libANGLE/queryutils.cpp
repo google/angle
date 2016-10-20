@@ -438,6 +438,20 @@ void QueryBufferParameteri64v(const Buffer *buffer, GLenum pname, GLint64 *param
     QueryBufferParameterBase(buffer, pname, params);
 }
 
+void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params)
+{
+    switch (pname)
+    {
+        case GL_BUFFER_MAP_POINTER:
+            *params = buffer->getMapPointer();
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
 {
     ASSERT(program != nullptr);

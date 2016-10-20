@@ -318,6 +318,12 @@ bool ValidateGenOrDeleteCountES3(Context *context, GLint count);
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 
 bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, GLvoid **params);
+bool ValidateGetBufferPointervRobustANGLE(Context *context,
+                                          GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLvoid **params);
 bool ValidateUnmapBuffer(Context *context, GLenum target);
 bool ValidateMapBufferRange(Context *context,
                             GLenum target,
