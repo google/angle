@@ -84,6 +84,8 @@ class RobustClientMemoryTest : public ANGLETest
             eglGetProcAddress("glGetBufferPointervRobustANGLE"));
         glGetIntegeri_vRobustANGLE = reinterpret_cast<PFNGLGETINTEGERI_VROBUSTANGLE>(
             eglGetProcAddress("glGetIntegeri_vRobustANGLE"));
+        glGetInternalformativRobustANGLE = reinterpret_cast<PFNGETINTERNALFORMATIVROBUSTANGLE>(
+            eglGetProcAddress("glGetInternalformativRobustANGLE"));
         glGetVertexAttribIivRobustANGLE = reinterpret_cast<PFNGLGETVERTEXATTRIBIIVROBUSTANGLE>(
             eglGetProcAddress("glGetVertexAttribIivRobustANGLE"));
         glGetVertexAttribIuivRobustANGLE = reinterpret_cast<PFNGLGETVERTEXATTRIBIUIVROBUSTANGLE>(
@@ -203,6 +205,7 @@ class RobustClientMemoryTest : public ANGLETest
     PFNGLGETQUERYOBJECTUIVROBUSTANGLE glGetQueryObjectuivRobustANGLE                   = nullptr;
     PFNGLGETBUFFERPOINTERVROBUSTANGLE glGetBufferPointervRobustANGLE                   = nullptr;
     PFNGLGETINTEGERI_VROBUSTANGLE glGetIntegeri_vRobustANGLE                           = nullptr;
+    PFNGETINTERNALFORMATIVROBUSTANGLE glGetInternalformativRobustANGLE                 = nullptr;
     PFNGLGETVERTEXATTRIBIIVROBUSTANGLE glGetVertexAttribIivRobustANGLE                 = nullptr;
     PFNGLGETVERTEXATTRIBIUIVROBUSTANGLE glGetVertexAttribIuivRobustANGLE               = nullptr;
     PFNGLGETUNIFORMUIVROBUSTANGLE glGetUniformuivRobustANGLE                           = nullptr;

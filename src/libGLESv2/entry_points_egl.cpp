@@ -1505,6 +1505,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, GetQueryObjectuivRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetBufferPointervRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetIntegeri_vRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, GetInternalformativRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetVertexAttribIivRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetVertexAttribIuivRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetUniformuivRobustANGLE);

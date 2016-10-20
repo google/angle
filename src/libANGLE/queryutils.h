@@ -21,6 +21,7 @@ class Renderbuffer;
 class Sampler;
 class Shader;
 class Texture;
+struct TextureCaps;
 struct UniformBlock;
 struct VertexAttribute;
 struct VertexAttribCurrentValueData;
@@ -60,6 +61,8 @@ void QueryActiveUniformBlockiv(const Program *program,
                                GLuint uniformBlockIndex,
                                GLenum pname,
                                GLint *params);
+
+void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params);
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param);
 void SetTexParameterfv(Texture *texture, GLenum pname, const GLfloat *params);

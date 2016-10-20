@@ -536,6 +536,20 @@ bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
                                                 GLsizei *length,
                                                 GLint *params);
 
+bool ValidateGetInternalFormativ(Context *context,
+                                 GLenum target,
+                                 GLenum internalformat,
+                                 GLenum pname,
+                                 GLsizei bufSize,
+                                 GLint *params);
+bool ValidateGetInternalFormativRobustANGLE(Context *context,
+                                            GLenum target,
+                                            GLenum internalformat,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLint *params);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl

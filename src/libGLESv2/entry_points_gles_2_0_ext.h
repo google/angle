@@ -417,6 +417,12 @@ ANGLE_EXPORT void GL_APIENTRY GetIntegeri_vRobustANGLE(GLenum target,
                                                        GLsizei bufSize,
                                                        GLsizei *length,
                                                        GLint *data);
+ANGLE_EXPORT void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
+                                                             GLenum internalformat,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLint *params);
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
                                                             GLenum pname,
                                                             GLsizei bufSize,

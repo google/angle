@@ -2605,55 +2605,14 @@ void GL_APIENTRY GetInternalformativ(GLenum target, GLenum internalformat, GLenu
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateGetInternalFormativ(context, target, internalformat, pname, bufSize, params))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
         const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-        if (!formatCaps.renderable)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        if (target != GL_RENDERBUFFER)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        if (bufSize < 0)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        switch (pname)
-        {
-          case GL_NUM_SAMPLE_COUNTS:
-            if (bufSize != 0)
-            {
-                *params = static_cast<GLint>(formatCaps.sampleCounts.size());
-            }
-            break;
-
-          case GL_SAMPLES:
-            {
-                size_t returnCount = std::min<size_t>(bufSize, formatCaps.sampleCounts.size());
-                auto sampleReverseIt = formatCaps.sampleCounts.rbegin();
-                for (size_t sampleIndex = 0; sampleIndex < returnCount; ++sampleIndex)
-                {
-                    params[sampleIndex] = *sampleReverseIt++;;
-                }
-            }
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
+        QueryInternalFormativ(formatCaps, pname, bufSize, params);
     }
 }
 

@@ -2670,6 +2670,34 @@ GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *
     UNIMPLEMENTED();
 }
 
+ANGLE_EXPORT void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
+                                                             GLenum internalformat,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLint *params)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLenum pname = 0x%X, GLsizei bufSize "
+        "= %d, GLsizei* length = 0x%0.8p, GLint* params = 0x%0.8p)",
+        target, internalformat, pname, bufSize, length, params);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetInternalFormativRobustANGLE(context, target, internalformat, pname, bufSize,
+                                                    &numParams, params))
+        {
+            return;
+        }
+
+        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+        QueryInternalFormativ(formatCaps, pname, bufSize, params);
+        SetRobustLengthParam(length, numParams);
+    }
+}
+
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
                                                             GLenum pname,
                                                             GLsizei bufSize,

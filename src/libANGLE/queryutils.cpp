@@ -676,6 +676,34 @@ void QueryActiveUniformBlockiv(const Program *program,
     }
 }
 
+void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params)
+{
+    switch (pname)
+    {
+        case GL_NUM_SAMPLE_COUNTS:
+            if (bufSize != 0)
+            {
+                *params = static_cast<GLint>(format.sampleCounts.size());
+            }
+            break;
+
+        case GL_SAMPLES:
+        {
+            size_t returnCount   = std::min<size_t>(bufSize, format.sampleCounts.size());
+            auto sampleReverseIt = format.sampleCounts.rbegin();
+            for (size_t sampleIndex = 0; sampleIndex < returnCount; ++sampleIndex)
+            {
+                params[sampleIndex] = *sampleReverseIt++;
+            }
+        }
+        break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)
 {
     SetTexParameterBase(texture, pname, &param);
