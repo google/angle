@@ -22,6 +22,30 @@
       "revId": "95b544836c01382d90c133e7cd098376e4285c99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c89f776_397093f8",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-10-20T01:45:37Z",
+      "side": 1,
+      "message": "Type infomation may be used at the link step. So, we cannot change it at AST traverser step in a shader compilation. Also, output version may be changed after RemoveInvariantDeclaration AST traverser. It\u0027s better to determine the output version at Output step.",
+      "parentUuid": "9c894b41_9d33f357",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 4
+      },
+      "revId": "95b544836c01382d90c133e7cd098376e4285c99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
