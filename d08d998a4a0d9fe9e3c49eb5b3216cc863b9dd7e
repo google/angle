@@ -119,6 +119,24 @@
     },
     {
       "key": {
+        "uuid": "7c89f776_17f8f3a6",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-20T17:05:54Z",
+      "side": 1,
+      "message": "Yea, I\u0027m fine with either.",
+      "parentUuid": "3cf3ffac_d1b29032",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_96cabea6",
         "filename": "src/libANGLE/Vendors/Intel/IntelDriver.h",
         "patchSetId": 7
