@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c89f776_3fd63352",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-20T08:08:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cf3ffac_11ad38d0",
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_91a128e1",
         "filename": "src/libANGLE/Vendors/Intel/IntelDriver.cpp",
         "patchSetId": 7
@@ -30,6 +48,30 @@
       "writtenOn": "2016-10-19T19:22:32Z",
       "side": 1,
       "message": "missing the license and top level comment in this file",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c89f776_9f12bf39",
+        "filename": "src/libANGLE/Vendors/Intel/IntelDriver.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-20T08:08:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cf3ffac_91a128e1",
       "range": {
         "startLine": 1,
         "startChar": 1,
@@ -163,6 +205,30 @@
     },
     {
       "key": {
+        "uuid": "7c89f776_ffa66bf8",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-20T08:08:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cf3ffac_567216c8",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 47
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_510ea017",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
@@ -186,6 +252,30 @@
     },
     {
       "key": {
+        "uuid": "7c89f776_9f9b9faf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-20T08:08:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cf3ffac_510ea017",
+      "range": {
+        "startLine": 1854,
+        "startChar": 42,
+        "endLine": 1854,
+        "endChar": 83
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3cf3ffac_96a11ee1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 7
@@ -197,6 +287,30 @@
       "writtenOn": "2016-10-19T18:19:17Z",
       "side": 1,
       "message": "nit: no need for \"rx::\" (and below)",
+      "range": {
+        "startLine": 1858,
+        "startChar": 9,
+        "endLine": 1858,
+        "endChar": 13
+      },
+      "revId": "d08d998a4a0d9fe9e3c49eb5b3216cc863b9dd7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c89f776_5fb69729",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1858,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-20T08:08:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cf3ffac_96a11ee1",
       "range": {
         "startLine": 1858,
         "startChar": 9,
