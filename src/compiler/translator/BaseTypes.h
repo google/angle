@@ -32,10 +32,10 @@ inline const char* getPrecisionString(TPrecision p)
 {
     switch(p)
     {
-    case EbpHigh:		return "highp";		break;
-    case EbpMedium:		return "mediump";	break;
-    case EbpLow:		return "lowp";		break;
-    default:			return "mediump";   break;   // Safest fallback
+        case EbpHigh:   return "highp";
+        case EbpMedium: return "mediump";
+        case EbpLow:    return "lowp";
+        default:        return "mediump";  // Safest fallback
     }
 }
 
@@ -532,13 +532,13 @@ inline const char* getInterpolationString(TQualifier q)
 {
     switch(q)
     {
-    case EvqSmoothOut:      return "smooth";   break;
-    case EvqCentroidOut:    return "smooth centroid"; break;
-    case EvqFlatOut:        return "flat";     break;
-    case EvqSmoothIn:       return "smooth";   break;
-    case EvqCentroidIn:     return "smooth centroid"; break;
-    case EvqFlatIn:         return "flat";     break;
-    default: UNREACHABLE(); return "unknown interpolation";
+        case EvqSmoothOut:      return "smooth";
+        case EvqCentroidOut:    return "smooth centroid";
+        case EvqFlatOut:        return "flat";
+        case EvqSmoothIn:       return "smooth";
+        case EvqCentroidIn:     return "smooth centroid";
+        case EvqFlatIn:         return "flat";
+        default: UNREACHABLE(); return "unknown interpolation";
     }
 }
 
