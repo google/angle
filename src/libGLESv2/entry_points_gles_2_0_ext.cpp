@@ -2681,7 +2681,19 @@ GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *
         "(GLenum target = 0x%X, GLuint index = %u, GLsizei bufsize = %d, GLsizei* length = "
         "0x%0.8p, GLint* data = 0x%0.8p)",
         target, index, bufSize, length, data);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        GLsizei numParams = 0;
+        if (!ValidateGetIntegeri_vRobustANGLE(context, target, index, bufSize, &numParams, data))
+        {
+            return;
+        }
+
+        context->getIntegeri_v(target, index, data);
+        SetRobustLengthParam(length, numParams);
+    }
 }
 
 ANGLE_EXPORT void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,

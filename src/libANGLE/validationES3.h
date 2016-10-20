@@ -340,6 +340,12 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
                                GLuint index,
                                GLsizei *length);
 bool ValidateGetIntegeri_v(ValidationContext *context, GLenum target, GLuint index, GLint *data);
+bool ValidateGetIntegeri_vRobustANGLE(ValidationContext *context,
+                                      GLenum target,
+                                      GLuint index,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLint *data);
 bool ValidateGetInteger64i_v(ValidationContext *context,
                              GLenum target,
                              GLuint index,
