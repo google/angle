@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c89f776_c51f1881",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-20T15:40:32Z",
+      "side": 1,
+      "message": "This check is already done in ValidateSurface, in ValidaateDisplay",
+      "revId": "d3af6fa2b4fff724701638a128d3ee939379c5e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
