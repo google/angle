@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c88b3a4_28cdca17",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-21T18:07:02Z",
+      "side": 1,
+      "message": "It seems like uninitialized layout qualifiers might be ending up here, or the isEmpty() check is not producing expected results.",
+      "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
