@@ -16,6 +16,24 @@
       "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcdd835f_f4bc2ea6",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-21T21:04:36Z",
+      "side": 1,
+      "message": "Actually, neither.\n\nThe problem occurs when the compile option SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS is enabled.\n\nThe bug happens in ScalarizeVecAndMatConstructorArgs.\nWhenever a constructor input variable is transformed as a sequence of scalars, first a copy of it is made ( check createTempVariable ). However, it also copies (spills) qualifications to that variable.\n\nFor example, for the failing original shader:\n#version 300 es\nout mediump vec4 v_color;\nlayout(location \u003d 3) in mediump mat2 a_0;\n\n\nvoid main (void)\n{\n\tmediump vec4 color \u003d vec4(0.0);\n\n\tcolor +\u003d vec4(a_0);\n\n\tv_color \u003d color;\n\tgl_Position \u003d color;\n}\n\nThe translated code looks like:\n#version 300 es\nout mediump vec4 webgl_42f24135131e57ca;\nlayout(location \u003d 3) in mediump mat2 webgl_9fc7e57fe32ab4e2;\nvoid main(){\n(gl_Position \u003d vec4(0.0, 0.0, 0.0, 0.0));\n(webgl_42f24135131e57ca \u003d vec4(0.0, 0.0, 0.0, 0.0));\nmediump vec4 webgl_19dff938713edbff \u003d vec4(0.0, 0.0, 0.0, 0.0);\nlayout() mediump mat2 webgl_37afb80cce2f4d55 \u003d webgl_9fc7e57fe32ab4e2;\n(webgl_19dff938713edbff +\u003d vec4(webgl_37afb80cce2f4d55[0][0], webgl_37afb80cce2f4d55[0][1], webgl_37afb80cce2f4d55[1][0], webgl_37afb80cce2f4d55[1][1]));\n(webgl_42f24135131e57ca \u003d webgl_19dff938713edbff);\n(gl_Position \u003d webgl_19dff938713edbff);\n}\n\nwhere webgl_37afb80cce2f4d55 is the copy of webgl_9fc7e57fe32ab4e2 or a_0 in the original shader.\nNote that in the createTempVariable function body, the qualifier type is set to EvqTemporary.\nThis leads to the problem that indeed the variable has location value set, but since the qualifier is neither EvqFragmentOut or EvqVertexIn, nothing gets outputted.\n\nI guess another patch is needed to fix this problem before merging this one.",
+      "parentUuid": "5c88b3a4_28cdca17",
+      "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
