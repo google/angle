@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5c88b3a4_a8955f1d",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-21T01:44:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c89f776_b7456711",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 64
+      },
+      "revId": "8d7fadcaa5cb55a525ab0ed10194e92decd0b623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c89f776_9716230a",
         "filename": "src/libANGLE/renderer/drivers/Intel.h",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-20T17:05:54Z",
       "side": 1,
       "message": "nit: Update to 2016 only and add the licence to the .cpp file too.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "8d7fadcaa5cb55a525ab0ed10194e92decd0b623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c88b3a4_e88f6707",
+        "filename": "src/libANGLE/renderer/drivers/Intel.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-21T01:44:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c89f776_9716230a",
       "range": {
         "startLine": 2,
         "startChar": 17,
