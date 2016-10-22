@@ -34,6 +34,24 @@
       "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcfa47f1_b17962ee",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-10-22T00:41:33Z",
+      "side": 1,
+      "message": "Ah, that\u0027s it! In a way it\u0027s an unexpected result from layoutQualifier.isEmpty(). Thanks for doing the analysis. I think it may be actually better to fix this by changing this patch - making sure that layout qualifiers set on TTypes are always sanitized is just a big task and better to be done as follow-up, so this patch isn\u0027t held back any longer. So instead of changing ScalarizeVecAndMatConstructorArgs, you could for now add a TOutputGLSLBase::needsToWriteLayoutQualifier() helper that would return whether something will be written inside the layout qualifier. A TODO comment about sanitizing layoutQualifiers could also be added to make the situation clearer for future readers of the code.",
+      "parentUuid": "dcdd835f_f4bc2ea6",
+      "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
