@@ -1321,9 +1321,8 @@ gl::ErrorOrResult<CopyResult> Buffer11::PackStorage::copyFromStorage(BufferStora
 {
     ANGLE_TRY(flushQueuedPackCommand());
 
-    // We copy through a staging buffer when drawing with a pack buffer, or for other cases where we
-    // access the pack buffer
-    ASSERT(source->isMappable(GL_MAP_READ_BIT) && source->getUsage() == BUFFER_USAGE_STAGING);
+    // For all use cases of pack buffers, we must copy through a readable buffer.
+    ASSERT(source->isMappable(GL_MAP_READ_BIT));
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourceData));
     ASSERT(destOffset + size <= mMemoryBuffer.size());
