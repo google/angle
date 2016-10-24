@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "017894b0_149dd4a1",
+        "filename": "doc/ChoosingANGLEBranch.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-24T19:23:13Z",
+      "side": 1,
+      "message": "it\u0027s fine to skip the review and land it yourself with TBR, if you have that ability.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 48
+      },
+      "revId": "2845587823daaffc2990b54bfdb695ca3ed31910",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
