@@ -52,6 +52,24 @@
       "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c15cbc1_4c548f3a",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-10-24T13:12:06Z",
+      "side": 1,
+      "message": "Should I report a bug? Should I write a fix to the problem or should I continue with the other compute related patches?",
+      "parentUuid": "fcfa47f1_b17962ee",
+      "revId": "21acc2439a46058dfa0e2c7c79692b1d071abaeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
