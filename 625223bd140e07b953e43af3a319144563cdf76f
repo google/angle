@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcfa47f1_f795971c",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 11
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-24T15:28:51Z",
+      "side": 1,
+      "message": "tiny nit: this is not sorted correctly",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 48
+      },
+      "revId": "625223bd140e07b953e43af3a319144563cdf76f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
