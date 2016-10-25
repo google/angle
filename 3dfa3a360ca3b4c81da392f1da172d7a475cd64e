@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "416e0c0f_9f02ffb4",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-25T16:46:43Z",
+      "side": 1,
+      "message": "nit: can use IsAMD or IsIntel when we land that Intel patch.",
+      "range": {
+        "startLine": 880,
+        "startChar": 9,
+        "endLine": 880,
+        "endChar": 61
+      },
+      "revId": "3dfa3a360ca3b4c81da392f1da172d7a475cd64e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
