@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41d60c38_39562b74",
+        "filename": "src/common/mathutil.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-25T20:27:29Z",
+      "side": 1,
+      "message": "According to this: http://stackoverflow.com/questions/13865842/does-static-constexpr-variable-make-sense\nstatic constexpr is a weird thing wrt what compiler should do with it.\nMaybe anonymous namespace would be appropriate here?",
+      "parentUuid": "41d60c38_d99bb74e",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 9
+      },
+      "revId": "8eca0195de576a0d6f472059a15c309a038af16d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41d60c38_b990fb2b",
         "filename": "src/common/mathutil.cpp",
         "patchSetId": 1
