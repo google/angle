@@ -22,8 +22,8 @@ debug.txt
 *.orig
 *.rej
 .gclient_entries
-/src/tests/third_party/googlemock
-/src/tests/third_party/googletest
+/testing/gmock
+/testing/gtest
 /third_party/cherry
 /third_party/deqp/src
 /third_party/gyp

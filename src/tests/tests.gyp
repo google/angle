@@ -71,12 +71,12 @@
                     'includes': [ '../../build/common_defines.gypi', ],
                     'include_dirs':
                     [
-                        'third_party/googletest',
-                        'third_party/googletest/include',
+                        '<(angle_path)/testing/gtest',
+                        '<(angle_path)/testing/gtest/include',
                     ],
                     'sources':
                     [
-                        'third_party/googletest/src/gtest-all.cc',
+                        '<(angle_path)/testing/gtest/src/gtest-all.cc',
                     ],
                     'defines':
                     [
@@ -90,8 +90,8 @@
                         ],
                         'include_dirs':
                         [
-                            'third_party/googletest',
-                            'third_party/googletest/include',
+                            '<(angle_path)/testing/gtest',
+                            '<(angle_path)/testing/gtest/include',
                         ],
                     },
                 },
@@ -102,13 +102,13 @@
                     'includes': [ '../../build/common_defines.gypi', ],
                     'include_dirs':
                     [
-                        'third_party/googlemock',
-                        'third_party/googlemock/include',
-                        'third_party/googletest/include',
+                        '<(angle_path)/testing/gmock',
+                        '<(angle_path)/testing/gmock/include',
+                        '<(angle_path)/testing/gtest/include',
                     ],
                     'sources':
                     [
-                        'third_party/googlemock/src/gmock-all.cc',
+                        '<(angle_path)/testing/gmock/src/gmock-all.cc',
                     ],
                     'defines':
                     [
@@ -122,9 +122,9 @@
                         ],
                         'include_dirs':
                         [
-                            'third_party/googlemock',
-                            'third_party/googlemock/include',
-                            'third_party/googletest/include',
+                            '<(angle_path)/testing/gmock',
+                            '<(angle_path)/testing/gmock/include',
+                            '<(angle_path)/testing/gtest/include',
                         ],
                     },
                 },
