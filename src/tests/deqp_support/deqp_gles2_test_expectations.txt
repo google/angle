@@ -128,29 +128,10 @@
 1143 LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_nearest = FAIL
 
 // Mac specific failures
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.linkage.varying_4 = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_int_variable_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_struct_variable_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.function_parameter_hides_struct_type_* = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_3 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.highp.loop_0 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.highp.loop_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.mediump.common_subexpression_3 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.mediump.loop_0 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.mediump.loop_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.lowp.common_subexpression_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.lowp.common_subexpression_3 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.lowp.loop_0 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.invariance.lowp.loop_1 = FAIL
-1143 MAC : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.43 = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.65 = FAIL
-1143 MAC : dEQP-GLES2.functional.texture.size.cube.256x256_rgba4444 = FAIL
-1143 MAC : dEQP-GLES2.functional.texture.size.cube.512x512_rgba4444 = FAIL
-1143 MAC : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-1143 MAC : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_* = FAIL
 
 // Android only failures
 1484 ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
