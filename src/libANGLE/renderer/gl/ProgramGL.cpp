@@ -223,7 +223,7 @@ void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
         std::vector<GLuint> &boundTextureUnits = mSamplerBindings[samplerIndex].boundTextureUnits;
 
         size_t copyCount =
-            std::max<size_t>(count, boundTextureUnits.size() - locationEntry.element);
+            std::min<size_t>(count, boundTextureUnits.size() - locationEntry.element);
         std::copy(v, v + copyCount, boundTextureUnits.begin() + locationEntry.element);
     }
 }
