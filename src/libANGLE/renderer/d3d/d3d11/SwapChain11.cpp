@@ -893,6 +893,11 @@ void SwapChain11::recreate()
 
 egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
 {
+    if (!mSwapChain)
+    {
+        return egl::Error(EGL_NOT_INITIALIZED, "Swap chain uninitialized");
+    }
+
     DXGI_FRAME_STATISTICS stats = {};
     HRESULT result              = mSwapChain->GetFrameStatistics(&stats);
 
