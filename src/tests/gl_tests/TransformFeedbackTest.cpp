@@ -746,8 +746,8 @@ TEST_P(TransformFeedbackTest, PackingBug)
     std::vector<Vector2> attrib2Data;
     int counter = 0;
     for (size_t i = 0; i < 6; i++) {
-        attrib1Data.push_back(Vector2(counter + 0, counter + 1));
-        attrib2Data.push_back(Vector2(counter + 2, counter + 3));
+        attrib1Data.push_back(Vector2(counter + 0.0f, counter + 1.0f));
+        attrib2Data.push_back(Vector2(counter + 2.0f, counter + 3.0f));
         counter += 4;
     }
 
