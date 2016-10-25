@@ -4321,6 +4321,17 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
                       falseExpression->getCompleteString());
         return falseExpression;
     }
+    if (IsOpaqueType(trueExpression->getBasicType()))
+    {
+        // ESSL 1.00 section 4.1.7
+        // ESSL 3.00 section 4.1.7
+        // Opaque/sampler types are not allowed in most types of expressions, including ternary.
+        // Note that structs containing opaque types don't need to be checked as structs are
+        // forbidden below.
+        error(loc, "ternary operator is not allowed for opaque types", ":");
+        return falseExpression;
+    }
+
     // ESSL1 sections 5.2 and 5.7:
     // ESSL3 section 5.7:
     // Ternary operator is not among the operators allowed for structures/arrays.

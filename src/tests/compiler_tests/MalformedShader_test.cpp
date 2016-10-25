@@ -2981,3 +2981,22 @@ TEST_F(MalformedFragmentShaderGLES31Test, ImageInternalFormatInGlobalLayoutQuali
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// ESSL 1.00 section 4.1.7.
+// Samplers are not allowed as operands for most operations. Test this for ternary operator.
+TEST_F(MalformedShaderTest, SamplerAsTernaryOperand)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "uniform bool u;\n"
+        "uniform sampler2D s1;\n"
+        "uniform sampler2D s2;\n"
+        "void main() {\n"
+        "    gl_FragColor = texture2D(u ? s1 : s2, vec2(0, 0));\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
