@@ -742,14 +742,20 @@ TEST_P(TransformFeedbackTest, PackingBug)
     GLint attrib1Loc = glGetAttribLocation(mProgram, "inAttrib1");
     GLint attrib2Loc = glGetAttribLocation(mProgram, "inAttrib2");
 
-    Vector2 attrib1Data[] = {Vector2(1.0, 2.0), Vector2(3.0, 4.0), Vector2(5.0, 6.0)};
-    Vector2 attrib2Data[] = {Vector2(11.0, 12.0), Vector2(13.0, 14.0), Vector2(15.0, 16.0)};
+    std::vector<Vector2> attrib1Data;
+    std::vector<Vector2> attrib2Data;
+    int counter = 0;
+    for (size_t i = 0; i < 6; i++) {
+        attrib1Data.push_back(Vector2(counter + 0, counter + 1));
+        attrib2Data.push_back(Vector2(counter + 2, counter + 3));
+        counter += 4;
+    }
 
     glEnableVertexAttribArray(attrib1Loc);
     glEnableVertexAttribArray(attrib2Loc);
 
-    glVertexAttribPointer(attrib1Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib1Data);
-    glVertexAttribPointer(attrib2Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib2Data);
+    glVertexAttribPointer(attrib1Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib1Data.data());
+    glVertexAttribPointer(attrib2Loc, 2, GL_FLOAT, GL_FALSE, 0, attrib2Data.data());
 
     glUseProgram(mProgram);
     glBeginTransformFeedback(GL_TRIANGLES);
