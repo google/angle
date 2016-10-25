@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "416e0c0f_9f64bf3f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1616,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-25T14:55:07Z",
+      "side": 1,
+      "message": "We\u0027re still not syncing the bound framebuffer via dirty bits.  This makes sure that if the framebuffer binding is updated then the framebuffer srgb flag gets updated too because desktop GL has some weird behaviour with the default framebuffer.",
+      "parentUuid": "017894b0_94dec451",
+      "range": {
+        "startLine": 1616,
+        "startChar": 7,
+        "endLine": 1616,
+        "endChar": 99
+      },
+      "revId": "04a899a10c471a35c080e500030f9fa344d4ede7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c89f776_c52dd8ac",
         "filename": "src/tests/gl_tests/SRGBFramebufferTest.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2016-10-20T15:47:52Z",
       "side": 1,
       "message": "nit: have value \u003d TRUE and is expectedError is NO_ERROR, check value is now FALSE",
+      "revId": "04a899a10c471a35c080e500030f9fa344d4ede7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "416e0c0f_5f83479c",
+        "filename": "src/tests/gl_tests/SRGBFramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-25T14:55:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c89f776_c52dd8ac",
       "revId": "04a899a10c471a35c080e500030f9fa344d4ede7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
