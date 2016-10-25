@@ -612,6 +612,11 @@ void OSXWindow::messageLoop()
             {
                 break;
             }
+
+            if ([event type] == NSAppKitDefined)
+            {
+                continue;
+            }
             [NSApp sendEvent: event];
         }
     }
