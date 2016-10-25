@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "411c4caf_86d58ad2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-25T08:32:38Z",
+      "side": 1,
+      "message": "nit: Swapchain is usually written in one word.",
+      "revId": "066aad6af878bdfafb90aebe9bd32ab5c6eea42f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
