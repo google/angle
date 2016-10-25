@@ -4,7 +4,7 @@
 
 import("//testing/test.gni")
 import("//build/config/chromecast_build.gni")
-import("//third_party/angle/build/angle_common.gni")
+import("//third_party/angle/gni/angle.gni")
 
 unittests_gypi = exec_script("//build/gypi_to_gn.py",
                              [

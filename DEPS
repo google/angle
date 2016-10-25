@@ -101,7 +101,7 @@ hooks = [
   {
     # A change to a .gyp, .gypi, or to GYP itself should run the generator.
     'pattern': '.',
-    'action': ['python', 'build/gyp_angle'],
+    'action': ['python', 'gyp/gyp_angle'],
   },
 ]
 

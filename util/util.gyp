@@ -97,7 +97,7 @@
         {
             'target_name': 'angle_util',
             'type': 'shared_library',
-            'includes': [ '../build/common_defines.gypi', ],
+            'includes': [ '../gyp/common_defines.gypi', ],
             'dependencies':
             [
                 '<(angle_path)/src/angle.gyp:angle_common',

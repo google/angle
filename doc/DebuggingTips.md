@@ -17,7 +17,7 @@ If you follow these steps, apitrace will work correctly aside from a few minor b
 For example, to trace a run of `hello_triangle`, assuming you are using the ninja gyp generator and the apitrace executables are in `$PATH`:
 
 ```
-./build/gyp_angle -D angle_link_glx=1 -D angle_gl_library_type=static_library
+./gyp/gyp_angle -D angle_link_glx=1 -D angle_gl_library_type=static_library
 ninja -C out/Debug
 export TRACE_LIBGL="/usr/lib/libGL.so.1" # may require a different path
 apitrace trace -o mytrace ./out/Debug/hello_triangle
