@@ -1859,6 +1859,15 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     // TODO(jmadill): Disable when we have a fixed driver version.
     workarounds.emulateTinyStencilTextures = (adapterDesc.VendorId == VENDOR_ID_AMD);
 
+    // The tiny stencil texture workaround involves using CopySubresource or UpdateSubresource on a
+    // depth stencil texture.  This is not allowed until feature level 10.1 but since it is not
+    // possible to support ES3 on these devices, there is no need for the workaround to begin with
+    // (anglebug.com/1572).
+    if (deviceCaps.featureLevel < D3D_FEATURE_LEVEL_10_1)
+    {
+        workarounds.emulateTinyStencilTextures = false;
+    }
+
     return workarounds;
 }
 
