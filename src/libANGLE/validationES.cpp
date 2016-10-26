@@ -1565,9 +1565,10 @@ bool ValidImageDataSize(ValidationContext *context,
         {
             context->handleError(
                 Error(GL_INVALID_OPERATION, "imageSize must be 0 if no texture data is provided."));
+            return false;
         }
 
-        if (endByte > static_cast<GLuint>(imageSize))
+        if (pixels != nullptr && endByte > static_cast<GLuint>(imageSize))
         {
             context->handleError(
                 Error(GL_INVALID_OPERATION, "imageSize must be at least %u.", endByte));
