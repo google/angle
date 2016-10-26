@@ -22,6 +22,30 @@
       "revId": "021db2176a7dfbf7324cd4fac996ed82a04044dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_90789ae8",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-26T06:52:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "416e0c0f_9feb1fc5",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 278,
+        "endChar": 1
+      },
+      "revId": "021db2176a7dfbf7324cd4fac996ed82a04044dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
