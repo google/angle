@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21a03809_87be9ab4",
+        "filename": "third_party/spirv-tools/README.angle",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-26T22:14:26Z",
+      "side": 1,
+      "message": "This file should be in spirv-tools-angle.",
+      "revId": "07b0f9f392963fcaa2d1eee9a907d6c42f7f1e21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
