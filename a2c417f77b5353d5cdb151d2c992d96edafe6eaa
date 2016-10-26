@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21a03809_41b4a2d8",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-26T19:55:50Z",
+      "side": 1,
+      "message": "nit: namespace comment",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 1
+      },
+      "revId": "a2c417f77b5353d5cdb151d2c992d96edafe6eaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
