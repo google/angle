@@ -22,6 +22,30 @@
       "revId": "7835b525b7cb1409ca5229e491c6f6a7cbbc0d93",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_c14c1240",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 0,
+      "message": "Yep!",
+      "parentUuid": "017894b0_f4acd86e",
+      "range": {
+        "startLine": 221,
+        "startChar": 6,
+        "endLine": 234,
+        "endChar": 5
+      },
+      "revId": "7835b525b7cb1409ca5229e491c6f6a7cbbc0d93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

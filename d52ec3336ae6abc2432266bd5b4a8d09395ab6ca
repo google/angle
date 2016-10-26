@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_212fd6a2",
+        "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done, limited the accepted formats.",
+      "parentUuid": "017894b0_94556469",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 86,
+        "endChar": 18
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c89f776_85e11017",
         "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
         "patchSetId": 10
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_0179fa71",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Using the angle::Format internally now but still using the GLenum externally because it integrates well with how SwapChain still uses GLenum formats.",
+      "parentUuid": "017894b0_3496d027",
+      "range": {
+        "startLine": 137,
+        "startChar": 41,
+        "endLine": 137,
+        "endChar": 55
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_f4a7f890",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 10
@@ -76,6 +124,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "here, since we know we want a render target format, you could use the fboImplementationFormat of the angle::Format. If this is the only place you need it, I would be fine with just renaming the parameter of getD3DTextureInfo to *fboFormat or *renderTargetFormat.",
+      "range": {
+        "startLine": 64,
+        "startChar": 23,
+        "endLine": 64,
+        "endChar": 40
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_21907667",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_f4a7f890",
       "range": {
         "startLine": 64,
         "startChar": 23,
@@ -111,6 +183,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_611f1e1e",
+        "filename": "src/libANGLE/renderer/d3d/SwapChainD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a18a68d9_01ad8a68",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 5
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_347d7025",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -122,6 +218,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "I would like it if you would use \n\n const angle::Format \u0026d3d11_angle::GetFormat(DXGI_FORMAT) \n\nfor this. You can retrieve the corresponding \"FBO\" format from fboImplementationInternalFormat.. there\u0027s also glInternalFormat, but that will sometimes be magical \"ANGLEX\" values. Depends on if you are returning the format to public clients, or only need it for internal use.",
+      "range": {
+        "startLine": 1219,
+        "startChar": 11,
+        "endLine": 1219,
+        "endChar": 24
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_8174ca7f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_347d7025",
       "range": {
         "startLine": 1219,
         "startChar": 11,
@@ -157,6 +277,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_e14b0e22",
+        "filename": "src/libANGLE/renderer/gl/SurfaceGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "This is intentional, the new surface type of WGL needs to know when it is no longer current to unlock the resources.",
+      "parentUuid": "017894b0_b4cf403b",
+      "range": {
+        "startLine": 29,
+        "startChar": 23,
+        "endLine": 29,
+        "endChar": 36
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_740f68a2",
         "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
         "patchSetId": 10
@@ -168,6 +312,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "nit: TODO(geofflang). not sure either on the type of error.",
+      "range": {
+        "startLine": 231,
+        "startChar": 11,
+        "endLine": 231,
+        "endChar": 15
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_c1f1b2c6",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_740f68a2",
       "range": {
         "startLine": 231,
         "startChar": 11,
@@ -203,6 +371,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_610d5ee2",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_1414f4b5",
+      "range": {
+        "startLine": 351,
+        "startChar": 0,
+        "endLine": 351,
+        "endChar": 1
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_540a6c93",
         "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h",
         "patchSetId": 10
@@ -214,6 +406,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "nit: namespace comment",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 1
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_813b2a8e",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_540a6c93",
       "range": {
         "startLine": 84,
         "startChar": 0,
@@ -243,6 +459,24 @@
     },
     {
       "key": {
+        "uuid": "21a03809_e182ee97",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "I wanted to try to make use of the inheritance a bit here, allowing DisplayGL to accept some more generic buffer types.",
+      "parentUuid": "7c89f776_4520085f",
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_b4242025",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
@@ -254,6 +488,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "can do ASSERT_NE",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 9
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_a1df4622",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_b4242025",
       "range": {
         "startLine": 65,
         "startChar": 0,
@@ -289,6 +547,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_01d57a02",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_54f34c85",
+      "range": {
+        "startLine": 70,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 31
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_f41a98de",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
@@ -312,6 +594,30 @@
     },
     {
       "key": {
+        "uuid": "21a03809_41ef82d2",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "017894b0_f41a98de",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 17
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017894b0_d4067c83",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
@@ -323,6 +629,30 @@
       "writtenOn": "2016-10-24T18:30:59Z",
       "side": 1,
       "message": "nit: comment before each test... now I\u0027m wondering if this file is just a move or you wrote these tests.",
+      "range": {
+        "startLine": 225,
+        "startChar": 0,
+        "endLine": 225,
+        "endChar": 6
+      },
+      "revId": "d52ec3336ae6abc2432266bd5b4a8d09395ab6ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_21ecf6db",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-26T19:47:09Z",
+      "side": 1,
+      "message": "Done.  Yep, these tests were from other pbuffer tests originally.",
+      "parentUuid": "017894b0_d4067c83",
       "range": {
         "startLine": 225,
         "startChar": 0,
