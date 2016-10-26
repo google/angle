@@ -87,10 +87,15 @@ void MacroExpander::lex(Token *token)
             token->setExpansionDisabled(true);
             break;
         }
+
+        // Bump the expansion count before peeking if the next token is a '('
+        // otherwise there could be a #undef of the macro before the next token.
+        macro.expansionCount++;
         if ((macro.type == Macro::kTypeFunc) && !isNextTokenLeftParen())
         {
             // If the token immediately after the macro name is not a '(',
             // this macro should not be expanded.
+            macro.expansionCount--;
             break;
         }
 
@@ -156,8 +161,6 @@ bool MacroExpander::pushMacro(const Macro &macro, const Token &identifier)
     ASSERT(!identifier.expansionDisabled());
     ASSERT(identifier.type == Token::IDENTIFIER);
     ASSERT(identifier.text == macro.name);
-
-    macro.expansionCount++;
 
     std::vector<Token> replacements;
     if (!expandMacro(macro, identifier, &replacements))
