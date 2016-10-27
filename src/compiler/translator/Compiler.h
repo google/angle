@@ -123,8 +123,6 @@ class TCompiler : public TShHandleBase
     // Returns true if the given shader does not exceed the minimum
     // functionality mandated in GLSL 1.0 spec Appendix A.
     bool validateLimitations(TIntermNode* root);
-    // Collect info for all attribs, uniforms, varyings.
-    void collectVariables(TIntermNode* root);
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};
@@ -160,20 +158,16 @@ class TCompiler : public TShHandleBase
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
     const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
-    virtual bool shouldCollectVariables(ShCompileOptions compileOptions)
-    {
-        return (compileOptions & SH_VARIABLES) != 0;
-    }
-
     virtual bool shouldFlattenPragmaStdglInvariantAll() = 0;
+    virtual bool shouldCollectVariables(ShCompileOptions compileOptions);
 
+    bool wereVariablesCollected() const;
     std::vector<sh::Attribute> attributes;
     std::vector<sh::OutputVariable> outputVariables;
     std::vector<sh::Uniform> uniforms;
     std::vector<sh::ShaderVariable> expandedUniforms;
     std::vector<sh::Varying> varyings;
     std::vector<sh::InterfaceBlock> interfaceBlocks;
-    bool variablesCollected;
 
   private:
     // Creates the function call DAG for further analysis, returning false if there is a recursion
@@ -183,6 +177,11 @@ class TCompiler : public TShHandleBase
     void internalTagUsedFunction(size_t index);
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
+
+    // Collect info for all attribs, uniforms, varyings.
+    void collectVariables(TIntermNode *root);
+
+    bool variablesCollected;
 
     // Removes unused function declarations and prototypes from the AST
     class UnusedPredicate;

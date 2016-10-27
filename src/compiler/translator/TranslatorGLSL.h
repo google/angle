@@ -20,6 +20,7 @@ class TranslatorGLSL : public TCompiler
 
     void translate(TIntermNode *root, ShCompileOptions compileOptions) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
+    bool shouldCollectVariables(ShCompileOptions compileOptions) override;
 
   private:
     void writeVersion(TIntermNode *root);

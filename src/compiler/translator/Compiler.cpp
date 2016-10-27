@@ -879,6 +879,16 @@ void TCompiler::collectVariables(TIntermNode* root)
     }
 }
 
+bool TCompiler::shouldCollectVariables(ShCompileOptions compileOptions)
+{
+    return (compileOptions & SH_VARIABLES) != 0;
+}
+
+bool TCompiler::wereVariablesCollected() const
+{
+    return variablesCollected;
+}
+
 bool TCompiler::enforcePackingRestrictions()
 {
     VariablePacker packer;
