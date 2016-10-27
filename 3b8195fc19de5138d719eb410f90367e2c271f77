@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21a03809_6fdc2059",
+        "filename": "src/compiler/translator/RemoveInvariantDeclaration.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-27T17:56:46Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with translator, so I have a question.\nWill this not remove invariant from FS outputs as well?\n(I\u0027m not that familiar with shaders either, does it make sense to have FS outputs?)",
+      "range": {
+        "startLine": 17,
+        "startChar": 59,
+        "endLine": 17,
+        "endChar": 64
+      },
+      "revId": "3b8195fc19de5138d719eb410f90367e2c271f77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21a03809_0f8f5c79",
+        "filename": "src/compiler/translator/RemoveInvariantDeclaration.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-27T17:56:46Z",
+      "side": 1,
+      "message": "nit: \u003e\u003d",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 14
+      },
+      "revId": "3b8195fc19de5138d719eb410f90367e2c271f77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
