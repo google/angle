@@ -3000,3 +3000,21 @@ TEST_F(MalformedShaderTest, SamplerAsTernaryOperand)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// ESSL 1.00.17 section 4.5.2.
+// ESSL 3.00.6 section 4.5.3.
+// Precision must be specified for floats. Test this with a declaration with no qualifiers.
+TEST_F(MalformedShaderTest, FloatDeclarationNoQualifiersNoPrecision)
+{
+    const std::string &shaderString =
+        "vec4 foo = vec4(0.0);\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = foo;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

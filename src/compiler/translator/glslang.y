@@ -813,14 +813,8 @@ single_declaration
 
 fully_specified_type
     : type_specifier {
+        context->addFullySpecifiedType(&$1);
         $$ = $1;
-
-        if ($1.array) {
-            ES3_OR_NEWER("[]", @1, "first-class-array");
-            if (context->getShaderVersion() != 300) {
-                $1.clearArrayness();
-            }
-        }
     }
     | type_qualifier type_specifier {
         $$ = context->addFullySpecifiedType(*$1, $2);
@@ -959,10 +953,7 @@ storage_qualifier
 type_specifier
     : type_specifier_no_prec {
         $$ = $1;
-
-        if ($$.precision == EbpUndefined) {
-            $$.precision = context->symbolTable.getDefaultPrecision($1.getBasicType());
-        }
+        $$.precision = context->symbolTable.getDefaultPrecision($1.getBasicType());
     }
     ;
 

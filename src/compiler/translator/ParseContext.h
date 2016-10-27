@@ -204,6 +204,7 @@ class TParseContext : angle::NonCopyable
                             TIntermTyped *initializer,
                             TIntermBinary **initNode);
 
+    void addFullySpecifiedType(TPublicType *typeSpecifier);
     TPublicType addFullySpecifiedType(const TTypeQualifierBuilder &typeQualifierBuilder,
                                       const TPublicType &typeSpecifier);
 
