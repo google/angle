@@ -151,7 +151,11 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier 
 
     TIntermSymbol *node = new TIntermSymbol(0, symbolName, type);
     node->setInternal(true);
+
+    ASSERT(qualifier == EvqTemporary || qualifier == EvqConst || qualifier == EvqGlobal);
     node->getTypePointer()->setQualifier(qualifier);
+    // TODO(oetuaho): Might be useful to sanitize layout qualifier etc. on the type of the created
+    // symbol. This might need to be done in other places as well.
     return node;
 }
 

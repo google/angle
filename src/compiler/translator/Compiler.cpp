@@ -438,9 +438,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
         {
-            ScalarizeVecAndMatConstructorArgs scalarizer(
-                shaderType, fragmentPrecisionHigh);
-            root->traverse(&scalarizer);
+            ScalarizeVecAndMatConstructorArgs(root, shaderType, fragmentPrecisionHigh,
+                                              &mTemporaryIndex);
         }
 
         if (success && (compileOptions & SH_REGENERATE_STRUCT_NAMES))
