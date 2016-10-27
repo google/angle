@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c63772d9_329a50aa",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-27T19:23:08Z",
+      "side": 1,
+      "message": "I see that other workarounds have STANDARD_GL_DESKTOP. Would that be useful here too?",
+      "range": {
+        "startLine": 905,
+        "startChar": 55,
+        "endLine": 905,
+        "endChar": 60
+      },
+      "revId": "59e307437702229966cd0ecb5550ecc8836d987e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
