@@ -1470,7 +1470,7 @@ gl::Error Blit11::copyDepthStencilImpl(const TextureHelper11 &source,
 
     if (stencilOnly)
     {
-        const auto &srcFormat = source.getFormatSet().format;
+        const auto &srcFormat = source.getFormatSet().format();
 
         // Stencil channel should be right after the depth channel. Some views to depth/stencil
         // resources have red channel for depth, in which case the depth channel bit width is in

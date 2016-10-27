@@ -64,7 +64,7 @@ gl::Error Image11::generateMipmap(Image11 *dest,
     uint8_t *destData         = reinterpret_cast<uint8_t *>(destMapped.pData);
 
     auto mipGenerationFunction =
-        d3d11::Format::Get(src->getInternalFormat(), rendererCaps).format.mipGenerationFunction;
+        d3d11::Format::Get(src->getInternalFormat(), rendererCaps).format().mipGenerationFunction;
     mipGenerationFunction(src->getWidth(), src->getHeight(), src->getDepth(), sourceData,
                           srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch,
                           destMapped.DepthPitch);
@@ -251,7 +251,7 @@ gl::Error Image11::loadData(const gl::Box &area,
 
     const d3d11::Format &d3dFormatInfo =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions(type).loadFunction;
+    LoadImageFunction loadFunction = d3dFormatInfo.getLoadFunctions()(type).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     ANGLE_TRY(map(D3D11_MAP_WRITE, &mappedImage));
@@ -286,7 +286,8 @@ gl::Error Image11::loadCompressedData(const gl::Box &area, const void *input)
 
     const d3d11::Format &d3dFormatInfo =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
-    LoadImageFunction loadFunction = d3dFormatInfo.loadFunctions(GL_UNSIGNED_BYTE).loadFunction;
+    LoadImageFunction loadFunction =
+        d3dFormatInfo.getLoadFunctions()(GL_UNSIGNED_BYTE).loadFunction;
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     ANGLE_TRY(map(D3D11_MAP_WRITE, &mappedImage));
@@ -364,7 +365,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     const auto &destD3D11Format =
         d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps());
 
-    auto loadFunction = destD3D11Format.loadFunctions(destFormatInfo.type);
+    auto loadFunction = destD3D11Format.getLoadFunctions()(destFormatInfo.type);
     gl::Error error   = gl::NoError();
     if (loadFunction.requiresConversion)
     {

@@ -3688,7 +3688,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     }
 
     // We don't support formats which we can't represent without conversion
-    if (d3d11FormatInfo.format.glInternalFormat != internalFormat)
+    if (d3d11FormatInfo.format().glInternalFormat != internalFormat)
     {
         return false;
     }
@@ -3968,9 +3968,9 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     int inputPitch  = static_cast<int>(mapping.RowPitch);
 
     const auto &formatInfo = textureHelper.getFormatSet();
-    ASSERT(formatInfo.format.glInternalFormat != GL_NONE);
+    ASSERT(formatInfo.format().glInternalFormat != GL_NONE);
 
-    PackPixels(params, formatInfo.format, inputPitch, source, pixelsOut);
+    PackPixels(params, formatInfo.format(), inputPitch, source, pixelsOut);
 
     mDeviceContext->Unmap(readResource, 0);
 
@@ -4128,7 +4128,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     const auto &destFormatInfo = gl::GetInternalFormatInfo(drawRenderTarget->getInternalFormat());
     const auto &srcFormatInfo  = gl::GetInternalFormatInfo(readRenderTarget->getInternalFormat());
     const auto &formatSet      = drawRenderTarget11->getFormatSet();
-    const auto &nativeFormat   = formatSet.format;
+    const auto &nativeFormat   = formatSet.format();
 
     // Some blits require masking off emulated texture channels. eg: from RGBA8 to RGB8, we
     // emulate RGB8 with RGBA8, so we need to mask off the alpha channel when we copy.
@@ -4166,8 +4166,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     bool partialDSBlit =
         (nativeFormat.depthBits > 0 && depthBlit) != (nativeFormat.stencilBits > 0 && stencilBlit);
 
-    if (readRenderTarget11->getFormatSet().format.id ==
-            drawRenderTarget11->getFormatSet().format.id &&
+    if (readRenderTarget11->getFormatSet().formatID ==
+            drawRenderTarget11->getFormatSet().formatID &&
         !stretchRequired && !outOfBounds && !flipRequired && !partialDSBlit &&
         !colorMaskingNeeded && (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {

@@ -332,7 +332,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                                      "Internal render target view pointer unexpectedly null.");
                 }
 
-                const auto &nativeFormat = renderTarget->getFormatSet().format;
+                const auto &nativeFormat = renderTarget->getFormatSet().format();
 
                 // Check if the actual format has a channel that the internal format does not and
                 // set them to the default values
@@ -389,7 +389,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         RenderTarget11 *renderTarget = nullptr;
         ANGLE_TRY(attachment->getRenderTarget(&renderTarget));
 
-        const auto &nativeFormat = renderTarget->getFormatSet().format;
+        const auto &nativeFormat = renderTarget->getFormatSet().format();
 
         unsigned int stencilUnmasked =
             (stencilAttachment != nullptr) ? (1 << nativeFormat.stencilBits) - 1 : 0;
