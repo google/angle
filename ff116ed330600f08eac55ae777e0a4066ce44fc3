@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "011ed449_0491f6dc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-27T10:19:53Z",
+      "side": 1,
+      "message": "nit: typo",
+      "revId": "ff116ed330600f08eac55ae777e0a4066ce44fc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
