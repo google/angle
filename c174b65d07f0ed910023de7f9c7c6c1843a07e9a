@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e11aa056_6394622a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1591,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-10-27T13:49:30Z",
+      "side": 1,
+      "message": "nit: fold both ifs with a \u0026\u0026",
+      "revId": "c174b65d07f0ed910023de7f9c7c6c1843a07e9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
