@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a6651ef7_0cf9770f",
+        "filename": "src/libANGLE/renderer/Format.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-27T21:50:39Z",
+      "side": 1,
+      "message": "Yes, good catch. I had it as a reference at once point, and changed it to fix a bug, but honestly I\u0027m not sure what was going on there. It seems to work fine now.",
+      "parentUuid": "a6651ef7_cc7d9f23",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 45
+      },
+      "revId": "58153ce9f649fd3e8ba4cfc65348bc5859410711",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6651ef7_6ce6b3d6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-27T21:11:13Z",
       "side": 1,
       "message": "I think it should be safe to remove \"static\", now that this is \"constexpr\". Since it is compile time initialized, it will happen only once, which is the reason \"static\" was here before, right?",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 18
+      },
+      "revId": "58153ce9f649fd3e8ba4cfc65348bc5859410711",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6651ef7_ace70b6a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-27T21:50:39Z",
+      "side": 1,
+      "message": "See http://stackoverflow.com/questions/13865842/does-static-constexpr-variable-make-sense.\n\nI believe the \"static constexpr\" makes it so these variables will be only initialized once per scope. Would have to verify, but I don\u0027t think the static is doing any harm.",
+      "parentUuid": "a6651ef7_6ce6b3d6",
       "range": {
         "startLine": 38,
         "startChar": 12,
