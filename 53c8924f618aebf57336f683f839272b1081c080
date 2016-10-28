@@ -401,6 +401,30 @@
       "revId": "53c8924f618aebf57336f683f839272b1081c080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_dfb913ad",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T20:19:01Z",
+      "side": 1,
+      "message": "I\u0027ve googled and found another option.\n#define ASSERT(expression) (void)sizeof((expression), 1)\nsizeof should use the variable, but not cause run-time evaluation",
+      "parentUuid": "a65fde57_bcb6eddc",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 43
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
