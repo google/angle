@@ -841,10 +841,14 @@ gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, s
 {
     ASSERT(isMappable(GL_MAP_WRITE_BIT));
 
-    uint8_t *writePointer = nullptr;
-    ANGLE_TRY(map(offset, size, GL_MAP_WRITE_BIT, &writePointer));
+    // Uniform storage can have a different internal size than the buffer size. Ensure we don't
+    // overflow.
+    size_t mapSize = std::min(size, mBufferSize - offset);
 
-    memcpy(writePointer, data, size);
+    uint8_t *writePointer = nullptr;
+    ANGLE_TRY(map(offset, mapSize, GL_MAP_WRITE_BIT, &writePointer));
+
+    memcpy(writePointer, data, mapSize);
 
     unmap();
 
