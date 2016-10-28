@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_1cf719df",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:46:35Z",
+      "side": 1,
+      "message": "OK, figured out how this works in ANGLE_LAZY_STREAM",
+      "parentUuid": "a65fde57_9cdcc9cb",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 34
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_fcd345e6",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -166,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_dc05a1ee",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:46:35Z",
+      "side": 1,
+      "message": "Yeah, you are right. I couldn\u0027t read this properly because of weird operator \u0026 overloading and the expression missing \u003c\u003c part.",
+      "parentUuid": "a65fde57_5c507146",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 65
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_7ce0d5b5",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -248,6 +296,30 @@
       "side": 1,
       "message": "Sorry I can\u0027t explain this. It needs to be this way to work, and I copied it from Chromium.",
       "parentUuid": "a65fde57_fcc225ed",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 43
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_bc68ada5",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:46:35Z",
+      "side": 1,
+      "message": "Thinking more about it and looking at Chromium code, I think this whole thing is needed only when ANGLE_ASSERTS_ON is 1.\nIn which case \u003c\u003c is invoked on the stream, which is then cast to void by \"::gl::LogMessageVoidify() \u0026\", so that \"?:\" types would match. I don\u0027t think this whole complexity is needed if ANGLE_ASSERTS_ON would always be 0 when ANGLE_LAZY_STREAM() is expanded.\nHave you tried this with just\n#define ASSERT(expression) ((void)(expression))",
+      "parentUuid": "a65fde57_7c4bb59f",
       "range": {
         "startLine": 154,
         "startChar": 0,
