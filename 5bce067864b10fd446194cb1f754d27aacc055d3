@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a65fde57_597b6368",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-28T18:17:15Z",
+      "side": 1,
+      "message": "why can\u0027t you make this part of the traverser?",
+      "range": {
+        "startLine": 153,
+        "startChar": 27,
+        "endLine": 154,
+        "endChar": 93
+      },
+      "revId": "5bce067864b10fd446194cb1f754d27aacc055d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
