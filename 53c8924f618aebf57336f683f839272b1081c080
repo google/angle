@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_dcfac14f",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-28T18:58:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a65fde57_bcd9cd0c",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 21
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_fcd345e6",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_1c60b94d",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-28T18:58:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a65fde57_fcd345e6",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 73
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_7ce0d5b5",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2016-10-28T18:47:02Z",
       "side": 1,
       "message": "nit: this probably doesn\u0027t need to be a function.",
+      "range": {
+        "startLine": 141,
+        "startChar": 24,
+        "endLine": 141,
+        "endChar": 26
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_5c4191a3",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-28T18:58:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a65fde57_7ce0d5b5",
       "range": {
         "startLine": 141,
         "startChar": 24,
