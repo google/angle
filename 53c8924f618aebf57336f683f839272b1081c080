@@ -329,6 +329,30 @@
       "revId": "53c8924f618aebf57336f683f839272b1081c080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_dc212166",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-28T19:55:22Z",
+      "side": 1,
+      "message": "Using ((void)(expression)) would still execute the expression when asserts are off which is not desired.",
+      "parentUuid": "a65fde57_bc68ada5",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 43
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
