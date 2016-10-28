@@ -22,6 +22,30 @@
       "revId": "2a9385aa68977fdc4bd1314ecd1bbaf4c9745f5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81ce44ee_68aed8cc",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-10-28T04:36:18Z",
+      "side": 1,
+      "message": "Sorry, I missed this before. I think we should check it\u0027s gl desktop. Fixed in new patch.",
+      "parentUuid": "868bbadf_e99ded4f",
+      "range": {
+        "startLine": 905,
+        "startChar": 55,
+        "endLine": 905,
+        "endChar": 60
+      },
+      "revId": "2a9385aa68977fdc4bd1314ecd1bbaf4c9745f5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
