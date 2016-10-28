@@ -93,6 +93,30 @@
       "revId": "58153ce9f649fd3e8ba4cfc65348bc5859410711",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21c918eb_843b3b8e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T01:18:04Z",
+      "side": 1,
+      "message": "Oh, I missed that this function returns \"const Format \u0026\", which makes \"static\" necessary here indeed. I thought for some reason that this function is constexpr as well, which would make its callers get the data at compile time, but maybe increasing the binary size, since the compiler may allocate new struct at each Format::Get callsite.",
+      "parentUuid": "a6651ef7_ace70b6a",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 18
+      },
+      "revId": "58153ce9f649fd3e8ba4cfc65348bc5859410711",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
