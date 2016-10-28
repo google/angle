@@ -208,6 +208,11 @@ class D3DTextureTest : public ANGLETest
             return false;
         }
 
+        if (IsWindows() && IsIntel() && IsOpenGL())
+        {
+            std::cout << "Test skipped on Windows Intel OpenGL." << std::endl;
+            return false;
+        }
         return true;
     }
 
