@@ -49,6 +49,29 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_9cdcc9cb",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:11:13Z",
+      "side": 1,
+      "message": "Can\u0027t figure out where this is used.",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 34
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_fcd345e6",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -96,6 +119,29 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_dcbf615f",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:11:13Z",
+      "side": 1,
+      "message": "Maybe enclose this in (), to be on the safe side?",
+      "range": {
+        "startLine": 138,
+        "startChar": 4,
+        "endLine": 138,
+        "endChar": 65
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_7ce0d5b5",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -136,6 +182,29 @@
         "startChar": 24,
         "endLine": 141,
         "endChar": 26
+      },
+      "revId": "53c8924f618aebf57336f683f839272b1081c080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_fcc225ed",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-28T19:11:13Z",
+      "side": 1,
+      "message": "I don\u0027t understand this.\nI think this expands to\n!(0 ? !(condition) : false) ? (void)0 : ::gl::LogMessageVoidify() \u0026 (::gl::DummyStream()) \u003c\u003c \"Check failed: \" #condition \". \"\nWhich is essentially (void)0.\nWhy all the complexity is needed? Wouldn\u0027t ((void)condition) be enough? Where am I wrong?",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 43
       },
       "revId": "53c8924f618aebf57336f683f839272b1081c080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
