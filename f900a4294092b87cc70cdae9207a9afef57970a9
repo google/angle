@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a65fde57_5c1871e7",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-28T18:50:13Z",
+      "side": 1,
+      "message": "nit: needs formatting.",
+      "range": {
+        "startLine": 207,
+        "startChar": 4,
+        "endLine": 207,
+        "endChar": 121
+      },
+      "revId": "f900a4294092b87cc70cdae9207a9afef57970a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
