@@ -106,3 +106,8 @@ hooks = [
     "action": ["python", "build/gyp_angle"],
   },
 ]
+
+recursedeps = [
+  # buildtools provides clang_format.
+  'buildtools',
+]
