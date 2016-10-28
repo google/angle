@@ -8,11 +8,21 @@
 // ANGLE Format table:
 //   Queries for typed format information from the ANGLE format enum.
 
+#include "libANGLE/renderer/Format.h"
+
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
+#include "image_util/loadimage.h"
+
 namespace angle
 {
 
-constexpr Format g_formatInfoTable[] =
-{
+static constexpr rx::FastCopyFunctionMap::Entry BGRAEntry = {GL_RGBA, GL_UNSIGNED_BYTE,
+                                                             CopyBGRA8ToRGBA8};
+static constexpr rx::FastCopyFunctionMap BGRACopyFunctions = {&BGRAEntry, 1};
+static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
+
+constexpr Format g_formatInfoTable[] = {
     // clang-format off
     { Format::ID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0 },
     { Format::ID::A16_FLOAT, GL_ALPHA16F_EXT, GL_ALPHA16F_EXT, GenerateMip<A16F>, NoCopyFunctions, ReadColor<A16F, GLfloat>, GL_FLOAT, 0, 0, 0, 16, 0, 0 },
@@ -137,5 +147,11 @@ constexpr Format g_formatInfoTable[] =
     { Format::ID::S8_UINT, GL_STENCIL_INDEX8, GL_STENCIL_INDEX8, nullptr, NoCopyFunctions, nullptr, GL_UNSIGNED_INT, 0, 0, 0, 0, 0, 8 },
     // clang-format on
 };
+
+// static
+const Format &Format::Get(ID id)
+{
+    return g_formatInfoTable[static_cast<size_t>(id)];
+}
 
 }  // namespace angle

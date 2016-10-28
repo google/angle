@@ -15,10 +15,6 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
-#include "image_util/copyimage.h"
-#include "image_util/generatemip.h"
-#include "image_util/loadimage.h"
-
 namespace angle
 {
 
@@ -40,7 +36,7 @@ struct Format final : angle::NonCopyable
                      GLuint depthBits,
                      GLuint stencilBits);
 
-    constexpr static const Format &Get(ID id);
+    static const Format &Get(ID id);
 
     ID id;
 
@@ -68,11 +64,6 @@ struct Format final : angle::NonCopyable
     GLuint depthBits;
     GLuint stencilBits;
 };
-
-static constexpr rx::FastCopyFunctionMap::Entry BGRAEntry = {GL_RGBA, GL_UNSIGNED_BYTE,
-                                                             CopyBGRA8ToRGBA8};
-static constexpr rx::FastCopyFunctionMap BGRACopyFunctions = {&BGRAEntry, 1};
-static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
 
 constexpr Format::Format(ID id,
                          GLenum glFormat,
@@ -106,17 +97,5 @@ constexpr Format::Format(ID id,
 }  // namespace angle
 
 #include "libANGLE/renderer/Format_ID_autogen.inl"
-#include "libANGLE/renderer/Format_table_autogen.inl"
-
-namespace angle
-{
-
-// static
-constexpr const Format &Format::Get(ID id)
-{
-    return g_formatInfoTable[static_cast<size_t>(id)];
-}
-
-}  // namespace angle
 
 #endif  // LIBANGLE_RENDERER_FORMAT_H_

@@ -1812,7 +1812,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
     // clang-format on
 
     UNREACHABLE();
-    static const Format defaultInfo;
+    static constexpr Format defaultInfo;
     return defaultInfo;
 }
 

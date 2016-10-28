@@ -175,7 +175,7 @@
             'libANGLE/renderer/FenceNVImpl.h',
             'libANGLE/renderer/FenceSyncImpl.h',
             'libANGLE/renderer/Format_ID_autogen.inl',
-            'libANGLE/renderer/Format_table_autogen.inl',
+            'libANGLE/renderer/Format_table_autogen.cpp',
             'libANGLE/renderer/Format.h',
             'libANGLE/renderer/FramebufferAttachmentObjectImpl.h',
             'libANGLE/renderer/FramebufferImpl.h',

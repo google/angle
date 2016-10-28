@@ -45,15 +45,31 @@ template_autogen_inl = """// GENERATED FILE - DO NOT EDIT.
 // ANGLE Format table:
 //   Queries for typed format information from the ANGLE format enum.
 
+#include "libANGLE/renderer/Format.h"
+
+#include "image_util/copyimage.h"
+#include "image_util/generatemip.h"
+#include "image_util/loadimage.h"
+
 namespace angle
 {{
 
-constexpr Format g_formatInfoTable[] =
-{{
+static constexpr rx::FastCopyFunctionMap::Entry BGRAEntry = {{GL_RGBA, GL_UNSIGNED_BYTE,
+                                                             CopyBGRA8ToRGBA8}};
+static constexpr rx::FastCopyFunctionMap BGRACopyFunctions = {{&BGRAEntry, 1}};
+static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
+
+constexpr Format g_formatInfoTable[] = {{
     // clang-format off
     {{ Format::ID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0 }},
 {angle_format_info_cases}    // clang-format on
 }};
+
+// static
+const Format &Format::Get(ID id)
+{{
+    return g_formatInfoTable[static_cast<size_t>(id)];
+}}
 
 }}  // namespace angle
 """
@@ -241,7 +257,7 @@ output_cpp = template_autogen_inl.format(
     copyright_year = date.today().year,
     angle_format_info_cases = angle_format_cases,
     data_source_name = data_source_name)
-with open('Format_table_autogen.inl', 'wt') as out_file:
+with open('Format_table_autogen.cpp', 'wt') as out_file:
     out_file.write(output_cpp)
     out_file.close()
 
