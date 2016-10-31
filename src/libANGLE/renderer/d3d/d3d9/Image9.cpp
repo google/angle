@@ -294,7 +294,6 @@ void Image9::unlock()
     if (mSurface)
     {
         HRESULT result = mSurface->UnlockRect();
-        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
     }
 }

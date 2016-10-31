@@ -1549,7 +1549,6 @@ gl::Error TextureStorage11_EGLImage::getRenderTarget(const gl::ImageIndex &index
 {
     ASSERT(!index.hasLayer());
     ASSERT(index.mipIndex == 0);
-    UNUSED_ASSERTION_VARIABLE(index);
 
     ANGLE_TRY(checkForUpdatedRenderTarget());
 

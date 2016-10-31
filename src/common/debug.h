@@ -57,6 +57,19 @@ void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator);
 void UninitializeDebugAnnotations();
 bool DebugAnnotationsActive();
 
+// This class is used to explicitly ignore values in the conditional logging macros. This avoids
+// compiler warnings like "value computed is not used" and "statement has no effect".
+class LogMessageVoidify
+{
+  public:
+    LogMessageVoidify() {}
+    // This has to be an operator with a precedence lower than << but higher than ?:
+    void operator&(std::ostream &) {}
+};
+
+// This can be any ostream, it is unused, but needs to be a valid reference.
+std::ostream &DummyStream();
+
 }  // namespace gl
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE) || defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
@@ -117,17 +130,28 @@ bool DebugAnnotationsActive();
 #define ANGLE_ASSERT_IMPL(expression) ANGLE_CRASH()
 #endif  // !defined(NDEBUG)
 
+// Helper macro which avoids evaluating the arguments to a stream if the condition doesn't hold.
+// Condition is evaluated once and only once.
+#define ANGLE_LAZY_STREAM(stream, condition) \
+    !(condition) ? static_cast<void>(0) : ::gl::LogMessageVoidify() & (stream)
+
+#if defined(NDEBUG) && !defined(ANGLE_ENABLE_ASSERTS)
+#define ANGLE_ASSERTS_ON 0
+#else
+#define ANGLE_ASSERTS_ON 1
+#endif
+
 // A macro asserting a condition and outputting failures to the debug log
-#if defined(ANGLE_ENABLE_ASSERTS)
+#if ANGLE_ASSERTS_ON
 #define ASSERT(expression)                                                                        \
     (expression ? static_cast<void>(0)                                                            \
                 : (ERR("\t! Assert failed in %s(%d): %s\n", __FUNCTION__, __LINE__, #expression), \
                    ANGLE_ASSERT_IMPL(expression)))
-#define UNUSED_ASSERTION_VARIABLE(variable)
 #else
-#define ASSERT(expression) (void(0))
-#define UNUSED_ASSERTION_VARIABLE(variable) ((void)variable)
-#endif
+#define ASSERT(condition)                                                           \
+    ANGLE_LAZY_STREAM(::gl::DummyStream(), ANGLE_ASSERTS_ON ? !(condition) : false) \
+        << "Check failed: " #condition ". "
+#endif  // ANGLE_ASSERTS_ON
 
 #define UNUSED_VARIABLE(variable) ((void)variable)
 

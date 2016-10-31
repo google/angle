@@ -125,7 +125,6 @@ FenceSync11::FenceSync11(Renderer11 *renderer) : FenceSyncImpl(), mRenderer(rend
 {
     LARGE_INTEGER counterFreqency = {};
     BOOL success                  = QueryPerformanceFrequency(&counterFreqency);
-    UNUSED_ASSERTION_VARIABLE(success);
     ASSERT(success);
 
     mCounterFrequency = counterFreqency.QuadPart;
@@ -170,7 +169,6 @@ gl::Error FenceSync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *ou
 
     LARGE_INTEGER currentCounter = {};
     BOOL success                 = QueryPerformanceCounter(&currentCounter);
-    UNUSED_ASSERTION_VARIABLE(success);
     ASSERT(success);
 
     LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout) * static_cast<LONGLONG>(1000000ll);
@@ -182,7 +180,6 @@ gl::Error FenceSync11::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *ou
         loopCount++;
         ScheduleYield();
         success = QueryPerformanceCounter(&currentCounter);
-        UNUSED_ASSERTION_VARIABLE(success);
         ASSERT(success);
 
         error = FenceTestHelper(this, flushCommandBuffer, &result);

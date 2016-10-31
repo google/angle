@@ -2812,14 +2812,12 @@ void TIntermTraverser::updateTree()
             bool inserted = insertion.parent->insertChildNodes(insertion.position + 1,
                                                                insertion.insertionsAfter);
             ASSERT(inserted);
-            UNUSED_ASSERTION_VARIABLE(inserted);
         }
         if (!insertion.insertionsBefore.empty())
         {
             bool inserted =
                 insertion.parent->insertChildNodes(insertion.position, insertion.insertionsBefore);
             ASSERT(inserted);
-            UNUSED_ASSERTION_VARIABLE(inserted);
         }
     }
     for (size_t ii = 0; ii < mReplacements.size(); ++ii)
@@ -2829,7 +2827,6 @@ void TIntermTraverser::updateTree()
         bool replaced = replacement.parent->replaceChildNode(
             replacement.original, replacement.replacement);
         ASSERT(replaced);
-        UNUSED_ASSERTION_VARIABLE(replaced);
 
         if (!replacement.originalBecomesChildOfReplacement)
         {
@@ -2852,7 +2849,6 @@ void TIntermTraverser::updateTree()
         bool replaced = replacement.parent->replaceChildNodeWithMultiple(
             replacement.original, replacement.replacements);
         ASSERT(replaced);
-        UNUSED_ASSERTION_VARIABLE(replaced);
     }
 
     clearReplacementQueue();

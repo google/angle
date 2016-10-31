@@ -68,7 +68,6 @@ bool AreTypeQualifierChecksRelaxed(int shaderVersion)
     return shaderVersion >= 310;
 }
 
-#if defined(ANGLE_ENABLE_ASSERTS)
 bool IsScopeQualifier(TQualifier qualifier)
 {
     return qualifier == EvqGlobal || qualifier == EvqTemporary;
@@ -91,7 +90,6 @@ bool IsInvariantCorrect(const TTypeQualifierBuilder::QualifierSequence &qualifie
     // The first qualifier always tells the scope.
     return qualifiers.size() >= 1 && IsScopeQualifierWrapper(qualifiers[0]);
 }
-#endif
 
 // Returns true if there are qualifiers which have been specified multiple times
 // If areQualifierChecksRelaxed is set to true, then layout qualifier repetition is allowed.

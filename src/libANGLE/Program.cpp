@@ -2408,7 +2408,6 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
 
         // All transform feedback varyings are expected to exist since packVaryings checks for them.
         ASSERT(found);
-        UNUSED_ASSERTION_VARIABLE(found);
     }
 
     if (mState.mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS &&

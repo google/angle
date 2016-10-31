@@ -2308,7 +2308,6 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             mDeviceContext->Map(vertexConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
         mapVS = (float(*)[4])map.pData;
     }
@@ -2318,7 +2317,6 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             mDeviceContext->Map(pixelConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        UNUSED_ASSERTION_VARIABLE(result);
         ASSERT(SUCCEEDED(result));
         mapPS = (float(*)[4])map.pData;
     }
@@ -2556,7 +2554,6 @@ void Renderer11::applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants
         HRESULT result =
             mDeviceContext->Map(driverConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping);
         ASSERT(SUCCEEDED(result));
-        UNUSED_ASSERTION_VARIABLE(result);
         memcpy(mapping.pData, appliedConstants, sizeof(TShaderConstants));
         // Previous buffer contents were discarded, so we need to refresh also the area of the
         // buffer that isn't used by this program.

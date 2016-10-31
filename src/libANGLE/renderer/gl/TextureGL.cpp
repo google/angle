@@ -214,7 +214,6 @@ void TextureGL::setImageHelper(GLenum target,
                                GLenum type,
                                const uint8_t *pixels)
 {
-    UNUSED_ASSERTION_VARIABLE(&CompatibleTextureTarget); // Reference this function to avoid warnings.
     ASSERT(CompatibleTextureTarget(mState.mTarget, target));
 
     nativegl::TexImageFormat texImageFormat =
@@ -912,8 +911,6 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions, GLenum nam
     {
         if (levelInfo.lumaWorkaround.enabled)
         {
-            UNUSED_ASSERTION_VARIABLE(levelInfo.lumaWorkaround.workaroundFormat);
-
             switch (value)
             {
             case GL_RED:

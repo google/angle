@@ -1791,7 +1791,6 @@ ID3D11InputLayout *LazyInputLayout::resolve(ID3D11Device *device)
             device->CreateInputLayout(&mInputDesc[0], static_cast<UINT>(mInputDesc.size()),
                                       mByteCode, mByteCodeLen, &mResource);
         ASSERT(SUCCEEDED(result));
-        UNUSED_ASSERTION_VARIABLE(result);
         d3d11::SetDebugName(mResource, mDebugName);
     }
 
@@ -1811,7 +1810,6 @@ ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
     {
         HRESULT result = device->CreateBlendState(&mDesc, &mResource);
         ASSERT(SUCCEEDED(result));
-        UNUSED_ASSERTION_VARIABLE(result);
         d3d11::SetDebugName(mResource, mDebugName);
     }
 

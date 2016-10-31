@@ -210,7 +210,6 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
             unsigned int index = static_cast<unsigned int>(-1);
             bool blockRegisterResult =
                 ShGetInterfaceBlockRegister(compilerHandle, interfaceBlock.name, &index);
-            UNUSED_ASSERTION_VARIABLE(blockRegisterResult);
             ASSERT(blockRegisterResult);
 
             mInterfaceBlockRegisterMap[interfaceBlock.name] = index;
