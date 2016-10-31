@@ -117,6 +117,30 @@
       "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66bde6e5_771dd0d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T21:31:58Z",
+      "side": 1,
+      "message": "I don\u0027t think inheriting from D3DFORMAT (or any OS or STL type) is totally ideal. If it is a big performance win we can look at it, I\u0027d say.",
+      "parentUuid": "a65fde57_6c0bf609",
+      "range": {
+        "startLine": 75,
+        "startChar": 18,
+        "endLine": 75,
+        "endChar": 29
+      },
+      "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
