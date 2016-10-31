@@ -93,6 +93,30 @@
       "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_6c0bf609",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-10-31T21:24:47Z",
+      "side": 1,
+      "message": "You could try something like this\nhttp://www.codeproject.com/Articles/16150/Inheriting-a-C-enum-type",
+      "parentUuid": "a65fde57_ec06e63b",
+      "range": {
+        "startLine": 75,
+        "startChar": 18,
+        "endLine": 75,
+        "endChar": 29
+      },
+      "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
