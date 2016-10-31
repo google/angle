@@ -69,6 +69,30 @@
       "revId": "b0e6e412026e45bf0d4d363ee4bb4afba0b6276f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_7141137f",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1925,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T19:58:52Z",
+      "side": 0,
+      "message": "I looked again, I still like the old style. It\u0027s not a big deal but would be nice if you could put it back!",
+      "parentUuid": "a65fde57_51aa0f29",
+      "range": {
+        "startLine": 1925,
+        "startChar": 33,
+        "endLine": 1925,
+        "endChar": 47
+      },
+      "revId": "b0e6e412026e45bf0d4d363ee4bb4afba0b6276f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
