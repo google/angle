@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a65fde57_8c276ae5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T21:14:14Z",
+      "side": 1,
+      "message": "It\u0027s not quite the same, I don\u0027t think it\u0027s a risk if the bots don\u0027t complain.",
+      "parentUuid": "a65fde57_f11a432e",
+      "range": {
+        "startLine": 735,
+        "startChar": 15,
+        "endLine": 735,
+        "endChar": 65
+      },
+      "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a65fde57_0c9fda35",
         "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-31T20:57:55Z",
       "side": 1,
       "message": "Are constexpr prohibited in switch cases?\nSeems to work here: http://stackoverflow.com/questions/16388510/evaluate-a-string-with-a-switch-in-c\nMaybe changing D3DFMT_NULL and D3DFMT_INTZ into functions will work?",
+      "range": {
+        "startLine": 75,
+        "startChar": 18,
+        "endLine": 75,
+        "endChar": 29
+      },
+      "revId": "24c2a8da5f0ea819cf58ddf1843bc1b8acc58ede",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_ec06e63b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T21:14:14Z",
+      "side": 1,
+      "message": "No, the issues is that D3DFMT_INTZ and D3DFMT_NULL are not part of the source enum. I wasn\u0027t able to find a solution for this.",
+      "parentUuid": "a65fde57_0c9fda35",
       "range": {
         "startLine": 75,
         "startChar": 18,
