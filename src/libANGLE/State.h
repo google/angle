@@ -21,6 +21,7 @@
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
+#include "libANGLE/Version.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
 
@@ -41,7 +42,7 @@ class State : angle::NonCopyable
 
     void initialize(const Caps &caps,
                     const Extensions &extensions,
-                    GLuint clientVersion,
+                    const Version &clientVersion,
                     bool debug,
                     bool bindGeneratesResource);
     void reset();

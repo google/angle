@@ -31,7 +31,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context, GLenum inter
     // error instead of a GL_INVALID_ENUM error. As this validation function is only called in
     // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    if (!formatInfo.textureSupport(context->getClientMajorVersion(), context->getExtensions()))
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         context->handleError(Error(GL_INVALID_VALUE));
         return false;
@@ -184,8 +184,7 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
         }
 
-        if (!actualFormatInfo.textureSupport(context->getClientMajorVersion(),
-                                             context->getExtensions()))
+        if (!actualFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
         {
             context->handleError(Error(GL_INVALID_ENUM));
             return false;
@@ -865,7 +864,7 @@ bool ValidateES3TexStorageParametersBase(Context *context,
     }
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
-    if (!formatInfo.textureSupport(context->getClientMajorVersion(), context->getExtensions()))
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         context->handleError(Error(GL_INVALID_ENUM));
         return false;
@@ -1922,7 +1921,7 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
 
 bool ValidateGetIntegeri_v(ValidationContext *context, GLenum target, GLuint index, GLint *data)
 {
-    if (!context->getGLVersion().isES3OrGreater())
+    if (context->getClientVersion() < ES_3_0)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;
@@ -1937,7 +1936,7 @@ bool ValidateGetIntegeri_vRobustANGLE(ValidationContext *context,
                                       GLsizei *length,
                                       GLint *data)
 {
-    if (!context->getGLVersion().isES3OrGreater())
+    if (context->getClientVersion() < ES_3_0)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;
@@ -1963,7 +1962,7 @@ bool ValidateGetIntegeri_vRobustANGLE(ValidationContext *context,
 
 bool ValidateGetInteger64i_v(ValidationContext *context, GLenum target, GLuint index, GLint64 *data)
 {
-    if (!context->getGLVersion().isES3OrGreater())
+    if (context->getClientVersion() < ES_3_0)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;
@@ -1978,7 +1977,7 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
                                         GLsizei *length,
                                         GLint64 *data)
 {
-    if (!context->getGLVersion().isES3OrGreater())
+    if (context->getClientVersion() < ES_3_0)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.0"));
         return false;

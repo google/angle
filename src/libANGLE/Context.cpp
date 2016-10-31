@@ -149,6 +149,11 @@ EGLint GetClientMinorVersion(const egl::AttributeMap &attribs)
     return static_cast<EGLint>(attribs.get(EGL_CONTEXT_MINOR_VERSION, 0));
 }
 
+gl::Version GetClientVersion(const egl::AttributeMap &attribs)
+{
+    return gl::Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
+}
+
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
 {
     EGLAttrib attrib = attribs.get(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_EXT,
@@ -230,8 +235,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const Context *shareContext,
                  const egl::AttributeMap &attribs)
 
-    : ValidationContext(GetClientMajorVersion(attribs),
-                        GetClientMinorVersion(attribs),
+    : ValidationContext(GetClientVersion(attribs),
                         &mGLState,
                         mCaps,
                         mTextureCaps,
@@ -241,8 +245,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
                         GetNoError(attribs)),
       mImplementation(implFactory->createContext(mState)),
       mCompiler(nullptr),
-      mClientMajorVersion(GetClientMajorVersion(attribs)),
-      mClientMinorVersion(GetClientMinorVersion(attribs)),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
       mHasBeenCurrent(false),
@@ -259,7 +261,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initCaps(GetWebGLContext(attribs));
     initWorkarounds();
 
-    mGLState.initialize(mCaps, mExtensions, mClientMajorVersion, GetDebug(attribs),
+    mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
                         GetBindGeneratesResource(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
@@ -288,7 +290,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     Texture *zeroTextureCube = new Texture(mImplementation.get(), 0, GL_TEXTURE_CUBE_MAP);
     mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
 
-    if (mClientMajorVersion >= 3)
+    if (getClientVersion() >= Version(3, 0))
     {
         // TODO: These could also be enabled via extension
         Texture *zeroTexture3D = new Texture(mImplementation.get(), 0, GL_TEXTURE_3D);
@@ -324,7 +326,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     bindPixelPackBuffer(0);
     bindPixelUnpackBuffer(0);
 
-    if (mClientMajorVersion >= 3)
+    if (getClientVersion() >= Version(3, 0))
     {
         // [OpenGL ES 3.0.2] section 2.14.1 pg 85:
         // In the initial state, a default transform feedback object is bound and treated as
@@ -1299,10 +1301,10 @@ void Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MIN_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.minProgramTexelOffset;                          break;
       case GL_MAX_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.maxProgramTexelOffset;                          break;
       case GL_MAJOR_VERSION:
-          *params = mClientMajorVersion;
+          *params = getClientVersion().major;
           break;
       case GL_MINOR_VERSION:
-          *params = mClientMinorVersion;
+          *params = getClientVersion().minor;
           break;
       case GL_MAX_ELEMENTS_INDICES:                     *params = mCaps.maxElementsIndices;                             break;
       case GL_MAX_ELEMENTS_VERTICES:                    *params = mCaps.maxElementsVertices;                            break;
@@ -2332,7 +2334,7 @@ void Context::initCaps(bool webGLContext)
 
     mLimitations = mImplementation->getNativeLimitations();
 
-    if (mClientMajorVersion < 3)
+    if (getClientVersion() < Version(3, 0))
     {
         // Disable ES3+ extensions
         mExtensions.colorBufferFloat = false;
@@ -2340,7 +2342,7 @@ void Context::initCaps(bool webGLContext)
         mExtensions.textureNorm16         = false;
     }
 
-    if (mClientMajorVersion > 2)
+    if (getClientVersion() > Version(2, 0))
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
         //mExtensions.sRGB = false;
@@ -2403,11 +2405,11 @@ void Context::updateCaps()
         // Caps are AND'd with the renderer caps because some core formats are still unsupported in
         // ES3.
         formatCaps.texturable =
-            formatCaps.texturable && formatInfo.textureSupport(mClientMajorVersion, mExtensions);
+            formatCaps.texturable && formatInfo.textureSupport(getClientVersion(), mExtensions);
         formatCaps.renderable =
-            formatCaps.renderable && formatInfo.renderSupport(mClientMajorVersion, mExtensions);
+            formatCaps.renderable && formatInfo.renderSupport(getClientVersion(), mExtensions);
         formatCaps.filterable =
-            formatCaps.filterable && formatInfo.filterSupport(mClientMajorVersion, mExtensions);
+            formatCaps.filterable && formatInfo.filterSupport(getClientVersion(), mExtensions);
 
         // OpenGL ES does not support multisampling with integer formats
         if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)

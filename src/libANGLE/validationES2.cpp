@@ -3413,13 +3413,18 @@ bool ValidateCreateShader(Context *context, GLenum type)
         case GL_VERTEX_SHADER:
         case GL_FRAGMENT_SHADER:
             break;
+
         case GL_COMPUTE_SHADER:
-            if (context->getGLVersion().isES31())
+            if (context->getClientVersion() < Version(3, 1))
             {
-                break;
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "GL_COMPUTE_SHADER requires OpenGL ES 3.1."));
+                return false;
             }
+            break;
+
         default:
-            context->handleError(Error(GL_INVALID_ENUM));
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown shader type."));
             return false;
     }
 

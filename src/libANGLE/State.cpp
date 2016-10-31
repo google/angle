@@ -72,7 +72,7 @@ State::~State()
 
 void State::initialize(const Caps &caps,
                        const Extensions &extensions,
-                       GLuint clientVersion,
+                       const Version &clientVersion,
                        bool debug,
                        bool bindGeneratesResource)
 {
@@ -164,7 +164,7 @@ void State::initialize(const Caps &caps,
 
     mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
-    if (clientVersion >= 3)
+    if (clientVersion >= Version(3, 0))
     {
         // TODO: These could also be enabled via extension
         mSamplerTextures[GL_TEXTURE_2D_ARRAY].resize(caps.maxCombinedTextureImageUnits);

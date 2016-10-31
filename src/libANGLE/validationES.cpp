@@ -2882,7 +2882,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
             return false;
         }
 
-        if (!formatInfo.textureSupport(context->getClientMajorVersion(), context->getExtensions()))
+        if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
         {
             context->handleError(Error(GL_INVALID_ENUM));
             return false;

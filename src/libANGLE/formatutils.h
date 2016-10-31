@@ -15,6 +15,7 @@
 #include "angle_gl.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/Version.h"
 #include "libANGLE/angletypes.h"
 
 namespace gl
@@ -111,7 +112,7 @@ struct InternalFormat
     GLenum componentType;
     GLenum colorEncoding;
 
-    typedef bool (*SupportCheckFunction)(GLuint, const Extensions &);
+    typedef bool (*SupportCheckFunction)(const Version &, const Extensions &);
     SupportCheckFunction textureSupport;
     SupportCheckFunction renderSupport;
     SupportCheckFunction filterSupport;

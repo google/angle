@@ -19,7 +19,7 @@ namespace gl
 
 bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLboolean *data)
 {
-    if (!context->getGLVersion().isES31())
+    if (context->getClientVersion() < ES_3_1)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1"));
         return false;
@@ -40,7 +40,7 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
                                       GLsizei *length,
                                       GLboolean *data)
 {
-    if (!context->getGLVersion().isES31())
+    if (context->getClientVersion() < ES_3_1)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1"));
         return false;

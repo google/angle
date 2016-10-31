@@ -15,15 +15,14 @@ namespace gl
 {
 
 ContextState::ContextState(uintptr_t contextIn,
-                           GLint clientMajorVersionIn,
-                           GLint clientMinorVersionIn,
+                           const Version &clientVersion,
                            State *stateIn,
                            const Caps &capsIn,
                            const TextureCapsMap &textureCapsIn,
                            const Extensions &extensionsIn,
                            const ResourceManager *resourceManagerIn,
                            const Limitations &limitationsIn)
-    : mGLVersion(clientMajorVersionIn, clientMinorVersionIn),
+    : mClientVersion(clientVersion),
       mContext(contextIn),
       mState(stateIn),
       mCaps(capsIn),
@@ -43,8 +42,7 @@ const TextureCaps &ContextState::getTextureCap(GLenum internalFormat) const
     return mTextureCaps.get(internalFormat);
 }
 
-ValidationContext::ValidationContext(GLint clientMajorVersion,
-                                     GLint clientMinorVersion,
+ValidationContext::ValidationContext(const Version &clientVersion,
                                      State *state,
                                      const Caps &caps,
                                      const TextureCapsMap &textureCaps,
@@ -53,8 +51,7 @@ ValidationContext::ValidationContext(GLint clientMajorVersion,
                                      const Limitations &limitations,
                                      bool skipValidation)
     : mState(reinterpret_cast<uintptr_t>(this),
-             clientMajorVersion,
-             clientMinorVersion,
+             clientVersion,
              state,
              caps,
              textureCaps,
@@ -399,9 +396,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             return true;
     }
 
-    const GLVersion &glVersion = mState.getGLVersion();
-
-    if (!glVersion.isES3OrGreater())
+    if (getClientVersion() < Version(3, 0))
     {
         return false;
     }
@@ -477,7 +472,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
-    if (!glVersion.isES31())
+    if (getClientVersion() < Version(3, 1))
     {
         return false;
     }
@@ -541,9 +536,7 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
                                                      GLenum *type,
                                                      unsigned int *numParams)
 {
-
-    const GLVersion &glVersion = mState.getGLVersion();
-    if (!glVersion.isES3OrGreater())
+    if (getClientVersion() < Version(3, 0))
     {
         return false;
     }
@@ -568,7 +561,7 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
         }
     }
 
-    if (!glVersion.isES31())
+    if (getClientVersion() < Version(3, 1))
     {
         return false;
     }

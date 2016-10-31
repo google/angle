@@ -29,8 +29,7 @@ namespace
 class MockValidationContext : public ValidationContext
 {
   public:
-    MockValidationContext(GLint majorClientVersion,
-                          GLint minorClientVersion,
+    MockValidationContext(const Version &version,
                           State *state,
                           const Caps &caps,
                           const TextureCapsMap &textureCaps,
@@ -42,8 +41,7 @@ class MockValidationContext : public ValidationContext
     MOCK_METHOD1(handleError, void(const Error &));
 };
 
-MockValidationContext::MockValidationContext(GLint majorClientVersion,
-                                             GLint minorClientVersion,
+MockValidationContext::MockValidationContext(const Version &version,
                                              State *state,
                                              const Caps &caps,
                                              const TextureCapsMap &textureCaps,
@@ -51,8 +49,7 @@ MockValidationContext::MockValidationContext(GLint majorClientVersion,
                                              const ResourceManager *resourceManager,
                                              const Limitations &limitations,
                                              bool skipValidation)
-    : ValidationContext(majorClientVersion,
-                        minorClientVersion,
+    : ValidationContext(version,
                         state,
                         caps,
                         textureCaps,
@@ -87,7 +84,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     caps.maxElementIndex     = 100;
     caps.maxDrawBuffers      = 1;
     caps.maxColorAttachments = 1;
-    state.initialize(caps, extensions, 3, false, true);
+    state.initialize(caps, extensions, Version(3, 0), false, true);
 
     NiceMock<MockTextureImpl> *textureImpl = new NiceMock<MockTextureImpl>();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));
@@ -108,8 +105,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setDrawFramebufferBinding(framebuffer);
     state.setProgram(program);
 
-    NiceMock<MockValidationContext> testContext(3, 0, &state, caps, textureCaps, extensions,
-                                                nullptr, limitations, false);
+    NiceMock<MockValidationContext> testContext(Version(3, 0), &state, caps, textureCaps,
+                                                extensions, nullptr, limitations, false);
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);
