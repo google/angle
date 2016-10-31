@@ -16,6 +16,24 @@
       "revId": "b1aa362949e9216ea9f58d3dc744d6a3d7a59c0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_782c58b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T15:09:58Z",
+      "side": 1,
+      "message": "in the call to Buffer11::getBuffer(BUFFER_USAGE_UNIFORM), it will call getLatestBufferStorage and initialize the D3D11 constant buffer with the system memory storage which is initialized here.",
+      "parentUuid": "a65fde57_38994056",
+      "revId": "b1aa362949e9216ea9f58d3dc744d6a3d7a59c0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
