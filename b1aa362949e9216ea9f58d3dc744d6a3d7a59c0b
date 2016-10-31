@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a65fde57_38994056",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-10-31T08:17:35Z",
+      "side": 1,
+      "message": "Hi Jamie,\nCould you tell me how ANGLE sync the data in GPU with the system memory? Or where should I read the related code? \nThanks!",
+      "revId": "b1aa362949e9216ea9f58d3dc744d6a3d7a59c0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
