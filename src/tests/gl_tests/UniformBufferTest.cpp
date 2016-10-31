@@ -25,7 +25,7 @@ class UniformBufferTest : public ANGLETest
         setConfigAlphaBits(8);
     }
 
-    virtual void SetUp()
+    void SetUp() override
     {
         ANGLETest::SetUp();
 
@@ -63,7 +63,7 @@ class UniformBufferTest : public ANGLETest
         ASSERT_GL_NO_ERROR();
     }
 
-    virtual void TearDown()
+    void TearDown() override
     {
         glDeleteBuffers(1, &mUniformBuffer);
         glDeleteProgram(mProgram);
@@ -565,9 +565,10 @@ TEST_P(UniformBufferTest, VeryLarge)
     float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
 
     GLsizei bigSize = 4096 * 64;
+    std::vector<GLubyte> zero(bigSize, 0);
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, bigSize, nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, bigSize, zero.data(), GL_STATIC_DRAW);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float) * 4, floatData);
 
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);

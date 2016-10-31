@@ -311,9 +311,20 @@ gl::Error Buffer11::setSubData(GLenum target, const void *data, size_t size, siz
         // Use system memory storage for dynamic buffers.
         // Try using a constant storage for constant buffers
         BufferStorage *writeBuffer = nullptr;
-        if (target == GL_UNIFORM_BUFFER && offset == 0 && size >= mSize)
+        if (target == GL_UNIFORM_BUFFER)
         {
-            ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_UNIFORM), writeBuffer);
+            // If we are a very large uniform buffer, keep system memory storage around so that we
+            // aren't forced to read back from a constant buffer.
+            // TODO(jmadill): Use Context caps.
+            if (offset == 0 && size >= mSize &&
+                size <= static_cast<UINT>(mRenderer->getNativeCaps().maxUniformBlockSize))
+            {
+                ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_UNIFORM), writeBuffer);
+            }
+            else
+            {
+                ANGLE_TRY_RESULT(getSystemMemoryStorage(), writeBuffer);
+            }
         }
         else if (supportsDirectBinding())
         {
@@ -522,11 +533,18 @@ gl::Error Buffer11::checkForDeallocation(BufferUsage usage)
     return gl::NoError();
 }
 
+// Keep system memory when we are using it for the canonical version of data.
+bool Buffer11::canDeallocateSystemMemory() const
+{
+    return (!mBufferStorages[BUFFER_USAGE_UNIFORM] ||
+            mSize <= mRenderer->getNativeCaps().maxUniformBlockSize);
+}
+
 gl::Error Buffer11::markBufferUsage(BufferUsage usage)
 {
     mIdleness[usage] = 0;
 
-    if (usage != BUFFER_USAGE_SYSTEM_MEMORY)
+    if (usage != BUFFER_USAGE_SYSTEM_MEMORY && canDeallocateSystemMemory())
     {
         ANGLE_TRY(checkForDeallocation(BUFFER_USAGE_SYSTEM_MEMORY));
     }

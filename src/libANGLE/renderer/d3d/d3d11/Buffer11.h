@@ -28,15 +28,16 @@ class Renderer11;
 struct SourceIndexData;
 struct TranslatedAttribute;
 
+// The order of this enum governs priority of 'getLatestBufferStorage'.
 enum BufferUsage
 {
+    BUFFER_USAGE_SYSTEM_MEMORY,
     BUFFER_USAGE_STAGING,
     BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
     BUFFER_USAGE_INDEX,
     BUFFER_USAGE_PIXEL_UNPACK,
     BUFFER_USAGE_PIXEL_PACK,
     BUFFER_USAGE_UNIFORM,
-    BUFFER_USAGE_SYSTEM_MEMORY,
     BUFFER_USAGE_EMULATED_INDEXED_VERTEX,
 
     BUFFER_USAGE_COUNT,
@@ -118,6 +119,9 @@ class Buffer11 : public BufferD3D
 
     // Free the storage if we decide it isn't being used very often.
     gl::Error checkForDeallocation(BufferUsage usage);
+
+    // For some cases of uniform buffer storage, we can't deallocate system memory storage.
+    bool canDeallocateSystemMemory() const;
 
     Renderer11 *mRenderer;
     size_t mSize;
