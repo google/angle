@@ -16,6 +16,24 @@
       "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_54d782d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T22:33:30Z",
+      "side": 1,
+      "message": "Thanks Bruce. This should be fixed already, and the fix rolled into Chromium just a few minutes ago.\n\nhttps://chromium-review.googlesource.com/#/c/404948/9/src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp (also one change preceding that)",
+      "parentUuid": "a6ec3e0b_f4be769a",
+      "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
