@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6ec3e0b_f4be769a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2016-10-31T22:31:38Z",
+      "side": 1,
+      "message": "This assert is incorrect. It\u0027s semantically wrong to apply the SUCCEEDED macro to a bool. And, it neuters the ASSERT because SUCCEEDED tests to see whether its parameter is \u003e\u003d 0, so \u0027true\u0027 and \u0027false\u0027 both succeed.\n\nThis was found by the experimental VC++ /analyze builder which said:\n\nthird_party\\angle\\src\\libangle\\renderer\\d3d\\d3d11\\swapchain11.cpp(216) : warning C6215: Cast between semantically different integer types:  a Boolean type to HRESULT.",
+      "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
