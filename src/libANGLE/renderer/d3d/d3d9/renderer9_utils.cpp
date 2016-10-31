@@ -307,7 +307,7 @@ GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type)
 
 bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format)
 {
-    GLenum internalFormat  = d3d9::GetD3DFormatInfo(d3dformat).info->glInternalFormat;
+    GLenum internalFormat  = d3d9::GetD3DFormatInfo(d3dformat).info().glInternalFormat;
     GLenum convertedFormat = gl::GetInternalFormatInfo(internalFormat).format;
     return convertedFormat == format;
 }

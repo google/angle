@@ -732,8 +732,8 @@ egl::Error Renderer9::getD3DTextureInfo(IUnknown *d3dTexture,
     if (fboFormat)
     {
         const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
-        ASSERT(d3dFormatInfo.info != nullptr);
-        *fboFormat = d3dFormatInfo.info->fboImplementationInternalFormat;
+        ASSERT(d3dFormatInfo.info().id != angle::Format::ID::NONE);
+        *fboFormat = d3dFormatInfo.info().fboImplementationInternalFormat;
     }
 
     return egl::Error(EGL_SUCCESS);
