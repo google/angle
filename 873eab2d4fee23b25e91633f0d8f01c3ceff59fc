@@ -16,6 +16,24 @@
       "revId": "873eab2d4fee23b25e91633f0d8f01c3ceff59fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_b1656b60",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/formatutils9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-10-31T19:47:20Z",
+      "side": 1,
+      "message": "I didn\u0027t feel like adding json file generators for every little table, but json files would be the way of making easy to read data.",
+      "parentUuid": "a65fde57_91ef8796",
+      "revId": "873eab2d4fee23b25e91633f0d8f01c3ceff59fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
