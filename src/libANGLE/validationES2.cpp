@@ -2288,6 +2288,16 @@ bool ValidateBindTexture(Context *context, GLenum target, GLuint texture)
                 return false;
             }
             break;
+
+        case GL_TEXTURE_2D_MULTISAMPLE:
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Context does not support GLES3.1"));
+                return false;
+            }
+            UNIMPLEMENTED();
+            break;
+
         case GL_TEXTURE_EXTERNAL_OES:
             if (!context->getExtensions().eglImageExternal &&
                 !context->getExtensions().eglStreamConsumerExternal)

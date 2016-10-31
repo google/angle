@@ -306,6 +306,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
         Texture *zeroTexture2DArray = new Texture(mImplementation.get(), 0, GL_TEXTURE_2D_ARRAY);
         mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
     }
+    if (getClientVersion() >= Version(3, 1))
+    {
+        Texture *zeroTexture2DMultisample =
+            new Texture(mImplementation.get(), 0, GL_TEXTURE_2D_MULTISAMPLE);
+        mZeroTextures[GL_TEXTURE_2D_MULTISAMPLE].set(zeroTexture2DMultisample);
+    }
 
     if (mExtensions.eglImageExternal || mExtensions.eglStreamConsumerExternal)
     {
@@ -3561,6 +3567,18 @@ void Context::bindBuffer(GLenum target, GLuint buffer)
             break;
         case GL_TRANSFORM_FEEDBACK_BUFFER:
             bindGenericTransformFeedbackBuffer(buffer);
+            break;
+        case GL_ATOMIC_COUNTER_BUFFER:
+            UNIMPLEMENTED();
+            break;
+        case GL_SHADER_STORAGE_BUFFER:
+            UNIMPLEMENTED();
+            break;
+        case GL_DRAW_INDIRECT_BUFFER:
+            UNIMPLEMENTED();
+            break;
+        case GL_DISPATCH_INDIRECT_BUFFER:
+            UNIMPLEMENTED();
             break;
 
         default:

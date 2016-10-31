@@ -165,6 +165,10 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_FRAMEBUFFER_SRGB_EXT:
             return context->getExtensions().sRGBWriteControl;
 
+        case GL_SAMPLE_MASK:
+            UNIMPLEMENTED();
+            return context->getClientVersion() >= Version(3, 1);
+
         default:
             return false;
     }
@@ -812,6 +816,15 @@ bool ValidateTexParameterBase(Context *context,
             }
             break;
 
+        case GL_DEPTH_STENCIL_TEXTURE_MODE:
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.1."));
+                return false;
+            }
+            UNIMPLEMENTED();
+            break;
+
         case GL_TEXTURE_SRGB_DECODE_EXT:
             if (!ValidateTextureSRGBDecodeValue(context, params))
             {
@@ -1295,6 +1308,10 @@ bool ValidTextureTarget(const ValidationContext *context, GLenum target)
       case GL_TEXTURE_2D_ARRAY:
           return (context->getClientMajorVersion() >= 3);
 
+      case GL_TEXTURE_2D_MULTISAMPLE:
+          UNIMPLEMENTED();
+          return (context->getClientVersion() >= Version(3, 1));
+
       default:
         return false;
     }
@@ -1400,6 +1417,13 @@ bool ValidBufferTarget(const ValidationContext *context, GLenum target)
       case GL_TRANSFORM_FEEDBACK_BUFFER:
       case GL_UNIFORM_BUFFER:
           return (context->getClientMajorVersion() >= 3);
+
+      case GL_ATOMIC_COUNTER_BUFFER:
+      case GL_SHADER_STORAGE_BUFFER:
+      case GL_DRAW_INDIRECT_BUFFER:
+      case GL_DISPATCH_INDIRECT_BUFFER:
+          UNIMPLEMENTED();
+          return context->getClientVersion() >= Version(3, 1);
 
       default:
         return false;

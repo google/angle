@@ -259,10 +259,6 @@ void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
-        }
         UNIMPLEMENTED();
     }
 }
@@ -994,10 +990,6 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
-        }
         UNIMPLEMENTED();
     }
 }
@@ -1080,10 +1072,6 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
-        }
         UNIMPLEMENTED();
     }
 }

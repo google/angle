@@ -839,6 +839,14 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
             }
             break;
 
+          case GL_ATOMIC_COUNTER_BUFFER:
+              UNIMPLEMENTED();
+              break;
+
+          case GL_SHADER_STORAGE_BUFFER:
+              UNIMPLEMENTED();
+              break;
+
           default:
               context->handleError(Error(GL_INVALID_ENUM));
             return;
@@ -872,6 +880,14 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
             context->bindIndexedUniformBuffer(buffer, index, 0, 0);
             context->bindGenericUniformBuffer(buffer);
             break;
+
+          case GL_ATOMIC_COUNTER_BUFFER:
+              UNIMPLEMENTED();
+              break;
+
+          case GL_SHADER_STORAGE_BUFFER:
+              UNIMPLEMENTED();
+              break;
 
           default:
             UNREACHABLE();
