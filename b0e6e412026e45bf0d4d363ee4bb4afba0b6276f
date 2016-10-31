@@ -45,6 +45,30 @@
       "revId": "b0e6e412026e45bf0d4d363ee4bb4afba0b6276f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a65fde57_51aa0f29",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1925,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-10-31T19:48:56Z",
+      "side": 0,
+      "message": "I actually find the new style much easier to read.  \"not es3 or greater\" is not as straight forward as \"version less than (3, 0)\"",
+      "parentUuid": "a65fde57_31fe7b46",
+      "range": {
+        "startLine": 1925,
+        "startChar": 33,
+        "endLine": 1925,
+        "endChar": 47
+      },
+      "revId": "b0e6e412026e45bf0d4d363ee4bb4afba0b6276f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
