@@ -152,6 +152,7 @@
             'libANGLE/angletypes.cpp',
             'libANGLE/angletypes.h',
             'libANGLE/angletypes.inl',
+            'libANGLE/es3_copy_conversion_table_autogen.cpp',
             'libANGLE/features.h',
             'libANGLE/format_map_autogen.cpp',
             'libANGLE/formatutils.cpp',
