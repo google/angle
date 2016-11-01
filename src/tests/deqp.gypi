@@ -1177,6 +1177,11 @@
             '<(deqp_path)/framework/delibs/dethread/unix/deThreadLocalUnix.c',
             '<(deqp_path)/framework/delibs/dethread/unix/deThreadUnix.c',
         ],
+        'deqp_libtester_sources_android':
+        [
+            '<(deqp_path)/framework/platform/android/tcuAndroidInternals.cpp',
+            '<(deqp_path)/framework/platform/android/tcuAndroidInternals.hpp',
+        ],
         'deqp_gpu_test_expectations_sources':
         [
             'third_party/gpu_test_expectations/gpu_info.cc',
