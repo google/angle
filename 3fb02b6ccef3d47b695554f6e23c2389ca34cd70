@@ -16,6 +16,24 @@
       "revId": "3fb02b6ccef3d47b695554f6e23c2389ca34cd70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_dac5d4f2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2075,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-01T21:05:02Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s possible, because the values must be non-negative, and the largest difference between non-negative values is \"positive max\", which is one less than negative max, which is the only value that can overflow. But, I added the abs to the validation, just in case.",
+      "parentUuid": "a6ec3e0b_866938ab",
+      "revId": "3fb02b6ccef3d47b695554f6e23c2389ca34cd70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
