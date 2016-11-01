@@ -22,6 +22,30 @@
       "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_c014c825",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-01T17:14:27Z",
+      "side": 1,
+      "message": "Take a look at the \"Enum allocation\" document in the team folder.  The next EGL enum is 0x33AF.",
+      "parentUuid": "a6ec3e0b_e098ec53",
+      "range": {
+        "startLine": 53,
+        "startChar": 59,
+        "endLine": 53,
+        "endChar": 65
+      },
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
