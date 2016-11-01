@@ -52,6 +52,24 @@
       "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_453c6a84",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-01T14:24:21Z",
+      "side": 1,
+      "message": "Oh, derp, was looking at the one above. Can you fix this?",
+      "parentUuid": "a6ec3e0b_658d2e4f",
+      "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
