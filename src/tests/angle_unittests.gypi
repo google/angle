@@ -101,7 +101,7 @@
     [
         '<(angle_path)/src/angle.gyp:libANGLE',
         '<(angle_path)/src/angle.gyp:preprocessor',
-        '<(angle_path)/src/angle.gyp:translator_static',
+        '<(angle_path)/src/angle.gyp:translator',
         '<(angle_path)/src/tests/tests.gyp:angle_test_support',
     ],
     'include_dirs':

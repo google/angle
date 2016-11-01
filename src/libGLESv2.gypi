@@ -705,7 +705,7 @@
             'type': 'static_library',
             'dependencies':
             [
-                'translator_static',
+                'translator',
                 'commit_id',
                 'angle_common',
                 'angle_image_util',

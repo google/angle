@@ -73,16 +73,19 @@ if (is_win) {
 
 angle_undefine_configs = [ "//build/config/compiler:default_include_dirs" ]
 
-component("translator") {
+static_library("translator") {
   sources = [
     "src/compiler/translator/ShaderLang.cpp",
     "src/compiler/translator/ShaderVars.cpp",
   ]
 
-  defines = [ "ANGLE_TRANSLATOR_IMPLEMENTATION" ]
+  if (angle_enable_hlsl) {
+    defines = [ "ANGLE_ENABLE_HLSL" ]
+  }
 
   configs -= angle_undefine_configs
   configs += [ ":internal_config" ]
+  public_configs = [ ":translator_static_config" ]
 
   public_deps = [
     ":translator_lib",
@@ -229,25 +232,6 @@ static_library("translator_lib") {
   }
 }
 
-static_library("translator_static") {
-  sources = [
-    "src/compiler/translator/ShaderLang.cpp",
-    "src/compiler/translator/ShaderVars.cpp",
-  ]
-
-  if (angle_enable_hlsl) {
-    defines = [ "ANGLE_ENABLE_HLSL" ]
-  }
-
-  configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
-  public_configs = [ ":translator_static_config" ]
-
-  public_deps = [
-    ":translator_lib",
-  ]
-}
-
 source_set("translator_fuzzer") {
   sources = [
     "src/compiler/fuzz/translator_fuzzer.cpp",
@@ -259,7 +243,7 @@ source_set("translator_fuzzer") {
   ]
 
   deps = [
-    ":translator_static",
+    ":translator",
   ]
 }
 
@@ -350,7 +334,7 @@ static_library("libANGLE") {
     ":angle_image_util",
     ":commit_id",
     ":includes",
-    ":translator_static",
+    ":translator",
   ]
 
   # Shared D3D sources.

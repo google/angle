@@ -339,29 +339,8 @@
 
         {
             'target_name': 'translator',
-            'type': '<(component)',
-            'dependencies': [ 'translator_lib', 'angle_common' ],
-            'includes': [ '../build/common_defines.gypi', ],
-            'include_dirs':
-            [
-                '.',
-                '../include',
-            ],
-            'defines':
-            [
-                'ANGLE_TRANSLATOR_IMPLEMENTATION',
-            ],
-            'sources':
-            [
-                'compiler/translator/ShaderLang.cpp',
-                'compiler/translator/ShaderVars.cpp'
-            ],
-        },
-
-        {
-            'target_name': 'translator_static',
             'type': 'static_library',
-            'dependencies': [ 'translator_lib' ],
+            'dependencies': [ 'translator_lib', 'angle_common' ],
             'includes': [ '../build/common_defines.gypi', ],
             'include_dirs':
             [
@@ -383,6 +362,23 @@
             [
                 'compiler/translator/ShaderLang.cpp',
                 'compiler/translator/ShaderVars.cpp'
+            ],
+            'conditions':
+            [
+                ['angle_enable_hlsl==1',
+                {
+                    'defines':
+                    [
+                        'ANGLE_ENABLE_HLSL',
+                    ],
+                    'direct_dependent_settings':
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_HLSL',
+                        ],
+                    },
+                }],
             ],
         },
     ],

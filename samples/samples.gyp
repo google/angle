@@ -9,7 +9,7 @@
             'target_name': 'shader_translator',
             'type': 'executable',
             'includes': [ '../build/common_defines.gypi', ],
-            'dependencies': [ '../src/angle.gyp:translator_static', ],
+            'dependencies': [ '../src/angle.gyp:translator', ],
             'include_dirs': [ '../include', ],
             'sources': [ 'shader_translator/shader_translator.cpp' ],
         },
