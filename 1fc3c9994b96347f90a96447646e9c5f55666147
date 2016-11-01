@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6ec3e0b_066f88e2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-01T19:56:43Z",
+      "side": 1,
+      "message": "nit: error messages? Might be easier to do it in the next patch.",
+      "range": {
+        "startLine": 2013,
+        "startChar": 8,
+        "endLine": 2013,
+        "endChar": 58
+      },
+      "revId": "1fc3c9994b96347f90a96447646e9c5f55666147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
