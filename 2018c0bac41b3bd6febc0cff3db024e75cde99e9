@@ -34,6 +34,24 @@
       "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_658d2e4f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-01T13:45:39Z",
+      "side": 1,
+      "message": "This one actually isn\u0027t fixed yet.  Looks like I updated the assert condition but left in the SUCCEEDED bit by accident.",
+      "parentUuid": "a6ec3e0b_54d782d5",
+      "revId": "2018c0bac41b3bd6febc0cff3db024e75cde99e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
