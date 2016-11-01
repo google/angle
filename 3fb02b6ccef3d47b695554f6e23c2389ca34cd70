@@ -34,6 +34,24 @@
       "revId": "3fb02b6ccef3d47b695554f6e23c2389ca34cd70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_3a0e2053",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2075,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-01T21:06:48Z",
+      "side": 1,
+      "message": "Make sense, thank you.",
+      "parentUuid": "a6ec3e0b_dac5d4f2",
+      "revId": "3fb02b6ccef3d47b695554f6e23c2389ca34cd70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
