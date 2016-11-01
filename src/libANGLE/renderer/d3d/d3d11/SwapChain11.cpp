@@ -207,17 +207,16 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
             mOffscreenTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(tempResource11);
             SafeRelease(tempResource11);
-            ASSERT(SUCCEEDED(mOffscreenTexture != nullptr));
         }
         else if (mD3DTexture != nullptr)
         {
             mOffscreenTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(mD3DTexture);
-            ASSERT(mOffscreenTexture != nullptr);
         }
         else
         {
             UNREACHABLE();
         }
+        ASSERT(mOffscreenTexture != nullptr);
     }
     else
     {
