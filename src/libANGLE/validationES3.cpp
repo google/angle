@@ -2001,4 +2001,56 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
     return true;
 }
 
+bool ValidateCopyBufferSubData(ValidationContext *context,
+                               GLenum readTarget,
+                               GLenum writeTarget,
+                               GLintptr readOffset,
+                               GLintptr writeOffset,
+                               GLsizeiptr size)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!ValidBufferTarget(context, readTarget) || !ValidBufferTarget(context, writeTarget))
+    {
+        context->handleError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    Buffer *readBuffer  = context->getGLState().getTargetBuffer(readTarget);
+    Buffer *writeBuffer = context->getGLState().getTargetBuffer(writeTarget);
+
+    if (!readBuffer || !writeBuffer)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // Verify that readBuffer and writeBuffer are not currently mapped
+    if (readBuffer->isMapped() || writeBuffer->isMapped())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (readOffset < 0 || writeOffset < 0 || size < 0 ||
+        static_cast<unsigned int>(readOffset + size) > readBuffer->getSize() ||
+        static_cast<unsigned int>(writeOffset + size) > writeBuffer->getSize())
+    {
+        context->handleError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    if (readBuffer == writeBuffer && std::abs(readOffset - writeOffset) < size)
+    {
+        context->handleError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

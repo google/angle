@@ -3518,4 +3518,23 @@ const Workarounds &Context::getWorkarounds() const
     return mWorkarounds;
 }
 
+void Context::copyBufferSubData(GLenum readTarget,
+                                GLenum writeTarget,
+                                GLintptr readOffset,
+                                GLintptr writeOffset,
+                                GLsizeiptr size)
+{
+    // if size is zero, the copy is a successful no-op
+    if (size == 0)
+    {
+        return;
+    }
+
+    // TODO(jmadill): cache these.
+    Buffer *readBuffer  = mGLState.getTargetBuffer(readTarget);
+    Buffer *writeBuffer = mGLState.getTargetBuffer(writeTarget);
+
+    handleError(writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size));
+}
+
 }  // namespace gl

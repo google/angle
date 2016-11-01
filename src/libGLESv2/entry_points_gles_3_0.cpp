@@ -1423,58 +1423,14 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateCopyBufferSubData(context, readTarget, writeTarget, readOffset, writeOffset,
+                                       size))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 
-        if (!ValidBufferTarget(context, readTarget) || !ValidBufferTarget(context, writeTarget))
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        Buffer *readBuffer  = context->getGLState().getTargetBuffer(readTarget);
-        Buffer *writeBuffer = context->getGLState().getTargetBuffer(writeTarget);
-
-        if (!readBuffer || !writeBuffer)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // Verify that readBuffer and writeBuffer are not currently mapped
-        if (readBuffer->isMapped() || writeBuffer->isMapped())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (readOffset < 0 || writeOffset < 0 || size < 0 ||
-            static_cast<unsigned int>(readOffset + size) > readBuffer->getSize() ||
-            static_cast<unsigned int>(writeOffset + size) > writeBuffer->getSize())
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (readBuffer == writeBuffer && std::abs(readOffset - writeOffset) < size)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        // if size is zero, the copy is a successful no-op
-        if (size > 0)
-        {
-            Error error = writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
-            if (error.isError())
-            {
-                context->handleError(error);
-                return;
-            }
-        }
+        context->copyBufferSubData(readTarget, writeTarget, readOffset, writeOffset, size);
     }
 }
 

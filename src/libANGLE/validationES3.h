@@ -356,6 +356,14 @@ bool ValidateGetInteger64i_vRobustANGLE(ValidationContext *context,
                                         GLsizei bufSize,
                                         GLsizei *length,
                                         GLint64 *data);
+
+bool ValidateCopyBufferSubData(ValidationContext *context,
+                               GLenum readTarget,
+                               GLenum writeTarget,
+                               GLintptr readOffset,
+                               GLintptr writeOffset,
+                               GLsizeiptr size);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_

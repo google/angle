@@ -580,6 +580,12 @@ class Context final : public ValidationContext
     void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
     void attachShader(GLuint program, GLuint shader);
 
+    void copyBufferSubData(GLenum readTarget,
+                           GLenum writeTarget,
+                           GLintptr readOffset,
+                           GLintptr writeOffset,
+                           GLsizeiptr size);
+
     void handleError(const Error &error) override;
 
     GLenum getError();
