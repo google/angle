@@ -358,43 +358,68 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
     const std::string &vertexShaderSource =
         "#version 300 es\n"
         "in vec2 position;\n"
-        "out float v;\n"
-        "uniform blockName {\n"
-        "  float f;\n"
-        "} instanceName;\n"
+        "out vec2 v;\n"
+        "uniform blockName1 {\n"
+        "  float f1;\n"
+        "} instanceName1;\n"
+        "uniform blockName2 {\n"
+        "  float f2;\n"
+        "} instanceName2[1];\n"
         "void main() {\n"
-        "  v = instanceName.f;\n"
+        "  v = vec2(instanceName1.f1, instanceName2[0].f2);\n"
         "  gl_Position = vec4(position, 0, 1);\n"
         "}";
 
     const std::string &fragmentShaderSource =
         "#version 300 es\n"
         "precision highp float;\n"
-        "in float v;\n"
+        "in vec2 v;\n"
         "out vec4 color;\n"
         "void main() {\n"
-        "  color = vec4(v, 0, 0, 1);\n"
+        "  color = vec4(v, 0, 1);\n"
         "}";
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     ASSERT_NE(0u, program);
 
+    GLint activeUniformBlocks;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &activeUniformBlocks);
+    ASSERT_EQ(2, activeUniformBlocks);
+
+    GLint maxLength;
+    GLsizei length;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &maxLength);
+    std::vector<GLchar> strBlockNameBuffer(maxLength + 1, 0);
+    glGetActiveUniformBlockName(program, 0, maxLength, &length, &strBlockNameBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ("blockName1", std::string(&strBlockNameBuffer[0]));
+
+    glGetActiveUniformBlockName(program, 1, maxLength, &length, &strBlockNameBuffer[0]);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ("blockName2[0]", std::string(&strBlockNameBuffer[0]));
+
     GLint activeUniforms;
     glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUniforms);
 
-    ASSERT_EQ(1, activeUniforms);
+    ASSERT_EQ(2, activeUniforms);
 
-    GLint maxLength, size;
+    GLint size;
     GLenum type;
-    GLsizei length;
     glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
-    std::vector<GLchar> strBuffer(maxLength + 1, 0);
-    glGetActiveUniform(program, 0, maxLength, &length, &size, &type, &strBuffer[0]);
+    std::vector<GLchar> strUniformNameBuffer(maxLength + 1, 0);
+    glGetActiveUniform(program, 0, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
 
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_GLENUM_EQ(GL_FLOAT, type);
-    EXPECT_EQ("blockName.f", std::string(&strBuffer[0]));
+    EXPECT_EQ("blockName1.f1", std::string(&strUniformNameBuffer[0]));
+
+    glGetActiveUniform(program, 1, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(1, size);
+    EXPECT_GLENUM_EQ(GL_FLOAT, type);
+    EXPECT_EQ("blockName2.f2", std::string(&strUniformNameBuffer[0]));
 }
 
 // Tests active uniforms and blocks when the layout is std140, shared and packed.
