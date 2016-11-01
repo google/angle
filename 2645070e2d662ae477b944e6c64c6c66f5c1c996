@@ -89,6 +89,40 @@
     },
     {
       "key": {
+        "uuid": "a6ec3e0b_eb468dbe",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-01T20:28:03Z",
+      "side": 1,
+      "message": "nit: specialized",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_cb9749cf",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-01T20:28:03Z",
+      "side": 1,
+      "message": "This block doesn\u0027t handle DisplayCGL and will break compilation on Mac.\n\nAlso we have two #if defined(ANGLE_ENABLE_OPENGL) following each other, they could be merged.",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_806920ab",
         "filename": "src/libANGLE/renderer/vulkan/CompilerVk.cpp",
         "patchSetId": 10
@@ -106,6 +140,23 @@
         "endLine": 27,
         "endChar": 34
       },
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_86901867",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-01T20:28:03Z",
+      "side": 1,
+      "message": "nit: CheckExtensionPresent?",
       "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
