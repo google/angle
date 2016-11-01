@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "a6ec3e0b_8055a037",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-01T16:47:02Z",
+      "side": 1,
+      "message": "A pity that now the distinction between the 2 is not clear.\nPerhaps reorganize to switch first by framebuffer format?\nSeems that these are distinct for ES spec and ANGLE back-buffers.",
+      "range": {
+        "startLine": 456,
+        "startChar": 4,
+        "endLine": 456,
+        "endChar": 58
+      },
+      "revId": "f006d568b2d0bd8e746258c298c84de4141287fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ec3e0b_009e50ef",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-01T16:47:02Z",
+      "side": 1,
+      "message": "Wasn\u0027t there originally. Doesn\u0027t seem to be allowed Spec 3.0.4 table 3.16",
+      "range": {
+        "startLine": 485,
+        "startChar": 21,
+        "endLine": 485,
+        "endChar": 27
+      },
+      "revId": "f006d568b2d0bd8e746258c298c84de4141287fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_408b3804",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 1
