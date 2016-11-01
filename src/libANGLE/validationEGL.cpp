@@ -258,7 +258,6 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     EGLAttrib clientMinorVersion = 0;
     EGLAttrib contextFlags       = 0;
     bool resetNotification = false;
-    bool robustAccess = false;
     for (AttributeMap::const_iterator attributeIter = attributes.begin(); attributeIter != attributes.end(); attributeIter++)
     {
         EGLAttrib attribute = attributeIter->first;
@@ -294,7 +293,6 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
             {
                 return Error(EGL_BAD_ATTRIBUTE);
             }
-            robustAccess = (value == EGL_TRUE);
             break;
 
           case EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR:
@@ -397,17 +395,6 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
     if ((contextFlags & ~validContextFlags) != 0)
     {
         return Error(EGL_BAD_ATTRIBUTE);
-    }
-
-    if ((contextFlags & EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR) > 0)
-    {
-        robustAccess = true;
-    }
-
-    if (robustAccess)
-    {
-        // Unimplemented
-        return Error(EGL_BAD_CONFIG);
     }
 
     if (shareContext)
