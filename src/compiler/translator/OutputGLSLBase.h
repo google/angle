@@ -61,9 +61,9 @@ class TOutputGLSLBase : public TIntermTraverser
 
     // Return the original name if hash function pointer is NULL;
     // otherwise return the hashed name.
-    TString hashName(const TString &name);
+    TString hashName(const TName &name);
     // Same as hashName(), but without hashing built-in variables.
-    TString hashVariableName(const TString &name);
+    TString hashVariableName(const TName &name);
     // Same as hashName(), but without hashing built-in functions and with unmangling.
     TString hashFunctionNameIfNeeded(const TName &mangledName);
     // Used to translate function names for differences between ESSL and GLSL

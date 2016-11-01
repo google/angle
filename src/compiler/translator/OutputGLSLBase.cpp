@@ -237,9 +237,8 @@ void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence &args)
         const TType &type = arg->getType();
         writeVariableType(type);
 
-        const TString &name = arg->getSymbol();
-        if (!name.empty())
-            out << " " << hashName(name);
+        if (!arg->getName().getString().empty())
+            out << " " << hashName(arg->getName());
         if (type.isArray())
             out << arrayBrackets(type);
 
@@ -257,7 +256,7 @@ const TConstantUnion *TOutputGLSLBase::writeConstantUnion(
     if (type.getBasicType() == EbtStruct)
     {
         const TStructure *structure = type.getStruct();
-        out << hashName(structure->name()) << "(";
+        out << hashName(TName(structure->name())) << "(";
 
         const TFieldList &fields = structure->fields();
         for (size_t i = 0; i < fields.size(); ++i)
@@ -331,7 +330,7 @@ void TOutputGLSLBase::visitSymbol(TIntermSymbol *node)
     if (mLoopUnrollStack.needsToReplaceSymbolWithValue(node))
         out << mLoopUnrollStack.getLoopIndexValue(node);
     else
-        out << hashVariableName(node->getSymbol());
+        out << hashVariableName(node->getName());
 
     if (mDeclaringVariables && node->getType().isArray())
         out << arrayBrackets(node->getType());
@@ -464,7 +463,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
 
                 TString fieldName = field->name();
                 if (!mSymbolTable.findBuiltIn(structure->name(), mShaderVersion))
-                    fieldName = hashName(fieldName);
+                    fieldName = hashName(TName(fieldName));
 
                 out << fieldName;
                 visitChildren = false;
@@ -481,7 +480,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
 
                 TString fieldName = field->name();
                 ASSERT(!mSymbolTable.findBuiltIn(interfaceBlock->name(), mShaderVersion));
-                fieldName = hashName(fieldName);
+                fieldName = hashName(TName(fieldName));
 
                 out << fieldName;
                 visitChildren = false;
@@ -928,7 +927,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             ASSERT(sequence && sequence->size() == 1);
             const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
             ASSERT(symbol);
-            out << "invariant " << hashVariableName(symbol->getSymbol());
+            out << "invariant " << hashVariableName(symbol->getName());
         }
         visitChildren = false;
         break;
@@ -1104,7 +1103,7 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
             TIntermSequence *declSeq = node->getInit()->getAsDeclarationNode()->getSequence();
             TIntermSymbol *indexSymbol =
                 (*declSeq)[0]->getAsBinaryNode()->getLeft()->getAsSymbolNode();
-            TString name = hashVariableName(indexSymbol->getSymbol());
+            TString name = hashVariableName(indexSymbol->getName());
             out << "for (int " << name << " = 0; "
                 << name << " < 1; "
                 << "++" << name << ")\n";
@@ -1192,27 +1191,43 @@ void TOutputGLSLBase::visitCodeBlock(TIntermBlock *node)
 TString TOutputGLSLBase::getTypeName(const TType &type)
 {
     if (type.getBasicType() == EbtStruct)
-        return hashName(type.getStruct()->name());
+        return hashName(TName(type.getStruct()->name()));
     else
         return type.getBuiltInTypeNameString();
 }
 
-TString TOutputGLSLBase::hashName(const TString &name)
+TString TOutputGLSLBase::hashName(const TName &name)
 {
-    if (mHashFunction == NULL || name.empty())
-        return name;
-    NameMap::const_iterator it = mNameMap.find(name.c_str());
+    if (name.getString().empty())
+    {
+        ASSERT(!name.isInternal());
+        return name.getString();
+    }
+    if (name.isInternal())
+    {
+        // TODO(oetuaho): Would be nicer to prefix non-internal names with "_" instead, like is
+        // done in the HLSL output, but that requires fairly complex changes elsewhere in the code
+        // as well.
+        // We need to use a prefix that is reserved in WebGL in order to guarantee that the internal
+        // names don't conflict with user-defined names from WebGL.
+        return "webgl_angle_" + name.getString();
+    }
+    if (mHashFunction == nullptr)
+    {
+        return name.getString();
+    }
+    NameMap::const_iterator it = mNameMap.find(name.getString().c_str());
     if (it != mNameMap.end())
         return it->second.c_str();
-    TString hashedName = TIntermTraverser::hash(name, mHashFunction);
-    mNameMap[name.c_str()] = hashedName.c_str();
+    TString hashedName                 = TIntermTraverser::hash(name.getString(), mHashFunction);
+    mNameMap[name.getString().c_str()] = hashedName.c_str();
     return hashedName;
 }
 
-TString TOutputGLSLBase::hashVariableName(const TString &name)
+TString TOutputGLSLBase::hashVariableName(const TName &name)
 {
-    if (mSymbolTable.findBuiltIn(name, mShaderVersion) != NULL)
-        return name;
+    if (mSymbolTable.findBuiltIn(name.getString(), mShaderVersion) != NULL)
+        return name.getString();
     return hashName(name);
 }
 
@@ -1223,9 +1238,16 @@ TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TName &mangledName)
     if (mSymbolTable.findBuiltIn(mangledStr, mShaderVersion) != nullptr || name == "main")
         return translateTextureFunction(name);
     if (mangledName.isInternal())
+    {
+        // Internal function names are outputted as-is - they may refer to functions manually added
+        // to the output shader source that are not included in the AST at all.
         return name;
+    }
     else
-        return hashName(name);
+    {
+        TName nameObj(name);
+        return hashName(nameObj);
+    }
 }
 
 bool TOutputGLSLBase::structDeclared(const TStructure *structure) const
@@ -1243,14 +1265,14 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
 {
     TInfoSinkBase &out = objSink();
 
-    out << "struct " << hashName(structure->name()) << "{\n";
+    out << "struct " << hashName(TName(structure->name())) << "{\n";
     const TFieldList &fields = structure->fields();
     for (size_t i = 0; i < fields.size(); ++i)
     {
         const TField *field = fields[i];
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";
-        out << getTypeName(*field->type()) << " " << hashName(field->name());
+        out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
         if (field->type()->isArray())
             out << arrayBrackets(*field->type());
         out << ";\n";
@@ -1311,14 +1333,14 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
 {
     TInfoSinkBase &out = objSink();
 
-    out << hashName(interfaceBlock->name()) << "{\n";
+    out << hashName(TName(interfaceBlock->name())) << "{\n";
     const TFieldList &fields = interfaceBlock->fields();
     for (size_t i = 0; i < fields.size(); ++i)
     {
         const TField *field = fields[i];
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";
-        out << getTypeName(*field->type()) << " " << hashName(field->name());
+        out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
         if (field->type()->isArray())
             out << arrayBrackets(*field->type());
         out << ";\n";
