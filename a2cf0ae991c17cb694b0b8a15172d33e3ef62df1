@@ -22,6 +22,30 @@
       "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_b448217d",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-02T20:41:37Z",
+      "side": 1,
+      "message": "I\u0027m thinking of unifying translator with translator_lib next (after this change is stable). Was going to postpone prettifying till then.",
+      "parentUuid": "e6a5561c_f42bc998",
+      "range": {
+        "startLine": 88,
+        "startChar": 23,
+        "endLine": 88,
+        "endChar": 47
+      },
+      "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
