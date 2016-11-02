@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_b4f026bf",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-02T15:18:56Z",
+      "side": 1,
+      "message": "nit: if !defined()",
+      "range": {
+        "startLine": 159,
+        "startChar": 1,
+        "endLine": 159,
+        "endChar": 7
+      },
+      "revId": "bb09612bf43eacbb2796d3b4e723ed0dc7022b17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
