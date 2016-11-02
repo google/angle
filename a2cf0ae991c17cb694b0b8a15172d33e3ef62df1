@@ -63,6 +63,24 @@
       "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_94aec5cd",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-02T20:57:22Z",
+      "side": 1,
+      "message": "It probably can. I was trying to make it similar to translator_lib. I see that it is used by angle_unittests, where it is defined independently. I don\u0027t see any harm in leaving this as is.",
+      "parentUuid": "e6a5561c_f47d8994",
+      "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
