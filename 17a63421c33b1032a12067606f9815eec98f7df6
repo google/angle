@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_aa2b9a4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-02T23:36:01Z",
+      "side": 1,
+      "message": "format should be:\n\n Title (\u003c\u003d65 chars)\n\n Description (wrapped to \u003c\u003d 71 chars)\n\n BUG\u003dangleproject:1523",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 99
+      },
+      "revId": "17a63421c33b1032a12067606f9815eec98f7df6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
