@@ -112,6 +112,33 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
     }
 }
 
+// Verify that shaders are of a compatible spec when the extension is enabled.
+TEST_P(WebGLCompatibilityTest, ExtensionCompilerSpec)
+{
+    EXPECT_TRUE(extensionEnabled("GL_ANGLE_webgl_compatibility"));
+
+    // Use of reserved _webgl prefix should fail when the shader specification is for WebGL.
+    const std::string &vert =
+        "struct Foo {\n"
+        "    int _webgl_bar;\n"
+        "};\n"
+        "void main()\n"
+        "{\n"
+        "    Foo foo = Foo(1);\n"
+        "}";
+
+    // Default fragement shader.
+    const std::string &frag =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n"
+        "}";
+
+    GLuint program = CompileProgram(vert, frag);
+    EXPECT_EQ(0u, program);
+    glDeleteProgram(program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

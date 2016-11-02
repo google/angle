@@ -23,27 +23,29 @@ namespace
 // ShFinalize.
 size_t activeCompilerHandles = 0;
 
-ShShaderSpec SelectShaderSpec(GLint majorVersion, GLint minorVersion)
+ShShaderSpec SelectShaderSpec(GLint majorVersion, GLint minorVersion, bool isWebGL)
 {
     if (majorVersion >= 3)
     {
         if (minorVersion == 1)
         {
-            return SH_GLES3_1_SPEC;
+            return isWebGL ? SH_WEBGL3_SPEC : SH_GLES3_1_SPEC;
         }
         else
         {
-            return SH_GLES3_SPEC;
+            return isWebGL ? SH_WEBGL2_SPEC : SH_GLES3_SPEC;
         }
     }
-    return SH_GLES2_SPEC;
+    return isWebGL ? SH_WEBGL_SPEC : SH_GLES2_SPEC;
 }
 
 }  // anonymous namespace
 
 Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     : mImplementation(implFactory->createCompiler()),
-      mSpec(SelectShaderSpec(state.getClientMajorVersion(), state.getClientMinorVersion())),
+      mSpec(SelectShaderSpec(state.getClientMajorVersion(),
+                             state.getClientMinorVersion(),
+                             state.getExtensions().webglCompatibility)),
       mOutputType(mImplementation->getTranslatorOutputType()),
       mResources(),
       mFragmentCompiler(nullptr),
