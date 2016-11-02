@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_f42bc998",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-02T20:37:12Z",
+      "side": 1,
+      "message": "if there\u0027s no deps outside of angle using this you can rename this just translator_config. There shouldn\u0027t be, if things don\u0027t reference translator_static.",
+      "range": {
+        "startLine": 88,
+        "startChar": 23,
+        "endLine": 88,
+        "endChar": 47
+      },
+      "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
