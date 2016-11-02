@@ -156,21 +156,15 @@ std::ostream &DummyStream();
 #define UNUSED_VARIABLE(variable) ((void)variable)
 
 // A macro to indicate unimplemented functionality
-
-#if defined (ANGLE_TEST_CONFIG)
+#ifndef NOASSERT_UNIMPLEMENTED
 #define NOASSERT_UNIMPLEMENTED 1
 #endif
 
-// This will allow us to test with some automated test suites (eg dEQP) without crashing
-#ifndef NOASSERT_UNIMPLEMENTED
-#define NOASSERT_UNIMPLEMENTED 0
-#endif
-
-#define UNIMPLEMENTED()                                               \
-    {                                                                 \
-        FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__); \
-        ASSERT(NOASSERT_UNIMPLEMENTED);                               \
-    }                                                                 \
+#define UNIMPLEMENTED()                                             \
+    {                                                               \
+        ERR("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__); \
+        ASSERT(NOASSERT_UNIMPLEMENTED);                             \
+    }                                                               \
     ANGLE_EMPTY_STATEMENT
 
 // A macro for code which is not expected to be reached under valid assumptions
