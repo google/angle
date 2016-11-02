@@ -216,7 +216,10 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
                 {
                     whileLoopBody->getSequence()->push_back(node->getBody());
                 }
-                whileLoopBody->getSequence()->push_back(node->getExpression());
+                if (node->getExpression())
+                {
+                    whileLoopBody->getSequence()->push_back(node->getExpression());
+                }
                 whileLoopBody->getSequence()->push_back(
                     createTempAssignment(node->getCondition()->deepCopy()));
                 TIntermLoop *whileLoop = new TIntermLoop(
