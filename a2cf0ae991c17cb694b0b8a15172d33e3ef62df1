@@ -46,6 +46,23 @@
       "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_f47d8994",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-02T20:44:44Z",
+      "side": 1,
+      "message": "I don\u0027t think the dependents need this define, it could be removed.",
+      "revId": "a2cf0ae991c17cb694b0b8a15172d33e3ef62df1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
