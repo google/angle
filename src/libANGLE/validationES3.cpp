@@ -8,6 +8,9 @@
 
 #include "libANGLE/validationES3.h"
 
+#include "base/numerics/safe_conversions.h"
+#include "common/mathutil.h"
+#include "common/utilities.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Texture.h"
@@ -15,9 +18,6 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/FramebufferAttachment.h"
-
-#include "common/mathutil.h"
-#include "common/utilities.h"
 
 using namespace angle;
 
@@ -1948,13 +1948,14 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "CopyBufferSubData requires ES 3 or greater"));
         return false;
     }
 
     if (!ValidBufferTarget(context, readTarget) || !ValidBufferTarget(context, writeTarget))
     {
-        context->handleError(Error(GL_INVALID_ENUM));
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid buffer target"));
         return false;
     }
 
@@ -1963,29 +1964,66 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
 
     if (!readBuffer || !writeBuffer)
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(Error(GL_INVALID_OPERATION, "No buffer bound to target"));
         return false;
     }
 
     // Verify that readBuffer and writeBuffer are not currently mapped
     if (readBuffer->isMapped() || writeBuffer->isMapped())
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Cannot call CopyBufferSubData on a mapped buffer"));
         return false;
     }
 
-    if (readOffset < 0 || writeOffset < 0 || size < 0 ||
-        static_cast<unsigned int>(readOffset + size) > readBuffer->getSize() ||
-        static_cast<unsigned int>(writeOffset + size) > writeBuffer->getSize())
+    CheckedNumeric<GLintptr> checkedReadOffset(readOffset);
+    CheckedNumeric<GLintptr> checkedWriteOffset(writeOffset);
+    CheckedNumeric<GLintptr> checkedSize(size);
+
+    auto checkedReadSum  = checkedReadOffset + checkedSize;
+    auto checkedWriteSum = checkedWriteOffset + checkedSize;
+
+    if (!checkedReadSum.IsValid() || !checkedWriteSum.IsValid() ||
+        !IsValueInRangeForNumericType<GLintptr>(readBuffer->getSize()) ||
+        !IsValueInRangeForNumericType<GLintptr>(writeBuffer->getSize()))
     {
-        context->handleError(Error(GL_INVALID_VALUE));
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Integer overflow when validating copy offsets."));
         return false;
     }
 
-    if (readBuffer == writeBuffer && std::abs(readOffset - writeOffset) < size)
+    if (readOffset < 0 || writeOffset < 0 || size < 0)
     {
-        context->handleError(Error(GL_INVALID_VALUE));
+        context->handleError(
+            Error(GL_INVALID_VALUE, "readOffset, writeOffset and size must all be non-negative"));
         return false;
+    }
+
+    if (checkedReadSum.ValueOrDie() > readBuffer->getSize() ||
+        checkedWriteSum.ValueOrDie() > writeBuffer->getSize())
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Buffer offset overflow in CopyBufferSubData"));
+        return false;
+    }
+
+    if (readBuffer == writeBuffer)
+    {
+        auto checkedOffsetDiff = (checkedReadOffset - checkedWriteOffset).Abs();
+        if (!checkedOffsetDiff.IsValid())
+        {
+            // This shold not be possible.
+            UNREACHABLE();
+            context->handleError(
+                Error(GL_INVALID_VALUE, "Integer overflow when validating same buffer copy."));
+            return false;
+        }
+
+        if (checkedOffsetDiff.ValueOrDie() < size)
+        {
+            context->handleError(Error(GL_INVALID_VALUE));
+            return false;
+        }
     }
 
     return true;
