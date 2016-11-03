@@ -3848,10 +3848,12 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
         case EOpLogicalAnd:
             ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
                    !right->getType().getStruct());
-            if (left->getBasicType() != EbtBool || left->isMatrix() || left->isVector())
+            if (left->getBasicType() != EbtBool || !left->isScalar() || !right->isScalar())
             {
                 return nullptr;
             }
+            // Basic types matching should have been already checked.
+            ASSERT(right->getBasicType() == EbtBool);
             break;
         case EOpAdd:
         case EOpSub:

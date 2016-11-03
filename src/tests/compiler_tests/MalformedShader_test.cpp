@@ -3038,3 +3038,22 @@ TEST_F(MalformedShaderTest, IncorrectUnsizedArray)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Check compiler doesn't crash when a bvec is on the right hand side of a logical operator.
+// ESSL 3.00.6 section 5.9.
+TEST_F(MalformedShaderTest, LogicalOpRHSIsBVec)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "void main()\n"
+        "{\n"
+        "    bool b;\n"
+        "    bvec3 b3;\n"
+        "    b && b3;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
