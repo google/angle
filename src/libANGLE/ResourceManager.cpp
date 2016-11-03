@@ -438,7 +438,7 @@ Buffer *ResourceManager::checkBufferAllocation(rx::GLImplFactory *factory, GLuin
         return bufferMapIt->second;
     }
 
-    Buffer *buffer = new Buffer(factory->createBuffer(), handle);
+    Buffer *buffer = new Buffer(factory, handle);
     buffer->addRef();
 
     if (handleAllocated)

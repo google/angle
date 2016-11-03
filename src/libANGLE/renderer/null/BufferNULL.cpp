@@ -14,7 +14,7 @@
 namespace rx
 {
 
-BufferNULL::BufferNULL() : BufferImpl()
+BufferNULL::BufferNULL(const gl::BufferState &state) : BufferImpl(state)
 {
 }
 

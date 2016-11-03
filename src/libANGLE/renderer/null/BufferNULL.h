@@ -18,7 +18,7 @@ namespace rx
 class BufferNULL : public BufferImpl
 {
   public:
-    BufferNULL();
+    BufferNULL(const gl::BufferState &state);
     ~BufferNULL() override;
 
     gl::Error setData(GLenum target, const void *data, size_t size, GLenum usage) override;

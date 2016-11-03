@@ -48,7 +48,7 @@ typedef size_t DataRevision;
 class Buffer11 : public BufferD3D
 {
   public:
-    Buffer11(Renderer11 *renderer);
+    Buffer11(const gl::BufferState &state, Renderer11 *renderer);
     virtual ~Buffer11();
 
     gl::ErrorOrResult<ID3D11Buffer *> getBuffer(BufferUsage usage);

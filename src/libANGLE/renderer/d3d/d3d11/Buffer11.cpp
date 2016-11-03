@@ -249,8 +249,8 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
     MemoryBuffer mSystemCopy;
 };
 
-Buffer11::Buffer11(Renderer11 *renderer)
-    : BufferD3D(renderer),
+Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
+    : BufferD3D(state, renderer),
       mRenderer(renderer),
       mSize(0),
       mMappedStorage(nullptr),

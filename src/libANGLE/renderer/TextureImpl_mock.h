@@ -19,7 +19,7 @@ namespace rx
 class MockTextureImpl : public TextureImpl
 {
   public:
-    MockTextureImpl() : TextureImpl(gl::TextureState(GL_TEXTURE_2D)) {}
+    MockTextureImpl() : TextureImpl(mMockState), mMockState(GL_TEXTURE_2D) {}
     virtual ~MockTextureImpl() { destructor(); }
     MOCK_METHOD8(setImage, gl::Error(GLenum, size_t, GLenum, const gl::Extents &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
     MOCK_METHOD7(setSubImage, gl::Error(GLenum, size_t, const gl::Box &, GLenum, GLenum, const gl::PixelUnpackState &, const uint8_t *));
@@ -51,6 +51,9 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD1(syncState, void(const gl::Texture::DirtyBits &));
 
     MOCK_METHOD0(destructor, void());
+
+  protected:
+    gl::TextureState mMockState;
 };
 
 }

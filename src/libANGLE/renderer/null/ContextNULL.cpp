@@ -124,7 +124,7 @@ RenderbufferImpl *ContextNULL::createRenderbuffer()
     return static_cast<RenderbufferImpl *>(0);
 }
 
-BufferImpl *ContextNULL::createBuffer()
+BufferImpl *ContextNULL::createBuffer(const gl::BufferState &state)
 {
     UNIMPLEMENTED();
     return static_cast<BufferImpl *>(0);

@@ -19,8 +19,8 @@ namespace rx
 
 unsigned int BufferD3D::mNextSerial = 1;
 
-BufferD3D::BufferD3D(BufferFactoryD3D *factory)
-    : BufferImpl(),
+BufferD3D::BufferD3D(const gl::BufferState &state, BufferFactoryD3D *factory)
+    : BufferImpl(state),
       mFactory(factory),
       mStaticIndexBuffer(nullptr),
       mStaticBufferCacheTotalSize(0),

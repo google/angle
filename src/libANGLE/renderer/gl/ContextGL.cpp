@@ -78,9 +78,9 @@ RenderbufferImpl *ContextGL::createRenderbuffer()
                               getNativeTextureCaps());
 }
 
-BufferImpl *ContextGL::createBuffer()
+BufferImpl *ContextGL::createBuffer(const gl::BufferState &state)
 {
-    return new BufferGL(getFunctions(), getStateManager());
+    return new BufferGL(state, getFunctions(), getStateManager());
 }
 
 VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
