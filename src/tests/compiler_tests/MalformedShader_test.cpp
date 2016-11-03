@@ -3018,3 +3018,23 @@ TEST_F(MalformedShaderTest, FloatDeclarationNoQualifiersNoPrecision)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Check compiler doesn't crash on incorrect unsized array declarations.
+TEST_F(MalformedShaderTest, IncorrectUnsizedArray)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "float foo[] = 0.0;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    foo[0] = 1.0;\n"
+        "    my_FragColor = vec4(foo[0]);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

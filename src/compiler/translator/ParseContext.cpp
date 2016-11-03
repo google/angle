@@ -1484,7 +1484,17 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     TVariable *variable = nullptr;
     if (type.isUnsizedArray())
     {
-        type.setArraySize(initializer->getArraySize());
+        // We have not checked yet whether the initializer actually is an array or not.
+        if (initializer->isArray())
+        {
+            type.setArraySize(initializer->getArraySize());
+        }
+        else
+        {
+            // Having a non-array initializer for an unsized array will result in an error later,
+            // so we don't generate an error message here.
+            type.setArraySize(1u);
+        }
     }
     if (!declareVariable(line, identifier, type, &variable))
     {
