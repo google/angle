@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_4048122b",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-03T21:20:07Z",
+      "side": 1,
+      "message": "Can you also try testing setting at an offset?\n\n  glGetUniformLocation(mProgram, \"uniF[1]\");",
+      "range": {
+        "startLine": 486,
+        "startChar": 4,
+        "endLine": 493,
+        "endChar": 59
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
