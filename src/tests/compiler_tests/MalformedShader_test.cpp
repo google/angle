@@ -3057,3 +3057,20 @@ TEST_F(MalformedShaderTest, LogicalOpRHSIsBVec)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Check compiler doesn't crash when there's an unsized array constructor with no parameters.
+// ESSL 3.00.6 section 4.1.9: Array size must be greater than zero.
+TEST_F(MalformedShaderTest, UnsizedArrayConstructorNoParameters)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "void main()\n"
+        "{\n"
+        "    int[]();\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
