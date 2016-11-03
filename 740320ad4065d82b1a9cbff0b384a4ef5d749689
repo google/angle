@@ -70,6 +70,76 @@
       "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_a0229667",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-03T21:17:18Z",
+      "side": 1,
+      "message": "Yuly is quite right.  As you can see in the link he supplied, it was originally much like you want to make it now, and that had problems.",
+      "parentUuid": "e6a5561c_8092fadc",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_204d063a",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-03T21:17:18Z",
+      "side": 1,
+      "message": "If you\u0027re going to move this up here, see if we can do away with the one below.",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 296,
+        "endChar": 38
+      },
+      "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_c0e6c2fd",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-03T21:17:18Z",
+      "side": 1,
+      "message": "do we need this line two places?  see above comment.",
+      "range": {
+        "startLine": 397,
+        "startChar": 20,
+        "endLine": 397,
+        "endChar": 35
+      },
+      "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
