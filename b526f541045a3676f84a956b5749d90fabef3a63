@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_88398696",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2807,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-03T08:23:41Z",
+      "side": 0,
+      "message": "There should be no such situation according to using blockName[0] to check otherwise we can\u0027t use \u0027[0]\u0027 to stand for other elements in array.\nAnother evidence is that if we have a block array like below:\nlayout(packed) uniform blockName {\n  float f;\n} instanceName[3];\nvoid main() {\n  v \u003d instanceName[2].f;\n}\n\nthe active block number is 3. But the active uniform number is 1 which\u0027s name is blockName.f. It seems that the three active blocks share the same uniform. So, the three blocks are all active since blockName.f is used.",
+      "revId": "b526f541045a3676f84a956b5749d90fabef3a63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
