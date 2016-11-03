@@ -22,6 +22,30 @@
       "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_00960a96",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-03T20:51:22Z",
+      "side": 1,
+      "message": "I don\u0027t know what flags cromecast build uses.\nMaybe something like:\nuse_ozone \u0026\u0026 (is_chromeos || is_desktop_linux)\nwould work here?",
+      "parentUuid": "e6a5561c_8092fadc",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
