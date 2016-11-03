@@ -43,4 +43,5 @@ TestResults.qpa
 *.nvuser
 buildtools/
 *.pyc
+*.TMP
 
