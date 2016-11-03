@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_e3a94d7e",
+        "filename": "src/compiler/preprocessor/ExpressionParser.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-03T16:05:54Z",
+      "side": 1,
+      "message": "nit: can you throw in brackets?",
+      "range": {
+        "startLine": 267,
+        "startChar": 17,
+        "endLine": 267,
+        "endChar": 71
+      },
+      "revId": "6ab366defb71b52b2f298ea7792799ae324b4bb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
