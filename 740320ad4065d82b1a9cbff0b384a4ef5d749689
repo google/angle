@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_8092fadc",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-03T20:33:46Z",
+      "side": 1,
+      "message": "This didn\u0027t work before\nhttps://chromium-review.googlesource.com/358860",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "740320ad4065d82b1a9cbff0b384a4ef5d749689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
