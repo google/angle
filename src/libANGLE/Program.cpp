@@ -2855,12 +2855,18 @@ void Program::setUniformInternal(GLint location, GLsizei count, const T *v)
     LinkedUniform *linkedUniform         = &mState.mUniforms[locationInfo.index];
     uint8_t *destPointer                 = linkedUniform->getDataPtrToElement(locationInfo.element);
 
+    // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
+    // element index used, as reported by GetActiveUniform, will be ignored by the GL."
+    unsigned int remainingElements = linkedUniform->elementCount() - locationInfo.element;
+    GLsizei clampedCount           = std::min(
+        count, static_cast<GLsizei>(remainingElements * linkedUniform->getElementComponents()));
+
     if (VariableComponentType(linkedUniform->type) == GL_BOOL)
     {
         // Do a cast conversion for boolean types. From the spec:
         // "The uniform is set to FALSE if the input value is 0 or 0.0f, and set to TRUE otherwise."
         GLint *destAsInt = reinterpret_cast<GLint *>(destPointer);
-        for (GLsizei component = 0; component < count; ++component)
+        for (GLsizei component = 0; component < clampedCount; ++component)
         {
             destAsInt[component] = (v[component] != static_cast<T>(0) ? GL_TRUE : GL_FALSE);
         }
@@ -2868,12 +2874,12 @@ void Program::setUniformInternal(GLint location, GLsizei count, const T *v)
     else
     {
         // Invalide the validation cache if we modify the sampler data.
-        if (linkedUniform->isSampler() && memcmp(destPointer, v, sizeof(T) * count) != 0)
+        if (linkedUniform->isSampler() && memcmp(destPointer, v, sizeof(T) * clampedCount) != 0)
         {
             mCachedValidateSamplersResult.reset();
         }
 
-        memcpy(destPointer, v, sizeof(T) * count);
+        memcpy(destPointer, v, sizeof(T) * clampedCount);
     }
 }
 
@@ -2893,7 +2899,13 @@ void Program::setMatrixUniformInternal(GLint location,
     const VariableLocation &locationInfo = mState.mUniformLocations[location];
     LinkedUniform *linkedUniform         = &mState.mUniforms[locationInfo.index];
     T *destPtr = reinterpret_cast<T *>(linkedUniform->getDataPtrToElement(locationInfo.element));
-    for (GLsizei element = 0; element < count; ++element)
+
+    // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array
+    // element index used, as reported by GetActiveUniform, will be ignored by the GL."
+    unsigned int remainingElements = linkedUniform->elementCount() - locationInfo.element;
+    GLsizei clampedCount           = std::min(count, static_cast<GLsizei>(remainingElements));
+
+    for (GLsizei element = 0; element < clampedCount; ++element)
     {
         size_t elementOffset = element * rows * cols;
 
