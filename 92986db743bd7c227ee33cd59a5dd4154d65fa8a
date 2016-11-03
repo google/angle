@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_3e8d2850",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-03T17:20:45Z",
+      "side": 1,
+      "message": "is this going to mess up anything which tries to read array values down the line?",
+      "range": {
+        "startLine": 2601,
+        "startChar": 12,
+        "endLine": 2601,
+        "endChar": 16
+      },
+      "revId": "92986db743bd7c227ee33cd59a5dd4154d65fa8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
