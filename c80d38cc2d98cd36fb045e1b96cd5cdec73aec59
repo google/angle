@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbff7b6a_612840b5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3564,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-04T20:51:59Z",
+      "side": 1,
+      "message": "nit: can probably update to the non-ANGLE suffix enums.",
+      "range": {
+        "startLine": 3564,
+        "startChar": 37,
+        "endLine": 3564,
+        "endChar": 43
+      },
+      "revId": "c80d38cc2d98cd36fb045e1b96cd5cdec73aec59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_e1339022",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3628,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-04T20:51:59Z",
+      "side": 1,
+      "message": "nit: Up for adding the error messages?",
+      "revId": "c80d38cc2d98cd36fb045e1b96cd5cdec73aec59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
