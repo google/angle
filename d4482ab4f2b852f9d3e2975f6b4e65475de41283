@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "cbff7b6a_95e926d1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2857,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "nit: you can call linkedUniform-\u003eelementCount() to get the same calculation.",
+      "range": {
+        "startLine": 2857,
+        "startChar": 4,
+        "endLine": 2857,
+        "endChar": 71
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_f5e6b2fe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "can you add a comment referencing OpenGL ES 3.0.4 spec pg 67: \"Values for any array element that exceeds the highest array element index used, as reported byGetActiveUniform, will be ignored by the GL.\"",
+      "range": {
+        "startLine": 2858,
+        "startChar": 12,
+        "endLine": 2858,
+        "endChar": 24
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_55d85e36",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "will \u0027git cl format\u0027 wrap this?",
+      "range": {
+        "startLine": 2858,
+        "startChar": 96,
+        "endLine": 2858,
+        "endChar": 102
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_d5e3aeec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2899,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "same comment about elementCount here",
+      "range": {
+        "startLine": 2899,
+        "startChar": 3,
+        "endLine": 2899,
+        "endChar": 71
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_35c2fa45",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2900,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "same comment about the comment here, and git cl format",
+      "range": {
+        "startLine": 2900,
+        "startChar": 4,
+        "endLine": 2900,
+        "endChar": 102
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6a5561c_4048122b",
         "filename": "src/tests/gl_tests/UniformTest.cpp",
         "patchSetId": 1
@@ -13,6 +128,30 @@
       "writtenOn": "2016-11-03T21:20:07Z",
       "side": 1,
       "message": "Can you also try testing setting at an offset?\n\n  glGetUniformLocation(mProgram, \"uniF[1]\");",
+      "range": {
+        "startLine": 486,
+        "startChar": 4,
+        "endLine": 493,
+        "endChar": 59
+      },
+      "revId": "d4482ab4f2b852f9d3e2975f6b4e65475de41283",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_15c7f655",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T15:39:08Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "e6a5561c_4048122b",
       "range": {
         "startLine": 486,
         "startChar": 4,
