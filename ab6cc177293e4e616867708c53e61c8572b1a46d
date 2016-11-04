@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbff7b6a_18de0d26",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-04T17:41:08Z",
+      "side": 1,
+      "message": "Not to be addressed here: we might have some memory gain making sure some commonly used structures are packed.",
+      "revId": "ab6cc177293e4e616867708c53e61c8572b1a46d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
