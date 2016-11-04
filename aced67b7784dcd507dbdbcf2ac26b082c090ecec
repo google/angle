@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6a5561c_cca439f5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T02:59:18Z",
+      "side": 1,
+      "message": "nit: run git cl format",
+      "range": {
+        "startLine": 2763,
+        "startChar": 38,
+        "endLine": 2763,
+        "endChar": 39
+      },
+      "revId": "aced67b7784dcd507dbdbcf2ac26b082c090ecec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_4cb1692c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2815,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-04T02:59:18Z",
+      "side": 1,
+      "message": "nit: you can wrap comments to 100 characters in ANGLE instead of the Chromium 80. Just make the comment one very long line, and use \u0027git cl format\u0027, and it will auto-wrap.\n\nAlso sorry to correct your grammar, but you would normally say something like:\n\n\"Since all block elements in an array share the same active uniforms, they will all be active once any uniform member is used.\"\n\"So, since interfaceBlock.name[0] was active, here we will add every block element in the array.\"",
+      "range": {
+        "startLine": 2812,
+        "startChar": 11,
+        "endLine": 2815,
+        "endChar": 83
+      },
+      "revId": "aced67b7784dcd507dbdbcf2ac26b082c090ecec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
