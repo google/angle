@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbff7b6a_c14dace1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2034,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-04T20:26:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the test be fore operandArray[i] and before the call to fold?",
+      "revId": "94c6f81777ed7b23213a5b05433ca99c8685a7c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_0158549a",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-04T20:26:51Z",
+      "side": 1,
+      "message": "nit: equivalent.",
+      "revId": "94c6f81777ed7b23213a5b05433ca99c8685a7c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbff7b6a_614200ac",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2073,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-04T20:26:51Z",
+      "side": 1,
+      "message": "Maybe add a comment about dividing by zero.",
+      "revId": "94c6f81777ed7b23213a5b05433ca99c8685a7c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
