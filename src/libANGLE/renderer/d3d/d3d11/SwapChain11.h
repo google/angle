@@ -50,8 +50,6 @@ class SwapChain11 final : public SwapChainD3D
     EGLint getHeight() const { return mHeight; }
     void *getKeyedMutex() override { return mKeyedMutex; }
 
-    egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
-
   private:
     void release();
     void initPassThroughResources();
@@ -104,8 +102,6 @@ class SwapChain11 final : public SwapChainD3D
 
     SurfaceRenderTarget11 mColorRenderTarget;
     SurfaceRenderTarget11 mDepthStencilRenderTarget;
-
-    LONGLONG mQPCFrequency;
 };
 
 }  // namespace rx

@@ -61,8 +61,6 @@ class Surface : public gl::FramebufferAttachmentObject
     Error bindTexImage(gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(EGLint buffer);
 
-    Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc);
-
     EGLint isPostSubBufferSupported() const;
 
     void setSwapInterval(EGLint interval);

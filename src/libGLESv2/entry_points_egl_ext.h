@@ -80,13 +80,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY StreamPostD3DTextureNV12ANGLE(EGLDisplay dpy
                                                                   void *texture,
                                                                   const EGLAttrib *attrib_list);
 
-// EGL_CHROMIUM_get_sync_values
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY GetSyncValuesCHROMIUM(EGLDisplay dpy,
-                                                          EGLSurface surface,
-                                                          EGLuint64KHR *ust,
-                                                          EGLuint64KHR *msc,
-                                                          EGLuint64KHR *sbc);
-
 // EGL_EXT_swap_buffers_with_damage
 ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
                                                  EGLSurface surface,

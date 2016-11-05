@@ -230,11 +230,6 @@ Error Surface::releaseTexImage(EGLint buffer)
     return Error(EGL_SUCCESS);
 }
 
-Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
-{
-    return mImplementation->getSyncValues(ust, msc, sbc);
-}
-
 void Surface::releaseTexImageFromTexture()
 {
     ASSERT(mTexture.get());
