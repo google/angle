@@ -2234,12 +2234,12 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, const gl::
     const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
     const int storageHeight = std::max(1, getLevelZeroHeight() >> level);
     const int storageDepth  = std::max(1, getLevelZeroDepth() >> level);
+    const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, size, false);
 
     if (mTexStorage)
     {
-        const GLenum storageFormat = getBaseLevelInternalFormat();
         const int storageLevels = mTexStorage->getLevelCount();
 
         if ((level >= storageLevels && storageLevels != 0) ||
