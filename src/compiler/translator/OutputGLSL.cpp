@@ -39,11 +39,11 @@ void TOutputGLSL::visitSymbol(TIntermSymbol *node)
     {
         out << "gl_FragDepth";
     }
-    else if (symbol == "gl_FragColor" && IsGLSL130OrNewer(getShaderOutput()))
+    else if (symbol == "gl_FragColor" && sh::IsGLSL130OrNewer(getShaderOutput()))
     {
         out << "webgl_FragColor";
     }
-    else if (symbol == "gl_FragData" && IsGLSL130OrNewer(getShaderOutput()))
+    else if (symbol == "gl_FragData" && sh::IsGLSL130OrNewer(getShaderOutput()))
     {
         out << "webgl_FragData";
     }
@@ -89,8 +89,8 @@ TString TOutputGLSL::translateTextureFunction(TString &name)
         "textureCubeGradEXT", "textureGrad",
         NULL, NULL
     };
-    const char **mapping = (IsGLSL130OrNewer(getShaderOutput())) ?
-        legacyToCoreRename : simpleRename;
+    const char **mapping =
+        (sh::IsGLSL130OrNewer(getShaderOutput())) ? legacyToCoreRename : simpleRename;
 
     for (int i = 0; mapping[i] != NULL; i += 2)
     {

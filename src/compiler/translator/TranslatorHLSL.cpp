@@ -24,6 +24,9 @@
 #include "compiler/translator/SplitSequenceOperator.h"
 #include "compiler/translator/UnfoldShortCircuitToIf.h"
 
+namespace sh
+{
+
 TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
     : TCompiler(type, spec, output)
 {
@@ -141,3 +144,5 @@ const std::map<std::string, unsigned int> *TranslatorHLSL::getUniformRegisterMap
 {
     return &mUniformRegisterMap;
 }
+
+}  // namespace sh

@@ -15,6 +15,8 @@
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/TranslatorESSL.h"
 
+using namespace sh;
+
 template <typename T>
 class ConstantFinder : public TIntermTraverser
 {
@@ -107,7 +109,7 @@ class ConstantFoldingTest : public testing::Test
         allocator.push();
         SetGlobalPoolAllocator(&allocator);
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        InitBuiltInResources(&resources);
 
         mTranslatorESSL = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslatorESSL->Init(resources));

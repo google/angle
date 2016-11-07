@@ -201,7 +201,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
 
     ShHandle compilerHandle = compiler->getCompilerHandle(mData.getShaderType());
 
-    mUniformRegisterMap = GetUniformRegisterMap(ShGetUniformRegisterMap(compilerHandle));
+    mUniformRegisterMap = GetUniformRegisterMap(sh::GetUniformRegisterMap(compilerHandle));
 
     for (const sh::InterfaceBlock &interfaceBlock : mData.getInterfaceBlocks())
     {
@@ -209,7 +209,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
         {
             unsigned int index = static_cast<unsigned int>(-1);
             bool blockRegisterResult =
-                ShGetInterfaceBlockRegister(compilerHandle, interfaceBlock.name, &index);
+                sh::GetInterfaceBlockRegister(compilerHandle, interfaceBlock.name, &index);
             ASSERT(blockRegisterResult);
 
             mInterfaceBlockRegisterMap[interfaceBlock.name] = index;

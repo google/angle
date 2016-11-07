@@ -14,6 +14,8 @@
 #include "compiler/translator/Compiler.h"
 #include "angle_gl.h"
 
+using namespace sh;
+
 struct TranslatorCacheKey
 {
     bool operator==(const TranslatorCacheKey &other) const

@@ -35,6 +35,9 @@
 #include "compiler/translator/VariablePacker.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -80,24 +83,17 @@ bool IsWebGLBasedSpec(ShShaderSpec spec)
 
 bool IsGLSL130OrNewer(ShShaderOutput output)
 {
-    return (output == SH_GLSL_130_OUTPUT ||
-            output == SH_GLSL_140_OUTPUT ||
-            output == SH_GLSL_150_CORE_OUTPUT ||
-            output == SH_GLSL_330_CORE_OUTPUT ||
-            output == SH_GLSL_400_CORE_OUTPUT ||
-            output == SH_GLSL_410_CORE_OUTPUT ||
-            output == SH_GLSL_420_CORE_OUTPUT ||
-            output == SH_GLSL_430_CORE_OUTPUT ||
-            output == SH_GLSL_440_CORE_OUTPUT ||
-            output == SH_GLSL_450_CORE_OUTPUT);
+    return (output == SH_GLSL_130_OUTPUT || output == SH_GLSL_140_OUTPUT ||
+            output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
+            output == SH_GLSL_400_CORE_OUTPUT || output == SH_GLSL_410_CORE_OUTPUT ||
+            output == SH_GLSL_420_CORE_OUTPUT || output == SH_GLSL_430_CORE_OUTPUT ||
+            output == SH_GLSL_440_CORE_OUTPUT || output == SH_GLSL_450_CORE_OUTPUT);
 }
 
 bool IsGLSL420OrNewer(ShShaderOutput output)
 {
-    return (output == SH_GLSL_420_CORE_OUTPUT ||
-            output == SH_GLSL_430_CORE_OUTPUT ||
-            output == SH_GLSL_440_CORE_OUTPUT ||
-            output == SH_GLSL_450_CORE_OUTPUT);
+    return (output == SH_GLSL_420_CORE_OUTPUT || output == SH_GLSL_430_CORE_OUTPUT ||
+            output == SH_GLSL_440_CORE_OUTPUT || output == SH_GLSL_450_CORE_OUTPUT);
 }
 
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
@@ -106,10 +102,10 @@ size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
     // size undefined. ES3 defines a max size of 1024 characters.
     switch (spec)
     {
-      case SH_WEBGL_SPEC:
-        return 256;
-      default:
-        return 1024;
+        case SH_WEBGL_SPEC:
+            return 256;
+        default:
+            return 1024;
     }
 }
 
@@ -155,18 +151,18 @@ int MapSpecToShaderVersion(ShShaderSpec spec)
 {
     switch (spec)
     {
-      case SH_GLES2_SPEC:
-      case SH_WEBGL_SPEC:
-        return 100;
-      case SH_GLES3_SPEC:
-      case SH_WEBGL2_SPEC:
-        return 300;
-      case SH_GLES3_1_SPEC:
-      case SH_WEBGL3_SPEC:
-          return 310;
-      default:
-        UNREACHABLE();
-        return 0;
+        case SH_GLES2_SPEC:
+        case SH_WEBGL_SPEC:
+            return 100;
+        case SH_GLES3_SPEC:
+        case SH_WEBGL2_SPEC:
+            return 300;
+        case SH_GLES3_1_SPEC:
+        case SH_WEBGL3_SPEC:
+            return 310;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -534,21 +530,21 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     TPublicType floatingPoint;
     floatingPoint.initializeBasicType(EbtFloat);
 
-    switch(shaderType)
+    switch (shaderType)
     {
-      case GL_FRAGMENT_SHADER:
-        symbolTable.setDefaultPrecision(integer, EbpMedium);
-        break;
-      case GL_VERTEX_SHADER:
-        symbolTable.setDefaultPrecision(integer, EbpHigh);
-        symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
-        break;
-      case GL_COMPUTE_SHADER:
-          symbolTable.setDefaultPrecision(integer, EbpHigh);
-          symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
-          break;
-      default:
-        assert(false && "Language not supported");
+        case GL_FRAGMENT_SHADER:
+            symbolTable.setDefaultPrecision(integer, EbpMedium);
+            break;
+        case GL_VERTEX_SHADER:
+            symbolTable.setDefaultPrecision(integer, EbpHigh);
+            symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+            break;
+        case GL_COMPUTE_SHADER:
+            symbolTable.setDefaultPrecision(integer, EbpHigh);
+            symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+            break;
+        default:
+            assert(false && "Language not supported");
     }
     // Set defaults for sampler types that have default precision, even those that are
     // only available if an extension exists.
@@ -581,60 +577,60 @@ void TCompiler::setResourceString()
 
     // clang-format off
     strstream << ":MaxVertexAttribs:" << compileResources.MaxVertexAttribs
-              << ":MaxVertexUniformVectors:" << compileResources.MaxVertexUniformVectors
-              << ":MaxVaryingVectors:" << compileResources.MaxVaryingVectors
-              << ":MaxVertexTextureImageUnits:" << compileResources.MaxVertexTextureImageUnits
-              << ":MaxCombinedTextureImageUnits:" << compileResources.MaxCombinedTextureImageUnits
-              << ":MaxTextureImageUnits:" << compileResources.MaxTextureImageUnits
-              << ":MaxFragmentUniformVectors:" << compileResources.MaxFragmentUniformVectors
-              << ":MaxDrawBuffers:" << compileResources.MaxDrawBuffers
-              << ":OES_standard_derivatives:" << compileResources.OES_standard_derivatives
-              << ":OES_EGL_image_external:" << compileResources.OES_EGL_image_external
-              << ":OES_EGL_image_external_essl3:" << compileResources.OES_EGL_image_external_essl3
-              << ":NV_EGL_stream_consumer_external:" << compileResources.NV_EGL_stream_consumer_external
-              << ":ARB_texture_rectangle:" << compileResources.ARB_texture_rectangle
-              << ":EXT_draw_buffers:" << compileResources.EXT_draw_buffers
-              << ":FragmentPrecisionHigh:" << compileResources.FragmentPrecisionHigh
-              << ":MaxExpressionComplexity:" << compileResources.MaxExpressionComplexity
-              << ":MaxCallStackDepth:" << compileResources.MaxCallStackDepth
-              << ":MaxFunctionParameters:" << compileResources.MaxFunctionParameters
-              << ":EXT_blend_func_extended:" << compileResources.EXT_blend_func_extended
-              << ":EXT_frag_depth:" << compileResources.EXT_frag_depth
-              << ":EXT_shader_texture_lod:" << compileResources.EXT_shader_texture_lod
-              << ":EXT_shader_framebuffer_fetch:" << compileResources.EXT_shader_framebuffer_fetch
-              << ":NV_shader_framebuffer_fetch:" << compileResources.NV_shader_framebuffer_fetch
-              << ":ARM_shader_framebuffer_fetch:" << compileResources.ARM_shader_framebuffer_fetch
-              << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
-              << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
-              << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset
-              << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset
-              << ":MaxDualSourceDrawBuffers:" << compileResources.MaxDualSourceDrawBuffers
-              << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
-              << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision
-              << ":MaxImageUnits:" << compileResources.MaxImageUnits
-              << ":MaxVertexImageUniforms:" << compileResources.MaxVertexImageUniforms
-              << ":MaxFragmentImageUniforms:" << compileResources.MaxFragmentImageUniforms
-              << ":MaxComputeImageUniforms:" << compileResources.MaxComputeImageUniforms
-              << ":MaxCombinedImageUniforms:" << compileResources.MaxCombinedImageUniforms
-              << ":MaxCombinedShaderOutputResources:" << compileResources.MaxCombinedShaderOutputResources
-              << ":MaxComputeWorkGroupCountX:" << compileResources.MaxComputeWorkGroupCount[0]
-              << ":MaxComputeWorkGroupCountY:" << compileResources.MaxComputeWorkGroupCount[1]
-              << ":MaxComputeWorkGroupCountZ:" << compileResources.MaxComputeWorkGroupCount[2]
-              << ":MaxComputeWorkGroupSizeX:" << compileResources.MaxComputeWorkGroupSize[0]
-              << ":MaxComputeWorkGroupSizeY:" << compileResources.MaxComputeWorkGroupSize[1]
-              << ":MaxComputeWorkGroupSizeZ:" << compileResources.MaxComputeWorkGroupSize[2]
-              << ":MaxComputeUniformComponents:" << compileResources.MaxComputeUniformComponents
-              << ":MaxComputeTextureImageUnits:" << compileResources.MaxComputeTextureImageUnits
-              << ":MaxComputeAtomicCounters:" << compileResources.MaxComputeAtomicCounters
-              << ":MaxComputeAtomicCounterBuffers:" << compileResources.MaxComputeAtomicCounterBuffers
-              << ":MaxVertexAtomicCounters:" << compileResources.MaxVertexAtomicCounters
-              << ":MaxFragmentAtomicCounters:" << compileResources.MaxFragmentAtomicCounters
-              << ":MaxCombinedAtomicCounters:" << compileResources.MaxCombinedAtomicCounters
-              << ":MaxAtomicCounterBindings:" << compileResources.MaxAtomicCounterBindings
-              << ":MaxVertexAtomicCounterBuffers:" << compileResources.MaxVertexAtomicCounterBuffers
-              << ":MaxFragmentAtomicCounterBuffers:" << compileResources.MaxFragmentAtomicCounterBuffers
-              << ":MaxCombinedAtomicCounterBuffers:" << compileResources.MaxCombinedAtomicCounterBuffers
-              << ":MaxAtomicCounterBufferSize:" << compileResources.MaxAtomicCounterBufferSize;
+        << ":MaxVertexUniformVectors:" << compileResources.MaxVertexUniformVectors
+        << ":MaxVaryingVectors:" << compileResources.MaxVaryingVectors
+        << ":MaxVertexTextureImageUnits:" << compileResources.MaxVertexTextureImageUnits
+        << ":MaxCombinedTextureImageUnits:" << compileResources.MaxCombinedTextureImageUnits
+        << ":MaxTextureImageUnits:" << compileResources.MaxTextureImageUnits
+        << ":MaxFragmentUniformVectors:" << compileResources.MaxFragmentUniformVectors
+        << ":MaxDrawBuffers:" << compileResources.MaxDrawBuffers
+        << ":OES_standard_derivatives:" << compileResources.OES_standard_derivatives
+        << ":OES_EGL_image_external:" << compileResources.OES_EGL_image_external
+        << ":OES_EGL_image_external_essl3:" << compileResources.OES_EGL_image_external_essl3
+        << ":NV_EGL_stream_consumer_external:" << compileResources.NV_EGL_stream_consumer_external
+        << ":ARB_texture_rectangle:" << compileResources.ARB_texture_rectangle
+        << ":EXT_draw_buffers:" << compileResources.EXT_draw_buffers
+        << ":FragmentPrecisionHigh:" << compileResources.FragmentPrecisionHigh
+        << ":MaxExpressionComplexity:" << compileResources.MaxExpressionComplexity
+        << ":MaxCallStackDepth:" << compileResources.MaxCallStackDepth
+        << ":MaxFunctionParameters:" << compileResources.MaxFunctionParameters
+        << ":EXT_blend_func_extended:" << compileResources.EXT_blend_func_extended
+        << ":EXT_frag_depth:" << compileResources.EXT_frag_depth
+        << ":EXT_shader_texture_lod:" << compileResources.EXT_shader_texture_lod
+        << ":EXT_shader_framebuffer_fetch:" << compileResources.EXT_shader_framebuffer_fetch
+        << ":NV_shader_framebuffer_fetch:" << compileResources.NV_shader_framebuffer_fetch
+        << ":ARM_shader_framebuffer_fetch:" << compileResources.ARM_shader_framebuffer_fetch
+        << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
+        << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
+        << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset
+        << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset
+        << ":MaxDualSourceDrawBuffers:" << compileResources.MaxDualSourceDrawBuffers
+        << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
+        << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision
+        << ":MaxImageUnits:" << compileResources.MaxImageUnits
+        << ":MaxVertexImageUniforms:" << compileResources.MaxVertexImageUniforms
+        << ":MaxFragmentImageUniforms:" << compileResources.MaxFragmentImageUniforms
+        << ":MaxComputeImageUniforms:" << compileResources.MaxComputeImageUniforms
+        << ":MaxCombinedImageUniforms:" << compileResources.MaxCombinedImageUniforms
+        << ":MaxCombinedShaderOutputResources:" << compileResources.MaxCombinedShaderOutputResources
+        << ":MaxComputeWorkGroupCountX:" << compileResources.MaxComputeWorkGroupCount[0]
+        << ":MaxComputeWorkGroupCountY:" << compileResources.MaxComputeWorkGroupCount[1]
+        << ":MaxComputeWorkGroupCountZ:" << compileResources.MaxComputeWorkGroupCount[2]
+        << ":MaxComputeWorkGroupSizeX:" << compileResources.MaxComputeWorkGroupSize[0]
+        << ":MaxComputeWorkGroupSizeY:" << compileResources.MaxComputeWorkGroupSize[1]
+        << ":MaxComputeWorkGroupSizeZ:" << compileResources.MaxComputeWorkGroupSize[2]
+        << ":MaxComputeUniformComponents:" << compileResources.MaxComputeUniformComponents
+        << ":MaxComputeTextureImageUnits:" << compileResources.MaxComputeTextureImageUnits
+        << ":MaxComputeAtomicCounters:" << compileResources.MaxComputeAtomicCounters
+        << ":MaxComputeAtomicCounterBuffers:" << compileResources.MaxComputeAtomicCounterBuffers
+        << ":MaxVertexAtomicCounters:" << compileResources.MaxVertexAtomicCounters
+        << ":MaxFragmentAtomicCounters:" << compileResources.MaxFragmentAtomicCounters
+        << ":MaxCombinedAtomicCounters:" << compileResources.MaxCombinedAtomicCounters
+        << ":MaxAtomicCounterBindings:" << compileResources.MaxAtomicCounterBindings
+        << ":MaxVertexAtomicCounterBuffers:" << compileResources.MaxVertexAtomicCounterBuffers
+        << ":MaxFragmentAtomicCounterBuffers:" << compileResources.MaxFragmentAtomicCounterBuffers
+        << ":MaxCombinedAtomicCounterBuffers:" << compileResources.MaxCombinedAtomicCounterBuffers
+        << ":MaxAtomicCounterBufferSize:" << compileResources.MaxAtomicCounterBufferSize;
     // clang-format on
 
     builtInResourcesString = strstream.str();
@@ -669,16 +665,16 @@ bool TCompiler::initCallDag(TIntermNode *root)
 
     switch (mCallDag.init(root, &infoSink.info))
     {
-      case CallDAG::INITDAG_SUCCESS:
-        return true;
-      case CallDAG::INITDAG_RECURSION:
-        infoSink.info.prefix(EPrefixError);
-        infoSink.info << "Function recursion detected";
-        return false;
-      case CallDAG::INITDAG_UNDEFINED:
-        infoSink.info.prefix(EPrefixError);
-        infoSink.info << "Unimplemented function detected";
-        return false;
+        case CallDAG::INITDAG_SUCCESS:
+            return true;
+        case CallDAG::INITDAG_RECURSION:
+            infoSink.info.prefix(EPrefixError);
+            infoSink.info << "Function recursion detected";
+            return false;
+        case CallDAG::INITDAG_UNDEFINED:
+            infoSink.info.prefix(EPrefixError);
+            infoSink.info << "Unimplemented function detected";
+            return false;
     }
 
     UNREACHABLE();
@@ -772,8 +768,7 @@ class TCompiler::UnusedPredicate
 {
   public:
     UnusedPredicate(const CallDAG *callDag, const std::vector<FunctionMetadata> *metadatas)
-        : mCallDag(callDag),
-          mMetadatas(metadatas)
+        : mCallDag(callDag), mMetadatas(metadatas)
     {
     }
 
@@ -846,7 +841,7 @@ bool TCompiler::validateLimitations(TIntermNode* root)
 
 bool TCompiler::limitExpressionComplexity(TIntermNode* root)
 {
-    TMaxDepthTraverser traverser(maxExpressionComplexity+1);
+    TMaxDepthTraverser traverser(maxExpressionComplexity + 1);
     root->traverse(&traverser);
 
     if (traverser.getMaxDepth() > maxExpressionComplexity)
@@ -869,7 +864,8 @@ void TCompiler::collectVariables(TIntermNode* root)
     if (!variablesCollected)
     {
         sh::CollectVariables collect(&attributes, &outputVariables, &uniforms, &varyings,
-                                     &interfaceBlocks, hashFunction, symbolTable, extensionBehavior);
+                                     &interfaceBlocks, hashFunction, symbolTable,
+                                     extensionBehavior);
         root->traverse(&collect);
 
         // This is for enforcePackingRestriction().
@@ -993,3 +989,5 @@ bool TCompiler::isVaryingDefined(const char *varyingName)
 
     return false;
 }
+
+}  // namespace sh

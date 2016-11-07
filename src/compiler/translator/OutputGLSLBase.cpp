@@ -150,7 +150,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
 {
     TQualifier qualifier = type.getQualifier();
     TInfoSinkBase &out = objSink();
-    bool removeInvariant = (qualifier == EvqVaryingIn && IsGLSL420OrNewer(mOutput) &&
+    bool removeInvariant = (qualifier == EvqVaryingIn && sh::IsGLSL420OrNewer(mOutput) &&
                             !(mCompileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT));
     if (type.isInvariant() && !removeInvariant)
     {
@@ -163,7 +163,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        if (IsGLSL130OrNewer(mOutput))
+        if (sh::IsGLSL130OrNewer(mOutput))
         {
             switch (qualifier)
             {

@@ -16,6 +16,9 @@
 #include "compiler/translator/TranslatorHLSL.h"
 #endif // ANGLE_ENABLE_HLSL
 
+namespace sh
+{
+
 //
 // This function must be provided to create the actual
 // compile object used by higher level code.  It returns
@@ -29,10 +32,10 @@ TCompiler* ConstructCompiler(
 #ifdef ANGLE_ENABLE_ESSL
         return new TranslatorESSL(type, spec);
 #else
-        // This compiler is not supported in this
-        // configuration. Return NULL per the ShConstructCompiler API.
-        return nullptr;
-#endif // ANGLE_ENABLE_ESSL
+          // This compiler is not supported in this configuration. Return NULL per the
+          // sh::ConstructCompiler API.
+          return nullptr;
+#endif  // ANGLE_ENABLE_ESSL
       case SH_GLSL_130_OUTPUT:
       case SH_GLSL_140_OUTPUT:
       case SH_GLSL_150_CORE_OUTPUT:
@@ -47,23 +50,23 @@ TCompiler* ConstructCompiler(
 #ifdef ANGLE_ENABLE_GLSL
         return new TranslatorGLSL(type, spec, output);
 #else
-        // This compiler is not supported in this
-        // configuration. Return NULL per the ShConstructCompiler API.
-        return nullptr;
-#endif // ANGLE_ENABLE_GLSL
+          // This compiler is not supported in this configuration. Return NULL per the
+          // sh::ConstructCompiler API.
+          return nullptr;
+#endif  // ANGLE_ENABLE_GLSL
       case SH_HLSL_3_0_OUTPUT:
       case SH_HLSL_4_1_OUTPUT:
       case SH_HLSL_4_0_FL9_3_OUTPUT:
 #ifdef ANGLE_ENABLE_HLSL
         return new TranslatorHLSL(type, spec, output);
 #else
-        // This compiler is not supported in this
-        // configuration. Return NULL per the ShConstructCompiler API.
-        return nullptr;
-#endif // ANGLE_ENABLE_HLSL
+          // This compiler is not supported in this configuration. Return NULL per the
+          // sh::ConstructCompiler API.
+          return nullptr;
+#endif  // ANGLE_ENABLE_HLSL
       default:
-        // Unknown format. Return NULL per the ShConstructCompiler API.
-        return nullptr;
+          // Unknown format. Return NULL per the sh::ConstructCompiler API.
+          return nullptr;
     }
 }
 
@@ -74,3 +77,5 @@ void DeleteCompiler(TCompiler* compiler)
 {
     delete compiler;
 }
+
+}  // namespace sh

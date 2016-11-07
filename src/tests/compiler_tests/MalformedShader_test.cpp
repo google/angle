@@ -12,6 +12,8 @@
 #include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/TranslatorESSL.h"
 
+using namespace sh;
+
 class MalformedShaderTest : public testing::Test
 {
   public:
@@ -21,7 +23,7 @@ class MalformedShaderTest : public testing::Test
     virtual void SetUp()
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
 
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
@@ -63,7 +65,7 @@ class MalformedVertexShaderTest : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
 
         mTranslator = new TranslatorESSL(GL_VERTEX_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
@@ -79,7 +81,7 @@ class MalformedWebGL2ShaderTest : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
 
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL2_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
@@ -95,7 +97,7 @@ class MalformedWebGL1ShaderTest : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
 
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
@@ -111,7 +113,7 @@ class MalformedVertexShaderGLES31Test : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
         mTranslator = new TranslatorESSL(GL_VERTEX_SHADER, SH_GLES3_1_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
@@ -126,7 +128,7 @@ class MalformedFragmentShaderGLES31Test : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_1_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
@@ -141,7 +143,7 @@ class MalformedComputeShaderTest : public MalformedShaderTest
     void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
         mTranslator = new TranslatorESSL(GL_COMPUTE_SHADER, SH_GLES3_1_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }

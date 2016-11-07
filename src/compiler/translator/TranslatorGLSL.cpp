@@ -14,6 +14,9 @@
 #include "compiler/translator/RewriteTexelFetchOffset.h"
 #include "compiler/translator/VersionGLSL.h"
 
+namespace sh
+{
+
 TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
                                ShShaderSpec spec,
                                ShShaderOutput output)
@@ -296,3 +299,5 @@ void TranslatorGLSL::conditionallyOutputInvariantDeclaration(const char *builtin
         sink << "invariant " << builtinVaryingName << ";\n";
     }
 }
+
+}  // namespace sh

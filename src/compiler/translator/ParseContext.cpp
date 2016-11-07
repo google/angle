@@ -65,6 +65,50 @@ bool ContainsImage(const TType &type)
 
 }  // namespace
 
+TParseContext::TParseContext(TSymbolTable &symt,
+                             TExtensionBehavior &ext,
+                             sh::GLenum type,
+                             ShShaderSpec spec,
+                             ShCompileOptions options,
+                             bool checksPrecErrors,
+                             TInfoSink &is,
+                             const ShBuiltInResources &resources)
+    : intermediate(),
+      symbolTable(symt),
+      mDeferredSingleDeclarationErrorCheck(false),
+      mShaderType(type),
+      mShaderSpec(spec),
+      mCompileOptions(options),
+      mShaderVersion(100),
+      mTreeRoot(nullptr),
+      mLoopNestingLevel(0),
+      mStructNestingLevel(0),
+      mSwitchNestingLevel(0),
+      mCurrentFunctionType(nullptr),
+      mFunctionReturnsValue(false),
+      mChecksPrecisionErrors(checksPrecErrors),
+      mFragmentPrecisionHighOnESSL1(false),
+      mDefaultMatrixPacking(EmpColumnMajor),
+      mDefaultBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
+      mDiagnostics(is),
+      mDirectiveHandler(ext,
+                        mDiagnostics,
+                        mShaderVersion,
+                        mShaderType,
+                        resources.WEBGL_debug_shader_precision == 1),
+      mPreprocessor(&mDiagnostics, &mDirectiveHandler),
+      mScanner(nullptr),
+      mUsesFragData(false),
+      mUsesFragColor(false),
+      mUsesSecondaryOutputs(false),
+      mMinProgramTexelOffset(resources.MinProgramTexelOffset),
+      mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
+      mComputeShaderLocalSizeDeclared(false),
+      mDeclaringFunction(false)
+{
+    mComputeShaderLocalSize.fill(-1);
+}
+
 //
 // Look at a '.' field selector string and change it into offsets
 // for a vector.
@@ -481,7 +525,7 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
             error(line, reservedErrMsg, "gl_");
             return false;
         }
-        if (IsWebGLBasedSpec(mShaderSpec))
+        if (sh::IsWebGLBasedSpec(mShaderSpec))
         {
             if (identifier.compare(0, 6, "webgl_") == 0)
             {
@@ -2844,7 +2888,7 @@ void TParseContext::exitStructDeclaration()
 
 void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field)
 {
-    if (!IsWebGLBasedSpec(mShaderSpec))
+    if (!sh::IsWebGLBasedSpec(mShaderSpec))
     {
         return;
     }
@@ -3134,7 +3178,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
 
     if (qualifierType == "shared")
     {
-        if (IsWebGLBasedSpec(mShaderSpec))
+        if (sh::IsWebGLBasedSpec(mShaderSpec))
         {
             error(qualifierTypeLine, "Only std140 layout is allowed in WebGL", "shared");
         }
@@ -3142,7 +3186,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     }
     else if (qualifierType == "packed")
     {
-        if (IsWebGLBasedSpec(mShaderSpec))
+        if (sh::IsWebGLBasedSpec(mShaderSpec))
         {
             error(qualifierTypeLine, "Only std140 layout is allowed in WebGL", "packed");
         }

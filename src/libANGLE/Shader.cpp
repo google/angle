@@ -266,17 +266,17 @@ void Shader::compile(Compiler *compiler)
     sourceCStrings.push_back(sourceString.c_str());
 
     bool result =
-        ShCompile(compilerHandle, &sourceCStrings[0], sourceCStrings.size(), compileOptions);
+        sh::Compile(compilerHandle, &sourceCStrings[0], sourceCStrings.size(), compileOptions);
 
     if (!result)
     {
-        mInfoLog = ShGetInfoLog(compilerHandle);
+        mInfoLog = sh::GetInfoLog(compilerHandle);
         TRACE("\n%s", mInfoLog.c_str());
         mCompiled = false;
         return;
     }
 
-    mState.mTranslatedSource = ShGetObjectCode(compilerHandle);
+    mState.mTranslatedSource = sh::GetObjectCode(compilerHandle);
 
 #ifndef NDEBUG
     // Prefix translated shader with commented out un-translated shader.
@@ -301,22 +301,22 @@ void Shader::compile(Compiler *compiler)
 #endif
 
     // Gather the shader information
-    mState.mShaderVersion = ShGetShaderVersion(compilerHandle);
+    mState.mShaderVersion = sh::GetShaderVersion(compilerHandle);
 
-    mState.mVaryings        = GetShaderVariables(ShGetVaryings(compilerHandle));
-    mState.mUniforms        = GetShaderVariables(ShGetUniforms(compilerHandle));
-    mState.mInterfaceBlocks = GetShaderVariables(ShGetInterfaceBlocks(compilerHandle));
+    mState.mVaryings        = GetShaderVariables(sh::GetVaryings(compilerHandle));
+    mState.mUniforms        = GetShaderVariables(sh::GetUniforms(compilerHandle));
+    mState.mInterfaceBlocks = GetShaderVariables(sh::GetInterfaceBlocks(compilerHandle));
 
     switch (mState.mShaderType)
     {
         case GL_COMPUTE_SHADER:
         {
-            mState.mLocalSize = ShGetComputeShaderLocalGroupSize(compilerHandle);
+            mState.mLocalSize = sh::GetComputeShaderLocalGroupSize(compilerHandle);
             break;
         }
         case GL_VERTEX_SHADER:
         {
-            mState.mActiveAttributes = GetActiveShaderVariables(ShGetAttributes(compilerHandle));
+            mState.mActiveAttributes = GetActiveShaderVariables(sh::GetAttributes(compilerHandle));
             break;
         }
         case GL_FRAGMENT_SHADER:
@@ -324,7 +324,7 @@ void Shader::compile(Compiler *compiler)
             // TODO(jmadill): Figure out why we only sort in the FS, and if we need to.
             std::sort(mState.mVaryings.begin(), mState.mVaryings.end(), CompareShaderVar);
             mState.mActiveOutputVariables =
-                GetActiveShaderVariables(ShGetOutputVariables(compilerHandle));
+                GetActiveShaderVariables(sh::GetOutputVariables(compilerHandle));
             break;
         }
         default:

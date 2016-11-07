@@ -24,6 +24,9 @@
 #include "compiler/translator/VariableInfo.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
+namespace sh
+{
+
 class TCompiler;
 #ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
@@ -256,5 +259,7 @@ class TCompiler : public TShHandleBase
 TCompiler* ConstructCompiler(
     sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
 void DeleteCompiler(TCompiler*);
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_COMPILER_H_

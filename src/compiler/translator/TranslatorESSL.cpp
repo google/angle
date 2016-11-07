@@ -11,6 +11,9 @@
 #include "compiler/translator/OutputESSL.h"
 #include "angle_gl.h"
 
+namespace sh
+{
+
 TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_ESSL_OUTPUT)
 {
@@ -107,3 +110,5 @@ void TranslatorESSL::writeExtensionBehavior() {
         }
     }
 }
+
+}  // namespace sh

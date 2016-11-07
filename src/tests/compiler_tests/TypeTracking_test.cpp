@@ -13,26 +13,25 @@
 #include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/TranslatorESSL.h"
 
+using namespace sh;
+
 class TypeTrackingTest : public testing::Test
 {
   public:
     TypeTrackingTest() {}
 
   protected:
-    virtual void SetUp()
+    void SetUp() override
     {
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        InitBuiltInResources(&resources);
         resources.FragmentPrecisionHigh = 1;
 
         mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 
-    virtual void TearDown()
-    {
-        delete mTranslator;
-    }
+    void TearDown() override { delete mTranslator; }
 
     void compile(const std::string& shaderString)
     {

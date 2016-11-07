@@ -49,9 +49,10 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 164
+#define ANGLE_SH_VERSION 165
 
-typedef enum {
+enum ShShaderSpec
+{
     SH_GLES2_SPEC,
     SH_WEBGL_SPEC,
 
@@ -60,10 +61,9 @@ typedef enum {
 
     SH_GLES3_1_SPEC,
     SH_WEBGL3_SPEC,
+};
 
-} ShShaderSpec;
-
-typedef enum
+enum ShShaderOutput
 {
     // ESSL output only supported in some configurations.
     SH_ESSL_OUTPUT = 0x8B45,
@@ -92,11 +92,11 @@ typedef enum
     SH_HLSL_3_0_OUTPUT       = 0x8B48,  // D3D 9
     SH_HLSL_4_1_OUTPUT       = 0x8B49,  // D3D 11
     SH_HLSL_4_0_FL9_3_OUTPUT = 0x8B4A   // D3D 11 feature level 9_3
-} ShShaderOutput;
+};
 
 // Compile options.
 
-typedef uint64_t ShCompileOptions;
+using ShCompileOptions = uint64_t;
 
 const ShCompileOptions SH_VALIDATE                           = 0;
 const ShCompileOptions SH_VALIDATE_LOOP_INDEXING             = UINT64_C(1) << 0;
@@ -226,35 +226,24 @@ const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
 const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1) << 29;
 
 // Defines alternate strategies for implementing array index clamping.
-typedef enum {
-  // Use the clamp intrinsic for array index clamping.
-  SH_CLAMP_WITH_CLAMP_INTRINSIC = 1,
+enum ShArrayIndexClampingStrategy
+{
+    // Use the clamp intrinsic for array index clamping.
+    SH_CLAMP_WITH_CLAMP_INTRINSIC = 1,
 
-  // Use a user-defined function for array index clamping.
-  SH_CLAMP_WITH_USER_DEFINED_INT_CLAMP_FUNCTION
-} ShArrayIndexClampingStrategy;
-
-//
-// Driver must call this first, once, before doing any other
-// compiler operations.
-// If the function succeeds, the return value is true, else false.
-//
-COMPILER_EXPORT bool ShInitialize();
-//
-// Driver should call this at shutdown.
-// If the function succeeds, the return value is true, else false.
-//
-COMPILER_EXPORT bool ShFinalize();
+    // Use a user-defined function for array index clamping.
+    SH_CLAMP_WITH_USER_DEFINED_INT_CLAMP_FUNCTION
+};
 
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
-typedef khronos_uint64_t (*ShHashFunction64)(const char*, size_t);
+using ShHashFunction64 = khronos_uint64_t (*)(const char *, size_t);
 
 //
 // Implementation dependent built-in resources (constants and extensions).
 // The names for these resources has been obtained by stripping gl_/GL_.
 //
-typedef struct
+struct ShBuiltInResources
 {
     // Constants.
     int MaxVertexAttribs;
@@ -386,15 +375,7 @@ typedef struct
 
     // maximum number of buffer object storage in machine units
     int MaxAtomicCounterBufferSize;
-
-} ShBuiltInResources;
-
-//
-// Initialize built-in resources with minimum expected values.
-// Parameters:
-// resources: The object to initialize. Will be comparable with memcmp.
-//
-COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources *resources);
+};
 
 //
 // ShHandle held by but opaque to the driver.  It is allocated,
@@ -403,7 +384,26 @@ COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources *resources);
 //
 // If handle creation fails, 0 will be returned.
 //
-typedef void *ShHandle;
+using ShHandle = void *;
+
+//
+// Driver must call this first, once, before doing any other
+// compiler operations.
+// If the function succeeds, the return value is true, else false.
+//
+COMPILER_EXPORT bool ShInitialize();
+//
+// Driver should call this at shutdown.
+// If the function succeeds, the return value is true, else false.
+//
+COMPILER_EXPORT bool ShFinalize();
+
+//
+// Initialize built-in resources with minimum expected values.
+// Parameters:
+// resources: The object to initialize. Will be comparable with memcmp.
+//
+COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources *resources);
 
 //
 // Returns the a concatenated list of the items in ShBuiltInResources as a
@@ -451,9 +451,9 @@ COMPILER_EXPORT void ShDestruct(ShHandle handle);
 //                            There is no need to specify this parameter when
 //                            compiling for WebGL - it is implied.
 // SH_INTERMEDIATE_TREE: Writes intermediate tree to info log.
-//                       Can be queried by calling ShGetInfoLog().
+//                       Can be queried by calling sh::GetInfoLog().
 // SH_OBJECT_CODE: Translates intermediate tree to glsl or hlsl shader.
-//                 Can be queried by calling ShGetObjectCode().
+//                 Can be queried by calling sh::GetObjectCode().
 // SH_VARIABLES: Extracts attributes, uniforms, and varyings.
 //               Can be queried by calling ShGetVariableInfo().
 //
@@ -503,12 +503,6 @@ COMPILER_EXPORT const std::vector<sh::OutputVariable> *ShGetOutputVariables(cons
 COMPILER_EXPORT const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
 COMPILER_EXPORT sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle);
 
-typedef struct
-{
-    sh::GLenum type;
-    int size;
-} ShVariableInfo;
-
 // Returns true if the passed in variables pack in maxVectors following
 // the packing rules from the GLSL 1.017 spec, Appendix A, section 7.
 // Returns false otherwise. Also look at the SH_ENFORCE_PACKING_RESTRICTIONS
@@ -536,5 +530,147 @@ COMPILER_EXPORT bool ShGetInterfaceBlockRegister(const ShHandle handle,
 // have been extracted from structs.
 COMPILER_EXPORT const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(
     const ShHandle handle);
+
+// Temporary duplicate of the scoped APIs, to be removed when we roll ANGLE and fix Chromium.
+// TODO(jmadill): Consolidate with these APIs once we roll ANGLE.
+
+namespace sh
+{
+
+//
+// Driver must call this first, once, before doing any other compiler operations.
+// If the function succeeds, the return value is true, else false.
+//
+bool Initialize();
+//
+// Driver should call this at shutdown.
+// If the function succeeds, the return value is true, else false.
+//
+bool Finalize();
+
+//
+// Initialize built-in resources with minimum expected values.
+// Parameters:
+// resources: The object to initialize. Will be comparable with memcmp.
+//
+void InitBuiltInResources(ShBuiltInResources *resources);
+
+//
+// Returns the a concatenated list of the items in ShBuiltInResources as a null-terminated string.
+// This function must be updated whenever ShBuiltInResources is changed.
+// Parameters:
+// handle: Specifies the handle of the compiler to be used.
+const std::string &GetBuiltInResourcesString(const ShHandle handle);
+
+//
+// Driver calls these to create and destroy compiler objects.
+//
+// Returns the handle of constructed compiler, null if the requested compiler is not supported.
+// Parameters:
+// type: Specifies the type of shader - GL_FRAGMENT_SHADER or GL_VERTEX_SHADER.
+// spec: Specifies the language spec the compiler must conform to - SH_GLES2_SPEC or SH_WEBGL_SPEC.
+// output: Specifies the output code type - for example SH_ESSL_OUTPUT, SH_GLSL_OUTPUT,
+//         SH_HLSL_3_0_OUTPUT or SH_HLSL_4_1_OUTPUT. Note: Each output type may only
+//         be supported in some configurations.
+// resources: Specifies the built-in resources.
+ShHandle ConstructCompiler(sh::GLenum type,
+                           ShShaderSpec spec,
+                           ShShaderOutput output,
+                           const ShBuiltInResources *resources);
+void Destruct(ShHandle handle);
+
+//
+// Compiles the given shader source.
+// If the function succeeds, the return value is true, else false.
+// Parameters:
+// handle: Specifies the handle of compiler to be used.
+// shaderStrings: Specifies an array of pointers to null-terminated strings containing the shader
+// source code.
+// numStrings: Specifies the number of elements in shaderStrings array.
+// compileOptions: A mask containing the following parameters:
+// SH_VALIDATE: Validates shader to ensure that it conforms to the spec
+//              specified during compiler construction.
+// SH_VALIDATE_LOOP_INDEXING: Validates loop and indexing in the shader to
+//                            ensure that they do not exceed the minimum
+//                            functionality mandated in GLSL 1.0 spec,
+//                            Appendix A, Section 4 and 5.
+//                            There is no need to specify this parameter when
+//                            compiling for WebGL - it is implied.
+// SH_INTERMEDIATE_TREE: Writes intermediate tree to info log.
+//                       Can be queried by calling sh::GetInfoLog().
+// SH_OBJECT_CODE: Translates intermediate tree to glsl or hlsl shader.
+//                 Can be queried by calling sh::GetObjectCode().
+// SH_VARIABLES: Extracts attributes, uniforms, and varyings.
+//               Can be queried by calling ShGetVariableInfo().
+//
+bool Compile(const ShHandle handle,
+             const char *const shaderStrings[],
+             size_t numStrings,
+             ShCompileOptions compileOptions);
+
+// Clears the results from the previous compilation.
+void ClearResults(const ShHandle handle);
+
+// Return the version of the shader language.
+int GetShaderVersion(const ShHandle handle);
+
+// Return the currently set language output type.
+ShShaderOutput GetShaderOutputType(const ShHandle handle);
+
+// Returns null-terminated information log for a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+const std::string &GetInfoLog(const ShHandle handle);
+
+// Returns null-terminated object code for a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+const std::string &GetObjectCode(const ShHandle handle);
+
+// Returns a (original_name, hash) map containing all the user defined names in the shader,
+// including variable names, function names, struct names, and struct field names.
+// Parameters:
+// handle: Specifies the compiler
+const std::map<std::string, std::string> *GetNameHashingMap(const ShHandle handle);
+
+// Shader variable inspection.
+// Returns a pointer to a list of variables of the designated type.
+// (See ShaderVars.h for type definitions, included above)
+// Returns NULL on failure.
+// Parameters:
+// handle: Specifies the compiler
+const std::vector<sh::Uniform> *GetUniforms(const ShHandle handle);
+const std::vector<sh::Varying> *GetVaryings(const ShHandle handle);
+const std::vector<sh::Attribute> *GetAttributes(const ShHandle handle);
+const std::vector<sh::OutputVariable> *GetOutputVariables(const ShHandle handle);
+const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle);
+sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle);
+
+// Returns true if the passed in variables pack in maxVectors followingthe packing rules from the
+// GLSL 1.017 spec, Appendix A, section 7.
+// Returns false otherwise. Also look at the SH_ENFORCE_PACKING_RESTRICTIONS
+// flag above.
+// Parameters:
+// maxVectors: the available rows of registers.
+// variables: an array of variables.
+bool CheckVariablesWithinPackingLimits(int maxVectors,
+                                       const std::vector<sh::ShaderVariable> &variables);
+
+// Gives the compiler-assigned register for an interface block.
+// The method writes the value to the output variable "indexOut".
+// Returns true if it found a valid interface block, false otherwise.
+// Parameters:
+// handle: Specifies the compiler
+// interfaceBlockName: Specifies the interface block
+// indexOut: output variable that stores the assigned register
+bool GetInterfaceBlockRegister(const ShHandle handle,
+                               const std::string &interfaceBlockName,
+                               unsigned int *indexOut);
+
+// Gives a map from uniform names to compiler-assigned registers in the default interface block.
+// Note that the map contains also registers of samplers that have been extracted from structs.
+const std::map<std::string, unsigned int> *GetUniformRegisterMap(const ShHandle handle);
+
+}  // namespace sh
 
 #endif // GLSLANG_SHADERLANG_H_

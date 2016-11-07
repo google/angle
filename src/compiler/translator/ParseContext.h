@@ -36,42 +36,7 @@ class TParseContext : angle::NonCopyable
                   ShCompileOptions options,
                   bool checksPrecErrors,
                   TInfoSink &is,
-                  const ShBuiltInResources &resources)
-        : intermediate(),
-          symbolTable(symt),
-          mDeferredSingleDeclarationErrorCheck(false),
-          mShaderType(type),
-          mShaderSpec(spec),
-          mCompileOptions(options),
-          mShaderVersion(100),
-          mTreeRoot(nullptr),
-          mLoopNestingLevel(0),
-          mStructNestingLevel(0),
-          mSwitchNestingLevel(0),
-          mCurrentFunctionType(nullptr),
-          mFunctionReturnsValue(false),
-          mChecksPrecisionErrors(checksPrecErrors),
-          mFragmentPrecisionHighOnESSL1(false),
-          mDefaultMatrixPacking(EmpColumnMajor),
-          mDefaultBlockStorage(IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
-          mDiagnostics(is),
-          mDirectiveHandler(ext,
-                            mDiagnostics,
-                            mShaderVersion,
-                            mShaderType,
-                            resources.WEBGL_debug_shader_precision == 1),
-          mPreprocessor(&mDiagnostics, &mDirectiveHandler),
-          mScanner(nullptr),
-          mUsesFragData(false),
-          mUsesFragColor(false),
-          mUsesSecondaryOutputs(false),
-          mMinProgramTexelOffset(resources.MinProgramTexelOffset),
-          mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
-          mComputeShaderLocalSizeDeclared(false),
-          mDeclaringFunction(false)
-    {
-        mComputeShaderLocalSize.fill(-1);
-    }
+                  const ShBuiltInResources &resources);
 
     const pp::Preprocessor &getPreprocessor() const { return mPreprocessor; }
     pp::Preprocessor &getPreprocessor() { return mPreprocessor; }

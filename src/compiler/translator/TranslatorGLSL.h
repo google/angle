@@ -9,6 +9,9 @@
 
 #include "compiler/translator/Compiler.h"
 
+namespace sh
+{
+
 class TranslatorGLSL : public TCompiler
 {
   public:
@@ -27,5 +30,7 @@ class TranslatorGLSL : public TCompiler
     void writeExtensionBehavior(TIntermNode *root);
     void conditionallyOutputInvariantDeclaration(const char *builtinVaryingName);
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TRANSLATORGLSL_H_

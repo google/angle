@@ -716,6 +716,6 @@ bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
         default:
             // Other languages not yet supported
             return (outputLanguage == SH_GLSL_COMPATIBILITY_OUTPUT ||
-                    IsGLSL130OrNewer(outputLanguage));
+                    sh::IsGLSL130OrNewer(outputLanguage));
     }
 }
