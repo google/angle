@@ -32,7 +32,8 @@ class ContextState final : public angle::NonCopyable
                  const TextureCapsMap &textureCaps,
                  const Extensions &extensions,
                  const ResourceManager *resourceManager,
-                 const Limitations &limitations);
+                 const Limitations &limitations,
+                 const ResourceMap<Framebuffer> &framebufferMap);
     ~ContextState();
 
     uintptr_t getContext() const { return mContext; }
@@ -60,6 +61,7 @@ class ContextState final : public angle::NonCopyable
     const Extensions &mExtensions;
     const ResourceManager *mResourceManager;
     const Limitations &mLimitations;
+    const ResourceMap<Framebuffer> &mFramebufferMap;
 };
 
 class ValidationContext : angle::NonCopyable
@@ -72,6 +74,7 @@ class ValidationContext : angle::NonCopyable
                       const Extensions &extensions,
                       const ResourceManager *resourceManager,
                       const Limitations &limitations,
+                      const ResourceMap<Framebuffer> &framebufferMap,
                       bool skipValidation);
     virtual ~ValidationContext() {}
 
@@ -94,6 +97,11 @@ class ValidationContext : angle::NonCopyable
 
     Program *getProgram(GLuint handle) const;
     Shader *getShader(GLuint handle) const;
+
+    bool isTextureGenerated(GLuint texture) const;
+    bool isBufferGenerated(GLuint buffer) const;
+    bool isRenderbufferGenerated(GLuint renderbuffer) const;
+    bool isFramebufferGenerated(GLuint framebuffer) const;
 
   protected:
     ContextState mState;

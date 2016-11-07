@@ -36,6 +36,7 @@ class MockValidationContext : public ValidationContext
                           const Extensions &extensions,
                           const ResourceManager *resourceManager,
                           const Limitations &limitations,
+                          const ResourceMap<Framebuffer> &framebufferMap,
                           bool skipValidation);
 
     MOCK_METHOD1(handleError, void(const Error &));
@@ -48,6 +49,7 @@ MockValidationContext::MockValidationContext(const Version &version,
                                              const Extensions &extensions,
                                              const ResourceManager *resourceManager,
                                              const Limitations &limitations,
+                                             const ResourceMap<Framebuffer> &framebufferMap,
                                              bool skipValidation)
     : ValidationContext(version,
                         state,
@@ -56,6 +58,7 @@ MockValidationContext::MockValidationContext(const Version &version,
                         extensions,
                         resourceManager,
                         limitations,
+                        framebufferMap,
                         skipValidation)
 {
 }
@@ -79,6 +82,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     TextureCapsMap textureCaps;
     Extensions extensions;
     Limitations limitations;
+    ResourceMap<Framebuffer> framebufferMap;
 
     // Set some basic caps.
     caps.maxElementIndex     = 100;
@@ -106,7 +110,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setProgram(program);
 
     NiceMock<MockValidationContext> testContext(Version(3, 0), &state, caps, textureCaps,
-                                                extensions, nullptr, limitations, false);
+                                                extensions, nullptr, limitations, framebufferMap,
+                                                false);
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);

@@ -354,6 +354,13 @@ bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name
 
 bool ValidateActiveTexture(ValidationContext *context, GLenum texture);
 bool ValidateAttachShader(ValidationContext *context, GLuint program, GLuint shader);
+bool ValidateBindAttribLocation(ValidationContext *context,
+                                GLuint program,
+                                GLuint index,
+                                const GLchar *name);
+bool ValidateBindBuffer(ValidationContext *context, GLenum target, GLuint buffer);
+bool ValidateBindFramebuffer(ValidationContext *context, GLenum target, GLuint framebuffer);
+bool ValidateBindRenderbuffer(ValidationContext *context, GLenum target, GLuint renderbuffer);
 
 }  // namespace gl
 

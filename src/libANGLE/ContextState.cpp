@@ -21,7 +21,8 @@ ContextState::ContextState(uintptr_t contextIn,
                            const TextureCapsMap &textureCapsIn,
                            const Extensions &extensionsIn,
                            const ResourceManager *resourceManagerIn,
-                           const Limitations &limitationsIn)
+                           const Limitations &limitationsIn,
+                           const ResourceMap<Framebuffer> &framebufferMap)
     : mClientVersion(clientVersion),
       mContext(contextIn),
       mState(stateIn),
@@ -29,7 +30,8 @@ ContextState::ContextState(uintptr_t contextIn,
       mTextureCaps(textureCapsIn),
       mExtensions(extensionsIn),
       mResourceManager(resourceManagerIn),
-      mLimitations(limitationsIn)
+      mLimitations(limitationsIn),
+      mFramebufferMap(framebufferMap)
 {
 }
 
@@ -49,6 +51,7 @@ ValidationContext::ValidationContext(const Version &clientVersion,
                                      const Extensions &extensions,
                                      const ResourceManager *resourceManager,
                                      const Limitations &limitations,
+                                     const ResourceMap<Framebuffer> &framebufferMap,
                                      bool skipValidation)
     : mState(reinterpret_cast<uintptr_t>(this),
              clientVersion,
@@ -57,7 +60,8 @@ ValidationContext::ValidationContext(const Version &clientVersion,
              textureCaps,
              extensions,
              resourceManager,
-             limitations),
+             limitations,
+             framebufferMap),
       mSkipValidation(skipValidation)
 {
 }
@@ -588,6 +592,27 @@ Program *ValidationContext::getProgram(GLuint handle) const
 Shader *ValidationContext::getShader(GLuint handle) const
 {
     return mState.mResourceManager->getShader(handle);
+}
+
+bool ValidationContext::isTextureGenerated(GLuint texture) const
+{
+    return mState.mResourceManager->isTextureGenerated(texture);
+}
+
+bool ValidationContext::isBufferGenerated(GLuint buffer) const
+{
+    return mState.mResourceManager->isBufferGenerated(buffer);
+}
+
+bool ValidationContext::isRenderbufferGenerated(GLuint renderbuffer) const
+{
+    return mState.mResourceManager->isRenderbufferGenerated(renderbuffer);
+}
+
+bool ValidationContext::isFramebufferGenerated(GLuint framebuffer) const
+{
+    ASSERT(mState.mFramebufferMap.find(0) != mState.mFramebufferMap.end());
+    return mState.mFramebufferMap.find(framebuffer) != mState.mFramebufferMap.end();
 }
 
 }  // namespace gl

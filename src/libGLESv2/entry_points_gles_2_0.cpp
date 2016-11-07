@@ -76,26 +76,13 @@ void GL_APIENTRY BindAttribLocation(GLuint program, GLuint index, const GLchar* 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateBindAttribLocation(context, program, index, name))
         {
             return;
         }
 
-        if (strncmp(name, "gl_", 3) == 0)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        programObject->bindAttributeLocation(index, name);
+        context->bindAttribLocation(program, index, name);
     }
 }
 
@@ -106,50 +93,12 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidBufferTarget(context, target))
+        if (!context->skipValidation() && !ValidateBindBuffer(context, target, buffer))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-            !context->isBufferGenerated(buffer))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Buffer was not generated"));
-            return;
-        }
-
-        switch (target)
-        {
-          case GL_ARRAY_BUFFER:
-            context->bindArrayBuffer(buffer);
-            return;
-          case GL_ELEMENT_ARRAY_BUFFER:
-            context->bindElementArrayBuffer(buffer);
-            return;
-          case GL_COPY_READ_BUFFER:
-            context->bindCopyReadBuffer(buffer);
-            return;
-          case GL_COPY_WRITE_BUFFER:
-            context->bindCopyWriteBuffer(buffer);
-            return;
-          case GL_PIXEL_PACK_BUFFER:
-            context->bindPixelPackBuffer(buffer);
-            return;
-          case GL_PIXEL_UNPACK_BUFFER:
-            context->bindPixelUnpackBuffer(buffer);
-            return;
-          case GL_UNIFORM_BUFFER:
-            context->bindGenericUniformBuffer(buffer);
-            return;
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            context->bindGenericTransformFeedbackBuffer(buffer);
-            return;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
+        context->bindBuffer(target, buffer);
     }
 }
 
@@ -160,28 +109,12 @@ void GL_APIENTRY BindFramebuffer(GLenum target, GLuint framebuffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidFramebufferTarget(target))
+        if (!context->skipValidation() && !ValidateBindFramebuffer(context, target, framebuffer))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-            !context->isFramebufferGenerated(framebuffer))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Framebuffer was not generated"));
-            return;
-        }
-
-        if (target == GL_READ_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
-        {
-            context->bindReadFramebuffer(framebuffer);
-        }
-
-        if (target == GL_DRAW_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
-        {
-            context->bindDrawFramebuffer(framebuffer);
-        }
+        context->bindFramebuffer(target, framebuffer);
     }
 }
 
@@ -192,20 +125,12 @@ void GL_APIENTRY BindRenderbuffer(GLenum target, GLuint renderbuffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (target != GL_RENDERBUFFER)
+        if (!context->skipValidation() && !ValidateBindRenderbuffer(context, target, renderbuffer))
         {
-            context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
-        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-            !context->isRenderbufferGenerated(renderbuffer))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Renderbuffer was not generated"));
-            return;
-        }
-
-        context->bindRenderbuffer(renderbuffer);
+        context->bindRenderbuffer(target, renderbuffer);
     }
 }
 
@@ -216,7 +141,7 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBindTexture(context, target, texture))
+        if (!context->skipValidation() && !ValidateBindTexture(context, target, texture))
         {
             return;
         }

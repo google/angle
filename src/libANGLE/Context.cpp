@@ -245,6 +245,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                         mExtensions,
                         nullptr,
                         mLimitations,
+                        mFramebufferMap,
                         GetNoError(attribs)),
       mImplementation(implFactory->createContext(mState)),
       mCompiler(nullptr),
@@ -319,7 +320,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     bindArrayBuffer(0);
     bindElementArrayBuffer(0);
 
-    bindRenderbuffer(0);
+    bindRenderbuffer(GL_RENDERBUFFER, 0);
 
     bindGenericUniformBuffer(0);
     for (unsigned int i = 0; i < mCaps.maxCombinedUniformBlocks; i++)
@@ -983,13 +984,6 @@ void Context::bindDrawFramebuffer(GLuint framebufferHandle)
 {
     Framebuffer *framebuffer = checkFramebufferAllocation(framebufferHandle);
     mGLState.setDrawFramebufferBinding(framebuffer);
-}
-
-void Context::bindRenderbuffer(GLuint renderbufferHandle)
-{
-    Renderbuffer *renderbuffer =
-        mResourceManager->checkRenderbufferAllocation(mImplementation.get(), renderbufferHandle);
-    mGLState.setRenderbufferBinding(renderbuffer);
 }
 
 void Context::bindVertexArray(GLuint vertexArrayHandle)
@@ -2094,27 +2088,6 @@ Framebuffer *Context::checkFramebufferAllocation(GLuint framebuffer)
     }
 
     return framebufferIt->second;
-}
-
-bool Context::isTextureGenerated(GLuint texture) const
-{
-    return mResourceManager->isTextureGenerated(texture);
-}
-
-bool Context::isBufferGenerated(GLuint buffer) const
-{
-    return mResourceManager->isBufferGenerated(buffer);
-}
-
-bool Context::isRenderbufferGenerated(GLuint renderbuffer) const
-{
-    return mResourceManager->isRenderbufferGenerated(renderbuffer);
-}
-
-bool Context::isFramebufferGenerated(GLuint framebuffer) const
-{
-    ASSERT(mFramebufferMap.find(0) != mFramebufferMap.end());
-    return mFramebufferMap.find(framebuffer) != mFramebufferMap.end();
 }
 
 bool Context::isVertexArrayGenerated(GLuint vertexArray)
@@ -3541,6 +3514,70 @@ void Context::copyBufferSubData(GLenum readTarget,
     Buffer *writeBuffer = mGLState.getTargetBuffer(writeTarget);
 
     handleError(writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size));
+}
+
+void Context::bindAttribLocation(GLuint program, GLuint index, const GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    // TODO(jmadill): Re-use this from the validation if possible.
+    ASSERT(programObject);
+    programObject->bindAttributeLocation(index, name);
+}
+
+void Context::bindBuffer(GLenum target, GLuint buffer)
+{
+    switch (target)
+    {
+        case GL_ARRAY_BUFFER:
+            bindArrayBuffer(buffer);
+            break;
+        case GL_ELEMENT_ARRAY_BUFFER:
+            bindElementArrayBuffer(buffer);
+            break;
+        case GL_COPY_READ_BUFFER:
+            bindCopyReadBuffer(buffer);
+            break;
+        case GL_COPY_WRITE_BUFFER:
+            bindCopyWriteBuffer(buffer);
+            break;
+        case GL_PIXEL_PACK_BUFFER:
+            bindPixelPackBuffer(buffer);
+            break;
+        case GL_PIXEL_UNPACK_BUFFER:
+            bindPixelUnpackBuffer(buffer);
+            break;
+        case GL_UNIFORM_BUFFER:
+            bindGenericUniformBuffer(buffer);
+            break;
+        case GL_TRANSFORM_FEEDBACK_BUFFER:
+            bindGenericTransformFeedbackBuffer(buffer);
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void Context::bindFramebuffer(GLenum target, GLuint framebuffer)
+{
+    if (target == GL_READ_FRAMEBUFFER || target == GL_FRAMEBUFFER)
+    {
+        bindReadFramebuffer(framebuffer);
+    }
+
+    if (target == GL_DRAW_FRAMEBUFFER || target == GL_FRAMEBUFFER)
+    {
+        bindDrawFramebuffer(framebuffer);
+    }
+}
+
+void Context::bindRenderbuffer(GLenum target, GLuint renderbuffer)
+{
+    ASSERT(target == GL_RENDERBUFFER);
+    Renderbuffer *object =
+        mResourceManager->checkRenderbufferAllocation(mImplementation.get(), renderbuffer);
+    mGLState.setRenderbufferBinding(object);
 }
 
 }  // namespace gl

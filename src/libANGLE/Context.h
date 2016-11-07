@@ -125,7 +125,6 @@ class Context final : public ValidationContext
     void bindTexture(GLenum target, GLuint handle);
     void bindReadFramebuffer(GLuint framebufferHandle);
     void bindDrawFramebuffer(GLuint framebufferHandle);
-    void bindRenderbuffer(GLuint renderbufferHandle);
     void bindVertexArray(GLuint vertexArrayHandle);
     void bindSampler(GLuint textureUnit, GLuint samplerHandle);
     void bindGenericUniformBuffer(GLuint bufferHandle);
@@ -193,10 +192,6 @@ class Context final : public ValidationContext
 
     bool isSampler(GLuint samplerName) const;
 
-    bool isTextureGenerated(GLuint texture) const;
-    bool isBufferGenerated(GLuint buffer) const;
-    bool isRenderbufferGenerated(GLuint renderbuffer) const;
-    bool isFramebufferGenerated(GLuint framebuffer) const;
     bool isVertexArrayGenerated(GLuint vertexArray);
     bool isTransformFeedbackGenerated(GLuint vertexArray);
 
@@ -579,6 +574,10 @@ class Context final : public ValidationContext
     void bufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage);
     void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
     void attachShader(GLuint program, GLuint shader);
+    void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);
+    void bindBuffer(GLenum target, GLuint buffer);
+    void bindFramebuffer(GLenum target, GLuint framebuffer);
+    void bindRenderbuffer(GLenum target, GLuint renderbuffer);
 
     void copyBufferSubData(GLenum readTarget,
                            GLenum writeTarget,
