@@ -12,6 +12,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 IntermNodePatternMatcher::IntermNodePatternMatcher(const unsigned int mask) : mMask(mask)
 {
 }
@@ -102,3 +105,5 @@ bool IntermNodePatternMatcher::match(TIntermTernary *node)
     }
     return false;
 }
+
+}  // namespace sh

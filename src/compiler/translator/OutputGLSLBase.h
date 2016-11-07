@@ -13,6 +13,9 @@
 #include "compiler/translator/LoopInfo.h"
 #include "compiler/translator/ParseContext.h"
 
+namespace sh
+{
+
 class TOutputGLSLBase : public TIntermTraverser
 {
   public:
@@ -102,5 +105,7 @@ class TOutputGLSLBase : public TIntermTraverser
 
     ShCompileOptions mCompileOptions;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_

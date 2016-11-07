@@ -15,6 +15,9 @@
 #include "compiler/translator/Intermediate.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 ////////////////////////////////////////////////////////////////////////////
 //
 // First set of functions are to help build the intermediate representation.
@@ -380,3 +383,5 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate,
             return nullptr;
     }
 }
+
+}  // namespace sh

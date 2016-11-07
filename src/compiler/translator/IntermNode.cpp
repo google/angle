@@ -23,6 +23,9 @@
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -2876,3 +2879,5 @@ void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
     bool originalBecomesChild = (originalStatus == OriginalNode::BECOMES_CHILD);
     mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, originalBecomesChild));
 }
+
+}  // namespace sh

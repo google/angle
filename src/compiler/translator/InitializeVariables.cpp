@@ -11,6 +11,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/util.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -103,3 +106,5 @@ void InitializeVariables(TIntermNode *root, const InitVariableList &vars)
     VariableInitializer initializer(vars);
     root->traverse(&initializer);
 }
+
+}  // namespace sh

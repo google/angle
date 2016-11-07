@@ -9,6 +9,9 @@
 
 #include "compiler/translator/OutputGLSLBase.h"
 
+namespace sh
+{
+
 class TOutputESSL : public TOutputGLSLBase
 {
 public:
@@ -27,5 +30,7 @@ protected:
 private:
     bool mForceHighp;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTESSL_H_

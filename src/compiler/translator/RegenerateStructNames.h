@@ -12,6 +12,9 @@
 
 #include <set>
 
+namespace sh
+{
+
 class RegenerateStructNames : public TIntermTraverser
 {
   public:
@@ -37,5 +40,7 @@ class RegenerateStructNames : public TIntermTraverser
     // If a struct's declared globally, push its ID in this set.
     std::set<int> mDeclaredGlobalStructs;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_REGENERATESTRUCTNAMES_H_

@@ -12,50 +12,6 @@
 
 namespace sh
 {
-TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
-                                      TLayoutQualifier rightQualifier,
-                                      const TSourceLoc &rightQualifierLocation,
-                                      TDiagnostics *diagnostics)
-{
-    TLayoutQualifier joinedQualifier = leftQualifier;
-
-    if (rightQualifier.location != -1)
-    {
-        joinedQualifier.location = rightQualifier.location;
-        ++joinedQualifier.locationsSpecified;
-    }
-    if (rightQualifier.matrixPacking != EmpUnspecified)
-    {
-        joinedQualifier.matrixPacking = rightQualifier.matrixPacking;
-    }
-    if (rightQualifier.blockStorage != EbsUnspecified)
-    {
-        joinedQualifier.blockStorage = rightQualifier.blockStorage;
-    }
-
-    for (size_t i = 0u; i < rightQualifier.localSize.size(); ++i)
-    {
-        if (rightQualifier.localSize[i] != -1)
-        {
-            if (joinedQualifier.localSize[i] != -1 &&
-                joinedQualifier.localSize[i] != rightQualifier.localSize[i])
-            {
-                diagnostics->error(rightQualifierLocation,
-                                   "Cannot have multiple different work group size specifiers",
-                                   getWorkGroupSizeString(i), "");
-            }
-            joinedQualifier.localSize[i] = rightQualifier.localSize[i];
-        }
-    }
-
-    if (rightQualifier.imageInternalFormat != EiifUnspecified)
-    {
-        joinedQualifier.imageInternalFormat = rightQualifier.imageInternalFormat;
-    }
-
-    return joinedQualifier;
-}
-}  // namespace sh
 
 namespace
 {
@@ -580,6 +536,50 @@ TTypeQualifier GetParameterTypeQualifierFromSortedSequence(
 }
 }  // namespace
 
+TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
+                                      TLayoutQualifier rightQualifier,
+                                      const TSourceLoc &rightQualifierLocation,
+                                      TDiagnostics *diagnostics)
+{
+    TLayoutQualifier joinedQualifier = leftQualifier;
+
+    if (rightQualifier.location != -1)
+    {
+        joinedQualifier.location = rightQualifier.location;
+        ++joinedQualifier.locationsSpecified;
+    }
+    if (rightQualifier.matrixPacking != EmpUnspecified)
+    {
+        joinedQualifier.matrixPacking = rightQualifier.matrixPacking;
+    }
+    if (rightQualifier.blockStorage != EbsUnspecified)
+    {
+        joinedQualifier.blockStorage = rightQualifier.blockStorage;
+    }
+
+    for (size_t i = 0u; i < rightQualifier.localSize.size(); ++i)
+    {
+        if (rightQualifier.localSize[i] != -1)
+        {
+            if (joinedQualifier.localSize[i] != -1 &&
+                joinedQualifier.localSize[i] != rightQualifier.localSize[i])
+            {
+                diagnostics->error(rightQualifierLocation,
+                                   "Cannot have multiple different work group size specifiers",
+                                   getWorkGroupSizeString(i), "");
+            }
+            joinedQualifier.localSize[i] = rightQualifier.localSize[i];
+        }
+    }
+
+    if (rightQualifier.imageInternalFormat != EiifUnspecified)
+    {
+        joinedQualifier.imageInternalFormat = rightQualifier.imageInternalFormat;
+    }
+
+    return joinedQualifier;
+}
+
 unsigned int TInvariantQualifierWrapper::getRank() const
 {
     return 0u;
@@ -711,3 +711,5 @@ TTypeQualifier TTypeQualifierBuilder::getVariableTypeQualifier(TDiagnostics *dia
     }
     return GetVariableTypeQualifierFromSortedSequence(mQualifiers, diagnostics);
 }
+
+}  // namespace sh

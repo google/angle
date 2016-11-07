@@ -9,6 +9,8 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
 class TParseContext;
 
 class ValidateSwitch : public TIntermTraverser
@@ -51,5 +53,7 @@ class ValidateSwitch : public TIntermTraverser
     std::set<unsigned int> mCasesUnsigned;
     bool mDuplicateCases;
 };
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_VALIDATESWITCH_H_

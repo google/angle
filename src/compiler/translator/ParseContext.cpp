@@ -16,6 +16,9 @@
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/util.h"
 
+namespace sh
+{
+
 ///////////////////////////////////////////////////////////////////////
 //
 // Sub- vector and matrix fields
@@ -4454,3 +4457,5 @@ int PaParseStrings(size_t count,
 
     return (error == 0) && (context->numErrors() == 0) ? 0 : 1;
 }
+
+}  // namespace sh

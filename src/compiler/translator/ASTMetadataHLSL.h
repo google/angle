@@ -12,6 +12,9 @@
 #include <set>
 #include <vector>
 
+namespace sh
+{
+
 class CallDAG;
 class TIntermNode;
 class TIntermIfElse;
@@ -54,5 +57,7 @@ typedef std::vector<ASTMetadataHLSL> MetadataList;
 
 // Return the AST analysis result, in the order defined by the call DAG
 MetadataList CreateASTMetadataHLSL(TIntermNode *root, const CallDAG &callDag);
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_ASTMETADATAHLSL_H_

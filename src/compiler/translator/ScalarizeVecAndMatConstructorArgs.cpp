@@ -17,6 +17,9 @@
 #include "common/angleutils.h"
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -299,3 +302,5 @@ void ScalarizeVecAndMatConstructorArgs(TIntermBlock *root,
     ScalarizeArgsTraverser scalarizer(shaderType, fragmentPrecisionHigh, temporaryIndex);
     root->traverse(&scalarizer);
 }
+
+}  // namespace sh

@@ -13,6 +13,9 @@
 #include "common/debug.h"
 #include "GLSLANG/ShaderLang.h"
 
+namespace sh
+{
+
 //
 // Precision qualifiers
 //
@@ -758,5 +761,7 @@ inline const char *getImageInternalFormatString(TLayoutImageInternalFormat iifq)
             return "unknown internal image format";
     }
 }
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_BASETYPES_H_

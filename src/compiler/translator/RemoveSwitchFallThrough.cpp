@@ -6,6 +6,9 @@
 
 #include "compiler/translator/RemoveSwitchFallThrough.h"
 
+namespace sh
+{
+
 TIntermBlock *RemoveSwitchFallThrough::removeFallThrough(TIntermBlock *statementList)
 {
     RemoveSwitchFallThrough rm(statementList);
@@ -167,3 +170,5 @@ bool RemoveSwitchFallThrough::visitBranch(Visit, TIntermBranch *node)
     mLastStatementWasBreak = true;
     return false;
 }
+
+}  // namespace sh

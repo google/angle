@@ -11,6 +11,9 @@
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/VersionGLSL.h"
 
+namespace sh
+{
+
 void InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu,
                                                       sh::GLenum shaderType)
 {
@@ -248,3 +251,5 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
         // clang-format on
     }
 }
+
+}  // namespace sh

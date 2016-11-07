@@ -10,6 +10,9 @@
 #include "compiler/translator/ParseContext.h"
 #include "angle_gl.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -496,3 +499,4 @@ bool ValidateLimitations::validateIndexing(TIntermBinary *node)
     return valid;
 }
 
+}  // namespace sh

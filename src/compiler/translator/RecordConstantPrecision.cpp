@@ -18,6 +18,9 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -160,3 +163,5 @@ void RecordConstantPrecision(TIntermNode *root, unsigned int *temporaryIndex)
     }
     while (traverser.foundHigherPrecisionConstant());
 }
+
+}  // namespace sh

@@ -11,15 +11,14 @@
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Types.h"
 
-class TDiagnostics;
-
 namespace sh
 {
+class TDiagnostics;
+
 TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
                                       TLayoutQualifier rightQualifier,
                                       const TSourceLoc &rightQualifierLocation,
                                       TDiagnostics *diagnostics);
-}  // namespace sh
 
 enum TQualifierType
 {
@@ -66,7 +65,7 @@ class TInterpolationQualifierWrapper final : public TQualifierWrapperBase
     ~TInterpolationQualifierWrapper() {}
 
     TQualifierType getType() const { return QtInterpolation; }
-    TString getQualifierString() const { return ::getQualifierString(mInterpolationQualifier); }
+    TString getQualifierString() const { return sh::getQualifierString(mInterpolationQualifier); }
     TQualifier getQualifier() const { return mInterpolationQualifier; }
     unsigned int getRank() const;
 
@@ -102,7 +101,7 @@ class TStorageQualifierWrapper final : public TQualifierWrapperBase
     ~TStorageQualifierWrapper() {}
 
     TQualifierType getType() const { return QtStorage; }
-    TString getQualifierString() const { return ::getQualifierString(mStorageQualifier); }
+    TString getQualifierString() const { return sh::getQualifierString(mStorageQualifier); }
     TQualifier getQualifier() const { return mStorageQualifier; }
     unsigned int getRank() const;
 
@@ -120,7 +119,7 @@ class TPrecisionQualifierWrapper final : public TQualifierWrapperBase
     ~TPrecisionQualifierWrapper() {}
 
     TQualifierType getType() const { return QtPrecision; }
-    TString getQualifierString() const { return ::getPrecisionString(mPrecisionQualifier); }
+    TString getQualifierString() const { return sh::getPrecisionString(mPrecisionQualifier); }
     TPrecision getQualifier() const { return mPrecisionQualifier; }
     unsigned int getRank() const;
 
@@ -138,7 +137,7 @@ class TMemoryQualifierWrapper final : public TQualifierWrapperBase
     ~TMemoryQualifierWrapper() {}
 
     TQualifierType getType() const { return QtMemory; }
-    TString getQualifierString() const { return ::getQualifierString(mMemoryQualifier); }
+    TString getQualifierString() const { return sh::getQualifierString(mMemoryQualifier); }
     TQualifier getQualifier() const { return mMemoryQualifier; }
     unsigned int getRank() const;
 
@@ -186,5 +185,7 @@ class TTypeQualifierBuilder : angle::NonCopyable
     QualifierSequence mQualifiers;
     int mShaderVersion;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_QUALIFIER_TYPES_H_

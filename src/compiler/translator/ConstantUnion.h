@@ -12,6 +12,9 @@
 #include "compiler/translator/Common.h"
 #include "compiler/translator/BaseTypes.h"
 
+namespace sh
+{
+
 class TDiagnostics;
 
 class TConstantUnion
@@ -82,5 +85,7 @@ class TConstantUnion
 
     TBasicType type;
 };
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_CONSTANTUNION_H_

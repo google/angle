@@ -14,6 +14,9 @@
 #include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -506,3 +509,5 @@ void RemoveDynamicIndexing(TIntermNode *root,
     traverser.insertHelperDefinitions(root);
     traverser.updateTree();
 }
+
+}  // namespace sh

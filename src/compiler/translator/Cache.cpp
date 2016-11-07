@@ -12,6 +12,9 @@
 #include "common/debug.h"
 #include "compiler/translator/Cache.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -97,3 +100,5 @@ const TType *TCache::getType(TBasicType basicType,
 
     return type;
 }
+
+}  // namespace sh

@@ -15,6 +15,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -187,3 +190,5 @@ void DeferGlobalInitializers(TIntermBlock *root)
     // Add the function with initialization and the call to that.
     traverser.insertInitFunction(root);
 }
+
+}  // namespace sh

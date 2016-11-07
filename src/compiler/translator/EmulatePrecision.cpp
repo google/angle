@@ -8,6 +8,9 @@
 
 #include <memory>
 
+namespace sh
+{
+
 namespace
 {
 
@@ -719,3 +722,5 @@ bool EmulatePrecision::SupportedInLanguage(const ShShaderOutput outputLanguage)
                     sh::IsGLSL130OrNewer(outputLanguage));
     }
 }
+
+}  // namespace sh

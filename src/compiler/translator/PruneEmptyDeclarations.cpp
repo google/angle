@@ -9,6 +9,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -106,3 +109,5 @@ void PruneEmptyDeclarations(TIntermNode *root)
 {
     PruneEmptyDeclarationsTraverser::apply(root);
 }
+
+}  // namespace sh

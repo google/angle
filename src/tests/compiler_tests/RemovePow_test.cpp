@@ -13,6 +13,8 @@
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/TranslatorGLSL.h"
 
+using namespace sh;
+
 class RemovePowTest : public testing::Test
 {
   public:

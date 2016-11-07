@@ -11,6 +11,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -152,3 +155,5 @@ void RewriteDoWhile(TIntermNode *root, unsigned int *temporaryIndex)
 
     root->traverse(&rewriter);
 }
+
+}  // namespace sh

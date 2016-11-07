@@ -9,6 +9,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 struct TVectorFields
 {
     int offsets[4];
@@ -70,5 +73,7 @@ class TIntermediate
   private:
     void operator=(TIntermediate &); // prevent assignments
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_INTERMEDIATE_H_

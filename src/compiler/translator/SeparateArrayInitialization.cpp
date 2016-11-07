@@ -20,6 +20,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/OutputHLSL.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -84,3 +87,5 @@ void SeparateArrayInitialization(TIntermNode *root)
 {
     SeparateArrayInitTraverser::apply(root);
 }
+
+}  // namespace sh

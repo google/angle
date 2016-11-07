@@ -9,6 +9,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 class RemoveSwitchFallThrough : public TIntermTraverser
 {
   public:
@@ -41,5 +44,7 @@ class RemoveSwitchFallThrough : public TIntermTraverser
     TIntermBlock *mPreviousCase;
     std::vector<TIntermBlock *> mCasesSharingBreak;
 };
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_REMOVESWITCHFALLTHROUGH_H_

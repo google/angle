@@ -13,6 +13,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -180,3 +183,5 @@ void UnfoldShortCircuitToIf(TIntermNode *root, unsigned int *temporaryIndex)
     }
     while (traverser.foundShortCircuit());
 }
+
+}  // namespace sh

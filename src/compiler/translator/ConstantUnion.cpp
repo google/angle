@@ -11,6 +11,9 @@
 #include "common/mathutil.h"
 #include "compiler/translator/Diagnostics.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -620,3 +623,5 @@ TConstantUnion TConstantUnion::operator||(const TConstantUnion &constant) const
 
     return returnValue;
 }
+
+}  // namespace sh

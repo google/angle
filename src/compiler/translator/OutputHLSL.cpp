@@ -28,6 +28,9 @@
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/util.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -71,9 +74,6 @@ const TConstantUnion *WriteConstantUnionArray(TInfoSinkBase &out,
 }
 
 } // namespace
-
-namespace sh
-{
 
 OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        int shaderVersion,
@@ -2854,6 +2854,4 @@ void OutputHLSL::ensureStructDefined(const TType &type)
     }
 }
 
-
-
-}
+}  // namespace sh

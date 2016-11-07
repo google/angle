@@ -8,6 +8,9 @@
 
 #include "compiler/translator/ParseContext.h"
 
+namespace sh
+{
+
 bool ValidateSwitch::validate(TBasicType switchType,
                               TParseContext *context,
                               TIntermBlock *statementList,
@@ -208,3 +211,5 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
     return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
         !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases;
 }
+
+}  // namespace sh

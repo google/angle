@@ -13,11 +13,14 @@
 
 #include "GLSLANG/ShaderLang.h"
 
+namespace sh
+{
 class TIntermBlock;
 
 void ScalarizeVecAndMatConstructorArgs(TIntermBlock *root,
                                        sh::GLenum shaderType,
                                        bool fragmentPrecisionHigh,
                                        unsigned int *temporaryIndex);
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_SCALARIZEVECANDMATCONSTRUCTORARGS_H_

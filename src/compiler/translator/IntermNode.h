@@ -27,6 +27,9 @@
 #include "compiler/translator/Operator.h"
 #include "compiler/translator/Types.h"
 
+namespace sh
+{
+
 class TDiagnostics;
 
 class TIntermTraverser;
@@ -1198,5 +1201,7 @@ class TMaxDepthTraverser : public TIntermTraverser
 
     int mDepthLimit;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_INTERMNODE_H_

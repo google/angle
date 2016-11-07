@@ -214,14 +214,14 @@ union YYSTYPE
     struct {
         TOperator op;
         union {
-            TIntermNode* intermNode;
+            TIntermNode *intermNode;
             TIntermNodePair nodePair;
-            TIntermTyped* intermTypedNode;
-            TIntermAggregate* intermAggregate;
+            TIntermTyped *intermTypedNode;
+            TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
             TIntermDeclaration *intermDeclaration;
-            TIntermSwitch* intermSwitch;
-            TIntermCase* intermCase;
+            TIntermSwitch *intermSwitch;
+            TIntermCase *intermCase;
         };
         union {
             TTypeSpecifierNonArray typeSpecifierNonArray;
@@ -229,10 +229,10 @@ union YYSTYPE
             TPrecision precision;
             TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
-            TFunction* function;
+            TFunction *function;
             TParameter param;
-            TField* field;
-            TFieldList* fieldList;
+            TField *field;
+            TFieldList *fieldList;
             TQualifierWrapperBase *qualifierWrapper;
             TTypeQualifierBuilder *typeQualifierBuilder;
         };

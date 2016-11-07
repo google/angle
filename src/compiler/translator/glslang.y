@@ -46,6 +46,8 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 
 #define YYENABLE_NLS 0
 
+using namespace sh;
+
 %}
 %expect 1 /* One shift reduce conflict because of if | else */
 %parse-param {TParseContext* context}
@@ -72,14 +74,14 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
     struct {
         TOperator op;
         union {
-            TIntermNode* intermNode;
+            TIntermNode *intermNode;
             TIntermNodePair nodePair;
-            TIntermTyped* intermTypedNode;
-            TIntermAggregate* intermAggregate;
-            TIntermBlock* intermBlock;
-            TIntermDeclaration* intermDeclaration;
-            TIntermSwitch* intermSwitch;
-            TIntermCase* intermCase;
+            TIntermTyped *intermTypedNode;
+            TIntermAggregate *intermAggregate;
+            TIntermBlock *intermBlock;
+            TIntermDeclaration *intermDeclaration;
+            TIntermSwitch *intermSwitch;
+            TIntermCase *intermCase;
         };
         union {
             TTypeSpecifierNonArray typeSpecifierNonArray;
@@ -87,12 +89,12 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TPrecision precision;
             TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
-            TFunction* function;
+            TFunction *function;
             TParameter param;
-            TField* field;
-            TFieldList* fieldList;
-            TQualifierWrapperBase* qualifierWrapper;
-            TTypeQualifierBuilder* typeQualifierBuilder;
+            TField *field;
+            TFieldList *fieldList;
+            TQualifierWrapperBase *qualifierWrapper;
+            TTypeQualifierBuilder *typeQualifierBuilder;
         };
     } interm;
 }

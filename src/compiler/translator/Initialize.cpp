@@ -16,6 +16,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "angle_gl.h"
 
+namespace sh
+{
+
 void InsertBuiltInFunctions(sh::GLenum type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &symbolTable)
 {
     const TType *voidType = TCache::getType(EbtVoid);
@@ -755,3 +758,5 @@ void ResetExtensionBehavior(TExtensionBehavior &extBehavior)
         ext_iter->second = EBhUndefined;
     }
 }
+
+}  // namespace sh

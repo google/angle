@@ -7,6 +7,9 @@
 #include "common/debug.h"
 #include "compiler/translator/RegenerateStructNames.h"
 
+namespace sh
+{
+
 void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol);
@@ -69,3 +72,5 @@ bool RegenerateStructNames::visitBlock(Visit, TIntermBlock *block)
     --mScopeDepth;
     return false;
 }
+
+}  // namespace sh

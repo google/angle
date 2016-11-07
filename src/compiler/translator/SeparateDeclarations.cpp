@@ -17,6 +17,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -71,3 +74,5 @@ void SeparateDeclarations(TIntermNode *root)
 {
     SeparateDeclarationsTraverser::apply(root);
 }
+
+}  // namespace sh

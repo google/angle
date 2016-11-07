@@ -14,6 +14,9 @@
 #include "compiler/translator/QualifierTypes.h"
 #include "compiler/preprocessor/Preprocessor.h"
 
+namespace sh
+{
+
 struct TMatrixFields
 {
     bool wholeRow;
@@ -429,5 +432,7 @@ class TParseContext : angle::NonCopyable
 
 int PaParseStrings(
     size_t count, const char *const string[], const int length[], TParseContext *context);
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_PARSECONTEXT_H_

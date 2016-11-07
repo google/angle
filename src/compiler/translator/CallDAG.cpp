@@ -11,6 +11,9 @@
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/InfoSink.h"
 
+namespace sh
+{
+
 // The CallDAGCreator does all the processing required to create the CallDAG
 // structure so that the latter contains only the necessary variables.
 class CallDAG::CallDAGCreator : public TIntermTraverser
@@ -341,3 +344,5 @@ CallDAG::InitResult CallDAG::init(TIntermNode *root, TInfoSinkBase *info)
     creator.fillDataStructures(&mRecords, &mFunctionIdToIndex);
     return INITDAG_SUCCESS;
 }
+
+}  // namespace sh

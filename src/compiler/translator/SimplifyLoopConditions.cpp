@@ -13,6 +13,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -278,3 +281,5 @@ void SimplifyLoopConditions(TIntermNode *root,
             traverser.updateTree();
     } while (traverser.foundLoopToChange());
 }
+
+}  // namespace sh

@@ -11,6 +11,9 @@
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -447,3 +450,5 @@ MetadataList CreateASTMetadataHLSL(TIntermNode *root, const CallDAG &callDag)
 
     return metadataList;
 }
+
+}  // namespace sh

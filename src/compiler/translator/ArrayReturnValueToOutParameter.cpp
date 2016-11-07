@@ -10,6 +10,9 @@
 
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -210,3 +213,5 @@ void ArrayReturnValueToOutParameter(TIntermNode *root, unsigned int *temporaryIn
 {
     ArrayReturnValueToOutParameterTraverser::apply(root, temporaryIndex);
 }
+
+}  // namespace sh

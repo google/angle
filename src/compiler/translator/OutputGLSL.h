@@ -9,6 +9,9 @@
 
 #include "compiler/translator/OutputGLSLBase.h"
 
+namespace sh
+{
+
 class TOutputGLSL : public TOutputGLSLBase
 {
   public:
@@ -26,5 +29,7 @@ class TOutputGLSL : public TOutputGLSLBase
     void visitSymbol(TIntermSymbol *node) override;
     TString translateTextureFunction(TString &name) override;
 };
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTGLSL_H_

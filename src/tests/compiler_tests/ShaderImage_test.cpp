@@ -13,6 +13,8 @@
 #include "compiler/translator/TranslatorESSL.h"
 #include "tests/test_utils/compiler_test.h"
 
+using namespace sh;
+
 namespace
 {
 
@@ -71,7 +73,7 @@ void CheckImageLoadCall(TIntermNode *astRoot,
 // Checks whether the image is properly exported as a uniform by the compiler.
 void CheckExportedImageUniform(const std::vector<sh::Uniform> &uniforms,
                                size_t uniformIndex,
-                               GLenum imageTypeGL,
+                               ::GLenum imageTypeGL,
                                const TString &imageName)
 {
     ASSERT_EQ(1u, uniforms.size());

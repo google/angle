@@ -7,6 +7,9 @@
 #include "compiler/translator/Intermediate.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -731,3 +734,5 @@ void TIntermediate::outputTree(TIntermNode *root, TInfoSinkBase &infoSink)
 
     root->traverse(&it);
 }
+
+}  // namespace sh

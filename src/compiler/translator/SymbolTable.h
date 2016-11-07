@@ -38,6 +38,9 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 
+namespace sh
+{
+
 // Symbol base class. (Can build functions or variables out of these...)
 class TSymbol : angle::NonCopyable
 {
@@ -537,5 +540,7 @@ class TSymbolTable : angle::NonCopyable
 
     static int uniqueIdCounter;
 };
+
+}  // namespace sh
 
 #endif // COMPILER_TRANSLATOR_SYMBOLTABLE_H_

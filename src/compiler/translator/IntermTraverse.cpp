@@ -8,6 +8,9 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/SymbolTable.h"
 
+namespace sh
+{
+
 void TIntermSymbol::traverse(TIntermTraverser *it)
 {
     it->traverseSymbol(this);
@@ -831,3 +834,5 @@ void TIntermTraverser::traverseRaw(TIntermRaw *node)
 {
     visitRaw(node);
 }
+
+}  // namespace sh

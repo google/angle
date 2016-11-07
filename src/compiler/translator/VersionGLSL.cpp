@@ -6,6 +6,9 @@
 
 #include "compiler/translator/VersionGLSL.h"
 
+namespace sh
+{
+
 int ShaderOutputTypeToGLSLVersion(ShShaderOutput output)
 {
     switch (output)
@@ -135,3 +138,4 @@ void TVersionGLSL::ensureVersionIsAtLeast(int version)
     mVersion = std::max(version, mVersion);
 }
 
+}  // namespace sh

@@ -9,6 +9,9 @@
 #include "compiler/translator/ValidateLimitations.h"
 #include "angle_gl.h"
 
+namespace sh
+{
+
 bool ForLoopUnrollMarker::visitBinary(Visit, TIntermBinary *node)
 {
     if (mUnrollCondition != kSamplerArrayIndex)
@@ -95,3 +98,5 @@ void ForLoopUnrollMarker::visitSymbol(TIntermSymbol* symbol)
         }
     }
 }
+
+}  // namespace sh

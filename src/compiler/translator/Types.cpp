@@ -16,6 +16,9 @@
 #include <algorithm>
 #include <climits>
 
+namespace sh
+{
+
 const char* getBasicString(TBasicType t)
 {
     switch (t)
@@ -557,3 +560,5 @@ int TStructure::calculateDeepestNesting() const
         maxNesting = std::max(maxNesting, (*mFields)[i]->type()->getDeepestStructNesting());
     return 1 + maxNesting;
 }
+
+}  // namespace sh

@@ -10,6 +10,9 @@
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/VersionGLSL.h"
 
+namespace sh
+{
+
 void InitBuiltInIsnanFunctionEmulatorForHLSLWorkarounds(BuiltInFunctionEmulator *emu,
                                                         int targetGLSLVersion)
 {
@@ -492,3 +495,5 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
         "}\n");
 
 }
+
+}  // namespace sh

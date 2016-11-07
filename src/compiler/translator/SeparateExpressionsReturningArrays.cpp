@@ -14,6 +14,9 @@
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -137,3 +140,5 @@ void SeparateExpressionsReturningArrays(TIntermNode *root, unsigned int *tempora
     }
     while (traverser.foundArrayExpression());
 }
+
+}  // namespace sh

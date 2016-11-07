@@ -19,6 +19,9 @@
 #include <stdio.h>
 #include <algorithm>
 
+namespace sh
+{
+
 int TSymbolTable::uniqueIdCounter = 0;
 
 TSymbol::TSymbol(const TString *n) : uniqueId(TSymbolTable::nextUniqueId()), name(n)
@@ -358,3 +361,5 @@ TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
     }
     return prec;
 }
+
+}  // namespace sh

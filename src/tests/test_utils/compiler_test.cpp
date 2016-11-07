@@ -11,6 +11,9 @@
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -249,3 +252,5 @@ const TIntermAggregate *FindFunctionCallNode(TIntermNode *root, const TString &f
     root->traverse(&finder);
     return finder.getNode();
 }
+
+}  // namespace sh

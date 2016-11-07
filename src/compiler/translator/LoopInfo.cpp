@@ -6,6 +6,9 @@
 
 #include "compiler/translator/LoopInfo.h"
 
+namespace sh
+{
+
 namespace
 {
 
@@ -208,3 +211,4 @@ void TLoopStack::pop()
     pop_back();
 }
 
+}  // namespace sh

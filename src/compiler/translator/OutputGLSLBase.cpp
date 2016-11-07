@@ -10,6 +10,9 @@
 
 #include <cfloat>
 
+namespace sh
+{
+
 namespace
 {
 TString arrayBrackets(const TType &type)
@@ -1347,3 +1350,5 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
     }
     out << "}";
 }
+
+}  // namespace sh
