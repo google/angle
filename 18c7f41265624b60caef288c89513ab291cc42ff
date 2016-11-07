@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bb0ebbe_ed907668",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T18:02:27Z",
+      "side": 1,
+      "message": "This should set a default API or incorrect expectations will be used when running without args.",
+      "range": {
+        "startLine": 175,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 5
+      },
+      "revId": "18c7f41265624b60caef288c89513ab291cc42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_2ded2e0e",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T18:02:27Z",
+      "side": 1,
+      "message": "If we\u0027re going to use this flag, it should match the values  that chrome uses. d3d9, d3d11, gl, gles",
+      "range": {
+        "startLine": 354,
+        "startChar": 32,
+        "endLine": 354,
+        "endChar": 45
+      },
+      "revId": "18c7f41265624b60caef288c89513ab291cc42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
