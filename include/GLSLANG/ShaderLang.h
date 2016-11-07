@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 165
+#define ANGLE_SH_VERSION 166
 
 enum ShShaderSpec
 {
@@ -81,12 +81,6 @@ enum ShShaderOutput
     SH_GLSL_430_CORE_OUTPUT = 0x8B86,
     SH_GLSL_440_CORE_OUTPUT = 0x8B87,
     SH_GLSL_450_CORE_OUTPUT = 0x8B88,
-
-    // HLSL output only supported in some configurations.
-    // Deprecated:
-    SH_HLSL_OUTPUT   = 0x8B48,
-    SH_HLSL9_OUTPUT  = 0x8B48,
-    SH_HLSL11_OUTPUT = 0x8B49,
 
     // Prefer using these to specify HLSL output type:
     SH_HLSL_3_0_OUTPUT       = 0x8B48,  // D3D 9
