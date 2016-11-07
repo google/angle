@@ -3288,6 +3288,16 @@ gl::Error Renderer11::createRenderTarget(int width,
         bindDSV = (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
         bindSRV = (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN);
 
+        // D3D feature level 10.0 no longer allows creation of textures with both the bind SRV and
+        // DSV flags when multisampled.  crbug.com/656989
+        bool supportsMultisampledDepthStencilSRVs =
+            mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0;
+        bool isMultisampledDepthStencil = bindDSV && desc.SampleDesc.Count > 1;
+        if (isMultisampledDepthStencil && !supportsMultisampledDepthStencilSRVs)
+        {
+            bindSRV = false;
+        }
+
         desc.BindFlags = (bindRTV ? D3D11_BIND_RENDER_TARGET : 0) |
                          (bindDSV ? D3D11_BIND_DEPTH_STENCIL : 0) |
                          (bindSRV ? D3D11_BIND_SHADER_RESOURCE : 0);

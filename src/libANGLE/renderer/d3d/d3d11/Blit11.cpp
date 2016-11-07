@@ -2000,6 +2000,14 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
 
 gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 {
+    // Multisampled depth stencil SRVs are not available in feature level 10.0
+    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_10_0)
+    {
+        return gl::Error(GL_INVALID_OPERATION,
+                         "Resolving multisampled depth stencil textures is not supported in "
+                         "feature level 10.0.");
+    }
+
     const auto &extents          = depth->getExtents();
     ID3D11Device *device         = mRenderer->getDevice();
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
@@ -2128,6 +2136,14 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
 gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthStencil,
                                                           bool alsoDepth)
 {
+    // Multisampled depth stencil SRVs are not available in feature level 10.0
+    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_10_0)
+    {
+        return gl::Error(GL_INVALID_OPERATION,
+                         "Resolving multisampled depth stencil textures is not supported in "
+                         "feature level 10.0.");
+    }
+
     const auto &extents = depthStencil->getExtents();
 
     ANGLE_TRY(initResolveDepthStencil(extents));
