@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bb0ebbe_db3c57f8",
+        "filename": "src/libANGLE/renderer/RenderbufferImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T14:52:17Z",
+      "side": 1,
+      "message": "I don\u0027t think this change is neccessary, it will cause the number of samples returned from queries to not match the number of requested samples.\n\nThe RenderTarget class has a getSamples method that should have the real number of samples, this number can be used when calling GetBlendSampleMask.\n\nThe code would look something like:\n\n   auto firstAttachment \u003d framebuffer-\u003egetFirstColorBuffer();\n   RenderTarget* renderTarget \u003d nullptr;\n   ANGLE_TRY(firstAttachment-\u003egetRenderTarget(\u0026renderTarget));\n   GLsizei nativeSamples \u003d renderTarget-\u003egetSamples();",
+      "range": {
+        "startLine": 36,
+        "startChar": 44,
+        "endLine": 36,
+        "endChar": 68
+      },
+      "revId": "a43d6135cd00be9cf57aeca2a07f3d2e0628e5ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
