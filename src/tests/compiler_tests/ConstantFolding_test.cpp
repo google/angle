@@ -1062,3 +1062,43 @@ TEST_F(ConstantFoldingTest, FoldShiftByZero)
     ASSERT_TRUE(constantFoundInAST(3));
     ASSERT_TRUE(constantFoundInAST(73));
 }
+
+// Test that folding IsInf results in true when the parameter is an out-of-range float literal.
+// ESSL 3.00.6 section 4.1.4 Floats:
+// "If the value of the floating point number is too large (small) to be stored as a single
+// precision value, it is converted to positive (negative) infinity."
+// ESSL 3.00.6 section 12.4:
+// "Mandate support for signed infinities."
+TEST_F(ConstantFoldingTest, FoldIsInfOutOfRangeFloatLiteral)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    bool b = isinf(1.0e2048);\n"
+        "    my_FragColor = vec4(b);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(true));
+}
+
+// Test that floats that are too small to be represented get flushed to zero.
+// ESSL 3.00.6 section 4.1.4 Floats:
+// "A value with a magnitude too small to be represented as a mantissa and exponent is converted to
+// zero."
+TEST_F(ConstantFoldingTest, FoldTooSmallFloat)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    bool b = (0.0 == 1.0e-2048);\n"
+        "    my_FragColor = vec4(b);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(true));
+}
