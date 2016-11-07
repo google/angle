@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "4bb0ebbe_fb8d934f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-07T16:37:07Z",
+      "side": 1,
+      "message": "is this a part of the debug layer error?",
+      "range": {
+        "startLine": 15,
+        "startChar": 62,
+        "endLine": 17,
+        "endChar": 53
+      },
+      "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bb0ebbe_bbdddb54",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
         "patchSetId": 3
@@ -42,6 +65,29 @@
         "startChar": 4,
         "endLine": 2004,
         "endChar": 87
+      },
+      "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_db90d768",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-07T16:37:07Z",
+      "side": 1,
+      "message": "please link to the crbug here.",
+      "range": {
+        "startLine": 3291,
+        "startChar": 11,
+        "endLine": 3291,
+        "endChar": 14
       },
       "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
