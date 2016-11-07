@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bb0ebbe_bbdddb54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T16:25:15Z",
+      "side": 1,
+      "message": "I think it\u0027s possible that these cases could be hit.  It would require a blit of a multisampled depth stencil texture in ES2 (via the GL_ANGLE_framebuffer_blit extension).",
+      "range": {
+        "startLine": 2004,
+        "startChar": 4,
+        "endLine": 2004,
+        "endChar": 87
+      },
+      "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
