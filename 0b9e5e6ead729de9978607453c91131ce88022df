@@ -22,6 +22,30 @@
       "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_3b632bcc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2004,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T16:27:38Z",
+      "side": 1,
+      "message": "Relevent text from GL_ANGLE_framebuffer_blit:\n\n   only whole depth and/or stencil buffers can be copied\n\nWhich may let us skip these calls and use a CopyResource instead?",
+      "parentUuid": "4bb0ebbe_bbdddb54",
+      "range": {
+        "startLine": 2004,
+        "startChar": 4,
+        "endLine": 2004,
+        "endChar": 87
+      },
+      "revId": "0b9e5e6ead729de9978607453c91131ce88022df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
