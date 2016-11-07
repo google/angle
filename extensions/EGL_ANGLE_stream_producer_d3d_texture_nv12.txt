@@ -59,7 +59,7 @@ New Tokens
 
     Accepted as an <attribute> in eglStreamPostD3DTextureNV12ANGLE:
 
-        EGL_D3D_TEXTURE_SUBRESOURCE_ID_ANGLE 0x3AAB
+        EGL_D3D_TEXTURE_SUBRESOURCE_ID_ANGLE 0x33AB
 
 Replace section "3.10.3.1 No way to connect producer to EGLStream" in the
 EGL_KHR_stream extension with this:
