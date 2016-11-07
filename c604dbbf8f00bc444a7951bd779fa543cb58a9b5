@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bb0ebbe_ed8ab667",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_cd81fa4a",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_8d7302ca",
+        "filename": "src/tests/compiler_tests/QualificationOrderESSL31_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_cd681ad3",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_ad6b5ecd",
+        "filename": "src/tests/compiler_tests/QualificationOrder_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "neccessary?",
+      "range": {
+        "startLine": 28,
+        "startChar": 50,
+        "endLine": 28,
+        "endChar": 52
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_6d97a694",
+        "filename": "src/tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bb0ebbe_4d966a96",
+        "filename": "src/tests/compiler_tests/WorkGroupSize_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-07T17:47:41Z",
+      "side": 1,
+      "message": "nit: remove this or the sh:: below",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 19
+      },
+      "revId": "c604dbbf8f00bc444a7951bd779fa543cb58a9b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
