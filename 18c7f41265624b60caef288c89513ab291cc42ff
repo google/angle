@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4bb0ebbe_504281ab",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-07T18:44:06Z",
+      "side": 1,
+      "message": "Good point, fixed.",
+      "parentUuid": "4bb0ebbe_ed907668",
+      "range": {
+        "startLine": 175,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 5
+      },
+      "revId": "18c7f41265624b60caef288c89513ab291cc42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bb0ebbe_2ded2e0e",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-07T18:02:27Z",
       "side": 1,
       "message": "If we\u0027re going to use this flag, it should match the values  that chrome uses. d3d9, d3d11, gl, gles",
+      "range": {
+        "startLine": 354,
+        "startChar": 32,
+        "endLine": 354,
+        "endChar": 45
+      },
+      "revId": "18c7f41265624b60caef288c89513ab291cc42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2bde5729_7d7b972f",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-07T18:44:06Z",
+      "side": 1,
+      "message": "I made it accept two ways:\n\n --use-angle\u003dgl\n --deqp-egl-display-type\u003dangle-gl\n\netc.\n\nTechnically it also accepts \"--use-angle\u003dangle-gl\" and such, but I don\u0027t think it\u0027s dangerous.",
+      "parentUuid": "4bb0ebbe_2ded2e0e",
       "range": {
         "startLine": 354,
         "startChar": 32,
