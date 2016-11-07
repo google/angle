@@ -50,6 +50,23 @@
       "revId": "94c6f81777ed7b23213a5b05433ca99c8685a7c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b64332d_f4e07814",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-07T11:25:17Z",
+      "side": 1,
+      "message": "In general we should generate warnings for undefined values, not errors. See comments 1-3 on:\n\nhttps://cvs.khronos.org/bugzilla/show_bug.cgi?id\u003d16034",
+      "revId": "94c6f81777ed7b23213a5b05433ca99c8685a7c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
