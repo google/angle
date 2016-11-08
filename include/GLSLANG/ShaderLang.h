@@ -219,6 +219,16 @@ const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
 // But don't remove on AMD Linux to avoid triggering the bug on AMD.
 const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1) << 29;
 
+// Due to spec difference between GLSL 4.1 or lower and ESSL3, some platforms (for example, Mac OSX
+// core profile) require a variable's "invariant"/"centroid" qualifiers to match between vertex and
+// fragment shader. A simple solution to allow such shaders to link is to omit the two qualifiers.
+// Note that the two flags only take effect on ESSL3 input shaders translated to GLSL 4.1 or lower.
+// TODO(zmo): This is not a good long-term solution. Simply dropping these qualifiers may break some
+// developers' content. A more complex workaround of dynamically generating, compiling, and
+// re-linking shaders that use these qualifiers should be implemented.
+const ShCompileOptions SH_REMOVE_INVARIANT_FOR_ESSL3 = UINT64_C(1) << 30;
+const ShCompileOptions SH_REMOVE_CENTROID_FOR_ESSL3 = UINT64_C(1) << 31;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

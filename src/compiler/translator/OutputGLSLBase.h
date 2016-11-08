@@ -37,6 +37,7 @@ class TOutputGLSLBase : public TIntermTraverser
     TInfoSinkBase &objSink() { return mObjSink; }
     void writeTriplet(Visit visit, const char *preStr, const char *inStr, const char *postStr);
     void writeLayoutQualifier(const TType &type);
+    void writeInvariantQualifier(const TType &type);
     void writeVariableType(const TType &type);
     virtual bool writeVariablePrecision(TPrecision precision) = 0;
     void writeFunctionParameters(const TIntermSequence &args);
@@ -80,6 +81,8 @@ class TOutputGLSLBase : public TIntermTraverser
     void declareInterfaceBlock(const TInterfaceBlock *interfaceBlock);
 
     void writeBuiltInFunctionTriplet(Visit visit, const char *preStr, bool useEmulatedFunction);
+
+    const char *mapQualifierToString(TQualifier qialifier);
 
     TInfoSinkBase &mObjSink;
     bool mDeclaringVariables;

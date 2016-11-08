@@ -42,6 +42,7 @@ bool IsWebGLBasedSpec(ShShaderSpec spec);
 //
 bool IsGLSL130OrNewer(ShShaderOutput output);
 bool IsGLSL420OrNewer(ShShaderOutput output);
+bool IsGLSL410OrOlder(ShShaderOutput output);
 
 //
 // The base class used to back handles returned to the driver.

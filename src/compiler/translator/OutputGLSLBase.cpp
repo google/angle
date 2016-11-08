@@ -101,6 +101,19 @@ TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase &objSink,
 {
 }
 
+void TOutputGLSLBase::writeInvariantQualifier(const TType &type)
+{
+    bool removeInvariant = ((type.getQualifier() == EvqVaryingIn && sh::IsGLSL420OrNewer(mOutput) &&
+                             !(mCompileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT)) ||
+                            (sh::IsGLSL410OrOlder(mOutput) && mShaderVersion >= 300 &&
+                             !!(mCompileOptions & SH_REMOVE_INVARIANT_FOR_ESSL3)));
+    if (!removeInvariant)
+    {
+        TInfoSinkBase &out = objSink();
+        out << "invariant ";
+    }
+}
+
 void TOutputGLSLBase::writeTriplet(
     Visit visit, const char *preStr, const char *inStr, const char *postStr)
 {
@@ -149,15 +162,49 @@ void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
     out << ") ";
 }
 
+const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
+{
+    if (sh::IsGLSL410OrOlder(mOutput) && mShaderVersion >= 300 &&
+        !!(mCompileOptions & SH_REMOVE_CENTROID_FOR_ESSL3))
+    {
+        switch (qualifier)
+        {
+            // The return string is consistent with sh::getQualifierString() from
+            // BaseTypes.h minus the "centroid" keyword.
+            case EvqCentroid:
+                return "";
+            case EvqCentroidIn:
+                return "smooth in";
+            case EvqCentroidOut:
+                return "smooth out";
+            default:
+                break;
+        }
+    }
+    if (sh::IsGLSL130OrNewer(mOutput))
+    {
+        switch (qualifier)
+        {
+            case EvqAttribute:
+                return "in";
+            case EvqVaryingIn:
+                return "in";
+            case EvqVaryingOut:
+                return "out";
+            default:
+                break;
+        }
+    }
+    return sh::getQualifierString(qualifier);
+}
+
 void TOutputGLSLBase::writeVariableType(const TType &type)
 {
     TQualifier qualifier = type.getQualifier();
     TInfoSinkBase &out = objSink();
-    bool removeInvariant = (qualifier == EvqVaryingIn && sh::IsGLSL420OrNewer(mOutput) &&
-                            !(mCompileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT));
-    if (type.isInvariant() && !removeInvariant)
+    if (type.isInvariant())
     {
-        out << "invariant ";
+        writeInvariantQualifier(type);
     }
     if (type.getBasicType() == EbtInterfaceBlock)
     {
@@ -166,27 +213,10 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
     }
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
     {
-        if (sh::IsGLSL130OrNewer(mOutput))
+        const char *qualifierString = mapQualifierToString(qualifier);
+        if (qualifierString && qualifierString[0] != '\0')
         {
-            switch (qualifier)
-            {
-              case EvqAttribute:
-                out << "in ";
-                break;
-              case EvqVaryingIn:
-                out << "in ";
-                break;
-              case EvqVaryingOut:
-                out << "out ";
-                break;
-              default:
-                out << type.getQualifierString() << " ";
-                break;
-            }
-        }
-        else
-        {
-            out << type.getQualifierString() << " ";
+            out << qualifierString << " ";
         }
     }
 
@@ -930,7 +960,8 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             ASSERT(sequence && sequence->size() == 1);
             const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
             ASSERT(symbol);
-            out << "invariant " << hashVariableName(symbol->getName());
+            writeInvariantQualifier(symbol->getType());
+            out << hashVariableName(symbol->getName());
         }
         visitChildren = false;
         break;
