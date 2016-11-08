@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bd84f3b_b71c4e8d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-08T23:26:03Z",
+      "side": 1,
+      "message": "ESSL3",
+      "range": {
+        "startLine": 222,
+        "startChar": 56,
+        "endLine": 222,
+        "endChar": 60
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bd3c31c_0cafb4cb",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-08T23:26:03Z",
+      "side": 1,
+      "message": "I\u0027m not sure, but perhaps SH_GLSL_COMPATIBILITY_OUTPUT should be in this list as well?",
+      "range": {
+        "startLine": 101,
+        "startChar": 11,
+        "endLine": 103,
+        "endChar": 83
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bb12ff1_0f3a50e0",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2016-11-08T23:26:03Z",
+      "side": 1,
+      "message": "I see that sh::TType::getQualifierString() has sh::getQualifierString(), with the namespace qualifier, even though it\u0027s in the same namespace. Not sure what\u0027s the convention about this.",
+      "range": {
+        "startLine": 196,
+        "startChar": 11,
+        "endLine": 196,
+        "endChar": 29
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
