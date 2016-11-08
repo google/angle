@@ -3,6 +3,7 @@
 # found in the LICENSE file.
 
 import("//build/config/ui.gni")  # import the use_x11 variable
+import("//ui/ozone/ozone.gni")
 
 angle_enable_d3d9 = false
 angle_enable_d3d11 = false
@@ -19,7 +20,7 @@ if (is_win) {
   import("//build/config/win/visual_studio_version.gni")
 } else if (is_linux && use_x11 && !is_chromeos) {
   angle_enable_gl = true
-} else if (is_mac || use_ozone) {
+} else if (is_mac || ozone_platform_gbm) {
   angle_enable_gl = true
 } else if (is_android) {
   angle_enable_gl = true
