@@ -423,27 +423,42 @@ TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
                 // ESSL 3.00.6 section 5.9: "If E1 is a signed integer, the right-shift will extend
                 // the sign bit." In C++ shifting negative integers is undefined, so we implement
                 // extending the sign bit manually.
-                bool extendSignBit = false;
                 int lhsSafe        = lhs.iConst;
-                if (lhsSafe < 0)
+                if (lhsSafe == std::numeric_limits<int>::min())
                 {
-                    extendSignBit = true;
-                    // Clear the sign bit so that bitshift right is defined in C++.
-                    lhsSafe &= 0x7fffffff;
-                    ASSERT(lhsSafe > 0);
+                    // The min integer needs special treatment because only bit it has set is the
+                    // sign bit, which we clear later to implement safe right shift of negative
+                    // numbers.
+                    lhsSafe = -0x40000000;
+                    --shiftOffset;
                 }
-                returnValue.setIConst(lhsSafe >> shiftOffset);
-
-                // Manually fill in the extended sign bit if necessary.
-                if (extendSignBit)
+                if (shiftOffset > 0)
                 {
-                    int extendedSignBit = static_cast<int>(0xffffffffu << (31 - shiftOffset));
-                    returnValue.setIConst(returnValue.getIConst() | extendedSignBit);
+                    bool extendSignBit = false;
+                    if (lhsSafe < 0)
+                    {
+                        extendSignBit = true;
+                        // Clear the sign bit so that bitshift right is defined in C++.
+                        lhsSafe &= 0x7fffffff;
+                        ASSERT(lhsSafe > 0);
+                    }
+                    returnValue.setIConst(lhsSafe >> shiftOffset);
+
+                    // Manually fill in the extended sign bit if necessary.
+                    if (extendSignBit)
+                    {
+                        int extendedSignBit = static_cast<int>(0xffffffffu << (31 - shiftOffset));
+                        returnValue.setIConst(returnValue.getIConst() | extendedSignBit);
+                    }
+                }
+                else
+                {
+                    returnValue.setIConst(lhsSafe);
                 }
             }
             else
             {
-                returnValue.setIConst(rhs.iConst);
+                returnValue.setIConst(lhs.iConst);
             }
             break;
         }

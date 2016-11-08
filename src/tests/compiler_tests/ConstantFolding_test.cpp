@@ -1026,3 +1026,39 @@ TEST_F(ConstantFoldingTest, FoldMinimumSignedIntegerNegation)
     // Negating the minimum signed integer overflows the positive range, so it wraps back to itself.
     ASSERT_TRUE(constantFoundInAST(-0x7fffffff - 1));
 }
+
+// Test that folding of shifting the minimum representable integer works.
+TEST_F(ConstantFoldingTest, FoldMinimumSignedIntegerRightShift)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = (0x80000000 >> 1);\n"
+        "    int j = (0x80000000 >> 7);\n"
+        "    my_FragColor = vec4(i, j, i, j);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(-0x40000000));
+    ASSERT_TRUE(constantFoundInAST(-0x01000000));
+}
+
+// Test that folding of shifting by 0 works.
+TEST_F(ConstantFoldingTest, FoldShiftByZero)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i = (3 >> 0);\n"
+        "    int j = (73 << 0);\n"
+        "    my_FragColor = vec4(i, j, i, j);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(constantFoundInAST(3));
+    ASSERT_TRUE(constantFoundInAST(73));
+}
