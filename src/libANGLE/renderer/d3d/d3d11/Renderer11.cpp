@@ -1615,7 +1615,17 @@ gl::Error Renderer11::updateState(const gl::ContextState &data, GLenum drawMode)
     mStateManager.setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     // Applying rasterizer state to D3D11 device
-    int samples                    = framebuffer->getSamples(data);
+    // Since framebuffer->getSamples will return the original samples which may be different with
+    // the sample counts that we set in render target view, here we use renderTarget->getSamples to
+    // get the actual samples.
+    GLsizei samples = 0;
+    if (firstColorAttachment)
+    {
+        ASSERT(firstColorAttachment->isAttached());
+        RenderTarget11 *renderTarget = nullptr;
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        samples = renderTarget->getSamples();
+    }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);

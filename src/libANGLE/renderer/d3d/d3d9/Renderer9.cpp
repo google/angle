@@ -1007,7 +1007,18 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
     setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
     // Setting blend, depth stencil, and rasterizer states
-    int samples                    = framebuffer->getSamples(data);
+    // Since framebuffer->getSamples will return the original samples which may be different with
+    // the sample counts that we set in render target view, here we use renderTarget->getSamples to
+    // get the actual samples.
+    GLsizei samples           = 0;
+    auto firstColorAttachment = framebuffer->getFirstColorbuffer();
+    if (firstColorAttachment)
+    {
+        ASSERT(firstColorAttachment->isAttached());
+        RenderTarget9 *renderTarget = nullptr;
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        samples = renderTarget->getSamples();
+    }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
@@ -1030,7 +1041,18 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, G
     const auto &glState  = glData.getState();
     auto drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(!drawFramebuffer->hasAnyDirtyBit());
-    int samples                    = drawFramebuffer->getSamples(glData);
+    // Since framebuffer->getSamples will return the original samples which may be different with
+    // the sample counts that we set in render target view, here we use renderTarget->getSamples to
+    // get the actual samples.
+    GLsizei samples           = 0;
+    auto firstColorAttachment = drawFramebuffer->getFirstColorbuffer();
+    if (firstColorAttachment)
+    {
+        ASSERT(firstColorAttachment->isAttached());
+        RenderTarget9 *renderTarget = nullptr;
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        samples = renderTarget->getSamples();
+    }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
