@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8baca39c_825e3bfb",
+        "filename": "src/libANGLE/renderer/d3d/RenderbufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "This was already handled in createRenderTarget, should leave it there.",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 90
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_425423df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3265,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "I don\u0027t think any changes to this function are needed.",
+      "range": {
+        "startLine": 3265,
+        "startChar": 22,
+        "endLine": 3265,
+        "endChar": 40
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_22de4f50",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "I don\u0027t think any changes to this function are needed.",
+      "range": {
+        "startLine": 2465,
+        "startChar": 21,
+        "endLine": 2465,
+        "endChar": 39
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_02e14b16",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "You need to check that GL_ANGLE_framebuffer_multisample and GL_OES_rgb8_rgba8 are available.",
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_c2e67331",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to be ES3-only.",
+      "range": {
+        "startLine": 392,
+        "startChar": 8,
+        "endLine": 392,
+        "endChar": 27
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_a2f25fea",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "store this in std::vector, you then don\u0027t need to do an explicit allocation and can directly compare vector objects.",
+      "range": {
+        "startLine": 407,
+        "startChar": 3,
+        "endLine": 407,
+        "endChar": 42
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_e2e3771e",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-08T15:14:27Z",
+      "side": 1,
+      "message": "Test ES2, D3D9 and OpenGL too.",
+      "range": {
+        "startLine": 440,
+        "startChar": 53,
+        "endLine": 440,
+        "endChar": 62
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
