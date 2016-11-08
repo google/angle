@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8baca39c_13c27bef",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-08T19:51:58Z",
+      "side": 1,
+      "message": "this won\u0027t compile on linux. You\u0027ll need to call it EglSuccess or EglNoError or something like that. I have tried to add it in the past.",
+      "range": {
+        "startLine": 113,
+        "startChar": 13,
+        "endLine": 113,
+        "endChar": 20
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_93c76bfb",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-08T19:51:58Z",
+      "side": 1,
+      "message": "can you put this minimum init in a helper method somewhere? I\u0027d like to use it for Vulkan.",
+      "range": {
+        "startLine": 36,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_f3dd07c6",
+        "filename": "src/libANGLE/renderer/null/DeviceNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-08T19:51:58Z",
+      "side": 1,
+      "message": "nit: is this necessary? can we ensure extensions are always default to off?",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 37
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_5376b3fc",
+        "filename": "src/libANGLE/renderer/null/DisplayNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-08T19:51:58Z",
+      "side": 1,
+      "message": "this seems harmless but it would be nice to only enable the specific ones that DisplayNULL cares about. A lot will default to false, or be enabled in a higher level since they don\u0027t apply to the back-end.",
+      "range": {
+        "startLine": 188,
+        "startChar": 3,
+        "endLine": 194,
+        "endChar": 62
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8baca39c_13db5bd1",
+        "filename": "src/libANGLE/renderer/null/DisplayNULL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-08T19:51:58Z",
+      "side": 1,
+      "message": "nit: I think we agreed not to put inline init in headers.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 34
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
