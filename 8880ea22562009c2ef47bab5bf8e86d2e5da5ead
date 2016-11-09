@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "8b9f4379_8043760d",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-09T01:02:32Z",
+      "side": 1,
+      "message": "Could you please add a comment pointing to that code (explicitly: e.g. getQualifierString() in BaseTypes.h) so future people looking at this code aren\u0027t confused? Thanks.",
+      "parentUuid": "ab9ec77a_c1c18290",
+      "range": {
+        "startLine": 175,
+        "startChar": 24,
+        "endLine": 175,
+        "endChar": 30
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bb12ff1_0f3a50e0",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 2
