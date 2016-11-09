@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "6bbdafe5_cbc635ff",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T18:16:27Z",
+      "side": 1,
+      "message": "the header hasn\u0027t changed, you can revert this line.",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bbdafe5_ab8421a6",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T18:16:27Z",
+      "side": 1,
+      "message": "for all these, compare them with zero. don\u0027t implicitly cast int to bool.",
+      "range": {
+        "startLine": 397,
+        "startChar": 25,
+        "endLine": 397,
+        "endChar": 88
+      },
+      "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bd3b749_7b06d73e",
         "filename": "src/compiler/translator/RemoveInvariantDeclaration.cpp",
         "patchSetId": 1
@@ -13,6 +59,52 @@
       "writtenOn": "2016-11-09T16:17:51Z",
       "side": 1,
       "message": "Do we really need this logic? At caller site, we already decide if we need to remove invariant declaration due to the shader type. So in here we should just remove them no matter what.  No need to pass in shaderType and no need to check qualifier.",
+      "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bbdafe5_8b939de3",
+        "filename": "src/compiler/translator/RemoveInvariantDeclaration.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T18:16:27Z",
+      "side": 1,
+      "message": "shaderType",
+      "range": {
+        "startLine": 16,
+        "startChar": 58,
+        "endLine": 16,
+        "endChar": 67
+      },
+      "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bbdafe5_8b54bd3b",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T18:16:27Z",
+      "side": 1,
+      "message": "this should be one workaround flag.",
+      "range": {
+        "startLine": 123,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 32
+      },
       "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
