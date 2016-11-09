@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6bbdafe5_2bbff160",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T18:14:40Z",
+      "side": 0,
+      "message": "this should give a performance warning on windows. use !\u003d 0.",
+      "parentUuid": "cbc21b71_43268c30",
+      "range": {
+        "startLine": 109,
+        "startChar": 29,
+        "endLine": 109,
+        "endChar": 32
+      },
+      "revId": "b7bf742696187bad97b3812ac9f14c8650c1eb16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bbdafe5_8b371d43",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 1
