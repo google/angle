@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4bad4bb0_64a63e9a",
+        "filename": "src/libANGLE/renderer/d3d/RenderbufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "I originally just wanted to simplify the code. But I think it may has potential issue like other functions may use createRenderTarget. So return to original code. Thanks.",
+      "parentUuid": "8baca39c_825e3bfb",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 90
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_425423df",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-08T15:14:27Z",
       "side": 1,
       "message": "I don\u0027t think any changes to this function are needed.",
+      "range": {
+        "startLine": 3265,
+        "startChar": 22,
+        "endLine": 3265,
+        "endChar": 40
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8bb823f7_9b7c0f98",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3265,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_425423df",
       "range": {
         "startLine": 3265,
         "startChar": 22,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8bb823f7_7b625bf7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2465,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_22de4f50",
+      "range": {
+        "startLine": 2465,
+        "startChar": 21,
+        "endLine": 2465,
+        "endChar": 39
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_02e14b16",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 6
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "4bd62b38_393aabe1",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_02e14b16",
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_c2e67331",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 6
@@ -99,6 +189,30 @@
       "writtenOn": "2016-11-08T15:14:27Z",
       "side": 1,
       "message": "This doesn\u0027t need to be ES3-only.",
+      "range": {
+        "startLine": 392,
+        "startChar": 8,
+        "endLine": 392,
+        "endChar": 27
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bad4bb0_a47a062a",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_c2e67331",
       "range": {
         "startLine": 392,
         "startChar": 8,
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "ab9ec77a_675f6626",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_a2f25fea",
+      "range": {
+        "startLine": 407,
+        "startChar": 3,
+        "endLine": 407,
+        "endChar": 42
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_e2e3771e",
         "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
         "patchSetId": 6
@@ -145,6 +283,30 @@
       "writtenOn": "2016-11-08T15:14:27Z",
       "side": 1,
       "message": "Test ES2, D3D9 and OpenGL too.",
+      "range": {
+        "startLine": 440,
+        "startChar": 53,
+        "endLine": 440,
+        "endChar": 62
+      },
+      "revId": "c796b4b84e01f49c4637a4889561aeb7544c7205",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0bb35316_c28e260e",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-09T05:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_e2e3771e",
       "range": {
         "startLine": 440,
         "startChar": 53,
