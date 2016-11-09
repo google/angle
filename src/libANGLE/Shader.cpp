@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ShaderImpl.h"
 #include "libANGLE/ResourceManager.h"
+#include "libANGLE/Context.h"
 
 namespace gl
 {
@@ -227,7 +228,7 @@ void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, 
     getSourceImpl(debugInfo, bufSize, length, buffer);
 }
 
-void Shader::compile(Compiler *compiler)
+void Shader::compile(const Context *context)
 {
     mState.mTranslatedSource.clear();
     mInfoLog.clear();
@@ -238,6 +239,7 @@ void Shader::compile(Compiler *compiler)
     mState.mActiveAttributes.clear();
     mState.mActiveOutputVariables.clear();
 
+    Compiler *compiler = context->getCompiler();
     ShHandle compilerHandle = compiler->getCompilerHandle(mState.mShaderType);
 
     std::stringstream sourceStream;
@@ -246,6 +248,14 @@ void Shader::compile(Compiler *compiler)
     ShCompileOptions additionalOptions =
         mImplementation->prepareSourceAndReturnOptions(&sourceStream, &sourcePath);
     ShCompileOptions compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | additionalOptions);
+
+    // Add default options to WebGL shaders to prevent unexpected behavior during compilation.
+    if (context->getExtensions().webglCompatibility)
+    {
+        compileOptions |= SH_LIMIT_CALL_STACK_DEPTH;
+        compileOptions |= SH_LIMIT_EXPRESSION_COMPLEXITY;
+        compileOptions |= SH_ENFORCE_PACKING_RESTRICTIONS;
+    }
 
     // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop indexes
     // in fragment shaders. Shader compilation will fail. To provide a better error message we can

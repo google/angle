@@ -485,7 +485,7 @@ void GL_APIENTRY CompileShader(GLuint shader)
         {
             return;
         }
-        shaderObject->compile(context->getCompiler());
+        shaderObject->compile(context);
     }
 }
 
