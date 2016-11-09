@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "ebe35fee_aed15a0d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-09T00:30:24Z",
+      "side": 1,
+      "message": "We should highlight that this is not a good long-term solution (and probably is not considered to be one). Simply dropping these qualifiers is probably going to break some developers\u0027 content. In the long run, we may need to do the more complex workaround of dynamically generating, compiling and re-linking shaders that use these qualifiers.",
+      "range": {
+        "startLine": 224,
+        "startChar": 40,
+        "endLine": 224,
+        "endChar": 41
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bd3c31c_0cafb4cb",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 2
@@ -41,6 +64,53 @@
         "startChar": 11,
         "endLine": 103,
         "endChar": 83
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0be7d3fb_9dfa0d9b",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-09T00:30:24Z",
+      "side": 1,
+      "message": "Only if it\u0027s actually affected. I\u0027m not sure which mode we use for the shader translator running on Linux on top of NVIDIA\u0027s OpenGL 4.5 (compatibility profile) drivers.",
+      "parentUuid": "8bd3c31c_0cafb4cb",
+      "range": {
+        "startLine": 101,
+        "startChar": 11,
+        "endLine": 103,
+        "endChar": 83
+      },
+      "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b9f4379_c0adfe3e",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-09T00:30:24Z",
+      "side": 1,
+      "message": "Why does this inject \"smooth\" here? \"flat centroid\" is legal -- even though it\u0027s equivalent to \"flat\". (GLSL ES 3.00.4 section 4.3.9 \"Interpolation\")",
+      "range": {
+        "startLine": 175,
+        "startChar": 24,
+        "endLine": 175,
+        "endChar": 30
       },
       "revId": "8880ea22562009c2ef47bab5bf8e86d2e5da5ead",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
