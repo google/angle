@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebafdfaa_1e8a29a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-09T03:19:44Z",
+      "side": 1,
+      "message": "typo: invarant -\u003e invariant.",
+      "range": {
+        "startLine": 7,
+        "startChar": 13,
+        "endLine": 7,
+        "endChar": 22
+      },
+      "revId": "b7bf742696187bad97b3812ac9f14c8650c1eb16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab9ec77a_874eeada",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-09T03:19:44Z",
+      "side": 1,
+      "message": "Version should be updated.",
+      "range": {
+        "startLine": 52,
+        "startChar": 25,
+        "endLine": 52,
+        "endChar": 28
+      },
+      "revId": "b7bf742696187bad97b3812ac9f14c8650c1eb16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbc21b71_fd9e63ed",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-09T03:19:44Z",
+      "side": 1,
+      "message": "We also should add these flags to libANGLE.",
+      "revId": "b7bf742696187bad97b3812ac9f14c8650c1eb16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
