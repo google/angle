@@ -188,13 +188,8 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
     }
 
     // Write translated shader.
-    TOutputGLSL outputGLSL(sink,
-                           getArrayIndexClampingStrategy(),
-                           getHashFunction(),
-                           getNameMap(),
-                           getSymbolTable(),
-                           getShaderVersion(),
-                           getOutputType(),
+    TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
+                           getSymbolTable(), getShaderType(), getShaderVersion(), getOutputType(),
                            compileOptions);
     root->traverse(&outputGLSL);
 }

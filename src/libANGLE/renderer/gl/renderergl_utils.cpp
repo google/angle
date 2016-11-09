@@ -944,6 +944,8 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->unpackLastRowSeparatelyForPaddingInclusion = IsNvidia(vendor);
     workarounds->packLastRowSeparatelyForPaddingInclusion   = IsNvidia(vendor);
 #endif
+
+    workarounds->removeInvariantAndCentroidForESSL3 = functions->isAtMostGL(gl::Version(4, 1));
 }
 
 }

@@ -80,6 +80,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT;
     }
 
+    if (mWorkarounds.removeInvariantAndCentroidForESSL3)
+    {
+        options |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;
+    }
+
     return options;
 }
 

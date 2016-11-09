@@ -49,7 +49,7 @@ typedef unsigned int GLenum;
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 166
+#define ANGLE_SH_VERSION 167
 
 enum ShShaderSpec
 {
@@ -226,8 +226,7 @@ const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1)
 // TODO(zmo): This is not a good long-term solution. Simply dropping these qualifiers may break some
 // developers' content. A more complex workaround of dynamically generating, compiling, and
 // re-linking shaders that use these qualifiers should be implemented.
-const ShCompileOptions SH_REMOVE_INVARIANT_FOR_ESSL3 = UINT64_C(1) << 30;
-const ShCompileOptions SH_REMOVE_CENTROID_FOR_ESSL3 = UINT64_C(1) << 31;
+const ShCompileOptions SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3 = UINT64_C(1) << 30;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

@@ -26,7 +26,8 @@ struct WorkaroundsGL
           addAndTrueToLoopCondition(false),
           emulateIsnanFloat(false),
           useUnusedBlocksWithStandardOrSharedLayout(false),
-          dontRemoveInvariantForFragmentInput(false)
+          dontRemoveInvariantForFragmentInput(false),
+          removeInvariantAndCentroidForESSL3(false)
     {
     }
 
@@ -116,6 +117,9 @@ struct WorkaroundsGL
     // This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20
     // on AMD.
     bool dontRemoveInvariantForFragmentInput;
+
+    // This flag is used to fix spec difference between GLSL 4.1 or lower and ESSL3.
+    bool removeInvariantAndCentroidForESSL3;
 };
 }
 

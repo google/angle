@@ -15,7 +15,7 @@ namespace
 {
 
 // An AST traverser that removes invariant declaration for input in fragment shader
-// when GLSL >= 4.20.
+// when GLSL >= 4.20 and for output in vertex shader when GLSL < 4.2.
 class RemoveInvariantDeclarationTraverser : public TIntermTraverser
 {
   public:
@@ -26,17 +26,10 @@ class RemoveInvariantDeclarationTraverser : public TIntermTraverser
     {
         if (node->getOp() == EOpInvariantDeclaration)
         {
-            for (TIntermNode *&child : *node->getSequence())
-            {
-                TIntermTyped *typed = child->getAsTyped();
-                if (typed && typed->getQualifier() == EvqVaryingIn)
-                {
-                    TIntermSequence emptyReplacement;
-                    mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(
-                        getParentNode()->getAsBlock(), node, emptyReplacement));
-                    return false;
-                }
-            }
+            TIntermSequence emptyReplacement;
+            mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(getParentNode()->getAsBlock(),
+                                                                      node, emptyReplacement));
+            return false;
         }
         return true;
     }

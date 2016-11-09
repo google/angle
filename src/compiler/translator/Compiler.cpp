@@ -103,6 +103,22 @@ bool IsGLSL410OrOlder(ShShaderOutput output)
             output == SH_GLSL_400_CORE_OUTPUT || output == SH_GLSL_410_CORE_OUTPUT);
 }
 
+bool RemoveInvariant(sh::GLenum shaderType,
+                     int shaderVersion,
+                     ShShaderOutput outputType,
+                     ShCompileOptions compileOptions)
+{
+    if ((compileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT) == 0 &&
+        shaderType == GL_FRAGMENT_SHADER && IsGLSL420OrNewer(outputType))
+        return true;
+
+    if ((compileOptions & SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3) != 0 &&
+        shaderVersion >= 300 && shaderType == GL_VERTEX_SHADER && IsGLSL410OrOlder(outputType))
+        return true;
+
+    return false;
+}
+
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
 {
     // WebGL defines a max token legnth of 256, while ES2 leaves max token
@@ -394,8 +410,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
              (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
             initializeGLPosition(root);
 
-        if (success && !(compileOptions & SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT) &&
-            shaderType == GL_FRAGMENT_SHADER && IsGLSL420OrNewer(outputType))
+        if (success && RemoveInvariant(shaderType, shaderVersion, outputType, compileOptions))
             sh::RemoveInvariantDeclaration(root);
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
