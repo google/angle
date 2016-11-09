@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb799f3f_fad195b6",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T23:58:48Z",
+      "side": 1,
+      "message": "nit: EXPECT_GLENUM_EQ",
+      "range": {
+        "startLine": 328,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 17
+      },
+      "revId": "c5d880d48b552aaa5ddb5eefbc0c3a5d559f4af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_9ac651fe",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T23:58:48Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 343,
+        "startChar": 8,
+        "endLine": 343,
+        "endChar": 17
+      },
+      "revId": "c5d880d48b552aaa5ddb5eefbc0c3a5d559f4af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_9aadf13f",
+        "filename": "src/tests/gl_tests/MultisampleCompatibilityTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-09T23:58:48Z",
+      "side": 1,
+      "message": "nit: EXPECT_EQ(expected, actual)",
+      "range": {
+        "startLine": 425,
+        "startChar": 12,
+        "endLine": 425,
+        "endChar": 23
+      },
+      "revId": "c5d880d48b552aaa5ddb5eefbc0c3a5d559f4af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
