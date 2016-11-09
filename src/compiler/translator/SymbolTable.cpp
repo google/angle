@@ -126,6 +126,12 @@ TSymbol *TSymbolTable::find(const TString &name, int shaderVersion,
     return symbol;
 }
 
+TSymbol *TSymbolTable::findGlobal(const TString &name) const
+{
+    ASSERT(table.size() > GLOBAL_LEVEL);
+    return table[GLOBAL_LEVEL]->find(name);
+}
+
 TSymbol *TSymbolTable::findBuiltIn(
     const TString &name, int shaderVersion) const
 {

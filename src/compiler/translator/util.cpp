@@ -302,27 +302,6 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
     }
 }
 
-TType GetInterfaceBlockType(const sh::InterfaceBlock &block)
-{
-    TType type;
-    TFieldList *fields = new TFieldList;
-    TSourceLoc loc;
-    for (const auto &field : block.fields)
-    {
-        TType *fieldType = new TType(GetShaderVariableType(field));
-        fields->push_back(new TField(fieldType, new TString(field.name.c_str()), loc));
-    }
-
-    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
-        new TString(block.name.c_str()), fields, new TString(block.instanceName.c_str()),
-        block.arraySize, TLayoutQualifier::create());
-
-    type.setBasicType(EbtInterfaceBlock);
-    type.setInterfaceBlock(interfaceBlock);
-    type.setArraySize(block.arraySize);
-    return type;
-}
-
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
 {
     switch (var.type)
@@ -381,35 +360,6 @@ TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
             UNREACHABLE();
             return TType();
     }
-}
-
-TType GetShaderVariableType(const sh::ShaderVariable &var)
-{
-    TType type;
-    if (var.isStruct())
-    {
-        TFieldList *fields = new TFieldList;
-        TSourceLoc loc;
-        for (const auto &field : var.fields)
-        {
-            TType *fieldType = new TType(GetShaderVariableType(field));
-            fields->push_back(new TField(fieldType, new TString(field.name.c_str()), loc));
-        }
-        TStructure *structure = new TStructure(new TString(var.structName.c_str()), fields);
-
-        type.setBasicType(EbtStruct);
-        type.setStruct(structure);
-    }
-    else
-    {
-        type = GetShaderVariableBasicType(var);
-    }
-
-    if (var.isArray())
-    {
-        type.setArraySize(var.elementCount());
-    }
-    return type;
 }
 
 TOperator TypeToConstructorOperator(const TType &type)

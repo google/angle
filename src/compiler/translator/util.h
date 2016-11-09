@@ -37,9 +37,7 @@ bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 TString ArrayString(const TType &type);
 
-TType GetInterfaceBlockType(const sh::InterfaceBlock &block);
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
-TType GetShaderVariableType(const sh::ShaderVariable &var);
 
 TOperator TypeToConstructorOperator(const TType &type);
 
