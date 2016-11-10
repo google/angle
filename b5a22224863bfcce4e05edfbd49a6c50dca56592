@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eb799f3f_57bf5f5f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-10T07:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb799f3f_74b619e1",
+      "range": {
+        "startLine": 229,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 72
+      },
+      "revId": "b5a22224863bfcce4e05edfbd49a6c50dca56592",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb799f3f_d4d02d0a",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-10T05:21:21Z",
       "side": 1,
       "message": "can you make this a helper function, and re-use it in Compiler.cpp? Seems pretty complex for a bool check.",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 110,
+        "endChar": 67
+      },
+      "revId": "b5a22224863bfcce4e05edfbd49a6c50dca56592",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_f7cc4b21",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-10T07:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb799f3f_d4d02d0a",
       "range": {
         "startLine": 106,
         "startChar": 4,
