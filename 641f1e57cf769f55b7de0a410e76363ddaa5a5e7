@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb799f3f_1a37c112",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-10T00:11:30Z",
+      "side": 1,
+      "message": "tiny nit: sorry to be picky, but could you add a whitespace newline between each of the sections?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 21
+      },
+      "revId": "641f1e57cf769f55b7de0a410e76363ddaa5a5e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_baf9cd10",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-10T00:11:30Z",
+      "side": 1,
+      "message": "I don\u0027t think you need this here. This is for shader extensions, like #extension blah : enabled. This extension I think will be transparent to the shader, only visible in the API-side.",
+      "range": {
+        "startLine": 277,
+        "startChar": 8,
+        "endLine": 277,
+        "endChar": 33
+      },
+      "revId": "641f1e57cf769f55b7de0a410e76363ddaa5a5e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_da113978",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-10T00:11:30Z",
+      "side": 1,
+      "message": "nit: lower case \"i\" for non-static member.",
+      "range": {
+        "startLine": 36,
+        "startChar": 9,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "641f1e57cf769f55b7de0a410e76363ddaa5a5e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
