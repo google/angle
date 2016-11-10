@@ -138,6 +138,8 @@
             'libANGLE/Surface.h',
             'libANGLE/Texture.cpp',
             'libANGLE/Texture.h',
+            'libANGLE/Thread.cpp',
+            'libANGLE/Thread.h',
             'libANGLE/TransformFeedback.cpp',
             'libANGLE/TransformFeedback.h',
             'libANGLE/Uniform.cpp',

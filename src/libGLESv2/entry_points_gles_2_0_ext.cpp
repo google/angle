@@ -18,6 +18,7 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/Thread.h"
 #include "libANGLE/VertexArray.h"
 
 #include "libANGLE/validationES.h"
@@ -990,10 +991,11 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglIma
 {
     EVENT("(GLenum target = 0x%X, GLeglImageOES image = 0x%0.8p)", target, image);
 
-    Context *context = GetValidGlobalContext();
+    egl::Thread *thread = egl::GetCurrentThread();
+    Context *context    = thread->getValidContext();
     if (context)
     {
-        egl::Display *display   = egl::GetGlobalDisplay();
+        egl::Display *display   = thread->getDisplay();
         egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
         if (!ValidateEGLImageTargetTexture2DOES(context, display, target, imageObject))
         {
@@ -1015,10 +1017,11 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
 {
     EVENT("(GLenum target = 0x%X, GLeglImageOES image = 0x%0.8p)", target, image);
 
-    Context *context = GetValidGlobalContext();
+    egl::Thread *thread = egl::GetCurrentThread();
+    Context *context    = thread->getValidContext();
     if (context)
     {
-        egl::Display *display   = egl::GetGlobalDisplay();
+        egl::Display *display   = thread->getDisplay();
         egl::Image *imageObject = reinterpret_cast<egl::Image *>(image);
         if (!ValidateEGLImageTargetRenderbufferStorageOES(context, display, target, imageObject))
         {
