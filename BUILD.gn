@@ -73,25 +73,6 @@ if (is_win) {
 
 angle_undefine_configs = [ "//build/config/compiler:default_include_dirs" ]
 
-static_library("translator") {
-  sources = [
-    "src/compiler/translator/ShaderLang.cpp",
-    "src/compiler/translator/ShaderVars.cpp",
-  ]
-
-  if (angle_enable_hlsl) {
-    defines = [ "ANGLE_ENABLE_HLSL" ]
-  }
-
-  configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
-  public_configs = [ ":translator_static_config" ]
-
-  public_deps = [
-    ":translator_lib",
-  ]
-}
-
 # Holds the shared includes so we only need to list them once.
 source_set("includes") {
   sources = [
@@ -119,10 +100,6 @@ static_library("preprocessor") {
   public_deps = [
     ":angle_common",
   ]
-}
-
-config("translator_static_config") {
-  defines = [ "ANGLE_TRANSLATOR_STATIC" ]
 }
 
 config("translator_disable_pool_alloc") {
@@ -185,7 +162,7 @@ static_library("angle_image_util") {
   ]
 }
 
-static_library("translator_lib") {
+static_library("translator") {
   sources = rebase_path(compiler_gypi.angle_translator_lib_sources, ".", "src")
   defines = []
 
@@ -207,10 +184,7 @@ static_library("translator_lib") {
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
   configs -= angle_undefine_configs
-  configs += [
-    ":internal_config",
-    ":translator_static_config",
-  ]
+  configs += [ ":internal_config" ]
   public_configs = [ ":external_config" ]
   if (use_libfuzzer) {
     all_dependent_configs = [ ":translator_disable_pool_alloc" ]

@@ -58,8 +58,7 @@ dest_folder = os.path.join(chrome_folder, sorted_chrome_bins[0])
 
 print('Copying DLLs from ' + source_folder + ' to ' + dest_folder + '.')
 
-# Translator.dll appears if we build in component=shared_library mode.
-for dll in ['libGLESv2.dll', 'libEGL.dll', 'translator.dll']:
+for dll in ['libGLESv2.dll', 'libEGL.dll']:
     src = os.path.join(source_folder, dll)
     if os.path.exists(src):
         # Make a backup of the original unmodified DLLs if they are present.

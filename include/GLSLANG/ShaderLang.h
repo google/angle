@@ -6,23 +6,6 @@
 #ifndef GLSLANG_SHADERLANG_H_
 #define GLSLANG_SHADERLANG_H_
 
-#if defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
-#if defined(_WIN32) || defined(_WIN64)
-
-#if defined(ANGLE_TRANSLATOR_IMPLEMENTATION)
-#define COMPILER_EXPORT __declspec(dllexport)
-#else
-#define COMPILER_EXPORT __declspec(dllimport)
-#endif  // defined(ANGLE_TRANSLATOR_IMPLEMENTATION)
-
-#else  // defined(_WIN32) || defined(_WIN64)
-#define COMPILER_EXPORT __attribute__((visibility("default")))
-#endif
-
-#else  // defined(COMPONENT_BUILD) && !defined(ANGLE_TRANSLATOR_STATIC)
-#define COMPILER_EXPORT
-#endif
-
 #include <stddef.h>
 
 #include "KHR/khrplatform.h"
@@ -394,19 +377,19 @@ using ShHandle = void *;
 // compiler operations.
 // If the function succeeds, the return value is true, else false.
 //
-COMPILER_EXPORT bool ShInitialize();
+bool ShInitialize();
 //
 // Driver should call this at shutdown.
 // If the function succeeds, the return value is true, else false.
 //
-COMPILER_EXPORT bool ShFinalize();
+bool ShFinalize();
 
 //
 // Initialize built-in resources with minimum expected values.
 // Parameters:
 // resources: The object to initialize. Will be comparable with memcmp.
 //
-COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources *resources);
+void ShInitBuiltInResources(ShBuiltInResources *resources);
 
 //
 // Returns the a concatenated list of the items in ShBuiltInResources as a
@@ -414,7 +397,7 @@ COMPILER_EXPORT void ShInitBuiltInResources(ShBuiltInResources *resources);
 // This function must be updated whenever ShBuiltInResources is changed.
 // Parameters:
 // handle: Specifies the handle of the compiler to be used.
-COMPILER_EXPORT const std::string &ShGetBuiltInResourcesString(const ShHandle handle);
+const std::string &ShGetBuiltInResourcesString(const ShHandle handle);
 
 //
 // Driver calls these to create and destroy compiler objects.
@@ -429,12 +412,11 @@ COMPILER_EXPORT const std::string &ShGetBuiltInResourcesString(const ShHandle ha
 //         SH_HLSL_3_0_OUTPUT or SH_HLSL_4_1_OUTPUT. Note: Each output type may only
 //         be supported in some configurations.
 // resources: Specifies the built-in resources.
-COMPILER_EXPORT ShHandle ShConstructCompiler(
-    sh::GLenum type,
-    ShShaderSpec spec,
-    ShShaderOutput output,
-    const ShBuiltInResources *resources);
-COMPILER_EXPORT void ShDestruct(ShHandle handle);
+ShHandle ShConstructCompiler(sh::GLenum type,
+                             ShShaderSpec spec,
+                             ShShaderOutput output,
+                             const ShBuiltInResources *resources);
+void ShDestruct(ShHandle handle);
 
 //
 // Compiles the given shader source.
@@ -460,38 +442,36 @@ COMPILER_EXPORT void ShDestruct(ShHandle handle);
 // SH_VARIABLES: Extracts attributes, uniforms, and varyings.
 //               Can be queried by calling ShGetVariableInfo().
 //
-COMPILER_EXPORT bool ShCompile(const ShHandle handle,
-                               const char *const shaderStrings[],
-                               size_t numStrings,
-                               ShCompileOptions compileOptions);
+bool ShCompile(const ShHandle handle,
+               const char *const shaderStrings[],
+               size_t numStrings,
+               ShCompileOptions compileOptions);
 
 // Clears the results from the previous compilation.
-COMPILER_EXPORT void ShClearResults(const ShHandle handle);
+void ShClearResults(const ShHandle handle);
 
 // Return the version of the shader language.
-COMPILER_EXPORT int ShGetShaderVersion(const ShHandle handle);
+int ShGetShaderVersion(const ShHandle handle);
 
 // Return the currently set language output type.
-COMPILER_EXPORT ShShaderOutput ShGetShaderOutputType(
-    const ShHandle handle);
+ShShaderOutput ShGetShaderOutputType(const ShHandle handle);
 
 // Returns null-terminated information log for a compiled shader.
 // Parameters:
 // handle: Specifies the compiler
-COMPILER_EXPORT const std::string &ShGetInfoLog(const ShHandle handle);
+const std::string &ShGetInfoLog(const ShHandle handle);
 
 // Returns null-terminated object code for a compiled shader.
 // Parameters:
 // handle: Specifies the compiler
-COMPILER_EXPORT const std::string &ShGetObjectCode(const ShHandle handle);
+const std::string &ShGetObjectCode(const ShHandle handle);
 
 // Returns a (original_name, hash) map containing all the user defined
 // names in the shader, including variable names, function names, struct
 // names, and struct field names.
 // Parameters:
 // handle: Specifies the compiler
-COMPILER_EXPORT const std::map<std::string, std::string> *ShGetNameHashingMap(
-    const ShHandle handle);
+const std::map<std::string, std::string> *ShGetNameHashingMap(const ShHandle handle);
 
 // Shader variable inspection.
 // Returns a pointer to a list of variables of the designated type.
@@ -499,12 +479,12 @@ COMPILER_EXPORT const std::map<std::string, std::string> *ShGetNameHashingMap(
 // Returns NULL on failure.
 // Parameters:
 // handle: Specifies the compiler
-COMPILER_EXPORT const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle);
-COMPILER_EXPORT const std::vector<sh::Varying> *ShGetVaryings(const ShHandle handle);
-COMPILER_EXPORT const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle);
-COMPILER_EXPORT const std::vector<sh::OutputVariable> *ShGetOutputVariables(const ShHandle handle);
-COMPILER_EXPORT const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
-COMPILER_EXPORT sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle);
+const std::vector<sh::Uniform> *ShGetUniforms(const ShHandle handle);
+const std::vector<sh::Varying> *ShGetVaryings(const ShHandle handle);
+const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle);
+const std::vector<sh::OutputVariable> *ShGetOutputVariables(const ShHandle handle);
+const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
+sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle);
 
 // Returns true if the passed in variables pack in maxVectors following
 // the packing rules from the GLSL 1.017 spec, Appendix A, section 7.
@@ -513,9 +493,8 @@ COMPILER_EXPORT sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandl
 // Parameters:
 // maxVectors: the available rows of registers.
 // variables: an array of variables.
-COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
-    int maxVectors,
-    const std::vector<sh::ShaderVariable> &variables);
+bool ShCheckVariablesWithinPackingLimits(int maxVectors,
+                                         const std::vector<sh::ShaderVariable> &variables);
 
 // Gives the compiler-assigned register for an interface block.
 // The method writes the value to the output variable "indexOut".
@@ -524,15 +503,14 @@ COMPILER_EXPORT bool ShCheckVariablesWithinPackingLimits(
 // handle: Specifies the compiler
 // interfaceBlockName: Specifies the interface block
 // indexOut: output variable that stores the assigned register
-COMPILER_EXPORT bool ShGetInterfaceBlockRegister(const ShHandle handle,
-                                                 const std::string &interfaceBlockName,
-                                                 unsigned int *indexOut);
+bool ShGetInterfaceBlockRegister(const ShHandle handle,
+                                 const std::string &interfaceBlockName,
+                                 unsigned int *indexOut);
 
 // Gives a map from uniform names to compiler-assigned registers in the default
 // interface block. Note that the map contains also registers of samplers that
 // have been extracted from structs.
-COMPILER_EXPORT const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(
-    const ShHandle handle);
+const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(const ShHandle handle);
 
 // Temporary duplicate of the scoped APIs, to be removed when we roll ANGLE and fix Chromium.
 // TODO(jmadill): Consolidate with these APIs once we roll ANGLE.

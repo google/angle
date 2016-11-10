@@ -106,6 +106,8 @@
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
             'compiler/translator/SearchSymbol.cpp',
             'compiler/translator/SearchSymbol.h',
+            'compiler/translator/ShaderLang.cpp',
+            'compiler/translator/ShaderVars.cpp',
             'compiler/translator/SymbolTable.cpp',
             'compiler/translator/SymbolTable.h',
             'compiler/translator/Types.cpp',
@@ -252,7 +254,7 @@
             'sources': [ '<@(angle_preprocessor_sources)', ],
         },
         {
-            'target_name': 'translator_lib',
+            'target_name': 'translator',
             'type': 'static_library',
             'dependencies': [ 'preprocessor', 'angle_common' ],
             'includes': [ '../gyp/common_defines.gypi', ],
@@ -260,12 +262,6 @@
             [
                 '.',
                 '../include',
-            ],
-            'defines':
-            [
-                # define the static translator to indicate exported
-                # classes are (in fact) locally defined
-                'ANGLE_TRANSLATOR_STATIC',
             ],
             'sources':
             [
@@ -333,51 +329,6 @@
                     [
                         '<@(angle_translator_lib_hlsl_sources)',
                     ],
-                }],
-            ],
-        },
-
-        {
-            'target_name': 'translator',
-            'type': 'static_library',
-            'dependencies': [ 'translator_lib', 'angle_common' ],
-            'includes': [ '../gyp/common_defines.gypi', ],
-            'include_dirs':
-            [
-                '.',
-                '../include',
-            ],
-            'defines':
-            [
-                'ANGLE_TRANSLATOR_STATIC',
-            ],
-            'direct_dependent_settings':
-            {
-                'defines':
-                [
-                    'ANGLE_TRANSLATOR_STATIC',
-                ],
-            },
-            'sources':
-            [
-                'compiler/translator/ShaderLang.cpp',
-                'compiler/translator/ShaderVars.cpp'
-            ],
-            'conditions':
-            [
-                ['angle_enable_hlsl==1',
-                {
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_HLSL',
-                    ],
-                    'direct_dependent_settings':
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_HLSL',
-                        ],
-                    },
                 }],
             ],
         },
