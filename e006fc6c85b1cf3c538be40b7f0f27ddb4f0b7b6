@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "eb799f3f_20fff041",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-10T01:43:14Z",
+      "side": 1,
+      "message": "Added the change back.",
+      "parentUuid": "eb799f3f_8567d643",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "e006fc6c85b1cf3c538be40b7f0f27ddb4f0b7b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6bbdafe5_ab8421a6",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 1
