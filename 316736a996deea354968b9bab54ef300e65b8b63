@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "eb799f3f_a57772b4",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-10T01:02:19Z",
+      "side": 1,
+      "message": "Per our offline discussion: it\u0027s subtle that this code only works for\nlimited scenarios:\n 1. Initializing gl_Position\n 2. Initializing ESSL 3.00 shaders\u0027 output variables (which might be structs)\nand that it\u0027s not feasible to make it work for local variables\nbecause the AST isn\u0027t set up to find type information\nafter the fact for the nodes it\u0027s created.\n\nCould you please add documentation to InitializeVariables.h indicating that this traverser only works in these limited situations (and document exactly what they are there)? Otherwise we\u0027ll forget how this code works and try to apply it in incorrect situations in the future. Thanks.",
+      "range": {
+        "startLine": 100,
+        "startChar": 46,
+        "endLine": 100,
+        "endChar": 58
+      },
+      "revId": "316736a996deea354968b9bab54ef300e65b8b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_c584fea7",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-10T01:02:19Z",
+      "side": 1,
+      "message": "Very cool -- confirmed that TIntermTyped::CreateZero synthesizes a constructor call for the struct type.",
+      "range": {
+        "startLine": 104,
+        "startChar": 12,
+        "endLine": 104,
+        "endChar": 24
+      },
+      "revId": "316736a996deea354968b9bab54ef300e65b8b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_855fd624",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-10T01:02:19Z",
+      "side": 1,
+      "message": "Requesting that this comment be expanded -- see feedback in InitializeVariables.cpp. Also, please carefully document that this only works for the top-level compilation, and can\u0027t currently initialize local variables in functions.",
+      "range": {
+        "startLine": 20,
+        "startChar": 12,
+        "endLine": 20,
+        "endChar": 17
+      },
+      "revId": "316736a996deea354968b9bab54ef300e65b8b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb799f3f_1a5ee158",
         "filename": "src/compiler/translator/SymbolTable.cpp",
         "patchSetId": 1
@@ -42,6 +111,29 @@
         "startChar": 23,
         "endLine": 129,
         "endChar": 40
+      },
+      "revId": "316736a996deea354968b9bab54ef300e65b8b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_e5b7ba2d",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-11-10T01:02:19Z",
+      "side": 1,
+      "message": "Could you explain in the comment what it is then?",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 16
       },
       "revId": "316736a996deea354968b9bab54ef300e65b8b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
