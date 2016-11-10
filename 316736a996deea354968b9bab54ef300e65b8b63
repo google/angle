@@ -155,6 +155,24 @@
       "revId": "316736a996deea354968b9bab54ef300e65b8b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb799f3f_0d00e81a",
+        "filename": "src/compiler/translator/UseInterfaceBlockFields.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2016-11-10T18:12:16Z",
+      "side": 1,
+      "message": "Yeah I realized this too while investigating the angle_end2end_tests failure on the trybot",
+      "parentUuid": "eb799f3f_6054183b",
+      "revId": "316736a996deea354968b9bab54ef300e65b8b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
