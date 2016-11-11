@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b7aab69_51b633e0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2862,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-11T21:37:41Z",
+      "side": 1,
+      "message": "nit: git cl format.",
+      "range": {
+        "startLine": 2862,
+        "startChar": 97,
+        "endLine": 2862,
+        "endChar": 112
+      },
+      "revId": "3cc051a092b4dc5a0116bb7a6b622e2c56c87997",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
