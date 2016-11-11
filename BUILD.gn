@@ -277,6 +277,7 @@ config("libANGLE_config") {
   defines += [
     "GL_GLEXT_PROTOTYPES",
     "EGL_EGLEXT_PROTOTYPES",
+    "LIBANGLE_IMPLEMENTATION",
   ]
 
   if (is_win) {
@@ -300,7 +301,7 @@ static_library("libANGLE") {
 
   include_dirs = []
   libs = []
-  defines = [ "LIBANGLE_IMPLEMENTATION" ]
+  defines = []
   public_deps = [
     ":angle_common",
   ]
