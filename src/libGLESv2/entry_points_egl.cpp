@@ -24,8 +24,6 @@
 #include "common/debug.h"
 #include "common/version.h"
 
-#include "platform/Platform.h"
-
 #include <EGL/eglext.h>
 
 namespace egl
@@ -1277,9 +1275,6 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
 #define INSERT_PROC_ADDRESS(ns, proc) \
     map[#ns #proc] = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(ns::proc)
 
-#define INSERT_PROC_ADDRESS_NO_NS(name, proc) \
-    map[name] = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(proc)
-
         // GLES2 core
         INSERT_PROC_ADDRESS(gl, ActiveTexture);
         INSERT_PROC_ADDRESS(gl, AttachShader);
@@ -1671,8 +1666,8 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, UniformBlockBinding);
         INSERT_PROC_ADDRESS(gl, DrawArraysInstanced);
         INSERT_PROC_ADDRESS(gl, DrawElementsInstanced);
-        // FenceSync is the name of a class, the function has an added _ to prevent a name conflict.
-        INSERT_PROC_ADDRESS_NO_NS("glFenceSync", gl::FenceSync_);
+        map["glFenceSync"] =
+            reinterpret_cast<__eglMustCastToProperFunctionPointerType>(gl::FenceSync_);
         INSERT_PROC_ADDRESS(gl, IsSync);
         INSERT_PROC_ADDRESS(gl, DeleteSync);
         INSERT_PROC_ADDRESS(gl, ClientWaitSync);
@@ -1875,13 +1870,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         // EGL_EXT_swap_buffers_with_damage
         INSERT_PROC_ADDRESS(egl, SwapBuffersWithDamageEXT);
 
-        // angle::Platform related entry points
-        INSERT_PROC_ADDRESS_NO_NS("ANGLEPlatformInitialize", ANGLEPlatformInitialize);
-        INSERT_PROC_ADDRESS_NO_NS("ANGLEPlatformShutdown", ANGLEPlatformShutdown);
-
 #undef INSERT_PROC_ADDRESS
-#undef INSERT_PROC_ADDRESS_NO_NS
-
         return map;
     };
 
