@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb527fc5_23de2a50",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 4
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-11-11T14:03:31Z",
+      "side": 1,
+      "message": "Was causing a compilation error under clang.",
+      "range": {
+        "startLine": 509,
+        "startChar": 4,
+        "endLine": 509,
+        "endChar": 68
+      },
+      "revId": "585cdc954b0ba81dcf717e0fa36a20ea913022e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
