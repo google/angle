@@ -77,6 +77,7 @@ static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
+static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -207,10 +208,11 @@ O           [0-7]
 "imageCube"	{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
 "readonly" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, READONLY); }
 "writeonly" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
+"coherent" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, COHERENT); }
+"restrict" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, RESTRICT); }
+"volatile" { return ES2_and_ES3_reserved_ES3_1_keyword(context, VOLATILE); }
 
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
-"coherent"          |
-"restrict"          |
 "resource"          |
 "atomic_uint"       |
 "noperspective"     |
@@ -285,7 +287,6 @@ O           [0-7]
 
 "inline"       |
 "noinline"     |
-"volatile"     |
 "public"       |
 "static"       |
 "extern"       |
@@ -503,6 +504,18 @@ int ES2_ident_ES3_keyword(TParseContext *context, int token)
     return token;
 }
 
+int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
+{
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    if (context->getShaderVersion() < 310)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    return token;
+}
+
 int uint_constant(TParseContext *context)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
@@ -608,4 +621,3 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
 
     return 0;
 }
-

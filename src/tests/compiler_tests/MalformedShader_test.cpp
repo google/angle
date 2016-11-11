@@ -3076,3 +3076,83 @@ TEST_F(MalformedShaderTest, UnsizedArrayConstructorNoParameters)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Passing an image parameter as an argument to another function should not be able to discard the
+// coherent qualifier.
+TEST_F(MalformedFragmentShaderGLES31Test, CoherentQualifierMissingInFunctionArgument)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(r32f) uniform coherent image2D myImage;\n"
+        "void myFunc(in image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(myImage);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Passing an image parameter as an argument to another function should not be able to discard the
+// volatile qualifier.
+TEST_F(MalformedFragmentShaderGLES31Test, VolatileQualifierMissingInFunctionArgument)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(r32f) uniform volatile image2D myImage;\n"
+        "void myFunc(in image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(myImage);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// The restrict qualifier can be discarded from a function argument.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(MalformedFragmentShaderGLES31Test, RestrictQualifierDiscardedInFunctionArgument)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(r32f) uniform restrict image2D myImage;\n"
+        "void myFunc(in image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(myImage);\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Function image arguments can be overqualified.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(MalformedFragmentShaderGLES31Test, OverqualifyingImageParameter)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(r32f) uniform image2D myImage;\n"
+        "void myFunc(in coherent volatile image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(myImage);\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}

@@ -1820,6 +1820,21 @@ bool TParseContext::checkIsMemoryQualifierNotSpecified(const TMemoryQualifier &m
         error(location, "Only allowed with images.", "writeonly");
         return false;
     }
+    if (memoryQualifier.coherent)
+    {
+        error(location, "Only allowed with images.", "coherent");
+        return false;
+    }
+    if (memoryQualifier.restrictQualifier)
+    {
+        error(location, "Only allowed with images.", "restrict");
+        return false;
+    }
+    if (memoryQualifier.volatileQualifier)
+    {
+        error(location, "Only allowed with images.", "volatile");
+        return false;
+    }
     return true;
 }
 
@@ -4209,6 +4224,22 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
             {
                 error(functionCall->getLine(),
                       "Function call discards the 'writeonly' qualifier from image",
+                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+            }
+
+            if (functionArgumentMemoryQualifier.coherent &&
+                !functionParameterMemoryQualifier.coherent)
+            {
+                error(functionCall->getLine(),
+                      "Function call discards the 'coherent' qualifier from image",
+                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+            }
+
+            if (functionArgumentMemoryQualifier.volatileQualifier &&
+                !functionParameterMemoryQualifier.volatileQualifier)
+            {
+                error(functionCall->getLine(),
+                      "Function call discards the 'volatile' qualifier from image",
                       arguments[i]->getAsSymbolNode()->getSymbol().c_str());
             }
         }

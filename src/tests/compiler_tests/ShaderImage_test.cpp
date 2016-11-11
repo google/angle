@@ -90,7 +90,10 @@ void CheckImageDeclaration(TIntermNode *astRoot,
                            TBasicType imageType,
                            TLayoutImageInternalFormat internalFormat,
                            bool readonly,
-                           bool writeonly)
+                           bool writeonly,
+                           bool coherent,
+                           bool restrictQualifier,
+                           bool volatileQualifier)
 {
     const TIntermSymbol *myImageNode = FindSymbolNode(astRoot, imageName, imageType);
     ASSERT_NE(nullptr, myImageNode);
@@ -101,6 +104,9 @@ void CheckImageDeclaration(TIntermNode *astRoot,
     TMemoryQualifier myImageMemoryQualifier = myImageType.getMemoryQualifier();
     ASSERT_EQ(readonly, myImageMemoryQualifier.readonly);
     ASSERT_EQ(writeonly, myImageMemoryQualifier.writeonly);
+    ASSERT_EQ(coherent, myImageMemoryQualifier.coherent);
+    ASSERT_EQ(restrictQualifier, myImageMemoryQualifier.restrictQualifier);
+    ASSERT_EQ(volatileQualifier, myImageMemoryQualifier.volatileQualifier);
 }
 
 }  // namespace
@@ -156,7 +162,8 @@ TEST_F(ShaderImageTest, Image2DDeclaration)
     }
 
     CheckExportedImageUniform(mTranslator->getUniforms(), 0, GL_IMAGE_2D, "myImage");
-    CheckImageDeclaration(mASTRoot, "myImage", EbtImage2D, EiifRGBA32F, true, false);
+    CheckImageDeclaration(mASTRoot, "myImage", EbtImage2D, EiifRGBA32F, true, false, false, false,
+                          false);
 }
 
 // Test that an image3D is properly parsed and exported as a uniform.
@@ -175,7 +182,8 @@ TEST_F(ShaderImageTest, Image3DDeclaration)
     }
 
     CheckExportedImageUniform(mTranslator->getUniforms(), 0, GL_UNSIGNED_INT_IMAGE_3D, "myImage");
-    CheckImageDeclaration(mASTRoot, "myImage", EbtUImage3D, EiifRGBA32UI, true, true);
+    CheckImageDeclaration(mASTRoot, "myImage", EbtUImage3D, EiifRGBA32UI, true, true, false, false,
+                          false);
 }
 
 // Check that imageLoad calls get correctly parsed.
@@ -224,4 +232,28 @@ TEST_F(ShaderImageTest, ImageStore)
 
     // imageStore call with image2DArray
     CheckImageStoreCall(mASTRoot, "imageStore(uim2a1;vi3;vu4;", EbtUImage2DArray, 3, EbtUInt, 4);
+}
+
+// Check that memory qualifiers are correctly parsed.
+TEST_F(ShaderImageTest, ImageMemoryQualifiers)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 4) in;"
+        "layout(rgba32f) uniform highp coherent readonly image2D image1;\n"
+        "layout(rgba32f) uniform highp volatile writeonly image2D image2;\n"
+        "layout(rgba32f) uniform highp volatile restrict readonly writeonly image2D image3;\n"
+        "void main() {\n"
+        "}";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed" << mInfoLog;
+    }
+
+    CheckImageDeclaration(mASTRoot, "image1", EbtImage2D, EiifRGBA32F, true, false, true, false,
+                          false);
+    CheckImageDeclaration(mASTRoot, "image2", EbtImage2D, EiifRGBA32F, false, true, true, false,
+                          true);
+    CheckImageDeclaration(mASTRoot, "image3", EbtImage2D, EiifRGBA32F, true, true, true, true,
+                          true);
 }

@@ -169,7 +169,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
-%token <lex> READONLY WRITEONLY
+%token <lex> READONLY WRITEONLY COHERENT RESTRICT VOLATILE
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
 %token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE ISAMPLER2DARRAY
@@ -949,6 +949,15 @@ storage_qualifier
     }
     | WRITEONLY {
         $$ = new TMemoryQualifierWrapper(EvqWriteOnly, @1);
+    }
+    | COHERENT {
+        $$ = new TMemoryQualifierWrapper(EvqCoherent, @1);
+    }
+    | RESTRICT {
+        $$ = new TMemoryQualifierWrapper(EvqRestrict, @1);
+    }
+    | VOLATILE {
+        $$ = new TMemoryQualifierWrapper(EvqVolatile, @1);
     }
     ;
 

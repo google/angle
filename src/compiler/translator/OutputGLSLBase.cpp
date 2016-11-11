@@ -231,6 +231,24 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
         out << "writeonly ";
     }
 
+    if (memoryQualifier.coherent)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "coherent ";
+    }
+
+    if (memoryQualifier.restrictQualifier)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "restrict ";
+    }
+
+    if (memoryQualifier.volatileQualifier)
+    {
+        ASSERT(IsImage(type.getBasicType()));
+        out << "volatile ";
+    }
+
     // Declare the struct if we have not done so already.
     if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
     {
