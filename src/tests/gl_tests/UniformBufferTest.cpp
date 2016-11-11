@@ -433,6 +433,15 @@ TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
         return;
     }
 
+    // This case fails on all AMD platforms (Mac, Linux, Win).
+    // TODO(zmo): This actually passes on certain AMD cards, but we don't have
+    // a way to do device specific handling yet.
+    if (IsAMD())
+    {
+        std::cout << "Test skipped on AMD." << std::endl;
+        return;
+    }
+
     const std::string &vertexShaderSource =
         "#version 300 es\n"
         "in vec2 position;\n"
