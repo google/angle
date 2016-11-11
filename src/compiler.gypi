@@ -6,7 +6,7 @@
     'variables':
     {
         # These file lists are shared with the GN build.
-        'angle_translator_lib_sources':
+        'angle_translator_sources':
         [
             '../include/EGL/egl.h',
             '../include/EGL/eglext.h',
@@ -145,14 +145,14 @@
             'third_party/compiler/ArrayBoundsClamper.cpp',
             'third_party/compiler/ArrayBoundsClamper.h',
         ],
-        'angle_translator_lib_essl_sources':
+        'angle_translator_essl_sources':
         [
             'compiler/translator/OutputESSL.cpp',
             'compiler/translator/OutputESSL.h',
             'compiler/translator/TranslatorESSL.cpp',
             'compiler/translator/TranslatorESSL.h',
         ],
-        'angle_translator_lib_glsl_sources':
+        'angle_translator_glsl_sources':
         [
             'compiler/translator/BuiltInFunctionEmulatorGLSL.cpp',
             'compiler/translator/BuiltInFunctionEmulatorGLSL.h',
@@ -167,7 +167,7 @@
             'compiler/translator/VersionGLSL.cpp',
             'compiler/translator/VersionGLSL.h',
         ],
-        'angle_translator_lib_hlsl_sources':
+        'angle_translator_hlsl_sources':
         [
             'compiler/translator/AddDefaultReturnStatements.cpp',
             'compiler/translator/AddDefaultReturnStatements.h',
@@ -265,7 +265,7 @@
             ],
             'sources':
             [
-                '<@(angle_translator_lib_sources)',
+                '<@(angle_translator_sources)',
             ],
             'msvs_settings':
             {
@@ -291,7 +291,7 @@
                     },
                     'sources':
                     [
-                        '<@(angle_translator_lib_essl_sources)',
+                        '<@(angle_translator_essl_sources)',
                     ],
                 }],
                 ['angle_enable_glsl==1',
@@ -309,7 +309,7 @@
                     },
                     'sources':
                     [
-                        '<@(angle_translator_lib_glsl_sources)',
+                        '<@(angle_translator_glsl_sources)',
                     ],
                 }],
                 ['angle_enable_hlsl==1',
@@ -327,7 +327,7 @@
                     },
                     'sources':
                     [
-                        '<@(angle_translator_lib_hlsl_sources)',
+                        '<@(angle_translator_hlsl_sources)',
                     ],
                 }],
             ],
