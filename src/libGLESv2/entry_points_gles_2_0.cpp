@@ -164,7 +164,18 @@ void GL_APIENTRY BlendColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
 
 void GL_APIENTRY BlendEquation(GLenum mode)
 {
-    BlendEquationSeparate(mode, mode);
+    EVENT("(GLenum mode = 0x%X)", mode);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateBlendEquation(context, mode))
+        {
+            return;
+        }
+
+        context->blendEquation(mode);
+    }
 }
 
 void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
@@ -174,31 +185,9 @@ void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        switch (modeRGB)
+        if (!context->skipValidation() &&
+            !ValidateBlendEquationSeparate(context, modeRGB, modeAlpha))
         {
-          case GL_FUNC_ADD:
-          case GL_FUNC_SUBTRACT:
-          case GL_FUNC_REVERSE_SUBTRACT:
-          case GL_MIN:
-          case GL_MAX:
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        switch (modeAlpha)
-        {
-          case GL_FUNC_ADD:
-          case GL_FUNC_SUBTRACT:
-          case GL_FUNC_REVERSE_SUBTRACT:
-          case GL_MIN:
-          case GL_MAX:
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
             return;
         }
 
@@ -208,7 +197,18 @@ void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 
 void GL_APIENTRY BlendFunc(GLenum sfactor, GLenum dfactor)
 {
-    BlendFuncSeparate(sfactor, dfactor, sfactor, dfactor);
+    EVENT("(GLenum sfactor = 0x%X, GLenum dfactor = 0x%X)", sfactor, dfactor);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateBlendFunc(context, sfactor, dfactor))
+        {
+            return;
+        }
+
+        context->blendFunc(sfactor, dfactor);
+    }
 }
 
 void GL_APIENTRY BlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
@@ -219,135 +219,10 @@ void GL_APIENTRY BlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        switch (srcRGB)
+        if (!context->skipValidation() &&
+            !ValidateBlendFuncSeparate(context, srcRGB, dstRGB, srcAlpha, dstAlpha))
         {
-          case GL_ZERO:
-          case GL_ONE:
-          case GL_SRC_COLOR:
-          case GL_ONE_MINUS_SRC_COLOR:
-          case GL_DST_COLOR:
-          case GL_ONE_MINUS_DST_COLOR:
-          case GL_SRC_ALPHA:
-          case GL_ONE_MINUS_SRC_ALPHA:
-          case GL_DST_ALPHA:
-          case GL_ONE_MINUS_DST_ALPHA:
-          case GL_CONSTANT_COLOR:
-          case GL_ONE_MINUS_CONSTANT_COLOR:
-          case GL_CONSTANT_ALPHA:
-          case GL_ONE_MINUS_CONSTANT_ALPHA:
-          case GL_SRC_ALPHA_SATURATE:
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-              return;
-        }
-
-        switch (dstRGB)
-        {
-            case GL_ZERO:
-            case GL_ONE:
-            case GL_SRC_COLOR:
-            case GL_ONE_MINUS_SRC_COLOR:
-            case GL_DST_COLOR:
-            case GL_ONE_MINUS_DST_COLOR:
-            case GL_SRC_ALPHA:
-            case GL_ONE_MINUS_SRC_ALPHA:
-            case GL_DST_ALPHA:
-            case GL_ONE_MINUS_DST_ALPHA:
-            case GL_CONSTANT_COLOR:
-            case GL_ONE_MINUS_CONSTANT_COLOR:
-            case GL_CONSTANT_ALPHA:
-            case GL_ONE_MINUS_CONSTANT_ALPHA:
-                break;
-
-            case GL_SRC_ALPHA_SATURATE:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                break;
-
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return;
-        }
-
-        switch (srcAlpha)
-        {
-          case GL_ZERO:
-          case GL_ONE:
-          case GL_SRC_COLOR:
-          case GL_ONE_MINUS_SRC_COLOR:
-          case GL_DST_COLOR:
-          case GL_ONE_MINUS_DST_COLOR:
-          case GL_SRC_ALPHA:
-          case GL_ONE_MINUS_SRC_ALPHA:
-          case GL_DST_ALPHA:
-          case GL_ONE_MINUS_DST_ALPHA:
-          case GL_CONSTANT_COLOR:
-          case GL_ONE_MINUS_CONSTANT_COLOR:
-          case GL_CONSTANT_ALPHA:
-          case GL_ONE_MINUS_CONSTANT_ALPHA:
-          case GL_SRC_ALPHA_SATURATE:
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-              return;
-        }
-
-        switch (dstAlpha)
-        {
-            case GL_ZERO:
-            case GL_ONE:
-            case GL_SRC_COLOR:
-            case GL_ONE_MINUS_SRC_COLOR:
-            case GL_DST_COLOR:
-            case GL_ONE_MINUS_DST_COLOR:
-            case GL_SRC_ALPHA:
-            case GL_ONE_MINUS_SRC_ALPHA:
-            case GL_DST_ALPHA:
-            case GL_ONE_MINUS_DST_ALPHA:
-            case GL_CONSTANT_COLOR:
-            case GL_ONE_MINUS_CONSTANT_COLOR:
-            case GL_CONSTANT_ALPHA:
-            case GL_ONE_MINUS_CONSTANT_ALPHA:
-                break;
-
-            case GL_SRC_ALPHA_SATURATE:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                break;
-
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return;
-        }
-
-        if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc)
-        {
-            bool constantColorUsed =
-                (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
-                 dstRGB == GL_CONSTANT_COLOR || dstRGB == GL_ONE_MINUS_CONSTANT_COLOR);
-
-            bool constantAlphaUsed =
-                (srcRGB == GL_CONSTANT_ALPHA || srcRGB == GL_ONE_MINUS_CONSTANT_ALPHA ||
-                 dstRGB == GL_CONSTANT_ALPHA || dstRGB == GL_ONE_MINUS_CONSTANT_ALPHA);
-
-            if (constantColorUsed && constantAlphaUsed)
-            {
-                ERR(
-                    "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
-                    "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
-                    "implementation.");
-                context->handleError(Error(GL_INVALID_OPERATION));
-                return;
-            }
+            return;
         }
 
         context->blendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);

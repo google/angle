@@ -3104,9 +3104,19 @@ void Context::blendColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf a
     mGLState.setBlendColor(clamp01(red), clamp01(green), clamp01(blue), clamp01(alpha));
 }
 
+void Context::blendEquation(GLenum mode)
+{
+    mGLState.setBlendEquation(mode, mode);
+}
+
 void Context::blendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 {
     mGLState.setBlendEquation(modeRGB, modeAlpha);
+}
+
+void Context::blendFunc(GLenum sfactor, GLenum dfactor)
+{
+    mGLState.setBlendFactors(sfactor, dfactor, sfactor, dfactor);
 }
 
 void Context::blendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)

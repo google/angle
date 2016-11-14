@@ -361,6 +361,14 @@ bool ValidateBindAttribLocation(ValidationContext *context,
 bool ValidateBindBuffer(ValidationContext *context, GLenum target, GLuint buffer);
 bool ValidateBindFramebuffer(ValidationContext *context, GLenum target, GLuint framebuffer);
 bool ValidateBindRenderbuffer(ValidationContext *context, GLenum target, GLuint renderbuffer);
+bool ValidateBlendEquation(ValidationContext *context, GLenum mode);
+bool ValidateBlendEquationSeparate(ValidationContext *context, GLenum modeRGB, GLenum modeAlpha);
+bool ValidateBlendFunc(ValidationContext *context, GLenum sfactor, GLenum dfactor);
+bool ValidateBlendFuncSeparate(ValidationContext *context,
+                               GLenum srcRGB,
+                               GLenum dstRGB,
+                               GLenum srcAlpha,
+                               GLenum dstAlpha);
 
 }  // namespace gl
 
