@@ -1194,6 +1194,16 @@ TEST_P(Texture2DTest, NegativeAPISubImage)
     const GLubyte *pixels[20] = { 0 };
     glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    if (extensionEnabled("GL_EXT_texture_storage"))
+    {
+        // Create a 1-level immutable texture.
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2);
+
+        // Try calling sub image on the second level.
+        glTexSubImage2D(GL_TEXTURE_2D, 1, 1, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
 }
 
 // Test that querying GL_TEXTURE_BINDING* doesn't cause an unexpected error.

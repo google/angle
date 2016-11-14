@@ -368,10 +368,16 @@ bool ValidateES2TexImageParameters(Context *context,
 
     if (isSubImage)
     {
+        GLenum textureFormat = texture->getFormat(target, level).asSized();
+        if (textureFormat == GL_NONE)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Texture level does not exist."));
+            return false;
+        }
+
         if (format != GL_NONE)
         {
-            if (gl::GetSizedInternalFormat(format, type) !=
-                texture->getFormat(target, level).asSized())
+            if (gl::GetSizedInternalFormat(format, type) != textureFormat)
             {
                 context->handleError(Error(GL_INVALID_OPERATION));
                 return false;

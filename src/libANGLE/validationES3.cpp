@@ -168,6 +168,12 @@ bool ValidateES3TexImageParametersBase(Context *context,
     // Validate texture formats
     GLenum actualInternalFormat =
         isSubImage ? texture->getFormat(target, level).asSized() : internalformat;
+    if (isSubImage && actualInternalFormat == GL_NONE)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Texture level does not exist."));
+        return false;
+    }
+
     const gl::InternalFormat &actualFormatInfo = gl::GetInternalFormatInfo(actualInternalFormat);
     if (isCompressed)
     {
