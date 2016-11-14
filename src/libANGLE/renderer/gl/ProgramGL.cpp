@@ -62,12 +62,12 @@ LinkResult ProgramGL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     // Verify that the program linked
     if (!checkLinkStatus(infoLog))
     {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return false;
     }
 
     postLink();
 
-    return LinkResult(true, gl::Error(GL_NO_ERROR));
+    return true;
 }
 
 gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
@@ -167,7 +167,7 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
     // Verify the link
     if (!checkLinkStatus(infoLog))
     {
-        return LinkResult(false, gl::Error(GL_NO_ERROR));
+        return false;
     }
 
     if (mWorkarounds.alwaysCallUseProgramAfterLink)
@@ -177,7 +177,7 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 
     postLink();
 
-    return LinkResult(true, gl::Error(GL_NO_ERROR));
+    return true;
 }
 
 GLboolean ProgramGL::validate(const gl::Caps & /*caps*/, gl::InfoLog * /*infoLog*/)

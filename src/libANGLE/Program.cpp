@@ -597,11 +597,10 @@ Error Program::link(const ContextState &data)
             return NoError();
         }
 
-        rx::LinkResult result = mProgram->link(data, mInfoLog);
-
-        if (result.error.isError() || !result.linkSuccess)
+        ANGLE_TRY_RESULT(mProgram->link(data, mInfoLog), mLinked);
+        if (!mLinked)
         {
-            return result.error;
+            return NoError();
         }
     }
     else
@@ -654,10 +653,10 @@ Error Program::link(const ContextState &data)
 
         linkOutputVariables();
 
-        rx::LinkResult result = mProgram->link(data, mInfoLog);
-        if (result.error.isError() || !result.linkSuccess)
+        ANGLE_TRY_RESULT(mProgram->link(data, mInfoLog), mLinked);
+        if (!mLinked)
         {
-            return result.error;
+            return NoError();
         }
 
         gatherTransformFeedbackVaryings(mergedVaryings);
@@ -665,7 +664,6 @@ Error Program::link(const ContextState &data)
 
     gatherInterfaceBlockInfo();
 
-    mLinked = true;
     return NoError();
 }
 
@@ -845,14 +843,9 @@ Error Program::loadBinary(GLenum binaryFormat, const void *binary, GLsizei lengt
     stream.readInt(&mSamplerUniformRange.start);
     stream.readInt(&mSamplerUniformRange.end);
 
-    rx::LinkResult result = mProgram->load(mInfoLog, &stream);
-    if (result.error.isError() || !result.linkSuccess)
-    {
-        return result.error;
-    }
+    ANGLE_TRY_RESULT(mProgram->load(mInfoLog, &stream), mLinked);
 
-    mLinked = true;
-    return Error(GL_NO_ERROR);
+    return NoError();
 #endif // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
 

@@ -141,7 +141,7 @@ def generate_impl_definition(impl_stub, typed_impl):
         elif return_type == 'egl::Error':
             return_statement = '    return egl::Error(EGL_BAD_ACCESS);\n'
         elif return_type == 'LinkResult':
-            return_statement = '    return LinkResult(false, gl::Error(GL_INVALID_OPERATION));\n'
+            return_statement = '    return gl::Error(GL_INVALID_OPERATION);\n'
         elif re.search(r'\*$', return_type):
             return_statement = '    return static_cast<' + return_type + '>(0);\n'
         elif re.search(r'const ([^ \&]+) \&$', return_type):

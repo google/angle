@@ -25,7 +25,7 @@ ProgramNULL::~ProgramNULL()
 LinkResult ProgramNULL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
 {
     UNIMPLEMENTED();
-    return LinkResult(false, gl::Error(GL_INVALID_OPERATION));
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 gl::Error ProgramNULL::save(gl::BinaryOutputStream *stream)
@@ -42,7 +42,7 @@ void ProgramNULL::setBinaryRetrievableHint(bool retrievable)
 LinkResult ProgramNULL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 {
     UNIMPLEMENTED();
-    return LinkResult(false, gl::Error(GL_INVALID_OPERATION));
+    return gl::Error(GL_INVALID_OPERATION);
 }
 
 GLboolean ProgramNULL::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
