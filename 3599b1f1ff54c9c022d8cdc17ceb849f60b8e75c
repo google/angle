@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b7aab69_be23cb1d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3750,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-14T15:55:18Z",
+      "side": 1,
+      "message": "nit: the four switches below are very similar and could be factored in a helper function.",
+      "revId": "3599b1f1ff54c9c022d8cdc17ceb849f60b8e75c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
