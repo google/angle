@@ -379,10 +379,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 
-    bool linkAttributes(const ContextState &data,
-                        InfoLog &infoLog,
-                        const Bindings &attributeBindings,
-                        const Shader *vertexShader);
+    bool linkAttributes(const ContextState &data, InfoLog &infoLog);
     bool validateUniformBlocksCount(GLuint maxUniformBlocks,
                                     const std::vector<sh::InterfaceBlock> &block,
                                     const std::string &errorMessage,
