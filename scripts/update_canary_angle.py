@@ -15,10 +15,10 @@ import sys, os, shutil
 
 # Set of search paths.
 source_paths = [
-    os.path.join('..', 'build', 'Debug_x64'),
-    os.path.join('..', 'build', 'Debug_Win32'),
-    os.path.join('..', 'build', 'Release_x64'),
-    os.path.join('..', 'build', 'Release_Win32'),
+    os.path.join('..', 'gyp', 'Debug_x64'),
+    os.path.join('..', 'gyp', 'Debug_Win32'),
+    os.path.join('..', 'gyp', 'Release_x64'),
+    os.path.join('..', 'gyp', 'Release_Win32'),
     os.path.join('..', 'out', 'Debug'),
     os.path.join('..', 'out', 'Debug_x64'),
     os.path.join('..', 'out', 'Release'),
