@@ -462,13 +462,6 @@ TEST_P(UniformTestES3, TranposedMatrixArrayUniformStateQuery)
 // Check that trying setting too many elements of an array doesn't overflow
 TEST_P(UniformTestES3, OverflowArray)
 {
-    // TODO(cwallez): fix on the Wintel OpenGL driver
-    if (IsIntel() && IsOpenGL() && IsWindows())
-    {
-        std::cout << "Test skipped on Intel Windows OpenGL." << std::endl;
-        return;
-    }
-
     const std::string &vertexShader =
         "#version 300 es\n"
         "void main() { gl_Position = vec4(1); }";

@@ -460,11 +460,15 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType);
 
+    // Both these function update the cached uniform values and return a modified "count"
+    // so that the uniform update doesn't overflow the uniform.
     template <typename T>
-    void setUniformInternal(GLint location, GLsizei count, const T *v);
-
+    GLsizei setUniformInternal(GLint location, GLsizei count, int vectorSize, const T *v);
     template <size_t cols, size_t rows, typename T>
-    void setMatrixUniformInternal(GLint location, GLsizei count, GLboolean transpose, const T *v);
+    GLsizei setMatrixUniformInternal(GLint location,
+                                     GLsizei count,
+                                     GLboolean transpose,
+                                     const T *v);
 
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
