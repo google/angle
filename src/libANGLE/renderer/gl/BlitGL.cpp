@@ -199,8 +199,17 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
 
     // Copy the swizzled texture to the destination texture
     mStateManager->bindTexture(textureType, texture);
-    mFunctions->copyTexSubImage2D(target, static_cast<GLint>(level), destOffset.x, destOffset.y, 0,
-                                  0, sourceArea.width, sourceArea.height);
+
+    if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
+    {
+        mFunctions->copyTexSubImage3D(target, static_cast<GLint>(level), destOffset.x, destOffset.y,
+                                      destOffset.z, 0, 0, sourceArea.width, sourceArea.height);
+    }
+    else
+    {
+        mFunctions->copyTexSubImage2D(target, static_cast<GLint>(level), destOffset.x, destOffset.y,
+                                      0, 0, sourceArea.width, sourceArea.height);
+    }
 
     // Finally orphan the scratch textures so they can be GCed by the driver.
     orphanScratchTextures();
