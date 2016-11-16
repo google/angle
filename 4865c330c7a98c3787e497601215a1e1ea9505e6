@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1042a47e_e1ac2289",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-16T21:13:03Z",
+      "side": 1,
+      "message": "can you shuffle the rest up? I think there\u0027s no danger of silently broken code - it would lead to compile errors.",
+      "range": {
+        "startLine": 88,
+        "startChar": 23,
+        "endLine": 88,
+        "endChar": 50
+      },
+      "revId": "4865c330c7a98c3787e497601215a1e1ea9505e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
