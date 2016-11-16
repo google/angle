@@ -93,7 +93,6 @@ int main(int argc, char *argv[])
               case 'i': compileOptions |= SH_INTERMEDIATE_TREE; break;
               case 'o': compileOptions |= SH_OBJECT_CODE; break;
               case 'u': compileOptions |= SH_VARIABLES; break;
-              case 'l': compileOptions |= SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX; break;
               case 'p': resources.WEBGL_debug_shader_precision = 1; break;
               case 's':
                 if (argv[0][2] == '=')
@@ -319,7 +318,6 @@ void usage()
         "       -i       : print intermediate tree\n"
         "       -o       : print translated code\n"
         "       -u       : print active attribs, uniforms, varyings and program outputs\n"
-        "       -l       : unroll for-loops with integer indices\n"
         "       -p       : use precision emulation\n"
         "       -s=e2    : use GLES2 spec (this is by default)\n"
         "       -s=e3    : use GLES3 spec (in development)\n"
