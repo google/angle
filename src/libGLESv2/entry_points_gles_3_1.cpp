@@ -89,11 +89,14 @@ void GL_APIENTRY FramebufferParameteri(GLenum target, GLenum pname, GLint param)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidationFramebufferParameteri(context, target, pname, param))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+        SetFramebufferParameteri(framebuffer, pname, param);
     }
 }
 
@@ -104,11 +107,14 @@ void GL_APIENTRY GetFramebufferParameteriv(GLenum target, GLenum pname, GLint *p
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidationGetFramebufferParameteri(context, target, pname, params))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+        QueryFramebufferParameteriv(framebuffer, pname, params);
     }
 }
 

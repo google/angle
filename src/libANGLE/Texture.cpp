@@ -426,7 +426,7 @@ ImageDesc::ImageDesc(const Extents &size, const Format &format)
 ImageDesc::ImageDesc(const Extents &size,
                      const Format &format,
                      const GLsizei samples,
-                     GLboolean fixedSampleLocations)
+                     const GLboolean fixedSampleLocations)
     : size(size), format(format), samples(samples), fixedSampleLocations(fixedSampleLocations)
 {
 }

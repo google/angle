@@ -49,11 +49,10 @@ struct ImageDesc final
 {
     ImageDesc();
     ImageDesc(const Extents &size, const Format &format);
-
     ImageDesc(const Extents &size,
               const Format &format,
               const GLsizei samples,
-              GLboolean fixedSampleLocations);
+              const GLboolean fixedSampleLocations);
 
     ImageDesc(const ImageDesc &other) = default;
     ImageDesc &operator=(const ImageDesc &other) = default;

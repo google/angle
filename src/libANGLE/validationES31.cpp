@@ -9,6 +9,7 @@
 #include "libANGLE/validationES31.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Framebuffer.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES3.h"
 #include "libANGLE/VertexArray.h"
@@ -388,4 +389,120 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
 
     return true;
 }
+
+bool ValidationFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    if (!ValidFramebufferTarget(target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid framebuffer target."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_FRAMEBUFFER_DEFAULT_WIDTH:
+        {
+            GLint maxWidth = context->getCaps().maxFramebufferWidth;
+            if (param < 0 || param > maxWidth)
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE,
+                          "Params less than 0 or greater than GL_MAX_FRAMEBUFFER_WIDTH."));
+                return false;
+            }
+            break;
+        }
+        case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
+        {
+            GLint maxHeight = context->getCaps().maxFramebufferHeight;
+            if (param < 0 || param > maxHeight)
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE,
+                          "Params less than 0 or greater than GL_MAX_FRAMEBUFFER_HEIGHT."));
+                return false;
+            }
+            break;
+        }
+        case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
+        {
+            GLint maxSamples = context->getCaps().maxFramebufferSamples;
+            if (param < 0 || param > maxSamples)
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE,
+                          "Params less than 0 or greater than GL_MAX_FRAMEBUFFER_SAMPLES."));
+                return false;
+            }
+            break;
+        }
+        case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+        {
+            break;
+        }
+        default:
+        {
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid pname: 0x%X", pname));
+            return false;
+        }
+    }
+
+    const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+    if (framebuffer->id() == 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Default framebuffer is bound to target."));
+        return false;
+    }
+    return true;
+}
+
+bool ValidationGetFramebufferParameteri(Context *context,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLint *params)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    if (!ValidFramebufferTarget(target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid framebuffer target."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_FRAMEBUFFER_DEFAULT_WIDTH:
+        case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
+        case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
+        case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid pname: 0x%X", pname));
+            return false;
+    }
+
+    const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (framebuffer->id() == 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Default framebuffer is bound to target."));
+        return false;
+    }
+    return true;
+}
+
 }  // namespace gl

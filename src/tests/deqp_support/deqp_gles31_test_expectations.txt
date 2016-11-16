@@ -147,6 +147,10 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.* = FAIL
 1679 D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.texture.multisample.* = FAIL
+1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_width_get_framebuffer_parameteriv = FAIL
+1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_height_get_framebuffer_parameteriv = FAIL
+1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL
+1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_fixed_sample_locations_get_framebuffer_parameteriv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.texparameter* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameter* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.texture.texparameter* = SKIP
@@ -1361,10 +1365,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.num_sample_counts = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.vertex_attribute_binding.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_width_get_framebuffer_parameteriv = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_height_get_framebuffer_parameteriv = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_fixed_sample_locations_get_framebuffer_parameteriv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = FAIL

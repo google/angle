@@ -832,6 +832,30 @@ void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufS
     }
 }
 
+void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params)
+{
+    ASSERT(framebuffer);
+
+    switch (pname)
+    {
+        case GL_FRAMEBUFFER_DEFAULT_WIDTH:
+            *params = framebuffer->getDefaultWidth();
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
+            *params = framebuffer->getDefaultHeight();
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
+            *params = framebuffer->getDefaultSamples();
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+            *params = framebuffer->getDefaultFixedSampleLocations();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)
 {
     SetTexParameterBase(texture, pname, &param);
@@ -870,6 +894,30 @@ void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param)
 void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params)
 {
     SetSamplerParameterBase(sampler, pname, params);
+}
+
+void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint param)
+{
+    ASSERT(framebuffer);
+
+    switch (pname)
+    {
+        case GL_FRAMEBUFFER_DEFAULT_WIDTH:
+            framebuffer->setDefaultWidth(param);
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_HEIGHT:
+            framebuffer->setDefaultHeight(param);
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_SAMPLES:
+            framebuffer->setDefaultSamples(param);
+            break;
+        case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+            framebuffer->setDefaultFixedSampleLocations(static_cast<GLboolean>(param));
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 }  // namespace gl

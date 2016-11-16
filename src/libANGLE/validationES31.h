@@ -50,6 +50,11 @@ bool ValidateDrawElementsIndirect(Context *context,
                                   GLenum type,
                                   const GLvoid *indirect);
 
+bool ValidationFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param);
+bool ValidationGetFramebufferParameteri(Context *context,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLint *params);
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_
