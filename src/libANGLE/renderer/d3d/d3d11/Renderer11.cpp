@@ -98,28 +98,6 @@ enum
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
 };
 
-void CalculateConstantBufferParams(GLintptr offset,
-                                   GLsizeiptr size,
-                                   UINT *outFirstConstant,
-                                   UINT *outNumConstants)
-{
-    // The offset must be aligned to 256 bytes (should have been enforced by glBindBufferRange).
-    ASSERT(offset % 256 == 0);
-
-    // firstConstant and numConstants are expressed in constants of 16-bytes. Furthermore they must
-    // be a multiple of 16 constants.
-    *outFirstConstant = static_cast<UINT>(offset / 16);
-
-    // The GL size is not required to be aligned to a 256 bytes boundary.
-    // Round the size up to a 256 bytes boundary then express the results in constants of 16-bytes.
-    *outNumConstants = static_cast<UINT>(rx::roundUp(size, static_cast<GLsizeiptr>(256)) / 16);
-
-    // Since the size is rounded up, firstConstant + numConstants may be bigger than the actual size
-    // of the buffer. This behaviour is explictly allowed according to the documentation on
-    // ID3D11DeviceContext1::PSSetConstantBuffers1
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
-}
-
 enum ANGLEFeatureLevel
 {
     ANGLE_FEATURE_LEVEL_INVALID,
@@ -1491,10 +1469,12 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
 
         Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
         ID3D11Buffer *constantBuffer = nullptr;
+        UINT firstConstant           = 0;
+        UINT numConstants            = 0;
 
-        ANGLE_TRY_RESULT(
-            bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize),
-            constantBuffer);
+        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
+                                                        &constantBuffer, &firstConstant,
+                                                        &numConstants));
 
         if (!constantBuffer)
         {
@@ -1505,11 +1485,9 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
             mCurrentConstantBufferVSOffset[uniformBufferIndex] != uniformBufferOffset ||
             mCurrentConstantBufferVSSize[uniformBufferIndex] != uniformBufferSize)
         {
-            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
+            if (firstConstant != 0 && uniformBufferSize != 0)
             {
-                UINT firstConstant = 0, numConstants = 0;
-                CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize,
-                                              &firstConstant, &numConstants);
+                ASSERT(numConstants != 0);
                 mDeviceContext1->VSSetConstantBuffers1(
                     getReservedVertexUniformBuffers() +
                         static_cast<unsigned int>(uniformBufferIndex),
@@ -1551,10 +1529,12 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
 
         Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
         ID3D11Buffer *constantBuffer = nullptr;
+        UINT firstConstant           = 0;
+        UINT numConstants            = 0;
 
-        ANGLE_TRY_RESULT(
-            bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize),
-            constantBuffer);
+        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
+                                                        &constantBuffer, &firstConstant,
+                                                        &numConstants));
 
         if (!constantBuffer)
         {
@@ -1565,11 +1545,8 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
             mCurrentConstantBufferPSOffset[uniformBufferIndex] != uniformBufferOffset ||
             mCurrentConstantBufferPSSize[uniformBufferIndex] != uniformBufferSize)
         {
-            if (mRenderer11DeviceCaps.supportsConstantBufferOffsets && uniformBufferSize != 0)
+            if (firstConstant != 0 && uniformBufferSize != 0)
             {
-                UINT firstConstant = 0, numConstants = 0;
-                CalculateConstantBufferParams(uniformBufferOffset, uniformBufferSize,
-                                              &firstConstant, &numConstants);
                 mDeviceContext1->PSSetConstantBuffers1(
                     getReservedFragmentUniformBuffers() +
                         static_cast<unsigned int>(uniformBufferIndex),

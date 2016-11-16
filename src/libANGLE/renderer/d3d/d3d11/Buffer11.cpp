@@ -38,6 +38,28 @@ enum class CopyResult
     NOT_RECREATED,
 };
 
+void CalculateConstantBufferParams(GLintptr offset,
+                                   GLsizeiptr size,
+                                   UINT *outFirstConstant,
+                                   UINT *outNumConstants)
+{
+    // The offset must be aligned to 256 bytes (should have been enforced by glBindBufferRange).
+    ASSERT(offset % 256 == 0);
+
+    // firstConstant and numConstants are expressed in constants of 16-bytes. Furthermore they must
+    // be a multiple of 16 constants.
+    *outFirstConstant = static_cast<UINT>(offset / 16);
+
+    // The GL size is not required to be aligned to a 256 bytes boundary.
+    // Round the size up to a 256 bytes boundary then express the results in constants of 16-bytes.
+    *outNumConstants = static_cast<UINT>(rx::roundUp(size, static_cast<GLsizeiptr>(256)) / 16);
+
+    // Since the size is rounded up, firstConstant + numConstants may be bigger than the actual size
+    // of the buffer. This behaviour is explictly allowed according to the documentation on
+    // ID3D11DeviceContext1::PSSetConstantBuffers1
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
+}
+
 }  // anonymous namespace
 
 namespace gl_d3d11
@@ -583,20 +605,29 @@ gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getEmulatedIndexedBuffer(
     return nativeStorage;
 }
 
-gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getConstantBufferRange(GLintptr offset, GLsizeiptr size)
+gl::Error Buffer11::getConstantBufferRange(GLintptr offset,
+                                           GLsizeiptr size,
+                                           ID3D11Buffer **bufferOut,
+                                           UINT *firstConstantOut,
+                                           UINT *numConstantsOut)
 {
     BufferStorage *bufferStorage = nullptr;
 
     if (offset == 0 || mRenderer->getRenderer11DeviceCaps().supportsConstantBufferOffsets)
     {
         ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_UNIFORM), bufferStorage);
+        CalculateConstantBufferParams(offset, size, firstConstantOut, numConstantsOut);
     }
     else
     {
         ANGLE_TRY_RESULT(getConstantBufferRangeStorage(offset, size), bufferStorage);
+        *firstConstantOut = 0;
+        *numConstantsOut  = 0;
     }
 
-    return GetAs<NativeStorage>(bufferStorage)->getNativeStorage();
+    *bufferOut = GetAs<NativeStorage>(bufferStorage)->getNativeStorage();
+
+    return gl::NoError();
 }
 
 gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::getSRV(DXGI_FORMAT srvFormat)

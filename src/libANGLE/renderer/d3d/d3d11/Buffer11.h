@@ -55,7 +55,11 @@ class Buffer11 : public BufferD3D
     gl::ErrorOrResult<ID3D11Buffer *> getEmulatedIndexedBuffer(SourceIndexData *indexInfo,
                                                                const TranslatedAttribute &attribute,
                                                                GLint startVertex);
-    gl::ErrorOrResult<ID3D11Buffer *> getConstantBufferRange(GLintptr offset, GLsizeiptr size);
+    gl::Error getConstantBufferRange(GLintptr offset,
+                                     GLsizeiptr size,
+                                     ID3D11Buffer **bufferOut,
+                                     UINT *firstConstantOut,
+                                     UINT *numConstantsOut);
     gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != nullptr; }
     gl::Error packPixels(const gl::FramebufferAttachment &readAttachment,
