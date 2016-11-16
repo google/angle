@@ -965,12 +965,8 @@ gl::ErrorOrResult<CopyResult> Buffer11::NativeStorage::copyFromStorage(BufferSto
         uint8_t *sourcePointer = nullptr;
         ANGLE_TRY(source->map(sourceOffset, clampedSize, GL_MAP_READ_BIT, &sourcePointer));
 
-        uint8_t *destPointer = nullptr;
-        ANGLE_TRY(map(destOffset, clampedSize, GL_MAP_WRITE_BIT, &destPointer));
+        setData(sourcePointer, destOffset, clampedSize);
 
-        memcpy(destPointer, sourcePointer, clampedSize);
-
-        unmap();
         source->unmap();
     }
     else
