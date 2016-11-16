@@ -336,10 +336,13 @@ gl::Error Buffer11::setSubData(GLenum target, const void *data, size_t size, siz
         if (target == GL_UNIFORM_BUFFER)
         {
             // If we are a very large uniform buffer, keep system memory storage around so that we
-            // aren't forced to read back from a constant buffer.
+            // aren't forced to read back from a constant buffer. We also check the workaround for
+            // Intel - this requires us to use system memory so we don't end up having to copy from
+            // a constant buffer to a staging buffer.
             // TODO(jmadill): Use Context caps.
             if (offset == 0 && size >= mSize &&
-                size <= static_cast<UINT>(mRenderer->getNativeCaps().maxUniformBlockSize))
+                size <= static_cast<UINT>(mRenderer->getNativeCaps().maxUniformBlockSize) &&
+                !mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers)
             {
                 ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_UNIFORM), writeBuffer);
             }
@@ -558,6 +561,12 @@ gl::Error Buffer11::checkForDeallocation(BufferUsage usage)
 // Keep system memory when we are using it for the canonical version of data.
 bool Buffer11::canDeallocateSystemMemory() const
 {
+    // Must keep system memory on Intel.
+    if (mRenderer->getWorkarounds().useSystemMemoryForConstantBuffers)
+    {
+        return false;
+    }
+
     return (!mBufferStorages[BUFFER_USAGE_UNIFORM] ||
             mSize <= mRenderer->getNativeCaps().maxUniformBlockSize);
 }

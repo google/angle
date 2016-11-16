@@ -99,6 +99,12 @@ struct WorkaroundsD3D
     // a target with width or height < 16. To work around this bug, we call clear() twice on these
     // platforms. Tracking bug: https://crbug.com/655534
     bool callClearTwiceOnSmallTarget = false;
+
+    // On some Intel drivers, copying from staging storage to constant buffer storage does not
+    // seem to work. Work around this by keeping system memory storage as a canonical reference
+    // for buffer data.
+    // D3D11-only workaround. See http://crbug.com/593024.
+    bool useSystemMemoryForConstantBuffers = false;
 };
 
 }  // namespace rx

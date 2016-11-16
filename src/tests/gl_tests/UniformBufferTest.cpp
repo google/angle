@@ -98,13 +98,6 @@ TEST_P(UniformBufferTest, Simple)
 // The second step renders a color from a UBO with a non-zero offset.
 TEST_P(UniformBufferTest, UniformBufferRange)
 {
-    // TODO(jmadill): Figure out why this fails on Intel.
-    if (IsIntel() && IsD3D11())
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
 
@@ -272,12 +265,6 @@ TEST_P(UniformBufferTest, UniformBufferManyUpdates)
 // Use a large number of buffer ranges (compared to the actual size of the UBO)
 TEST_P(UniformBufferTest, ManyUniformBufferRange)
 {
-    // TODO(jmadill): Figure out why this fails on Intel.
-    if (IsIntel() && IsD3D11())
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
     int px = getWindowWidth() / 2;
     int py = getWindowHeight() / 2;
 
@@ -556,14 +543,6 @@ TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
 // Test that using a very large buffer to back a small uniform block works OK.
 TEST_P(UniformBufferTest, VeryLarge)
 {
-    // TODO(jmadill): Figure out why this fails on Intel.
-    // See http://crbug.com/593024
-    if (IsIntel() && IsD3D11())
-    {
-        std::cout << "Test skipped on Intel D3D11." << std::endl;
-        return;
-    }
-
     glClear(GL_COLOR_BUFFER_BIT);
     float floatData[4] = {0.5f, 0.75f, 0.25f, 1.0f};
 

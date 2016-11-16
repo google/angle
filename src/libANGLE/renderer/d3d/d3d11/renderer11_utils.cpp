@@ -1872,6 +1872,8 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
         workarounds.emulateTinyStencilTextures = false;
     }
 
+    workarounds.useSystemMemoryForConstantBuffers = IsIntel(adapterDesc.VendorId);
+
     return workarounds;
 }
 
