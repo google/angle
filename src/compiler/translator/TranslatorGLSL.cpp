@@ -58,7 +58,9 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
     // variables. It should be harmless to do this twice in the case that the shader also explicitly
     // did this. However, it's important to emit invariant qualifiers only for those built-in
     // variables that are actually used, to avoid affecting the behavior of the shader.
-    if ((compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) && getPragma().stdgl.invariantAll)
+    if ((compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) != 0 &&
+        getPragma().stdgl.invariantAll &&
+        !sh::RemoveInvariant(getShaderType(), getShaderVersion(), getOutputType(), compileOptions))
     {
         ASSERT(wereVariablesCollected());
 
