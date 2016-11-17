@@ -136,7 +136,10 @@ TextureGL::TextureGL(const gl::TextureState &state,
       mStateManager(stateManager),
       mBlitter(blitter),
       mLevelInfo(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1),
-      mAppliedTextureState(state.mTarget),
+      mAppliedSwizzle(state.getSwizzleState()),
+      mAppliedSampler(state.getSamplerState()),
+      mAppliedBaseLevel(state.getEffectiveBaseLevel()),
+      mAppliedMaxLevel(state.getEffectiveMaxLevel()),
       mTextureID(0)
 {
     ASSERT(mFunctions);
@@ -818,74 +821,86 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
         switch (dirtyBit)
         {
             case gl::Texture::DIRTY_BIT_MIN_FILTER:
+                mAppliedSampler.minFilter = mState.getSamplerState().minFilter;
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MIN_FILTER,
-                                          mState.getSamplerState().minFilter);
+                                          mAppliedSampler.minFilter);
                 break;
             case gl::Texture::DIRTY_BIT_MAG_FILTER:
+                mAppliedSampler.magFilter = mState.getSamplerState().magFilter;
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAG_FILTER,
-                                          mState.getSamplerState().magFilter);
+                                          mAppliedSampler.magFilter);
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_S:
-                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_S,
-                                          mState.getSamplerState().wrapS);
+                mAppliedSampler.wrapS = mState.getSamplerState().wrapS;
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_S, mAppliedSampler.wrapS);
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_T:
-                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_T,
-                                          mState.getSamplerState().wrapT);
+                mAppliedSampler.wrapT = mState.getSamplerState().wrapT;
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_T, mAppliedSampler.wrapT);
                 break;
             case gl::Texture::DIRTY_BIT_WRAP_R:
-                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_R,
-                                          mState.getSamplerState().wrapR);
+                mAppliedSampler.wrapR = mState.getSamplerState().wrapR;
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_WRAP_R, mAppliedSampler.wrapR);
                 break;
             case gl::Texture::DIRTY_BIT_MAX_ANISOTROPY:
+                mAppliedSampler.maxAnisotropy = mState.getSamplerState().maxAnisotropy;
                 mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-                                          mState.getSamplerState().maxAnisotropy);
+                                          mAppliedSampler.maxAnisotropy);
                 break;
             case gl::Texture::DIRTY_BIT_MIN_LOD:
+                mAppliedSampler.minLod = mState.getSamplerState().minLod;
                 mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MIN_LOD,
-                                          mState.getSamplerState().minLod);
+                                          mAppliedSampler.minLod);
                 break;
             case gl::Texture::DIRTY_BIT_MAX_LOD:
+                mAppliedSampler.maxLod = mState.getSamplerState().maxLod;
                 mFunctions->texParameterf(mState.mTarget, GL_TEXTURE_MAX_LOD,
-                                          mState.getSamplerState().maxLod);
+                                          mAppliedSampler.maxLod);
                 break;
             case gl::Texture::DIRTY_BIT_COMPARE_MODE:
+                mAppliedSampler.compareMode = mState.getSamplerState().compareMode;
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_COMPARE_MODE,
-                                          mState.getSamplerState().compareMode);
+                                          mAppliedSampler.compareMode);
                 break;
             case gl::Texture::DIRTY_BIT_COMPARE_FUNC:
+                mAppliedSampler.compareFunc = mState.getSamplerState().compareFunc;
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_COMPARE_FUNC,
-                                          mState.getSamplerState().compareFunc);
+                                          mAppliedSampler.compareFunc);
                 break;
             case gl::Texture::DIRTY_BIT_SRGB_DECODE:
+                mAppliedSampler.sRGBDecode = mState.getSamplerState().sRGBDecode;
                 mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_SRGB_DECODE_EXT,
-                                          mState.getSamplerState().sRGBDecode);
+                                          mAppliedSampler.sRGBDecode);
                 break;
 
             // Texture state
             case gl::Texture::DIRTY_BIT_SWIZZLE_RED:
                 syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_R,
-                                        mState.getSwizzleState().swizzleRed);
+                                        mState.getSwizzleState().swizzleRed,
+                                        &mAppliedSwizzle.swizzleRed);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_GREEN:
                 syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_G,
-                                        mState.getSwizzleState().swizzleGreen);
+                                        mState.getSwizzleState().swizzleGreen,
+                                        &mAppliedSwizzle.swizzleGreen);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_BLUE:
                 syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_B,
-                                        mState.getSwizzleState().swizzleBlue);
+                                        mState.getSwizzleState().swizzleBlue,
+                                        &mAppliedSwizzle.swizzleBlue);
                 break;
             case gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA:
                 syncTextureStateSwizzle(mFunctions, GL_TEXTURE_SWIZZLE_A,
-                                        mState.getSwizzleState().swizzleAlpha);
+                                        mState.getSwizzleState().swizzleAlpha,
+                                        &mAppliedSwizzle.swizzleAlpha);
                 break;
             case gl::Texture::DIRTY_BIT_BASE_LEVEL:
-                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_BASE_LEVEL,
-                                          mState.getEffectiveBaseLevel());
+                mAppliedBaseLevel = mState.getEffectiveBaseLevel();
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_BASE_LEVEL, mAppliedBaseLevel);
                 break;
             case gl::Texture::DIRTY_BIT_MAX_LEVEL:
-                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAX_LEVEL,
-                                          mState.getEffectiveMaxLevel());
+                mAppliedMaxLevel = mState.getEffectiveMaxLevel();
+                mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAX_LEVEL, mAppliedMaxLevel);
                 break;
             case gl::Texture::DIRTY_BIT_USAGE:
                 break;
@@ -903,7 +918,51 @@ bool TextureGL::hasAnyDirtyBit() const
     return mLocalDirtyBits.any();
 }
 
-void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions, GLenum name, GLenum value)
+void TextureGL::setMinFilter(GLenum filter)
+{
+    if (filter != mAppliedSampler.minFilter)
+    {
+        mAppliedSampler.minFilter = filter;
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
+
+        mStateManager->bindTexture(mState.mTarget, mTextureID);
+        mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MIN_FILTER, filter);
+    }
+}
+void TextureGL::setMagFilter(GLenum filter)
+{
+    if (filter != mAppliedSampler.magFilter)
+    {
+        mAppliedSampler.magFilter = filter;
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
+
+        mStateManager->bindTexture(mState.mTarget, mTextureID);
+        mFunctions->texParameteri(mState.mTarget, GL_TEXTURE_MAG_FILTER, filter);
+    }
+}
+
+void TextureGL::setSwizzle(GLint swizzle[4])
+{
+    gl::SwizzleState resultingSwizzle =
+        gl::SwizzleState(swizzle[0], swizzle[1], swizzle[2], swizzle[3]);
+
+    if (resultingSwizzle != mAppliedSwizzle)
+    {
+        mAppliedSwizzle = resultingSwizzle;
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_RED);
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN);
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE);
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA);
+
+        mStateManager->bindTexture(mState.mTarget, mTextureID);
+        mFunctions->texParameteriv(mState.mTarget, GL_TEXTURE_SWIZZLE_RGBA, swizzle);
+    }
+}
+
+void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
+                                        GLenum name,
+                                        GLenum value,
+                                        GLenum *outValue)
 {
     const LevelInfoGL &levelInfo = mLevelInfo[mState.getEffectiveBaseLevel()];
     GLenum resultSwizzle         = value;
@@ -1011,6 +1070,7 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions, GLenum nam
 
     }
 
+    *outValue = resultSwizzle;
     functions->texParameteri(mState.mTarget, name, resultSwizzle);
 }
 

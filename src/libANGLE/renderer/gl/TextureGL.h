@@ -94,6 +94,11 @@ class TextureGL : public TextureImpl
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
     bool hasAnyDirtyBit() const;
 
+    void setMinFilter(GLenum filter);
+    void setMagFilter(GLenum filter);
+
+    void setSwizzle(GLint swizzle[4]);
+
   private:
     void setImageHelper(GLenum target,
                         size_t level,
@@ -124,7 +129,10 @@ class TextureGL : public TextureImpl
                                            const gl::PixelUnpackState &unpack,
                                            const uint8_t *pixels);
 
-    void syncTextureStateSwizzle(const FunctionsGL *functions, GLenum name, GLenum value);
+    void syncTextureStateSwizzle(const FunctionsGL *functions,
+                                 GLenum name,
+                                 GLenum value,
+                                 GLenum *outValue);
 
     void setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL &levelInfo);
 
@@ -136,7 +144,11 @@ class TextureGL : public TextureImpl
     std::vector<LevelInfoGL> mLevelInfo;
     gl::Texture::DirtyBits mLocalDirtyBits;
 
-    mutable gl::TextureState mAppliedTextureState;
+    gl::SwizzleState mAppliedSwizzle;
+    gl::SamplerState mAppliedSampler;
+    GLuint mAppliedBaseLevel;
+    GLuint mAppliedMaxLevel;
+
     GLuint mTextureID;
 };
 
