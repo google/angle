@@ -246,6 +246,30 @@
       "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1042a47e_a31a1596",
+        "filename": "src/libANGLE/renderer/null/DisplayNULL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T16:49:39Z",
+      "side": 1,
+      "message": "I\u0027d vote against it, it\u0027s similar to putting inline accessor methods, on which I\u0027ve received negative feedback myself. I\u0027ve also seen people commenting similarly on this particular issue in Chromium-dev.",
+      "parentUuid": "1042a47e_836f1915",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 34
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
