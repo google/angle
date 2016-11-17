@@ -661,17 +661,27 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
     return setGenericDrawState(data);
 }
 
-gl::Error StateManagerGL::pauseTransformFeedback(const gl::ContextState &data)
+void StateManagerGL::pauseTransformFeedback()
 {
-    // If the context is going to be changed, pause the previous context's transform feedback
-    if (data.getContext() != mPrevDrawContext)
+    if (mPrevDrawTransformFeedback != nullptr)
     {
-        if (mPrevDrawTransformFeedback != nullptr)
-        {
-            mPrevDrawTransformFeedback->syncPausedState(true);
-        }
+        mPrevDrawTransformFeedback->syncPausedState(true);
     }
-    return gl::Error(GL_NO_ERROR);
+}
+
+void StateManagerGL::pauseQueries()
+{
+    for (QueryGL *prevQuery : mCurrentQueries)
+    {
+        prevQuery->pause();
+    }
+}
+void StateManagerGL::resumeQueries()
+{
+    for (QueryGL *prevQuery : mCurrentQueries)
+    {
+        prevQuery->resume();
+    }
 }
 
 gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
@@ -681,10 +691,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
     // If the context has changed, pause the previous context's queries
     if (data.getContext() != mPrevDrawContext)
     {
-        for (QueryGL *prevQuery : mCurrentQueries)
-        {
-            prevQuery->pause();
-        }
+        pauseQueries();
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
