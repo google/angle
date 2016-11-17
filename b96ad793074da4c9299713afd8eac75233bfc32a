@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_0ef42bd7",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T18:20:40Z",
+      "side": 1,
+      "message": "I get a warning about digit \u003e\u003d 0 always being true here and line 105",
+      "revId": "b96ad793074da4c9299713afd8eac75233bfc32a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
