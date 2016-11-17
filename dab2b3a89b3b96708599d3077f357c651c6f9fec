@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1042a47e_a0620b4f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-17T08:54:37Z",
+      "side": 1,
+      "message": "We cannot remove SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT since it handles translation from ESS1 to GLSL, While SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3 handles translation from ESS3 to GLSL.",
+      "parentUuid": "1042a47e_6dce4a47",
+      "range": {
+        "startLine": 218,
+        "startChar": 23,
+        "endLine": 218,
+        "endChar": 52
+      },
+      "revId": "dab2b3a89b3b96708599d3077f357c651c6f9fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1042a47e_ada3324d",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "1042a47e_602ac3ed",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-17T08:54:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1042a47e_ada3324d",
+      "range": {
+        "startLine": 63,
+        "startChar": 29,
+        "endLine": 63,
+        "endChar": 43
+      },
+      "revId": "dab2b3a89b3b96708599d3077f357c651c6f9fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1042a47e_0db4e681",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -59,6 +107,24 @@
       "writtenOn": "2016-11-16T18:15:50Z",
       "side": 1,
       "message": "Should we limit this to Linux AMD?",
+      "revId": "dab2b3a89b3b96708599d3077f357c651c6f9fec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1042a47e_00f13f75",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-17T08:54:37Z",
+      "side": 1,
+      "message": "And STANDARD_GL_DESKTOP now. How to limit it only to Linux?",
+      "parentUuid": "1042a47e_0db4e681",
       "revId": "dab2b3a89b3b96708599d3077f357c651c6f9fec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
