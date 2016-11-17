@@ -20,19 +20,12 @@
 // and the shading language compiler.
 //
 
-namespace sh
-{
-// GLenum alias
-typedef unsigned int GLenum;
-}
-
-// Must be included after GLenum proxy typedef
 // Note: make sure to increment ANGLE_SH_VERSION when changing ShaderVars.h
 #include "ShaderVars.h"
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 167
+#define ANGLE_SH_VERSION 168
 
 enum ShShaderSpec
 {
@@ -72,8 +65,8 @@ enum ShShaderOutput
 };
 
 // Compile options.
-
-using ShCompileOptions = uint64_t;
+// The Compile options type is defined in ShaderVars.h, to allow ANGLE to import the ShaderVars
+// header without needing the ShaderLang header. This avoids some conflicts with glslang.
 
 const ShCompileOptions SH_VALIDATE                           = 0;
 const ShCompileOptions SH_VALIDATE_LOOP_INDEXING             = UINT64_C(1) << 0;

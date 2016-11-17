@@ -11,8 +11,9 @@
 #define LIBANGLE_PROGRAM_H_
 
 #include <GLES2/gl2.h>
-#include <GLSLANG/ShaderLang.h>
+#include <GLSLANG/ShaderVars.h>
 
+#include <map>
 #include <set>
 #include <sstream>
 #include <string>
