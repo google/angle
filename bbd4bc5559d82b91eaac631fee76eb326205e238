@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_a2dde6ce",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T20:48:45Z",
+      "side": 1,
+      "message": "nit: return std::find(layerProps.begin(), layerProps.end(), g_VkStdValidationLayerName) !\u003d layerProps.end();?",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_e2d7eea8",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T20:48:45Z",
+      "side": 1,
+      "message": "It should be possible for thisto be just //third_party which could make the variable unnecessary.",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_e24fee7f",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T20:48:45Z",
+      "side": 1,
+      "message": "GN should be able to figure out the two helpers are deps from files in sources being in their outputs.",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
