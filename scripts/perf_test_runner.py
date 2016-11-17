@@ -21,8 +21,8 @@ base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file_
 perftests_paths = [
     os.path.join('out', 'Release_x64'),
     os.path.join('out', 'Release'),
-    os.path.join('build', 'Release_x64'),
-    os.path.join('build', 'Release_Win32')
+    os.path.join('gyp', 'Release_x64'),
+    os.path.join('gyp', 'Release_Win32')
 ]
 metric = 'score'
 
@@ -72,16 +72,16 @@ newest_mtime = None
 
 for path in perftests_paths:
     binary_path = os.path.join(base_path, path, binary_name)
-    binary_mtime = os.path.getmtime(binary_path)
     if os.path.exists(binary_path):
+        binary_mtime = os.path.getmtime(binary_path)
         if (newest_binary is None) or (binary_mtime > newest_mtime):
             newest_binary = binary_path
             newest_mtime = binary_mtime
 
 perftests_path = newest_binary
 
-if not os.path.exists(perftests_path):
-    print("Cannot find angle_perftests.exe!")
+if perftests_path == None or not os.path.exists(perftests_path):
+    print("Cannot find Release angle_perftests.exe!")
     sys.exit(1)
 
 test_name = "DrawCallPerfBenchmark.Run/d3d11_null"
