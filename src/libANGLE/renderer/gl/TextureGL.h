@@ -74,6 +74,26 @@ class TextureGL : public TextureImpl
     gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
+    gl::Error copyTexture(GLenum internalFormat,
+                          GLenum type,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha,
+                          const gl::Texture *source) override;
+    gl::Error copySubTexture(const gl::Offset &destOffset,
+                             const gl::Rectangle &sourceArea,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const gl::Texture *source) override;
+    gl::Error copySubTextureHelper(const gl::Offset &destOffset,
+                                   const gl::Rectangle &sourceArea,
+                                   GLenum destFormat,
+                                   bool unpackFlipY,
+                                   bool unpackPremultiplyAlpha,
+                                   bool unpackUnmultiplyAlpha,
+                                   const gl::Texture *source);
+
     gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
     gl::Error setImageExternal(GLenum target,
@@ -88,6 +108,7 @@ class TextureGL : public TextureImpl
     gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
 
     GLuint getTextureID() const;
+    GLenum getTarget() const;
 
     void setBaseLevel(GLuint) override {}
 
@@ -107,6 +128,7 @@ class TextureGL : public TextureImpl
                         GLenum format,
                         GLenum type,
                         const uint8_t *pixels);
+    // This changes the current pixel unpack state that will have to be reapplied.
     void reserveTexImageToBeFilled(GLenum target,
                                    size_t level,
                                    GLenum internalFormat,
