@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "308fa83f_1448bc2d",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done, good suggestion. Also see the issue section.",
+      "parentUuid": "a6ec3e0b_00c3f049",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_e098ec53",
         "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
         "patchSetId": 10
@@ -66,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "e6a5561c_5fd47b46",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done, two enums allocated.",
+      "parentUuid": "a6ec3e0b_c014c825",
+      "range": {
+        "startLine": 53,
+        "startChar": 59,
+        "endLine": 53,
+        "endChar": 65
+      },
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_20ddd453",
         "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
         "patchSetId": 10
@@ -77,6 +119,30 @@
       "writtenOn": "2016-11-01T17:27:57Z",
       "side": 1,
       "message": "I think we would want specify that it\u0027s disabled by default.  We can always have chrome/angle tests enable it in debug builds.",
+      "range": {
+        "startLine": 73,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 76
+      },
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_140d1c1f",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Care to elaborate?\n\nSome flexibility to enable Debug layers at our own discretion could be useful. I reworded this sentence to make it clear that this only happens when the state of the layers is not specified, and added an issue clarifying the intent is to only be in debug, but I did not add a resolution.",
+      "parentUuid": "a6ec3e0b_20ddd453",
       "range": {
         "startLine": 73,
         "startChar": 24,
@@ -106,6 +172,24 @@
     },
     {
       "key": {
+        "uuid": "e6a5561c_9f46e3bd",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ec3e0b_eb468dbe",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_cb9749cf",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 10
@@ -117,6 +201,24 @@
       "writtenOn": "2016-11-01T20:28:03Z",
       "side": 1,
       "message": "This block doesn\u0027t handle DisplayCGL and will break compilation on Mac.\n\nAlso we have two #if defined(ANGLE_ENABLE_OPENGL) following each other, they could be merged.",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_ffae073a",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ec3e0b_cb9749cf",
       "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -146,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "e6a5561c_5f563b70",
+        "filename": "src/libANGLE/renderer/vulkan/CompilerVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ec3e0b_806920ab",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 34
+      },
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6ec3e0b_86901867",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 10
@@ -157,6 +283,24 @@
       "writtenOn": "2016-11-01T20:28:03Z",
       "side": 1,
       "message": "nit: CheckExtensionPresent?",
+      "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_3fe08f83",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-17T19:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ec3e0b_86901867",
       "revId": "2645070e2d662ae477b944e6c64c6c66f5c1c996",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
