@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "1042a47e_e356dd48",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-17T16:38:02Z",
+      "side": 1,
+      "message": "Went with egl::NoError",
+      "parentUuid": "8baca39c_84fac39a",
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_93c76bfb",
         "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
         "patchSetId": 4
@@ -54,6 +72,30 @@
       "writtenOn": "2016-11-08T19:51:58Z",
       "side": 1,
       "message": "can you put this minimum init in a helper method somewhere? I\u0027d like to use it for Vulkan.",
+      "range": {
+        "startLine": 36,
+        "startChar": 3,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1042a47e_23dba5d9",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-17T16:38:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_93c76bfb",
       "range": {
         "startLine": 36,
         "startChar": 3,
@@ -89,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "1042a47e_43deb1ca",
+        "filename": "src/libANGLE/renderer/null/DeviceNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-17T16:38:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_f3dd07c6",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 37
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_5376b3fc",
         "filename": "src/libANGLE/renderer/null/DisplayNULL.cpp",
         "patchSetId": 4
@@ -112,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "1042a47e_43651135",
+        "filename": "src/libANGLE/renderer/null/DisplayNULL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-17T16:38:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8baca39c_5376b3fc",
+      "range": {
+        "startLine": 188,
+        "startChar": 3,
+        "endLine": 194,
+        "endChar": 62
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8baca39c_13db5bd1",
         "filename": "src/libANGLE/renderer/null/DisplayNULL.h",
         "patchSetId": 4
@@ -123,6 +213,30 @@
       "writtenOn": "2016-11-08T19:51:58Z",
       "side": 1,
       "message": "nit: I think we agreed not to put inline init in headers.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 34
+      },
+      "revId": "24b4fcb4cfcf1512818dee42ccc0920626190147",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1042a47e_836f1915",
+        "filename": "src/libANGLE/renderer/null/DisplayNULL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-17T16:38:02Z",
+      "side": 1,
+      "message": "Can we start allowing it for simple initialization? It\u0027s really helpful for nulling/zeroing members but it shouldn\u0027t be used for implementing class logic.",
+      "parentUuid": "8baca39c_13db5bd1",
       "range": {
         "startLine": 79,
         "startChar": 4,
