@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_f796d234",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T20:30:21Z",
+      "side": 1,
+      "message": "typo: Vulkan",
+      "revId": "75924ab935962672efc81adf0304e38b1ac9d7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_a27ec61b",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-17T20:30:21Z",
+      "side": 1,
+      "message": "Making this a maximum version instead of a minimum is pretty weird to me, in other places such parameters are used (such as in eglCreateContextAttribs) it specifies a minimum version.",
+      "revId": "75924ab935962672efc81adf0304e38b1ac9d7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
