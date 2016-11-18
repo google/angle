@@ -9,6 +9,8 @@
 
 #include "libANGLE/renderer/null/FramebufferNULL.h"
 
+#include "libANGLE/formatutils.h"
+
 #include "common/debug.h"
 
 namespace rx
@@ -87,14 +89,28 @@ gl::Error FramebufferNULL::clearBufferfi(ContextImpl *context,
 
 GLenum FramebufferNULL::getImplementationColorReadFormat() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
+    if (readAttachment == nullptr)
+    {
+        return GL_NONE;
+    }
+
+    const gl::Format &format = readAttachment->getFormat();
+    ASSERT(format.info != nullptr);
+    return format.info->getReadPixelsFormat();
 }
 
 GLenum FramebufferNULL::getImplementationColorReadType() const
 {
-    UNIMPLEMENTED();
-    return GLenum();
+    const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
+    if (readAttachment == nullptr)
+    {
+        return GL_NONE;
+    }
+
+    const gl::Format &format = readAttachment->getFormat();
+    ASSERT(format.info != nullptr);
+    return format.info->getReadPixelsType();
 }
 
 gl::Error FramebufferNULL::readPixels(ContextImpl *context,
