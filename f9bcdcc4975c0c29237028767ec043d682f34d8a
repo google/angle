@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_9fd4bc02",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Blit9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T18:58:22Z",
+      "side": 1,
+      "message": "With texCoordOffset in the shader, you don\u0027t really need a special VS for flipY anymore",
+      "revId": "f9bcdcc4975c0c29237028767ec043d682f34d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_ffc2203f",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Blit9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T18:58:22Z",
+      "side": 1,
+      "message": "nit: setShaderConstants?",
+      "revId": "f9bcdcc4975c0c29237028767ec043d682f34d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_9f475c1b",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2452,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T18:58:22Z",
+      "side": 1,
+      "message": "nit: copySubTexture?",
+      "revId": "f9bcdcc4975c0c29237028767ec043d682f34d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
