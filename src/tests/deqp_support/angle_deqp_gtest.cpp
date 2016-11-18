@@ -52,6 +52,7 @@ const APIInfo g_eglDisplayAPIs[] = {
     {"angle-d3d11", gpu::GPUTestConfig::kAPID3D11},
     {"angle-gl", gpu::GPUTestConfig::kAPIGLDesktop},
     {"angle-gles", gpu::GPUTestConfig::kAPIGLES},
+    {"angle-null", gpu::GPUTestConfig::kAPIUnknown },
 };
 
 const APIInfo *g_initAPI = nullptr;
