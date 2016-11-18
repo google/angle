@@ -151,8 +151,7 @@ const FramebufferAttachment *FramebufferState::getDepthStencilAttachment() const
     // A valid depth-stencil attachment has the same resource bound to both the
     // depth and stencil attachment points.
     if (mDepthAttachment.isAttached() && mStencilAttachment.isAttached() &&
-        mDepthAttachment.type() == mStencilAttachment.type() &&
-        mDepthAttachment.id() == mStencilAttachment.id())
+        mDepthAttachment == mStencilAttachment)
     {
         return &mDepthAttachment;
     }
