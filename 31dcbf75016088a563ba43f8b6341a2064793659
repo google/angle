@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_0965fa23",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-18T14:58:54Z",
+      "side": 1,
+      "message": "nit: final. also I\u0027m not sure if Guard is the right term - I looked at https://en.wikipedia.org/wiki/Guard_(computer_science). Also it makes me think of a US police man. :)\n\nMaybe GLScopedState would work? Or ScopedGLState? I think scope is the right term here. (I looked at http://stackoverflow.com/questions/35911317/raii-state-management)",
+      "range": {
+        "startLine": 52,
+        "startChar": 6,
+        "endLine": 52,
+        "endChar": 16
+      },
+      "revId": "31dcbf75016088a563ba43f8b6341a2064793659",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
