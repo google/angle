@@ -33,6 +33,24 @@
       "revId": "75924ab935962672efc81adf0304e38b1ac9d7e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_c9b93216",
+        "filename": "extensions/ANGLE_platform_angle_vulkan.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-18T15:49:20Z",
+      "side": 1,
+      "message": "For us, it\u0027s used as a way to request specific versions for testing.  If no values are provided, the maximum version available will be used.",
+      "parentUuid": "308fa83f_a27ec61b",
+      "revId": "75924ab935962672efc81adf0304e38b1ac9d7e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
