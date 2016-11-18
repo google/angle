@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "308fa83f_e988aeb3",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-18T14:53:07Z",
+      "side": 1,
+      "message": "seems like this can be in an anon namespace.",
+      "range": {
+        "startLine": 26,
+        "startChar": 6,
+        "endLine": 26,
+        "endChar": 43
+      },
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_09325a4e",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -36,6 +59,24 @@
     },
     {
       "key": {
+        "uuid": "308fa83f_694cbeba",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-18T14:53:07Z",
+      "side": 1,
+      "message": "seems reasonable. the first else could be a continue and the second could be flattened.",
+      "parentUuid": "308fa83f_a9b22697",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_c937723f",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -64,6 +105,29 @@
       "writtenOn": "2016-11-18T14:23:15Z",
       "side": 1,
       "message": "This doesn\u0027t protect against all overflows, (std::numeric_limits\u003cunsigned int\u003e::max() - 9u) / 10u",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_8951ea53",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-18T14:53:07Z",
+      "side": 1,
+      "message": "probably just char is fine here as well. (or const)",
+      "range": {
+        "startLine": 103,
+        "startChar": 12,
+        "endLine": 103,
+        "endChar": 24
+      },
       "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
