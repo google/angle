@@ -16,6 +16,24 @@
       "revId": "b96ad793074da4c9299713afd8eac75233bfc32a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cb5092_54aacc4f",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T10:55:30Z",
+      "side": 1,
+      "message": "Ah, of course. It used to be signed and forgot to clean this up.",
+      "parentUuid": "308fa83f_0ef42bd7",
+      "revId": "b96ad793074da4c9299713afd8eac75233bfc32a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
