@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_9f067cce",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-18T19:00:32Z",
+      "side": 1,
+      "message": "This should check that color.a !\u003d 0.0f",
+      "range": {
+        "startLine": 571,
+        "startChar": 21,
+        "endLine": 571,
+        "endChar": 39
+      },
+      "revId": "da90467c154f079342484450cdad74d87d4558da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
