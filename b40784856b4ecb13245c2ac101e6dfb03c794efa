@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b0e71824_d2cee419",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Needs to be in sh namespace so it can be tested.",
+      "parentUuid": "308fa83f_e988aeb3",
+      "range": {
+        "startLine": 26,
+        "startChar": 6,
+        "endLine": 26,
+        "endChar": 43
+      },
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_09325a4e",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2016-11-18T14:23:15Z",
       "side": 1,
       "message": "nit: this shouldn\u0027t be a reference.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cb5092_34d870da",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308fa83f_09325a4e",
       "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -94,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "f0cb5092_14d574a0",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308fa83f_c937723f",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_09c17aeb",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -105,6 +165,24 @@
       "writtenOn": "2016-11-18T14:23:15Z",
       "side": 1,
       "message": "This doesn\u0027t protect against all overflows, (std::numeric_limits\u003cunsigned int\u003e::max() - 9u) / 10u",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cb5092_74b70889",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "This check is enough to protect against overflows, but doing a \u003c\u003d comparison with the limit you suggest is clearer.",
+      "parentUuid": "308fa83f_09c17aeb",
       "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -134,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "f0cb5092_f470b8fd",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308fa83f_8951ea53",
+      "range": {
+        "startLine": 103,
+        "startChar": 12,
+        "endLine": 103,
+        "endChar": 24
+      },
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_29be3663",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -145,6 +247,24 @@
       "writtenOn": "2016-11-18T14:23:15Z",
       "side": 1,
       "message": "We could have a check for overflows like for the mantissa.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cb5092_d475bceb",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308fa83f_29be3663",
       "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -168,6 +288,24 @@
     },
     {
       "key": {
+        "uuid": "f0cb5092_b47a40da",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "308fa83f_49caa208",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_89c48af9",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 5
@@ -185,6 +323,24 @@
     },
     {
       "key": {
+        "uuid": "f0cb5092_14be9462",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Not true. Consider what happens if the mantissa has hundreds of digits before the decimal point, for example.",
+      "parentUuid": "308fa83f_89c48af9",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_e9da6ed3",
         "filename": "src/tests/compiler_tests/FloatLex_test.cpp",
         "patchSetId": 5
@@ -196,6 +352,24 @@
       "writtenOn": "2016-11-18T14:23:15Z",
       "side": 1,
       "message": "Other test cases for overflows I commented on in the parser:\n4294967299 // Should be a few ulps from float(424967299), or just \"big\"\n1e2147483649 // Should give inf\n0.0000001e-2147483647 // Should give inf",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0cb5092_947f44ca",
+        "filename": "src/tests/compiler_tests/FloatLex_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-18T16:09:52Z",
+      "side": 1,
+      "message": "Added cases similar to these suggestions.",
+      "parentUuid": "308fa83f_e9da6ed3",
       "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
