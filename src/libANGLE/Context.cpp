@@ -323,7 +323,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     bindRenderbuffer(GL_RENDERBUFFER, 0);
 
     bindGenericUniformBuffer(0);
-    for (unsigned int i = 0; i < mCaps.maxCombinedUniformBlocks; i++)
+    for (unsigned int i = 0; i < mCaps.maxUniformBufferBindings; i++)
     {
         bindIndexedUniformBuffer(0, i, 0, -1);
     }

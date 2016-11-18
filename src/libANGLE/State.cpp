@@ -160,7 +160,7 @@ void State::initialize(const Caps &caps,
 
     mVertexAttribCurrentValues.resize(caps.maxVertexAttributes);
 
-    mUniformBuffers.resize(caps.maxCombinedUniformBlocks);
+    mUniformBuffers.resize(caps.maxUniformBufferBindings);
 
     mSamplerTextures[GL_TEXTURE_2D].resize(caps.maxCombinedTextureImageUnits);
     mSamplerTextures[GL_TEXTURE_CUBE_MAP].resize(caps.maxCombinedTextureImageUnits);
