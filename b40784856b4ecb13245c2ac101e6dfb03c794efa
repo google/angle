@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_09325a4e",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "nit: this shouldn\u0027t be a reference.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_a9b22697",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "nit: all usages finishedParsingMantissa could be replaced by a break here.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_c937723f",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "nit static_cast\u003cunsigned int\u003e(c - \u00270\u0027)",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_09c17aeb",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "This doesn\u0027t protect against all overflows, (std::numeric_limits\u003cunsigned int\u003e::max() - 9u) / 10u",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_29be3663",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "We could have a check for overflows like for the mantissa.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_49caa208",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "nit: this might overflow too.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_89c48af9",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "I don\u0027t think normalizationExponentOffset is needed if exponentOffset is only decremented after the . and not incremented before.",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "308fa83f_e9da6ed3",
+        "filename": "src/tests/compiler_tests/FloatLex_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-18T14:23:15Z",
+      "side": 1,
+      "message": "Other test cases for overflows I commented on in the parser:\n4294967299 // Should be a few ulps from float(424967299), or just \"big\"\n1e2147483649 // Should give inf\n0.0000001e-2147483647 // Should give inf",
+      "revId": "b40784856b4ecb13245c2ac101e6dfb03c794efa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
