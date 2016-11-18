@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308fa83f_3fcae807",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-18T18:32:06Z",
+      "side": 1,
+      "message": "nit: \u0027stateScope\u0027? or \u0027scopedState\u0027?",
+      "range": {
+        "startLine": 397,
+        "startChar": 18,
+        "endLine": 397,
+        "endChar": 23
+      },
+      "revId": "7900db1ec21558b127327b5913e777495d483dbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
