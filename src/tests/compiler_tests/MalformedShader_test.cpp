@@ -3130,3 +3130,202 @@ TEST_F(MalformedComputeShaderTest, WorkGroupSizeAsArraySize)
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// Shared memory variables cannot be used inside a vertex shader.
+// GLSL ES 3.10 Revision 4, 4.3.8 Shared Variables
+TEST_F(MalformedVertexShaderGLES31Test, VertexShaderSharedMemory)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "in vec4 i;\n"
+        "shared float myShared[10];\n"
+        "void main() {\n"
+        "    gl_Position = i;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Shared memory variables cannot be used inside a fragment shader.
+// GLSL ES 3.10 Revision 4, 4.3.8 Shared Variables
+TEST_F(MalformedFragmentShaderGLES31Test, FragmentShaderSharedMemory)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "shared float myShared[10];\n"
+        "out vec4 color;\n"
+        "void main() {\n"
+        "   color = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Shared memory cannot be combined with any other storage qualifier.
+TEST_F(MalformedComputeShaderTest, UniformSharedMemory)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "uniform shared float myShared[100];\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Correct usage of shared memory variables.
+TEST_F(MalformedComputeShaderTest, CorrectUsageOfSharedMemory)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "shared float myShared[100];\n"
+        "void main() {\n"
+        "   myShared[gl_LocalInvocationID.x] = 1.0;\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Shared memory variables cannot be initialized.
+// GLSL ES 3.10 Revision 4, 4.3.8 Shared Variables
+TEST_F(MalformedComputeShaderTest, SharedVariableInitialization)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "shared int myShared = 0;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Local variables cannot be qualified as shared.
+// GLSL ES 3.10 Revision 4, 4.3 Storage Qualifiers
+TEST_F(MalformedComputeShaderTest, SharedMemoryInFunctionBody)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "void func() {\n"
+        "   shared int myShared;\n"
+        "}\n"
+        "void main() {\n"
+        "   func();\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Struct members cannot be qualified as shared.
+TEST_F(MalformedComputeShaderTest, SharedMemoryInStruct)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "struct MyStruct {\n"
+        "   shared int myShared;\n"
+        "};\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Interface block members cannot be qualified as shared.
+TEST_F(MalformedComputeShaderTest, SharedMemoryInInterfaceBlock)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "uniform Myblock {\n"
+        "   shared int myShared;\n"
+        "};\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// The shared qualifier cannot be used with any other qualifier.
+TEST_F(MalformedComputeShaderTest, SharedWithInvariant)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "invariant shared int myShared;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// The shared qualifier cannot be used with any other qualifier.
+TEST_F(MalformedComputeShaderTest, SharedWithMemoryQualifier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "readonly shared int myShared;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// The shared qualifier cannot be used with any other qualifier.
+TEST_F(MalformedComputeShaderTest, SharedGlobalLayoutDeclaration)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 5) in;\n"
+        "layout(row_major) shared mat4;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}

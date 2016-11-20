@@ -169,7 +169,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
-%token <lex> READONLY WRITEONLY COHERENT RESTRICT VOLATILE
+%token <lex> READONLY WRITEONLY COHERENT RESTRICT VOLATILE SHARED
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
 %token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE ISAMPLER2DARRAY
@@ -959,6 +959,11 @@ storage_qualifier
     | VOLATILE {
         $$ = new TMemoryQualifierWrapper(EvqVolatile, @1);
     }
+    | SHARED {
+        context->checkIsAtGlobalLevel(@1, "shared");
+        COMPUTE_ONLY("shared", @1);
+        $$ = new TStorageQualifierWrapper(EvqShared, @1);
+    }
     ;
 
 type_specifier
@@ -1005,6 +1010,9 @@ layout_qualifier_id
     }
     | IDENTIFIER EQUAL UINTCONSTANT {
         $$ = context->parseLayoutQualifier(*$1.string, @1, $3.i, @3);
+    }
+    | SHARED {
+        $$ = context->parseLayoutQualifier("shared", @1);
     }
     ;
 

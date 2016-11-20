@@ -78,6 +78,7 @@ static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
+static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -131,6 +132,7 @@ O           [0-7]
 "in"           { return IN_QUAL; }
 "out"          { return OUT_QUAL; }
 "inout"        { return INOUT_QUAL; }
+"shared"       { return ES2_and_ES3_ident_ES3_1_keyword(context, SHARED); }
 
 "float"        { return FLOAT_TYPE; }
 "int"          { return INT_TYPE; }
@@ -511,6 +513,21 @@ int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token)
     if (context->getShaderVersion() < 310)
     {
         return reserved_word(yyscanner);
+    }
+
+    return token;
+}
+
+int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // not a reserved word in GLSL ES 1.00 and GLSL ES 3.00, so could be used as an identifier/type name
+    if (context->getShaderVersion() < 310)
+    {
+        yylval->lex.string = NewPoolTString(yytext);
+        return check_type(yyscanner);
     }
 
     return token;

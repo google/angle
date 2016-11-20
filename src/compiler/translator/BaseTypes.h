@@ -504,6 +504,7 @@ enum TQualifier
     EvqCentroidIn,  // Implies smooth
 
     // GLSL ES 3.1 compute shader special variables
+    EvqShared,
     EvqComputeIn,
     EvqNumWorkGroups,
     EvqWorkGroupSize,
@@ -707,6 +708,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqCentroid:               return "centroid";
     case EvqFlat:                   return "flat";
     case EvqSmooth:                 return "smooth";
+    case EvqShared:                 return "shared";
     case EvqComputeIn:              return "in";
     case EvqNumWorkGroups:          return "NumWorkGroups";
     case EvqWorkGroupSize:          return "WorkGroupSize";

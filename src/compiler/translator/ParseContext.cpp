@@ -1099,6 +1099,21 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     return true;
 }
 
+void TParseContext::emptyDeclarationErrorCheck(const TPublicType &publicType,
+                                               const TSourceLoc &location)
+{
+    if (publicType.isUnsizedArray())
+    {
+        // ESSL3 spec section 4.1.9: Array declaration which leaves the size unspecified is an
+        // error. It is assumed that this applies to empty declarations as well.
+        error(location, "empty array declaration needs to specify a size", "");
+    }
+    if (publicType.qualifier == EvqShared && !publicType.layoutQualifier.isEmpty())
+    {
+        error(location, "Shared memory declarations cannot have layout specified", "layout");
+    }
+}
+
 // These checks are common for all declarations starting a declarator list, and declarators that
 // follow an empty declaration.
 void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
@@ -1900,13 +1915,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
 
     if (emptyDeclaration)
     {
-        if (publicType.isUnsizedArray())
-        {
-            // ESSL3 spec section 4.1.9: Array declaration which leaves the size unspecified is an
-            // error. It is assumed that this applies to empty declarations as well.
-            error(identifierOrTypeLocation, "empty array declaration needs to specify a size",
-                  identifier.c_str());
-        }
+        emptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
     }
     else
     {
