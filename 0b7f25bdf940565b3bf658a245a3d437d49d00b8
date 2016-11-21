@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30496802_1e86cda4",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-11-21T11:54:16Z",
+      "side": 1,
+      "message": "I could not find anything about that in the spec, but I do recall that I had compilation errors when I tried it some time ago.",
+      "range": {
+        "startLine": 3204,
+        "startChar": 0,
+        "endLine": 3204,
+        "endChar": 64
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10d8e46b_b08b5601",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3260,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-11-21T11:54:16Z",
+      "side": 1,
+      "message": "Do you think they are unnecessary? Or should they be possibly renamed to something along the lines \"Interface block members cannot be qualified as shared\"?",
+      "range": {
+        "startLine": 3224,
+        "startChar": 0,
+        "endLine": 3260,
+        "endChar": 1
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
