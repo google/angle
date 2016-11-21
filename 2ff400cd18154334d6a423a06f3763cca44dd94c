@@ -16,6 +16,29 @@
       "revId": "2ff400cd18154334d6a423a06f3763cca44dd94c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b010f8cf_d8deeff9",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-21T18:59:02Z",
+      "side": 1,
+      "message": "Probably best to generate this after the VAO so there is no chance of changing the bindings of another VAO",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 636,
+        "endChar": 95
+      },
+      "revId": "2ff400cd18154334d6a423a06f3763cca44dd94c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
