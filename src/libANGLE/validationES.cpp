@@ -4240,12 +4240,11 @@ bool ValidateGenerateMipmap(Context *context, GLenum target)
     }
 
     // Non-power of 2 ES2 check
-    if (!context->getExtensions().textureNPOT &&
+    if (context->getClientVersion() < Version(3, 0) && !context->getExtensions().textureNPOT &&
         (!isPow2(static_cast<int>(texture->getWidth(baseTarget, 0))) ||
          !isPow2(static_cast<int>(texture->getHeight(baseTarget, 0)))))
     {
-        ASSERT(context->getClientMajorVersion() <= 2 &&
-               (target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP));
+        ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP);
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
     }
