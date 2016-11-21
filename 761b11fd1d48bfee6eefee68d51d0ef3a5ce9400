@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0355864_53c438a0",
+        "filename": "src/libANGLE/renderer/null/ProgramNULL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-21T21:58:12Z",
+      "side": 1,
+      "message": "Shouldn\u0027t sizeout be initialized to something like 0?",
+      "revId": "761b11fd1d48bfee6eefee68d51d0ef3a5ce9400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0355864_13a550e6",
+        "filename": "src/libANGLE/renderer/null/ProgramNULL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-21T21:58:12Z",
+      "side": 1,
+      "message": "Shouldn\u0027t memberInfoOut be initialized to something?",
+      "revId": "761b11fd1d48bfee6eefee68d51d0ef3a5ce9400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
