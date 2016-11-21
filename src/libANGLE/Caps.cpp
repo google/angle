@@ -796,6 +796,8 @@ Caps GenerateMinimumCaps(const Version &clientVersion)
         caps.maxViewportHeight     = caps.max2DTextureSize;
         caps.minAliasedPointSize   = 1;
         caps.maxAliasedPointSize   = 1;
+        caps.minAliasedLineWidth   = 1;
+        caps.maxAliasedLineWidth   = 1;
 
         // Table 6.19
         caps.vertexHighpFloat.setSimulatedFloat(62, 16);
