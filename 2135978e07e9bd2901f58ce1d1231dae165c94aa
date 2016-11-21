@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0355864_8e385832",
+        "filename": "src/compiler/preprocessor/MacroExpander.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-21T19:10:57Z",
+      "side": 1,
+      "message": "I think this can be declared here and implemented in MacroExpander.cpp",
+      "revId": "2135978e07e9bd2901f58ce1d1231dae165c94aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
