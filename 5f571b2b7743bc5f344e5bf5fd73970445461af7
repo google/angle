@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b0355864_bf078580",
+        "filename": "gyp/common.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-22T00:49:53Z",
+      "side": 1,
+      "message": "These are used in vk_loader_platform.h.  I don\u0027t know yet if these are the values we want, but looking at a cmake build file that comes with vulkan, I think these are reasonable guesses.",
+      "parentUuid": "308fa83f_2b0d4e1f",
+      "range": {
+        "startLine": 438,
+        "startChar": 0,
+        "endLine": 440,
+        "endChar": 51
+      },
+      "revId": "5f571b2b7743bc5f344e5bf5fd73970445461af7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_8ba562e9",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-18T15:50:36Z",
       "side": 1,
       "message": "The designation syntax is cool, haven\u0027t seen it before. It isn\u0027t valid c++11 sadly, might be an extension, but probably won\u0027t be portable. If the {} was giving compile errors you can remove it.\n\nhttp://stackoverflow.com/questions/18731707/why-does-c11-not-support-designated-initializer-list-as-c99",
+      "range": {
+        "startLine": 27,
+        "startChar": 1,
+        "endLine": 36,
+        "endChar": 6
+      },
+      "revId": "5f571b2b7743bc5f344e5bf5fd73970445461af7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0355864_ff42edaa",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-22T00:49:53Z",
+      "side": 1,
+      "message": "Yes the \u003d{} has to go.\n\nI wonder if it\u0027s worth looking for a g++ flag to turn off extensions, so it behaves more like MSVC.",
+      "parentUuid": "308fa83f_8ba562e9",
       "range": {
         "startLine": 27,
         "startChar": 1,
