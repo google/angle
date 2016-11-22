@@ -1179,7 +1179,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d_array.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_3d.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture_level.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgb10_a2ui_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.r8i_samples = FAIL

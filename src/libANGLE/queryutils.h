@@ -36,6 +36,16 @@ void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params);
 void QueryProgramiv(const Program *program, GLenum pname, GLint *params);
 void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *params);
 void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params);
+void QueryTexLevelParameterfv(const Texture *texture,
+                              GLenum target,
+                              GLint level,
+                              GLenum pname,
+                              GLfloat *params);
+void QueryTexLevelParameteriv(const Texture *texture,
+                              GLenum target,
+                              GLint level,
+                              GLenum pname,
+                              GLint *params);
 void QueryTexParameterfv(const Texture *texture, GLenum pname, GLfloat *params);
 void QueryTexParameteriv(const Texture *texture, GLenum pname, GLint *params);
 void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params);

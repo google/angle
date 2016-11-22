@@ -1439,6 +1439,26 @@ bool ValidTexture3DDestinationTarget(const ValidationContext *context, GLenum ta
     }
 }
 
+bool ValidTexLevelDestinationTarget(const ValidationContext *context, GLenum target)
+{
+    switch (target)
+    {
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_2D_ARRAY:
+        case GL_TEXTURE_2D_MULTISAMPLE:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool ValidFramebufferTarget(GLenum target)
 {
     static_assert(GL_DRAW_FRAMEBUFFER_ANGLE == GL_DRAW_FRAMEBUFFER &&
@@ -1510,6 +1530,9 @@ bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level)
             maxDimension = caps.max3DTextureSize;
             break;
         case GL_TEXTURE_2D_ARRAY:
+            maxDimension = caps.max2DTextureSize;
+            break;
+        case GL_TEXTURE_2D_MULTISAMPLE:
             maxDimension = caps.max2DTextureSize;
             break;
         default:

@@ -49,12 +49,18 @@ struct ImageDesc final
 {
     ImageDesc();
     ImageDesc(const Extents &size, const Format &format);
+    ImageDesc(const Extents &size,
+              const Format &format,
+              const GLsizei samples,
+              GLboolean fixedSampleLocations);
 
     ImageDesc(const ImageDesc &other) = default;
     ImageDesc &operator=(const ImageDesc &other) = default;
 
     Extents size;
     Format format;
+    GLsizei samples;
+    GLboolean fixedSampleLocations;
 };
 
 struct SwizzleState final
@@ -240,6 +246,10 @@ class Texture final : public egl::ImageSibling,
     void setUsage(GLenum usage);
     GLenum getUsage() const;
 
+    GLsizei getSamples(GLenum target, size_t level) const;
+
+    GLboolean getFixedSampleLocations(GLenum target, size_t level) const;
+
     const TextureState &getTextureState() const;
 
     size_t getWidth(GLenum target, size_t level) const;
@@ -400,4 +410,4 @@ inline bool operator!=(const TextureState &a, const TextureState &b)
 }
 }
 
-#endif   // LIBANGLE_TEXTURE_H_
+#endif  // LIBANGLE_TEXTURE_H_

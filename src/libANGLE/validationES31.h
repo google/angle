@@ -22,6 +22,16 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
                                       GLsizei bufSize,
                                       GLsizei *length,
                                       GLboolean *data);
+bool ValidateGetTexLevelParameterfv(Context *context,
+                                    GLenum target,
+                                    GLint level,
+                                    GLenum pname,
+                                    GLfloat *params);
+bool ValidateGetTexLevelParameteriv(Context *context,
+                                    GLenum target,
+                                    GLint level,
+                                    GLenum pname,
+                                    GLint *param);
 
 bool ValidateDrawIndirectBase(Context *context, GLenum mode, const GLvoid *indirect);
 bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const GLvoid *indirect);
