@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0355864_7795a18d",
+        "filename": "gyp/common.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-22T13:09:37Z",
+      "side": 1,
+      "message": "nit: put the \"[\" on a new line, like with \"defines\"",
+      "range": {
+        "startLine": 430,
+        "startChar": 36,
+        "endLine": 430,
+        "endChar": 37
+      },
+      "revId": "4f3db73cd05fe742cfba8214f12c6e2ffd798633",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0355864_178a156e",
+        "filename": "gyp/common.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-22T13:09:37Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 434,
+        "startChar": 36,
+        "endLine": 434,
+        "endChar": 38
+      },
+      "revId": "4f3db73cd05fe742cfba8214f12c6e2ffd798633",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
