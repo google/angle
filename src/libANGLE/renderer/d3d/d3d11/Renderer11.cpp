@@ -882,9 +882,9 @@ void Renderer11::populateRenderer11DeviceCaps()
                                                       sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS));
         if (SUCCEEDED(result))
         {
-            mRenderer11DeviceCaps.supportsClearView = (d3d11Options.ClearView != FALSE);
+            mRenderer11DeviceCaps.supportsClearView = (d3d11Options.ClearView == TRUE);
             mRenderer11DeviceCaps.supportsConstantBufferOffsets =
-                (d3d11Options.ConstantBufferOffsetting != FALSE);
+                (d3d11Options.ConstantBufferOffsetting == TRUE);
         }
     }
 
