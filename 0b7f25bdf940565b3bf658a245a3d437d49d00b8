@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "10d8e46b_f052fef7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1717,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-22T14:37:37Z",
+      "side": 1,
+      "message": "This check seems unnecessary to me - shouldn\u0027t this be covered in singleDeclarationErrorCheck?",
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30496802_81359c38",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-22T14:37:37Z",
+      "side": 1,
+      "message": "Be consistent with the function names, here \"ES2_and_ES3_ident_ES3_1_keyword\" would be better.",
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30496802_1e86cda4",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -25,6 +59,30 @@
     },
     {
       "key": {
+        "uuid": "30db286a_31b40a19",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-22T14:37:37Z",
+      "side": 1,
+      "message": "I filed a bug on the Khronos tracker about this, it might be a simple mistake in the spec. I\u0027m okay with keeping this test.",
+      "parentUuid": "30496802_1e86cda4",
+      "range": {
+        "startLine": 3204,
+        "startChar": 0,
+        "endLine": 3204,
+        "endChar": 64
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10d8e46b_b08b5601",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -36,6 +94,30 @@
       "writtenOn": "2016-11-21T11:54:16Z",
       "side": 1,
       "message": "Do you think they are unnecessary? Or should they be possibly renamed to something along the lines \"Interface block members cannot be qualified as shared\"?",
+      "range": {
+        "startLine": 3224,
+        "startChar": 0,
+        "endLine": 3260,
+        "endChar": 1
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0c80c9b_7956df21",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-22T14:37:37Z",
+      "side": 1,
+      "message": "\"Interface block members cannot be qualified as shared\" sounds like a better description to me.",
+      "parentUuid": "10d8e46b_b08b5601",
       "range": {
         "startLine": 3224,
         "startChar": 0,
