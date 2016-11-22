@@ -505,6 +505,15 @@ bool TCompiler::compile(const char *const shaderStrings[],
 
 bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 {
+    if (resources.MaxDrawBuffers < 1)
+    {
+        return false;
+    }
+    if (resources.EXT_blend_func_extended && resources.MaxDualSourceDrawBuffers < 1)
+    {
+        return false;
+    }
+
     compileResources = resources;
     setResourceString();
 
