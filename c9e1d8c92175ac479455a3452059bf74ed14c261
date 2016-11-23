@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "f0c190c3_b3dfa2f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-23T16:05:05Z",
+      "side": 1,
+      "message": "nit: size_t, would rather not use the Microsoft typedefs unless needed.",
+      "range": {
+        "startLine": 46,
+        "startChar": 9,
+        "endLine": 46,
+        "endChar": 13
+      },
+      "revId": "c9e1d8c92175ac479455a3452059bf74ed14c261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0c190c3_33d452d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-23T16:05:05Z",
+      "side": 1,
+      "message": "Can still use the SetPositionDepthColorVertex helper.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 36
+      },
+      "revId": "c9e1d8c92175ac479455a3452059bf74ed14c261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0c190c3_5833edb1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
