@@ -148,7 +148,7 @@ LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         // Bind attribute locations to match the GL layer.
         for (const sh::Attribute &attribute : mState.getAttributes())
         {
-            if (!attribute.staticUse)
+            if (!attribute.staticUse || attribute.isBuiltIn())
             {
                 continue;
             }
