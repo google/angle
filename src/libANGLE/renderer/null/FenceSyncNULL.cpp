@@ -29,6 +29,7 @@ gl::Error FenceSyncNULL::set(GLenum condition, GLbitfield flags)
 
 gl::Error FenceSyncNULL::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
 {
+    *outResult = GL_ALREADY_SIGNALED;
     return gl::NoError();
 }
 
