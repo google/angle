@@ -91,6 +91,8 @@
             '<(angle_path)/src/tests/preprocessor_tests/version_test.cpp',
             '<(angle_path)/src/tests/test_utils/compiler_test.cpp',
             '<(angle_path)/src/tests/test_utils/compiler_test.h',
+            '<(angle_path)/src/tests/test_utils/ConstantFoldingTest.h',
+            '<(angle_path)/src/tests/test_utils/ConstantFoldingTest.cpp',
         ],
         # TODO(jmadill): should probably call this windows sources
         'angle_unittests_hlsl_sources':
