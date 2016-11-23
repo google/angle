@@ -83,6 +83,30 @@
     },
     {
       "key": {
+        "uuid": "d041ec2c_4b2dc503",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-23T16:56:13Z",
+      "side": 1,
+      "message": "Found now that the ESSL 3.10 spec mentions in section 4.3. that \"local variables can only use the const qualifier\". You can refer to this section here. The spec might still be clarified to mention this in the \"Shared variables\" section as well.",
+      "parentUuid": "30db286a_31b40a19",
+      "range": {
+        "startLine": 3204,
+        "startChar": 0,
+        "endLine": 3204,
+        "endChar": 64
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10d8e46b_b08b5601",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
