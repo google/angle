@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0c190c3_b8f661b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-23T14:18:52Z",
+      "side": 1,
+      "message": "nit: format this such that there\u0027s a title sentence in the first paragraph, like\n\nD3D11: Clean up blendState code.\n\u003cspace\u003e\nChanges:\n...",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 68
+      },
+      "revId": "c9e1d8c92175ac479455a3452059bf74ed14c261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0c190c3_5833edb1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-23T14:18:52Z",
+      "side": 1,
+      "message": "nit: git cl format should clear up this trailing whitespace.",
+      "range": {
+        "startLine": 1605,
+        "startChar": 5,
+        "endLine": 1605,
+        "endChar": 9
+      },
+      "revId": "c9e1d8c92175ac479455a3452059bf74ed14c261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
