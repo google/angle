@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0c190c3_984c4543",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-23T14:13:30Z",
+      "side": 1,
+      "message": "nit: maybe we should make a new error for this?",
+      "range": {
+        "startLine": 386,
+        "startChar": 46,
+        "endLine": 386,
+        "endChar": 62
+      },
+      "revId": "c49f943588130a6f965ca1334eda5cbd91e6be6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
