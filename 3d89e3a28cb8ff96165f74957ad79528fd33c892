@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01acc56_496785fc",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "value -\u003e v for consistent.\nAlso change setUniformMatirx*",
+      "range": {
+        "startLine": 319,
+        "startChar": 51,
+        "endLine": 319,
+        "endChar": 56
+      },
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_c99ff59d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2562,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "Uniform and ProgramUniform doesn\u0027t support image uniform setting. We should validate this.",
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_69da817c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2575,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "This should be checked by GetValidProgram.",
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_e9cd91c4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2582,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "This isn\u0027t needed any more since you validate it below.",
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_a9aab9b8",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2608,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "Should you validate targetUniformType and size and type of uniform?\ni.e.\n1. size should match\n2. type should match",
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_49ddc571",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2670,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "No ProgramUniform API for MajorVersion \u003c 3.",
+      "range": {
+        "startLine": 2670,
+        "startChar": 8,
+        "endLine": 2670,
+        "endChar": 44
+      },
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_09d3cd69",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2703,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "No ProgramUniformMatrix api for MajorVersion \u003c 3.",
+      "range": {
+        "startLine": 2703,
+        "startChar": 24,
+        "endLine": 2703,
+        "endChar": 60
+      },
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_29d0895a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2709,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-11-24T09:14:40Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 2709,
+        "startChar": 33,
+        "endLine": 2709,
+        "endChar": 69
+      },
+      "revId": "3d89e3a28cb8ff96165f74957ad79528fd33c892",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
