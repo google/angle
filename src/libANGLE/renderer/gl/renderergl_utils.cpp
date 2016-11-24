@@ -899,6 +899,14 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     // Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
     extensions->sRGBWriteControl = false;
 #endif
+
+    // EXT_discard_framebuffer can be implemented as long as glDiscardFramebufferEXT or
+    // glInvalidateFramebuffer is available
+    extensions->discardFramebuffer = functions->isAtLeastGL(gl::Version(4, 3)) ||
+                                     functions->hasGLExtension("GL_ARB_invalidate_subdata") ||
+                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||
+                                     functions->hasGLESExtension("GL_EXT_discard_framebuffer") ||
+                                     functions->hasGLESExtension("GL_ARB_invalidate_subdata");
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)
