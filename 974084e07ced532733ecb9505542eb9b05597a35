@@ -22,6 +22,30 @@
       "revId": "974084e07ced532733ecb9505542eb9b05597a35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_b14d2289",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4580,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-24T16:06:46Z",
+      "side": 1,
+      "message": "Also if for some reason you needed this, you should make GetMaximumClientVersion return a gl::Version instead. But if you don\u0027t need it, best to leave it out.",
+      "parentUuid": "ed0297f6_711f9a78",
+      "range": {
+        "startLine": 4580,
+        "startChar": 94,
+        "endLine": 4580,
+        "endChar": 95
+      },
+      "revId": "974084e07ced532733ecb9505542eb9b05597a35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
