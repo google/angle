@@ -34,8 +34,6 @@ class DisplayVk : public DisplayImpl
     bool testDeviceLost() override;
     egl::Error restoreLostDevice() override;
 
-    bool isValidNativeWindow(EGLNativeWindowType window) const override;
-
     std::string getVendorString() const override;
 
     egl::Error getDevice(DeviceImpl **device) override;
@@ -71,7 +69,13 @@ class DisplayVk : public DisplayImpl
 
     RendererVk *getRenderer() const { return mRenderer.get(); }
 
+    virtual const char *getWSIName() const = 0;
+
   private:
+    virtual SurfaceImpl *createWindowSurfaceVk(const egl::SurfaceState &state,
+                                               EGLNativeWindowType window,
+                                               EGLint width,
+                                               EGLint height) = 0;
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 

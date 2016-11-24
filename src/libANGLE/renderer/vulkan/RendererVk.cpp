@@ -153,7 +153,7 @@ RendererVk::~RendererVk()
     mPhysicalDevice = VK_NULL_HANDLE;
 }
 
-vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
+vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *wsiName)
 {
 #if !defined(NDEBUG)
     // Validation layers enabled by default in Debug.
@@ -229,11 +229,7 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 
     std::vector<const char *> enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
-#if defined(ANGLE_PLATFORM_WINDOWS)
-    enabledInstanceExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-#else
-#error Unsupported Vulkan platform.
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+    enabledInstanceExtensions.push_back(wsiName);
 
     // TODO(jmadill): Should be able to continue initialization if debug report ext missing.
     if (mEnableValidationLayers)

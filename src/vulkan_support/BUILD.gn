@@ -162,6 +162,12 @@ config("vulkan_config") {
       "VK_USE_PLATFORM_WIN32_KHX",
     ]
   }
+  if (is_linux) {
+    defines = [
+      "VK_USE_PLATFORM_XCB_KHR",
+      "VK_USE_PLATFORM_XCB_KHX",
+    ]
+  }
 }
 
 config("vulkan_internal_config") {
@@ -172,6 +178,13 @@ config("vulkan_internal_config") {
     # See https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/issues/1649
     # TODO(jmadill): Lift this once github issue is fixed.
     cflags += [ "-Wno-ignored-attributes" ]
+  }
+  if (is_linux) {
+    defines += [
+      "SYSCONFDIR=\"/etc\"",
+      "FALLBACK_CONFIG_DIRS=\"/etc/xdg\"",
+      "FALLBACK_DATA_DIRS=\"/usr/local/share:/usr/share\"",
+    ]
   }
 }
 
@@ -316,8 +329,8 @@ config("glslang_config") {
 config("glslang_internal_config") {
   if (is_clang || !is_win) {
     cflags = [
-      "-Wno-reorder",
       "-Wno-ignored-qualifiers",
+      "-Wno-reorder",
     ]
   }
 }
@@ -338,6 +351,9 @@ static_library("glslang") {
     ]
 
     sources += rebase_path(vulkan_gypi.glslang_win_sources, ".", "src")
+  }
+  if (is_linux) {
+    sources += rebase_path(vulkan_gypi.glslang_unix_sources, ".", "src")
   }
 }
 
@@ -401,16 +417,21 @@ layers = [
 
 action("vulkan_gen_json_files") {
   script = "$third_party_dir/angle/scripts/generate_vulkan_layers_json.py"
-  sources =
-      rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
+  if (is_win) {
+    sources =
+        rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
+    args = [ "$raw_vulkan_layers_dir/layers/windows" ]
+  }
+  if (is_linux) {
+    sources =
+        rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_linux, ".", "src")
+    args = [ "$raw_vulkan_layers_dir/layers/linux" ]
+  }
 
   # The layer JSON files are part of the necessary data deps.
   outputs = vulkan_gen_json_files_outputs
   data = vulkan_gen_json_files_outputs
-  args = [
-    "$raw_vulkan_layers_dir/layers/windows",
-    rebase_path("$root_out_dir/$data_dir"),
-  ]
+  args += [ rebase_path("$root_out_dir/$data_dir") ]
 }
 
 source_set("vulkan_layer_utils") {

@@ -37,7 +37,7 @@ class RendererVk : angle::NonCopyable
     RendererVk();
     ~RendererVk();
 
-    vk::Error initialize(const egl::AttributeMap &attribs);
+    vk::Error initialize(const egl::AttributeMap &attribs, const char *wsiName);
 
     std::string getVendorString() const;
     std::string getRendererDescription() const;

@@ -20,6 +20,7 @@ if (is_win) {
   import("//build/config/win/visual_studio_version.gni")
 } else if (is_linux && use_x11 && !is_chromeos) {
   angle_enable_gl = true
+  angle_enable_vulkan = true
 } else if (is_mac || ozone_platform_gbm) {
   angle_enable_gl = true
 } else if (is_android) {

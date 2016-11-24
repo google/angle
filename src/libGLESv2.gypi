@@ -683,6 +683,20 @@
             'libANGLE/renderer/vulkan/renderervk_utils.h',
             'libANGLE/renderer/vulkan/vk_format_table_autogen.cpp',
         ],
+        'libangle_vulkan_win32_sources':
+        [
+            'libANGLE/renderer/vulkan/win32/DisplayVkWin32.cpp',
+            'libANGLE/renderer/vulkan/win32/DisplayVkWin32.h',
+            'libANGLE/renderer/vulkan/win32/WindowSurfaceVkWin32.cpp',
+            'libANGLE/renderer/vulkan/win32/WindowSurfaceVkWin32.h',
+        ],
+        'libangle_vulkan_xcb_sources':
+        [
+            'libANGLE/renderer/vulkan/xcb/DisplayVkXcb.cpp',
+            'libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h',
+            'libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.cpp',
+            'libANGLE/renderer/vulkan/xcb/WindowSurfaceVkXcb.h',
+        ],
         'libangle_null_sources':
         [
             'libANGLE/renderer/null/BufferNULL.cpp',
@@ -1009,10 +1023,10 @@
                             ],
                             'link_settings': {
                                 'ldflags': [
-                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi xext)',
+                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi xext xcb)',
                                 ],
                                 'libraries': [
-                                    '<!@(<(pkg-config) --libs-only-l x11 xi xext) -ldl',
+                                    '<!@(<(pkg-config) --libs-only-l x11 xi xext xcb) -ldl',
                                 ],
                             },
                         }],
@@ -1085,6 +1099,23 @@
                     'sources':
                     [
                         '<@(libangle_vulkan_sources)',
+                    ],
+                    'conditions':
+                    [
+                        ['OS=="win"',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_vulkan_win32_sources)',
+                            ],
+                        }],
+                        ['OS=="linux"',
+                        {
+                            'sources':
+                            [
+                                '<@(libangle_vulkan_xcb_sources)',
+                            ],
+                        }],
                     ],
                     'dependencies':
                     [

@@ -59,7 +59,13 @@
 #endif  // defined(ANGLE_ENABLE_NULL)
 
 #if defined(ANGLE_ENABLE_VULKAN)
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
+#if defined(ANGLE_PLATFORM_WINDOWS)
+#include "libANGLE/renderer/vulkan/win32/DisplayVkWin32.h"
+#elif defined(ANGLE_PLATFORM_LINUX)
+#include "libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h"
+#else
+#error Unsupported Vulkan platform.
+#endif
 #endif  // defined(ANGLE_ENABLE_VULKAN)
 
 namespace egl
@@ -199,7 +205,13 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
 
         case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
 #if defined(ANGLE_ENABLE_VULKAN)
-            impl = new rx::DisplayVk(state);
+#if defined(ANGLE_PLATFORM_WINDOWS)
+            impl = new rx::DisplayVkWin32(state);
+#elif defined(ANGLE_PLATFORM_LINUX)
+            impl = new rx::DisplayVkXcb(state);
+#else
+#error Unsupported Vulkan platform.
+#endif
 #else
             // No display available
             UNREACHABLE();

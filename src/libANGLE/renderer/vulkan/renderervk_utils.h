@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_RENDERERVK_UTILS_H_
 #define LIBANGLE_RENDERER_VULKAN_RENDERERVK_UTILS_H_
 
+#include <limits>
+
 #include <vulkan/vulkan.h>
 
 #include "common/debug.h"

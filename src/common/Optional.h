@@ -10,6 +10,8 @@
 #ifndef COMMON_OPTIONAL_H_
 #define COMMON_OPTIONAL_H_
 
+#include <utility>
+
 template <class T>
 struct Optional
 {

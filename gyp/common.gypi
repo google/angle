@@ -23,7 +23,6 @@
             '-Wextra',
             '-Wformat=2',
             '-Winit-self',
-            '-Wnon-virtual-dtor',
             '-Wno-format-nonliteral',
             '-Wno-unknown-pragmas',
             '-Wno-unused-function',
@@ -32,6 +31,10 @@
             '-Wpointer-arith',
             '-Wundef',
             '-Wwrite-strings',
+        ],
+        'gcc_or_clang_warnings_cc':
+        [
+            '-Wnon-virtual-dtor',
         ],
 
         # TODO: Pull chromium's clang dep.
@@ -428,7 +431,21 @@
                     }],
                     ['OS != "win" and OS != "mac"',
                     {
-                        'cflags': ['<@(gcc_or_clang_warnings)']
+                        'cflags_c':
+                        [
+                            '<@(gcc_or_clang_warnings)',
+                            '-std=c99',
+                        ],
+                        'cflags_cc':
+                        [
+                            '<@(gcc_or_clang_warnings_cc)',
+                        ],
+                        'defines':
+                        [
+                            'SYSCONFDIR="/etc"',
+                            'FALLBACK_CONFIG_DIRS="/etc/xdg"',
+                            'FALLBACK_DATA_DIRS="/usr/local/share:/usr/share"',
+                        ],
                     }],
                     ['clang==1',
                     {
