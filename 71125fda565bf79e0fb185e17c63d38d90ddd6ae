@@ -16,6 +16,24 @@
       "revId": "71125fda565bf79e0fb185e17c63d38d90ddd6ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d041ec2c_2e12471c",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-25T15:35:48Z",
+      "side": 1,
+      "message": "log(0), log2(0) and inversesqrt(0) are undefined in ESSL. Added the other suggestions.",
+      "parentUuid": "ed0297f6_66ac7f3c",
+      "revId": "71125fda565bf79e0fb185e17c63d38d90ddd6ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
