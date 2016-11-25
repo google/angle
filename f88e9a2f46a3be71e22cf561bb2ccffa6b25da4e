@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_06eedb41",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "This fails to compile without std::move.",
+      "parentUuid": "ed0297f6_667a3fdc",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_e66d2f1d",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "nit: first std::move not necessary.",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_c6e7d363",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "This fails to compile without std::move.",
+      "parentUuid": "ed0297f6_e66d2f1d",
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_e6eacf2b",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "This fails to compile without std::move.",
+      "parentUuid": "ed0297f6_2664373a",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_06613b29",
         "filename": "src/libANGLE/WorkerThread.cpp",
         "patchSetId": 8
@@ -64,6 +118,24 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "ditto",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_861f8b77",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "This fails to compile without std::move.",
+      "parentUuid": "ed0297f6_06613b29",
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_e611af77",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "Right now it uses features.h, which is in libANGLE, and there\u0027s some discussion about the platform, which is currently in libANGLE as well, so I think it makes sense to stay here.",
+      "parentUuid": "ed0297f6_462e23bd",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_46caa304",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 8
@@ -98,6 +188,24 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "nit: event",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_c60eb353",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_46caa304",
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_a6fde7fd",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "added NonCopyable. Move assignment is implemeted in copyBase, since this class is a base class defining a move assignment op isn\u0027t very useful.",
+      "parentUuid": "ed0297f6_e6d88fdb",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_a67047fd",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 8
@@ -132,6 +258,24 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "nit: create",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_8602eb24",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_a67047fd",
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -161,6 +305,30 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_66247fc5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "Done. Why, out of curiosity?",
+      "parentUuid": "ed0297f6_06401b70",
+      "range": {
+        "startLine": 1298,
+        "startChar": 0,
+        "endLine": 1306,
+        "endChar": 1
+      },
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_66c59ff4",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -172,6 +340,24 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "This makes it so no info log is output when there is an error.",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_e6508f24",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T16:39:53Z",
+      "side": 1,
+      "message": "The only possible errors are from the compile DLL failing to load, and compile returning E_OUTOFMEMORY, so I don\u0027t think the info log can save you here, but I re-ordered this to be safe.",
+      "parentUuid": "ed0297f6_66c59ff4",
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
