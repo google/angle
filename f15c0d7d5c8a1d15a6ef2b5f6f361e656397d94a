@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_86faebc1",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T18:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d06c8cba_b3c9586c",
+      "revId": "f15c0d7d5c8a1d15a6ef2b5f6f361e656397d94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "905054f1_34061e3e",
         "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
         "patchSetId": 1
@@ -36,6 +54,42 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_a6f5e7d6",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T18:23:34Z",
+      "side": 1,
+      "message": "Done, the function now checks all of Init, Condition and Expression before changing the loop. This makes change for loops with matching expressions to be completely decayed compared to the original code that would just decay the loop expression.",
+      "parentUuid": "905054f1_34061e3e",
+      "revId": "f15c0d7d5c8a1d15a6ef2b5f6f361e656397d94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_c606b3fc",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T18:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "905054f1_34061e3e",
+      "revId": "f15c0d7d5c8a1d15a6ef2b5f6f361e656397d94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01acc56_6c2a8fee",
         "filename": "src/compiler/translator/TranslatorHLSL.cpp",
         "patchSetId": 1
@@ -47,6 +101,24 @@
       "writtenOn": "2016-11-25T12:14:08Z",
       "side": 1,
       "message": "I think that SeparateDeclarations needs to be run before SplitSequenceOperator, in case there\u0027s a sequence operator that needs to be split inside an initializer. Example:\n\n#version 300 es\n\nuniform bool u;\n\nvoid main() {\n    int a \u003d 0, b \u003d ((u ? a : 0), 1);\n}",
+      "revId": "f15c0d7d5c8a1d15a6ef2b5f6f361e656397d94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_66efdf01",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T18:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_6c2a8fee",
       "revId": "f15c0d7d5c8a1d15a6ef2b5f6f361e656397d94a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
