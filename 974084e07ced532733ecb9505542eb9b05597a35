@@ -46,6 +46,54 @@
       "revId": "974084e07ced532733ecb9505542eb9b05597a35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_c3b225c6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4580,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-25T04:44:42Z",
+      "side": 1,
+      "message": "Without this change, there will be the following error:\nFATAL ERROR: Got EGL_BAD_CONFIG: eglCreateContext() at egluglutil.cpp:153\nThis is because that in egl::ValidateCreateContext line 380, getMaxSupportedESVersion is gl::Version(3, 0) which is lower that (3, 1), the path will fall in Error(EGL_BAD_CONFIG, \"Requested GLES version is not supported.\")",
+      "parentUuid": "ed0297f6_711f9a78",
+      "range": {
+        "startLine": 4580,
+        "startChar": 94,
+        "endLine": 4580,
+        "endChar": 95
+      },
+      "revId": "974084e07ced532733ecb9505542eb9b05597a35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_83e65dcd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4580,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-25T04:44:42Z",
+      "side": 1,
+      "message": "I think d3d11_gl::GetMaximumClientVersion is not a good name. In fact, it will return a GLint value. Maybe d3d11_gl::GetClientMajorVersionIn is more appropriate. Some other places need this GLint value not a gl::Version. If here we make d3d11_gl::GetMaximumClientVersion return a gl::Version, we need to change more places. I will submit a new patch set to finish it. Thanks.",
+      "parentUuid": "ed0297f6_b14d2289",
+      "range": {
+        "startLine": 4580,
+        "startChar": 94,
+        "endLine": 4580,
+        "endChar": 95
+      },
+      "revId": "974084e07ced532733ecb9505542eb9b05597a35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
