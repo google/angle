@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_66ac7f3c",
+        "filename": "src/tests/compiler_tests/ConstantFolding_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T14:49:52Z",
+      "side": 1,
+      "message": "Ideas of more test cases:\n - dot(vec2(inf, 1), vec2(1)) \u003d inf\n - Same for faceforward\nNot sure about the following:\n - log(0) \u003d log2(0) \u003d inf?\n - rsqrt(0) \u003d inf?",
+      "revId": "71125fda565bf79e0fb185e17c63d38d90ddd6ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
