@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_83253d74",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T06:52:40Z",
+      "side": 1,
+      "message": "let\u0027s restrict 10_1 to ES 3.0 only, and make ES 3.1 require 11.0+",
+      "range": {
+        "startLine": 1032,
+        "startChar": 8,
+        "endLine": 1032,
+        "endChar": 36
+      },
+      "revId": "f6e8c177c38f28024e3721658cc2cef5eeed9ba0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
