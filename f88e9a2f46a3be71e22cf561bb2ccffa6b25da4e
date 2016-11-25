@@ -70,6 +70,23 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_462e23bd",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T15:50:11Z",
+      "side": 1,
+      "message": "Does it make sense to put this in the util or common library instead?",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_46caa304",
         "filename": "src/libANGLE/WorkerThread.h",
         "patchSetId": 8
@@ -115,6 +132,29 @@
       "writtenOn": "2016-11-25T15:14:39Z",
       "side": 1,
       "message": "nit: create",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_06401b70",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T15:50:11Z",
+      "side": 1,
+      "message": "nit: I think it makes sense to inline these (and the run functions below).",
+      "range": {
+        "startLine": 1298,
+        "startChar": 0,
+        "endLine": 1306,
+        "endChar": 1
+      },
       "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
