@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_c64d9388",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:35:23Z",
+      "side": 1,
+      "message": "nit: std::vector\u003cGLubyte\u003e actualData(mapPtr, mapPtr + bigSize);",
+      "range": {
+        "startLine": 600,
+        "startChar": 4,
+        "endLine": 601,
+        "endChar": 47
+      },
+      "revId": "1a46276e4ed87844afe7e17b2ef3ca904ea000df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
