@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01acc56_2608b8d9",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T22:41:29Z",
+      "side": 1,
+      "message": "#if defined(ANGLE_PLATFORM_WINDOWS)\n...\n#else if defined(ANGLE_PLATFORM_LINUX)\n// TODO\nreturn true;\n#else\n#error Unsupported platform!\n#endif",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 12
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_dca0c276",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T22:41:29Z",
+      "side": 1,
+      "message": "why didn\u0027t you need to remove this instance of {}; ?",
+      "range": {
+        "startLine": 165,
+        "startChar": 5,
+        "endLine": 165,
+        "endChar": 44
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_bc9df642",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T22:41:29Z",
+      "side": 1,
+      "message": "need the equivalent clang/gcc flag",
+      "range": {
+        "startLine": 246,
+        "startChar": 32,
+        "endLine": 246,
+        "endChar": 76
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_9cb8faac",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T22:41:29Z",
+      "side": 1,
+      "message": "need to path to the \u0027lib/\u0027 folder somehow",
+      "range": {
+        "startLine": 330,
+        "startChar": 32,
+        "endLine": 330,
+        "endChar": 79
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_7cbd2e9a",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-25T22:41:29Z",
+      "side": 1,
+      "message": "need the xbc flag again for linux.",
+      "range": {
+        "startLine": 476,
+        "startChar": 33,
+        "endLine": 476,
+        "endChar": 58
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
