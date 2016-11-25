@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_2650b77b",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-25T12:32:03Z",
+      "side": 1,
+      "message": "Hi, Geoff. I am not clear why \u0027mStateManager-\u003euseProgram(mProgramID)\u0027 is needed in original implementation. In current design, if it\u0027s on ES 31 context, setUnifor2iv will always enter mFunctions-\u003eprogramUniform2iv path. But the caller may still be glUniform* not glProgramUniform*. Comparing old implementation, it will lack useProgram. I think it is a problem. How do you think? Thanks.",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
