@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "ed0297f6_8648ab7d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "I think this was part of your other patch and got merged in here.",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_663d9fd1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4580,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "same for this.",
+      "range": {
+        "startLine": 4580,
+        "startChar": 94,
+        "endLine": 4580,
+        "endChar": 95
+      },
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_2650b77b",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 4
@@ -13,6 +59,81 @@
       "writtenOn": "2016-11-25T12:32:03Z",
       "side": 1,
       "message": "Hi, Geoff. I am not clear why \u0027mStateManager-\u003euseProgram(mProgramID)\u0027 is needed in original implementation. In current design, if it\u0027s on ES 31 context, setUnifor2iv will always enter mFunctions-\u003eprogramUniform2iv path. But the caller may still be glUniform* not glProgramUniform*. Comparing old implementation, it will lack useProgram. I think it is a problem. How do you think? Thanks.",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_a61a8786",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "This is fine, it may even improve performance by doing fewer GL calls.  These two branches are equivalent in functionality except that one changes the current program binding.  This is not a problem because we already make sure that the program is bound before we use it for a draw call.",
+      "parentUuid": "ed0297f6_2650b77b",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_46298399",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2562,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "Can we merge this and the ValidateUniformCommonBase function below? Instead of passing it \"GLuint program\", it could be \"Program *program\".",
+      "range": {
+        "startLine": 2562,
+        "startChar": 12,
+        "endLine": 2562,
+        "endChar": 44
+      },
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_e6376ff6",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2656,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "This also needs to validate that the context version is high enough.",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_2657971f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2680,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-25T16:32:53Z",
+      "side": 1,
+      "message": "Needs to check version number too.",
       "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
