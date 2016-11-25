@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/gl/BlitGL.h"
 
+#include "common/vector_utils.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/renderer/gl/formatutilsgl.h"
@@ -16,6 +17,8 @@
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
+
+using angle::Vector2;
 
 namespace rx
 {
@@ -336,24 +339,24 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
     //          = P * (T.size / D.size) + (T.offset - D.offset * T.size / D.size)
 
     GLuint textureId;
-    gl::Vector2 TOffset;
-    gl::Vector2 TSize;
+    Vector2 TOffset;
+    Vector2 TSize;
 
     // TODO(cwallez) once texture dirty bits are landed, reuse attached texture instead of using
     // CopyTexImage2D
     {
         textureId = mScratchTextures[0];
-        TOffset   = gl::Vector2(0.0, 0.0);
-        TSize     = gl::Vector2(1.0, 1.0);
+        TOffset   = Vector2(0.0);
+        TSize     = Vector2(1.0);
         if (sourceArea.width < 0)
         {
-            TOffset.x = 1.0;
-            TSize.x   = -1.0;
+            TOffset.x() = 1.0;
+            TSize.x()   = -1.0;
         }
         if (sourceArea.height < 0)
         {
-            TOffset.y = 1.0;
-            TSize.y   = -1.0;
+            TOffset.y() = 1.0;
+            TSize.y()   = -1.0;
         }
 
         GLenum format                 = readAttachment->getFormat().info->internalFormat;
@@ -372,8 +375,8 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
 
     // Compute normalized sampled draw quad region
     // It is the same as the region of the source rectangle that is in bounds.
-    gl::Vector2 DOffset;
-    gl::Vector2 DSize;
+    Vector2 DOffset;
+    Vector2 DSize;
     {
         ASSERT(sourceArea.width != 0 && sourceArea.height != 0);
         gl::Rectangle orientedInBounds = inBoundsSource;
@@ -389,16 +392,15 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
         }
 
         DOffset =
-            gl::Vector2(static_cast<float>(orientedInBounds.x - sourceArea.x) / sourceArea.width,
-                        static_cast<float>(orientedInBounds.y - sourceArea.y) / sourceArea.height);
-        DSize = gl::Vector2(static_cast<float>(orientedInBounds.width) / sourceArea.width,
-                            static_cast<float>(orientedInBounds.height) / sourceArea.height);
+            Vector2(static_cast<float>(orientedInBounds.x - sourceArea.x) / sourceArea.width,
+                    static_cast<float>(orientedInBounds.y - sourceArea.y) / sourceArea.height);
+        DSize = Vector2(static_cast<float>(orientedInBounds.width) / sourceArea.width,
+                        static_cast<float>(orientedInBounds.height) / sourceArea.height);
     }
 
-    ASSERT(DSize.x != 0.0 && DSize.y != 0.0);
-    gl::Vector2 texCoordScale  = gl::Vector2(TSize.x / DSize.x, TSize.y / DSize.y);
-    gl::Vector2 texCoordOffset = gl::Vector2(TOffset.x - DOffset.x * texCoordScale.x,
-                                             TOffset.y - DOffset.y * texCoordScale.y);
+    ASSERT(DSize.x() != 0.0 && DSize.y() != 0.0);
+    Vector2 texCoordScale  = TSize / DSize;
+    Vector2 texCoordOffset = TOffset - DOffset * texCoordScale;
 
     // Reset all the state except scissor and use the viewport to draw exactly to the destination
     // rectangle
@@ -411,8 +413,8 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
 
     mStateManager->useProgram(mBlitProgram);
     mFunctions->uniform1i(mSourceTextureLocation, 0);
-    mFunctions->uniform2f(mScaleLocation, texCoordScale.x, texCoordScale.y);
-    mFunctions->uniform2f(mOffsetLocation, texCoordOffset.x, texCoordOffset.y);
+    mFunctions->uniform2f(mScaleLocation, texCoordScale.x(), texCoordScale.y());
+    mFunctions->uniform2f(mOffsetLocation, texCoordOffset.x(), texCoordOffset.y());
     mFunctions->uniform1i(mMultiplyAlphaLocation, 0);
     mFunctions->uniform1i(mUnMultiplyAlphaLocation, 0);
 
@@ -472,20 +474,20 @@ gl::Error BlitGL::copySubTexture(TextureGL *source,
     mStateManager->activeTexture(0);
     mStateManager->bindTexture(GL_TEXTURE_2D, source->getTextureID());
 
-    gl::Vector2 scale(sourceArea.width / static_cast<float>(sourceSize.width),
-                      sourceArea.height / static_cast<float>(sourceSize.height));
-    gl::Vector2 offset(sourceArea.x / static_cast<float>(sourceSize.width),
-                       sourceArea.y / static_cast<float>(sourceSize.height));
+    Vector2 scale(sourceArea.width / static_cast<float>(sourceSize.width),
+                  sourceArea.height / static_cast<float>(sourceSize.height));
+    Vector2 offset(sourceArea.x / static_cast<float>(sourceSize.width),
+                   sourceArea.y / static_cast<float>(sourceSize.height));
     if (unpackFlipY)
     {
-        offset.y += scale.y;
-        scale.y = -scale.y;
+        offset.y() += scale.y();
+        scale.y() = -scale.y();
     }
 
     mStateManager->useProgram(mBlitProgram);
     mFunctions->uniform1i(mSourceTextureLocation, 0);
-    mFunctions->uniform2f(mScaleLocation, scale.x, scale.y);
-    mFunctions->uniform2f(mOffsetLocation, offset.x, offset.y);
+    mFunctions->uniform2f(mScaleLocation, scale.x(), scale.y());
+    mFunctions->uniform2f(mOffsetLocation, offset.x(), offset.y());
     if (unpackPremultiplyAlpha == unpackUnmultiplyAlpha)
     {
         mFunctions->uniform1i(mMultiplyAlphaLocation, 0);

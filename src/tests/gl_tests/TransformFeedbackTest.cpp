@@ -6,7 +6,6 @@
 
 #include "test_utils/ANGLETest.h"
 #include "random_utils.h"
-#include "Vector.h"
 
 using namespace angle;
 

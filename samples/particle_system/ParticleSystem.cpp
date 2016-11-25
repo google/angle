@@ -14,7 +14,8 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "Vector.h"
+
+#include "common/vector_utils.h"
 #include "shader_utils.h"
 #include "random_utils.h"
 #include "system_utils.h"
@@ -100,17 +101,17 @@ class ParticleSystemSample : public SampleApplication
         {
             mParticles[i].lifetime = mRNG.randomFloatBetween(0.0f, 1.0f);
 
-            float endAngle              = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
-            float endRadius             = mRNG.randomFloatBetween(0.0f, 2.0f);
-            mParticles[i].endPosition.x = sinf(endAngle) * endRadius;
-            mParticles[i].endPosition.y = cosf(endAngle) * endRadius;
-            mParticles[i].endPosition.z = 0.0f;
+            float endAngle                = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
+            float endRadius               = mRNG.randomFloatBetween(0.0f, 2.0f);
+            mParticles[i].endPosition.x() = sinf(endAngle) * endRadius;
+            mParticles[i].endPosition.y() = cosf(endAngle) * endRadius;
+            mParticles[i].endPosition.z() = 0.0f;
 
-            float startAngle              = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
-            float startRadius             = mRNG.randomFloatBetween(0.0f, 0.25f);
-            mParticles[i].startPosition.x = sinf(startAngle) * startRadius;
-            mParticles[i].startPosition.y = cosf(startAngle) * startRadius;
-            mParticles[i].startPosition.z = 0.0f;
+            float startAngle                = mRNG.randomFloatBetween(0, 2.0f * float(M_PI));
+            float startRadius               = mRNG.randomFloatBetween(0.0f, 0.25f);
+            mParticles[i].startPosition.x() = sinf(startAngle) * startRadius;
+            mParticles[i].startPosition.y() = cosf(startAngle) * startRadius;
+            mParticles[i].startPosition.z() = 0.0f;
         }
 
         mParticleTime = 1.0f;

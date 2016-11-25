@@ -14,13 +14,16 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
-#include "Vector.h"
+
+#include "common/vector_utils.h"
 #include "shader_utils.h"
 #include "texture_utils.h"
 
 #include <cstring>
 #include <iostream>
 #include <vector>
+
+using namespace angle;
 
 class SimpleInstancingSample : public SampleApplication
 {

@@ -17,7 +17,6 @@
 #include "shader_utils.h"
 #include "texture_utils.h"
 #include "geometry_utils.h"
-#include "Vector.h"
 
 class SimpleTextureCubemapSample : public SampleApplication
 {

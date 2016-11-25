@@ -28,8 +28,6 @@
             'OSWindow.cpp',
             'OSWindow.h',
             'Timer.h',
-            'Vector.cpp',
-            'Vector.h',
         ],
         'util_win32_sources':
         [

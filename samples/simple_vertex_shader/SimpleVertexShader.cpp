@@ -14,10 +14,10 @@
 //            http://www.opengles-book.com
 
 #include "SampleApplication.h"
+
 #include "shader_utils.h"
 #include "texture_utils.h"
 #include "geometry_utils.h"
-#include "Vector.h"
 #include "Matrix.h"
 
 #include <cmath>
@@ -93,8 +93,8 @@ class SimpleVertexShaderSample : public SampleApplication
         Matrix4 perspectiveMatrix = Matrix4::perspective(60.0f, float(getWindow()->getWidth()) / getWindow()->getHeight(),
                                                          1.0f, 20.0f);
 
-        Matrix4 modelMatrix = Matrix4::translate(Vector3(0.0f, 0.0f, -2.0f)) *
-                              Matrix4::rotate(mRotation, Vector3(1.0f, 0.0f, 1.0f));
+        Matrix4 modelMatrix = Matrix4::translate(angle::Vector3(0.0f, 0.0f, -2.0f)) *
+                              Matrix4::rotate(mRotation, angle::Vector3(1.0f, 0.0f, 1.0f));
 
         Matrix4 viewMatrix = Matrix4::identity();
 

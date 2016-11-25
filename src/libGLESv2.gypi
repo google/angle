@@ -34,6 +34,7 @@
             'common/tls.h',
             'common/utilities.cpp',
             'common/utilities.h',
+            'common/vector_utils.h',
             'common/version.h',
         ],
         'libangle_image_util_sources':

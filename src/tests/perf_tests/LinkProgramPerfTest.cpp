@@ -11,7 +11,7 @@
 
 #include <array>
 
-#include "Vector.h"
+#include "common/vector_utils.h"
 #include "shader_utils.h"
 
 using namespace angle;

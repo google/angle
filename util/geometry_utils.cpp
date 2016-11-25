@@ -12,6 +12,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+using namespace angle;
+
 void CreateSphereGeometry(size_t sliceCount, float radius, SphereGeometry *result)
 {
     size_t parellelCount = sliceCount / 2;
