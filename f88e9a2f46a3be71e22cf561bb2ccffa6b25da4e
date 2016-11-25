@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_667a3fdc",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "nit: std::move not necessary.",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_e66d2f1d",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "nit: first std::move not necessary.",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_2664373a",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "nit: std::move not necessary",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_06613b29",
+        "filename": "src/libANGLE/WorkerThread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_46caa304",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "nit: event",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_e6d88fdb",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "You probable want a move assignment operator too and angle::NonCopyable",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_a67047fd",
+        "filename": "src/libANGLE/WorkerThread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "nit: create",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_66c59ff4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-25T15:14:39Z",
+      "side": 1,
+      "message": "This makes it so no info log is output when there is an error.",
+      "revId": "f88e9a2f46a3be71e22cf561bb2ccffa6b25da4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
