@@ -151,6 +151,8 @@
             'libANGLE/VertexAttribute.cpp',
             'libANGLE/VertexAttribute.h',
             'libANGLE/VertexAttribute.inl',
+            'libANGLE/WorkerThread.cpp',
+            'libANGLE/WorkerThread.h',
             'libANGLE/angletypes.cpp',
             'libANGLE/angletypes.h',
             'libANGLE/angletypes.inl',

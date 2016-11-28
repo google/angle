@@ -2626,22 +2626,26 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
     // Transform feedback is not supported in ES2 or D3D9
     ASSERT(streamOutVaryings.empty());
 
-    const char *profileType = NULL;
+    std::stringstream profileStream;
+
     switch (type)
     {
-      case SHADER_VERTEX:
-        profileType = "vs";
-        break;
-      case SHADER_PIXEL:
-        profileType = "ps";
-        break;
-      default:
-        UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
+        case SHADER_VERTEX:
+            profileStream << "vs";
+            break;
+        case SHADER_PIXEL:
+            profileStream << "ps";
+            break;
+        default:
+            UNREACHABLE();
+            return gl::Error(GL_INVALID_OPERATION);
     }
-    unsigned int profileMajorVersion = (getMajorShaderModel() >= 3) ? 3 : 2;
-    unsigned int profileMinorVersion = 0;
-    std::string profile = FormatString("%s_%u_%u", profileType, profileMajorVersion, profileMinorVersion);
+
+    profileStream << "_" << ((getMajorShaderModel() >= 3) ? 3 : 2);
+    profileStream << "_"
+                  << "0";
+
+    std::string profile = profileStream.str();
 
     UINT flags = ANGLE_COMPILE_OPTIMIZATION_LEVEL;
 
@@ -2701,6 +2705,11 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
     }
 
     return gl::Error(GL_NO_ERROR);
+}
+
+gl::Error Renderer9::ensureHLSLCompilerInitialized()
+{
+    return mCompiler.ensureInitialized();
 }
 
 UniformStorageD3D *Renderer9::createUniformStorage(size_t storageSize)

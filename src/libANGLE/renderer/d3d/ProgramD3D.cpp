@@ -24,6 +24,8 @@
 #include "libANGLE/renderer/d3d/VaryingPacking.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
+using namespace angle;
+
 namespace rx
 {
 
@@ -1147,14 +1149,10 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
-    gl::Error error = mRenderer->compileToExecutable(
+    ANGLE_TRY(mRenderer->compileToExecutable(
         *currentInfoLog, finalPixelHLSL, SHADER_PIXEL, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), mPixelWorkarounds,
-        &pixelExecutable);
-    if (error.isError())
-    {
-        return error;
-    }
+        &pixelExecutable));
 
     if (pixelExecutable)
     {
@@ -1168,7 +1166,7 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     }
 
     *outExectuable = pixelExecutable;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout,
@@ -1196,14 +1194,10 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
 
-    gl::Error error = mRenderer->compileToExecutable(
+    ANGLE_TRY(mRenderer->compileToExecutable(
         *currentInfoLog, finalVertexHLSL, SHADER_VERTEX, mStreamOutVaryings,
         (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), mVertexWorkarounds,
-        &vertexExecutable);
-    if (error.isError())
-    {
-        return error;
-    }
+        &vertexExecutable));
 
     if (vertexExecutable)
     {
@@ -1218,7 +1212,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     }
 
     *outExectuable = vertexExecutable;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextState &data,
@@ -1274,25 +1268,115 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
     return error;
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(const gl::ContextState &data, gl::InfoLog &infoLog)
+class ProgramD3D::GetExecutableTask : public Closure
 {
-    const gl::InputLayout &defaultInputLayout =
-        GetDefaultInputLayoutFromShader(mState.getAttachedVertexShader());
-    ShaderExecutableD3D *defaultVertexExecutable = nullptr;
-    ANGLE_TRY(
-        getVertexExecutableForInputLayout(defaultInputLayout, &defaultVertexExecutable, &infoLog));
-
-    std::vector<GLenum> defaultPixelOutput      = GetDefaultOutputLayoutFromShader(getPixelShaderKey());
-    ShaderExecutableD3D *defaultPixelExecutable = nullptr;
-    ANGLE_TRY(
-        getPixelExecutableForOutputLayout(defaultPixelOutput, &defaultPixelExecutable, &infoLog));
-
-    // Auto-generate the geometry shader here, if we expect to be using point rendering in D3D11.
-    ShaderExecutableD3D *pointGS = nullptr;
-    if (usesGeometryShader(GL_POINTS))
+  public:
+    GetExecutableTask(ProgramD3D *program)
+        : mProgram(program), mError(GL_NO_ERROR), mInfoLog(), mResult(nullptr)
     {
-        getGeometryExecutableForPrimitiveType(data, GL_POINTS, &pointGS, &infoLog);
     }
+
+    virtual gl::Error run() = 0;
+
+    void operator()() override { mError = run(); }
+
+    const gl::Error &getError() const { return mError; }
+    const gl::InfoLog &getInfoLog() const { return mInfoLog; }
+    ShaderExecutableD3D *getResult() { return mResult; }
+
+  protected:
+    ProgramD3D *mProgram;
+    gl::Error mError;
+    gl::InfoLog mInfoLog;
+    ShaderExecutableD3D *mResult;
+};
+
+class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
+{
+  public:
+    GetVertexExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
+    gl::Error run() override
+    {
+        const auto &defaultInputLayout =
+            GetDefaultInputLayoutFromShader(mProgram->mState.getAttachedVertexShader());
+
+        ANGLE_TRY(
+            mProgram->getVertexExecutableForInputLayout(defaultInputLayout, &mResult, &mInfoLog));
+
+        return gl::NoError();
+    }
+};
+
+class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
+{
+  public:
+    GetPixelExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
+    gl::Error run() override
+    {
+        const auto &defaultPixelOutput =
+            GetDefaultOutputLayoutFromShader(mProgram->getPixelShaderKey());
+
+        ANGLE_TRY(
+            mProgram->getPixelExecutableForOutputLayout(defaultPixelOutput, &mResult, &mInfoLog));
+
+        return gl::NoError();
+    }
+};
+
+class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
+{
+  public:
+    GetGeometryExecutableTask(ProgramD3D *program, const gl::ContextState &contextState)
+        : GetExecutableTask(program), mContextState(contextState)
+    {
+    }
+
+    gl::Error run() override
+    {
+        // Auto-generate the geometry shader here, if we expect to be using point rendering in
+        // D3D11.
+        if (mProgram->usesGeometryShader(GL_POINTS))
+        {
+            ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(mContextState, GL_POINTS,
+                                                                      &mResult, &mInfoLog));
+        }
+
+        return gl::NoError();
+    }
+
+  private:
+    const gl::ContextState &mContextState;
+};
+
+LinkResult ProgramD3D::compileProgramExecutables(const gl::ContextState &contextState,
+                                                 gl::InfoLog &infoLog)
+{
+    // Ensure the compiler is initialized to avoid race conditions.
+    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
+
+    WorkerThreadPool *workerPool = mRenderer->getWorkerThreadPool();
+
+    GetVertexExecutableTask vertexTask(this);
+    GetPixelExecutableTask pixelTask(this);
+    GetGeometryExecutableTask geometryTask(this, contextState);
+
+    std::array<WaitableEvent, 3> waitEvents = {{workerPool->postWorkerTask(&vertexTask),
+                                                workerPool->postWorkerTask(&pixelTask),
+                                                workerPool->postWorkerTask(&geometryTask)}};
+
+    WaitableEvent::WaitMany(&waitEvents);
+
+    infoLog << vertexTask.getInfoLog().str();
+    infoLog << pixelTask.getInfoLog().str();
+    infoLog << geometryTask.getInfoLog().str();
+
+    ANGLE_TRY(vertexTask.getError());
+    ANGLE_TRY(pixelTask.getError());
+    ANGLE_TRY(geometryTask.getError());
+
+    ShaderExecutableD3D *defaultVertexExecutable = vertexTask.getResult();
+    ShaderExecutableD3D *defaultPixelExecutable  = pixelTask.getResult();
+    ShaderExecutableD3D *pointGS                 = geometryTask.getResult();
 
     const ShaderD3D *vertexShaderD3D = GetImplAs<ShaderD3D>(mState.getAttachedVertexShader());
 
@@ -1528,11 +1612,7 @@ gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
 {
     ASSERT(!mDirtySamplerMapping);
 
-    gl::Error error = mRenderer->applyUniforms(*this, drawMode, mD3DUniforms);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mRenderer->applyUniforms(*this, drawMode, mD3DUniforms));
 
     for (D3DUniform *d3dUniform : mD3DUniforms)
     {
@@ -2173,7 +2253,7 @@ void ProgramD3D::updateCachedInputLayout(const gl::State &state)
     mCachedInputLayout.clear();
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
-    for (unsigned int locationIndex : angle::IterateBitSet(mState.getActiveAttribLocationsMask()))
+    for (unsigned int locationIndex : IterateBitSet(mState.getActiveAttribLocationsMask()))
     {
         int d3dSemantic = mAttribLocationToD3DSemantic[locationIndex];
 

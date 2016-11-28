@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 #include "libANGLE/Version.h"
+#include "libANGLE/WorkerThread.h"
 
 //FIXME(jmadill): std::array is currently prohibited by Chromium style guide
 #include <array>
@@ -200,6 +201,8 @@ class RendererD3D : public BufferFactoryD3D
                                           bool separatedOutputBuffers,
                                           const D3DCompilerWorkarounds &workarounds,
                                           ShaderExecutableD3D **outExectuable) = 0;
+    virtual gl::Error ensureHLSLCompilerInitialized()                          = 0;
+
     virtual UniformStorageD3D *createUniformStorage(size_t storageSize) = 0;
 
     // Image operations
@@ -260,6 +263,8 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual gl::Version getMaxSupportedESVersion() const = 0;
 
+    angle::WorkerThreadPool *getWorkerThreadPool();
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual void generateCaps(gl::Caps *outCaps,
@@ -310,6 +315,8 @@ class RendererD3D : public BufferFactoryD3D
 
     bool mDisjoint;
     bool mDeviceLost;
+
+    angle::WorkerThreadPool mWorkerThreadPool;
 };
 
 }  // namespace rx

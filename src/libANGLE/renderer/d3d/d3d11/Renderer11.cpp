@@ -3546,25 +3546,27 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
                                           const D3DCompilerWorkarounds &workarounds,
                                           ShaderExecutableD3D **outExectuable)
 {
-    const char *profileType = NULL;
+    std::stringstream profileStream;
+
     switch (type)
     {
         case SHADER_VERTEX:
-            profileType = "vs";
+            profileStream << "vs";
             break;
         case SHADER_PIXEL:
-            profileType = "ps";
+            profileStream << "ps";
             break;
         case SHADER_GEOMETRY:
-            profileType = "gs";
+            profileStream << "gs";
             break;
         default:
             UNREACHABLE();
             return gl::Error(GL_INVALID_OPERATION);
     }
 
-    std::string profile = FormatString("%s_%d_%d%s", profileType, getMajorShaderModel(),
-                                       getMinorShaderModel(), getShaderModelSuffix().c_str());
+    profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel()
+                  << getShaderModelSuffix();
+    std::string profile = profileStream.str();
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
 
@@ -3628,6 +3630,11 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     }
 
     return gl::NoError();
+}
+
+gl::Error Renderer11::ensureHLSLCompilerInitialized()
+{
+    return mCompiler.ensureInitialized();
 }
 
 UniformStorageD3D *Renderer11::createUniformStorage(size_t storageSize)

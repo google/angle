@@ -49,9 +49,9 @@ class HLSLCompiler : angle::NonCopyable
                               ID3DBlob **outCompiledBlob, std::string *outDebugInfo);
 
     gl::Error disassembleBinary(ID3DBlob *shaderBinary, std::string *disassemblyOut);
+    gl::Error ensureInitialized();
 
   private:
-    gl::Error initialize();
 
     bool mInitialized;
     HMODULE mD3DCompilerModule;

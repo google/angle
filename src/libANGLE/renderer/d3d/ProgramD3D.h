@@ -248,6 +248,12 @@ class ProgramD3D : public ProgramImpl
     bool isSamplerMappingDirty() { return mDirtySamplerMapping; }
 
   private:
+    // These forward-declared tasks are used for multi-thread shader compiles.
+    class GetExecutableTask;
+    class GetVertexExecutableTask;
+    class GetPixelExecutableTask;
+    class GetGeometryExecutableTask;
+
     class VertexExecutable
     {
       public:
