@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b04b9845_d5278ede",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-11-28T11:06:20Z",
+      "side": 1,
+      "message": "Please add BUG\u003dangleproject:1442",
+      "revId": "4f87502810b49bfd4e99c21f9d2be25db55c52ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
