@@ -158,6 +158,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_72755572",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2656,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-28T15:12:59Z",
+      "side": 1,
+      "message": "Yes, a user can still load the ES 3.1 entry points and call them with any context version.  It\u0027s undefined behaviour to call an entry point with a context that doesn\u0027t support it but we always check and return INVALID_OPERATION.",
+      "parentUuid": "ed0297f6_9719f3a4",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_2657971f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
