@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_d2978931",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Yes, and as a way to share implementation between vector but still being able to restrict some methods to certain vectors (see cross)",
+      "parentUuid": "ed0297f6_521b7959",
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_72167535",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 1
@@ -42,6 +60,24 @@
         "endLine": 43,
         "endChar": 18
       },
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_0d7b962c",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_72167535",
       "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_4d92be37",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "This can\u0027t be defined like the rest: the first operand is a float so the operator has to be defined as an overload of the operator* function.",
+      "parentUuid": "ed0297f6_12e6112b",
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_f2e28514",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 1
@@ -88,6 +142,24 @@
         "endLine": 79,
         "endChar": 65
       },
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_0da4b688",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_f2e28514",
       "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -117,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_eda06a76",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_9211013e",
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_3200ede1",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 1
@@ -134,6 +224,24 @@
         "endLine": 100,
         "endChar": 46
       },
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_cd9dae42",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "This imports the constructors defined in VectorBase, added a comment about it.",
+      "parentUuid": "ed0297f6_3200ede1",
       "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -163,6 +271,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_8dbd669d",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_12fdf1be",
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_b2f51dd7",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 1
@@ -180,6 +306,24 @@
         "endLine": 182,
         "endChar": 1
       },
+      "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_0d1f16d5",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-28T18:15:08Z",
+      "side": 1,
+      "message": "Yeah it is a bit weird. We want two constructors:\n- The scalar constructor that initializes all components to the same value\n- The compound constructor that gathers a bunch of values from the arguments\n\nHowever if we define only these two, than Vector2(0.0) wil be ambiguous. A constructor call with more than two arguments will always be seen as a compound constructor so we special case the compound constructor with one argument (the argument has to be the same dimension as this).\n\nThis leaves the compound constructor having two args, then the variadic args.",
+      "parentUuid": "ed0297f6_b2f51dd7",
       "revId": "c33767bcdf052f337d252cf562d00220dd898a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
