@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed0297f6_d46ad259",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "it\u0027s worth mentioning integer vectors here. If we want to type our vectors here to get it done with for future use with ints, we could have\n\nVector2F/Vec2F/Vec2f\nVector3I/Vec3I/Vec3i\nVector4U/Vec4U/Vec4u\n\netc.",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 13
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_b1b2b8e2",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "how about VectorN? If you like that something better than \"Full\" vector (I know what you mean, but Full is not very \"technicalish\")",
+      "range": {
+        "startLine": 28,
+        "startChar": 10,
+        "endLine": 28,
+        "endChar": 20
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_7479be33",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "nit: explicit",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 14
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_51f374bd",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "this doesn\u0027t access mData. I feel like it could be static + not a friend function, unless there\u0027s some usage of friend that I\u0027m missing here?",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 78
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_94744a40",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "can you comment about the ambiguious overloads trick here.",
+      "range": {
+        "startLine": 175,
+        "startChar": 40,
+        "endLine": 175,
+        "endChar": 74
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_51b814c7",
+        "filename": "src/common/vector_utils_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-28T21:14:56Z",
+      "side": 1,
+      "message": "can you define a static Zero() function that returns the zero vector? One() probably wouldn\u0027t hurt either. plus a tiny test for those.",
+      "range": {
+        "startLine": 30,
+        "startChar": 14,
+        "endLine": 30,
+        "endChar": 21
+      },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
