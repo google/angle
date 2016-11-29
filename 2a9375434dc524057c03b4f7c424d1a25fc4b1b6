@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01acc56_a5a575eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T18:27:36Z",
+      "side": 1,
+      "message": "nit: compatibility",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_45b7611f",
+        "filename": "extensions/ANGLE_request_extension.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T18:27:36Z",
+      "side": 1,
+      "message": "nit: another query",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_c57ef157",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2299,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T18:27:36Z",
+      "side": 1,
+      "message": "nit: while we are at it, we could add support for OpenGL ES 3.1, or at least make a branch for ES 3.0 and an else UNREACHABLE.",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_e573ed8c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2311,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T18:27:36Z",
+      "side": 1,
+      "message": "nit: ditto.",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
