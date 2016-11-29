@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_8013077e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T18:58:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_a5a575eb",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01acc56_45b7611f",
         "filename": "extensions/ANGLE_request_extension.txt",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2016-11-29T18:27:36Z",
       "side": 1,
       "message": "nit: another query",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_65ec5dd9",
+        "filename": "extensions/ANGLE_request_extension.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T18:58:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_45b7611f",
       "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_40658f34",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2299,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T18:58:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_c57ef157",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01acc56_e573ed8c",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2016-11-29T18:27:36Z",
       "side": 1,
       "message": "nit: ditto.",
+      "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_60628b2f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2311,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T18:58:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_e573ed8c",
       "revId": "2a9375434dc524057c03b4f7c424d1a25fc4b1b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
