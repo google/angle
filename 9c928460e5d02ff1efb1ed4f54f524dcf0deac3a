@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_180151e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-29T05:38:26Z",
+      "side": 1,
+      "message": "Yes, this is only to run the CQ. Have been removed since another patch has been merged.",
+      "parentUuid": "ed0297f6_8648ab7d",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_663d9fd1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -106,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_98f381f0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2562,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-29T05:38:26Z",
+      "side": 1,
+      "message": "Good suggestion. Done.",
+      "parentUuid": "ed0297f6_46298399",
+      "range": {
+        "startLine": 2562,
+        "startChar": 12,
+        "endLine": 2562,
+        "endChar": 44
+      },
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_771e678c",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
@@ -117,6 +165,24 @@
       "writtenOn": "2016-11-28T02:46:00Z",
       "side": 1,
       "message": "Add a TODO for image uniform check in future.",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_b8f83dcd",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2568,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-29T05:38:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_771e678c",
       "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -170,6 +236,24 @@
       "side": 1,
       "message": "Yes, a user can still load the ES 3.1 entry points and call them with any context version.  It\u0027s undefined behaviour to call an entry point with a context that doesn\u0027t support it but we always check and return INVALID_OPERATION.",
       "parentUuid": "ed0297f6_9719f3a4",
+      "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_d8edf909",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2656,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-11-29T05:38:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_72755572",
       "revId": "9c928460e5d02ff1efb1ed4f54f524dcf0deac3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
