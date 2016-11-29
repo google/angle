@@ -17,6 +17,7 @@
 #include "common/matrix_utils.h"
 #include "common/platform.h"
 #include "common/utilities.h"
+#include "common/version.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"
@@ -457,6 +458,7 @@ void Context::makeCurrent(egl::Surface *surface)
     if (!mHasBeenCurrent)
     {
         initRendererString();
+        initVersionStrings();
         initExtensionStrings();
 
         mGLState.setViewportParams(0, 0, surface->getWidth(), surface->getHeight());
@@ -2257,37 +2259,121 @@ void Context::initRendererString()
     mRendererString = MakeStaticString(rendererString.str());
 }
 
-const char *Context::getRendererString() const
+void Context::initVersionStrings()
 {
-    return mRendererString;
+    const Version &clientVersion = getClientVersion();
+
+    std::ostringstream versionString;
+    versionString << "OpenGL ES " << clientVersion.major << "." << clientVersion.minor << " (ANGLE "
+                  << ANGLE_VERSION_STRING << ")";
+    mVersionString = MakeStaticString(versionString.str());
+
+    std::ostringstream shadingLanguageVersionString;
+    shadingLanguageVersionString << "OpenGL ES GLSL ES "
+                                 << (clientVersion.major == 2 ? 1 : clientVersion.major) << "."
+                                 << clientVersion.minor << "0 (ANGLE " << ANGLE_VERSION_STRING
+                                 << ")";
+    mShadingLanguageString = MakeStaticString(shadingLanguageVersionString.str());
 }
 
 void Context::initExtensionStrings()
 {
+    auto mergeExtensionStrings = [](const std::vector<const char *> &strings) {
+        std::ostringstream combinedStringStream;
+        std::copy(strings.begin(), strings.end(),
+                  std::ostream_iterator<const char *>(combinedStringStream, " "));
+        return MakeStaticString(combinedStringStream.str());
+    };
+
+    mExtensionStrings.clear();
     for (const auto &extensionString : mExtensions.getStrings())
     {
         mExtensionStrings.push_back(MakeStaticString(extensionString));
     }
+    mExtensionString = mergeExtensionStrings(mExtensionStrings);
 
-    std::ostringstream combinedStringStream;
-    std::copy(mExtensionStrings.begin(), mExtensionStrings.end(),
-              std::ostream_iterator<const char *>(combinedStringStream, " "));
-    mExtensionString = MakeStaticString(combinedStringStream.str());
+    mRequestableExtensionStrings.clear();
+    for (const auto &extensionInfo : GetExtensionInfoMap())
+    {
+        if (extensionInfo.second.Requestable &&
+            !(mExtensions.*(extensionInfo.second.ExtensionsMember)))
+        {
+            mRequestableExtensionStrings.push_back(MakeStaticString(extensionInfo.first));
+        }
+    }
+    mRequestableExtensionString = mergeExtensionStrings(mRequestableExtensionStrings);
 }
 
-const char *Context::getExtensionString() const
+const GLubyte *Context::getString(GLenum name) const
 {
-    return mExtensionString;
+    switch (name)
+    {
+        case GL_VENDOR:
+            return reinterpret_cast<const GLubyte *>("Google Inc.");
+
+        case GL_RENDERER:
+            return reinterpret_cast<const GLubyte *>(mRendererString);
+
+        case GL_VERSION:
+            return reinterpret_cast<const GLubyte *>(mVersionString);
+
+        case GL_SHADING_LANGUAGE_VERSION:
+            return reinterpret_cast<const GLubyte *>(mShadingLanguageString);
+
+        case GL_EXTENSIONS:
+            return reinterpret_cast<const GLubyte *>(mExtensionString);
+
+        case GL_REQUESTABLE_EXTENSIONS_ANGLE:
+            return reinterpret_cast<const GLubyte *>(mRequestableExtensionString);
+
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
 }
 
-const char *Context::getExtensionString(size_t idx) const
+const GLubyte *Context::getStringi(GLenum name, GLuint index) const
 {
-    return mExtensionStrings[idx];
+    switch (name)
+    {
+        case GL_EXTENSIONS:
+            return reinterpret_cast<const GLubyte *>(mExtensionStrings[index]);
+
+        case GL_REQUESTABLE_EXTENSIONS_ANGLE:
+            return reinterpret_cast<const GLubyte *>(mRequestableExtensionStrings[index]);
+
+        default:
+            UNREACHABLE();
+            return nullptr;
+    }
 }
 
 size_t Context::getExtensionStringCount() const
 {
     return mExtensionStrings.size();
+}
+
+void Context::requestExtension(const char *name)
+{
+    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
+    ASSERT(extensionInfos.find(name) != extensionInfos.end());
+    const auto &extension = extensionInfos.at(name);
+    ASSERT(extension.Requestable);
+
+    if (mExtensions.*(extension.ExtensionsMember))
+    {
+        // Extension already enabled
+        return;
+    }
+
+    mExtensions.*(extension.ExtensionsMember) = true;
+    updateCaps();
+    initExtensionStrings();
+}
+
+size_t Context::getRequestableExtensionStringCount() const
+{
+    return mRequestableExtensionStrings.size();
 }
 
 void Context::beginTransformFeedback(GLenum primitiveMode)
@@ -2337,6 +2423,7 @@ void Context::initCaps(bool webGLContext)
     mExtensions.bindUniformLocation = true;
     mExtensions.vertexArrayObject   = true;
     mExtensions.bindGeneratesResource = true;
+    mExtensions.requestExtension      = true;
 
     // Enable the no error extension if the context was created with the flag.
     mExtensions.noError = mSkipValidation;
@@ -2363,7 +2450,7 @@ void Context::initCaps(bool webGLContext)
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         // If this context is for WebGL, disable all enableable extensions
-        if (webGLContext && extensionInfo.second.Enableable)
+        if (webGLContext && extensionInfo.second.Requestable)
         {
             mExtensions.*(extensionInfo.second.ExtensionsMember) = false;
         }
@@ -2935,32 +3022,6 @@ void Context::generateMipmap(GLenum target)
 {
     Texture *texture = getTargetTexture(target);
     handleError(texture->generateMipmap());
-}
-
-GLboolean Context::enableExtension(const char *name)
-{
-    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
-    ASSERT(extensionInfos.find(name) != extensionInfos.end());
-    const auto &extension = extensionInfos.at(name);
-    ASSERT(extension.Enableable);
-
-    if (mExtensions.*(extension.ExtensionsMember))
-    {
-        // Extension already enabled
-        return GL_TRUE;
-    }
-
-    const auto &nativeExtensions = mImplementation->getNativeExtensions();
-    if (!(nativeExtensions.*(extension.ExtensionsMember)))
-    {
-        // Underlying implementation does not support this valid extension
-        return GL_FALSE;
-    }
-
-    mExtensions.*(extension.ExtensionsMember) = true;
-    updateCaps();
-    initExtensionStrings();
-    return GL_TRUE;
 }
 
 void Context::copyTextureCHROMIUM(GLuint sourceId,

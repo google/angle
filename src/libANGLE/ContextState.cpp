@@ -476,6 +476,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
+    if (getExtensions().requestExtension)
+    {
+        switch (pname)
+        {
+            case GL_NUM_REQUESTABLE_EXTENSIONS_ANGLE:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     if (getClientVersion() < Version(3, 1))
     {
         return false;

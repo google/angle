@@ -107,17 +107,24 @@ TEST_P(RendererTest, RequestedRendererCreated)
     }
 
     EGLint glesMajorVersion = GetParam().majorVersion;
+    EGLint glesMinorVersion = GetParam().minorVersion;
 
-    // Ensure that the renderer string contains GL ES 3.0, if we requested a GL ES 3.0
-    if (glesMajorVersion == 3)
+    // Ensure that the renderer string contains the requested version number
+    if (glesMajorVersion == 3 && glesMinorVersion == 1)
+    {
+        ASSERT_NE(versionString.find(std::string("es 3.1")), std::string::npos);
+    }
+    else if (glesMajorVersion == 3 && glesMinorVersion == 0)
     {
         ASSERT_NE(versionString.find(std::string("es 3.0")), std::string::npos);
     }
-
-    // Ensure that the version string contains GL ES 2.0, if we requested GL ES 2.0
-    if (glesMajorVersion == 2)
+    else if (glesMajorVersion == 2 && glesMinorVersion == 0)
     {
         ASSERT_NE(versionString.find(std::string("es 2.0")), std::string::npos);
+    }
+    else
+    {
+        FAIL() << "Unhandled GL ES client version.";
     }
 }
 

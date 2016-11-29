@@ -1407,28 +1407,15 @@ const GLubyte *GL_APIENTRY GetStringi(GLenum name, GLuint index)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateGetStringi(context, name, index))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return NULL;
+            return nullptr;
         }
 
-        if (name != GL_EXTENSIONS)
-        {
-            context->handleError(Error(GL_INVALID_ENUM));
-            return NULL;
-        }
-
-        if (index >= context->getExtensionStringCount())
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return NULL;
-        }
-
-        return reinterpret_cast<const GLubyte *>(context->getExtensionString(index));
+        return context->getStringi(name, index);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void GL_APIENTRY CopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size)

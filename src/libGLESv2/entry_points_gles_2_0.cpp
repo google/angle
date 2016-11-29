@@ -32,7 +32,6 @@
 
 #include "common/debug.h"
 #include "common/utilities.h"
-#include "common/version.h"
 
 namespace gl
 {
@@ -1465,45 +1464,12 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
 
     if (context)
     {
-        switch (name)
+        if (!context->skipValidation() && !ValidateGetString(context, name))
         {
-            case GL_VENDOR:
-                return reinterpret_cast<const GLubyte *>("Google Inc.");
-
-            case GL_RENDERER:
-                return reinterpret_cast<const GLubyte *>(context->getRendererString());
-
-            case GL_VERSION:
-                if (context->getClientMajorVersion() == 2)
-                {
-                    return reinterpret_cast<const GLubyte *>(
-                        "OpenGL ES 2.0 (ANGLE " ANGLE_VERSION_STRING ")");
-                }
-                else
-                {
-                    return reinterpret_cast<const GLubyte *>(
-                        "OpenGL ES 3.0 (ANGLE " ANGLE_VERSION_STRING ")");
-                }
-
-            case GL_SHADING_LANGUAGE_VERSION:
-                if (context->getClientMajorVersion() == 2)
-                {
-                    return reinterpret_cast<const GLubyte *>(
-                        "OpenGL ES GLSL ES 1.00 (ANGLE " ANGLE_VERSION_STRING ")");
-                }
-                else
-                {
-                    return reinterpret_cast<const GLubyte *>(
-                        "OpenGL ES GLSL ES 3.00 (ANGLE " ANGLE_VERSION_STRING ")");
-                }
-
-            case GL_EXTENSIONS:
-                return reinterpret_cast<const GLubyte *>(context->getExtensionString());
-
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
             return nullptr;
         }
+
+        return context->getString(name);
     }
 
     return nullptr;

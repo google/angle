@@ -309,6 +309,9 @@ struct Extensions
     // GL_ANGLE_webgl_compatibility
     bool webglCompatibility;
 
+    // GL_ANGLE_request_extension
+    bool requestExtension;
+
     // GL_CHROMIUM_bind_generates_resource
     bool bindGeneratesResource;
 
@@ -343,8 +346,8 @@ struct Extensions
 
 struct ExtensionInfo
 {
-    // If this extension can be enabled with glEnableExtension (GL_ANGLE_webgl_compatibility)
-    bool Enableable = false;
+    // If this extension can be enabled with glRequestExtension (GL_ANGLE_request_extension)
+    bool Requestable = false;
 
     // Pointer to a boolean member of the Extensions struct
     typedef bool(Extensions::*ExtensionBool);

@@ -2056,4 +2056,47 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
     return true;
 }
 
+bool ValidateGetStringi(Context *context, GLenum name, GLuint index)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "glGetStringi requires OpenGL ES 3.0 or higher."));
+        return false;
+    }
+
+    switch (name)
+    {
+        case GL_EXTENSIONS:
+            if (index >= context->getExtensionStringCount())
+            {
+                context->handleError(Error(
+                    GL_INVALID_VALUE, "index must be less than the number of extension strings."));
+                return false;
+            }
+            break;
+
+        case GL_REQUESTABLE_EXTENSIONS_ANGLE:
+            if (!context->getExtensions().requestExtension)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Invalid name."));
+                return false;
+            }
+            if (index >= context->getRequestableExtensionStringCount())
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE,
+                          "index must be less than the number of requestable extension strings."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid name."));
+            return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

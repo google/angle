@@ -3521,20 +3521,20 @@ bool ValidateBufferSubData(ValidationContext *context,
     return true;
 }
 
-bool ValidateEnableExtensionANGLE(ValidationContext *context, const GLchar *name)
+bool ValidateRequestExtensionANGLE(ValidationContext *context, const GLchar *name)
 {
-    if (!context->getExtensions().webglCompatibility)
+    if (!context->getExtensions().requestExtension)
     {
         context->handleError(
-            Error(GL_INVALID_OPERATION, "GL_ANGLE_webgl_compatibility is not available."));
+            Error(GL_INVALID_OPERATION, "GL_ANGLE_request_extension is not available."));
         return false;
     }
 
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     auto extension                         = extensionInfos.find(name);
-    if (extension == extensionInfos.end() || !extension->second.Enableable)
+    if (extension == extensionInfos.end() || !extension->second.Requestable)
     {
-        context->handleError(Error(GL_INVALID_OPERATION, "Extension %s is not enableable.", name));
+        context->handleError(Error(GL_INVALID_OPERATION, "Extension %s is not requestable.", name));
         return false;
     }
 
@@ -3833,6 +3833,33 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
                                        "supported by this implementation."));
             return false;
         }
+    }
+
+    return true;
+}
+
+bool ValidateGetString(Context *context, GLenum name)
+{
+    switch (name)
+    {
+        case GL_VENDOR:
+        case GL_RENDERER:
+        case GL_VERSION:
+        case GL_SHADING_LANGUAGE_VERSION:
+        case GL_EXTENSIONS:
+            break;
+
+        case GL_REQUESTABLE_EXTENSIONS_ANGLE:
+            if (!context->getExtensions().requestExtension)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Invalid name."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid name."));
+            return false;
     }
 
     return true;

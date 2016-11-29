@@ -25,7 +25,7 @@ Status
 
 Version
 
-    Version 1, September 16, 2016
+    Version 2, November 28, 2016
 
 Number
 
@@ -47,23 +47,14 @@ Overview
 
 New Procedures and Functions
 
-    boolean EnableExtension(const char *name)
+    None
+
 
 New Tokens
 
     None
 
 Additions to the OpenGL ES Specification
-
-    The command
-
-       boolean EnableExtension(const char *name)
-
-    enables the OpenGL ES extension named <name>.  Returns true on success and
-    false otherwise.  If the extension does not support being enabled or <name>
-    does not name a valid OpenGL ES extension, INVALID_OPERATION is generated.
-    If the extension is valid but is not supported by the context, no error is
-    generated but false is returned.
 
     Additional validation will be performed according to the the sections of
     the WebGL specification entitled "Differences Between WebGL and OpenGL ES
@@ -79,17 +70,12 @@ Conformance Tests
 
 Issues
 
-    (1) How can the user determine which extensions can be enabled without
-        potentially generating errors?
-
-      This can be solved by:
-      a) Never generate an error in EnableExtensions, simply return false when
-         the extension is not recognized or cannot be enabled.
-      b) Add another entry point to query all extensions that the context
-         supports enabling.
+    None
 
 Revision History
 
     Rev.    Date         Author     Changes
     ----  -------------  ---------  ----------------------------------------
       1   Sept 16, 2016  geofflang  Initial version
+      2    Nov 28, 2016  geofflang  Break the extension requests into a
+                                    separate extension.
