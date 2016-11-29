@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01acc56_71325b50",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T21:52:38Z",
+      "side": 1,
+      "message": "May be worth templating on the \"other\" type too.  It can be useful to multiply a float vector by an int.  If you want to go all the way, you can make the return type as Vector\u003cDimension, decltype(Type + Type2)\u003e to allow an int vector * float to turn into a float vector but that may be overboard.",
+      "range": {
+        "startLine": 69,
+        "startChar": 3,
+        "endLine": 70,
+        "endChar": 40
+      },
+      "revId": "75c5352b1a6479aa192dba675021583ba064209b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_71041b7c",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T21:52:38Z",
+      "side": 1,
+      "message": "nit: static_cast\n\nThis will probably generate warnings otherwise.",
+      "range": {
+        "startLine": 178,
+        "startChar": 19,
+        "endLine": 178,
+        "endChar": 34
+      },
+      "revId": "75c5352b1a6479aa192dba675021583ba064209b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_d1614f4e",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-11-29T21:52:38Z",
+      "side": 1,
+      "message": "This probably needs a static_cast or it will generate warnings.",
+      "range": {
+        "startLine": 178,
+        "startChar": 8,
+        "endLine": 178,
+        "endChar": 34
+      },
+      "revId": "75c5352b1a6479aa192dba675021583ba064209b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
