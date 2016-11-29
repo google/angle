@@ -42,6 +42,7 @@ enum class EventInitialState
 class Closure
 {
   public:
+    virtual ~Closure()        = default;
     virtual void operator()() = 0;
 };
 
