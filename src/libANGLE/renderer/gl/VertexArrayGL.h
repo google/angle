@@ -36,6 +36,7 @@ class VertexArrayGL : public VertexArrayImpl
                                     GLsizei instanceCount,
                                     bool primitiveRestartEnabled,
                                     const GLvoid **outIndices) const;
+    gl::Error syncElementArrayState() const;
 
     GLuint getVertexArrayID() const;
     GLuint getAppliedElementArrayBufferID() const;

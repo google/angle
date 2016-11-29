@@ -23,6 +23,13 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
                                       GLsizei *length,
                                       GLboolean *data);
 
+bool ValidateDrawIndirectBase(Context *context, GLenum mode, const GLvoid *indirect);
+bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const GLvoid *indirect);
+bool ValidateDrawElementsIndirect(Context *context,
+                                  GLenum mode,
+                                  GLenum type,
+                                  const GLvoid *indirect);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

@@ -61,6 +61,9 @@ class ContextImpl : public GLImplFactory
                                         const GLvoid *indices,
                                         const gl::IndexRange &indexRange) = 0;
 
+    virtual gl::Error drawArraysIndirect(GLenum mode, const GLvoid *indirect) = 0;
+    virtual gl::Error drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect) = 0;
+
     // CHROMIUM_path_rendering path drawing methods.
     virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);
     virtual void stencilStrokePath(const gl::Path *path, GLint reference, GLuint mask);

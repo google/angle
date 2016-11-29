@@ -3051,10 +3051,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     return true;
 }
 
-static bool ValidateDrawBase(ValidationContext *context,
-                             GLenum mode,
-                             GLsizei count,
-                             GLsizei primcount)
+bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 {
     switch (mode)
     {
@@ -3191,7 +3188,7 @@ bool ValidateDrawArrays(ValidationContext *context,
         return false;
     }
 
-    if (!ValidateDrawBase(context, mode, count, primcount))
+    if (!ValidateDrawBase(context, mode, count))
     {
         return false;
     }
@@ -3272,13 +3269,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
     return ValidateDrawArraysInstanced(context, mode, first, count, primcount);
 }
 
-bool ValidateDrawElements(ValidationContext *context,
-                          GLenum mode,
-                          GLsizei count,
-                          GLenum type,
-                          const GLvoid *indices,
-                          GLsizei primcount,
-                          IndexRange *indexRangeOut)
+bool ValidateDrawElementsBase(ValidationContext *context, GLenum type)
 {
     switch (type)
     {
@@ -3309,6 +3300,22 @@ bool ValidateDrawElements(ValidationContext *context,
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
     }
+
+    return true;
+}
+
+bool ValidateDrawElements(ValidationContext *context,
+                          GLenum mode,
+                          GLsizei count,
+                          GLenum type,
+                          const GLvoid *indices,
+                          GLsizei primcount,
+                          IndexRange *indexRangeOut)
+{
+    if (!ValidateDrawElementsBase(context, type))
+        return false;
+
+    const State &state = context->getGLState();
 
     // Check for mapped buffers
     if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
@@ -3361,7 +3368,7 @@ bool ValidateDrawElements(ValidationContext *context,
         return false;
     }
 
-    if (!ValidateDrawBase(context, mode, count, primcount))
+    if (!ValidateDrawBase(context, mode, count))
     {
         return false;
     }

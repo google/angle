@@ -221,6 +221,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
                                         GLint border,
                                         Format *textureFormatOut);
 
+bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count);
 bool ValidateDrawArrays(ValidationContext *context,
                         GLenum mode,
                         GLint first,
@@ -229,6 +230,7 @@ bool ValidateDrawArrays(ValidationContext *context,
 bool ValidateDrawArraysInstanced(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 bool ValidateDrawArraysInstancedANGLE(Context *context, GLenum mode, GLint first, GLsizei count, GLsizei primcount);
 
+bool ValidateDrawElementsBase(ValidationContext *context, GLenum type);
 bool ValidateDrawElements(ValidationContext *context,
                           GLenum mode,
                           GLsizei count,

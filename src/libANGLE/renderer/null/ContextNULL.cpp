@@ -101,6 +101,16 @@ gl::Error ContextNULL::drawRangeElements(GLenum mode,
     return gl::NoError();
 }
 
+gl::Error ContextNULL::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+{
+    return gl::NoError();
+}
+
+gl::Error ContextNULL::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+{
+    return gl::NoError();
+}
+
 void ContextNULL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
 {
 }

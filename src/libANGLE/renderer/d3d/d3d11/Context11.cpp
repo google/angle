@@ -192,6 +192,18 @@ gl::Error Context11::drawRangeElements(GLenum mode,
     return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
 }
 
+gl::Error Context11::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "DrawArraysIndirect hasn't been implemented for D3D11 backend.";
+}
+
+gl::Error Context11::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "DrawElementsIndirect hasn't been implemented for D3D11 backend.";
+}
+
 GLenum Context11::getResetStatus()
 {
     return mRenderer->getResetStatus();

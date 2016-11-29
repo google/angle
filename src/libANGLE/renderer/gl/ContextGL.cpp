@@ -194,6 +194,16 @@ gl::Error ContextGL::drawRangeElements(GLenum mode,
     return mRenderer->drawRangeElements(mState, mode, start, end, count, type, indices, indexRange);
 }
 
+gl::Error ContextGL::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+{
+    return mRenderer->drawArraysIndirect(mState, mode, indirect);
+}
+
+gl::Error ContextGL::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+{
+    return mRenderer->drawElementsIndirect(mState, mode, type, indirect);
+}
+
 void ContextGL::stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask)
 {
     mRenderer->stencilFillPath(mState, path, fillMode, mask);

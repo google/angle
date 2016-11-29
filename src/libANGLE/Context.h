@@ -310,6 +310,8 @@ class Context final : public ValidationContext
                             GLenum type,
                             const GLvoid *indices,
                             const IndexRange &indexRange);
+    void drawArraysIndirect(GLenum mode, const GLvoid *indirect);
+    void drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect);
 
     void blitFramebuffer(GLint srcX0,
                          GLint srcY0,

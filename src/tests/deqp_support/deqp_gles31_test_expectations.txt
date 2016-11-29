@@ -24,6 +24,10 @@
 //  91532 MAC NVIDIA 0x0640 : tex_image_and_sub_image_2d_with_video = PASS FAIL
 
 // Crashing Tests
+1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.0 = SKIP
+1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.10 = SKIP
+1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.15 = SKIP
+1659 NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.random.18 = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image2d.vertex_binding_array = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image2d.vertex_binding_max_array = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image2d.fragment_binding_array = SKIP
@@ -46,6 +50,7 @@
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
 
 // D3D11 Failing Tests
+1442 D3D11 : dEQP-GLES31.functional.draw_indirect.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_color_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_depth_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_integer_samples_* = FAIL
@@ -98,6 +103,10 @@
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_3 = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_9 = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.error_groups.case_10 = SKIP
+
+// OPENGL Failing Tests
+1663 OPENGL : dEQP-GLES31.functional.draw_indirect.compute_interop.* = FAIL
+1665 WIN NVIDIA OPENGL : dEQP-GLES31.functional.draw_indirect.negative.command_offset_not_in_buffer_unsigned32_wrap = FAIL
 
 // OpenGL and D3D11 Failing Tests
 1442 OPENGL D3D11 : dEQP-GLES31.functional.shaders.builtin_var.compute.num_work_groups = FAIL
@@ -1119,8 +1128,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.basic.atomic_counter_multiple_groups = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.shared_var.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.compute.indirect_dispatch.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.draw_indirect.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.draw_indirect.negative.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ssbo.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.2_level_array.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.ubo.3_level_array.* = FAIL

@@ -106,6 +106,19 @@ gl::Error ContextVk::drawRangeElements(GLenum mode,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
+gl::Error ContextVk::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "DrawArraysIndirect hasn't been implemented for vulkan backend.";
+}
+
+gl::Error ContextVk::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError()
+           << "DrawElementsIndirect hasn't been implemented for vulkan backend.";
+}
+
 GLenum ContextVk::getResetStatus()
 {
     UNIMPLEMENTED();

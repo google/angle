@@ -88,6 +88,8 @@ class Context11 : public ContextImpl
                                 GLenum type,
                                 const GLvoid *indices,
                                 const gl::IndexRange &indexRange) override;
+    gl::Error drawArraysIndirect(GLenum mode, const GLvoid *indirect) override;
+    gl::Error drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect) override;
 
     // Device loss
     GLenum getResetStatus() override;

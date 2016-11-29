@@ -274,6 +274,33 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
     return gl::Error(GL_NO_ERROR);
 }
 
+gl::Error RendererGL::drawArraysIndirect(const gl::ContextState &data,
+                                         GLenum mode,
+                                         const GLvoid *indirect)
+{
+    ANGLE_TRY(mStateManager->setDrawIndirectState(data, GL_NONE));
+
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawArraysIndirect(mode, indirect);
+    }
+    return gl::NoError();
+}
+
+gl::Error RendererGL::drawElementsIndirect(const gl::ContextState &data,
+                                           GLenum mode,
+                                           GLenum type,
+                                           const GLvoid *indirect)
+{
+    ANGLE_TRY(mStateManager->setDrawIndirectState(data, type));
+
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawElementsIndirect(mode, type, indirect);
+    }
+    return gl::NoError();
+}
+
 void RendererGL::stencilFillPath(const gl::ContextState &state,
                                  const gl::Path *path,
                                  GLenum fillMode,

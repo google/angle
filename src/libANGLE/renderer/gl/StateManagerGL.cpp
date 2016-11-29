@@ -662,6 +662,25 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
     return setGenericDrawState(data);
 }
 
+gl::Error StateManagerGL::setDrawIndirectState(const gl::ContextState &data, GLenum type)
+{
+    const gl::State &state = data.getState();
+
+    if (type != GL_NONE)
+    {
+        const gl::VertexArray *vao = state.getVertexArray();
+        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+        ANGLE_TRY(vaoGL->syncElementArrayState());
+    }
+
+    gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
+    ASSERT(drawIndirectBuffer);
+    const BufferGL *bufferGL = GetImplAs<BufferGL>(drawIndirectBuffer);
+    bindBuffer(GL_DRAW_INDIRECT_BUFFER, bufferGL->getBufferID());
+
+    return setGenericDrawState(data);
+}
+
 void StateManagerGL::pauseTransformFeedback()
 {
     if (mPrevDrawTransformFeedback != nullptr)

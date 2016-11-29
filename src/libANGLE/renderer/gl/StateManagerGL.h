@@ -149,6 +149,7 @@ class StateManagerGL final : angle::NonCopyable
                                    const GLvoid *indices,
                                    GLsizei instanceCount,
                                    const GLvoid **outIndices);
+    gl::Error setDrawIndirectState(const gl::ContextState &data, GLenum type);
 
     void pauseTransformFeedback();
     void pauseAllQueries();
