@@ -48,6 +48,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_5b9d7e52",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T20:40:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_b1b2b8e2",
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_7479be33",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 3
@@ -65,6 +83,24 @@
         "endLine": 32,
         "endChar": 14
       },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_7b9a3a5d",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T20:40:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_7479be33",
       "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -94,6 +130,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_d61305d2",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T20:40:14Z",
+      "side": 1,
+      "message": "I haven\u0027t been able to change this :S\n\ntried by replacing friend with static but get:\nerror: overloaded \u0027operator*\u0027 cannot be a static member function\n\nI also tried to make it a template function definition outside of the class definition. But then it accepts only multiplications with floats (and templating on the type of A too causes an infinite recursion).",
+      "parentUuid": "ed0297f6_51f374bd",
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_94744a40",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 3
@@ -117,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_962a6deb",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T20:40:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed0297f6_94744a40",
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_51b814c7",
         "filename": "src/common/vector_utils_unittest.cpp",
         "patchSetId": 3
@@ -134,6 +206,24 @@
         "endLine": 30,
         "endChar": 21
       },
+      "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_bbabd26e",
+        "filename": "src/common/vector_utils_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T20:40:14Z",
+      "side": 1,
+      "message": "Vector4(0.0) and Vector4(1.0) already do this.\n\nMade use of this constructor here.",
+      "parentUuid": "ed0297f6_51b814c7",
       "revId": "778b70a97ad96077739c504e24d0754cbd1172a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
