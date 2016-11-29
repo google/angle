@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d01acc56_e2c20324",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T16:44:53Z",
+      "side": 1,
+      "message": "nit: this does a copy of the string so it should take it by value and std::move it inside.",
+      "revId": "b99cb6a2db75d6c5f45b550ccb6f790f42419382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_a2b80bae",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-29T16:44:53Z",
+      "side": 1,
+      "message": "How about templating this on the argument type and forward directly to iostream + have a specialization for HRESULT.",
+      "revId": "b99cb6a2db75d6c5f45b550ccb6f790f42419382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
