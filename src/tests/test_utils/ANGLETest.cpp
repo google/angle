@@ -795,6 +795,12 @@ bool IsAndroid()
 #endif
 }
 
+bool IsVulkan()
+{
+    std::string rendererString(reinterpret_cast<const char *>(glGetString(GL_RENDERER)));
+    return (rendererString.find("Vulkan") != std::string::npos);
+}
+
 bool IsLinux()
 {
 #if defined(ANGLE_PLATFORM_LINUX)

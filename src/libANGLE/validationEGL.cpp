@@ -1613,4 +1613,51 @@ Error ValidateSwapBuffersWithDamageEXT(const Display *display,
     return Error(EGL_SUCCESS);
 }
 
-}  // namespace gl
+Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLint platformType)
+{
+    switch (platformType)
+    {
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+            if (!clientExtensions.platformANGLED3D)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "Direct3D platform is unsupported.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+            if (!clientExtensions.platformANGLEOpenGL)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "OpenGL platform is unsupported.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
+            if (!clientExtensions.platformANGLENULL)
+            {
+                return Error(EGL_BAD_ATTRIBUTE,
+                             "Display type "
+                             "EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE "
+                             "requires EGL_ANGLE_platform_angle_null.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+            if (!clientExtensions.platformANGLEVulkan)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "Vulkan platform is unsupported.");
+            }
+            break;
+
+        default:
+            return Error(EGL_BAD_ATTRIBUTE, "Unknown platform type.");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+}  // namespace egl

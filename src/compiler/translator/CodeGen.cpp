@@ -67,6 +67,11 @@ TCompiler *ConstructCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput 
             return nullptr;
 #endif  // ANGLE_ENABLE_HLSL
 
+        case SH_GLSL_VULKAN_OUTPUT:
+            UNIMPLEMENTED();
+            // TODO(jmadill): Vulkan GLSL
+            return nullptr;
+
         default:
             // Unknown format. Return NULL per the sh::ConstructCompiler API.
             return nullptr;

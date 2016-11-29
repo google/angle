@@ -55,7 +55,11 @@
 
 #if defined(ANGLE_ENABLE_NULL)
 #include "libANGLE/renderer/null/DisplayNULL.h"
-#endif
+#endif  // defined(ANGLE_ENABLE_NULL)
+
+#if defined(ANGLE_ENABLE_VULKAN)
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
+#endif  // defined(ANGLE_ENABLE_VULKAN)
 
 namespace egl
 {
@@ -146,88 +150,101 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap)
         attribMap.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
     switch (displayType)
     {
-      case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-        // Default to D3D displays
-        impl = new rx::DisplayD3D();
+            // Default to D3D displays
+            impl = new rx::DisplayD3D();
 #elif defined(ANGLE_USE_X11)
-        impl = new rx::DisplayGLX();
+            impl = new rx::DisplayGLX();
 #elif defined(ANGLE_PLATFORM_APPLE)
-        impl = new rx::DisplayCGL();
+            impl = new rx::DisplayCGL();
 #elif defined(ANGLE_USE_OZONE)
-        impl = new rx::DisplayOzone();
+            impl = new rx::DisplayOzone();
 #elif defined(ANGLE_PLATFORM_ANDROID)
-        impl = new rx::DisplayAndroid();
+            impl = new rx::DisplayAndroid();
 #else
-        // No display available
-        UNREACHABLE();
+            // No display available
+            UNREACHABLE();
 #endif
-        break;
+            break;
 
-      case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-      case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
 #if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
-        impl = new rx::DisplayD3D();
+            impl = new rx::DisplayD3D();
 #else
-        // A D3D display was requested on a platform that doesn't support it
-        UNREACHABLE();
+            // A D3D display was requested on a platform that doesn't support it
+            UNREACHABLE();
 #endif
-        break;
+            break;
 
-      case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
 #if defined(ANGLE_ENABLE_OPENGL)
 #if defined(ANGLE_PLATFORM_WINDOWS)
-        impl = new rx::DisplayWGL();
+            impl = new rx::DisplayWGL();
 #elif defined(ANGLE_USE_X11)
-        impl = new rx::DisplayGLX();
+            impl = new rx::DisplayGLX();
 #elif defined(ANGLE_PLATFORM_APPLE)
-        impl = new rx::DisplayCGL();
+            impl = new rx::DisplayCGL();
 #elif defined(ANGLE_USE_OZONE)
-        // This might work but has never been tried, so disallow for now.
-        impl = nullptr;
+            // This might work but has never been tried, so disallow for now.
+            impl = nullptr;
 #elif defined(ANGLE_PLATFORM_ANDROID)
-        // No GL support on this platform, fail display creation.
-        impl = nullptr;
+            // No GL support on this platform, fail display creation.
+            impl = nullptr;
 #else
 #error Unsupported OpenGL platform.
 #endif
 #else
-        UNREACHABLE();
-#endif
-        break;
+            // No display available
+            UNREACHABLE();
+#endif  // defined(ANGLE_ENABLE_OPENGL)
+            break;
 
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
 #if defined(ANGLE_ENABLE_OPENGL)
-      case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
 #if defined(ANGLE_PLATFORM_WINDOWS)
-        impl = new rx::DisplayWGL();
+            impl = new rx::DisplayWGL();
 #elif defined(ANGLE_USE_X11)
-        impl = new rx::DisplayGLX();
+            impl = new rx::DisplayGLX();
 #elif defined(ANGLE_USE_OZONE)
-        impl = new rx::DisplayOzone();
+            impl = new rx::DisplayOzone();
 #elif defined(ANGLE_PLATFORM_ANDROID)
-        impl = new rx::DisplayAndroid();
+            impl = new rx::DisplayAndroid();
 #else
-        // No GLES support on this platform, fail display creation.
-        impl = nullptr;
+            // No GLES support on this platform, fail display creation.
+            impl = nullptr;
 #endif
-        break;
-#endif
+#endif  // defined(ANGLE_ENABLE_OPENGL)
+            break;
 
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+#if defined(ANGLE_ENABLE_VULKAN)
+            impl = new rx::DisplayVk();
+#else
+            // No display available
+            UNREACHABLE();
+#endif  // defined(ANGLE_ENABLE_VULKAN)
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
 #if defined(ANGLE_ENABLE_NULL)
-      case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-          impl = new rx::DisplayNULL();
-          break;
-#endif
+            impl = new rx::DisplayNULL();
+#else
+            // No display available
+            UNREACHABLE();
+#endif  // defined(ANGLE_ENABLE_NULL)
+            break;
 
-      default:
-        UNREACHABLE();
-        break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     return impl;
 }
 
-}
+}  // anonymous namespace
 
 Display *Display::GetDisplayFromAttribs(void *native_display, const AttributeMap &attribMap)
 {
@@ -899,6 +916,10 @@ static ClientExtensions GenerateClientExtensions()
     extensions.experimentalPresentPath = true;
 #endif
 
+#if defined(ANGLE_ENABLE_VULKAN)
+    extensions.platformANGLEVulkan = true;
+#endif
+
 #if defined(ANGLE_USE_X11)
     extensions.x11Visual = true;
 #endif
@@ -1032,4 +1053,4 @@ gl::Version Display::getMaxSupportedESVersion() const
 {
     return mImplementation->getMaxSupportedESVersion();
 }
-}
+}  // namespace egl

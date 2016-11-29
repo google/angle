@@ -73,7 +73,7 @@ class DisplayVk : public DisplayImpl
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
-    RendererVk *mRenderer;
+    std::unique_ptr<RendererVk> mRenderer;
 };
 
 }  // namespace rx

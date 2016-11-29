@@ -59,27 +59,30 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
 
     switch (pp.eglParameters.renderer)
     {
-      case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-        stream << "D3D9";
-        break;
-      case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-        stream << "D3D11";
-        break;
-      case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-        stream << "OPENGL";
-        break;
-      case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-          stream << "OPENGLES";
-          break;
-      case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-          stream << "NULL";
-          break;
-      case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-        stream << "DEFAULT";
-        break;
-      default:
-          stream << "UNDEFINED";
-          break;
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+            stream << "DEFAULT";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+            stream << "D3D9";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+            stream << "D3D11";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
+            stream << "NULL";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+            stream << "OPENGL";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+            stream << "OPENGLES";
+            break;
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+            stream << "VULKAN";
+            break;
+        default:
+            stream << "UNDEFINED";
+            break;
     }
 
     if (pp.eglParameters.majorVersion != EGL_DONT_CARE)
@@ -370,7 +373,12 @@ EGLPlatformParameters OPENGLES(EGLint major, EGLint minor)
                                  EGL_DONT_CARE);
 }
 
-} // namespace egl_platform
+EGLPlatformParameters VULKAN()
+{
+    return EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
+}
+
+}  // namespace egl_platform
 
 // ANGLE tests platforms
 PlatformParameters ES2_D3D9()
@@ -613,4 +621,14 @@ PlatformParameters ES31_NULL()
     return PlatformParameters(3, 1, EGLPlatformParameters(EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE));
 }
 
-} // namespace angle
+PlatformParameters ES2_VULKAN()
+{
+    return PlatformParameters(2, 0, egl_platform::VULKAN());
+}
+
+PlatformParameters ES3_VULKAN()
+{
+    return PlatformParameters(3, 0, egl_platform::VULKAN());
+}
+
+}  // namespace angle

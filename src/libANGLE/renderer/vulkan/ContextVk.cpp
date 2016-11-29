@@ -42,8 +42,7 @@ ContextVk::~ContextVk()
 
 gl::Error ContextVk::initialize()
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::NoError();
 }
 
 gl::Error ContextVk::flush()
@@ -133,8 +132,7 @@ std::string ContextVk::getVendorString() const
 
 std::string ContextVk::getRendererDescription() const
 {
-    UNIMPLEMENTED();
-    return std::string();
+    return mRenderer->getRendererDescription();
 }
 
 void ContextVk::insertEventMarker(GLsizei length, const char *marker)
@@ -169,9 +167,8 @@ GLint64 ContextVk::getTimestamp()
     return GLint64();
 }
 
-void ContextVk::onMakeCurrent(const gl::ContextState &data)
+void ContextVk::onMakeCurrent(const gl::ContextState & /*data*/)
 {
-    UNIMPLEMENTED();
 }
 
 const gl::Caps &ContextVk::getNativeCaps() const

@@ -14,12 +14,43 @@
 
 namespace rx
 {
+class RendererVk;
 
-class SurfaceVk : public SurfaceImpl
+class OffscreenSurfaceVk : public SurfaceImpl
 {
   public:
-    SurfaceVk(const egl::SurfaceState &surfaceState);
-    ~SurfaceVk() override;
+    OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, EGLint width, EGLint height);
+    ~OffscreenSurfaceVk() override;
+
+    egl::Error initialize(const DisplayImpl *displayImpl) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
+    egl::Error swap(const DisplayImpl *displayImpl) override;
+    egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
+    egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) override;
+    egl::Error bindTexImage(gl::Texture *texture, EGLint buffer) override;
+    egl::Error releaseTexImage(EGLint buffer) override;
+    void setSwapInterval(EGLint interval) override;
+
+    // width and height can change with client window resizing
+    EGLint getWidth() const override;
+    EGLint getHeight() const override;
+
+    EGLint isPostSubBufferSupported() const override;
+    EGLint getSwapBehavior() const override;
+
+    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+                                        FramebufferAttachmentRenderTarget **rtOut) override;
+
+  private:
+    EGLint mWidth;
+    EGLint mHeight;
+};
+
+class WindowSurfaceVk : public SurfaceImpl
+{
+  public:
+    WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativeWindowType window);
+    ~WindowSurfaceVk() override;
 
     egl::Error initialize(const DisplayImpl *displayImpl) override;
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;

@@ -23,6 +23,7 @@ namespace egl
 {
 
 class AttributeMap;
+struct ClientExtensions;
 struct Config;
 class Device;
 class Display;
@@ -106,6 +107,8 @@ Error ValidateCompatibleConfigs(const Display *display,
                                 const Surface *surface,
                                 const Config *config2,
                                 EGLint surfaceType);
-}
+
+Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLint platformType);
+}  // namespace gl
 
 #endif // LIBANGLE_VALIDATIONEGL_H_

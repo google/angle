@@ -16,6 +16,11 @@
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
+namespace egl
+{
+class AttributeMap;
+}
+
 namespace rx
 {
 
@@ -25,12 +30,16 @@ class RendererVk : angle::NonCopyable
     RendererVk();
     ~RendererVk();
 
+    vk::Error initialize(const egl::AttributeMap &attribs);
+
+    std::string getRendererDescription() const;
+
+    VkInstance getInstance() const { return mInstance; }
+
     const gl::Caps &getNativeCaps() const;
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
-
-    vk::Error initialize();
 
   private:
     void ensureCapsInitialized() const;

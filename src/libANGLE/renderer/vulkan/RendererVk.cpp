@@ -9,12 +9,45 @@
 
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
+#include <EGL/eglext.h>
+
 #include "common/debug.h"
+#include "libANGLE/renderer/vulkan/CompilerVk.h"
+#include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
+#include "libANGLE/renderer/vulkan/VertexArrayVk.h"
+#include "platform/Platform.h"
 
 namespace rx
 {
 
-RendererVk::RendererVk() : mCapsInitialized(false), mInstance(nullptr)
+namespace
+{
+
+VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &extensionProps,
+                                 const std::vector<const char *> &enabledExtensionNames)
+{
+    // Compile the extensions names into a set.
+    std::set<std::string> extensionNames;
+    for (const auto &extensionProp : extensionProps)
+    {
+        extensionNames.insert(extensionProp.extensionName);
+    }
+
+    for (const auto &extensionName : enabledExtensionNames)
+    {
+        if (extensionNames.count(extensionName) == 0)
+        {
+            return VK_ERROR_EXTENSION_NOT_PRESENT;
+        }
+    }
+
+    return VK_SUCCESS;
+}
+
+}  // anonymous namespace
+
+RendererVk::RendererVk() : mCapsInitialized(false), mInstance(VK_NULL_HANDLE)
 {
 }
 
@@ -23,8 +56,29 @@ RendererVk::~RendererVk()
     vkDestroyInstance(mInstance, nullptr);
 }
 
-vk::Error RendererVk::initialize()
+vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 {
+    uint32_t instanceExtensionCount = 0;
+    ANGLE_VK_TRY(vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, nullptr));
+
+    std::vector<VkExtensionProperties> instanceExtensionProps(instanceExtensionCount);
+    if (instanceExtensionCount > 0)
+    {
+        ANGLE_VK_TRY(vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount,
+                                                            instanceExtensionProps.data()));
+    }
+
+    std::vector<const char *> enabledInstanceExtensions;
+    enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    enabledInstanceExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+#else
+#error Unsupported Vulkan platform.
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
+
+    // Verify the required extensions are in the extension names set. Fail if not.
+    ANGLE_VK_TRY(VerifyExtensionsPresent(instanceExtensionProps, enabledInstanceExtensions));
+
     VkApplicationInfo applicationInfo;
     applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     applicationInfo.pNext              = nullptr;
@@ -40,15 +94,22 @@ vk::Error RendererVk::initialize()
     instanceInfo.flags            = 0;
     instanceInfo.pApplicationInfo = &applicationInfo;
 
-    // TODO(jmadill): Layers and extensions.
-    instanceInfo.enabledExtensionCount   = 0;
-    instanceInfo.ppEnabledExtensionNames = nullptr;
-    instanceInfo.enabledLayerCount       = 0;
-    instanceInfo.ppEnabledLayerNames     = nullptr;
+    // Enable requested layers and extensions.
+    instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
+    instanceInfo.ppEnabledExtensionNames =
+        enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
+    instanceInfo.enabledLayerCount   = 0u;
+    instanceInfo.ppEnabledLayerNames = nullptr;
 
     ANGLE_VK_TRY(vkCreateInstance(&instanceInfo, nullptr, &mInstance));
 
     return vk::NoError();
+}
+
+std::string RendererVk::getRendererDescription() const
+{
+    // TODO(jmadill): Description.
+    return "Vulkan";
 }
 
 void RendererVk::ensureCapsInitialized() const

@@ -165,11 +165,12 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
     {
         EGLint platformType          = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
         EGLint deviceType            = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
-        bool majorVersionSpecified   = false;
-        bool minorVersionSpecified   = false;
         bool enableAutoTrimSpecified = false;
         bool deviceTypeSpecified     = false;
         bool presentPathSpecified    = false;
+
+        Optional<EGLint> majorVersion;
+        Optional<EGLint> minorVersion;
 
         if (attrib_list)
         {
@@ -178,58 +179,28 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                 switch (curAttrib[0])
                 {
                     case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
-                        switch (curAttrib[1])
                     {
-                        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-                            break;
-
-                        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-                        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-                            if (!clientExtensions.platformANGLED3D)
-                            {
-                                thread->setError(Error(EGL_BAD_ATTRIBUTE));
-                                return EGL_NO_DISPLAY;
-                            }
-                            break;
-
-                        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-                        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-                            if (!clientExtensions.platformANGLEOpenGL)
-                            {
-                                thread->setError(Error(EGL_BAD_ATTRIBUTE));
-                                return EGL_NO_DISPLAY;
-                            }
-                            break;
-
-                        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-                            if (!clientExtensions.platformANGLENULL)
-                            {
-                                thread->setError(Error(EGL_BAD_ATTRIBUTE,
-                                                       "Display type "
-                                                       "EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE "
-                                                       "requires EGL_ANGLE_platform_angle_null."));
-                                return EGL_NO_DISPLAY;
-                            }
-                            break;
-
-                        default:
-                            thread->setError(Error(EGL_BAD_ATTRIBUTE));
+                        egl::Error error = ValidatePlatformType(clientExtensions, curAttrib[1]);
+                        if (error.isError())
+                        {
+                            thread->setError(error);
                             return EGL_NO_DISPLAY;
+                        }
+                        platformType = curAttrib[1];
+                        break;
                     }
-                    platformType = curAttrib[1];
-                    break;
 
                     case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
                         if (curAttrib[1] != EGL_DONT_CARE)
                         {
-                            majorVersionSpecified = true;
+                            majorVersion = curAttrib[1];
                         }
                         break;
 
                     case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
                         if (curAttrib[1] != EGL_DONT_CARE)
                         {
-                            minorVersionSpecified = true;
+                            minorVersion = curAttrib[1];
                         }
                         break;
 
@@ -292,13 +263,37 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                         deviceType = curAttrib[1];
                     break;
 
+                    case EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE:
+                        if (!clientExtensions.platformANGLEVulkan)
+                        {
+                            thread->setError(
+                                Error(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle_vulkan extension not active"));
+                            return EGL_NO_DISPLAY;
+                        }
+                        if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+                        {
+                            thread->setError(
+                                Error(EGL_BAD_ATTRIBUTE,
+                                      "Validation can only be enabled for the Vulkan back-end."));
+                            return EGL_NO_DISPLAY;
+                        }
+                        if (curAttrib[1] != EGL_TRUE && curAttrib[1] != EGL_FALSE)
+                        {
+                            thread->setError(
+                                Error(EGL_BAD_ATTRIBUTE,
+                                      "Validation layer attribute must be EGL_TRUE or EGL_FALSE."));
+                            return EGL_NO_DISPLAY;
+                        }
+                        break;
+
                     default:
                         break;
                 }
             }
         }
 
-        if (!majorVersionSpecified && minorVersionSpecified)
+        if (!majorVersion.valid() && minorVersion.valid())
         {
             thread->setError(Error(EGL_BAD_ATTRIBUTE));
             return EGL_NO_DISPLAY;
@@ -339,6 +334,18 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
                       "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requires a device type of "
                       "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE."));
             return EGL_NO_DISPLAY;
+        }
+
+        if (platformType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            if ((majorVersion.valid() && majorVersion.value() != 1) ||
+                (minorVersion.valid() && minorVersion.value() != 0))
+            {
+                thread->setError(Error(
+                    EGL_BAD_ATTRIBUTE,
+                    "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently only supports Vulkan 1.0."));
+                return EGL_NO_DISPLAY;
+            }
         }
 
         thread->setError(Error(EGL_SUCCESS));
