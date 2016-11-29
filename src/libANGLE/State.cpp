@@ -228,6 +228,7 @@ void State::reset()
     }
 
     mArrayBuffer.set(NULL);
+    mDrawIndirectBuffer.set(NULL);
     mRenderbuffer.set(NULL);
 
     if (mProgram)
@@ -1125,6 +1126,12 @@ GLuint State::getArrayBufferId() const
     return mArrayBuffer.id();
 }
 
+void State::setDrawIndirectBufferBinding(Buffer *buffer)
+{
+    mDrawIndirectBuffer.set(buffer);
+    mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
+}
+
 void State::setGenericUniformBufferBinding(Buffer *buffer)
 {
     mGenericUniformBuffer.set(buffer);
@@ -1182,17 +1189,16 @@ Buffer *State::getTargetBuffer(GLenum target) const
           UNIMPLEMENTED();
           return nullptr;
       case GL_DRAW_INDIRECT_BUFFER:
-          UNIMPLEMENTED();
-          return nullptr;
+          return mDrawIndirectBuffer.get();
       default: UNREACHABLE();            return NULL;
     }
 }
 
 void State::detachBuffer(GLuint bufferName)
 {
-    BindingPointer<Buffer> *buffers[] = {&mArrayBuffer,        &mCopyReadBuffer,
-                                         &mCopyWriteBuffer,    &mPack.pixelBuffer,
-                                         &mUnpack.pixelBuffer, &mGenericUniformBuffer};
+    BindingPointer<Buffer> *buffers[] = {
+        &mArrayBuffer,      &mCopyReadBuffer,     &mCopyWriteBuffer,     &mDrawIndirectBuffer,
+        &mPack.pixelBuffer, &mUnpack.pixelBuffer, &mGenericUniformBuffer};
     for (auto buffer : buffers)
     {
         if (buffer->id() == bufferName)
@@ -1611,6 +1617,9 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
     switch (pname)
     {
       case GL_ARRAY_BUFFER_BINDING:                     *params = mArrayBuffer.id();                              break;
+      case GL_DRAW_INDIRECT_BUFFER_BINDING:
+          *params = mDrawIndirectBuffer.id();
+          break;
       case GL_ELEMENT_ARRAY_BUFFER_BINDING:             *params = getVertexArray()->getElementArrayBuffer().id(); break;
         //case GL_FRAMEBUFFER_BINDING:                    // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
       case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:           *params = mDrawFramebuffer->id();                         break;

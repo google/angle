@@ -1574,6 +1574,9 @@ void StateManagerGL::syncState(const gl::State &state, const gl::State::DirtyBit
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
                 // TODO(jmadill): implement this
                 break;
+            case gl::State::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING:
+                // TODO: implement this
+                break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
                 // TODO(jmadill): implement this
                 break;

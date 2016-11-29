@@ -1158,7 +1158,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.gather.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.boolean.sample_mask_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.texture_binding_2d_multisample_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.draw_indirect_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.atomic_counter_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.shader_storage_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.dispatch_indirect_buffer_binding_* = FAIL

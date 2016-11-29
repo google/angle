@@ -143,6 +143,7 @@ class Context final : public ValidationContext
     void bindPixelUnpackBuffer(GLuint bufferHandle);
     void useProgram(GLuint program);
     void bindTransformFeedback(GLuint transformFeedbackHandle);
+    void bindDrawIndirectBuffer(GLuint bufferHandle);
 
     Error beginQuery(GLenum target, GLuint query);
     Error endQuery(GLenum target);
