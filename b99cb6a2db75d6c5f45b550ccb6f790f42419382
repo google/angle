@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_b8b1132b",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-30T19:13:43Z",
+      "side": 1,
+      "message": "Sounds good, done.",
+      "parentUuid": "d01acc56_e2c20324",
+      "revId": "b99cb6a2db75d6c5f45b550ccb6f790f42419382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01acc56_a2b80bae",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2016-11-29T16:44:53Z",
       "side": 1,
       "message": "How about templating this on the argument type and forward directly to iostream + have a specialization for HRESULT.",
+      "revId": "b99cb6a2db75d6c5f45b550ccb6f790f42419382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_18678761",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-11-30T19:13:43Z",
+      "side": 1,
+      "message": "seems good, had to make two methods because of partial template specialization rules.",
+      "parentUuid": "d01acc56_a2b80bae",
       "revId": "b99cb6a2db75d6c5f45b550ccb6f790f42419382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
