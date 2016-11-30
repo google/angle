@@ -85,6 +85,11 @@ class ConstantFinder : public TIntermTraverser
         {
             return gl::isInf(node.getFConst()) && node.getFConst() < 0;
         }
+        else if (gl::isNaN(value))
+        {
+            // All NaNs are treated as equal.
+            return gl::isNaN(node.getFConst());
+        }
         return mFaultTolerance >= fabsf(node.getFConst() - value);
     }
 
@@ -138,6 +143,9 @@ class ConstantFoldingTest : public testing::Test
     void TearDown() override;
 
     void compile(const std::string &shaderString);
+
+    // Must be called after compile()
+    bool hasWarning();
 
     template <typename T>
     bool constantFoundInAST(T constant)

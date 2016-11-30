@@ -45,6 +45,12 @@ void ConstantFoldingTest::compile(const std::string &shaderString)
     }
 }
 
+bool ConstantFoldingTest::hasWarning()
+{
+    TInfoSink &infoSink = mTranslatorESSL->getInfoSink();
+    return infoSink.info.str().find("WARNING:") != std::string::npos;
+}
+
 void ConstantFoldingExpressionTest::evaluateFloat(const std::string &floatExpression)
 {
     std::stringstream shaderStream;

@@ -1158,3 +1158,89 @@ TEST_F(ConstantFoldingExpressionTest, FoldFaceForwardInfinity2)
     evaluateFloat(floatString);
     ASSERT_TRUE(constantFoundInAST(-4.0f));
 }
+
+// Test that infinity - finite value evaluates to infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldInfinityMinusFinite)
+{
+    const std::string &floatString = "1.0e2048 - 1.0e20";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<float>::infinity()));
+}
+
+// Test that -infinity + finite value evaluates to -infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldMinusInfinityPlusFinite)
+{
+    const std::string &floatString = "(-1.0e2048) + 1.0e20";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(-std::numeric_limits<float>::infinity()));
+}
+
+// Test that infinity * finite value evaluates to infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldInfinityMultipliedByFinite)
+{
+    const std::string &floatString = "1.0e2048 * 1.0e-20";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<float>::infinity()));
+}
+
+// Test that infinity * infinity evaluates to infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldInfinityMultipliedByInfinity)
+{
+    const std::string &floatString = "1.0e2048 * 1.0e2048";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<float>::infinity()));
+}
+
+// Test that infinity * negative infinity evaluates to negative infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldInfinityMultipliedByNegativeInfinity)
+{
+    const std::string &floatString = "1.0e2048 * (-1.0e2048)";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(-std::numeric_limits<float>::infinity()));
+}
+
+// Test that dividing by minus zero results in the appropriately signed infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+// "If both positive and negative zeros are implemented, the correctly signed Inf will be
+// generated".
+TEST_F(ConstantFoldingExpressionTest, FoldDivideByNegativeZero)
+{
+    const std::string &floatString = "1.0 / (-0.0)";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(-std::numeric_limits<float>::infinity()));
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that infinity divided by zero evaluates to infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldInfinityDividedByZero)
+{
+    const std::string &floatString = "1.0e2048 / 0.0";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(std::numeric_limits<float>::infinity()));
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that negative infinity divided by zero evaluates to negative infinity.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldMinusInfinityDividedByZero)
+{
+    const std::string &floatString = "(-1.0e2048) / 0.0";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(-std::numeric_limits<float>::infinity()));
+    ASSERT_TRUE(hasWarning());
+}
+
+// Test that dividing a finite number by infinity results in zero.
+// ESSL 3.00.6 section 4.5.1: "Infinities and zeroes are generated as dictated by IEEE".
+TEST_F(ConstantFoldingExpressionTest, FoldDivideByInfinity)
+{
+    const std::string &floatString = "1.0e30 / 1.0e2048";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(0.0f));
+}
