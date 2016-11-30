@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_988617a3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-30T02:03:33Z",
+      "side": 1,
+      "message": "It\u0027s not complaining about this anymore, dunno why.",
+      "parentUuid": "ed0297f6_dca0c276",
+      "range": {
+        "startLine": 165,
+        "startChar": 5,
+        "endLine": 165,
+        "endChar": 44
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed0297f6_bc9df642",
         "filename": "src/vulkan_support/vulkan.gypi",
         "patchSetId": 4
@@ -82,6 +106,30 @@
       "writtenOn": "2016-11-25T22:41:29Z",
       "side": 1,
       "message": "need to path to the \u0027lib/\u0027 folder somehow",
+      "range": {
+        "startLine": 330,
+        "startChar": 32,
+        "endLine": 330,
+        "endChar": 79
+      },
+      "revId": "3cffffdbcd1a2477510780fda48d9b5a5b993b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d01acc56_1ed84f3e",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 4
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-11-30T02:03:33Z",
+      "side": 1,
+      "message": "Actually it works as is, presumably due to rpath.",
+      "parentUuid": "ed0297f6_9cb8faac",
       "range": {
         "startLine": 330,
         "startChar": 32,
