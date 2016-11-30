@@ -14,12 +14,41 @@
 namespace rx
 {
 
-RendererVk::RendererVk() : mCapsInitialized(false)
+RendererVk::RendererVk() : mCapsInitialized(false), mInstance(nullptr)
 {
 }
 
 RendererVk::~RendererVk()
 {
+    vkDestroyInstance(mInstance, nullptr);
+}
+
+vk::Error RendererVk::initialize()
+{
+    VkApplicationInfo applicationInfo;
+    applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+    applicationInfo.pNext              = nullptr;
+    applicationInfo.pApplicationName   = "ANGLE";
+    applicationInfo.applicationVersion = 1;
+    applicationInfo.pEngineName        = "ANGLE";
+    applicationInfo.engineVersion      = 1;
+    applicationInfo.apiVersion         = VK_API_VERSION_1_0;
+
+    VkInstanceCreateInfo instanceInfo;
+    instanceInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+    instanceInfo.pNext            = nullptr;
+    instanceInfo.flags            = 0;
+    instanceInfo.pApplicationInfo = &applicationInfo;
+
+    // TODO(jmadill): Layers and extensions.
+    instanceInfo.enabledExtensionCount   = 0;
+    instanceInfo.ppEnabledExtensionNames = nullptr;
+    instanceInfo.enabledLayerCount       = 0;
+    instanceInfo.ppEnabledLayerNames     = nullptr;
+
+    ANGLE_VK_TRY(vkCreateInstance(&instanceInfo, nullptr, &mInstance));
+
+    return vk::NoError();
 }
 
 void RendererVk::ensureCapsInitialized() const
@@ -36,7 +65,7 @@ void RendererVk::generateCaps(gl::Caps * /*outCaps*/,
                               gl::Extensions * /*outExtensions*/,
                               gl::Limitations * /* outLimitations */) const
 {
-    // TODO(jmadill): Caps
+    // TODO(jmadill): Caps.
 }
 
 const gl::Caps &RendererVk::getNativeCaps() const

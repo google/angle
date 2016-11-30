@@ -1,0 +1,55 @@
+# Copyright 2016 The ANGLE Project Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+vulkan_layers_dir = "../../../../vulkan-validation-layers/src/"
+vulkan_gypi =
+    exec_script("//build/gypi_to_gn.py",
+                [
+                  rebase_path("vulkan.gypi"),
+                  "--replace=<(vulkan_layers_path)=$vulkan_layers_dir",
+                ],
+                "scope",
+                [ "vulkan.gypi" ])
+
+config("vulkan_loader_config") {
+  include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
+  defines = [
+    "LAYERS_SOURCE_PATH=\"./gen/third_party/angle/src/vulkan_support/angle/vulkan/json\"",
+    "DEFAULT_VK_LAYERS_PATH=\".\"",
+    "API_NAME=\"Vulkan\"",
+  ]
+  if (is_win) {
+    defines += [ "VK_USE_PLATFORM_WIN32_KHR" ]
+  }
+}
+
+config("vulkan_loader_internal_config") {
+  if (is_clang || !is_win) {
+    cflags = [ "-Wno-unused-function" ]
+  }
+}
+
+static_library("vulkan_loader") {
+  sources = rebase_path(vulkan_gypi.vulkan_loader_sources, ".", "src")
+  if (is_win) {
+    sources += rebase_path(vulkan_gypi.vulkan_loader_win_sources, ".", "src")
+    if (!is_clang) {
+      cflags = vulkan_gypi.vulkan_loader_cflags_win
+    }
+    configs -= [
+      "//build/config/win:nominmax",
+      "//build/config/win:unicode",
+    ]
+  }
+  configs += [ ":vulkan_loader_internal_config" ]
+  public_configs = [ ":vulkan_loader_config" ]
+}
+
+# Use this target to include everything ANGLE needs for Vulkan.
+group("angle_vulkan") {
+  deps = [
+    ":vulkan_loader",
+  ]
+  public_configs = [ ":vulkan_loader_config" ]
+}

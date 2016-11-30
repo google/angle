@@ -381,6 +381,7 @@ static_library("libANGLE") {
 
   if (angle_enable_vulkan) {
     sources += rebase_path(gles_gypi.libangle_vulkan_sources, ".", "src")
+    deps += [ "//third_party/angle/src/vulkan_support:angle_vulkan" ]
   }
 
   if (angle_enable_null) {

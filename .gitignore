@@ -48,4 +48,4 @@ TestResults.qpa
 buildtools/
 *.pyc
 *.TMP
-
+*.VC.db
