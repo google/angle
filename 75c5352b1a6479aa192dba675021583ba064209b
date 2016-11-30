@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "d01acc56_1e620a52",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-30T16:20:35Z",
+      "side": 1,
+      "message": "Since Type is a scalar here, conversion will be made automatically by the compiler on function call. This is already being used in the test with a Vector2 * int.",
+      "parentUuid": "d01acc56_71325b50",
+      "revId": "75c5352b1a6479aa192dba675021583ba064209b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d01acc56_71041b7c",
         "filename": "src/common/vector_utils.h",
         "patchSetId": 4
@@ -65,6 +83,24 @@
         "endLine": 178,
         "endChar": 34
       },
+      "revId": "75c5352b1a6479aa192dba675021583ba064209b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd9b1332_5bb863ab",
+        "filename": "src/common/vector_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-11-30T16:20:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d01acc56_d1614f4e",
       "revId": "75c5352b1a6479aa192dba675021583ba064209b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
