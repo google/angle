@@ -55,6 +55,9 @@ const APIInfo g_eglDisplayAPIs[] = {
     {"angle-null", gpu::GPUTestConfig::kAPIUnknown },
 };
 
+const char *g_deqpEGLString = "--deqp-egl-display-type=";
+const char *g_angleEGLString = "--use-angle=";
+
 const APIInfo *g_initAPI = nullptr;
 
 // Returns the default API for a platform.
@@ -318,19 +321,18 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
     sFails            = 0;
     sUnexpectedPasses = 0;
 
-    int argc = 0;
     std::vector<const char *> argv;
 
     // Reserve one argument for the binary name.
-    argc++;
     argv.push_back("");
 
     // Add init api.
-    argc++;
-    argv.push_back(g_initAPI ? g_initAPI->first : GetDefaultAPIName());
+    const char *targetApi    = g_initAPI ? g_initAPI->first : GetDefaultAPIName();
+    std::string apiArgString = std::string(g_deqpEGLString) + targetApi;
+    argv.push_back(apiArgString.c_str());
 
     // Init the platform.
-    if (!deqp_libtester_init_platform(argc, argv.data()))
+    if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data()))
     {
         std::cout << "Aborting test due to dEQP initialization error." << std::endl;
         exit(1);
@@ -385,9 +387,6 @@ ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_GLES31, 2);
 #ifdef ANGLE_DEQP_EGL_TESTS
 ANGLE_INSTANTIATE_DEQP_TEST_CASE(dEQP_EGL, 3);
 #endif
-
-const char *g_deqpEGLString  = "--deqp-egl-display-type=";
-const char *g_angleEGLString = "--use-angle=";
 
 void HandleDisplayType(const char *displayTypeString)
 {
