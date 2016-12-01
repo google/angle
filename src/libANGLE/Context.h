@@ -49,7 +49,6 @@ class Renderbuffer;
 class FenceNV;
 class FenceSync;
 class Query;
-class ResourceManager;
 class Buffer;
 struct VertexAttribute;
 class VertexArray;
@@ -703,8 +702,6 @@ class Context final : public ValidationContext
     GLenum mResetStrategy;
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;
-
-    ResourceManager *mResourceManager;
 
     State::DirtyBits mTexImageDirtyBits;
     State::DirtyObjects mTexImageDirtyObjects;

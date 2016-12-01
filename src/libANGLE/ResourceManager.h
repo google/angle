@@ -1,11 +1,11 @@
 //
-// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2016 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// ResourceManager.h : Defines the ResourceManager class, which tracks objects
-// shared by multiple GL contexts.
+// ResourceManager.h : Defines the ResourceManager classes, which handle allocation and lifetime of
+// GL objects.
 
 #ifndef LIBANGLE_RESOURCEMANAGER_H_
 #define LIBANGLE_RESOURCEMANAGER_H_
@@ -34,89 +34,138 @@ class Sampler;
 class Shader;
 class Texture;
 
-class ResourceManager : angle::NonCopyable
+template <typename HandleAllocatorType>
+class ResourceManagerBase : angle::NonCopyable
 {
   public:
-    ResourceManager();
-    ~ResourceManager();
+    ResourceManagerBase();
 
     void addRef();
     void release();
 
+  protected:
+    virtual ~ResourceManagerBase() {}
+
+    HandleAllocatorType mHandleAllocator;
+
+  private:
+    size_t mRefCount;
+};
+
+template <typename ResourceType, typename HandleAllocatorType>
+class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
+{
+  public:
+    TypedResourceManager() {}
+
+  protected:
+    ~TypedResourceManager() override;
+
+    void deleteObject(GLuint handle);
+
+    ResourceMap<ResourceType> mObjectMap;
+};
+
+class BufferManager : public TypedResourceManager<Buffer, HandleAllocator>
+{
+  public:
     GLuint createBuffer();
+    void deleteBuffer(GLuint buffer);
+    Buffer *getBuffer(GLuint handle) const;
+    Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle);
+    bool isBufferGenerated(GLuint buffer) const;
+
+  protected:
+    ~BufferManager() override {}
+};
+
+class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
+{
+  public:
     GLuint createShader(rx::GLImplFactory *factory,
                         const gl::Limitations &rendererLimitations,
                         GLenum type);
-    GLuint createProgram(rx::GLImplFactory *factory);
-    GLuint createTexture();
-    GLuint createRenderbuffer();
-    GLuint createSampler();
-    GLuint createFenceSync(rx::GLImplFactory *factory);
-    ErrorOrResult<GLuint> createPaths(rx::GLImplFactory *factory, GLsizei range);
-
-    void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
-    void deleteProgram(GLuint program);
-    void deleteTexture(GLuint texture);
-    void deleteRenderbuffer(GLuint renderbuffer);
-    void deleteSampler(GLuint sampler);
-    void deleteFenceSync(GLuint fenceSync);
-    void deletePaths(GLuint first, GLsizei range);
-
-    Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle) const;
+
+    GLuint createProgram(rx::GLImplFactory *factory);
+    void deleteProgram(GLuint program);
     Program *getProgram(GLuint handle) const;
-    Texture *getTexture(GLuint handle);
-    Renderbuffer *getRenderbuffer(GLuint handle);
-    Sampler *getSampler(GLuint handle);
-    FenceSync *getFenceSync(GLuint handle);
 
-    // CHROMIUM_path_rendering
-    const Path *getPath(GLuint path) const;
-    Path *getPath(GLuint path);
-    bool hasPath(GLuint path) const;
-
-    void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
-
-    Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle);
-    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum type);
-    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle);
-    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint samplerHandle);
-
-    bool isSampler(GLuint sampler);
-
-    // GL_CHROMIUM_bind_generates_resource
-    bool isTextureGenerated(GLuint texture) const;
-    bool isBufferGenerated(GLuint buffer) const;
-    bool isRenderbufferGenerated(GLuint renderbuffer) const;
+  protected:
+    ~ShaderProgramManager() override;
 
   private:
-    void createTextureInternal(GLuint handle);
+    template <typename ObjectType>
+    void deleteObject(ResourceMap<ObjectType> *objectMap, GLuint id);
 
-    std::size_t mRefCount;
+    ResourceMap<Shader> mShaders;
+    ResourceMap<Program> mPrograms;
+};
 
-    ResourceMap<Buffer> mBufferMap;
-    HandleAllocator mBufferHandleAllocator;
+class TextureManager : public TypedResourceManager<Texture, HandleAllocator>
+{
+  public:
+    GLuint createTexture();
+    void deleteTexture(GLuint texture);
+    Texture *getTexture(GLuint handle) const;
+    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum type);
+    bool isTextureGenerated(GLuint texture) const;
 
-    ResourceMap<Shader> mShaderMap;
+  protected:
+    ~TextureManager() override {}
+};
 
-    ResourceMap<Program> mProgramMap;
-    HandleAllocator mProgramShaderHandleAllocator;
+class RenderbufferManager : public TypedResourceManager<Renderbuffer, HandleAllocator>
+{
+  public:
+    GLuint createRenderbuffer();
+    void deleteRenderbuffer(GLuint renderbuffer);
+    Renderbuffer *getRenderbuffer(GLuint handle);
+    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle);
+    bool isRenderbufferGenerated(GLuint renderbuffer) const;
 
-    ResourceMap<Texture> mTextureMap;
-    HandleAllocator mTextureHandleAllocator;
+  protected:
+    ~RenderbufferManager() override {}
+};
 
-    ResourceMap<Renderbuffer> mRenderbufferMap;
-    HandleAllocator mRenderbufferHandleAllocator;
+class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator>
+{
+  public:
+    GLuint createSampler();
+    void deleteSampler(GLuint sampler);
+    Sampler *getSampler(GLuint handle);
+    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle);
+    bool isSampler(GLuint sampler);
 
-    ResourceMap<Sampler> mSamplerMap;
-    HandleAllocator mSamplerHandleAllocator;
+  protected:
+    ~SamplerManager() override {}
+};
 
-    ResourceMap<FenceSync> mFenceSyncMap;
-    HandleAllocator mFenceSyncHandleAllocator;
+class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator>
+{
+  public:
+    GLuint createFenceSync(rx::GLImplFactory *factory);
+    void deleteFenceSync(GLuint fenceSync);
+    FenceSync *getFenceSync(GLuint handle);
 
-    ResourceMap<Path> mPathMap;
-    HandleRangeAllocator mPathHandleAllocator;
+  protected:
+    ~FenceSyncManager() override {}
+};
+
+class PathManager : public ResourceManagerBase<HandleRangeAllocator>
+{
+  public:
+    ErrorOrResult<GLuint> createPaths(rx::GLImplFactory *factory, GLsizei range);
+    void deletePaths(GLuint first, GLsizei range);
+    Path *getPath(GLuint handle) const;
+    bool hasPath(GLuint handle) const;
+
+  protected:
+    ~PathManager() override;
+
+  private:
+    ResourceMap<Path> mPaths;
 };
 
 }  // namespace gl

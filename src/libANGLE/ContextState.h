@@ -15,8 +15,15 @@
 
 namespace gl
 {
-class ValidationContext;
+class BufferManager;
 class ContextState;
+class FenceSyncManager;
+class PathManager;
+class RenderbufferManager;
+class SamplerManager;
+class ShaderProgramManager;
+class TextureManager;
+class ValidationContext;
 
 static constexpr Version ES_2_0 = Version(2, 0);
 static constexpr Version ES_3_0 = Version(3, 0);
@@ -26,12 +33,12 @@ class ContextState final : public angle::NonCopyable
 {
   public:
     ContextState(uintptr_t context,
+                 const ContextState *shareContextState,
                  const Version &clientVersion,
                  State *state,
                  const Caps &caps,
                  const TextureCapsMap &textureCaps,
                  const Extensions &extensions,
-                 const ResourceManager *resourceManager,
                  const Limitations &limitations,
                  const ResourceMap<Framebuffer> &framebufferMap);
     ~ContextState();
@@ -44,7 +51,6 @@ class ContextState final : public angle::NonCopyable
     const Caps &getCaps() const { return mCaps; }
     const TextureCapsMap &getTextureCaps() const { return mTextureCaps; }
     const Extensions &getExtensions() const { return mExtensions; }
-    const ResourceManager &getResourceManager() const { return *mResourceManager; }
     const Limitations &getLimitations() const { return mLimitations; }
 
     const TextureCaps &getTextureCap(GLenum internalFormat) const;
@@ -59,20 +65,27 @@ class ContextState final : public angle::NonCopyable
     const Caps &mCaps;
     const TextureCapsMap &mTextureCaps;
     const Extensions &mExtensions;
-    const ResourceManager *mResourceManager;
     const Limitations &mLimitations;
     const ResourceMap<Framebuffer> &mFramebufferMap;
+
+    BufferManager *mBuffers;
+    ShaderProgramManager *mShaderPrograms;
+    TextureManager *mTextures;
+    RenderbufferManager *mRenderbuffers;
+    SamplerManager *mSamplers;
+    FenceSyncManager *mFenceSyncs;
+    PathManager *mPaths;
 };
 
 class ValidationContext : angle::NonCopyable
 {
   public:
-    ValidationContext(const Version &clientVersion,
+    ValidationContext(const ValidationContext *shareContext,
+                      const Version &clientVersion,
                       State *state,
                       const Caps &caps,
                       const TextureCapsMap &textureCaps,
                       const Extensions &extensions,
-                      const ResourceManager *resourceManager,
                       const Limitations &limitations,
                       const ResourceMap<Framebuffer> &framebufferMap,
                       bool skipValidation);

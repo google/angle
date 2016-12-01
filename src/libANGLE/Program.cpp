@@ -380,7 +380,7 @@ GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
     return uniformIndex - mSamplerUniformRange.start;
 }
 
-Program::Program(rx::GLImplFactory *factory, ResourceManager *manager, GLuint handle)
+Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLuint handle)
     : mProgram(factory->createProgram(mState)),
       mValidated(false),
       mLinked(false),

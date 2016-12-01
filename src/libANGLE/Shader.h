@@ -35,7 +35,7 @@ namespace gl
 class Compiler;
 class ContextState;
 struct Limitations;
-class ResourceManager;
+class ShaderProgramManager;
 class Context;
 
 class ShaderState final : angle::NonCopyable
@@ -83,7 +83,7 @@ class ShaderState final : angle::NonCopyable
 class Shader final : angle::NonCopyable, public LabeledObject
 {
   public:
-    Shader(ResourceManager *manager,
+    Shader(ShaderProgramManager *manager,
            rx::GLImplFactory *implFactory,
            const gl::Limitations &rendererLimitations,
            GLenum type,
@@ -145,7 +145,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     bool mCompiled;             // Indicates if this shader has been successfully compiled
     std::string mInfoLog;
 
-    ResourceManager *mResourceManager;
+    ShaderProgramManager *mResourceManager;
 };
 
 bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y);

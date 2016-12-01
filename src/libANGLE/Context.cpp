@@ -46,7 +46,7 @@ namespace
 {
 
 template <typename T>
-std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
+std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
                                     GLsizei numPaths,
                                     const void *paths,
                                     GLuint pathBase)
@@ -66,7 +66,7 @@ std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
     return ret;
 }
 
-std::vector<gl::Path *> GatherPaths(gl::ResourceManager &resourceManager,
+std::vector<gl::Path *> GatherPaths(gl::PathManager &resourceManager,
                                     GLsizei numPaths,
                                     GLenum pathNameType,
                                     const void *paths,
@@ -239,12 +239,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const Context *shareContext,
                  const egl::AttributeMap &attribs)
 
-    : ValidationContext(GetClientVersion(attribs),
+    : ValidationContext(shareContext,
+                        GetClientVersion(attribs),
                         &mGLState,
                         mCaps,
                         mTextureCaps,
                         mExtensions,
-                        nullptr,
                         mLimitations,
                         mFramebufferMap,
                         GetNoError(attribs)),
@@ -258,8 +258,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
-      mCurrentSurface(nullptr),
-      mResourceManager(nullptr)
+      mCurrentSurface(nullptr)
 {
     if (mRobustAccess)
     {
@@ -273,18 +272,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
                         GetBindGeneratesResource(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
-
-    if (shareContext != nullptr)
-    {
-        mResourceManager = shareContext->mResourceManager;
-        mResourceManager->addRef();
-    }
-    else
-    {
-        mResourceManager = new ResourceManager();
-    }
-
-    mState.mResourceManager = mResourceManager;
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have twodimensional
@@ -444,11 +431,6 @@ Context::~Context()
         releaseSurface();
     }
 
-    if (mResourceManager)
-    {
-        mResourceManager->release();
-    }
-
     SafeDelete(mCompiler);
 }
 
@@ -521,39 +503,39 @@ void Context::releaseSurface()
 
 GLuint Context::createBuffer()
 {
-    return mResourceManager->createBuffer();
+    return mState.mBuffers->createBuffer();
 }
 
 GLuint Context::createProgram()
 {
-    return mResourceManager->createProgram(mImplementation.get());
+    return mState.mShaderPrograms->createProgram(mImplementation.get());
 }
 
 GLuint Context::createShader(GLenum type)
 {
-    return mResourceManager->createShader(mImplementation.get(), mLimitations, type);
+    return mState.mShaderPrograms->createShader(mImplementation.get(), mLimitations, type);
 }
 
 GLuint Context::createTexture()
 {
-    return mResourceManager->createTexture();
+    return mState.mTextures->createTexture();
 }
 
 GLuint Context::createRenderbuffer()
 {
-    return mResourceManager->createRenderbuffer();
+    return mState.mRenderbuffers->createRenderbuffer();
 }
 
 GLsync Context::createFenceSync()
 {
-    GLuint handle = mResourceManager->createFenceSync(mImplementation.get());
+    GLuint handle = mState.mFenceSyncs->createFenceSync(mImplementation.get());
 
     return reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 }
 
 GLuint Context::createPaths(GLsizei range)
 {
-    auto resultOrError = mResourceManager->createPaths(mImplementation.get(), range);
+    auto resultOrError = mState.mPaths->createPaths(mImplementation.get(), range);
     if (resultOrError.isError())
     {
         handleError(resultOrError.getError());
@@ -571,7 +553,7 @@ GLuint Context::createVertexArray()
 
 GLuint Context::createSampler()
 {
-    return mResourceManager->createSampler();
+    return mState.mSamplers->createSampler();
 }
 
 GLuint Context::createTransformFeedback()
@@ -612,42 +594,42 @@ GLuint Context::createQuery()
 
 void Context::deleteBuffer(GLuint buffer)
 {
-    if (mResourceManager->getBuffer(buffer))
+    if (mState.mBuffers->getBuffer(buffer))
     {
         detachBuffer(buffer);
     }
 
-    mResourceManager->deleteBuffer(buffer);
+    mState.mBuffers->deleteBuffer(buffer);
 }
 
 void Context::deleteShader(GLuint shader)
 {
-    mResourceManager->deleteShader(shader);
+    mState.mShaderPrograms->deleteShader(shader);
 }
 
 void Context::deleteProgram(GLuint program)
 {
-    mResourceManager->deleteProgram(program);
+    mState.mShaderPrograms->deleteProgram(program);
 }
 
 void Context::deleteTexture(GLuint texture)
 {
-    if (mResourceManager->getTexture(texture))
+    if (mState.mTextures->getTexture(texture))
     {
         detachTexture(texture);
     }
 
-    mResourceManager->deleteTexture(texture);
+    mState.mTextures->deleteTexture(texture);
 }
 
 void Context::deleteRenderbuffer(GLuint renderbuffer)
 {
-    if (mResourceManager->getRenderbuffer(renderbuffer))
+    if (mState.mRenderbuffers->getRenderbuffer(renderbuffer))
     {
         detachRenderbuffer(renderbuffer);
     }
 
-    mResourceManager->deleteRenderbuffer(renderbuffer);
+    mState.mRenderbuffers->deleteRenderbuffer(renderbuffer);
 }
 
 void Context::deleteFenceSync(GLsync fenceSync)
@@ -656,17 +638,18 @@ void Context::deleteFenceSync(GLsync fenceSync)
     // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
     // and since our API is currently designed for being called from a single thread, we can delete
     // the fence immediately.
-    mResourceManager->deleteFenceSync(static_cast<GLuint>(reinterpret_cast<uintptr_t>(fenceSync)));
+    mState.mFenceSyncs->deleteFenceSync(
+        static_cast<GLuint>(reinterpret_cast<uintptr_t>(fenceSync)));
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
 {
-    mResourceManager->deletePaths(first, range);
+    mState.mPaths->deletePaths(first, range);
 }
 
 bool Context::hasPathData(GLuint path) const
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (pathObj == nullptr)
         return false;
 
@@ -675,7 +658,7 @@ bool Context::hasPathData(GLuint path) const
 
 bool Context::hasPath(GLuint path) const
 {
-    return mResourceManager->hasPath(path);
+    return mState.mPaths->hasPath(path);
 }
 
 void Context::setPathCommands(GLuint path,
@@ -685,14 +668,14 @@ void Context::setPathCommands(GLuint path,
                               GLenum coordType,
                               const void *coords)
 {
-    auto *pathObject = mResourceManager->getPath(path);
+    auto *pathObject = mState.mPaths->getPath(path);
 
     handleError(pathObject->setCommands(numCommands, commands, numCoords, coordType, coords));
 }
 
 void Context::setPathParameterf(GLuint path, GLenum pname, GLfloat value)
 {
-    auto *pathObj = mResourceManager->getPath(path);
+    auto *pathObj = mState.mPaths->getPath(path);
 
     switch (pname)
     {
@@ -719,7 +702,7 @@ void Context::setPathParameterf(GLuint path, GLenum pname, GLfloat value)
 
 void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) const
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
 
     switch (pname)
     {
@@ -768,12 +751,12 @@ void Context::deleteVertexArray(GLuint vertexArray)
 
 void Context::deleteSampler(GLuint sampler)
 {
-    if (mResourceManager->getSampler(sampler))
+    if (mState.mSamplers->getSampler(sampler))
     {
         detachSampler(sampler);
     }
 
-    mResourceManager->deleteSampler(sampler);
+    mState.mSamplers->deleteSampler(sampler);
 }
 
 void Context::deleteTransformFeedback(GLuint transformFeedback)
@@ -835,22 +818,23 @@ void Context::deleteQuery(GLuint query)
 
 Buffer *Context::getBuffer(GLuint handle) const
 {
-    return mResourceManager->getBuffer(handle);
+    return mState.mBuffers->getBuffer(handle);
 }
 
 Texture *Context::getTexture(GLuint handle) const
 {
-    return mResourceManager->getTexture(handle);
+    return mState.mTextures->getTexture(handle);
 }
 
 Renderbuffer *Context::getRenderbuffer(GLuint handle) const
 {
-    return mResourceManager->getRenderbuffer(handle);
+    return mState.mRenderbuffers->getRenderbuffer(handle);
 }
 
 FenceSync *Context::getFenceSync(GLsync handle) const
 {
-    return mResourceManager->getFenceSync(static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
+    return mState.mFenceSyncs->getFenceSync(
+        static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
 }
 
 VertexArray *Context::getVertexArray(GLuint handle) const
@@ -861,7 +845,7 @@ VertexArray *Context::getVertexArray(GLuint handle) const
 
 Sampler *Context::getSampler(GLuint handle) const
 {
-    return mResourceManager->getSampler(handle);
+    return mState.mSamplers->getSampler(handle);
 }
 
 TransformFeedback *Context::getTransformFeedback(GLuint handle) const
@@ -950,24 +934,24 @@ void Context::getObjectPtrLabel(const void *ptr,
 
 bool Context::isSampler(GLuint samplerName) const
 {
-    return mResourceManager->isSampler(samplerName);
+    return mState.mSamplers->isSampler(samplerName);
 }
 
 void Context::bindArrayBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setArrayBufferBinding(buffer);
 }
 
 void Context::bindDrawIndirectBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setDrawIndirectBufferBinding(buffer);
 }
 
 void Context::bindElementArrayBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.getVertexArray()->setElementArrayBuffer(buffer);
 }
 
@@ -981,7 +965,7 @@ void Context::bindTexture(GLenum target, GLuint handle)
     }
     else
     {
-        texture = mResourceManager->checkTextureAllocation(mImplementation.get(), handle, target);
+        texture = mState.mTextures->checkTextureAllocation(mImplementation.get(), handle, target);
     }
 
     ASSERT(texture);
@@ -1010,13 +994,13 @@ void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
 {
     ASSERT(textureUnit < mCaps.maxCombinedTextureImageUnits);
     Sampler *sampler =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), samplerHandle);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), samplerHandle);
     mGLState.setSamplerBinding(textureUnit, sampler);
 }
 
 void Context::bindGenericUniformBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setGenericUniformBufferBinding(buffer);
 }
 
@@ -1025,13 +1009,13 @@ void Context::bindIndexedUniformBuffer(GLuint bufferHandle,
                                        GLintptr offset,
                                        GLsizeiptr size)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setIndexedUniformBufferBinding(index, buffer, offset, size);
 }
 
 void Context::bindGenericTransformFeedbackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.getCurrentTransformFeedback()->bindGenericBuffer(buffer);
 }
 
@@ -1040,31 +1024,31 @@ void Context::bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
                                                  GLintptr offset,
                                                  GLsizeiptr size)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.getCurrentTransformFeedback()->bindIndexedBuffer(index, buffer, offset, size);
 }
 
 void Context::bindCopyReadBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setCopyReadBufferBinding(buffer);
 }
 
 void Context::bindCopyWriteBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setCopyWriteBufferBinding(buffer);
 }
 
 void Context::bindPixelPackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setPixelPackBufferBinding(buffer);
 }
 
 void Context::bindPixelUnpackBuffer(GLuint bufferHandle)
 {
-    Buffer *buffer = mResourceManager->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setPixelUnpackBufferBinding(buffer);
 }
 
@@ -1742,7 +1726,7 @@ void Context::loadPathRenderingIdentityMatrix(GLenum matrixMode)
 
 void Context::stencilFillPath(GLuint path, GLenum fillMode, GLuint mask)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1754,7 +1738,7 @@ void Context::stencilFillPath(GLuint path, GLenum fillMode, GLuint mask)
 
 void Context::stencilStrokePath(GLuint path, GLint reference, GLuint mask)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1766,7 +1750,7 @@ void Context::stencilStrokePath(GLuint path, GLint reference, GLuint mask)
 
 void Context::coverFillPath(GLuint path, GLenum coverMode)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1778,7 +1762,7 @@ void Context::coverFillPath(GLuint path, GLenum coverMode)
 
 void Context::coverStrokePath(GLuint path, GLenum coverMode)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1790,7 +1774,7 @@ void Context::coverStrokePath(GLuint path, GLenum coverMode)
 
 void Context::stencilThenCoverFillPath(GLuint path, GLenum fillMode, GLuint mask, GLenum coverMode)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1805,7 +1789,7 @@ void Context::stencilThenCoverStrokePath(GLuint path,
                                          GLuint mask,
                                          GLenum coverMode)
 {
-    const auto *pathObj = mResourceManager->getPath(path);
+    const auto *pathObj = mState.mPaths->getPath(path);
     if (!pathObj)
         return;
 
@@ -1823,8 +1807,7 @@ void Context::coverFillPathInstanced(GLsizei numPaths,
                                      GLenum transformType,
                                      const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -1840,8 +1823,7 @@ void Context::coverStrokePathInstanced(GLsizei numPaths,
                                        GLenum transformType,
                                        const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -1859,8 +1841,7 @@ void Context::stencilFillPathInstanced(GLsizei numPaths,
                                        GLenum transformType,
                                        const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -1878,8 +1859,7 @@ void Context::stencilStrokePathInstanced(GLsizei numPaths,
                                          GLenum transformType,
                                          const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -1898,8 +1878,7 @@ void Context::stencilThenCoverFillPathInstanced(GLsizei numPaths,
                                                 GLenum transformType,
                                                 const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -1918,8 +1897,7 @@ void Context::stencilThenCoverStrokePathInstanced(GLsizei numPaths,
                                                   GLenum transformType,
                                                   const GLfloat *transformValues)
 {
-    const auto &pathObjects =
-        GatherPaths(*mResourceManager, numPaths, pathNameType, paths, pathBase);
+    const auto &pathObjects = GatherPaths(*mState.mPaths, numPaths, pathNameType, paths, pathBase);
 
     // TODO(svaisanen@nvidia.com): maybe sync only state required for path rendering?
     syncRendererState();
@@ -2224,42 +2202,42 @@ void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
 void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
 {
     Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteri(samplerObject, pname, param);
 }
 
 void Context::samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param)
 {
     Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameteriv(samplerObject, pname, param);
 }
 
 void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 {
     Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterf(samplerObject, pname, param);
 }
 
 void Context::samplerParameterfv(GLuint sampler, GLenum pname, const GLfloat *param)
 {
     Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     SetSamplerParameterfv(samplerObject, pname, param);
 }
 
 void Context::getSamplerParameteriv(GLuint sampler, GLenum pname, GLint *params)
 {
     const Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameteriv(samplerObject, pname, params);
 }
 
 void Context::getSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *params)
 {
     const Sampler *samplerObject =
-        mResourceManager->checkSamplerAllocation(mImplementation.get(), sampler);
+        mState.mSamplers->checkSamplerAllocation(mImplementation.get(), sampler);
     QuerySamplerParameterfv(samplerObject, pname, params);
 }
 
@@ -3594,8 +3572,8 @@ void Context::bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, con
 
 void Context::attachShader(GLuint program, GLuint shader)
 {
-    auto programObject = mResourceManager->getProgram(program);
-    auto shaderObject  = mResourceManager->getShader(shader);
+    auto programObject = mState.mShaderPrograms->getProgram(program);
+    auto shaderObject  = mState.mShaderPrograms->getShader(shader);
     ASSERT(programObject && shaderObject);
     programObject->attachShader(shaderObject);
 }
@@ -3708,7 +3686,7 @@ void Context::bindRenderbuffer(GLenum target, GLuint renderbuffer)
 {
     ASSERT(target == GL_RENDERBUFFER);
     Renderbuffer *object =
-        mResourceManager->checkRenderbufferAllocation(mImplementation.get(), renderbuffer);
+        mState.mRenderbuffers->checkRenderbufferAllocation(mImplementation.get(), renderbuffer);
     mGLState.setRenderbufferBinding(object);
 }
 

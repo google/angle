@@ -30,39 +30,29 @@ namespace
 class MockValidationContext : public ValidationContext
 {
   public:
-    MockValidationContext(const Version &version,
+    MockValidationContext(const ValidationContext *shareContext,
+                          const Version &version,
                           State *state,
                           const Caps &caps,
                           const TextureCapsMap &textureCaps,
                           const Extensions &extensions,
-                          const ResourceManager *resourceManager,
                           const Limitations &limitations,
                           const ResourceMap<Framebuffer> &framebufferMap,
-                          bool skipValidation);
+                          bool skipValidation)
+        : ValidationContext(shareContext,
+                            version,
+                            state,
+                            caps,
+                            textureCaps,
+                            extensions,
+                            limitations,
+                            framebufferMap,
+                            skipValidation)
+    {
+    }
 
     MOCK_METHOD1(handleError, void(const Error &));
 };
-
-MockValidationContext::MockValidationContext(const Version &version,
-                                             State *state,
-                                             const Caps &caps,
-                                             const TextureCapsMap &textureCaps,
-                                             const Extensions &extensions,
-                                             const ResourceManager *resourceManager,
-                                             const Limitations &limitations,
-                                             const ResourceMap<Framebuffer> &framebufferMap,
-                                             bool skipValidation)
-    : ValidationContext(version,
-                        state,
-                        caps,
-                        textureCaps,
-                        extensions,
-                        resourceManager,
-                        limitations,
-                        framebufferMap,
-                        skipValidation)
-{
-}
 
 // Test that ANGLE generates an INVALID_OPERATION when validating index data that uses a value
 // larger than MAX_ELEMENT_INDEX. Not specified in the GLES 3 spec, it's undefined behaviour,
@@ -110,9 +100,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setDrawFramebufferBinding(framebuffer);
     state.setProgram(program);
 
-    NiceMock<MockValidationContext> testContext(Version(3, 0), &state, caps, textureCaps,
-                                                extensions, nullptr, limitations, framebufferMap,
-                                                false);
+    NiceMock<MockValidationContext> testContext(nullptr, Version(3, 0), &state, caps, textureCaps,
+                                                extensions, limitations, framebufferMap, false);
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);
