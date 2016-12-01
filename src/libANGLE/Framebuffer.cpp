@@ -96,6 +96,10 @@ const FramebufferAttachment *FramebufferState::getAttachment(GLenum attachment) 
 
 const FramebufferAttachment *FramebufferState::getReadAttachment() const
 {
+    if (mReadBufferState == GL_NONE)
+    {
+        return nullptr;
+    }
     ASSERT(mReadBufferState == GL_BACK || (mReadBufferState >= GL_COLOR_ATTACHMENT0 && mReadBufferState <= GL_COLOR_ATTACHMENT15));
     size_t readIndex = (mReadBufferState == GL_BACK ? 0 : static_cast<size_t>(mReadBufferState - GL_COLOR_ATTACHMENT0));
     ASSERT(readIndex < mColorAttachments.size());
