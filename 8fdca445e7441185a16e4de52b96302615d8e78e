@@ -22,6 +22,30 @@
       "revId": "8fdca445e7441185a16e4de52b96302615d8e78e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d6b6b00_978bff6f",
+        "filename": "extensions/ANGLE_request_extension.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-01T16:30:20Z",
+      "side": 1,
+      "message": "Done.  The extension is only requestable if it is returned by REQUESTABLE_EXTENSIONS_ANGLE.  It\u0027s an error to request an extension that is not in that string, even if it is a valid extension name.",
+      "parentUuid": "0d6b6b00_9e667c64",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 22
+      },
+      "revId": "8fdca445e7441185a16e4de52b96302615d8e78e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
