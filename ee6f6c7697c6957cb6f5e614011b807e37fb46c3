@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0d6b6b00_172c0f07",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-01T15:00:16Z",
+      "side": 1,
+      "message": "I think this is going to regress http://crbug.com/637050",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 29
+      },
+      "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d6b6b00_b7d1dbe9",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
