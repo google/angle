@@ -17,7 +17,8 @@
     * You _must_ update the gyp build scripts lists with your changes. See `src/libEGL.gypi`, `src/libGLESv2.gypi`, and `src/compiler.gypi`.
  2. ANGLE also now maintains a BUILD.gn script for  [Chromium's gn build](https://code.google.com/p/chromium/wiki/gn).  If you changed the gyp files other than to add or remove new files, you will also need to update BUILD.gn. Ask a project member for help with testing if you don't have a Chromium checkout.
  3. If you modified `glslang.y` or `glslang.l`:
-    * You _must_ update the bison-generated compiler sources. Download and install the latest 64-bit Bison in [https://cygwin.com/install.html Cygwin]. From the Cygwin shell run `generate_parser.sh` in `src/compiler/translator` and update your CL. Do not edit the generated files by hand.
+    * You _must_ update the bison-generated compiler sources. Download and install the latest 64-bit Bison and flex from official [Cygwin](https://cygwin.com/install.html) on _Windows_. From the Cygwin shell run `generate_parser.sh` in `src/compiler/translator` and update your CL. Do not edit the generated files by hand.
+    * _NOTE:_ You can ignore failing chunk messages if there are no compile errors.
     * If you modified `ExpressionParser.y` or `Tokenizer.l`, follow the same process by running `src/compiler/preprocessor/generate_parser.sh`.
 
 ### Testing
