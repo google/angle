@@ -170,6 +170,14 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
         return;
     }
 
+    // TODO(jmadill): Figure out why this fails on Intel.
+    // http://anglebug.com/1346
+    if (IsIntel() && IsWindows() && (IsD3D11() || IsD3D9()))
+    {
+        std::cout << "Test skipped on Intel Windows D3D." << std::endl;
+        return;
+    }
+
     // clang-format off
     const std::string fs = SHADER_SOURCE
     (
