@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d6b6b00_9e667c64",
+        "filename": "extensions/ANGLE_request_extension.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-01T03:05:47Z",
+      "side": 1,
+      "message": "nit: \u0027requestable\u0027 OpenGL ES extension named \u003cname\u003e.\n\nWhat if the name is neither requestable nor a valid non-requestable extension?",
+      "range": {
+        "startLine": 81,
+        "startChar": 16,
+        "endLine": 81,
+        "endChar": 22
+      },
+      "revId": "8fdca445e7441185a16e4de52b96302615d8e78e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
