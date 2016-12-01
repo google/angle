@@ -485,4 +485,70 @@ PathManager::~PathManager()
     }
 }
 
+FramebufferManager::~FramebufferManager()
+{
+    for (auto framebuffer : mFramebuffers)
+    {
+        // Default framebuffer are owned by their respective Surface
+        if (framebuffer.second != nullptr && framebuffer.second->id() != 0)
+        {
+            SafeDelete(framebuffer.second);
+        }
+    }
+}
+
+GLuint FramebufferManager::createFramebuffer()
+{
+    return AllocateEmptyObject(&mHandleAllocator, &mFramebuffers);
+}
+
+void FramebufferManager::deleteFramebuffer(GLuint framebuffer)
+{
+    DeleteObject(&mHandleAllocator, &mFramebuffers, framebuffer, [](Framebuffer *framebuffer) {
+        ASSERT(framebuffer->id() != 0);
+        delete framebuffer;
+    });
+}
+
+Framebuffer *FramebufferManager::checkFramebufferAllocation(rx::GLImplFactory *factory,
+                                                            const Caps &caps,
+                                                            GLuint handle)
+{
+    // Can be called from Bind without a prior call to Gen.
+    auto framebufferIt = mFramebuffers.find(handle);
+    bool neverCreated  = framebufferIt == mFramebuffers.end();
+    if (neverCreated || framebufferIt->second == nullptr)
+    {
+        ASSERT(handle != 0);
+        Framebuffer *newFBO = new Framebuffer(caps, factory, handle);
+        if (neverCreated)
+        {
+            mHandleAllocator.reserve(handle);
+            mFramebuffers[handle] = newFBO;
+            return newFBO;
+        }
+
+        framebufferIt->second = newFBO;
+    }
+
+    return framebufferIt->second;
+}
+
+Framebuffer *FramebufferManager::getFramebuffer(GLuint handle) const
+{
+    return GetObject(mFramebuffers, handle);
+}
+
+void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
+{
+    ASSERT(framebuffer == nullptr || framebuffer->id() == 0);
+    mFramebuffers[0] = framebuffer;
+}
+
+bool FramebufferManager::isFramebufferGenerated(GLuint framebuffer)
+{
+    ASSERT(mFramebuffers.find(0) != mFramebuffers.end());
+    return mFramebuffers.find(framebuffer) != mFramebuffers.end();
+}
+
 }  // namespace gl

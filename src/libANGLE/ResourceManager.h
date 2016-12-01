@@ -25,7 +25,9 @@ class GLImplFactory;
 namespace gl
 {
 class Buffer;
+struct Caps;
 class FenceSync;
+class Framebuffer;
 struct Limitations;
 class Path;
 class Program;
@@ -166,6 +168,25 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
 
   private:
     ResourceMap<Path> mPaths;
+};
+
+class FramebufferManager : public ResourceManagerBase<HandleAllocator>
+{
+  public:
+    GLuint createFramebuffer();
+    void deleteFramebuffer(GLuint framebuffer);
+    Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
+                                            const Caps &caps,
+                                            GLuint handle);
+    Framebuffer *getFramebuffer(GLuint handle) const;
+    void setDefaultFramebuffer(Framebuffer *framebuffer);
+    bool isFramebufferGenerated(GLuint framebuffer);
+
+  protected:
+    ~FramebufferManager() override;
+
+  private:
+    ResourceMap<Framebuffer> mFramebuffers;
 };
 
 }  // namespace gl

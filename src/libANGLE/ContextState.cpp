@@ -45,8 +45,7 @@ ContextState::ContextState(uintptr_t contextIn,
                            const Caps &capsIn,
                            const TextureCapsMap &textureCapsIn,
                            const Extensions &extensionsIn,
-                           const Limitations &limitationsIn,
-                           const ResourceMap<Framebuffer> &framebufferMap)
+                           const Limitations &limitationsIn)
     : mClientVersion(clientVersion),
       mContext(contextIn),
       mState(stateIn),
@@ -54,7 +53,6 @@ ContextState::ContextState(uintptr_t contextIn,
       mTextureCaps(textureCapsIn),
       mExtensions(extensionsIn),
       mLimitations(limitationsIn),
-      mFramebufferMap(framebufferMap),
       mBuffers(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mBuffers)),
       mShaderPrograms(
           AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mShaderPrograms)),
@@ -64,7 +62,8 @@ ContextState::ContextState(uintptr_t contextIn,
       mSamplers(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mSamplers)),
       mFenceSyncs(
           AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mFenceSyncs)),
-      mPaths(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mPaths))
+      mPaths(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mPaths)),
+      mFramebuffers(new FramebufferManager())
 {
 }
 
@@ -77,6 +76,7 @@ ContextState::~ContextState()
     mSamplers->release();
     mFenceSyncs->release();
     mPaths->release();
+    mFramebuffers->release();
 }
 
 const TextureCaps &ContextState::getTextureCap(GLenum internalFormat) const
@@ -91,7 +91,6 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
                                      const TextureCapsMap &textureCaps,
                                      const Extensions &extensions,
                                      const Limitations &limitations,
-                                     const ResourceMap<Framebuffer> &framebufferMap,
                                      bool skipValidation)
     : mState(reinterpret_cast<uintptr_t>(this),
              shareContext ? &shareContext->mState : nullptr,
@@ -100,8 +99,7 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
              caps,
              textureCaps,
              extensions,
-             limitations,
-             framebufferMap),
+             limitations),
       mSkipValidation(skipValidation)
 {
 }
@@ -672,8 +670,7 @@ bool ValidationContext::isRenderbufferGenerated(GLuint renderbuffer) const
 
 bool ValidationContext::isFramebufferGenerated(GLuint framebuffer) const
 {
-    ASSERT(mState.mFramebufferMap.find(0) != mState.mFramebufferMap.end());
-    return mState.mFramebufferMap.find(framebuffer) != mState.mFramebufferMap.end();
+    return mState.mFramebuffers->isFramebufferGenerated(framebuffer);
 }
 
 }  // namespace gl
