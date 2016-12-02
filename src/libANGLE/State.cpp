@@ -637,7 +637,11 @@ void State::setEnableFeature(GLenum feature, bool enabled)
       case GL_PRIMITIVE_RESTART_FIXED_INDEX: setPrimitiveRestart(enabled);      break;
       case GL_RASTERIZER_DISCARD:            setRasterizerDiscard(enabled);     break;
       case GL_SAMPLE_MASK:
-          UNIMPLEMENTED();
+          if (enabled)
+          {
+              // Enabling this feature is not implemented yet.
+              UNIMPLEMENTED();
+          }
           break;
       case GL_DEBUG_OUTPUT_SYNCHRONOUS:
           mDebug.setOutputSynchronous(enabled);

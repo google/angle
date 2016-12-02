@@ -260,7 +260,11 @@ void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        UNIMPLEMENTED();
+        if (pipeline != 0)
+        {
+            // Binding non-zero pipelines is not implemented yet.
+            UNIMPLEMENTED();
+        }
     }
 }
 
@@ -945,7 +949,11 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        UNIMPLEMENTED();
+        if (texture != 0)
+        {
+            // Binding non-zero image textures is not implemented yet.
+            UNIMPLEMENTED();
+        }
     }
 }
 
@@ -1027,7 +1035,11 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        UNIMPLEMENTED();
+        if (mask != ~GLbitfield(0))
+        {
+            // Setting a non-default sample mask is not implemented yet.
+            UNIMPLEMENTED();
+        }
     }
 }
 

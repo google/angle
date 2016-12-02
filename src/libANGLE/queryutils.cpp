@@ -157,7 +157,7 @@ void SetTexParameterBase(Texture *texture, GLenum pname, const ParamType *params
             texture->setMaxLod(ConvertToGLfloat(params[0]));
             break;
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
-            UNIMPLEMENTED();
+            texture->setDepthStencilTextureMode(ConvertToGLenum(params[0]));
             break;
         case GL_TEXTURE_SRGB_DECODE_EXT:
             texture->setSRGBDecode(ConvertToGLenum(params[0]));
