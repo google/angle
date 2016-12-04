@@ -65,7 +65,7 @@
 #       include <d3dcompiler.h>
 #   endif
 
-#if defined(ANBLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 #include <wrl.h>
 #endif
 
