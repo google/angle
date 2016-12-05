@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2d04af97_c6cf4214",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-05T13:29:30Z",
+      "side": 1,
+      "message": "If all of the target architectures where ANGLE runs on implement IEEE float, it would be a huge waste of implementation effort and runtime performance to not to leverage that. Can certain bits of code be made exempt from treating overflows as errors in the automatic testing?",
+      "parentUuid": "0d6b6b00_172c0f07",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 29
+      },
+      "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d6b6b00_b7d1dbe9",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2016-12-01T14:30:51Z",
       "side": 1,
       "message": "IEEE floats have different bit representations for +0 and -0. Do we need to handle them?",
+      "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edf9b7d6_24d972de",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-05T13:29:30Z",
+      "side": 1,
+      "message": "Good point, fixed.",
+      "parentUuid": "0d6b6b00_b7d1dbe9",
       "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
