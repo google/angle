@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ad35ff63_85a9245b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1717,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-05T14:54:20Z",
+      "side": 1,
+      "message": "I moved it to the function emptyDeclarationErrorCheck along with another check.\nIn a future patch, I can add more checks there since there are some illegal passing empty declarations.",
+      "parentUuid": "10d8e46b_f052fef7",
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30496802_81359c38",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-11-22T14:37:37Z",
       "side": 1,
       "message": "Be consistent with the function names, here \"ES2_and_ES3_ident_ES3_1_keyword\" would be better.",
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edf9b7d6_448a2eab",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 1
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-05T14:54:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30496802_81359c38",
       "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -107,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "8d3afb53_a128deb0",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-05T14:54:20Z",
+      "side": 1,
+      "message": "Done. Changed the comment to the test. I guess we can keep the test as it is a new qualifier being added.",
+      "parentUuid": "d041ec2c_4b2dc503",
+      "range": {
+        "startLine": 3204,
+        "startChar": 0,
+        "endLine": 3204,
+        "endChar": 64
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10d8e46b_b08b5601",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
@@ -142,6 +202,30 @@
       "side": 1,
       "message": "\"Interface block members cannot be qualified as shared\" sounds like a better description to me.",
       "parentUuid": "10d8e46b_b08b5601",
+      "range": {
+        "startLine": 3224,
+        "startChar": 0,
+        "endLine": 3260,
+        "endChar": 1
+      },
+      "revId": "0b7f25bdf940565b3bf658a245a3d437d49d00b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6d3b075b_0034260e",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3260,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-05T14:54:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0c80c9b_7956df21",
       "range": {
         "startLine": 3224,
         "startChar": 0,
