@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dd8cb6b_20c4a751",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-05T19:32:34Z",
+      "side": 1,
+      "message": "nit: sampler",
+      "range": {
+        "startLine": 9,
+        "startChar": 36,
+        "endLine": 9,
+        "endChar": 43
+      },
+      "revId": "4483de70907f51c1374150c2982b70c0ef458a31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
