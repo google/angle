@@ -673,6 +673,9 @@ bool State::getEnableFeature(GLenum feature) const
       case GL_DITHER:                        return isDitherEnabled();
       case GL_PRIMITIVE_RESTART_FIXED_INDEX: return isPrimitiveRestartEnabled();
       case GL_RASTERIZER_DISCARD:            return isRasterizerDiscardEnabled();
+      case GL_SAMPLE_MASK:
+          UNIMPLEMENTED();
+          return false;
       case GL_DEBUG_OUTPUT_SYNCHRONOUS:
           return mDebug.isOutputSynchronous();
       case GL_DEBUG_OUTPUT:
@@ -1172,6 +1175,15 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_PIXEL_UNPACK_BUFFER:       return mUnpack.pixelBuffer.get();
       case GL_TRANSFORM_FEEDBACK_BUFFER: return mTransformFeedback->getGenericBuffer().get();
       case GL_UNIFORM_BUFFER:            return mGenericUniformBuffer.get();
+      case GL_ATOMIC_COUNTER_BUFFER:
+          UNIMPLEMENTED();
+          return nullptr;
+      case GL_SHADER_STORAGE_BUFFER:
+          UNIMPLEMENTED();
+          return nullptr;
+      case GL_DRAW_INDIRECT_BUFFER:
+          UNIMPLEMENTED();
+          return nullptr;
       default: UNREACHABLE();            return NULL;
     }
 }
