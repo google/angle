@@ -2167,6 +2167,37 @@ TEST_P(GLSLTest, NestedPowStatements)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that -float calculation is correct.
+TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
+{
+    // TODO(oetuaho@nvidia.com): re-enable once http://crbug.com/672380 is fixed.
+    if ((IsWindows() || IsLinux()) && IsNVIDIA() && IsOpenGL())
+    {
+        std::cout << "Test disabled on this OpenGL configuration." << std::endl;
+        return;
+    }
+
+    const std::string &vert =
+        "#version 300 es\n"
+        "in highp vec4 position;\n"
+        "void main() {\n"
+        "    gl_Position = position;\n"
+        "}\n";
+    const std::string &frag =
+        "#version 300 es\n"
+        "out highp vec4 o_color;\n"
+        "void main() {\n"
+        "    highp float f = -1.0;\n"
+        "    // atan(tan(0.5), -f) should be 0.5.\n"
+        "    highp float v = atan(tan(0.5), -f);\n"
+        "    o_color = abs(v - 0.5) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+    drawQuad(prog.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Convers a bug with the unary minus operator on signed integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 {

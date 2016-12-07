@@ -95,6 +95,8 @@
             'compiler/translator/RewriteDoWhile.h',
             'compiler/translator/RewriteTexelFetchOffset.cpp',
             'compiler/translator/RewriteTexelFetchOffset.h',
+            'compiler/translator/RewriteUnaryMinusOperatorFloat.cpp',
+            'compiler/translator/RewriteUnaryMinusOperatorFloat.h',
             'compiler/translator/RewriteUnaryMinusOperatorInt.cpp',
             'compiler/translator/RewriteUnaryMinusOperatorInt.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',

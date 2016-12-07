@@ -12,6 +12,7 @@
 #include "compiler/translator/ExtensionGLSL.h"
 #include "compiler/translator/OutputGLSL.h"
 #include "compiler/translator/RewriteTexelFetchOffset.h"
+#include "compiler/translator/RewriteUnaryMinusOperatorFloat.h"
 #include "compiler/translator/VersionGLSL.h"
 
 namespace sh
@@ -90,6 +91,11 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
     if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)
     {
         sh::RewriteTexelFetchOffset(root, getSymbolTable(), getShaderVersion());
+    }
+
+    if ((compileOptions & SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR) != 0)
+    {
+        sh::RewriteUnaryMinusOperatorFloat(root);
     }
 
     bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;

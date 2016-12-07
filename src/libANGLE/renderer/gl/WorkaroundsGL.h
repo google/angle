@@ -27,7 +27,8 @@ struct WorkaroundsGL
           emulateIsnanFloat(false),
           useUnusedBlocksWithStandardOrSharedLayout(false),
           dontRemoveInvariantForFragmentInput(false),
-          removeInvariantAndCentroidForESSL3(false)
+          removeInvariantAndCentroidForESSL3(false),
+          rewriteFloatUnaryMinusOperator(false)
     {
     }
 
@@ -120,6 +121,11 @@ struct WorkaroundsGL
 
     // This flag is used to fix spec difference between GLSL 4.1 or lower and ESSL3.
     bool removeInvariantAndCentroidForESSL3;
+
+    // On Intel Mac OSX 10.11 driver, using "-float" will get wrong answer. Use "0.0 - float" to
+    // replace "-float".
+    // Tracking bug: http://crbug.com/308366
+    bool rewriteFloatUnaryMinusOperator;
 };
 }
 

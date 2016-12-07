@@ -469,6 +469,7 @@ class TType
     {
         return primarySize == 1 && secondarySize == 1 && !structure;
     }
+    bool isScalarFloat() const { return isScalar() && type == EbtFloat; }
     bool isScalarInt() const
     {
         return isScalar() && (type == EbtInt || type == EbtUInt);

@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 168
+#define ANGLE_SH_VERSION 169
 
 enum ShShaderSpec
 {
@@ -202,6 +202,10 @@ const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
 // OpenGL ES3.0.4 requires all members of a named uniform block declared with a shared or std140
 // layout qualifier to be considered active. The uniform block itself is also considered active.
 const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
+
+// This flag works around a bug in unary minus operator on float numbers on Intel
+// Mac OSX 10.11 drivers. It works by translating -float into 0.0 - float.
+const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 29;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

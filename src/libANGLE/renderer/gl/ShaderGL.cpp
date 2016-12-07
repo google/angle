@@ -85,6 +85,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3;
     }
 
+    if (mWorkarounds.rewriteFloatUnaryMinusOperator)
+    {
+        options |= SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR;
+    }
+
     return options;
 }
 

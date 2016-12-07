@@ -928,6 +928,7 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->doWhileGLSLCausesGPUHang = true;
     workarounds->useUnusedBlocksWithStandardOrSharedLayout = true;
+    workarounds->rewriteFloatUnaryMinusOperator            = IsIntel(vendor);
 #endif
 
     workarounds->finishDoesNotCauseQueriesToBeAvailable =
