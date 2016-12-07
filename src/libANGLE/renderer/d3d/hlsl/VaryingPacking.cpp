@@ -8,12 +8,11 @@
 //   for linking between shader stages.
 //
 
-#include "libANGLE/renderer/d3d/VaryingPacking.h"
+#include "libANGLE/renderer/d3d/hlsl/VaryingPacking.h"
 
 #include "common/utilities.h"
 #include "compiler/translator/blocklayoutHLSL.h"
-#include "libANGLE/renderer/d3d/DynamicHLSL.h"
-#include "libANGLE/renderer/d3d/ProgramD3D.h"
+#include "libANGLE/Program.h"
 
 namespace rx
 {
@@ -158,7 +157,7 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
                     registerInfo.registerRow       = row + arrayIndex;
                     registerInfo.registerColumn    = bestColumn;
                     registerInfo.varyingArrayIndex = arrayIndex;
-                    registerInfo.varyingRowIndex = 0;
+                    registerInfo.varyingRowIndex   = 0;
                     mRegisterList.push_back(registerInfo);
                     mRegisterMap[row + arrayIndex][bestColumn] = true;
                 }
@@ -213,8 +212,8 @@ void VaryingPacking::insert(unsigned int registerRow,
     {
         for (unsigned int varyingRow = 0; varyingRow < varyingRows; ++varyingRow)
         {
-            registerInfo.registerRow       = registerRow + (arrayElement * varyingRows) + varyingRow;
-            registerInfo.varyingRowIndex   = varyingRow;
+            registerInfo.registerRow     = registerRow + (arrayElement * varyingRows) + varyingRow;
+            registerInfo.varyingRowIndex = varyingRow;
             registerInfo.varyingArrayIndex = arrayElement;
             mRegisterList.push_back(registerInfo);
 
@@ -336,66 +335,6 @@ unsigned int VaryingPacking::getRegisterCount() const
     }
 
     return count;
-}
-
-void VaryingPacking::enableBuiltins(ShaderType shaderType,
-                                    const ProgramD3DMetadata &programMetadata)
-{
-    int majorShaderModel = programMetadata.getRendererMajorShaderModel();
-    bool position        = programMetadata.usesTransformFeedbackGLPosition();
-    bool fragCoord       = programMetadata.usesFragCoord();
-    bool pointCoord = shaderType == SHADER_VERTEX ? programMetadata.addsPointCoordToVertexShader()
-                                                  : programMetadata.usesPointCoord();
-    bool pointSize                  = programMetadata.usesSystemValuePointSize();
-    bool hlsl4                      = (majorShaderModel >= 4);
-    const std::string &userSemantic = GetVaryingSemantic(majorShaderModel, pointSize);
-
-    unsigned int reservedSemanticIndex = getMaxSemanticIndex();
-
-    BuiltinInfo *builtins = &mBuiltinInfo[shaderType];
-
-    if (hlsl4)
-    {
-        builtins->dxPosition.enableSystem("SV_Position");
-    }
-    else if (shaderType == SHADER_PIXEL)
-    {
-        builtins->dxPosition.enableSystem("VPOS");
-    }
-    else
-    {
-        builtins->dxPosition.enableSystem("POSITION");
-    }
-
-    if (position)
-    {
-        builtins->glPosition.enable(userSemantic, reservedSemanticIndex++);
-    }
-
-    if (fragCoord)
-    {
-        builtins->glFragCoord.enable(userSemantic, reservedSemanticIndex++);
-    }
-
-    if (pointCoord)
-    {
-        // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
-        // In D3D11 we manually compute gl_PointCoord in the GS.
-        if (hlsl4)
-        {
-            builtins->glPointCoord.enable(userSemantic, reservedSemanticIndex++);
-        }
-        else
-        {
-            builtins->glPointCoord.enable("TEXCOORD", 0);
-        }
-    }
-
-    // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders
-    if (pointSize && (shaderType != SHADER_PIXEL || hlsl4))
-    {
-        builtins->glPointSize.enableSystem("PSIZE");
-    }
 }
 
 }  // namespace rx

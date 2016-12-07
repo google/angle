@@ -21,8 +21,8 @@
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
-#include "libANGLE/renderer/d3d/VaryingPacking.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
+#include "libANGLE/renderer/d3d/hlsl/VaryingPacking.h"
 
 using namespace angle;
 
@@ -471,6 +471,60 @@ GLint ProgramD3DMetadata::getMajorShaderVersion() const
 const ShaderD3D *ProgramD3DMetadata::getFragmentShader() const
 {
     return mFragmentShader;
+}
+
+void ProgramD3DMetadata::updatePackingBuiltins(ShaderType shaderType, VaryingPacking *packing)
+{
+    const std::string &userSemantic =
+        GetVaryingSemantic(mRendererMajorShaderModel, usesSystemValuePointSize());
+
+    unsigned int reservedSemanticIndex = packing->getMaxSemanticIndex();
+
+    VaryingPacking::BuiltinInfo *builtins = &packing->builtins(shaderType);
+
+    if (mRendererMajorShaderModel >= 4)
+    {
+        builtins->dxPosition.enableSystem("SV_Position");
+    }
+    else if (shaderType == SHADER_PIXEL)
+    {
+        builtins->dxPosition.enableSystem("VPOS");
+    }
+    else
+    {
+        builtins->dxPosition.enableSystem("POSITION");
+    }
+
+    if (usesTransformFeedbackGLPosition())
+    {
+        builtins->glPosition.enable(userSemantic, reservedSemanticIndex++);
+    }
+
+    if (usesFragCoord())
+    {
+        builtins->glFragCoord.enable(userSemantic, reservedSemanticIndex++);
+    }
+
+    if (shaderType == SHADER_VERTEX ? addsPointCoordToVertexShader() : usesPointCoord())
+    {
+        // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
+        // In D3D11 we manually compute gl_PointCoord in the GS.
+        if (mRendererMajorShaderModel >= 4)
+        {
+            builtins->glPointCoord.enable(userSemantic, reservedSemanticIndex++);
+        }
+        else
+        {
+            builtins->glPointCoord.enable("TEXCOORD", 0);
+        }
+    }
+
+    // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders
+    if (usesSystemValuePointSize() &&
+        (shaderType != SHADER_PIXEL || mRendererMajorShaderModel >= 4))
+    {
+        builtins->glPointSize.enableSystem("PSIZE");
+    }
 }
 
 // ProgramD3D Implementation
@@ -1444,8 +1498,8 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 
     ProgramD3DMetadata metadata(mRenderer, vertexShaderD3D, fragmentShaderD3D);
 
-    varyingPacking.enableBuiltins(SHADER_VERTEX, metadata);
-    varyingPacking.enableBuiltins(SHADER_PIXEL, metadata);
+    metadata.updatePackingBuiltins(SHADER_VERTEX, &varyingPacking);
+    metadata.updatePackingBuiltins(SHADER_PIXEL, &varyingPacking);
 
     if (static_cast<GLuint>(varyingPacking.getRegisterCount()) > data.getCaps().maxVaryingVectors)
     {
@@ -1486,7 +1540,7 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
 
     if (mRenderer->getMajorShaderModel() >= 4)
     {
-        varyingPacking.enableBuiltins(SHADER_GEOMETRY, metadata);
+        metadata.updatePackingBuiltins(SHADER_GEOMETRY, &varyingPacking);
         mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(varyingPacking);
     }
 

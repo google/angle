@@ -9,19 +9,19 @@
 #ifndef LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 #define LIBANGLE_RENDERER_D3D_RENDERERD3D_H_
 
+#include <array>
+
 #include "common/debug.h"
 #include "common/MemoryBuffer.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "libANGLE/renderer/d3d/hlsl/hlsl_utils.h"
+#include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/WorkerThread.h"
-
-//FIXME(jmadill): std::array is currently prohibited by Chromium style guide
-#include <array>
 
 namespace egl
 {
@@ -55,14 +55,6 @@ class TextureStorage;
 struct TranslatedIndexData;
 class UniformStorageD3D;
 class VertexBuffer;
-
-enum ShaderType
-{
-    SHADER_VERTEX,
-    SHADER_PIXEL,
-    SHADER_GEOMETRY,
-    SHADER_TYPE_MAX
-};
 
 struct DeviceIdentifier
 {

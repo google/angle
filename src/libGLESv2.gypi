@@ -265,13 +265,17 @@
             'libANGLE/renderer/d3d/TextureD3D.cpp',
             'libANGLE/renderer/d3d/TextureD3D.h',
             'libANGLE/renderer/d3d/TextureStorage.h',
-            'libANGLE/renderer/d3d/VaryingPacking.cpp',
-            'libANGLE/renderer/d3d/VaryingPacking.h',
             'libANGLE/renderer/d3d/VertexBuffer.cpp',
             'libANGLE/renderer/d3d/VertexBuffer.h',
             'libANGLE/renderer/d3d/VertexDataManager.cpp',
             'libANGLE/renderer/d3d/VertexDataManager.h',
             'libANGLE/renderer/d3d/WorkaroundsD3D.h',
+        ],
+        'libangle_d3d_hlsl_sources':
+        [
+            'libANGLE/renderer/d3d/hlsl/VaryingPacking.cpp',
+            'libANGLE/renderer/d3d/hlsl/VaryingPacking.h',
+            'libANGLE/renderer/d3d/hlsl/hlsl_utils.h',
         ],
         'libangle_d3d9_sources':
         [
@@ -826,6 +830,7 @@
                 {
                     'sources':
                     [
+                        '<@(libangle_d3d_hlsl_sources)',
                         '<@(libangle_d3d_shared_sources)',
                     ],
                 }],
