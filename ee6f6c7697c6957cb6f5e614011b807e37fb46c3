@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2d32ef87_425a1f9c",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-07T17:25:35Z",
+      "side": 1,
+      "message": "Sorry I misread this. Signed integer overflow is undefined in C++, I have no idea about float. I don\u0027t think there\u0027s a problem with the fuzzer and IEEE.",
+      "parentUuid": "2d04af97_c6cf4214",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 29
+      },
+      "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d6b6b00_b7d1dbe9",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
