@@ -103,6 +103,8 @@
 1025 WIN : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_constant_color = FAIL
 1025 WIN : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.reverse_subtract_one_minus_constant_alpha_one_minus_constant_color = FAIL
 1418 WIN : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_pos_x_pos_y_pos_z_and_neg_x_pos_y_pos_z_and_neg_x_neg_y_neg_z = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.random.* = FAIL
+1025 WIN : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = FAIL
 
 // Failures on the dEQP Windows bots that do not reproduce locally
 1108 WIN : dEQP-GLES2.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL
@@ -169,24 +171,7 @@
 1489 ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_fastest = FAIL
 1489 ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.generate.la88_nicest = FAIL
 
-// Windows and Linux failures
-1020 WIN LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.linear_linear = FAIL
-
 // Windows Linux and Mac failures
-989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_vertex = FAIL
-989 WIN LINUX MAC : dEQP-GLES2.functional.shaders.preprocessor.extensions.after_non_preprocessing_tokens_fragment = FAIL
-1015 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_vertex = FAIL
-1015 WIN LINUX MAC : dEQP-GLES2.functional.shaders.functions.invalid.return_array_in_struct_fragment = FAIL
-1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_vertex = FAIL
-1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.valid.local_variable_hides_function_parameter_fragment = FAIL
-1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_vertex = FAIL
-1016 WIN LINUX MAC : dEQP-GLES2.functional.shaders.scoping.invalid.redeclare_function_fragment = FAIL
-1020 WIN LINUX MAC : dEQP-GLES2.functional.texture.mipmap.2d.projected.nearest_nearest* = FAIL
-1020 WIN LINUX MAC : dEQP-GLES2.functional.texture.mipmap.2d.projected.linear_nearest* = FAIL
-1025 WIN LINUX MAC : dEQP-GLES2.functional.fragment_ops.random.* = FAIL
-1025 WIN LINUX MAC : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = FAIL
-1027 WIN LINUX MAC : dEQP-GLES2.functional.fbo.render.repeated_clear.tex2d_rgb = FAIL
-1027 WIN LINUX MAC : dEQP-GLES2.functional.fbo.render.repeated_clear.tex2d_rgba = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_float = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgb_half_float_oes = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rgba_float = FAIL
@@ -198,25 +183,3 @@
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8 = FAIL
 1028 WIN LINUX MAC : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.srgb8_alpha8 = FAIL
-1128 WIN LINUX MAC : dEQP-GLES2.functional.negative_api.texture.compressedtexsubimage2d_invalid_size = FAIL
-1029 WIN LINUX MAC : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_format = FAIL
-1029 WIN LINUX MAC : dEQP-GLES2.functional.negative_api.texture.teximage2d_invalid_internalformat = FAIL
-1029 WIN LINUX MAC : dEQP-GLES2.functional.negative_api.texture.texsubimage2d_invalid_type = FAIL
-1029 WIN LINUX MAC : dEQP-GLES2.functional.negative_api.texture.texsubimage2d_offset_allowed = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_float = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_float = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_vec2 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_vec2 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_vec3 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_vec3 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_vec4 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_vec4 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat2 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat2_offset_1 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat2 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat3 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat3_offset_1 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat3 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat4 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond_mat4_offset_1 = FAIL
-1030 WIN LINUX MAC : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond_mat4 = FAIL
