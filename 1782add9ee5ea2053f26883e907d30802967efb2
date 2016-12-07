@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d32ef87_e7225dc8",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-07T15:11:23Z",
+      "side": 1,
+      "message": "Since this is GLSL specific, it could go in TranslatorGLSL.",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d32ef87_473d51ec",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorFloat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-07T15:11:23Z",
+      "side": 1,
+      "message": "You can use TIntermTyped::CreateZero(type) and only keep the setLine line.",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d32ef87_c71de18e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-07T15:11:23Z",
+      "side": 1,
+      "message": "Why add it for NVIDIA on non-OSX?",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
