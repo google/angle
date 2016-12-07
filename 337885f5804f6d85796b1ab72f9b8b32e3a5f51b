@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d32ef87_67eacdbd",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-07T16:51:13Z",
+      "side": 1,
+      "message": "please include a description here of which vectors/OSes were affected, and a link to the anglebug or crbug which tracks this bug and the possible fix.",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 24
+      },
+      "revId": "337885f5804f6d85796b1ab72f9b8b32e3a5f51b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
