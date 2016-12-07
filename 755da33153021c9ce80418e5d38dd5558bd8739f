@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2d32ef87_cc1748be",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-07T07:42:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d32ef87_d6f60471",
+      "range": {
+        "startLine": 136,
+        "startChar": 8,
+        "endLine": 136,
+        "endChar": 45
+      },
+      "revId": "755da33153021c9ce80418e5d38dd5558bd8739f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d32ef87_96f08c74",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "2d32ef87_ec1c84e2",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-07T07:42:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d32ef87_96f08c74",
+      "range": {
+        "startLine": 496,
+        "startChar": 4,
+        "endLine": 496,
+        "endChar": 18
+      },
+      "revId": "755da33153021c9ce80418e5d38dd5558bd8739f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d32ef87_16055c78",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-12-06T15:44:18Z",
       "side": 1,
       "message": "This binding is actually not part of the vertex array state.  In the \"Table 20.3: Vertex Array Data (not in vertex array objects)\" from the ES 3.1 spec, it\u0027s a binding that is part of the global GL state, beside the vertex array binding.",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 57,
+        "endChar": 47
+      },
+      "revId": "755da33153021c9ce80418e5d38dd5558bd8739f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d32ef87_ac1f6cd2",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-07T07:42:49Z",
+      "side": 1,
+      "message": "Thank for pointing it out. Done.",
+      "parentUuid": "2d32ef87_16055c78",
       "range": {
         "startLine": 57,
         "startChar": 4,
