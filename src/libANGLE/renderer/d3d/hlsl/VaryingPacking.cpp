@@ -53,9 +53,6 @@ VaryingPacking::VaryingPacking(GLuint maxVaryingVectors)
 // Returns false if unsuccessful.
 bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
 {
-    unsigned int varyingRows    = 0;
-    unsigned int varyingColumns = 0;
-
     const auto &varying = *packedVarying.varying;
 
     // "Non - square matrices of type matCxR consume the same space as a square matrix of type matN
@@ -63,14 +60,20 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     // Here we are a bit more conservative and allow packing non-square matrices more tightly.
     // Make sure we use transposed matrix types to count registers correctly.
     ASSERT(!varying.isStruct());
-    GLenum transposedType = gl::TransposeMatrixType(varying.type);
-    varyingRows           = gl::VariableRowCount(transposedType);
-    varyingColumns        = gl::VariableColumnCount(transposedType);
+    GLenum transposedType       = gl::TransposeMatrixType(varying.type);
+    unsigned int varyingRows    = gl::VariableRowCount(transposedType);
+    unsigned int varyingColumns = gl::VariableColumnCount(transposedType);
 
     // "Arrays of size N are assumed to take N times the size of the base type"
     varyingRows *= varying.elementCount();
 
     unsigned int maxVaryingVectors = static_cast<unsigned int>(mRegisterMap.size());
+
+    // Fail if we are packing a single over-large varying.
+    if (varyingRows > maxVaryingVectors)
+    {
+        return false;
+    }
 
     // "For 2, 3 and 4 component variables packing is started using the 1st column of the 1st row.
     // Variables are then allocated to successive rows, aligning them to the 1st column."
@@ -226,9 +229,9 @@ void VaryingPacking::insert(unsigned int registerRow,
 }
 
 // See comment on packVarying.
-bool VaryingPacking::packVaryings(gl::InfoLog &infoLog,
-                                  const std::vector<PackedVarying> &packedVaryings,
-                                  const std::vector<std::string> &transformFeedbackVaryings)
+bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
+                                      const std::vector<PackedVarying> &packedVaryings,
+                                      const std::vector<std::string> &transformFeedbackVaryings)
 {
     std::set<std::string> uniqueVaryingNames;
 
@@ -310,6 +313,11 @@ bool VaryingPacking::packVaryings(gl::InfoLog &infoLog,
     }
 
     return true;
+}
+
+bool VaryingPacking::validateBuiltins() const
+{
+    return (static_cast<size_t>(getRegisterCount()) <= mRegisterMap.size());
 }
 
 unsigned int VaryingPacking::getRegisterCount() const

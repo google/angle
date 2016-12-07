@@ -1246,30 +1246,6 @@ TEST_P(GLSLTest, MaxMinusTwoVaryingVec4PlusThreeSpecialVariables)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 2, 0, true, true, true, true);
 }
 
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec4PlusFragCoord)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
-    // This test should fail, since we are really using (maxVaryings + 1) varyings.
-    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, true, false, false, false);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec4PlusPointCoord)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
-    // This test should fail, since we are really using (maxVaryings + 1) varyings.
-    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, true, false, false);
-}
-
 TEST_P(GLSLTest, MaxVaryingVec3)
 {
     GLint maxVaryings = 0;
@@ -1378,56 +1354,6 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
     VaryingTestBase(0, 0, 0, maxVaryings, 0, 0, 0, 0, false, false, false, true);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxPlusOneVaryingVec3)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(0, 0, 0, 0, maxVaryings + 1, 0, 0, 0, false, false, false, false);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxPlusOneVaryingVec3Array)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2 + 1, 0, 0, false, false, false, false);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec3AndOneVec2)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(0, 0, 1, 0, maxVaryings, 0, 0, 0, false, false, false, false);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxPlusOneVaryingVec2)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(0, 0, 2 * maxVaryings + 1, 0, 0, 0, 0, 0, false, false, false, false);
-}
-
-// Disabled because drivers are allowed to successfully compile shaders that have more than the
-// maximum number of varyings. (http://anglebug.com/1296)
-TEST_P(GLSLTest, DISABLED_MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
-{
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(0, maxVaryings / 2 + 1, 0, 0, 0, 0, 0, maxVaryings / 2, false, false, false, false);
 }
 
 // Verify shader source with a fixed length that is less than the null-terminated length will compile.

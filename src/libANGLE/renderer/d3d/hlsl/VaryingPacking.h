@@ -108,9 +108,13 @@ class VaryingPacking final : angle::NonCopyable
   public:
     VaryingPacking(GLuint maxVaryingVectors);
 
-    bool packVaryings(gl::InfoLog &infoLog,
-                      const std::vector<PackedVarying> &packedVaryings,
-                      const std::vector<std::string> &transformFeedbackVaryings);
+    bool packUserVaryings(gl::InfoLog &infoLog,
+                          const std::vector<PackedVarying> &packedVaryings,
+                          const std::vector<std::string> &transformFeedbackVaryings);
+
+    // Some built-in varyings require emulation that eats up available registers. This method
+    // checks that we're within the register limits of the implementation.
+    bool validateBuiltins() const;
 
     struct Register
     {
