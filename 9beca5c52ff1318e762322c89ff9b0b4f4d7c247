@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d32ef87_2df7d36e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3869,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-07T20:59:14Z",
+      "side": 1,
+      "message": "we actually had some weird problems with ::isnan on some platforms, I think mac or android. can you use gl::isNaN instead?",
+      "range": {
+        "startLine": 3869,
+        "startChar": 25,
+        "endLine": 3869,
+        "endChar": 30
+      },
+      "revId": "9beca5c52ff1318e762322c89ff9b0b4f4d7c247",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
