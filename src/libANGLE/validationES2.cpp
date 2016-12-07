@@ -3864,4 +3864,15 @@ bool ValidateGetString(Context *context, GLenum name)
     return true;
 }
 
+bool ValidateLineWidth(ValidationContext *context, GLfloat width)
+{
+    if (width <= 0.0f || isNaN(width))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid width value."));
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

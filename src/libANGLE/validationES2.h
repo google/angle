@@ -371,6 +371,7 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
                                GLenum dstAlpha);
 
 bool ValidateGetString(Context *context, GLenum name);
+bool ValidateLineWidth(ValidationContext *context, GLfloat width);
 
 }  // namespace gl
 

@@ -1806,9 +1806,8 @@ void GL_APIENTRY LineWidth(GLfloat width)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (width <= 0.0f)
+        if (!context->skipValidation() && !ValidateLineWidth(context, width))
         {
-            context->handleError(Error(GL_INVALID_VALUE));
             return;
         }
 
