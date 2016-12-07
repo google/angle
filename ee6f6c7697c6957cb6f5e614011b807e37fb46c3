@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "0d5d2bd4_c5487a30",
+        "filename": "src/compiler/translator/ConstantUnion.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-07T17:57:11Z",
+      "side": 1,
+      "message": "Okay, I\u0027ll submit the patch as it is. Let\u0027s see if the fuzzer complains about float overflow. C++ does allow for varied floating point representations, so it\u0027s not really about the C++ spec, but the floating point spec of the environments where ANGLE is used and what conditions the fuzzer might consider a sign of an error.",
+      "parentUuid": "2d32ef87_425a1f9c",
+      "range": {
+        "startLine": 49,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 29
+      },
+      "revId": "ee6f6c7697c6957cb6f5e614011b807e37fb46c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d6b6b00_b7d1dbe9",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 2
