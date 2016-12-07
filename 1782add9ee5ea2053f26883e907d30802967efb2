@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2d32ef87_e7f33ded",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-07T16:18:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d32ef87_e7225dc8",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d32ef87_473d51ec",
         "filename": "src/compiler/translator/RewriteUnaryMinusOperatorFloat.cpp",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "2d32ef87_27c3759c",
+        "filename": "src/compiler/translator/RewriteUnaryMinusOperatorFloat.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-07T16:18:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d32ef87_473d51ec",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d32ef87_c71de18e",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2016-12-07T15:11:23Z",
       "side": 1,
       "message": "Why add it for NVIDIA on non-OSX?",
+      "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d32ef87_47dc7175",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-07T16:18:45Z",
+      "side": 1,
+      "message": "See https://build.chromium.org/p/tryserver.chromium.angle/builders/linux_angle_rel_ng/builds/2925. \nLinux NVIDIA bot failed on the added test. After I added the workaround for NVIDIA Linux bot, the bot became green again. So, I think NVIDIA Linux also has this bug. But, I cannot reproduce it on my local Linux NVIDIA.",
+      "parentUuid": "2d32ef87_c71de18e",
       "revId": "1782add9ee5ea2053f26883e907d30802967efb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
