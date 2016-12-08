@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ade17f42_c869e367",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-08T15:43:39Z",
+      "side": 1,
+      "message": "Trig functions have undefined precision in ESSL 3.00.6 and the allowed range here is the same order of magnitude as error from simply running the calculations in 16-bit mediump.\n\nEither the pass criteria should be made more loose, or the test should be replaced with something simpler.",
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
