@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d32ef87_9f1ba635",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-08T15:45:21Z",
+      "side": 1,
+      "message": "nit: Can the name be more descriptive? applyVaryingPacking?",
+      "range": {
+        "startLine": 123,
+        "startChar": 9,
+        "endLine": 123,
+        "endChar": 14
+      },
+      "revId": "4fea929386a94eec88cf3a9af403e84f64b93169",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
