@@ -2353,6 +2353,48 @@ TEST_P(GLSLTest_ES3, FoldedInvalidLeftShift)
     glDeleteProgram(program);
 }
 
+// Test that literal infinity can be written out from the shader translator.
+// A similar test can't be made for NaNs, since ESSL 3.00.6 requirements for NaNs are very loose.
+TEST_P(GLSLTest_ES3, LiteralInfinityOutput)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 out_color;\n"
+        "uniform float u;\n"
+        "void main()\n"
+        "{\n"
+        "   float infVar = 1.0e40 - u;\n"
+        "   bool correct = isinf(infVar) && infVar > 0.0;\n"
+        "   out_color = correct ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that literal negative infinity can be written out from the shader translator.
+// A similar test can't be made for NaNs, since ESSL 3.00.6 requirements for NaNs are very loose.
+TEST_P(GLSLTest_ES3, LiteralNegativeInfinityOutput)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 out_color;\n"
+        "uniform float u;\n"
+        "void main()\n"
+        "{\n"
+        "   float infVar = -1.0e40 + u;\n"
+        "   bool correct = isinf(infVar) && infVar < 0.0;\n"
+        "   out_color = correct ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
