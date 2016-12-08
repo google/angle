@@ -34,6 +34,24 @@
       "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2df58ffe_4108144a",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-08T17:16:17Z",
+      "side": 1,
+      "message": "Right, it may well be a real bug in the NVIDIA driver, either way I think the tolerance in this test should be increased, or at least the test should be run with highp. I\u0027m a bit curious though how you ended up incorporating atan() into the test case, as it doesn\u0027t seem like a very minimal case? Is it just to get around some quirks in the compiler?",
+      "parentUuid": "2d32ef87_da54cc19",
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
