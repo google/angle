@@ -479,6 +479,17 @@ TIntermTyped *TIntermTyped::CreateZero(const TType &type)
     return constructor;
 }
 
+// static
+TIntermTyped *TIntermTyped::CreateBool(bool value)
+{
+    TConstantUnion *u = new TConstantUnion[1];
+    u[0].setBConst(value);
+
+    TType type(EbtBool, EbpUndefined, EvqConst, 1);
+    TIntermConstantUnion *node = new TIntermConstantUnion(u, type);
+    return node;
+}
+
 TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : TIntermTyped(node)
 {
     mUnionArrayPointer = node.mUnionArrayPointer;

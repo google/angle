@@ -2426,6 +2426,87 @@ TEST_P(GLSLTest_ES3, LiteralNegativeInfinityOutput)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// The following MultipleDeclaration* tests are testing TranslatorHLSL specific simplification
+// passes. Because the interaction of multiple passes must be tested, it is difficult to write
+// a unittest for them. Instead we add the tests as end2end so will in particular test
+// TranslatorHLSL when run on Windows.
+
+// Test that passes splitting multiple declarations and comma operators are correctly ordered.
+TEST_P(GLSLTest_ES3, MultipleDeclarationWithCommaOperator)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : 0.0), 1.0);\n"
+        " color = vec4(b);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
+// Test that passes splitting multiple declarations and comma operators and for loops are
+// correctly ordered.
+TEST_P(GLSLTest_ES3, MultipleDeclarationWithCommaOperatorInForLoop)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " for(float a = 0.0, b = ((gl_FragCoord.x < 0.5 ? a : 0.0), 1.0); a < 10.0; a++)\n"
+        " {\n"
+        "  b += 1.0;\n"
+        "  color = vec4(b);\n"
+        " }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
+// Test that splitting multiple declaration in for loops works with no loop condition
+TEST_P(GLSLTest_ES3, MultipleDeclarationInForLoopEmptyCondition)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " for(float a = 0.0, b = 1.0;; a++)\n"
+        " {\n"
+        "  b += 1.0;\n"
+        "  if (a > 10.0) {break;}\n"
+        "  color = vec4(b);\n"
+        " }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
+// Test that splitting multiple declaration in for loops works with no loop expression
+TEST_P(GLSLTest_ES3, MultipleDeclarationInForLoopEmptyExpression)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main(void)\n"
+        "{\n"
+        " for(float a = 0.0, b = 1.0; a < 10.0;)\n"
+        " {\n"
+        "  b += 1.0;\n"
+        "  a += 1.0;\n"
+        "  color = vec4(b);\n"
+        " }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

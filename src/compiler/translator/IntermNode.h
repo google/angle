@@ -176,6 +176,7 @@ class TIntermTyped : public TIntermNode
 
     static TIntermTyped *CreateIndexNode(int index);
     static TIntermTyped *CreateZero(const TType &type);
+    static TIntermTyped *CreateBool(bool value);
 
   protected:
     TType mType;

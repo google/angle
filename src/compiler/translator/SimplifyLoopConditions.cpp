@@ -224,29 +224,54 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             //   {
             //     init;
             //     bool s0 = expr;
-            //     while (s0) { { body; } exprB; s0 = expr; }
+            //     while (s0) {
+            //       { body; }
+            //       exprB;
+            //       s0 = expr;
+            //     }
             //   }
-            TIntermBlock *loopScope = new TIntermBlock();
+            TIntermBlock *loopScope            = new TIntermBlock();
+            TIntermSequence *loopScopeSequence = loopScope->getSequence();
+
+            // Insert "init;"
             if (node->getInit())
             {
-                loopScope->getSequence()->push_back(node->getInit());
+                loopScopeSequence->push_back(node->getInit());
             }
-            loopScope->getSequence()->push_back(
-                createTempInitDeclaration(node->getCondition()->deepCopy()));
 
+            // Insert "bool s0 = expr;" if applicable, "bool s0 = true;" otherwise
+            TIntermTyped *conditionInitializer = nullptr;
+            if (node->getCondition())
+            {
+                conditionInitializer = node->getCondition()->deepCopy();
+            }
+            else
+            {
+                conditionInitializer = TIntermTyped::CreateBool(true);
+            }
+            loopScopeSequence->push_back(createTempInitDeclaration(conditionInitializer));
+
+            // Insert "{ body; }" in the while loop
             TIntermBlock *whileLoopBody = new TIntermBlock();
             if (node->getBody())
             {
                 whileLoopBody->getSequence()->push_back(node->getBody());
             }
+            // Insert "exprB;" in the while loop
             if (node->getExpression())
             {
                 whileLoopBody->getSequence()->push_back(node->getExpression());
             }
-            whileLoopBody->getSequence()->push_back(
-                createTempAssignment(node->getCondition()->deepCopy()));
+            // Insert "s0 = expr;" in the while loop
+            if (node->getCondition())
+            {
+                whileLoopBody->getSequence()->push_back(
+                    createTempAssignment(node->getCondition()->deepCopy()));
+            }
+
+            // Create "while(s0) { whileLoopBody }"
             TIntermLoop *whileLoop = new TIntermLoop(
-                ELoopWhile, nullptr, createTempSymbol(node->getCondition()->getType()), nullptr,
+                ELoopWhile, nullptr, createTempSymbol(conditionInitializer->getType()), nullptr,
                 whileLoopBody);
             loopScope->getSequence()->push_back(whileLoop);
             queueReplacementWithParent(getAncestorNode(1), node, loopScope,
