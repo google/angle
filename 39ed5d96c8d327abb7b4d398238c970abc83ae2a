@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_db6e84ab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-09T19:26:11Z",
+      "side": 1,
+      "message": "nit: I don\u0027t quite follow the problem/solution here, maybe you could clarify this in the description?",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 69
+      },
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_3b60d8b7",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2371,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-09T19:26:11Z",
+      "side": 1,
+      "message": "nit: you can use ANGLE_GL_PROGRAM for all the positive tests here",
+      "range": {
+        "startLine": 2369,
+        "startChar": 4,
+        "endLine": 2371,
+        "endChar": 29
+      },
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
