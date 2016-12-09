@@ -106,6 +106,24 @@
       "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa024ff6_3c9451cf",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-09T11:58:59Z",
+      "side": 1,
+      "message": "Thanks, looks good!",
+      "parentUuid": "fa1b2f68_e8b73bd4",
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
