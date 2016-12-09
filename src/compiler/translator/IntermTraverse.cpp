@@ -71,6 +71,11 @@ void TIntermBlock::traverse(TIntermTraverser *it)
     it->traverseBlock(this);
 }
 
+void TIntermInvariantDeclaration::traverse(TIntermTraverser *it)
+{
+    it->traverseInvariantDeclaration(this);
+}
+
 void TIntermDeclaration::traverse(TIntermTraverser *it)
 {
     it->traverseDeclaration(this);
@@ -502,6 +507,25 @@ void TIntermTraverser::traverseBlock(TIntermBlock *node)
 
     if (visit && postVisit)
         visitBlock(PostVisit, node);
+}
+
+void TIntermTraverser::traverseInvariantDeclaration(TIntermInvariantDeclaration *node)
+{
+    bool visit = true;
+
+    if (preVisit)
+    {
+        visit = visitInvariantDeclaration(PreVisit, node);
+    }
+
+    if (visit)
+    {
+        node->getSymbol()->traverse(this);
+        if (postVisit)
+        {
+            visitInvariantDeclaration(PostVisit, node);
+        }
+    }
 }
 
 // Traverse a declaration node.

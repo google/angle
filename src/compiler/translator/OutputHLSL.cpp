@@ -1616,15 +1616,18 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
     return false;
 }
 
+bool OutputHLSL::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+{
+    // Do not do any translation
+    return false;
+}
+
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
     switch (node->getOp())
     {
-        case EOpInvariantDeclaration:
-            // Do not do any translation
-            return false;
         case EOpPrototype:
             if (visit == PreVisit)
             {

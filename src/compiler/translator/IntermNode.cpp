@@ -203,6 +203,12 @@ bool TIntermUnary::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return false;
 }
 
+bool TIntermInvariantDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
+{
+    REPLACE_IF_IS(mSymbol, TIntermSymbol, original, replacement);
+    return false;
+}
+
 bool TIntermFunctionDefinition::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     REPLACE_IF_IS(mParameters, TIntermAggregate, original, replacement);
@@ -773,6 +779,13 @@ TIntermBinary::TIntermBinary(TOperator op, TIntermTyped *left, TIntermTyped *rig
     : TIntermOperator(op), mLeft(left), mRight(right), mAddIndexClamp(false)
 {
     promote();
+}
+
+TIntermInvariantDeclaration::TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line)
+    : TIntermNode(), mSymbol(symbol)
+{
+    ASSERT(symbol);
+    setLine(line);
 }
 
 TIntermTernary::TIntermTernary(TIntermTyped *cond,

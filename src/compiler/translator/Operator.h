@@ -16,7 +16,6 @@ enum TOperator
     EOpFunctionCall,
     EOpParameters,  // an aggregate listing the parameters to a function
 
-    EOpInvariantDeclaration,  // Specialized declarations for attributing invariance
     EOpPrototype,
 
     //

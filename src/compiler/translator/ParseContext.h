@@ -212,10 +212,11 @@ class TParseContext : angle::NonCopyable
                                                         const TSourceLoc &initLocation,
                                                         TIntermTyped *initializer);
 
-    TIntermAggregate *parseInvariantDeclaration(const TTypeQualifierBuilder &typeQualifierBuilder,
-                                                const TSourceLoc &identifierLoc,
-                                                const TString *identifier,
-                                                const TSymbol *symbol);
+    TIntermInvariantDeclaration *parseInvariantDeclaration(
+        const TTypeQualifierBuilder &typeQualifierBuilder,
+        const TSourceLoc &identifierLoc,
+        const TString *identifier,
+        const TSymbol *symbol);
 
     void parseDeclarator(TPublicType &publicType,
                          const TSourceLoc &identifierLocation,

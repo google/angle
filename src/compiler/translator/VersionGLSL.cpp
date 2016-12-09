@@ -92,15 +92,18 @@ bool TVersionGLSL::visitDeclaration(Visit, TIntermDeclaration *node)
     return true;
 }
 
+bool TVersionGLSL::visitInvariantDeclaration(Visit, TIntermInvariantDeclaration *node)
+{
+    ensureVersionIsAtLeast(GLSL_VERSION_120);
+    return true;
+}
+
 bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
 
     switch (node->getOp())
     {
-        case EOpInvariantDeclaration:
-            ensureVersionIsAtLeast(GLSL_VERSION_120);
-            break;
         case EOpParameters:
         {
             const TIntermSequence &params = *(node->getSequence());

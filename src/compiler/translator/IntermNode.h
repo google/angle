@@ -35,6 +35,7 @@ class TDiagnostics;
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBlock;
+class TIntermInvariantDeclaration;
 class TIntermDeclaration;
 class TIntermFunctionDefinition;
 class TIntermSwizzle;
@@ -724,6 +725,21 @@ class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
     TIntermSequence mDeclarators;
 };
 
+// Specialized declarations for attributing invariance.
+class TIntermInvariantDeclaration : public TIntermNode
+{
+  public:
+    TIntermInvariantDeclaration(TIntermSymbol *symbol, const TSourceLoc &line);
+
+    TIntermSymbol *getSymbol() { return mSymbol; }
+
+    void traverse(TIntermTraverser *it) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+
+  private:
+    TIntermSymbol *mSymbol;
+};
+
 // For ternary operators like a ? b : c.
 class TIntermTernary : public TIntermTyped
 {
@@ -866,6 +882,10 @@ class TIntermTraverser : angle::NonCopyable
     }
     virtual bool visitAggregate(Visit visit, TIntermAggregate *node) { return true; }
     virtual bool visitBlock(Visit visit, TIntermBlock *node) { return true; }
+    virtual bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+    {
+        return true;
+    }
     virtual bool visitDeclaration(Visit visit, TIntermDeclaration *node) { return true; }
     virtual bool visitLoop(Visit visit, TIntermLoop *node) { return true; }
     virtual bool visitBranch(Visit visit, TIntermBranch *node) { return true; }
@@ -886,6 +906,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void traverseFunctionDefinition(TIntermFunctionDefinition *node);
     virtual void traverseAggregate(TIntermAggregate *node);
     virtual void traverseBlock(TIntermBlock *node);
+    virtual void traverseInvariantDeclaration(TIntermInvariantDeclaration *node);
     virtual void traverseDeclaration(TIntermDeclaration *node);
     virtual void traverseLoop(TIntermLoop *node);
     virtual void traverseBranch(TIntermBranch *node);

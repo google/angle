@@ -959,6 +959,15 @@ bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefini
     return false;
 }
 
+bool TOutputGLSLBase::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+{
+    TInfoSinkBase &out = objSink();
+    ASSERT(visit == PreVisit);
+    const TIntermSymbol *symbol = node->getSymbol();
+    out << "invariant " << hashVariableName(symbol->getName());
+    return false;
+}
+
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren       = true;
@@ -999,18 +1008,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             out << "(";
             writeFunctionParameters(*(node->getSequence()));
             out << ")";
-            visitChildren = false;
-            break;
-        case EOpInvariantDeclaration:
-            // Invariant declaration.
-            ASSERT(visit == PreVisit);
-            {
-                const TIntermSequence *sequence = node->getSequence();
-                ASSERT(sequence && sequence->size() == 1);
-                const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
-                ASSERT(symbol);
-                out << "invariant " << hashVariableName(symbol->getName());
-            }
             visitChildren = false;
             break;
         case EOpConstructFloat:

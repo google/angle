@@ -623,6 +623,11 @@ bool EmulatePrecision::visitDeclaration(Visit visit, TIntermDeclaration *node)
     return true;
 }
 
+bool EmulatePrecision::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node)
+{
+    return false;
+}
+
 bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
@@ -634,9 +639,6 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
             visitChildren = false;
             break;
         case EOpParameters:
-            visitChildren = false;
-            break;
-        case EOpInvariantDeclaration:
             visitChildren = false;
             break;
         case EOpFunctionCall:
