@@ -16,6 +16,24 @@
       "revId": "a661f612e5a9a8b5446fe6f28a6489cf7c86a673",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa024ff6_fc85c95c",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3121,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-09T15:50:05Z",
+      "side": 1,
+      "message": "It is an error to refer to gl_WorkGroupSize before the work group size has been declared. This is already covered by the \"InvalidUsageOfWorkGroupSize\" test.",
+      "parentUuid": "fa1b2f68_c3122008",
+      "revId": "a661f612e5a9a8b5446fe6f28a6489cf7c86a673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
