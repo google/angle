@@ -242,6 +242,12 @@ size_t FramebufferState::getDrawBufferCount() const
     return mDrawBufferStates.size();
 }
 
+Error Framebuffer::getSamplePosition(size_t index, GLfloat *xy) const
+{
+    ANGLE_TRY(mImpl->getSamplePosition(index, xy));
+    return gl::NoError();
+}
+
 bool FramebufferState::colorAttachmentsAreUniqueImages() const
 {
     for (size_t firstAttachmentIdx = 0; firstAttachmentIdx < mColorAttachments.size();

@@ -96,6 +96,12 @@ class TextureGL : public TextureImpl
 
     gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
 
+    gl::Error setStorageMultisample(GLenum target,
+                                    GLsizei samples,
+                                    GLint internalFormat,
+                                    const gl::Extents &size,
+                                    GLboolean fixedSampleLocations) override;
+
     gl::Error setImageExternal(GLenum target,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;

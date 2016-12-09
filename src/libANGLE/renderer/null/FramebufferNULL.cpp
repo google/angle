@@ -132,4 +132,9 @@ void FramebufferNULL::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
 {
 }
 
+gl::Error FramebufferNULL::getSamplePosition(size_t index, GLfloat *xy) const
+{
+    return gl::NoError();
+}
+
 }  // namespace rx

@@ -78,6 +78,7 @@ class FramebufferVk : public FramebufferImpl
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
+    gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 };
 
 }  // namespace rx

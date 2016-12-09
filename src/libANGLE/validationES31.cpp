@@ -274,4 +274,118 @@ bool ValidateGetTexLevelParameteriv(Context *context,
     return ValidateGetTexLevelParameterBase(context, target, level, pname, nullptr);
 }
 
+bool ValidateTexStorage2DMultiSample(Context *context,
+                                     GLenum target,
+                                     GLsizei samples,
+                                     GLint internalFormat,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLboolean fixedSampleLocations)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    if (target != GL_TEXTURE_2D_MULTISAMPLE)
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Target must be TEXTURE_2D_MULTISAMPLE."));
+        return false;
+    }
+
+    if (width < 1 || height < 1)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Width and height must be positive."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (static_cast<GLuint>(width) > caps.max2DTextureSize ||
+        static_cast<GLuint>(height) > caps.max2DTextureSize)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE,
+                  "Width and height must be less than or equal to GL_MAX_TEXTURE_SIZE."));
+        return false;
+    }
+
+    if (samples == 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Samples may not be zero."));
+        return false;
+    }
+
+    const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
+    if (!formatCaps.renderable)
+    {
+        context->handleError(
+            Error(GL_INVALID_ENUM,
+                  "SizedInternalformat must be color-renderable, depth-renderable, "
+                  "or stencil-renderable."));
+        return false;
+    }
+
+    // The ES3.1 spec(section 8.8) states that an INVALID_ENUM error is generated if internalformat
+    // is one of the unsized base internalformats listed in table 8.11.
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
+    if (formatInfo.pixelBytes == 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_ENUM,
+                  "Internalformat is one of the unsupported unsized base internalformats."));
+        return false;
+    }
+
+    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Samples must not be greater than maximum supported value for the format."));
+        return false;
+    }
+
+    Texture *texture = context->getTargetTexture(target);
+    if (!texture || texture->id() == 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Zero is bound to target."));
+        return false;
+    }
+
+    if (texture->getImmutableFormat())
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "The value of TEXTURE_IMMUTABLE_FORMAT for the texture "
+                  "currently bound to target on the active texture unit is true."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    if (pname != GL_SAMPLE_POSITION)
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Pname must be SAMPLE_POSITION."));
+        return false;
+    }
+
+    GLint maxSamples = context->getCaps().maxSamples;
+    if (index >= static_cast<GLuint>(maxSamples))
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Index must be less than the value of SAMPLES."));
+        return false;
+    }
+
+    return true;
+}
 }  // namespace gl

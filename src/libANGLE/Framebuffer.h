@@ -149,6 +149,9 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
 
     // This method calls checkStatus.
     int getSamples(const ContextState &state);
+
+    Error getSamplePosition(size_t index, GLfloat *xy) const;
+
     GLenum checkStatus(const ContextState &state);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.

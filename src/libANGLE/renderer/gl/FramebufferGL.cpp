@@ -85,10 +85,12 @@ static void BindFramebufferAttachment(const FunctionsGL *functions,
             const Texture *texture     = attachment->getTexture();
             const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
-            if (texture->getTarget() == GL_TEXTURE_2D)
+            if (texture->getTarget() == GL_TEXTURE_2D ||
+                texture->getTarget() == GL_TEXTURE_2D_MULTISAMPLE)
             {
-                functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D,
-                                                textureGL->getTextureID(), attachment->mipLevel());
+                functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint,
+                                                texture->getTarget(), textureGL->getTextureID(),
+                                                attachment->mipLevel());
             }
             else if (texture->getTarget() == GL_TEXTURE_CUBE_MAP)
             {
@@ -364,6 +366,13 @@ Error FramebufferGL::blit(ContextImpl *context,
                                 destArea.x, destArea.y, destArea.x1(), destArea.y1(), blitMask,
                                 filter);
 
+    return gl::NoError();
+}
+
+gl::Error FramebufferGL::getSamplePosition(size_t index, GLfloat *xy) const
+{
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->getMultisamplefv(GL_SAMPLE_POSITION, static_cast<GLuint>(index), xy);
     return gl::NoError();
 }
 

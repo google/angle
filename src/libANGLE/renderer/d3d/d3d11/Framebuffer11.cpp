@@ -425,6 +425,12 @@ void Framebuffer11::signal(SignalToken token)
     }
 }
 
+gl::Error Framebuffer11::getSamplePosition(size_t index, GLfloat *xy) const
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "getSamplePosition is unimplemented.";
+}
+
 bool Framebuffer11::hasAnyInternalDirtyBit() const
 {
     return mInternalDirtyBits.any();

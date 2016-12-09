@@ -475,6 +475,16 @@ void TextureState::setImageDescChain(GLuint baseLevel,
     }
 }
 
+void TextureState::setImageDescChainMultisample(Extents baseSize,
+                                                const Format &format,
+                                                GLsizei samples,
+                                                GLboolean fixedSampleLocations)
+{
+    ASSERT(mTarget == GL_TEXTURE_2D_MULTISAMPLE);
+    ImageDesc levelInfo(baseSize, format, samples, fixedSampleLocations);
+    setImageDesc(mTarget, 0, levelInfo);
+}
+
 void TextureState::clearImageDesc(GLenum target, size_t level)
 {
     setImageDesc(target, level, ImageDesc());
@@ -773,20 +783,6 @@ GLenum Texture::getUsage() const
     return mState.mUsage;
 }
 
-GLsizei Texture::getSamples(GLenum target, size_t level) const
-{
-    ASSERT(target == mState.mTarget ||
-           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return mState.getImageDesc(target, level).samples;
-}
-
-GLboolean Texture::getFixedSampleLocations(GLenum target, size_t level) const
-{
-    ASSERT(target == mState.mTarget ||
-           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return mState.getImageDesc(target, level).fixedSampleLocations;
-}
-
 const TextureState &Texture::getTextureState() const
 {
     return mState;
@@ -818,6 +814,20 @@ const Format &Texture::getFormat(GLenum target, size_t level) const
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
     return mState.getImageDesc(target, level).format;
+}
+
+GLsizei Texture::getSamples(GLenum target, size_t level) const
+{
+    ASSERT(target == mState.mTarget ||
+           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
+    return mState.getImageDesc(target, level).samples;
+}
+
+GLboolean Texture::getFixedSampleLocations(GLenum target, size_t level) const
+{
+    ASSERT(target == mState.mTarget ||
+           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
+    return mState.getImageDesc(target, level).fixedSampleLocations;
 }
 
 bool Texture::isMipmapComplete() const
@@ -1022,6 +1032,32 @@ Error Texture::setStorage(GLenum target, GLsizei levels, GLenum internalFormat, 
     return NoError();
 }
 
+Error Texture::setStorageMultisample(GLenum target,
+                                     GLsizei samples,
+                                     GLint internalFormat,
+                                     const Extents &size,
+                                     GLboolean fixedSampleLocations)
+{
+    ASSERT(target == mState.mTarget);
+
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    releaseTexImageInternal();
+    orphanImages();
+
+    ANGLE_TRY(mTexture->setStorageMultisample(target, samples, internalFormat, size,
+                                              fixedSampleLocations));
+
+    mState.mImmutableFormat = true;
+    mState.mImmutableLevels = static_cast<GLuint>(1);
+    mState.clearImageDescs();
+    mState.setImageDescChainMultisample(size, Format(internalFormat), samples,
+                                        fixedSampleLocations);
+
+    mDirtyChannel.signal();
+
+    return NoError();
+}
+
 Error Texture::generateMipmap()
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
@@ -1167,10 +1203,9 @@ const Format &Texture::getAttachmentFormat(const gl::FramebufferAttachment::Targ
     return getFormat(target.textureIndex().type, target.textureIndex().mipIndex);
 }
 
-GLsizei Texture::getAttachmentSamples(const gl::FramebufferAttachment::Target & /*target*/) const
+GLsizei Texture::getAttachmentSamples(const gl::FramebufferAttachment::Target &target) const
 {
-    // Multisample textures not currently supported
-    return 0;
+    return getSamples(target.textureIndex().type, 0);
 }
 
 void Texture::onAttach()

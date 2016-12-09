@@ -46,6 +46,8 @@ class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
 
     void signal(angle::SignalToken token) override;
 
+    gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
+
   private:
     gl::Error clearImpl(ContextImpl *context, const ClearParameters &clearParams) override;
 

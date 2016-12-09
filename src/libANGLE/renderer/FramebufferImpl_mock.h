@@ -38,6 +38,8 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_CONST_METHOD5(readPixels,
                        gl::Error(ContextImpl *, const gl::Rectangle &, GLenum, GLenum, GLvoid *));
 
+    MOCK_CONST_METHOD2(getSamplePosition, gl::Error(size_t, GLfloat *));
+
     MOCK_METHOD5(
         blit,
         gl::Error(ContextImpl *, const gl::Rectangle &, const gl::Rectangle &, GLbitfield, GLenum));

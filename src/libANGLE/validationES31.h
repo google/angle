@@ -22,6 +22,7 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
                                       GLsizei bufSize,
                                       GLsizei *length,
                                       GLboolean *data);
+
 bool ValidateGetTexLevelParameterfv(Context *context,
                                     GLenum target,
                                     GLint level,
@@ -32,6 +33,15 @@ bool ValidateGetTexLevelParameteriv(Context *context,
                                     GLint level,
                                     GLenum pname,
                                     GLint *param);
+
+bool ValidateTexStorage2DMultiSample(Context *context,
+                                     GLenum target,
+                                     GLsizei samples,
+                                     GLint internalFormat,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLboolean fixedSampleLocations);
+bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val);
 
 bool ValidateDrawIndirectBase(Context *context, GLenum mode, const GLvoid *indirect);
 bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const GLvoid *indirect);

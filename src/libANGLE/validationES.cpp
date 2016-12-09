@@ -1313,6 +1313,15 @@ bool ValidateGetInternalFormativBase(Context *context,
         case GL_RENDERBUFFER:
             break;
 
+        case GL_TEXTURE_2D_MULTISAMPLE:
+            if (context->getClientVersion() < ES_3_1)
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Texture target requires at least OpenGL ES 3.1."));
+                return false;
+            }
+            break;
+
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Invalid target."));
             return false;
@@ -3665,7 +3674,8 @@ bool ValidateFramebufferTexture2D(Context *context,
                 }
                 if (tex->getTarget() != GL_TEXTURE_2D)
                 {
-                    context->handleError(Error(GL_INVALID_OPERATION));
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
                     return false;
                 }
             }
@@ -3685,7 +3695,32 @@ bool ValidateFramebufferTexture2D(Context *context,
                 }
                 if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
                 {
-                    context->handleError(Error(GL_INVALID_OPERATION));
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
+                    return false;
+                }
+            }
+            break;
+
+            case GL_TEXTURE_2D_MULTISAMPLE:
+            {
+                if (context->getClientVersion() < ES_3_1)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Texture target requires at least OpenGL ES 3.1."));
+                    return false;
+                }
+
+                if (level != 0)
+                {
+                    context->handleError(
+                        Error(GL_INVALID_VALUE, "Level must be 0 for TEXTURE_2D_MULTISAMPLE."));
+                    return false;
+                }
+                if (tex->getTarget() != GL_TEXTURE_2D_MULTISAMPLE)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
                     return false;
                 }
             }

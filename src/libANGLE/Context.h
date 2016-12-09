@@ -582,6 +582,15 @@ class Context final : public ValidationContext
     void bindFramebuffer(GLenum target, GLuint framebuffer);
     void bindRenderbuffer(GLenum target, GLuint renderbuffer);
 
+    void texStorage2DMultisample(GLenum target,
+                                 GLsizei samples,
+                                 GLenum internalformat,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLboolean fixedsamplelocations);
+
+    void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);
+
     void copyBufferSubData(GLenum readTarget,
                            GLenum writeTarget,
                            GLintptr readOffset,

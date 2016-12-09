@@ -1021,18 +1021,31 @@ void GL_APIENTRY TexStorage2DMultisample(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateTexStorage2DMultiSample(context, target, samples, internalformat, width,
+                                             height, fixedsamplelocations))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+        context->texStorage2DMultisample(target, samples, internalformat, width, height,
+                                         fixedsamplelocations);
     }
 }
 
 void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
     EVENT("(GLenum pname = 0x%X, GLuint index = %u, GLfloat* val = 0x%0.8p)", pname, index, val);
-    UNIMPLEMENTED();
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateGetMultisamplefv(context, pname, index, val))
+        {
+            return;
+        }
+
+        context->getMultisamplefv(pname, index, val);
+    }
 }
 
 void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)

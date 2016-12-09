@@ -807,6 +807,27 @@ gl::Error TextureGL::setStorage(GLenum target,
     return gl::NoError();
 }
 
+gl::Error TextureGL::setStorageMultisample(GLenum target,
+                                           GLsizei samples,
+                                           GLint internalFormat,
+                                           const gl::Extents &size,
+                                           GLboolean fixedSampleLocations)
+{
+    nativegl::TexStorageFormat texStorageFormat =
+        nativegl::GetTexStorageFormat(mFunctions, mWorkarounds, internalFormat);
+
+    mStateManager->bindTexture(mState.mTarget, mTextureID);
+
+    ASSERT(size.depth == 1);
+
+    mFunctions->texStorage2DMultisample(target, samples, texStorageFormat.internalFormat,
+                                        size.width, size.height, fixedSampleLocations);
+
+    setLevelInfo(0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+
+    return gl::NoError();
+}
+
 gl::Error TextureGL::setImageExternal(GLenum target,
                                       egl::Stream *stream,
                                       const egl::Stream::GLTextureDescription &desc)

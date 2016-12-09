@@ -83,7 +83,7 @@ TextureImpl *Context11::createTexture(const gl::TextureState &state)
         case GL_TEXTURE_EXTERNAL_OES:
             return new TextureD3D_External(state, mRenderer);
         case GL_TEXTURE_2D_MULTISAMPLE:
-            UNIMPLEMENTED();
+            return new TextureD3D_2DMultisample(state, mRenderer);
             break;
         default:
             UNREACHABLE();
