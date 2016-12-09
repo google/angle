@@ -36,6 +36,11 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
         InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(emu, getShaderVersion());
     }
 
+    if (compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION)
+    {
+        InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(emu);
+    }
+
     int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
     InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
 }

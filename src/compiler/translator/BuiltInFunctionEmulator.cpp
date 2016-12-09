@@ -108,29 +108,50 @@ BuiltInFunctionEmulator::BuiltInFunctionEmulator()
 {
 }
 
-void BuiltInFunctionEmulator::addEmulatedFunction(TOperator op,
-                                                  const TType *param,
-                                                  const char *emulatedFunctionDefinition)
+BuiltInFunctionEmulator::FunctionId BuiltInFunctionEmulator::addEmulatedFunction(
+    TOperator op,
+    const TType *param,
+    const char *emulatedFunctionDefinition)
 {
-    mEmulatedFunctions[FunctionId(op, param)] = std::string(emulatedFunctionDefinition);
+    FunctionId id(op, param);
+    mEmulatedFunctions[id] = std::string(emulatedFunctionDefinition);
+    return id;
 }
 
-void BuiltInFunctionEmulator::addEmulatedFunction(TOperator op,
-                                                  const TType *param1,
-                                                  const TType *param2,
-                                                  const char *emulatedFunctionDefinition)
+BuiltInFunctionEmulator::FunctionId BuiltInFunctionEmulator::addEmulatedFunction(
+    TOperator op,
+    const TType *param1,
+    const TType *param2,
+    const char *emulatedFunctionDefinition)
 {
-    mEmulatedFunctions[FunctionId(op, param1, param2)] = std::string(emulatedFunctionDefinition);
+    FunctionId id(op, param1, param2);
+    mEmulatedFunctions[id] = std::string(emulatedFunctionDefinition);
+    return id;
 }
 
-void BuiltInFunctionEmulator::addEmulatedFunction(TOperator op,
-                                                  const TType *param1,
-                                                  const TType *param2,
-                                                  const TType *param3,
-                                                  const char *emulatedFunctionDefinition)
+BuiltInFunctionEmulator::FunctionId BuiltInFunctionEmulator::addEmulatedFunctionWithDependency(
+    FunctionId dependency,
+    TOperator op,
+    const TType *param1,
+    const TType *param2,
+    const char *emulatedFunctionDefinition)
 {
-    mEmulatedFunctions[FunctionId(op, param1, param2, param3)] =
-        std::string(emulatedFunctionDefinition);
+    FunctionId id(op, param1, param2);
+    mEmulatedFunctions[id]    = std::string(emulatedFunctionDefinition);
+    mFunctionDependencies[id] = dependency;
+    return id;
+}
+
+BuiltInFunctionEmulator::FunctionId BuiltInFunctionEmulator::addEmulatedFunction(
+    TOperator op,
+    const TType *param1,
+    const TType *param2,
+    const TType *param3,
+    const char *emulatedFunctionDefinition)
+{
+    FunctionId id(op, param1, param2, param3);
+    mEmulatedFunctions[id] = std::string(emulatedFunctionDefinition);
+    return id;
 }
 
 bool BuiltInFunctionEmulator::IsOutputEmpty() const
@@ -175,6 +196,12 @@ bool BuiltInFunctionEmulator::SetFunctionCalled(const FunctionId &functionId)
             if (mFunctions[i] == functionId)
                 return true;
         }
+        // If the function depends on another, mark the dependency as called.
+        auto dependency = mFunctionDependencies.find(functionId);
+        if (dependency != mFunctionDependencies.end())
+        {
+            SetFunctionCalled((*dependency).second);
+        }
         // Copy the functionId if it needs to be stored, to make sure that the TType pointers inside
         // remain valid and constant.
         mFunctions.push_back(functionId.getCopy());
@@ -197,6 +224,7 @@ void BuiltInFunctionEmulator::MarkBuiltInFunctionsForEmulation(TIntermNode *root
 void BuiltInFunctionEmulator::Cleanup()
 {
     mFunctions.clear();
+    mFunctionDependencies.clear();
 }
 
 // static
@@ -204,6 +232,14 @@ TString BuiltInFunctionEmulator::GetEmulatedFunctionName(const TString &name)
 {
     ASSERT(name[name.length() - 1] == '(');
     return "webgl_" + name.substr(0, name.length() - 1) + "_emu(";
+}
+
+BuiltInFunctionEmulator::FunctionId::FunctionId()
+    : mOp(EOpNull),
+      mParam1(TCache::getType(EbtVoid)),
+      mParam2(TCache::getType(EbtVoid)),
+      mParam3(TCache::getType(EbtVoid))
+{
 }
 
 BuiltInFunctionEmulator::FunctionId::FunctionId(TOperator op, const TType *param)

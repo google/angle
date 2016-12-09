@@ -70,6 +70,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_EMULATE_ISNAN_FLOAT_FUNCTION;
     }
 
+    if (mWorkarounds.emulateAtan2Float)
+    {
+        options |= SH_EMULATE_ATAN2_FLOAT_FUNCTION;
+    }
+
     if (mWorkarounds.useUnusedBlocksWithStandardOrSharedLayout)
     {
         options |= SH_USE_UNUSED_STANDARD_SHARED_BLOCKS;

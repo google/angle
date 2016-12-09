@@ -24,6 +24,10 @@ void InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *e
 //
 void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu,
                                                         int targetGLSLVersion);
+//
+// This works around atan(y, x) bug in NVIDIA drivers.
+//
+void InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu);
 
 //
 // This function is emulating built-in functions missing from GLSL 1.30 and higher.

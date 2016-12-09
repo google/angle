@@ -953,6 +953,10 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->removeInvariantAndCentroidForESSL3 =
         functions->isAtMostGL(gl::Version(4, 1)) ||
         (functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor));
+
+    // TODO(oetuaho): Make this specific to the affected driver versions. Versions that came after
+    // 364 are known to be affected, at least up to 375.
+    workarounds->emulateAtan2Float = IsNvidia(vendor);
 }
 
 }

@@ -2170,13 +2170,6 @@ TEST_P(GLSLTest, NestedPowStatements)
 // Test that -float calculation is correct.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
 {
-    // TODO(oetuaho@nvidia.com): re-enable once http://crbug.com/672380 is fixed.
-    if ((IsWindows() || IsLinux()) && IsNVIDIA() && IsOpenGL())
-    {
-        std::cout << "Test disabled on this OpenGL configuration." << std::endl;
-        return;
-    }
-
     const std::string &vert =
         "#version 300 es\n"
         "in highp vec4 position;\n"
@@ -2191,6 +2184,31 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
         "    // atan(tan(0.5), -f) should be 0.5.\n"
         "    highp float v = atan(tan(0.5), -f);\n"
         "    o_color = abs(v - 0.5) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+    drawQuad(prog.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that atan(vec2, vec2) calculation is correct.
+TEST_P(GLSLTest_ES3, AtanVec2)
+{
+    const std::string &vert =
+        "#version 300 es\n"
+        "in highp vec4 position;\n"
+        "void main() {\n"
+        "    gl_Position = position;\n"
+        "}\n";
+    const std::string &frag =
+        "#version 300 es\n"
+        "out highp vec4 o_color;\n"
+        "void main() {\n"
+        "    highp float f = 1.0;\n"
+        "    // atan(tan(0.5), f) should be 0.5.\n"
+        "    highp vec2 v = atan(vec2(tan(0.5)), vec2(f));\n"
+        "    o_color = (abs(v[0] - 0.5) < 0.001 && abs(v[1] - 0.5) < 0.001) ? vec4(0, 1, 0, 1) : "
+        "vec4(1, 0, 0, 1);\n"
         "}\n";
 
     ANGLE_GL_PROGRAM(prog, vert, frag);

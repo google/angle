@@ -35,39 +35,16 @@ class BuiltInFunctionEmulator
     // Output function emulation definition. This should be before any other shader source.
     void OutputEmulatedFunctions(TInfoSinkBase &out) const;
 
-    // Add functions that need to be emulated.
-    void addEmulatedFunction(TOperator op,
-                             const TType *param,
-                             const char *emulatedFunctionDefinition);
-    void addEmulatedFunction(TOperator op,
-                             const TType *param1,
-                             const TType *param2,
-                             const char *emulatedFunctionDefinition);
-    void addEmulatedFunction(TOperator op,
-                             const TType *param1,
-                             const TType *param2,
-                             const TType *param3,
-                             const char *emulatedFunctionDefinition);
-
-  private:
-    class BuiltInFunctionEmulationMarker;
-
-    // Records that a function is called by the shader and might need to be emulated. If the
-    // function is not in mEmulatedFunctions, this becomes a no-op. Returns true if the function
-    // call needs to be replaced with an emulated one.
-    bool SetFunctionCalled(TOperator op, const TType &param);
-    bool SetFunctionCalled(TOperator op, const TType &param1, const TType &param2);
-    bool SetFunctionCalled(TOperator op,
-                           const TType &param1,
-                           const TType &param2,
-                           const TType &param3);
-
     class FunctionId
     {
       public:
+        FunctionId();
         FunctionId(TOperator op, const TType *param);
         FunctionId(TOperator op, const TType *param1, const TType *param2);
         FunctionId(TOperator op, const TType *param1, const TType *param2, const TType *param3);
+
+        FunctionId(const FunctionId &) = default;
+        FunctionId &operator=(const FunctionId &) = default;
 
         bool operator==(const FunctionId &other) const;
         bool operator<(const FunctionId &other) const;
@@ -85,10 +62,47 @@ class BuiltInFunctionEmulator
         const TType *mParam3;
     };
 
+    // Add functions that need to be emulated.
+    FunctionId addEmulatedFunction(TOperator op,
+                                   const TType *param,
+                                   const char *emulatedFunctionDefinition);
+    FunctionId addEmulatedFunction(TOperator op,
+                                   const TType *param1,
+                                   const TType *param2,
+                                   const char *emulatedFunctionDefinition);
+    FunctionId addEmulatedFunction(TOperator op,
+                                   const TType *param1,
+                                   const TType *param2,
+                                   const TType *param3,
+                                   const char *emulatedFunctionDefinition);
+
+    FunctionId addEmulatedFunctionWithDependency(FunctionId dependency,
+                                                 TOperator op,
+                                                 const TType *param1,
+                                                 const TType *param2,
+                                                 const char *emulatedFunctionDefinition);
+
+  private:
+    class BuiltInFunctionEmulationMarker;
+
+    // Records that a function is called by the shader and might need to be emulated. If the
+    // function is not in mEmulatedFunctions, this becomes a no-op. Returns true if the function
+    // call needs to be replaced with an emulated one.
+    bool SetFunctionCalled(TOperator op, const TType &param);
+    bool SetFunctionCalled(TOperator op, const TType &param1, const TType &param2);
+    bool SetFunctionCalled(TOperator op,
+                           const TType &param1,
+                           const TType &param2,
+                           const TType &param3);
+
     bool SetFunctionCalled(const FunctionId &functionId);
 
     // Map from function id to emulated function definition
     std::map<FunctionId, std::string> mEmulatedFunctions;
+
+    // Map from dependent functions to their dependencies. This structure allows each function to
+    // have at most one dependency.
+    std::map<FunctionId, FunctionId> mFunctionDependencies;
 
     // Called function ids
     std::vector<FunctionId> mFunctions;

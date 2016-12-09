@@ -28,7 +28,8 @@ struct WorkaroundsGL
           useUnusedBlocksWithStandardOrSharedLayout(false),
           dontRemoveInvariantForFragmentInput(false),
           removeInvariantAndCentroidForESSL3(false),
-          rewriteFloatUnaryMinusOperator(false)
+          rewriteFloatUnaryMinusOperator(false),
+          emulateAtan2Float(false)
     {
     }
 
@@ -126,6 +127,10 @@ struct WorkaroundsGL
     // replace "-float".
     // Tracking bug: http://crbug.com/308366
     bool rewriteFloatUnaryMinusOperator;
+
+    // On NVIDIA drivers, atan(y, x) may return a wrong answer.
+    // Tracking bug: http://crbug.com/672380
+    bool emulateAtan2Float;
 };
 }
 

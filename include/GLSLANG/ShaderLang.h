@@ -207,6 +207,10 @@ const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
 // Mac OSX 10.11 drivers. It works by translating -float into 0.0 - float.
 const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 29;
 
+// This flag works around a bug in evaluating atan(y, x) on some NVIDIA OpenGL drivers.
+// It works by using an expression to emulate this function.
+const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

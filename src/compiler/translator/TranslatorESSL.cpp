@@ -6,6 +6,7 @@
 
 #include "compiler/translator/TranslatorESSL.h"
 
+#include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/RecordConstantPrecision.h"
 #include "compiler/translator/OutputESSL.h"
@@ -17,6 +18,15 @@ namespace sh
 TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
     : TCompiler(type, spec, SH_ESSL_OUTPUT)
 {
+}
+
+void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
+                                                 ShCompileOptions compileOptions)
+{
+    if (compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION)
+    {
+        InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(emu);
+    }
 }
 
 void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOptions)

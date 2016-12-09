@@ -75,6 +75,43 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
         "}\n");
 }
 
+void InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator *emu)
+{
+    const TType *float1 = TCache::getType(EbtFloat);
+    auto floatFuncId    = emu->addEmulatedFunction(
+        EOpAtan, float1, float1,
+        "webgl_emu_precision float webgl_atan_emu(webgl_emu_precision float y, webgl_emu_precision "
+        "float x)\n"
+        "{\n"
+        "    if (x > 0.0) return atan(y / x);\n"
+        "    else if (x < 0.0 && y >= 0.0) return atan(y / x) + 3.14159265;\n"
+        "    else if (x < 0.0 && y < 0.0) return atan(y / x) - 3.14159265;\n"
+        "    else return 1.57079632 * sign(y);\n"
+        "}\n");
+    for (int dim = 2; dim <= 4; ++dim)
+    {
+        const TType *floatVec = TCache::getType(EbtFloat, static_cast<unsigned char>(dim));
+        std::stringstream ss;
+        ss << "webgl_emu_precision vec" << dim << " webgl_atan_emu(webgl_emu_precision vec" << dim
+           << " y, webgl_emu_precision vec" << dim << " x)\n"
+                                                      "{\n"
+                                                      "    return vec"
+           << dim << "(";
+        for (int i = 0; i < dim; ++i)
+        {
+            ss << "webgl_atan_emu(y[" << i << "], x[" << i << "])";
+            if (i < dim - 1)
+            {
+                ss << ", ";
+            }
+        }
+        ss << ");\n"
+              "}\n";
+        emu->addEmulatedFunctionWithDependency(floatFuncId, EOpAtan, floatVec, floatVec,
+                                               ss.str().c_str());
+    }
+}
+
 // Emulate built-in functions missing from GLSL 1.30 and higher
 void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu,
                                                         sh::GLenum shaderType,
