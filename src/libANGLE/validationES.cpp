@@ -42,6 +42,8 @@ bool ValidateDrawAttribs(ValidationContext *context,
     const gl::State &state     = context->getGLState();
     const gl::Program *program = state.getProgram();
 
+    bool webglCompatibility = context->getExtensions().webglCompatibility;
+
     const VertexArray *vao    = state.getVertexArray();
     const auto &vertexAttribs = vao->getVertexAttributes();
     size_t maxEnabledAttrib   = vao->getMaxEnabledAttribute();
@@ -95,6 +97,15 @@ bool ValidateDrawAttribs(ValidationContext *context,
                         return false;
                     }
                 }
+            }
+            else if (webglCompatibility)
+            {
+                // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
+                // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
+                // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then
+                // calls to drawArrays or drawElements will generate an INVALID_OPERATION error.
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "An enabled vertex array has no buffer."));
             }
             else if (attrib.pointer == NULL)
             {
@@ -3306,11 +3317,6 @@ bool ValidateDrawElements(ValidationContext *context,
 
     const gl::VertexArray *vao     = state.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    if (!indices && !elementArrayBuffer)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
 
     if (elementArrayBuffer)
     {
@@ -3335,10 +3341,21 @@ bool ValidateDrawElements(ValidationContext *context,
             return false;
         }
     }
+    else if (context->getExtensions().webglCompatibility && count > 0)
+    {
+        // [WebGL 1.0] Section 6.2 No Client Side Arrays
+        // If drawElements is called with a count greater than zero, and no WebGLBuffer is bound
+        // to the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "There is no element array buffer bound and count > 0."));
+        return false;
+    }
     else if (!indices)
     {
-        // Catch this programming error here
-        context->handleError(Error(GL_INVALID_OPERATION));
+        // This is an application error that would normally result in a crash,
+        // but we catch it and return an error
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "No element array buffer and no pointer."));
         return false;
     }
 
