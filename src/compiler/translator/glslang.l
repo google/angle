@@ -180,14 +180,17 @@ O           [0-7]
 "sampler3DRect"        { return ES2_reserved_ES3_keyword(context, SAMPLER3DRECT); }
 "sampler2DRect"        { return SAMPLER2DRECT; }
 "sampler2DArray"       { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAY); }
+"sampler2DMS"          { return ES2_ident_ES3_reserved_ES3_1_keyword(context, SAMPLER2DMS); }
 "isampler2D"           { return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
 "isampler3D"           { return ES2_ident_ES3_keyword(context, ISAMPLER3D); }
 "isamplerCube"         { return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
 "isampler2DArray"      { return ES2_ident_ES3_keyword(context, ISAMPLER2DARRAY); }
+"isampler2DMS"         { return ES2_ident_ES3_reserved_ES3_1_keyword(context, ISAMPLER2DMS); }
 "usampler2D"           { return ES2_ident_ES3_keyword(context, USAMPLER2D); }
 "usampler3D"           { return ES2_ident_ES3_keyword(context, USAMPLER3D); }
 "usamplerCube"         { return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
 "usampler2DArray"      { return ES2_ident_ES3_keyword(context, USAMPLER2DARRAY); }
+"usampler2DMS"         { return ES2_ident_ES3_reserved_ES3_1_keyword(context, USAMPLER2DMS); }
 "sampler2DShadow"      { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "samplerCubeShadow"    { return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
@@ -251,9 +254,6 @@ O           [0-7]
 "samplerBuffer"     |
 "isamplerBuffer"    |
 "usamplerBuffer"    |
-"sampler2DMS"       |
-"isampler2DMS"      |
-"usampler2DMS"      |
 "sampler2DMSArray"  |
 "isampler2DMSArray" |
 "usampler2DMSArray" { 

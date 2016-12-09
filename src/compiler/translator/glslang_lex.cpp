@@ -222,7 +222,7 @@ typedef size_t yy_size_t;
     #define  YY_LESS_LINENO(n) \
             do { \
                 yy_size_t yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
+                for ( yyl = n; yyl < static_cast<yy_site_t>(yyleng); ++yyl )\
                     if ( yytext[yyl] == '\n' )\
                         --yylineno;\
             }while(0)
@@ -397,7 +397,7 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
  */
 #define YY_DO_BEFORE_ACTION \
 	yyg->yytext_ptr = yy_bp; \
-	yyleng = (yy_size_t) (yy_cp - yy_bp); \
+	yyleng = (size_t) (yy_cp - yy_bp); \
 	yyg->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
@@ -455,55 +455,55 @@ static yyconst flex_int16_t yy_accept[824] =
       178,  165,  166,  167,  178,   33,  178,  157,   27,  168,
       169,  170,    2,  162,  163,  164,  178,  178,  178,   25,
       160,  178,  178,  178,   51,   52,   53,  178,  178,  178,
-      178,  178,  178,  178,  178,  178,  178,  178,  100,  178,
+      178,  178,  178,  178,  178,  178,  178,  178,  103,  178,
 
       178,  178,  178,  178,  178,  178,  178,  154,  178,  178,
       178,  178,  178,  178,  178,  178,  178,  178,  178,  140,
       178,  178,  177,   57,   58,   59,  178,  178,   14,  178,
-      105,  178,  178,  178,  178,  103,  178,  178,  178,  155,
-      150,  106,  178,  178,  178,  178,  178,  178,  146,  178,
-      178,  178,   79,   39,   42,   44,   43,   40,   46,   45,
+      108,  178,  178,  178,  178,  106,  178,  178,  178,  155,
+      150,  109,  178,  178,  178,  178,  178,  178,  146,  178,
+      178,  178,   82,   39,   42,   44,   43,   40,   46,   45,
        47,   41,  178,  178,  178,  178,  161,  137,  178,  178,
-      148,  178,  178,  178,   35,  101,   26,  174,   22,  149,
-       78,  178,  159,   17,  178,  178,  178,  178,  178,  178,
+      148,  178,  178,  178,   35,  104,   26,  174,   22,  149,
+       81,  178,  159,   17,  178,  178,  178,  178,  178,  178,
       178,  178,  178,  178,  178,  178,  178,  178,   19,   34,
 
-      178,  178,  178,  178,  178,  178,  107,   80,   86,  178,
+      178,  178,  178,  178,  178,  178,  110,   83,   89,  178,
       178,  178,  178,  178,    3,  178,  178,  178,  178,  178,
       178,  178,  178,  178,  178,  178,  142,  178,  178,  178,
       178,  178,    8,  178,  178,    9,  178,  178,  178,  178,
-       20,   94,   11,  151,  108,   81,   88,  178,  178,  178,
+       20,   97,   11,  151,  111,   84,   91,  178,  178,  178,
       178,  178,  178,  178,  178,  178,  178,  178,  178,  147,
-      178,  178,  178,   92,   97,   95,  178,  178,  178,  178,
-      178,  178,  178,  143,  109,   82,   87,  178,  178,  158,
-      178,   96,  178,  178,    6,  178,  178,  178,  178,  178,
-      178,  178,  178,  178,   91,  152,    1,  178,  178,  178,
+      178,  178,  178,   95,  100,   98,  178,  178,  178,  178,
+      178,  178,  178,  143,  112,   85,   90,  178,  178,  158,
+      178,   99,  178,  178,    6,  178,  178,  178,  178,  178,
+      178,  178,  178,  178,   94,  152,    1,  178,  178,  178,
 
-      178,  178,  176,  178,  104,    5,  171,   60,   63,  178,
+      178,  178,  176,  178,  107,    5,  171,   60,   63,  178,
       178,  178,  178,  178,  178,  178,  178,  178,  178,  178,
-      178,  178,   93,  178,  178,  178,  178,   89,  178,  178,
-      178,  178,  178,  122,   67,   68,  178,  178,  178,  178,
-      178,  178,  178,  178,  178,  178,  178,  178,  178,  102,
-      178,  178,  178,   90,  124,   71,   72,  178,  178,   98,
-      178,  178,  178,  178,  178,  178,  178,  117,  178,  178,
-      178,  178,  178,  178,  178,  178,  178,  178,  131,  178,
+      178,  178,   96,  178,  178,  178,  178,   92,  178,  178,
+      178,  178,  178,  125,   68,   69,  178,  178,  178,  178,
+      178,  178,  178,  178,  178,  178,  178,  178,  178,  105,
+      178,  178,  178,   93,  127,   73,   74,  178,  178,  101,
+      178,  178,  178,  178,  178,  178,  178,  120,  178,  178,
+      178,  178,  178,  178,  178,  178,  178,  178,   67,  178,
       178,  178,  178,   61,  178,  178,  178,  178,  178,  178,
-      178,  178,  178,  178,  178,  178,  118,  110,  178,   83,
+      178,  178,  178,  178,  178,  178,  121,  113,  178,   86,
 
-      178,  178,  178,  132,  178,  178,   69,  178,  178,  178,
+      178,  178,  178,   72,  178,  178,   70,  178,  178,  178,
       178,  178,  178,  178,  178,  178,  178,  178,  178,  178,
-      119,  178,  178,  133,  178,  178,   73,  111,   84,  178,
-      113,  178,  114,  178,  178,  178,  178,  178,   99,  178,
-      178,  178,  178,   65,  178,   64,  128,  178,  178,  112,
-       85,  178,  178,  178,  178,  178,  178,  178,  178,  178,
-      178,  126,  129,  120,  178,   66,  178,  178,  178,  178,
-      178,  178,  178,  178,  127,  130,  178,  178,  123,   70,
-      178,  178,  172,  178,  178,  178,   75,  178,  178,  125,
-       74,  178,  178,  178,  178,  178,  178,  134,  178,  178,
+      122,  178,  178,   77,  178,  178,   75,  114,   87,  178,
+      116,  178,  117,  178,  178,  178,  178,  178,  102,  178,
+      178,  178,  178,   65,  178,   64,  131,  178,  178,  115,
+       88,  178,  178,  178,  178,  178,  178,  178,  178,  178,
+      178,  129,  132,  123,  178,   66,  178,  178,  178,  178,
+      178,  178,  178,  178,  130,  133,  178,  178,  126,   71,
+      178,  178,  172,  178,  178,  178,   78,  178,  178,  128,
+       76,  178,  178,  178,  178,  178,  178,  134,  178,  178,
 
-      178,  178,  178,  178,  135,  178,  178,  178,   76,  178,
-      136,  115,  116,  178,  178,  178,   62,  178,  178,  173,
-      121,   77,    0
+      178,  178,  178,  178,  135,  178,  178,  178,   79,  178,
+      136,  118,  119,  178,  178,  178,   62,  178,  178,  173,
+      124,   80,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
@@ -1381,7 +1381,7 @@ yy_find_action:
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
 			yy_size_t yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
+			for ( yyl = 0; yyl < static_cast<yy_size_t>(yyleng); ++yyl )
 				if ( yytext[yyl] == '\n' )
 					   
     do{ yylineno++;
@@ -1667,128 +1667,137 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, SAMPLER2DMS); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER3D); }
+{ return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
+{ return ES2_ident_ES3_keyword(context, ISAMPLER3D); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, ISAMPLER2DARRAY); }
+{ return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER2D); }
+{ return ES2_ident_ES3_keyword(context, ISAMPLER2DARRAY); }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER3D); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, ISAMPLER2DMS); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
+{ return ES2_ident_ES3_keyword(context, USAMPLER2D); }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, USAMPLER2DARRAY); }
+{ return ES2_ident_ES3_keyword(context, USAMPLER3D); }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-{ return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
+{ return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
+{ return ES2_ident_ES3_keyword(context, USAMPLER2DARRAY); }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, USAMPLER2DMS); }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-{ return STRUCT; }
+{ return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_keyword(context, LAYOUT); }
+{ return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
+{ return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
+{ return STRUCT; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2D); }
+{ return ES2_ident_ES3_keyword(context, LAYOUT); }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2DARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2DARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2DARRAY); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2D); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE3D); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2DARRAY); }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE3D); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2DARRAY); }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE2DARRAY); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE3D); }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGE3D); }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE3D); }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, READONLY); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGECUBE); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, UIMAGECUBE); }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, COHERENT); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGECUBE); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, RESTRICT); }
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, READONLY); }
 	YY_BREAK
 case 96:
+YY_RULE_SETUP
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, WRITEONLY); }
+	YY_BREAK
+case 97:
+YY_RULE_SETUP
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, COHERENT); }
+	YY_BREAK
+case 98:
+YY_RULE_SETUP
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, RESTRICT); }
+	YY_BREAK
+case 99:
 YY_RULE_SETUP
 { return ES2_and_ES3_reserved_ES3_1_keyword(context, VOLATILE); }
 	YY_BREAK
 /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
-case 97:
-case 98:
-case 99:
 case 100:
 case 101:
 case 102:
@@ -2385,7 +2394,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			yyg->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
 			num_to_read = YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
-						number_to_move - 1;
+						static_cast<int>(number_to_move) - 1;
 
 			}
 
@@ -2393,8 +2402,10 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			num_to_read = YY_READ_BUF_SIZE;
 
 		/* Read in more data. */
+        size_t result = 0;
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			yyg->yy_n_chars, num_to_read );
+            result, num_to_read );
+        yyg->yy_n_chars = static_cast<int>(result);
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
 		}
@@ -2835,7 +2846,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 		/* Increase the buffer to prepare for a possible push. */
 		int grow_size = 8 /* arbitrary grow size */;
 
-		num_to_alloc = yyg->yy_buffer_stack_max + grow_size;
+		num_to_alloc = static_cast<int>(yyg->yy_buffer_stack_max + grow_size);
 		yyg->yy_buffer_stack = (struct yy_buffer_state**)yyrealloc
 								(yyg->yy_buffer_stack,
 								num_to_alloc * sizeof(struct yy_buffer_state*)
@@ -2869,7 +2880,7 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscann
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
-	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
+	b->yy_buf_size = static_cast<int>(size) - 2;	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = 0;
 	b->yy_input_file = 0;
@@ -2918,7 +2929,7 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len 
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
-	for ( i = 0; i < _yybytes_len; ++i )
+	for ( i = 0; i < static_cast<yy_size_t>(_yybytes_len); ++i )
 		buf[i] = yybytes[i];
 
 	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;

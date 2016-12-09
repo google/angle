@@ -174,6 +174,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
 %token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE ISAMPLER2DARRAY
 %token <lex> USAMPLER2D USAMPLER3D USAMPLERCUBE USAMPLER2DARRAY
+%token <lex> SAMPLER2DMS ISAMPLER2DMS USAMPLER2DMS
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW SAMPLERCUBESHADOW SAMPLER2DARRAYSHADOW
 %token <lex> IMAGE2D IIMAGE2D UIMAGE2D IMAGE3D IIMAGE3D UIMAGE3D IMAGE2DARRAY IIMAGE2DARRAY UIMAGE2DARRAY
 %token <lex> IMAGECUBE IIMAGECUBE UIMAGECUBE
@@ -1147,6 +1148,9 @@ type_specifier_nonarray
     | SAMPLER2DARRAY {
         $$.initialize(EbtSampler2DArray, @1);
     }
+    | SAMPLER2DMS {
+        $$.initialize(EbtSampler2DMS, @1);
+    }
     | ISAMPLER2D {
         $$.initialize(EbtISampler2D, @1);
     }
@@ -1159,6 +1163,9 @@ type_specifier_nonarray
     | ISAMPLER2DARRAY {
         $$.initialize(EbtISampler2DArray, @1);
     }
+    | ISAMPLER2DMS {
+        $$.initialize(EbtISampler2DMS, @1);
+    }
     | USAMPLER2D {
         $$.initialize(EbtUSampler2D, @1);
     }
@@ -1170,6 +1177,9 @@ type_specifier_nonarray
     }
     | USAMPLER2DARRAY {
         $$.initialize(EbtUSampler2DArray, @1);
+    }
+    | USAMPLER2DMS {
+        $$.initialize(EbtUSampler2DMS, @1);
     }
     | SAMPLER2DSHADOW {
         $$.initialize(EbtSampler2DShadow, @1);

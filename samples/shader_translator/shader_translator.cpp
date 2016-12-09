@@ -429,6 +429,15 @@ void PrintVariable(const std::string &prefix, size_t index, const sh::ShaderVari
       case GL_FLOAT_MAT3x4: typeName = "GL_FLOAT_MAT3x4"; break;
       case GL_FLOAT_MAT4x3: typeName = "GL_FLOAT_MAT4x3"; break;
       case GL_SAMPLER_2D: typeName = "GL_SAMPLER_2D"; break;
+      case GL_SAMPLER_2D_MULTISAMPLE:
+          typeName = "GL_SAMPLER_2D_MULTISAMPLE";
+          break;
+      case GL_INT_SAMPLER_2D_MULTISAMPLE:
+          typeName = "GL_INT_SAMPLER_2D_MULTISAMPLE";
+          break;
+      case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
+          typeName = "GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE";
+          break;
       case GL_SAMPLER_CUBE: typeName = "GL_SAMPLER_CUBE"; break;
       case GL_SAMPLER_EXTERNAL_OES: typeName = "GL_SAMPLER_EXTERNAL_OES"; break;
       default: typeName = "UNKNOWN"; break;

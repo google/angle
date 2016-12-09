@@ -338,6 +338,8 @@ GLenum GLVariableType(const TType &type)
             return GL_SAMPLER_2D_RECT_ARB;
         case EbtSampler2DArray:
             return GL_SAMPLER_2D_ARRAY;
+        case EbtSampler2DMS:
+            return GL_SAMPLER_2D_MULTISAMPLE;
         case EbtISampler2D:
             return GL_INT_SAMPLER_2D;
         case EbtISampler3D:
@@ -346,6 +348,8 @@ GLenum GLVariableType(const TType &type)
             return GL_INT_SAMPLER_CUBE;
         case EbtISampler2DArray:
             return GL_INT_SAMPLER_2D_ARRAY;
+        case EbtISampler2DMS:
+            return GL_INT_SAMPLER_2D_MULTISAMPLE;
         case EbtUSampler2D:
             return GL_UNSIGNED_INT_SAMPLER_2D;
         case EbtUSampler3D:
@@ -354,6 +358,8 @@ GLenum GLVariableType(const TType &type)
             return GL_UNSIGNED_INT_SAMPLER_CUBE;
         case EbtUSampler2DArray:
             return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
+        case EbtUSampler2DMS:
+            return GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE;
         case EbtSampler2DShadow:
             return GL_SAMPLER_2D_SHADOW;
         case EbtSamplerCubeShadow:

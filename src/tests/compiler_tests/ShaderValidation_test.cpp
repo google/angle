@@ -3356,3 +3356,17 @@ TEST_F(FragmentShaderValidationTest, ValidUseOfMemoryBarrierImageInFragmentShade
         FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
     }
 }
+
+// checks that gsampler2DMS is not supported in version lower than 310
+TEST_F(FragmentShaderValidationTest, Sampler2DMSInESSL300Shader)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "uniform highp sampler2DMS s;\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeed, expecting failure " << mInfoLog;
+    }
+}

@@ -48,6 +48,7 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.name_length.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.state_query.shader.sampler_type = SKIP
 
 // D3D11 Failing Tests
 1442 D3D11 : dEQP-GLES31.functional.draw_indirect.* = FAIL
@@ -1180,7 +1181,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d_multisample.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture_level.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.shader.sampler_type = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.rgb10_a2ui_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.r8i_samples = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.r8ui_samples = FAIL
