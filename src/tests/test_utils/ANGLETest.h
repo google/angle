@@ -41,6 +41,10 @@
 
 #define ASSERT_GLENUM_EQ(expected, actual) ASSERT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
 #define EXPECT_GLENUM_EQ(expected, actual) EXPECT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+#define ASSERT_GLENUM_NE(expected, actual) \
+    ASSERT_NE(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+#define EXPECT_GLENUM_NE(expected, actual) \
+    EXPECT_NE(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
 
 namespace angle
 {

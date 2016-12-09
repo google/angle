@@ -336,10 +336,10 @@ ANGLE_INSTANTIATE_TEST(FramebufferFormatsTest,
                        ES2_OPENGLES(),
                        ES3_OPENGLES());
 
-class FramebufferInvalidateTest : public ANGLETest
+class FramebufferTest_ES3 : public ANGLETest
 {
   protected:
-    FramebufferInvalidateTest() : mFramebuffer(0), mRenderbuffer(0) {}
+    FramebufferTest_ES3() : mFramebuffer(0), mRenderbuffer(0) {}
 
     void SetUp() override
     {
@@ -361,7 +361,7 @@ class FramebufferInvalidateTest : public ANGLETest
 };
 
 // Covers invalidating an incomplete framebuffer. This should be a no-op, but should not error.
-TEST_P(FramebufferInvalidateTest, Incomplete)
+TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
@@ -376,4 +376,17 @@ TEST_P(FramebufferInvalidateTest, Incomplete)
     EXPECT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST(FramebufferInvalidateTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+// Test that the framebuffer state tracking robustly handles a depth-only attachment being set
+// as a depth-stencil attachment. It is equivalent to detaching the depth-stencil attachment.
+TEST_P(FramebufferTest_ES3, DepthOnlyAsDepthStencil)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 4, 4);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              mRenderbuffer);
+    EXPECT_GLENUM_NE(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+}
+
+ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
