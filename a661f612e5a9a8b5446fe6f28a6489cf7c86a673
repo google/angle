@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b2f68_ae9a6b46",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-09T16:07:07Z",
+      "side": 1,
+      "message": "can you reference the angle bug issue in here with a short comment on how the constant folding is necessary instead of using the ID",
+      "range": {
+        "startLine": 1477,
+        "startChar": 8,
+        "endLine": 1477,
+        "endChar": 10
+      },
+      "revId": "a661f612e5a9a8b5446fe6f28a6489cf7c86a673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_c3122008",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 1
