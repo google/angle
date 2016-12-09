@@ -52,6 +52,24 @@
       "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_3d19f360",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2268,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2016-12-09T04:06:21Z",
+      "side": 1,
+      "message": "atan was used because the bug was originally discovered with that built-in function: https://bugs.chromium.org/p/chromium/issues/detail?id\u003d308366 .",
+      "parentUuid": "2df58ffe_4108144a",
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
