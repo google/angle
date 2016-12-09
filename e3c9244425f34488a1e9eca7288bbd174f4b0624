@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b2f68_2e8f7b10",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-09T16:03:06Z",
+      "side": 1,
+      "message": "I think this should also have \u0026\u0026 IsOpenGL() -- I don\u0027t think this test would behave the same on D3D11 as desktop GL.",
+      "range": {
+        "startLine": 2249,
+        "startChar": 38,
+        "endLine": 2249,
+        "endChar": 46
+      },
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ade17f42_c869e367",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 9
