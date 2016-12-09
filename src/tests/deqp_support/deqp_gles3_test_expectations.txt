@@ -181,6 +181,7 @@
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.tex2d.rg8 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.tex2d.rgb10_a2 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.tex2d.rgba16f = FAIL
+1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.blit.tex2d.r8 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgba32f = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgba16f = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r11f_g11f_b10f = FAIL
@@ -189,6 +190,7 @@
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r32f = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r16f = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgb16f = FAIL
+1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rg8 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.r8 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.color.repeated_clear.sample.tex2d.rgb10_a2 = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.fbo.render.shared_colorbuffer_clear.tex2d_rgb16f = FAIL
