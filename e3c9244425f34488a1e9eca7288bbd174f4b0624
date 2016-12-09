@@ -70,6 +70,24 @@
       "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e81dfbda",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2268,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-09T06:49:49Z",
+      "side": 1,
+      "message": "atan is introduced because of the chrome bug kbr pointed. Result of atan(tan(0.5), -f) is in range [2.023010, 2.023011) on NVIDIA Linux.",
+      "parentUuid": "fa1b2f68_3d19f360",
+      "revId": "e3c9244425f34488a1e9eca7288bbd174f4b0624",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
