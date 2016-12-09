@@ -1945,13 +1945,14 @@ bool State::hasMappedBuffer(GLenum target) const
 {
     if (target == GL_ARRAY_BUFFER)
     {
-        const VertexArray *vao = getVertexArray();
+        const VertexArray *vao     = getVertexArray();
         const auto &vertexAttribs = vao->getVertexAttributes();
+        const auto &vertexBindings = vao->getVertexBindings();
         size_t maxEnabledAttrib = vao->getMaxEnabledAttribute();
         for (size_t attribIndex = 0; attribIndex < maxEnabledAttrib; attribIndex++)
         {
             const gl::VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
-            gl::Buffer *boundBuffer = vertexAttrib.buffer.get();
+            auto *boundBuffer = vertexBindings[vertexAttrib.bindingIndex].buffer.get();
             if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
                 return true;

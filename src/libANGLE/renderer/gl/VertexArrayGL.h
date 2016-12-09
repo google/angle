@@ -78,6 +78,7 @@ class VertexArrayGL : public VertexArrayImpl
     void updateNeedsStreaming(size_t attribIndex);
     void updateAttribEnabled(size_t attribIndex);
     void updateAttribPointer(size_t attribIndex);
+    void updateAttribDivisor(size_t attribIndex);
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
@@ -85,7 +86,9 @@ class VertexArrayGL : public VertexArrayImpl
     GLuint mVertexArrayID;
 
     mutable BindingPointer<gl::Buffer> mAppliedElementArrayBuffer;
+
     mutable std::vector<gl::VertexAttribute> mAppliedAttributes;
+    mutable std::vector<gl::VertexBinding> mAppliedBindings;
 
     mutable size_t mStreamingElementArrayBufferSize;
     mutable GLuint mStreamingElementArrayBuffer;

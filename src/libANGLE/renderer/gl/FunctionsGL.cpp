@@ -904,6 +904,14 @@ void FunctionsGL::initializeProcsDesktopGL()
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glGenVertexArrays"), &genVertexArrays);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_array_object", loadProcAddress("glIsVertexArray"), &isVertexArray);
 
+    // GL_ARB_vertex_attrib_binding
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glBindVertexBuffer"), &bindVertexBuffer);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glVertexAttribFormat"), &vertexAttribFormat);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glVertexAttribIFormat"), &vertexAttribIFormat);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glVertexAttribLFormat"), &vertexAttribLFormat);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glVertexAttribBinding"), &vertexAttribBinding);
+    AssignGLExtensionEntryPoint(extensions, "GL_ARB_vertex_attrib_binding", loadProcAddress("glVertexBindingDivisor"), &vertexBindingDivisor);
+
     // GL_ARB_sync
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glClientWaitSync"), &clientWaitSync);
     AssignGLExtensionEntryPoint(extensions, "GL_ARB_sync", loadProcAddress("glDeleteSync"), &deleteSync);

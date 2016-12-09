@@ -461,6 +461,8 @@ void GenerateCaps(IDirect3D9 *d3d9,
 
     // Vertex shader limits
     caps->maxVertexAttributes = 16;
+    // Vertex Attrib Binding not supported.
+    caps->maxVertexAttribBindings = caps->maxVertexAttributes;
 
     const size_t MAX_VERTEX_CONSTANT_VECTORS_D3D9 = 256;
     caps->maxVertexUniformVectors =

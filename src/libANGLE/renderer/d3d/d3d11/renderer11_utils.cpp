@@ -1224,6 +1224,8 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
     caps->maxVertexTextureImageUnits =
         static_cast<GLuint>(GetMaximumVertexTextureUnits(featureLevel));
+    // Vertex Attrib Bindings not supported.
+    caps->maxVertexAttribBindings = caps->maxVertexAttributes;
 
     // Fragment shader limits
     caps->maxFragmentUniformComponents =

@@ -108,6 +108,7 @@ void VertexBuffer11::hintUnmapResource()
 }
 
 gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib,
+                                                const gl::VertexBinding &binding,
                                                 GLenum currentValueType,
                                                 GLint start,
                                                 GLsizei count,
@@ -120,7 +121,7 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attri
         return gl::Error(GL_OUT_OF_MEMORY, "Internal vertex buffer is not initialized.");
     }
 
-    int inputStride = static_cast<int>(ComputeVertexAttributeStride(attrib));
+    int inputStride = static_cast<int>(ComputeVertexAttributeStride(attrib, binding));
 
     // This will map the resource if it isn't already mapped.
     ANGLE_TRY(mapResource());
@@ -129,7 +130,7 @@ gl::Error VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attri
 
     const uint8_t *input = sourceData;
 
-    if (instances == 0 || attrib.divisor == 0)
+    if (instances == 0 || binding.divisor == 0)
     {
         input += inputStride * start;
     }

@@ -312,7 +312,11 @@ class Renderer9 : public RendererD3D
     bool getLUID(LUID *adapterLuid) const override;
     VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const override;
     GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
+
+    // Warning: you should ensure binding really matches attrib.bindingIndex before using this
+    // function.
     gl::ErrorOrResult<unsigned int> getVertexSpaceRequired(const gl::VertexAttribute &attrib,
+                                                           const gl::VertexBinding &binding,
                                                            GLsizei count,
                                                            GLsizei instances) const override;
 

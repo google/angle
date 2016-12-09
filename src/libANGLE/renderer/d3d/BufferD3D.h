@@ -18,6 +18,7 @@
 namespace gl
 {
 struct VertexAttribute;
+struct VertexBinding;
 }
 
 namespace rx
@@ -45,7 +46,10 @@ class BufferD3D : public BufferImpl
     virtual gl::Error markTransformFeedbackUsage() = 0;
     virtual gl::Error getData(const uint8_t **outData) = 0;
 
-    StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute);
+    // Warning: you should ensure binding really matches attrib.bindingIndex before using this
+    // function.
+    StaticVertexBufferInterface *getStaticVertexBuffer(const gl::VertexAttribute &attribute,
+                                                       const gl::VertexBinding &binding);
     StaticIndexBufferInterface *getStaticIndexBuffer();
 
     virtual void initializeStaticData();

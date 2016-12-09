@@ -260,6 +260,11 @@ class Context final : public ValidationContext
     void vertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w);
     void vertexAttribI4iv(GLuint index, const GLint *v);
     void vertexAttribI4uiv(GLuint index, const GLuint *v);
+    void getVertexAttribiv(GLuint index, GLenum pname, GLint *params);
+    void getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params);
+    void getVertexAttribIiv(GLuint index, GLenum pname, GLint *params);
+    void getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params);
+    void getVertexAttribPointerv(GLuint index, GLenum pname, GLvoid **pointer);
 
     void debugMessageControl(GLenum source,
                              GLenum type,

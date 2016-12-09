@@ -1576,11 +1576,7 @@ void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
             return;
         }
 
-        const VertexAttribCurrentValueData &currentValues =
-            context->getGLState().getVertexAttribCurrentValue(index);
-        const VertexAttribute &attrib =
-            context->getGLState().getVertexArray()->getVertexAttribute(index);
-        QueryVertexAttribfv(attrib, currentValues, pname, params);
+        context->getVertexAttribfv(index, pname, params);
     }
 }
 
@@ -1596,11 +1592,7 @@ void GL_APIENTRY GetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
             return;
         }
 
-        const VertexAttribCurrentValueData &currentValues =
-            context->getGLState().getVertexAttribCurrentValue(index);
-        const VertexAttribute &attrib =
-            context->getGLState().getVertexArray()->getVertexAttribute(index);
-        QueryVertexAttribiv(attrib, currentValues, pname, params);
+        context->getVertexAttribiv(index, pname, params);
     }
 }
 
@@ -1617,9 +1609,7 @@ void GL_APIENTRY GetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
             return;
         }
 
-        const VertexAttribute &attrib =
-            context->getGLState().getVertexArray()->getVertexAttribute(index);
-        QueryVertexAttribPointerv(attrib, pname, pointer);
+        context->getVertexAttribPointerv(index, pname, pointer);
     }
 }
 

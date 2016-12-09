@@ -89,7 +89,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     texture->addRef();
     texture->setStorage(nullptr, GL_TEXTURE_2D, 1, GL_RGBA8, Extents(1, 1, 0));
 
-    VertexArray *vertexArray = new VertexArray(&mockFactory, 0, 1);
+    VertexArray *vertexArray = new VertexArray(&mockFactory, 0, 1, 1);
     Framebuffer *framebuffer = new Framebuffer(caps, &mockFactory, 1);
     framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex::Make2D(0), texture);
 
