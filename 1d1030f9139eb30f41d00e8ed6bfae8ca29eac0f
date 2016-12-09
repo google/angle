@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba129745_7afe59f9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-09T17:17:25Z",
+      "side": 1,
+      "message": "It\u0027s actually the result of atan() that\u0027s wrong on NVIDIA OpenGL. The test result is the same on my dev machine whether the unary minus is involved or not.",
+      "revId": "1d1030f9139eb30f41d00e8ed6bfae8ca29eac0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
