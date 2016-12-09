@@ -80,7 +80,7 @@ Aside from using array buffers to feed attribute data to the vertex shader,
 OpenGL also supports attributes which remain constant for all vertices used in a
 draw call. Direct3D 9 doesn't have a similar concept, at least not explicitly.
 
-Constant attributes are implementated using separate (static) vertex buffers,
+Constant attributes are implemented using separate (static) vertex buffers,
 and uses a stride of 0 to ensure that every vertex retrieves the same data.
 Using a stride of 0 is not possible with streaming buffers because on some
 hardware it is incompatible with the D3DUSAGE\_DYNAMIC flag. We found that with

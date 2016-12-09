@@ -9,7 +9,7 @@ Steps:
   * Checkout and build [Chromium](http://dev.chromium.org/Home).
   * You should now be able to use `ninja -C out/Debug angle_end2end_tests`, for example.
 
-## Building Standalone ANGLE insinde Chromium
+## Building Standalone ANGLE inside Chromium
 
 On Mac, ANGLE doesn't yet include the dEQP tests or the API translation libraries as part of Chromium. ANGLE also includes some sample applications and a few other targets that don't build on Chromium. These steps describe how to build such targets within a Chromium checkout.
 

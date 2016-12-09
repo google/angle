@@ -14,7 +14,7 @@ Tasks to implement vertex texture support.
     *   ensure other (non-bias/non-LOD) texture functions work in vertex shaders
     *   non-mipmapped textures use the only level available
     *   mipmapped textures use only the base level (ie level 0).
-2.  update implementation-dependant constants in Context.h
+2.  update implementation-dependent constants in Context.h
     *   MAX\_VERTEX\_TEXTURE\_IMAGE\_UNITS = 4
     *   MAX\_COMBINED\_TEXTURE\_IMAGE\_UNITS =
         MAX\_VERTEX\_TEXTURE\_IMAGE\_UNITS + MAX\_TEXTURE\_IMAGE\_UNITS (ie 20).

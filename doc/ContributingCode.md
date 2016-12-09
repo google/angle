@@ -24,7 +24,7 @@
 ### Testing
  * ANGLE uses trybots to test on a variety of platforms.  Please run your changes against our trybots and check the results before requesting a review.
     * Upload your change (see [Making changes](ContributingCode.md#Making-changes)).
-    * Run `git try`.  If you are not part of the `angle-commiters` group, you will need to either ask to be added or ask a member of the group to submit the tryjob for you.
+    * Run `git try`.  If you are not part of the `angle-committers` group, you will need to either ask to be added or ask a member of the group to submit the tryjob for you.
     * Wait for the bots to report the result on the code review page, this can take up to two hours for some of the debug bots.
     * Sometimes the bots report failures that are not due to the patch being tested.  If a failure is unexpected, ask an ANGLE project member for advice.
     * The `-b` flag can be used with `git try` to target individual bots.  Ex: `git try -b win_angle_rel_ng`.
@@ -36,7 +36,7 @@
       * Your failures must be a subset of the expected WebGL failures located in [`src/tests/WebGL-CTS-known-failures.txt`](../src/tests/WebGL-CTS-known-failures.txt). If you believe there are failing tests missing from the known failures file, please notify project members.
    * If your code isn't covered by an existing test, you are *strongly encouraged* to add new test coverage. This both ensures that your code is correct and that new contributors won't break it in the future.
    * If you are submitting a performance fix, test your code with `angle_perftests` and add a new performance test if it is not covered by the existing benchmarks.
-   * The [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) provides continuous integration for ANGLE patches that have been committed.  There may be hardware configurations that are not tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch, please notify a project memeber.
+   * The [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) provides continuous integration for ANGLE patches that have been committed.  There may be hardware configurations that are not tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch, please notify a project member.
    * ANGLE also includes the [drawElements Quality Program (dEQP)](dEQP.md) for additional testing. If you're working on a new feature, there may be some extensive tests for it already written.
 
 ### Legal
