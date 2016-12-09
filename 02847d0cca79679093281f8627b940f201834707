@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_9e735a06",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-09T20:05:32Z",
+      "side": 1,
+      "message": "detach()",
+      "range": {
+        "startLine": 111,
+        "startChar": 8,
+        "endLine": 111,
+        "endChar": 30
+      },
+      "revId": "02847d0cca79679093281f8627b940f201834707",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
