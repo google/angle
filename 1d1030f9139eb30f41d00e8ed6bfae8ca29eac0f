@@ -16,6 +16,24 @@
       "revId": "1d1030f9139eb30f41d00e8ed6bfae8ca29eac0f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_85642560",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-10T01:04:08Z",
+      "side": 1,
+      "message": "Thank you for pointing this. Done.",
+      "parentUuid": "ba129745_7afe59f9",
+      "revId": "1d1030f9139eb30f41d00e8ed6bfae8ca29eac0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
