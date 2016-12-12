@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_6954433f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3441,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "Is it correct for 32-bit OSes or applications?",
+      "range": {
+        "startLine": 3441,
+        "startChar": 4,
+        "endLine": 3441,
+        "endChar": 11
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_09882fb1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3448,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "Is this needed?",
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e984d39e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "I think you validate this in ValidateDraw[Arrays|Elements]Indirect. Do you still need this in base?",
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_c9459791",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3479,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "DrawArraysIndirectCommand",
+      "range": {
+        "startLine": 3479,
+        "startChar": 11,
+        "endLine": 3479,
+        "endChar": 28
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_29640b3a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3517,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "DrawElementsIndirectCommand",
+      "range": {
+        "startLine": 3517,
+        "startChar": 11,
+        "endLine": 3517,
+        "endChar": 30
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_09714ff7",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T05:55:43Z",
+      "side": 1,
+      "message": "Is this correct for 32-bit OSes?",
+      "range": {
+        "startLine": 3526,
+        "startChar": 4,
+        "endLine": 3526,
+        "endChar": 11
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
