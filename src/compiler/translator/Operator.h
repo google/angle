@@ -12,11 +12,11 @@
 //
 enum TOperator
 {
-    EOpNull,            // if in a node, should only mean a node is still being built
+    EOpNull,  // if in a node, should only mean a node is still being built
     EOpFunctionCall,
-    EOpParameters,      // an aggregate listing the parameters to a function
+    EOpParameters,  // an aggregate listing the parameters to a function
 
-    EOpInvariantDeclaration, // Specialized declarations for attributing invariance
+    EOpInvariantDeclaration,  // Specialized declarations for attributing invariance
     EOpPrototype,
 
     //
@@ -142,9 +142,9 @@ enum TOperator
     EOpReflect,
     EOpRefract,
 
-    EOpDFdx,            // Fragment only, OES_standard_derivatives extension
-    EOpDFdy,            // Fragment only, OES_standard_derivatives extension
-    EOpFwidth,          // Fragment only, OES_standard_derivatives extension
+    EOpDFdx,    // Fragment only, OES_standard_derivatives extension
+    EOpDFdy,    // Fragment only, OES_standard_derivatives extension
+    EOpFwidth,  // Fragment only, OES_standard_derivatives extension
 
     EOpMatrixTimesMatrix,
 
@@ -160,7 +160,7 @@ enum TOperator
     // Branch
     //
 
-    EOpKill,            // Fragment only
+    EOpKill,  // Fragment only
     EOpReturn,
     EOpBreak,
     EOpContinue,
@@ -221,7 +221,7 @@ enum TOperator
 };
 
 // Returns the string corresponding to the operator in GLSL
-const char* GetOperatorString(TOperator op);
+const char *GetOperatorString(TOperator op);
 
 // Say whether or not a binary or unary operation changes the value of a variable.
 bool IsAssignment(TOperator op);

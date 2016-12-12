@@ -9,8 +9,10 @@
 namespace sh
 {
 
-void TInfoSinkBase::prefix(TPrefixType p) {
-    switch(p) {
+void TInfoSinkBase::prefix(TPrefixType p)
+{
+    switch (p)
+    {
         case EPrefixNone:
             break;
         case EPrefixWarning:
@@ -34,7 +36,8 @@ void TInfoSinkBase::prefix(TPrefixType p) {
     }
 }
 
-void TInfoSinkBase::location(int file, int line) {
+void TInfoSinkBase::location(int file, int line)
+{
     TPersistStringStream stream;
     if (line)
         stream << file << ":" << line;
@@ -45,11 +48,13 @@ void TInfoSinkBase::location(int file, int line) {
     sink.append(stream.str());
 }
 
-void TInfoSinkBase::location(const TSourceLoc& loc) {
+void TInfoSinkBase::location(const TSourceLoc &loc)
+{
     location(loc.first_file, loc.first_line);
 }
 
-void TInfoSinkBase::message(TPrefixType p, const TSourceLoc& loc, const char* m) {
+void TInfoSinkBase::message(TPrefixType p, const TSourceLoc &loc, const char *m)
+{
     prefix(p);
     location(loc);
     sink.append(m);

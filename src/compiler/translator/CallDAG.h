@@ -67,6 +67,7 @@ class CallDAG : angle::NonCopyable
     void clear();
 
     const static size_t InvalidIndex;
+
   private:
     std::vector<Record> mRecords;
     std::map<int, int> mFunctionIdToIndex;

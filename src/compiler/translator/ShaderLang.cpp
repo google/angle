@@ -16,7 +16,7 @@
 #include "compiler/translator/length_limits.h"
 #ifdef ANGLE_ENABLE_HLSL
 #include "compiler/translator/TranslatorHLSL.h"
-#endif // ANGLE_ENABLE_HLSL
+#endif  // ANGLE_ENABLE_HLSL
 #include "compiler/translator/VariablePacker.h"
 #include "angle_gl.h"
 
@@ -73,8 +73,8 @@ const std::vector<VarT> *GetShaderVariables(const ShHandle handle)
         return NULL;
     }
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TCompiler* compiler = base->getAsCompiler();
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
     if (!compiler)
     {
         return NULL;
@@ -99,7 +99,7 @@ TranslatorHLSL *GetTranslatorHLSLFromHandle(ShHandle handle)
     TShHandleBase *base = static_cast<TShHandleBase *>(handle);
     return base->getAsTranslatorHLSL();
 }
-#endif // ANGLE_ENABLE_HLSL
+#endif  // ANGLE_ENABLE_HLSL
 
 }  // anonymous namespace
 
@@ -132,35 +132,35 @@ bool ShFinalize()
 //
 // Initialize built-in resources with minimum expected values.
 //
-void ShInitBuiltInResources(ShBuiltInResources* resources)
+void ShInitBuiltInResources(ShBuiltInResources *resources)
 {
     // Make comparable.
     memset(resources, 0, sizeof(*resources));
 
     // Constants.
-    resources->MaxVertexAttribs = 8;
-    resources->MaxVertexUniformVectors = 128;
-    resources->MaxVaryingVectors = 8;
-    resources->MaxVertexTextureImageUnits = 0;
+    resources->MaxVertexAttribs             = 8;
+    resources->MaxVertexUniformVectors      = 128;
+    resources->MaxVaryingVectors            = 8;
+    resources->MaxVertexTextureImageUnits   = 0;
     resources->MaxCombinedTextureImageUnits = 8;
-    resources->MaxTextureImageUnits = 8;
-    resources->MaxFragmentUniformVectors = 16;
-    resources->MaxDrawBuffers = 1;
+    resources->MaxTextureImageUnits         = 8;
+    resources->MaxFragmentUniformVectors    = 16;
+    resources->MaxDrawBuffers               = 1;
 
     // Extensions.
-    resources->OES_standard_derivatives = 0;
-    resources->OES_EGL_image_external = 0;
+    resources->OES_standard_derivatives        = 0;
+    resources->OES_EGL_image_external          = 0;
     resources->OES_EGL_image_external_essl3    = 0;
     resources->NV_EGL_stream_consumer_external = 0;
-    resources->ARB_texture_rectangle = 0;
-    resources->EXT_blend_func_extended      = 0;
-    resources->EXT_draw_buffers = 0;
-    resources->EXT_frag_depth = 0;
-    resources->EXT_shader_texture_lod = 0;
-    resources->WEBGL_debug_shader_precision = 0;
-    resources->EXT_shader_framebuffer_fetch = 0;
-    resources->NV_shader_framebuffer_fetch = 0;
-    resources->ARM_shader_framebuffer_fetch = 0;
+    resources->ARB_texture_rectangle           = 0;
+    resources->EXT_blend_func_extended         = 0;
+    resources->EXT_draw_buffers                = 0;
+    resources->EXT_frag_depth                  = 0;
+    resources->EXT_shader_texture_lod          = 0;
+    resources->WEBGL_debug_shader_precision    = 0;
+    resources->EXT_shader_framebuffer_fetch    = 0;
+    resources->NV_shader_framebuffer_fetch     = 0;
+    resources->ARM_shader_framebuffer_fetch    = 0;
 
     resources->NV_draw_buffers = 0;
 
@@ -168,10 +168,10 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     resources->FragmentPrecisionHigh = 0;
 
     // GLSL ES 3.0 constants.
-    resources->MaxVertexOutputVectors = 16;
+    resources->MaxVertexOutputVectors  = 16;
     resources->MaxFragmentInputVectors = 15;
-    resources->MinProgramTexelOffset = -8;
-    resources->MaxProgramTexelOffset = 7;
+    resources->MinProgramTexelOffset   = -8;
+    resources->MaxProgramTexelOffset   = 7;
 
     // Extensions constants.
     resources->MaxDualSourceDrawBuffers = 0;
@@ -220,17 +220,18 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
 //
 // Driver calls these to create and destroy compiler objects.
 //
-ShHandle ShConstructCompiler(sh::GLenum type, ShShaderSpec spec,
+ShHandle ShConstructCompiler(sh::GLenum type,
+                             ShShaderSpec spec,
                              ShShaderOutput output,
-                             const ShBuiltInResources* resources)
+                             const ShBuiltInResources *resources)
 {
-    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(type, spec, output));
+    TShHandleBase *base = static_cast<TShHandleBase *>(ConstructCompiler(type, spec, output));
     if (base == nullptr)
     {
         return 0;
     }
 
-    TCompiler* compiler = base->getAsCompiler();
+    TCompiler *compiler = base->getAsCompiler();
     if (compiler == nullptr)
     {
         return 0;
@@ -243,7 +244,7 @@ ShHandle ShConstructCompiler(sh::GLenum type, ShShaderSpec spec,
         return 0;
     }
 
-    return reinterpret_cast<void*>(base);
+    return reinterpret_cast<void *>(base);
 }
 
 void ShDestruct(ShHandle handle)
@@ -251,7 +252,7 @@ void ShDestruct(ShHandle handle)
     if (handle == 0)
         return;
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
 
     if (base->getAsCompiler())
         DeleteCompiler(base->getAsCompiler());
@@ -291,14 +292,14 @@ void ShClearResults(const ShHandle handle)
 
 int ShGetShaderVersion(const ShHandle handle)
 {
-    TCompiler* compiler = GetCompilerFromHandle(handle);
+    TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);
     return compiler->getShaderVersion();
 }
 
 ShShaderOutput ShGetShaderOutputType(const ShHandle handle)
 {
-    TCompiler* compiler = GetCompilerFromHandle(handle);
+    TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);
     return compiler->getOutputType();
 }
@@ -327,8 +328,7 @@ const std::string &ShGetObjectCode(const ShHandle handle)
     return infoSink.obj.str();
 }
 
-const std::map<std::string, std::string> *ShGetNameHashingMap(
-    const ShHandle handle)
+const std::map<std::string, std::string> *ShGetNameHashingMap(const ShHandle handle)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);
@@ -397,7 +397,7 @@ bool ShGetInterfaceBlockRegister(const ShHandle handle,
     return true;
 #else
     return false;
-#endif // ANGLE_ENABLE_HLSL
+#endif  // ANGLE_ENABLE_HLSL
 }
 
 const std::map<std::string, unsigned int> *ShGetUniformRegisterMap(const ShHandle handle)

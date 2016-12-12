@@ -38,4 +38,4 @@ class ValidateOutputs : public TIntermTraverser
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_VALIDATEOUTPUTS_H_
+#endif  // COMPILER_TRANSLATOR_VALIDATEOUTPUTS_H_

@@ -28,7 +28,8 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
 //
 // This function is emulating built-in functions missing from GLSL 1.30 and higher.
 //
-void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu, sh::GLenum shaderType,
+void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu,
+                                                        sh::GLenum shaderType,
                                                         int targetGLSLVersion);
 }  // namespace sh
 

@@ -36,7 +36,7 @@ bool TOutputESSL::writeVariablePrecision(TPrecision precision)
     if (precision == EbpUndefined)
         return false;
 
-    TInfoSinkBase& out = objSink();
+    TInfoSinkBase &out = objSink();
     if (mForceHighp)
         out << getPrecisionString(EbpHigh);
     else

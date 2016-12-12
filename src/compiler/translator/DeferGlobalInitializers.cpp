@@ -141,7 +141,7 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     {
         return;
     }
-    const int initFunctionId  = TSymbolTable::nextUniqueId();
+    const int initFunctionId = TSymbolTable::nextUniqueId();
 
     const char *functionName = "initializeDeferredGlobals";
 
@@ -152,7 +152,7 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
 
     // Add function definition to the end of the shader
     TIntermBlock *functionBodyNode = new TIntermBlock();
-    TIntermSequence *functionBody = functionBodyNode->getSequence();
+    TIntermSequence *functionBody  = functionBodyNode->getSequence();
     for (const auto &deferredInit : mDeferredInitializers)
     {
         functionBody->push_back(deferredInit);

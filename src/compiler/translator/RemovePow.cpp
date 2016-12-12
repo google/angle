@@ -46,8 +46,7 @@ class RemovePowTraverser : public TIntermTraverser
 };
 
 RemovePowTraverser::RemovePowTraverser()
-    : TIntermTraverser(true, false, false),
-      mNeedAnotherIteration(false)
+    : TIntermTraverser(true, false, false), mNeedAnotherIteration(false)
 {
 }
 
@@ -81,7 +80,7 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
     return true;
 }
 
-} // namespace
+}  // namespace
 
 void RemovePow(TIntermNode *root)
 {
@@ -92,8 +91,7 @@ void RemovePow(TIntermNode *root)
         traverser.nextIteration();
         root->traverse(&traverser);
         traverser.updateTree();
-    }
-    while (traverser.needAnotherIteration());
+    } while (traverser.needAnotherIteration());
 }
 
 }  // namespace sh

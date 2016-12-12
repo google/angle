@@ -23,10 +23,7 @@ namespace sh
 class UnfoldShortCircuitAST : public TIntermTraverser
 {
   public:
-    UnfoldShortCircuitAST()
-        : TIntermTraverser(true, false, false)
-    {
-    }
+    UnfoldShortCircuitAST() : TIntermTraverser(true, false, false) {}
 
     bool visitBinary(Visit visit, TIntermBinary *) override;
 };

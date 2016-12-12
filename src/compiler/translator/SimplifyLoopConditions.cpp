@@ -66,7 +66,7 @@ SimplifyLoopConditionsTraverser::SimplifyLoopConditionsTraverser(
 
 void SimplifyLoopConditionsTraverser::nextIteration()
 {
-    mFoundLoopToChange               = false;
+    mFoundLoopToChange                   = false;
     mInsideLoopInitConditionOrExpression = false;
     nextTemporaryIndex();
 }

@@ -18,10 +18,9 @@
 namespace sh
 {
 
-TranslatorGLSL::TranslatorGLSL(sh::GLenum type,
-                               ShShaderSpec spec,
-                               ShShaderOutput output)
-    : TCompiler(type, spec, output) {
+TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
+    : TCompiler(type, spec, output)
+{
 }
 
 void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
@@ -43,7 +42,7 @@ void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
 
 void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOptions)
 {
-    TInfoSinkBase& sink = getInfoSink().obj;
+    TInfoSinkBase &sink = getInfoSink().obj;
 
     // Write GLSL version.
     writeVersion(root);
@@ -98,7 +97,8 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
         sh::RewriteUnaryMinusOperatorFloat(root);
     }
 
-    bool precisionEmulation = getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
+    bool precisionEmulation =
+        getResources().WEBGL_debug_shader_precision && getPragma().debugShaderPrecision;
 
     if (precisionEmulation)
     {
@@ -224,15 +224,15 @@ void TranslatorGLSL::writeVersion(TIntermNode *root)
     // If there is no version directive in the shader, 110 is implied.
     if (version > 110)
     {
-        TInfoSinkBase& sink = getInfoSink().obj;
+        TInfoSinkBase &sink = getInfoSink().obj;
         sink << "#version " << version << "\n";
     }
 }
 
 void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root)
 {
-    TInfoSinkBase& sink = getInfoSink().obj;
-    const TExtensionBehavior& extBehavior = getExtensionBehavior();
+    TInfoSinkBase &sink                   = getInfoSink().obj;
+    const TExtensionBehavior &extBehavior = getExtensionBehavior();
     for (const auto &iter : extBehavior)
     {
         if (iter.second == EBhUndefined)

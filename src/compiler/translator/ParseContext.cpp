@@ -222,7 +222,6 @@ bool TParseContext::parseVectorFields(const TString &compString,
 //
 ////////////////////////////////////////////////////////////////////////
 
-
 //
 // Used by flex/bison to output all syntax and parsing errors.
 //
@@ -340,8 +339,8 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
 // an l-value that can be operated on this way.
 bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIntermTyped *node)
 {
-    TIntermSymbol *symNode    = node->getAsSymbolNode();
-    TIntermBinary *binaryNode = node->getAsBinaryNode();
+    TIntermSymbol *symNode      = node->getAsSymbolNode();
+    TIntermBinary *binaryNode   = node->getAsBinaryNode();
     TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
 
     if (swizzleNode)
@@ -591,7 +590,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
     bool full           = false;
     bool overFull       = false;
     bool matrixInMatrix = false;
-    bool arrayArg = false;
+    bool arrayArg       = false;
     for (size_t i = 0; i < function.getParamCount(); ++i)
     {
         const TConstParameter &param = function.getParam(i);
@@ -2141,7 +2140,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &publicType,
 
     if (checkIsValidTypeAndQualifierForArray(arrayLocation, publicType))
     {
-        TType arrayType = TType(publicType);
+        TType arrayType   = TType(publicType);
         unsigned int size = checkIsValidArraySize(arrayLocation, indexExpression);
         arrayType.setArraySize(size);
 
@@ -2380,7 +2379,7 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
         else
         {
             TIntermSymbol *paramSymbol = intermediate.addSymbol(0, "", *param.type, location);
-            prototype                  = intermediate.growAggregate(prototype, paramSymbol, location);
+            prototype = intermediate.growAggregate(prototype, paramSymbol, location);
         }
     }
 
@@ -2654,7 +2653,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
             error(publicType.getLine(), "cannot construct this type",
                   getBasicString(publicType.getBasicType()));
             publicType.setBasicType(EbtFloat);
-            op              = EOpConstructFloat;
+            op = EOpConstructFloat;
         }
     }
 
@@ -3006,7 +3005,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         // handle this case is to report a warning instead of an error and force the index to be in
         // the correct range.
         bool outOfRangeIndexIsError = indexExpression->getQualifier() == EvqConst;
-        int index = indexConstantUnion->getIConst(0);
+        int index                   = indexConstantUnion->getIConst(0);
 
         int safeIndex = -1;
 
@@ -3356,7 +3355,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         }
         else
         {
-            qualifier.location = intValue;
+            qualifier.location           = intValue;
             qualifier.locationsSpecified = 1;
         }
     }
@@ -4062,10 +4061,10 @@ TIntermTyped *TParseContext::addComma(TIntermTyped *left,
 {
     // WebGL2 section 5.26, the following results in an error:
     // "Sequence operator applied to void, arrays, or structs containing arrays"
-    if (mShaderSpec == SH_WEBGL2_SPEC && (left->isArray() || left->getBasicType() == EbtVoid ||
-                                          left->getType().isStructureContainingArrays() ||
-                                          right->isArray() || right->getBasicType() == EbtVoid ||
-                                          right->getType().isStructureContainingArrays()))
+    if (mShaderSpec == SH_WEBGL2_SPEC &&
+        (left->isArray() || left->getBasicType() == EbtVoid ||
+         left->getType().isStructureContainingArrays() || right->isArray() ||
+         right->getBasicType() == EbtVoid || right->getType().isStructureContainingArrays()))
     {
         error(loc,
               "sequence operator is not allowed for void, arrays, or structs containing arrays",
@@ -4279,7 +4278,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
         int arraySize              = 0;
-        TIntermTyped *typedThis = thisNode->getAsTyped();
+        TIntermTyped *typedThis    = thisNode->getAsTyped();
         if (fnCall->getName() != "length")
         {
             error(loc, "invalid method", fnCall->getName().c_str());
@@ -4349,7 +4348,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                     //
                     TIntermAggregate *paramAgg = paramNode->getAsAggregate();
                     paramNode                  = paramAgg->getSequence()->front();
-                    callNode = createUnaryMath(op, paramNode->getAsTyped(), loc,
+                    callNode                   = createUnaryMath(op, paramNode->getAsTyped(), loc,
                                                &fnCandidate->getReturnType());
                     if (callNode == nullptr)
                     {

@@ -21,7 +21,8 @@
 namespace sh
 {
 
-struct TSourceLoc {
+struct TSourceLoc
+{
     int first_file;
     int first_line;
     int last_file;
@@ -32,25 +33,25 @@ struct TSourceLoc {
 // Put POOL_ALLOCATOR_NEW_DELETE in base classes to make them use this scheme.
 //
 #define POOL_ALLOCATOR_NEW_DELETE()                                                  \
-    void* operator new(size_t s) { return GetGlobalPoolAllocator()->allocate(s); }   \
-    void* operator new(size_t, void *_Where) { return (_Where); }                    \
-    void operator delete(void*) { }                                                  \
-    void operator delete(void *, void *) { }                                         \
-    void* operator new[](size_t s) { return GetGlobalPoolAllocator()->allocate(s); } \
-    void* operator new[](size_t, void *_Where) { return (_Where); }                  \
-    void operator delete[](void*) { }                                                \
-    void operator delete[](void *, void *) { }
+    void *operator new(size_t s) { return GetGlobalPoolAllocator()->allocate(s); }   \
+    void *operator new(size_t, void *_Where) { return (_Where); }                    \
+    void operator delete(void *) {}                                                  \
+    void operator delete(void *, void *) {}                                          \
+    void *operator new[](size_t s) { return GetGlobalPoolAllocator()->allocate(s); } \
+    void *operator new[](size_t, void *_Where) { return (_Where); }                  \
+    void operator delete[](void *) {}                                                \
+    void operator delete[](void *, void *) {}
 
 //
 // Pool version of string.
 //
 typedef pool_allocator<char> TStringAllocator;
-typedef std::basic_string <char, std::char_traits<char>, TStringAllocator> TString;
+typedef std::basic_string<char, std::char_traits<char>, TStringAllocator> TString;
 typedef std::basic_ostringstream<char, std::char_traits<char>, TStringAllocator> TStringStream;
-inline TString* NewPoolTString(const char* s)
+inline TString *NewPoolTString(const char *s)
 {
-	void* memory = GetGlobalPoolAllocator()->allocate(sizeof(TString));
-	return new(memory) TString(s);
+    void *memory = GetGlobalPoolAllocator()->allocate(sizeof(TString));
+    return new (memory) TString(s);
 }
 
 //
@@ -81,7 +82,10 @@ class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D>>>
 
     TMap() : std::map<K, D, CMP, tAllocator>() {}
     // use correct two-stage name lookup supported in gcc 3.4 and above
-    TMap(const tAllocator& a) : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a) {}
+    TMap(const tAllocator &a)
+        : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a)
+    {
+    }
 };
 
 // Integer to TString conversion
@@ -97,4 +101,4 @@ inline TString str(T i)
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_COMMON_H_
+#endif  // COMPILER_TRANSLATOR_COMMON_H_

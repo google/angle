@@ -105,13 +105,13 @@ bool ValidateLimitations::visitBinary(Visit, TIntermBinary *node)
     // Check indexing.
     switch (node->getOp())
     {
-      case EOpIndexDirect:
-      case EOpIndexIndirect:
-          if (mValidateIndexing)
-              validateIndexing(node);
-          break;
-      default:
-          break;
+        case EOpIndexDirect:
+        case EOpIndexIndirect:
+            if (mValidateIndexing)
+                validateIndexing(node);
+            break;
+        default:
+            break;
     }
     return true;
 }
@@ -126,12 +126,13 @@ bool ValidateLimitations::visitUnary(Visit, TIntermUnary *node)
 
 bool ValidateLimitations::visitAggregate(Visit, TIntermAggregate *node)
 {
-    switch (node->getOp()) {
-      case EOpFunctionCall:
-        validateFunctionCall(node);
-        break;
-      default:
-        break;
+    switch (node->getOp())
+    {
+        case EOpFunctionCall:
+            validateFunctionCall(node);
+            break;
+        default:
+            break;
     }
     return true;
 }
@@ -159,8 +160,7 @@ bool ValidateLimitations::visitLoop(Visit, TIntermLoop *node)
     return false;
 }
 
-void ValidateLimitations::error(TSourceLoc loc,
-                                const char *reason, const char *token)
+void ValidateLimitations::error(TSourceLoc loc, const char *reason, const char *token)
 {
     if (mSink)
     {
@@ -189,9 +189,7 @@ bool ValidateLimitations::validateLoopType(TIntermLoop *node)
         return true;
 
     // Reject while and do-while loops.
-    error(node->getLine(),
-          "This type of loop is not allowed",
-          type == ELoopWhile ? "while" : "do");
+    error(node->getLine(), "This type of loop is not allowed", type == ELoopWhile ? "while" : "do");
     return false;
 }
 
@@ -254,16 +252,15 @@ int ValidateLimitations::validateForLoopInit(TIntermLoop *node)
     }
     // The loop index has type int or float.
     TBasicType type = symbol->getBasicType();
-    if ((type != EbtInt) && (type != EbtUInt) && (type != EbtFloat)) {
-        error(symbol->getLine(),
-              "Invalid type for loop index", getBasicString(type));
+    if ((type != EbtInt) && (type != EbtUInt) && (type != EbtFloat))
+    {
+        error(symbol->getLine(), "Invalid type for loop index", getBasicString(type));
         return -1;
     }
     // The loop index is initialized with constant expression.
     if (!isConstExpr(declInit->getRight()))
     {
-        error(declInit->getLine(),
-              "Loop index cannot be initialized with non-constant expression",
+        error(declInit->getLine(), "Loop index cannot be initialized with non-constant expression",
               symbol->getSymbol().c_str());
         return -1;
     }
@@ -271,8 +268,7 @@ int ValidateLimitations::validateForLoopInit(TIntermLoop *node)
     return symbol->getId();
 }
 
-bool ValidateLimitations::validateForLoopCond(TIntermLoop *node,
-                                              int indexSymbolId)
+bool ValidateLimitations::validateForLoopCond(TIntermLoop *node, int indexSymbolId)
 {
     TIntermNode *cond = node->getCondition();
     if (cond == NULL)
@@ -299,31 +295,28 @@ bool ValidateLimitations::validateForLoopCond(TIntermLoop *node,
     }
     if (symbol->getId() != indexSymbolId)
     {
-        error(symbol->getLine(),
-              "Expected loop index", symbol->getSymbol().c_str());
+        error(symbol->getLine(), "Expected loop index", symbol->getSymbol().c_str());
         return false;
     }
     // Relational operator is one of: > >= < <= == or !=.
     switch (binOp->getOp())
     {
-      case EOpEqual:
-      case EOpNotEqual:
-      case EOpLessThan:
-      case EOpGreaterThan:
-      case EOpLessThanEqual:
-      case EOpGreaterThanEqual:
-        break;
-      default:
-        error(binOp->getLine(),
-              "Invalid relational operator",
-              GetOperatorString(binOp->getOp()));
-        break;
+        case EOpEqual:
+        case EOpNotEqual:
+        case EOpLessThan:
+        case EOpGreaterThan:
+        case EOpLessThanEqual:
+        case EOpGreaterThanEqual:
+            break;
+        default:
+            error(binOp->getLine(), "Invalid relational operator",
+                  GetOperatorString(binOp->getOp()));
+            break;
     }
     // Loop index must be compared with a constant.
     if (!isConstExpr(binOp->getRight()))
     {
-        error(binOp->getLine(),
-              "Loop index cannot be compared with non-constant expression",
+        error(binOp->getLine(), "Loop index cannot be compared with non-constant expression",
               symbol->getSymbol().c_str());
         return false;
     }
@@ -331,8 +324,7 @@ bool ValidateLimitations::validateForLoopCond(TIntermLoop *node,
     return true;
 }
 
-bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node,
-                                              int indexSymbolId)
+bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node, int indexSymbolId)
 {
     TIntermNode *expr = node->getExpression();
     if (expr == NULL)
@@ -350,19 +342,19 @@ bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node,
     //     --loop_index
     // The last two forms are not specified in the spec, but I am assuming
     // its an oversight.
-    TIntermUnary *unOp = expr->getAsUnaryNode();
+    TIntermUnary *unOp   = expr->getAsUnaryNode();
     TIntermBinary *binOp = unOp ? NULL : expr->getAsBinaryNode();
 
-    TOperator op = EOpNull;
+    TOperator op          = EOpNull;
     TIntermSymbol *symbol = NULL;
     if (unOp != NULL)
     {
-        op = unOp->getOp();
+        op     = unOp->getOp();
         symbol = unOp->getOperand()->getAsSymbolNode();
     }
     else if (binOp != NULL)
     {
-        op = binOp->getOp();
+        op     = binOp->getOp();
         symbol = binOp->getLeft()->getAsSymbolNode();
     }
 
@@ -374,27 +366,26 @@ bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node,
     }
     if (symbol->getId() != indexSymbolId)
     {
-        error(symbol->getLine(),
-              "Expected loop index", symbol->getSymbol().c_str());
+        error(symbol->getLine(), "Expected loop index", symbol->getSymbol().c_str());
         return false;
     }
 
     // The operator is one of: ++ -- += -=.
     switch (op)
     {
-      case EOpPostIncrement:
-      case EOpPostDecrement:
-      case EOpPreIncrement:
-      case EOpPreDecrement:
-        ASSERT((unOp != NULL) && (binOp == NULL));
-        break;
-      case EOpAddAssign:
-      case EOpSubAssign:
-        ASSERT((unOp == NULL) && (binOp != NULL));
-        break;
-      default:
-        error(expr->getLine(), "Invalid operator", GetOperatorString(op));
-        return false;
+        case EOpPostIncrement:
+        case EOpPostDecrement:
+        case EOpPreIncrement:
+        case EOpPreDecrement:
+            ASSERT((unOp != NULL) && (binOp == NULL));
+            break;
+        case EOpAddAssign:
+        case EOpSubAssign:
+            ASSERT((unOp == NULL) && (binOp != NULL));
+            break;
+        default:
+            error(expr->getLine(), "Invalid operator", GetOperatorString(op));
+            return false;
     }
 
     // Loop index must be incremented/decremented with a constant.
@@ -402,8 +393,7 @@ bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node,
     {
         if (!isConstExpr(binOp->getRight()))
         {
-            error(binOp->getLine(),
-                  "Loop index cannot be modified by non-constant expression",
+            error(binOp->getLine(), "Loop index cannot be modified by non-constant expression",
                   symbol->getSymbol().c_str());
             return false;
         }
@@ -435,17 +425,16 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
     if (pIndex.empty())
         return true;
 
-    bool valid = true;
-    TSymbolTable& symbolTable = GetGlobalParseContext()->symbolTable;
+    bool valid                = true;
+    TSymbolTable &symbolTable = GetGlobalParseContext()->symbolTable;
     TSymbol *symbol           = symbolTable.find(node->getFunctionSymbolInfo()->getName(),
                                        GetGlobalParseContext()->getShaderVersion());
     ASSERT(symbol && symbol->isFunction());
     TFunction *function = static_cast<TFunction *>(symbol);
-    for (ParamIndex::const_iterator i = pIndex.begin();
-         i != pIndex.end(); ++i)
+    for (ParamIndex::const_iterator i = pIndex.begin(); i != pIndex.end(); ++i)
     {
         const TConstParameter &param = function->getParam(*i);
-        TQualifier qual = param.type->getQualifier();
+        TQualifier qual              = param.type->getQualifier();
         if ((qual == EvqOut) || (qual == EvqInOut))
         {
             error((*params)[*i]->getLine(),
@@ -458,8 +447,7 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
     return valid;
 }
 
-bool ValidateLimitations::validateOperation(TIntermOperator *node,
-                                            TIntermNode* operand)
+bool ValidateLimitations::validateOperation(TIntermOperator *node, TIntermNode *operand)
 {
     // Check if loop index is modified in the loop body.
     if (!withinLoopBody() || !node->isAssignment())
@@ -492,16 +480,14 @@ bool ValidateLimitations::isConstIndexExpr(TIntermNode *node)
 
 bool ValidateLimitations::validateIndexing(TIntermBinary *node)
 {
-    ASSERT((node->getOp() == EOpIndexDirect) ||
-           (node->getOp() == EOpIndexIndirect));
+    ASSERT((node->getOp() == EOpIndexDirect) || (node->getOp() == EOpIndexIndirect));
 
-    bool valid = true;
+    bool valid          = true;
     TIntermTyped *index = node->getRight();
     // The index expession must be a constant-index-expression unless
     // the operand is a uniform in a vertex shader.
     TIntermTyped *operand = node->getLeft();
-    bool skip = (mShaderType == GL_VERTEX_SHADER) &&
-                (operand->getQualifier() == EvqUniform);
+    bool skip = (mShaderType == GL_VERTEX_SHADER) && (operand->getQualifier() == EvqUniform);
     if (!skip && !isConstIndexExpr(index))
     {
         error(index->getLine(), "Index expression must be constant", "[]");

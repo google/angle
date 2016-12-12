@@ -91,7 +91,7 @@ class TIntermNode : angle::NonCopyable
         mLine.first_file = mLine.last_file = 0;
         mLine.first_line = mLine.last_line = 0;
     }
-    virtual ~TIntermNode() { }
+    virtual ~TIntermNode() {}
 
     const TSourceLoc &getLine() const { return mLine; }
     void setLine(const TSourceLoc &l) { mLine = l; }
@@ -117,8 +117,7 @@ class TIntermNode : angle::NonCopyable
 
     // Replace a child node. Return true if |original| is a child
     // node and it is replaced; otherwise, return false.
-    virtual bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement) = 0;
+    virtual bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) = 0;
 
   protected:
     TSourceLoc mLine;
@@ -139,7 +138,7 @@ struct TIntermNodePair
 class TIntermTyped : public TIntermNode
 {
   public:
-    TIntermTyped(const TType &t) : mType(t)  { }
+    TIntermTyped(const TType &t) : mType(t) {}
 
     virtual TIntermTyped *deepCopy() const = 0;
 
@@ -163,7 +162,7 @@ class TIntermTyped : public TIntermNode
 
     bool isInterfaceBlock() const { return mType.isInterfaceBlock(); }
     bool isMatrix() const { return mType.isMatrix(); }
-    bool isArray()  const { return mType.isArray(); }
+    bool isArray() const { return mType.isArray(); }
     bool isVector() const { return mType.isVector(); }
     bool isScalar() const { return mType.isScalar(); }
     bool isScalarInt() const { return mType.isScalarInt(); }
@@ -222,9 +221,9 @@ class TIntermLoop : public TIntermNode
 
   protected:
     TLoopType mType;
-    TIntermNode *mInit;  // for-loop initialization
-    TIntermTyped *mCond; // loop exit condition
-    TIntermTyped *mExpr; // for-loop expression
+    TIntermNode *mInit;   // for-loop initialization
+    TIntermTyped *mCond;  // loop exit condition
+    TIntermTyped *mExpr;  // for-loop expression
     TIntermBlock *mBody;  // loop body
 };
 
@@ -234,18 +233,16 @@ class TIntermLoop : public TIntermNode
 class TIntermBranch : public TIntermNode
 {
   public:
-    TIntermBranch(TOperator op, TIntermTyped *e)
-        : mFlowOp(op),
-          mExpression(e) { }
+    TIntermBranch(TOperator op, TIntermTyped *e) : mFlowOp(op), mExpression(e) {}
 
     void traverse(TIntermTraverser *it) override;
     TIntermBranch *getAsBranchNode() override { return this; }
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
     TOperator getFlowOp() { return mFlowOp; }
-    TIntermTyped* getExpression() { return mExpression; }
+    TIntermTyped *getExpression() { return mExpression; }
 
-protected:
+  protected:
     TOperator mFlowOp;
     TIntermTyped *mExpression;  // non-zero except for "return exp;" statements
 };
@@ -294,9 +291,7 @@ class TIntermSymbol : public TIntermTyped
 class TIntermRaw : public TIntermTyped
 {
   public:
-    TIntermRaw(const TType &type, const TString &rawText)
-        : TIntermTyped(type),
-          mRawText(rawText) { }
+    TIntermRaw(const TType &type, const TString &rawText) : TIntermTyped(type), mRawText(rawText) {}
     TIntermRaw(const TIntermRaw &) = delete;
 
     TIntermTyped *deepCopy() const override
@@ -384,7 +379,7 @@ class TIntermConstantUnion : public TIntermTyped
     const TConstantUnion *mUnionArrayPointer;
 
   private:
-    typedef float(*FloatTypeUnaryFunc) (float);
+    typedef float (*FloatTypeUnaryFunc)(float);
     void foldFloatTypeUnary(const TConstantUnion &parameter,
                             FloatTypeUnaryFunc builtinFunc,
                             TConstantUnion *result) const;
@@ -407,12 +402,8 @@ class TIntermOperator : public TIntermTyped
     bool hasSideEffects() const override { return isAssignment(); }
 
   protected:
-    TIntermOperator(TOperator op)
-        : TIntermTyped(TType(EbtFloat, EbpUndefined)),
-          mOp(op) {}
-    TIntermOperator(TOperator op, const TType &type)
-        : TIntermTyped(type),
-          mOp(op) {}
+    TIntermOperator(TOperator op) : TIntermTyped(TType(EbtFloat, EbpUndefined)), mOp(op) {}
+    TIntermOperator(TOperator op, const TType &type) : TIntermTyped(type), mOp(op) {}
 
     TIntermOperator(const TIntermOperator &) = default;
 
@@ -485,8 +476,8 @@ class TIntermBinary : public TIntermOperator
     bool getAddIndexClamp() { return mAddIndexClamp; }
 
   protected:
-    TIntermTyped* mLeft;
-    TIntermTyped* mRight;
+    TIntermTyped *mLeft;
+    TIntermTyped *mRight;
 
     // If set to true, wrap any EOpIndexIndirect with a clamp to bounds.
     bool mAddIndexClamp;
@@ -639,7 +630,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
           mGotPrecisionFromChildren(false)
     {
     }
-    ~TIntermAggregate() { }
+    ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.
     TIntermTyped *deepCopy() const override { return new TIntermAggregate(*this); }
@@ -675,7 +666,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
   protected:
     TIntermSequence mSequence;
-    bool mUserDefined; // used for user defined function names
+    bool mUserDefined;  // used for user defined function names
 
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs.
@@ -801,8 +792,7 @@ class TIntermSwitch : public TIntermNode
     }
 
     void traverse(TIntermTraverser *it) override;
-    bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
     TIntermSwitch *getAsSwitchNode() override { return this; }
 
@@ -821,15 +811,10 @@ class TIntermSwitch : public TIntermNode
 class TIntermCase : public TIntermNode
 {
   public:
-    TIntermCase(TIntermTyped *condition)
-        : TIntermNode(),
-          mCondition(condition)
-    {
-    }
+    TIntermCase(TIntermTyped *condition) : TIntermNode(), mCondition(condition) {}
 
     void traverse(TIntermTraverser *it) override;
-    bool replaceChildNode(
-        TIntermNode *original, TIntermNode *replacement) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
     TIntermCase *getAsCaseNode() override { return this; }
 
@@ -933,10 +918,7 @@ class TIntermTraverser : angle::NonCopyable
         mPath.pop_back();
     }
 
-    TIntermNode *getParentNode()
-    {
-        return mPath.size() == 0 ? NULL : mPath.back();
-    }
+    TIntermNode *getParentNode() { return mPath.size() == 0 ? NULL : mPath.back(); }
 
     // Return the nth ancestor of the node being traversed. getAncestorNode(0) == getParentNode()
     TIntermNode *getAncestorNode(unsigned int n)
@@ -992,10 +974,12 @@ class TIntermTraverser : angle::NonCopyable
         TIntermSequence insertionsAfter;
     };
 
-    // Helper to insert statements in the parent block (sequence) of the node currently being traversed.
+    // Helper to insert statements in the parent block (sequence) of the node currently being
+    // traversed.
     // The statements will be inserted before the node being traversed once updateTree is called.
     // Should only be called during PreVisit or PostVisit from sequence nodes.
-    // Note that inserting more than one set of nodes to the same parent node on a single updateTree call is not
+    // Note that inserting more than one set of nodes to the same parent node on a single updateTree
+    // call is not
     // supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
 
@@ -1013,7 +997,8 @@ class TIntermTraverser : angle::NonCopyable
     TIntermSymbol *createTempSymbol(const TType &type);
     // Create a node that declares but doesn't initialize a temporary symbol.
     TIntermDeclaration *createTempDeclaration(const TType &type);
-    // Create a node that initializes the current temporary symbol with initializer having the given qualifier.
+    // Create a node that initializes the current temporary symbol with initializer having the given
+    // qualifier.
     TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer, TQualifier qualifier);
     // Create a node that initializes the current temporary symbol with initializer.
     TIntermDeclaration *createTempInitDeclaration(TIntermTyped *initializer);
@@ -1180,8 +1165,9 @@ class TMaxDepthTraverser : public TIntermTraverser
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TMaxDepthTraverser(int depthLimit)
-        : TIntermTraverser(true, true, false),
-          mDepthLimit(depthLimit) { }
+        : TIntermTraverser(true, true, false), mDepthLimit(depthLimit)
+    {
+    }
 
     bool visitBinary(Visit, TIntermBinary *) override { return depthCheck(); }
     bool visitUnary(Visit, TIntermUnary *) override { return depthCheck(); }

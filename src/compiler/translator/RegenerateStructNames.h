@@ -18,12 +18,13 @@ namespace sh
 class RegenerateStructNames : public TIntermTraverser
 {
   public:
-    RegenerateStructNames(const TSymbolTable &symbolTable,
-                          int shaderVersion)
+    RegenerateStructNames(const TSymbolTable &symbolTable, int shaderVersion)
         : TIntermTraverser(true, false, false),
           mSymbolTable(symbolTable),
           mShaderVersion(shaderVersion),
-          mScopeDepth(0) {}
+          mScopeDepth(0)
+    {
+    }
 
   protected:
     void visitSymbol(TIntermSymbol *) override;

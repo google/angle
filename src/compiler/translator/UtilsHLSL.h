@@ -69,7 +69,8 @@ TString DecorateField(const TString &string, const TStructure &structure);
 TString DecoratePrivate(const TString &privateText);
 TString TypeString(const TType &type);
 TString StructNameString(const TStructure &structure);
-TString QualifiedStructNameString(const TStructure &structure, bool useHLSLRowMajorPacking,
+TString QualifiedStructNameString(const TStructure &structure,
+                                  bool useHLSLRowMajorPacking,
                                   bool useStd140Packing);
 TString InterpolationString(TQualifier qualifier);
 TString QualifierString(TQualifier qualifier);
@@ -78,4 +79,4 @@ TString QualifierString(TQualifier qualifier);
 TString DisambiguateFunctionName(const TIntermSequence *parameters);
 }
 
-#endif // COMPILER_TRANSLATOR_UTILSHLSL_H_
+#endif  // COMPILER_TRANSLATOR_UTILSHLSL_H_

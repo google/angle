@@ -444,26 +444,28 @@ TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild)
     if (roundedChild->getPrecision() == EbpMedium)
         roundFunctionName = "angle_frm";
     else
-        roundFunctionName = "angle_frl";
+        roundFunctionName      = "angle_frl";
     TIntermAggregate *callNode = createInternalFunctionCallNode(roundFunctionName, roundedChild);
     callNode->setType(roundedChild->getType());
     return callNode;
 }
 
-TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left, TIntermTyped *right, const char *opNameStr)
+TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
+                                                           TIntermTyped *right,
+                                                           const char *opNameStr)
 {
     std::stringstream strstr;
     if (left->getPrecision() == EbpMedium)
         strstr << "angle_compound_" << opNameStr << "_frm";
     else
         strstr << "angle_compound_" << opNameStr << "_frl";
-    TString functionName = strstr.str().c_str();
+    TString functionName       = strstr.str().c_str();
     TIntermAggregate *callNode = createInternalFunctionCallNode(functionName, left);
     callNode->getSequence()->push_back(right);
     return callNode;
 }
 
-bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
+bool parentUsesResult(TIntermNode *parent, TIntermNode *node)
 {
     if (!parent)
     {
@@ -491,7 +493,8 @@ bool parentUsesResult(TIntermNode* parent, TIntermNode* node)
 EmulatePrecision::EmulatePrecision(const TSymbolTable &symbolTable, int shaderVersion)
     : TLValueTrackingTraverser(true, true, true, symbolTable, shaderVersion),
       mDeclaringVariables(false)
-{}
+{
+}
 
 void EmulatePrecision::visitSymbol(TIntermSymbol *node)
 {
@@ -501,7 +504,6 @@ void EmulatePrecision::visitSymbol(TIntermSymbol *node)
         queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
     }
 }
-
 
 bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
 {
@@ -519,83 +521,85 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
     if (visit != PreVisit)
         return visitChildren;
 
-    const TType& type = node->getType();
-    bool roundFloat = canRoundFloat(type);
+    const TType &type = node->getType();
+    bool roundFloat   = canRoundFloat(type);
 
-    if (roundFloat) {
-        switch (op) {
-          // Math operators that can result in a float may need to apply rounding to the return
-          // value. Note that in the case of assignment, the rounding is applied to its return
-          // value here, not the value being assigned.
-          case EOpAssign:
-          case EOpAdd:
-          case EOpSub:
-          case EOpMul:
-          case EOpDiv:
-          case EOpVectorTimesScalar:
-          case EOpVectorTimesMatrix:
-          case EOpMatrixTimesVector:
-          case EOpMatrixTimesScalar:
-          case EOpMatrixTimesMatrix:
-          {
-            TIntermNode *parent = getParentNode();
-            if (!parentUsesResult(parent, node))
+    if (roundFloat)
+    {
+        switch (op)
+        {
+            // Math operators that can result in a float may need to apply rounding to the return
+            // value. Note that in the case of assignment, the rounding is applied to its return
+            // value here, not the value being assigned.
+            case EOpAssign:
+            case EOpAdd:
+            case EOpSub:
+            case EOpMul:
+            case EOpDiv:
+            case EOpVectorTimesScalar:
+            case EOpVectorTimesMatrix:
+            case EOpMatrixTimesVector:
+            case EOpMatrixTimesScalar:
+            case EOpMatrixTimesMatrix:
             {
+                TIntermNode *parent = getParentNode();
+                if (!parentUsesResult(parent, node))
+                {
+                    break;
+                }
+                TIntermNode *replacement = createRoundingFunctionCallNode(node);
+                queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
                 break;
             }
-            TIntermNode *replacement = createRoundingFunctionCallNode(node);
-            queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
-            break;
-          }
 
-          // Compound assignment cases need to replace the operator with a function call.
-          case EOpAddAssign:
-          {
-              mEmulateCompoundAdd.insert(
-                  TypePair(type.getBuiltInTypeNameString(),
-                           node->getRight()->getType().getBuiltInTypeNameString()));
-              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
-                  node->getLeft(), node->getRight(), "add");
-              queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
-              break;
-          }
-          case EOpSubAssign:
-          {
-              mEmulateCompoundSub.insert(
-                  TypePair(type.getBuiltInTypeNameString(),
-                           node->getRight()->getType().getBuiltInTypeNameString()));
-              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
-                  node->getLeft(), node->getRight(), "sub");
-              queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
-              break;
-          }
-          case EOpMulAssign:
-          case EOpVectorTimesMatrixAssign:
-          case EOpVectorTimesScalarAssign:
-          case EOpMatrixTimesScalarAssign:
-          case EOpMatrixTimesMatrixAssign:
-          {
-              mEmulateCompoundMul.insert(
-                  TypePair(type.getBuiltInTypeNameString(),
-                           node->getRight()->getType().getBuiltInTypeNameString()));
-              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
-                  node->getLeft(), node->getRight(), "mul");
-              queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
-              break;
-          }
-          case EOpDivAssign:
-          {
-              mEmulateCompoundDiv.insert(
-                  TypePair(type.getBuiltInTypeNameString(),
-                           node->getRight()->getType().getBuiltInTypeNameString()));
-              TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
-                  node->getLeft(), node->getRight(), "div");
-              queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
-              break;
-          }
-          default:
-            // The rest of the binary operations should not need precision emulation.
-            break;
+            // Compound assignment cases need to replace the operator with a function call.
+            case EOpAddAssign:
+            {
+                mEmulateCompoundAdd.insert(
+                    TypePair(type.getBuiltInTypeNameString(),
+                             node->getRight()->getType().getBuiltInTypeNameString()));
+                TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                    node->getLeft(), node->getRight(), "add");
+                queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
+                break;
+            }
+            case EOpSubAssign:
+            {
+                mEmulateCompoundSub.insert(
+                    TypePair(type.getBuiltInTypeNameString(),
+                             node->getRight()->getType().getBuiltInTypeNameString()));
+                TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                    node->getLeft(), node->getRight(), "sub");
+                queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
+                break;
+            }
+            case EOpMulAssign:
+            case EOpVectorTimesMatrixAssign:
+            case EOpVectorTimesScalarAssign:
+            case EOpMatrixTimesScalarAssign:
+            case EOpMatrixTimesMatrixAssign:
+            {
+                mEmulateCompoundMul.insert(
+                    TypePair(type.getBuiltInTypeNameString(),
+                             node->getRight()->getType().getBuiltInTypeNameString()));
+                TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                    node->getLeft(), node->getRight(), "mul");
+                queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
+                break;
+            }
+            case EOpDivAssign:
+            {
+                mEmulateCompoundDiv.insert(
+                    TypePair(type.getBuiltInTypeNameString(),
+                             node->getRight()->getType().getBuiltInTypeNameString()));
+                TIntermNode *replacement = createCompoundAssignmentFunctionCallNode(
+                    node->getLeft(), node->getRight(), "div");
+                queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
+                break;
+            }
+            default:
+                // The rest of the binary operations should not need precision emulation.
+                break;
         }
     }
     return visitChildren;
@@ -624,42 +628,43 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
     bool visitChildren = true;
     switch (node->getOp())
     {
-      case EOpConstructStruct:
-        break;
-      case EOpPrototype:
-        visitChildren = false;
-        break;
-      case EOpParameters:
-        visitChildren = false;
-        break;
-      case EOpInvariantDeclaration:
-        visitChildren = false;
-        break;
-      case EOpFunctionCall:
-      {
-        // Function call.
-        if (visit == PreVisit)
+        case EOpConstructStruct:
+            break;
+        case EOpPrototype:
+            visitChildren = false;
+            break;
+        case EOpParameters:
+            visitChildren = false;
+            break;
+        case EOpInvariantDeclaration:
+            visitChildren = false;
+            break;
+        case EOpFunctionCall:
         {
-            // User-defined function return values are not rounded, this relies on that
-            // calculations producing the value were rounded.
+            // Function call.
+            if (visit == PreVisit)
+            {
+                // User-defined function return values are not rounded, this relies on that
+                // calculations producing the value were rounded.
+                TIntermNode *parent = getParentNode();
+                if (canRoundFloat(node->getType()) && !isInFunctionMap(node) &&
+                    parentUsesResult(parent, node))
+                {
+                    TIntermNode *replacement = createRoundingFunctionCallNode(node);
+                    queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
+                }
+            }
+            break;
+        }
+        default:
             TIntermNode *parent = getParentNode();
-            if (canRoundFloat(node->getType()) && !isInFunctionMap(node) &&
+            if (canRoundFloat(node->getType()) && visit == PreVisit &&
                 parentUsesResult(parent, node))
             {
                 TIntermNode *replacement = createRoundingFunctionCallNode(node);
                 queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
             }
-        }
-        break;
-      }
-      default:
-        TIntermNode *parent = getParentNode();
-        if (canRoundFloat(node->getType()) && visit == PreVisit && parentUsesResult(parent, node))
-        {
-            TIntermNode *replacement = createRoundingFunctionCallNode(node);
-            queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
-        }
-        break;
+            break;
     }
     return visitChildren;
 }
@@ -668,21 +673,21 @@ bool EmulatePrecision::visitUnary(Visit visit, TIntermUnary *node)
 {
     switch (node->getOp())
     {
-      case EOpNegative:
-      case EOpVectorLogicalNot:
-      case EOpLogicalNot:
-      case EOpPostIncrement:
-      case EOpPostDecrement:
-      case EOpPreIncrement:
-      case EOpPreDecrement:
-        break;
-      default:
-        if (canRoundFloat(node->getType()) && visit == PreVisit)
-        {
-            TIntermNode *replacement = createRoundingFunctionCallNode(node);
-            queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
-        }
-        break;
+        case EOpNegative:
+        case EOpVectorLogicalNot:
+        case EOpLogicalNot:
+        case EOpPostIncrement:
+        case EOpPostDecrement:
+        case EOpPreIncrement:
+        case EOpPreDecrement:
+            break;
+        default:
+            if (canRoundFloat(node->getType()) && visit == PreVisit)
+            {
+                TIntermNode *replacement = createRoundingFunctionCallNode(node);
+                queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
+            }
+            break;
     }
 
     return true;

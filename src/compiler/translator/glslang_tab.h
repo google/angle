@@ -31,25 +31,22 @@
    version 2.2 of Bison.  */
 
 #ifndef YY_YY_GLSLANG_TAB_H_INCLUDED
-# define YY_YY_GLSLANG_TAB_H_INCLUDED
+#define YY_YY_GLSLANG_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+#define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 
-
 #define YYLTYPE TSourceLoc
 #define YYLTYPE_IS_DECLARED 1
 
-
-
 /* Token type.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
+#define YYTOKENTYPE
 enum yytokentype
 {
     INVARIANT            = 258,
@@ -198,13 +195,12 @@ enum yytokentype
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
 
-union YYSTYPE
-{
+union YYSTYPE {
 
-
-    struct {
+    struct
+    {
         union {
             TString *string;
             float f;
@@ -212,9 +208,10 @@ union YYSTYPE
             unsigned int u;
             bool b;
         };
-        TSymbol* symbol;
+        TSymbol *symbol;
     } lex;
-    struct {
+    struct
+    {
         TOperator op;
         union {
             TIntermNode *intermNode;
@@ -240,31 +237,27 @@ union YYSTYPE
             TTypeQualifierBuilder *typeQualifierBuilder;
         };
     } interm;
-
-
 };
 
 typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_DECLARED 1
 #endif
 
 /* Location type.  */
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+#if !defined YYLTYPE && !defined YYLTYPE_IS_DECLARED
 typedef struct YYLTYPE YYLTYPE;
 struct YYLTYPE
 {
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
+    int first_line;
+    int first_column;
+    int last_line;
+    int last_column;
 };
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
+#define YYLTYPE_IS_DECLARED 1
+#define YYLTYPE_IS_TRIVIAL 1
 #endif
 
-
-
-int yyparse (TParseContext* context, void *scanner);
+int yyparse(TParseContext *context, void *scanner);
 
 #endif /* !YY_YY_GLSLANG_TAB_H_INCLUDED  */

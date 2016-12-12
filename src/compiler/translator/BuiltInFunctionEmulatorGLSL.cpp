@@ -76,7 +76,8 @@ void InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(BuiltInFunctionEmulator 
 }
 
 // Emulate built-in functions missing from GLSL 1.30 and higher
-void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu, sh::GLenum shaderType,
+void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator *emu,
+                                                        sh::GLenum shaderType,
                                                         int targetGLSLVersion)
 {
     // Emulate packUnorm2x16 and unpackUnorm2x16 (GLSL 4.10)
@@ -109,7 +110,7 @@ void InitBuiltInFunctionEmulatorForGLSLMissingFunctions(BuiltInFunctionEmulator 
     if (targetGLSLVersion >= GLSL_VERSION_330 && targetGLSLVersion < GLSL_VERSION_420)
     {
         const TType *float2 = TCache::getType(EbtFloat, 2);
-        const TType *uint1 = TCache::getType(EbtUInt);
+        const TType *uint1  = TCache::getType(EbtUInt);
 
         // clang-format off
         emu->addEmulatedFunction(EOpPackSnorm2x16, float2,

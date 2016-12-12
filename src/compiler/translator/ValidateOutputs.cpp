@@ -34,7 +34,7 @@ ValidateOutputs::ValidateOutputs(const TExtensionBehavior &extBehavior, int maxD
 
 void ValidateOutputs::visitSymbol(TIntermSymbol *symbol)
 {
-    TString name = symbol->getSymbol();
+    TString name         = symbol->getSymbol();
     TQualifier qualifier = symbol->getQualifier();
 
     if (mVisitedSymbols.count(name.c_str()) == 1)

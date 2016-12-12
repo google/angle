@@ -34,10 +34,9 @@ class ElseBlockRewriter : public TIntermTraverser
     TIntermNode *rewriteIfElse(TIntermIfElse *ifElse);
 };
 
-ElseBlockRewriter::ElseBlockRewriter()
-    : TIntermTraverser(true, false, true),
-      mFunctionType(NULL)
-{}
+ElseBlockRewriter::ElseBlockRewriter() : TIntermTraverser(true, false, true), mFunctionType(NULL)
+{
+}
 
 bool ElseBlockRewriter::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
@@ -85,9 +84,9 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
         // returns (that are unreachable) we can silence this compile error.
         if (mFunctionType && mFunctionType->getBasicType() != EbtVoid)
         {
-            TString typeString = mFunctionType->getStruct() ? mFunctionType->getStruct()->name() :
-                mFunctionType->getBasicString();
-            TString rawText = "return (" + typeString + ")0";
+            TString typeString = mFunctionType->getStruct() ? mFunctionType->getStruct()->name()
+                                                            : mFunctionType->getBasicString();
+            TString rawText        = "return (" + typeString + ")0";
             TIntermRaw *returnNode = new TIntermRaw(*mFunctionType, rawText);
             negatedElse            = new TIntermBlock();
             negatedElse->getSequence()->push_back(returnNode);
@@ -110,7 +109,6 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 
     return block;
 }
-
 }
 
 void RewriteElseBlocks(TIntermNode *node, unsigned int *temporaryIndex)
@@ -119,5 +117,4 @@ void RewriteElseBlocks(TIntermNode *node, unsigned int *temporaryIndex)
     rewriter.useTemporaryIndex(temporaryIndex);
     node->traverse(&rewriter);
 }
-
 }

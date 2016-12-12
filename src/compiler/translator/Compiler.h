@@ -30,7 +30,7 @@ namespace sh
 class TCompiler;
 #ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
-#endif // ANGLE_ENABLE_HLSL
+#endif  // ANGLE_ENABLE_HLSL
 
 //
 // Helper function to identify specs that are based on the WebGL spec.
@@ -55,16 +55,17 @@ bool RemoveInvariant(sh::GLenum shaderType,
 //
 // The base class used to back handles returned to the driver.
 //
-class TShHandleBase {
-public:
+class TShHandleBase
+{
+  public:
     TShHandleBase();
     virtual ~TShHandleBase();
-    virtual TCompiler* getAsCompiler() { return 0; }
+    virtual TCompiler *getAsCompiler() { return 0; }
 #ifdef ANGLE_ENABLE_HLSL
-    virtual TranslatorHLSL* getAsTranslatorHLSL() { return 0; }
-#endif // ANGLE_ENABLE_HLSL
+    virtual TranslatorHLSL *getAsTranslatorHLSL() { return 0; }
+#endif  // ANGLE_ENABLE_HLSL
 
-protected:
+  protected:
     // Memory allocator. Allocates and tracks memory required by the compiler.
     // Deallocates all memory when compiler is destructed.
     TPoolAllocator allocator;
@@ -81,7 +82,7 @@ class TCompiler : public TShHandleBase
     ~TCompiler() override;
     TCompiler *getAsCompiler() override { return this; }
 
-    bool Init(const ShBuiltInResources& resources);
+    bool Init(const ShBuiltInResources &resources);
 
     // compileTreeForTesting should be used only when tests require access to
     // the AST. Users of this function need to manually manage the global pool
@@ -96,7 +97,7 @@ class TCompiler : public TShHandleBase
 
     // Get results of the last compilation.
     int getShaderVersion() const { return shaderVersion; }
-    TInfoSink& getInfoSink() { return infoSink; }
+    TInfoSink &getInfoSink() { return infoSink; }
 
     bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() { return mComputeShaderLocalSize; }
@@ -111,8 +112,8 @@ class TCompiler : public TShHandleBase
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const { return interfaceBlocks; }
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
-    NameMap& getNameMap() { return nameMap; }
-    TSymbolTable& getSymbolTable() { return symbolTable; }
+    NameMap &getNameMap() { return nameMap; }
+    TSymbolTable &getSymbolTable() { return symbolTable; }
     ShShaderSpec getShaderSpec() const { return shaderSpec; }
     ShShaderOutput getOutputType() const { return outputType; }
     const std::string &getBuiltInResourcesString() const { return builtInResourcesString; }
@@ -120,21 +121,21 @@ class TCompiler : public TShHandleBase
     bool shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptions) const;
 
     // Get the resources set by InitBuiltInSymbolTable
-    const ShBuiltInResources& getResources() const;
+    const ShBuiltInResources &getResources() const;
 
   protected:
     sh::GLenum getShaderType() const { return shaderType; }
     // Initialize symbol-table with built-in symbols.
-    bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
+    bool InitBuiltInSymbolTable(const ShBuiltInResources &resources);
     // Compute the string representation of the built-in resources
     void setResourceString();
     // Return false if the call depth is exceeded.
     bool checkCallDepth();
     // Returns true if a program has no conflicting or missing fragment outputs
-    bool validateOutputs(TIntermNode* root);
+    bool validateOutputs(TIntermNode *root);
     // Returns true if the given shader does not exceed the minimum
     // functionality mandated in GLSL 1.0 spec Appendix A.
-    bool validateLimitations(TIntermNode* root);
+    bool validateLimitations(TIntermNode *root);
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};
@@ -154,21 +155,21 @@ class TCompiler : public TShHandleBase
     // It is to work around a Linux driver bug where missing this causes compile failure
     // while spec says it is allowed.
     // This function should only be applied to vertex shaders.
-    void initializeGLPosition(TIntermNode* root);
+    void initializeGLPosition(TIntermNode *root);
     // Return true if the maximum expression complexity is below the limit.
-    bool limitExpressionComplexity(TIntermNode* root);
+    bool limitExpressionComplexity(TIntermNode *root);
     // Get built-in extensions with default behavior.
-    const TExtensionBehavior& getExtensionBehavior() const;
+    const TExtensionBehavior &getExtensionBehavior() const;
     const char *getSourcePath() const;
-    const TPragma& getPragma() const { return mPragma; }
+    const TPragma &getPragma() const { return mPragma; }
     void writePragma(ShCompileOptions compileOptions);
     unsigned int *getTemporaryIndex() { return &mTemporaryIndex; }
     // Relies on collectVariables having been called.
     bool isVaryingDefined(const char *varyingName);
 
-    const ArrayBoundsClamper& getArrayBoundsClamper() const;
+    const ArrayBoundsClamper &getArrayBoundsClamper() const;
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
-    const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
+    const BuiltInFunctionEmulator &getBuiltInFunctionEmulator() const;
 
     virtual bool shouldFlattenPragmaStdglInvariantAll() = 0;
     virtual bool shouldCollectVariables(ShCompileOptions compileOptions);
@@ -209,10 +210,7 @@ class TCompiler : public TShHandleBase
 
     struct FunctionMetadata
     {
-        FunctionMetadata()
-            : used(false)
-        {
-        }
+        FunctionMetadata() : used(false) {}
         bool used;
     };
 
@@ -240,8 +238,8 @@ class TCompiler : public TShHandleBase
 
     // Results of compilation.
     int shaderVersion;
-    TInfoSink infoSink;  // Output sink.
-    const char *mSourcePath; // Path of source file or NULL
+    TInfoSink infoSink;       // Output sink.
+    const char *mSourcePath;  // Path of source file or NULL
 
     // compute shader local group size
     bool mComputeShaderLocalSizeDeclared;
@@ -265,10 +263,9 @@ class TCompiler : public TShHandleBase
 // destroy the machine dependent objects, which contain the
 // above machine independent information.
 //
-TCompiler* ConstructCompiler(
-    sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
-void DeleteCompiler(TCompiler*);
+TCompiler *ConstructCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
+void DeleteCompiler(TCompiler *);
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_COMPILER_H_
+#endif  // COMPILER_TRANSLATOR_COMPILER_H_

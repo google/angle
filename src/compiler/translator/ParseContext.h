@@ -50,10 +50,14 @@ class TParseContext : angle::NonCopyable
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
     int numErrors() const { return mDiagnostics.numErrors(); }
     TInfoSink &infoSink() { return mDiagnostics.infoSink(); }
-    void error(const TSourceLoc &loc, const char *reason, const char *token,
-               const char *extraInfo="");
-    void warning(const TSourceLoc &loc, const char *reason, const char *token,
-                 const char *extraInfo="");
+    void error(const TSourceLoc &loc,
+               const char *reason,
+               const char *token,
+               const char *extraInfo = "");
+    void warning(const TSourceLoc &loc,
+                 const char *reason,
+                 const char *token,
+                 const char *extraInfo = "");
 
     // If isError is false, a warning will be reported instead.
     void outOfRangeError(bool isError,
@@ -74,10 +78,7 @@ class TParseContext : angle::NonCopyable
         mFragmentPrecisionHighOnESSL1 = fragmentPrecisionHigh;
     }
 
-    void setLoopNestingLevel(int loopNestintLevel)
-    {
-        mLoopNestingLevel = loopNestintLevel;
-    }
+    void setLoopNestingLevel(int loopNestintLevel) { mLoopNestingLevel = loopNestintLevel; }
 
     void incrLoopNestingLevel() { ++mLoopNestingLevel; }
     void decrLoopNestingLevel() { --mLoopNestingLevel; }
@@ -95,12 +96,14 @@ class TParseContext : angle::NonCopyable
     bool declaringFunction() const { return mDeclaringFunction; }
 
     // This method is guaranteed to succeed, even if no variable with 'name' exists.
-    const TVariable *getNamedVariable(const TSourceLoc &location, const TString *name, const TSymbol *symbol);
+    const TVariable *getNamedVariable(const TSourceLoc &location,
+                                      const TString *name,
+                                      const TSymbol *symbol);
     TIntermTyped *parseVariableIdentifier(const TSourceLoc &location,
                                           const TString *name,
                                           const TSymbol *symbol);
 
-    bool parseVectorFields(const TString&, int vecSize, TVectorFields&, const TSourceLoc &line);
+    bool parseVectorFields(const TString &, int vecSize, TVectorFields &, const TSourceLoc &line);
 
     void assignError(const TSourceLoc &line, const char *op, TString left, TString right);
     void unaryOpError(const TSourceLoc &line, const char *op, TString operand);
@@ -158,14 +161,22 @@ class TParseContext : angle::NonCopyable
                                         const TSourceLoc &qualifierLocation);
     void checkLocalVariableConstStorageQualifier(const TQualifierWrapperBase &qualifier);
     const TPragma &pragma() const { return mDirectiveHandler.pragma(); }
-    const TExtensionBehavior &extensionBehavior() const { return mDirectiveHandler.extensionBehavior(); }
+    const TExtensionBehavior &extensionBehavior() const
+    {
+        return mDirectiveHandler.extensionBehavior();
+    }
     bool supportsExtension(const char *extension);
     bool isExtensionEnabled(const char *extension) const;
     void handleExtensionDirective(const TSourceLoc &loc, const char *extName, const char *behavior);
-    void handlePragmaDirective(const TSourceLoc &loc, const char *name, const char *value, bool stdgl);
+    void handlePragmaDirective(const TSourceLoc &loc,
+                               const char *name,
+                               const char *value,
+                               bool stdgl);
 
-    const TFunction* findFunction(
-        const TSourceLoc &line, TFunction *pfnCall, int inputShaderVersion, bool *builtIn = 0);
+    const TFunction *findFunction(const TSourceLoc &line,
+                                  TFunction *pfnCall,
+                                  int inputShaderVersion,
+                                  bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line,
                             const TString &identifier,
                             const TPublicType &pType,
@@ -242,8 +253,7 @@ class TParseContext : angle::NonCopyable
     void parseFunctionDefinitionHeader(const TSourceLoc &location,
                                        TFunction **function,
                                        TIntermAggregate **aggregateOut);
-    TFunction *parseFunctionDeclarator(const TSourceLoc &location,
-                                       TFunction *function);
+    TFunction *parseFunctionDeclarator(const TSourceLoc &location, TFunction *function);
     TFunction *parseFunctionHeader(const TPublicType &type,
                                    const TString *name,
                                    const TSourceLoc &location);
@@ -254,9 +264,9 @@ class TParseContext : angle::NonCopyable
                                  const TSourceLoc &line);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
-                                     const TSourceLoc& location,
+                                     const TSourceLoc &location,
                                      TIntermTyped *indexExpression);
-    TIntermTyped* addFieldSelectionExpression(TIntermTyped *baseExpression,
+    TIntermTyped *addFieldSelectionExpression(TIntermTyped *baseExpression,
                                               const TSourceLoc &dotLocation,
                                               const TString &fieldString,
                                               const TSourceLoc &fieldLocation);
@@ -287,8 +297,8 @@ class TParseContext : angle::NonCopyable
                         const std::string &intValueString,
                         size_t index,
                         sh::WorkGroupSize *localSize);
-    TLayoutQualifier parseLayoutQualifier(
-        const TString &qualifierType, const TSourceLoc &qualifierTypeLine);
+    TLayoutQualifier parseLayoutQualifier(const TString &qualifierType,
+                                          const TSourceLoc &qualifierTypeLine);
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType,
                                           const TSourceLoc &qualifierTypeLine,
                                           int intValue,
@@ -312,12 +322,18 @@ class TParseContext : angle::NonCopyable
 
     TIntermTyped *addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
     TIntermTyped *addUnaryMathLValue(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
-    TIntermTyped *addBinaryMath(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
-    TIntermTyped *addBinaryMathBooleanResult(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
-    TIntermTyped *addAssign(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
+    TIntermTyped *addBinaryMath(TOperator op,
+                                TIntermTyped *left,
+                                TIntermTyped *right,
+                                const TSourceLoc &loc);
+    TIntermTyped *addBinaryMathBooleanResult(TOperator op,
+                                             TIntermTyped *left,
+                                             TIntermTyped *right,
+                                             const TSourceLoc &loc);
+    TIntermTyped *addAssign(TOperator op,
+                            TIntermTyped *left,
+                            TIntermTyped *right,
+                            const TSourceLoc &loc);
 
     TIntermTyped *addComma(TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
 
@@ -352,7 +368,10 @@ class TParseContext : angle::NonCopyable
                              const char *reason,
                              const char *token);
 
-    bool declareVariable(const TSourceLoc &line, const TString &identifier, const TType &type, TVariable **variable);
+    bool declareVariable(const TSourceLoc &line,
+                         const TString &identifier,
+                         const TType &type,
+                         TVariable **variable);
 
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                               const TString &identifier,
@@ -376,35 +395,42 @@ class TParseContext : angle::NonCopyable
                                        TQualifier qualifier,
                                        const TType &type);
 
-    TIntermTyped *addBinaryMathInternal(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
+    TIntermTyped *addBinaryMathInternal(TOperator op,
+                                        TIntermTyped *left,
+                                        TIntermTyped *right,
+                                        const TSourceLoc &loc);
     TIntermBinary *createAssign(TOperator op,
                                 TIntermTyped *left,
                                 TIntermTyped *right,
                                 const TSourceLoc &loc);
-    // The funcReturnType parameter is expected to be non-null when the operation is a built-in function.
+    // The funcReturnType parameter is expected to be non-null when the operation is a built-in
+    // function.
     // It is expected to be null for other unary operators.
-    TIntermTyped *createUnaryMath(
-        TOperator op, TIntermTyped *child, const TSourceLoc &loc, const TType *funcReturnType);
+    TIntermTyped *createUnaryMath(TOperator op,
+                                  TIntermTyped *child,
+                                  const TSourceLoc &loc,
+                                  const TType *funcReturnType);
 
     // Return true if the checks pass
-    bool binaryOpCommonCheck(
-        TOperator op, TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
+    bool binaryOpCommonCheck(TOperator op,
+                             TIntermTyped *left,
+                             TIntermTyped *right,
+                             const TSourceLoc &loc);
 
     // Set to true when the last/current declarator list was started with an empty declaration.
     bool mDeferredSingleDeclarationErrorCheck;
 
-    sh::GLenum mShaderType;              // vertex or fragment language (future: pack or unpack)
+    sh::GLenum mShaderType;    // vertex or fragment language (future: pack or unpack)
     ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES2 or WebGL.
     ShCompileOptions mCompileOptions;  // Options passed to TCompiler
     int mShaderVersion;
-    TIntermBlock *mTreeRoot;     // root of parse tree being created
-    int mLoopNestingLevel;       // 0 if outside all loops
-    int mStructNestingLevel;     // incremented while parsing a struct declaration
-    int mSwitchNestingLevel;     // 0 if outside all switch statements
+    TIntermBlock *mTreeRoot;  // root of parse tree being created
+    int mLoopNestingLevel;    // 0 if outside all loops
+    int mStructNestingLevel;  // incremented while parsing a struct declaration
+    int mSwitchNestingLevel;  // 0 if outside all switch statements
     const TType
-        *mCurrentFunctionType;   // the return type of the function that's currently being parsed
-    bool mFunctionReturnsValue;  // true if a non-void function has a return
+        *mCurrentFunctionType;    // the return type of the function that's currently being parsed
+    bool mFunctionReturnsValue;   // true if a non-void function has a return
     bool mChecksPrecisionErrors;  // true if an error will be generated when a variable is declared
                                   // without precision, explicit or implicit.
     bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
@@ -416,7 +442,7 @@ class TParseContext : angle::NonCopyable
     TDirectiveHandler mDirectiveHandler;
     pp::Preprocessor mPreprocessor;
     void *mScanner;
-    bool mUsesFragData; // track if we are using both gl_FragData and gl_FragColor
+    bool mUsesFragData;  // track if we are using both gl_FragData and gl_FragColor
     bool mUsesFragColor;
     bool mUsesSecondaryOutputs;  // Track if we are using either gl_SecondaryFragData or
                                  // gl_Secondary FragColor or both.
@@ -430,9 +456,11 @@ class TParseContext : angle::NonCopyable
     bool mDeclaringFunction;
 };
 
-int PaParseStrings(
-    size_t count, const char *const string[], const int length[], TParseContext *context);
+int PaParseStrings(size_t count,
+                   const char *const string[],
+                   const int length[],
+                   TParseContext *context);
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_PARSECONTEXT_H_
+#endif  // COMPILER_TRANSLATOR_PARSECONTEXT_H_

@@ -64,4 +64,4 @@ class ValidateLimitations : public TIntermTraverser
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_VALIDATELIMITATIONS_H_
+#endif  // COMPILER_TRANSLATOR_VALIDATELIMITATIONS_H_

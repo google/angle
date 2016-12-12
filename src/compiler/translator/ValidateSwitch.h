@@ -56,4 +56,4 @@ class ValidateSwitch : public TIntermTraverser
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_VALIDATESWITCH_H_
+#endif  // COMPILER_TRANSLATOR_VALIDATESWITCH_H_

@@ -31,8 +31,10 @@ namespace sh
 //
 // Returns the added node.
 //
-TIntermSymbol *TIntermediate::addSymbol(
-    int id, const TString &name, const TType &type, const TSourceLoc &line)
+TIntermSymbol *TIntermediate::addSymbol(int id,
+                                        const TString &name,
+                                        const TType &type,
+                                        const TSourceLoc &line)
 {
     TIntermSymbol *node = new TIntermSymbol(id, name, type);
     node->setLine(line);
@@ -71,8 +73,9 @@ TIntermTyped *TIntermediate::addIndex(TOperator op,
 //
 // Returns an aggregate node, which could be the one passed in if
 // it was already an aggregate but no operator was set.
-TIntermAggregate *TIntermediate::setAggregateOperator(
-    TIntermNode *node, TOperator op, const TSourceLoc &line)
+TIntermAggregate *TIntermediate::setAggregateOperator(TIntermNode *node,
+                                                      TOperator op,
+                                                      const TSourceLoc &line)
 {
     TIntermAggregate *aggNode;
 
@@ -112,8 +115,9 @@ TIntermAggregate *TIntermediate::setAggregateOperator(
 // Returns the resulting aggregate, unless 0 was passed in for
 // both existing nodes.
 //
-TIntermAggregate *TIntermediate::growAggregate(
-    TIntermNode *left, TIntermNode *right, const TSourceLoc &line)
+TIntermAggregate *TIntermediate::growAggregate(TIntermNode *left,
+                                               TIntermNode *right,
+                                               const TSourceLoc &line)
 {
     if (left == NULL && right == NULL)
         return NULL;
@@ -267,8 +271,7 @@ TIntermSwitch *TIntermediate::addSwitch(TIntermTyped *init,
     return node;
 }
 
-TIntermCase *TIntermediate::addCase(
-    TIntermTyped *condition, const TSourceLoc &line)
+TIntermCase *TIntermediate::addCase(TIntermTyped *condition, const TSourceLoc &line)
 {
     TIntermCase *node = new TIntermCase(condition);
     node->setLine(line);
@@ -316,9 +319,12 @@ TIntermTyped *TIntermediate::AddSwizzle(TIntermTyped *baseExpression,
 //
 // Create loop nodes.
 //
-TIntermNode *TIntermediate::addLoop(
-    TLoopType type, TIntermNode *init, TIntermTyped *cond, TIntermTyped *expr,
-    TIntermNode *body, const TSourceLoc &line)
+TIntermNode *TIntermediate::addLoop(TLoopType type,
+                                    TIntermNode *init,
+                                    TIntermTyped *cond,
+                                    TIntermTyped *expr,
+                                    TIntermNode *body,
+                                    const TSourceLoc &line)
 {
     TIntermNode *node = new TIntermLoop(type, init, cond, expr, EnsureBlock(body));
     node->setLine(line);
@@ -329,14 +335,14 @@ TIntermNode *TIntermediate::addLoop(
 //
 // Add branches.
 //
-TIntermBranch* TIntermediate::addBranch(
-    TOperator branchOp, const TSourceLoc &line)
+TIntermBranch *TIntermediate::addBranch(TOperator branchOp, const TSourceLoc &line)
 {
     return addBranch(branchOp, 0, line);
 }
 
-TIntermBranch* TIntermediate::addBranch(
-    TOperator branchOp, TIntermTyped *expression, const TSourceLoc &line)
+TIntermBranch *TIntermediate::addBranch(TOperator branchOp,
+                                        TIntermTyped *expression,
+                                        const TSourceLoc &line)
 {
     TIntermBranch *node = new TIntermBranch(branchOp, expression);
     node->setLine(line);

@@ -41,8 +41,7 @@ class EmulatePrecision : public TLValueTrackingTraverser
   private:
     struct TypePair
     {
-        TypePair(const char *l, const char *r)
-            : lType(l), rType(r) { }
+        TypePair(const char *l, const char *r) : lType(l), rType(r) {}
 
         const char *lType;
         const char *rType;
@@ -50,7 +49,7 @@ class EmulatePrecision : public TLValueTrackingTraverser
 
     struct TypePairComparator
     {
-        bool operator() (const TypePair& l, const TypePair& r) const
+        bool operator()(const TypePair &l, const TypePair &r) const
         {
             if (l.lType == r.lType)
                 return l.rType < r.rType;

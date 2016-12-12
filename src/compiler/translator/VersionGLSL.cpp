@@ -15,18 +15,31 @@ int ShaderOutputTypeToGLSLVersion(ShShaderOutput output)
 {
     switch (output)
     {
-      case SH_GLSL_130_OUTPUT:           return GLSL_VERSION_130;
-      case SH_GLSL_140_OUTPUT:           return GLSL_VERSION_140;
-      case SH_GLSL_150_CORE_OUTPUT:      return GLSL_VERSION_150;
-      case SH_GLSL_330_CORE_OUTPUT:      return GLSL_VERSION_330;
-      case SH_GLSL_400_CORE_OUTPUT:      return GLSL_VERSION_400;
-      case SH_GLSL_410_CORE_OUTPUT:      return GLSL_VERSION_410;
-      case SH_GLSL_420_CORE_OUTPUT:      return GLSL_VERSION_420;
-      case SH_GLSL_430_CORE_OUTPUT:      return GLSL_VERSION_430;
-      case SH_GLSL_440_CORE_OUTPUT:      return GLSL_VERSION_440;
-      case SH_GLSL_450_CORE_OUTPUT:      return GLSL_VERSION_450;
-      case SH_GLSL_COMPATIBILITY_OUTPUT: return GLSL_VERSION_110;
-      default: UNREACHABLE();            return 0;
+        case SH_GLSL_130_OUTPUT:
+            return GLSL_VERSION_130;
+        case SH_GLSL_140_OUTPUT:
+            return GLSL_VERSION_140;
+        case SH_GLSL_150_CORE_OUTPUT:
+            return GLSL_VERSION_150;
+        case SH_GLSL_330_CORE_OUTPUT:
+            return GLSL_VERSION_330;
+        case SH_GLSL_400_CORE_OUTPUT:
+            return GLSL_VERSION_400;
+        case SH_GLSL_410_CORE_OUTPUT:
+            return GLSL_VERSION_410;
+        case SH_GLSL_420_CORE_OUTPUT:
+            return GLSL_VERSION_420;
+        case SH_GLSL_430_CORE_OUTPUT:
+            return GLSL_VERSION_430;
+        case SH_GLSL_440_CORE_OUTPUT:
+            return GLSL_VERSION_440;
+        case SH_GLSL_450_CORE_OUTPUT:
+            return GLSL_VERSION_450;
+        case SH_GLSL_COMPATIBILITY_OUTPUT:
+            return GLSL_VERSION_110;
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -47,9 +60,7 @@ int ShaderOutputTypeToGLSLVersion(ShShaderOutput output)
 //    GLSL 1.2 relaxed the restriction on arrays, section 5.8: "Variables that
 //    are built-in types, entire structures or arrays... are all l-values."
 //
-TVersionGLSL::TVersionGLSL(sh::GLenum type,
-                           const TPragma &pragma,
-                           ShShaderOutput output)
+TVersionGLSL::TVersionGLSL(sh::GLenum type, const TPragma &pragma, ShShaderOutput output)
     : TIntermTraverser(true, false, false)
 {
     mVersion = ShaderOutputTypeToGLSLVersion(output);
@@ -87,20 +98,20 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
 
     switch (node->getOp())
     {
-      case EOpInvariantDeclaration:
-        ensureVersionIsAtLeast(GLSL_VERSION_120);
-        break;
-      case EOpParameters:
+        case EOpInvariantDeclaration:
+            ensureVersionIsAtLeast(GLSL_VERSION_120);
+            break;
+        case EOpParameters:
         {
             const TIntermSequence &params = *(node->getSequence());
-            for (TIntermSequence::const_iterator iter = params.begin();
-                 iter != params.end(); ++iter)
+            for (TIntermSequence::const_iterator iter = params.begin(); iter != params.end();
+                 ++iter)
             {
                 const TIntermTyped *param = (*iter)->getAsTyped();
                 if (param->isArray())
                 {
                     TQualifier qualifier = param->getQualifier();
-                    if ((qualifier == EvqOut) || (qualifier ==  EvqInOut))
+                    if ((qualifier == EvqOut) || (qualifier == EvqInOut))
                     {
                         ensureVersionIsAtLeast(GLSL_VERSION_120);
                         break;
@@ -111,15 +122,15 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
             visitChildren = false;
             break;
         }
-      case EOpConstructMat2:
-      case EOpConstructMat2x3:
-      case EOpConstructMat2x4:
-      case EOpConstructMat3x2:
-      case EOpConstructMat3:
-      case EOpConstructMat3x4:
-      case EOpConstructMat4x2:
-      case EOpConstructMat4x3:
-      case EOpConstructMat4:
+        case EOpConstructMat2:
+        case EOpConstructMat2x3:
+        case EOpConstructMat2x4:
+        case EOpConstructMat3x2:
+        case EOpConstructMat3:
+        case EOpConstructMat3x4:
+        case EOpConstructMat4x2:
+        case EOpConstructMat4x3:
+        case EOpConstructMat4:
         {
             const TIntermSequence &sequence = *(node->getSequence());
             if (sequence.size() == 1)
@@ -132,8 +143,8 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
             }
             break;
         }
-      default:
-        break;
+        default:
+            break;
     }
 
     return visitChildren;

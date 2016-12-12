@@ -47,4 +47,4 @@ class RemoveSwitchFallThrough : public TIntermTraverser
 
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_REMOVESWITCHFALLTHROUGH_H_
+#endif  // COMPILER_TRANSLATOR_REMOVESWITCHFALLTHROUGH_H_

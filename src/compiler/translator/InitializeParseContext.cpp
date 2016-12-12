@@ -31,16 +31,16 @@ void FreeParseContextIndex()
     GlobalParseContextIndex = TLS_INVALID_INDEX;
 }
 
-void SetGlobalParseContext(TParseContext* context)
+void SetGlobalParseContext(TParseContext *context)
 {
     assert(GlobalParseContextIndex != TLS_INVALID_INDEX);
     SetTLSValue(GlobalParseContextIndex, context);
 }
 
-TParseContext* GetGlobalParseContext()
+TParseContext *GetGlobalParseContext()
 {
     assert(GlobalParseContextIndex != TLS_INVALID_INDEX);
-    return static_cast<TParseContext*>(GetTLSValue(GlobalParseContextIndex));
+    return static_cast<TParseContext *>(GetTLSValue(GlobalParseContextIndex));
 }
 
 }  // namespace sh

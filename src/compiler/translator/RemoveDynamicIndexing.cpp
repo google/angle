@@ -185,7 +185,7 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type, bool write)
     type.setPrecision(EbpHigh);
 
     TType fieldType = GetFieldType(type);
-    int numCases = 0;
+    int numCases    = 0;
     if (type.isMatrix())
     {
         numCases = type.getCols();
@@ -196,7 +196,7 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type, bool write)
     }
 
     TIntermAggregate *paramsNode = new TIntermAggregate(EOpParameters);
-    TQualifier baseQualifier = EvqInOut;
+    TQualifier baseQualifier     = EvqInOut;
     if (!write)
         baseQualifier        = EvqIn;
     TIntermSymbol *baseParam = CreateBaseSymbol(type, baseQualifier);

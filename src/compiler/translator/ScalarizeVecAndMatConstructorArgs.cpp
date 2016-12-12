@@ -50,11 +50,9 @@ TIntermBinary *ConstructVectorIndexBinaryNode(TIntermSymbol *symbolNode, int ind
     return new TIntermBinary(EOpIndexDirect, symbolNode, TIntermTyped::CreateIndexNode(index));
 }
 
-TIntermBinary *ConstructMatrixIndexBinaryNode(
-    TIntermSymbol *symbolNode, int colIndex, int rowIndex)
+TIntermBinary *ConstructMatrixIndexBinaryNode(TIntermSymbol *symbolNode, int colIndex, int rowIndex)
 {
-    TIntermBinary *colVectorNode =
-        ConstructVectorIndexBinaryNode(symbolNode, colIndex);
+    TIntermBinary *colVectorNode = ConstructVectorIndexBinaryNode(symbolNode, colIndex);
 
     return new TIntermBinary(EOpIndexDirect, colVectorNode,
                              TIntermTyped::CreateIndexNode(rowIndex));
@@ -103,32 +101,32 @@ bool ScalarizeArgsTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
     {
         switch (node->getOp())
         {
-          case EOpConstructVec2:
-          case EOpConstructVec3:
-          case EOpConstructVec4:
-          case EOpConstructBVec2:
-          case EOpConstructBVec3:
-          case EOpConstructBVec4:
-          case EOpConstructIVec2:
-          case EOpConstructIVec3:
-          case EOpConstructIVec4:
-            if (ContainsMatrixNode(*(node->getSequence())))
-                scalarizeArgs(node, false, true);
-            break;
-          case EOpConstructMat2:
-          case EOpConstructMat2x3:
-          case EOpConstructMat2x4:
-          case EOpConstructMat3x2:
-          case EOpConstructMat3:
-          case EOpConstructMat3x4:
-          case EOpConstructMat4x2:
-          case EOpConstructMat4x3:
-          case EOpConstructMat4:
-            if (ContainsVectorNode(*(node->getSequence())))
-                scalarizeArgs(node, true, false);
-            break;
-          default:
-            break;
+            case EOpConstructVec2:
+            case EOpConstructVec3:
+            case EOpConstructVec4:
+            case EOpConstructBVec2:
+            case EOpConstructBVec3:
+            case EOpConstructBVec4:
+            case EOpConstructIVec2:
+            case EOpConstructIVec3:
+            case EOpConstructIVec4:
+                if (ContainsMatrixNode(*(node->getSequence())))
+                    scalarizeArgs(node, false, true);
+                break;
+            case EOpConstructMat2:
+            case EOpConstructMat2x3:
+            case EOpConstructMat2x4:
+            case EOpConstructMat3x2:
+            case EOpConstructMat3:
+            case EOpConstructMat3x4:
+            case EOpConstructMat4x2:
+            case EOpConstructMat4x3:
+            case EOpConstructMat4:
+                if (ContainsVectorNode(*(node->getSequence())))
+                    scalarizeArgs(node, true, false);
+                break;
+            default:
+                break;
         }
     }
     return true;
@@ -162,42 +160,42 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
     int size = 0;
     switch (aggregate->getOp())
     {
-      case EOpConstructVec2:
-      case EOpConstructBVec2:
-      case EOpConstructIVec2:
-        size = 2;
-        break;
-      case EOpConstructVec3:
-      case EOpConstructBVec3:
-      case EOpConstructIVec3:
-        size = 3;
-        break;
-      case EOpConstructVec4:
-      case EOpConstructBVec4:
-      case EOpConstructIVec4:
-      case EOpConstructMat2:
-        size = 4;
-        break;
-      case EOpConstructMat2x3:
-      case EOpConstructMat3x2:
-        size = 6;
-        break;
-      case EOpConstructMat2x4:
-      case EOpConstructMat4x2:
-        size = 8;
-        break;
-      case EOpConstructMat3:
-        size = 9;
-        break;
-      case EOpConstructMat3x4:
-      case EOpConstructMat4x3:
-        size = 12;
-        break;
-      case EOpConstructMat4:
-        size = 16;
-        break;
-      default:
-        break;
+        case EOpConstructVec2:
+        case EOpConstructBVec2:
+        case EOpConstructIVec2:
+            size = 2;
+            break;
+        case EOpConstructVec3:
+        case EOpConstructBVec3:
+        case EOpConstructIVec3:
+            size = 3;
+            break;
+        case EOpConstructVec4:
+        case EOpConstructBVec4:
+        case EOpConstructIVec4:
+        case EOpConstructMat2:
+            size = 4;
+            break;
+        case EOpConstructMat2x3:
+        case EOpConstructMat3x2:
+            size = 6;
+            break;
+        case EOpConstructMat2x4:
+        case EOpConstructMat4x2:
+            size = 8;
+            break;
+        case EOpConstructMat3:
+            size = 9;
+            break;
+        case EOpConstructMat3x4:
+        case EOpConstructMat4x3:
+            size = 12;
+            break;
+        case EOpConstructMat4:
+            size = 16;
+            break;
+        default:
+            break;
     }
     TIntermSequence *sequence = aggregate->getSequence();
     TIntermSequence original(*sequence);
@@ -222,8 +220,7 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 for (int index = 0; index < repeat; ++index)
                 {
                     TIntermSymbol *symbolNode = createTempSymbol(node->getType());
-                    TIntermBinary *newNode = ConstructVectorIndexBinaryNode(
-                        symbolNode, index);
+                    TIntermBinary *newNode    = ConstructVectorIndexBinaryNode(symbolNode, index);
                     sequence->push_back(newNode);
                 }
             }
@@ -245,8 +242,8 @@ void ScalarizeArgsTraverser::scalarizeArgs(TIntermAggregate *aggregate,
                 while (repeat > 0)
                 {
                     TIntermSymbol *symbolNode = createTempSymbol(node->getType());
-                    TIntermBinary *newNode = ConstructMatrixIndexBinaryNode(
-                        symbolNode, colIndex, rowIndex);
+                    TIntermBinary *newNode =
+                        ConstructMatrixIndexBinaryNode(symbolNode, colIndex, rowIndex);
                     sequence->push_back(newNode);
                     rowIndex++;
                     if (rowIndex >= node->getRows())
@@ -274,8 +271,7 @@ void ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
     TIntermDeclaration *decl = createTempInitDeclaration(original);
 
     TType type = original->getType();
-    if (mShaderType == GL_FRAGMENT_SHADER &&
-        type.getBasicType() == EbtFloat &&
+    if (mShaderType == GL_FRAGMENT_SHADER && type.getBasicType() == EbtFloat &&
         type.getPrecision() == EbpUndefined)
     {
         // We use the highest available precision for the temporary variable

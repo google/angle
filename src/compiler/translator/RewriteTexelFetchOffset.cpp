@@ -21,9 +21,7 @@ namespace
 class Traverser : public TIntermTraverser
 {
   public:
-    static void Apply(TIntermNode *root,
-                      const TSymbolTable &symbolTable,
-                      int shaderVersion);
+    static void Apply(TIntermNode *root, const TSymbolTable &symbolTable, int shaderVersion);
 
   private:
     Traverser(const TSymbolTable &symbolTable, int shaderVersion);
@@ -41,9 +39,7 @@ Traverser::Traverser(const TSymbolTable &symbolTable, int shaderVersion)
 }
 
 // static
-void Traverser::Apply(TIntermNode *root,
-                      const TSymbolTable &symbolTable,
-                      int shaderVersion)
+void Traverser::Apply(TIntermNode *root, const TSymbolTable &symbolTable, int shaderVersion)
 {
     Traverser traverser(symbolTable, shaderVersion);
     do
@@ -156,9 +152,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
 }  // anonymous namespace
 
-void RewriteTexelFetchOffset(TIntermNode *root,
-                             const TSymbolTable &symbolTable,
-                             int shaderVersion)
+void RewriteTexelFetchOffset(TIntermNode *root, const TSymbolTable &symbolTable, int shaderVersion)
 {
     // texelFetchOffset is only valid in GLSL 3.0 and later.
     if (shaderVersion < 300)

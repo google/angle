@@ -85,18 +85,11 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
     }
 
   private:
-
     struct CreatorFunctionData
     {
-        CreatorFunctionData()
-            : node(nullptr),
-              index(0),
-              indexAssigned(false),
-              visiting(false)
-        {
-        }
+        CreatorFunctionData() : node(nullptr), index(0), indexAssigned(false), visiting(false) {}
 
-        std::set<CreatorFunctionData*> callees;
+        std::set<CreatorFunctionData *> callees;
         TIntermFunctionDefinition *node;
         TString name;
         size_t index;
@@ -135,15 +128,15 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
     {
         switch (node->getOp())
         {
-          case EOpPrototype:
-            if (visit == PreVisit)
-            {
-                // Function declaration, create an empty record.
-                auto &record = mFunctions[node->getFunctionSymbolInfo()->getName()];
-                record.name  = node->getFunctionSymbolInfo()->getName();
-            }
-            break;
-          case EOpFunctionCall:
+            case EOpPrototype:
+                if (visit == PreVisit)
+                {
+                    // Function declaration, create an empty record.
+                    auto &record = mFunctions[node->getFunctionSymbolInfo()->getName()];
+                    record.name  = node->getFunctionSymbolInfo()->getName();
+                }
+                break;
+            case EOpFunctionCall:
             {
                 // Function call, add the callees
                 if (visit == PreVisit)
@@ -163,8 +156,8 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 }
                 break;
             }
-          default:
-            break;
+            default:
+                break;
         }
         return true;
     }

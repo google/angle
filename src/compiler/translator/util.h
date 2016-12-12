@@ -62,8 +62,9 @@ class GetVariableTraverser : angle::NonCopyable
     // Helper function called by traverse() to fill specific fields
     // for attributes/varyings/uniforms.
     template <typename VarT>
-    void setTypeSpecificInfo(
-        const TType &type, const TString &name, VarT *variable) {}
+    void setTypeSpecificInfo(const TType &type, const TString &name, VarT *variable)
+    {
+    }
 
     const TSymbolTable &mSymbolTable;
 };
@@ -74,4 +75,4 @@ bool CanBeInvariantESSL1(TQualifier qualifier);
 bool CanBeInvariantESSL3OrGreater(TQualifier qualifier);
 }  // namespace sh
 
-#endif // COMPILER_TRANSLATOR_UTIL_H_
+#endif  // COMPILER_TRANSLATOR_UTIL_H_

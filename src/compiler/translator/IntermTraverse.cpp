@@ -146,7 +146,8 @@ void TIntermTraverser::insertStatementInParentBlock(TIntermNode *statement)
 
 TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier qualifier)
 {
-    // Each traversal uses at most one temporary variable, so the index stays the same within a single traversal.
+    // Each traversal uses at most one temporary variable, so the index stays the same within a
+    // single traversal.
     TInfoSinkBase symbolNameOut;
     ASSERT(mTemporaryIndex != nullptr);
     symbolNameOut << "s" << (*mTemporaryIndex);
@@ -178,9 +179,9 @@ TIntermDeclaration *TIntermTraverser::createTempInitDeclaration(TIntermTyped *in
                                                                 TQualifier qualifier)
 {
     ASSERT(initializer != nullptr);
-    TIntermSymbol *tempSymbol = createTempSymbol(initializer->getType(), qualifier);
+    TIntermSymbol *tempSymbol           = createTempSymbol(initializer->getType(), qualifier);
     TIntermDeclaration *tempDeclaration = new TIntermDeclaration();
-    TIntermBinary *tempInit           = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
+    TIntermBinary *tempInit             = new TIntermBinary(EOpInitialize, tempSymbol, initializer);
     tempDeclaration->appendDeclarator(tempInit);
     return tempDeclaration;
 }
@@ -631,7 +632,7 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             // Find the built-in function corresponding to this op so that we can determine the
             // in/out qualifiers of its parameters.
             TFunction *builtInFunc = nullptr;
-            TString opString = GetOperatorString(node->getOp());
+            TString opString       = GetOperatorString(node->getOp());
             if (!node->isConstructor() && !opString.empty())
             {
                 // The return type doesn't affect the mangled name of the function, which is used

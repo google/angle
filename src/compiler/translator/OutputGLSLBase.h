@@ -28,10 +28,7 @@ class TOutputGLSLBase : public TIntermTraverser
                     ShShaderOutput output,
                     ShCompileOptions compileOptions);
 
-    ShShaderOutput getShaderOutput() const
-    {
-        return mOutput;
-    }
+    ShShaderOutput getShaderOutput() const { return mOutput; }
 
   protected:
     TInfoSinkBase &objSink() { return mObjSink; }

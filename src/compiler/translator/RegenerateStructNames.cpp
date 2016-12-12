@@ -56,7 +56,7 @@ void RegenerateStructNames::visitSymbol(TIntermSymbol *symbol)
         return;
     }
     std::string id = Str(uniqueId);
-    TString tmp = kPrefix + TString(id.c_str());
+    TString tmp    = kPrefix + TString(id.c_str());
     tmp += "_" + userType->name();
     userType->setName(tmp);
 }

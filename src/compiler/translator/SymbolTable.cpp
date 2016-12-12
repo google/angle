@@ -10,7 +10,7 @@
 //
 
 #if defined(_MSC_VER)
-#pragma warning(disable: 4718)
+#pragma warning(disable : 4718)
 #endif
 
 #include "compiler/translator/SymbolTable.h"
@@ -99,8 +99,10 @@ TSymbol *TSymbolTableLevel::find(const TString &name) const
         return (*it).second;
 }
 
-TSymbol *TSymbolTable::find(const TString &name, int shaderVersion,
-                            bool *builtIn, bool *sameScope) const
+TSymbol *TSymbolTable::find(const TString &name,
+                            int shaderVersion,
+                            bool *builtIn,
+                            bool *sameScope) const
 {
     int level = currentLevel();
     TSymbol *symbol;
@@ -115,8 +117,7 @@ TSymbol *TSymbolTable::find(const TString &name, int shaderVersion,
             level--;
 
         symbol = table[level]->find(name);
-    }
-    while (symbol == 0 && --level >= 0);
+    } while (symbol == 0 && --level >= 0);
 
     if (builtIn)
         *builtIn = (level <= LAST_BUILTIN_LEVEL);
@@ -132,8 +133,7 @@ TSymbol *TSymbolTable::findGlobal(const TString &name) const
     return table[GLOBAL_LEVEL]->find(name);
 }
 
-TSymbol *TSymbolTable::findBuiltIn(
-    const TString &name, int shaderVersion) const
+TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
 {
     for (int level = LAST_BUILTIN_LEVEL; level >= 0; level--)
     {
@@ -164,7 +164,8 @@ bool IsGenType(const TType *type)
     if (type)
     {
         TBasicType basicType = type->getBasicType();
-        return basicType == EbtGenType || basicType == EbtGenIType || basicType == EbtGenUType || basicType == EbtGenBType;
+        return basicType == EbtGenType || basicType == EbtGenIType || basicType == EbtGenUType ||
+               basicType == EbtGenBType;
     }
 
     return false;
@@ -175,7 +176,8 @@ bool IsVecType(const TType *type)
     if (type)
     {
         TBasicType basicType = type->getBasicType();
-        return basicType == EbtVec || basicType == EbtIVec || basicType == EbtUVec || basicType == EbtBVec;
+        return basicType == EbtVec || basicType == EbtIVec || basicType == EbtUVec ||
+               basicType == EbtBVec;
     }
 
     return false;
@@ -192,13 +194,18 @@ const TType *SpecificType(const TType *type, int size)
 
     ASSERT(!IsVecType(type));
 
-    switch(type->getBasicType())
+    switch (type->getBasicType())
     {
-      case EbtGenType:  return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
-      case EbtGenIType: return TCache::getType(EbtInt, static_cast<unsigned char>(size));
-      case EbtGenUType: return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
-      case EbtGenBType: return TCache::getType(EbtBool, static_cast<unsigned char>(size));
-      default: return type;
+        case EbtGenType:
+            return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
+        case EbtGenIType:
+            return TCache::getType(EbtInt, static_cast<unsigned char>(size));
+        case EbtGenUType:
+            return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
+        case EbtGenBType:
+            return TCache::getType(EbtBool, static_cast<unsigned char>(size));
+        default:
+            return type;
     }
 }
 
@@ -213,50 +220,75 @@ const TType *VectorType(const TType *type, int size)
 
     ASSERT(!IsGenType(type));
 
-    switch(type->getBasicType())
+    switch (type->getBasicType())
     {
-      case EbtVec:  return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
-      case EbtIVec: return TCache::getType(EbtInt, static_cast<unsigned char>(size));
-      case EbtUVec: return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
-      case EbtBVec: return TCache::getType(EbtBool, static_cast<unsigned char>(size));
-      default: return type;
+        case EbtVec:
+            return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
+        case EbtIVec:
+            return TCache::getType(EbtInt, static_cast<unsigned char>(size));
+        case EbtUVec:
+            return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
+        case EbtBVec:
+            return TCache::getType(EbtBool, static_cast<unsigned char>(size));
+        default:
+            return type;
     }
 }
 
-void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *ext, const TType *rvalue, const char *name,
-                                 const TType *ptype1, const TType *ptype2, const TType *ptype3, const TType *ptype4, const TType *ptype5)
+void TSymbolTable::insertBuiltIn(ESymbolLevel level,
+                                 TOperator op,
+                                 const char *ext,
+                                 const TType *rvalue,
+                                 const char *name,
+                                 const TType *ptype1,
+                                 const TType *ptype2,
+                                 const TType *ptype3,
+                                 const TType *ptype4,
+                                 const TType *ptype5)
 {
     if (ptype1->getBasicType() == EbtGSampler2D)
     {
         insertUnmangledBuiltIn(name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name,
+                      TCache::getType(EbtSampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name,
+                      TCache::getType(EbtISampler2D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name,
+                      TCache::getType(EbtUSampler2D), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSampler3D)
     {
         insertUnmangledBuiltIn(name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name,
+                      TCache::getType(EbtSampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name,
+                      TCache::getType(EbtISampler3D), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name,
+                      TCache::getType(EbtUSampler3D), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSamplerCube)
     {
         insertUnmangledBuiltIn(name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name,
+                      TCache::getType(EbtSamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name,
+                      TCache::getType(EbtISamplerCube), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name,
+                      TCache::getType(EbtUSamplerCube), ptype2, ptype3, ptype4, ptype5);
     }
     else if (ptype1->getBasicType() == EbtGSampler2DArray)
     {
         insertUnmangledBuiltIn(name);
         bool gvec4 = (rvalue->getBasicType() == EbtGVec4);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name, TCache::getType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name, TCache::getType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
-        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name, TCache::getType(EbtUSampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtFloat, 4) : rvalue, name,
+                      TCache::getType(EbtSampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtInt, 4) : rvalue, name,
+                      TCache::getType(EbtISampler2DArray), ptype2, ptype3, ptype4, ptype5);
+        insertBuiltIn(level, gvec4 ? TCache::getType(EbtUInt, 4) : rvalue, name,
+                      TCache::getType(EbtUSampler2DArray), ptype2, ptype3, ptype4, ptype5);
     }
     else if (IsGImage(ptype1->getBasicType()))
     {
@@ -299,18 +331,25 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level, TOperator op, const char *e
     {
         ASSERT(!ptype4 && !ptype5);
         insertUnmangledBuiltIn(name);
-        insertBuiltIn(level, op, ext, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1), SpecificType(ptype2, 1), SpecificType(ptype3, 1));
-        insertBuiltIn(level, op, ext, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2), SpecificType(ptype2, 2), SpecificType(ptype3, 2));
-        insertBuiltIn(level, op, ext, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3), SpecificType(ptype2, 3), SpecificType(ptype3, 3));
-        insertBuiltIn(level, op, ext, SpecificType(rvalue, 4), name, SpecificType(ptype1, 4), SpecificType(ptype2, 4), SpecificType(ptype3, 4));
+        insertBuiltIn(level, op, ext, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1),
+                      SpecificType(ptype2, 1), SpecificType(ptype3, 1));
+        insertBuiltIn(level, op, ext, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2),
+                      SpecificType(ptype2, 2), SpecificType(ptype3, 2));
+        insertBuiltIn(level, op, ext, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3),
+                      SpecificType(ptype2, 3), SpecificType(ptype3, 3));
+        insertBuiltIn(level, op, ext, SpecificType(rvalue, 4), name, SpecificType(ptype1, 4),
+                      SpecificType(ptype2, 4), SpecificType(ptype3, 4));
     }
     else if (IsVecType(rvalue) || IsVecType(ptype1) || IsVecType(ptype2) || IsVecType(ptype3))
     {
         ASSERT(!ptype4 && !ptype5);
         insertUnmangledBuiltIn(name);
-        insertBuiltIn(level, op, ext, VectorType(rvalue, 2), name, VectorType(ptype1, 2), VectorType(ptype2, 2), VectorType(ptype3, 2));
-        insertBuiltIn(level, op, ext, VectorType(rvalue, 3), name, VectorType(ptype1, 3), VectorType(ptype2, 3), VectorType(ptype3, 3));
-        insertBuiltIn(level, op, ext, VectorType(rvalue, 4), name, VectorType(ptype1, 4), VectorType(ptype2, 4), VectorType(ptype3, 4));
+        insertBuiltIn(level, op, ext, VectorType(rvalue, 2), name, VectorType(ptype1, 2),
+                      VectorType(ptype2, 2), VectorType(ptype3, 2));
+        insertBuiltIn(level, op, ext, VectorType(rvalue, 3), name, VectorType(ptype1, 3),
+                      VectorType(ptype2, 3), VectorType(ptype3, 3));
+        insertBuiltIn(level, op, ext, VectorType(rvalue, 4), name, VectorType(ptype1, 4),
+                      VectorType(ptype2, 4), VectorType(ptype3, 4));
     }
     else
     {
@@ -352,7 +391,7 @@ TPrecision TSymbolTable::getDefaultPrecision(TBasicType type) const
     TBasicType baseType = (type == EbtUInt) ? EbtInt : type;
 
     int level = static_cast<int>(precisionStack.size()) - 1;
-    assert(level >= 0); // Just to be safe. Should not happen.
+    assert(level >= 0);  // Just to be safe. Should not happen.
     // If we dont find anything we return this. Some types don't have predefined default precision.
     TPrecision prec = EbpUndefined;
     while (level >= 0)

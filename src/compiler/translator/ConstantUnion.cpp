@@ -416,7 +416,7 @@ TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
                 // ESSL 3.00.6 section 5.9: "If E1 is a signed integer, the right-shift will extend
                 // the sign bit." In C++ shifting negative integers is undefined, so we implement
                 // extending the sign bit manually.
-                int lhsSafe        = lhs.iConst;
+                int lhsSafe = lhs.iConst;
                 if (lhsSafe == std::numeric_limits<int>::min())
                 {
                     // The min integer needs special treatment because only bit it has set is the

@@ -27,17 +27,17 @@ class TIntermediate
     POOL_ALLOCATOR_NEW_DELETE();
     TIntermediate() {}
 
-    TIntermSymbol *addSymbol(
-        int id, const TString &, const TType &, const TSourceLoc &);
+    TIntermSymbol *addSymbol(int id, const TString &, const TType &, const TSourceLoc &);
     TIntermTyped *addIndex(TOperator op,
                            TIntermTyped *base,
                            TIntermTyped *index,
                            const TSourceLoc &line,
                            TDiagnostics *diagnostics);
-    TIntermTyped *addUnaryMath(
-        TOperator op, TIntermTyped *child, const TSourceLoc &line, const TType *funcReturnType);
-    TIntermAggregate *growAggregate(
-        TIntermNode *left, TIntermNode *right, const TSourceLoc &);
+    TIntermTyped *addUnaryMath(TOperator op,
+                               TIntermTyped *child,
+                               const TSourceLoc &line,
+                               const TType *funcReturnType);
+    TIntermAggregate *growAggregate(TIntermNode *left, TIntermNode *right, const TSourceLoc &);
     static TIntermAggregate *MakeAggregate(TIntermNode *node, const TSourceLoc &line);
     static TIntermBlock *EnsureBlock(TIntermNode *node);
     TIntermAggregate *setAggregateOperator(TIntermNode *, TOperator, const TSourceLoc &);
@@ -49,8 +49,7 @@ class TIntermediate
     TIntermSwitch *addSwitch(TIntermTyped *init,
                              TIntermBlock *statementList,
                              const TSourceLoc &line);
-    TIntermCase *addCase(
-        TIntermTyped *condition, const TSourceLoc &line);
+    TIntermCase *addCase(TIntermTyped *condition, const TSourceLoc &line);
     static TIntermTyped *AddComma(TIntermTyped *left,
                                   TIntermTyped *right,
                                   const TSourceLoc &line,
@@ -58,8 +57,12 @@ class TIntermediate
     TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
                                            const TType &type,
                                            const TSourceLoc &line);
-    TIntermNode *addLoop(TLoopType, TIntermNode *, TIntermTyped *, TIntermTyped *,
-                         TIntermNode *, const TSourceLoc &);
+    TIntermNode *addLoop(TLoopType,
+                         TIntermNode *,
+                         TIntermTyped *,
+                         TIntermTyped *,
+                         TIntermNode *,
+                         const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, TIntermTyped *, const TSourceLoc &);
     static TIntermTyped *AddSwizzle(TIntermTyped *baseExpression,
@@ -71,7 +74,7 @@ class TIntermediate
     TIntermTyped *foldAggregateBuiltIn(TIntermAggregate *aggregate, TDiagnostics *diagnostics);
 
   private:
-    void operator=(TIntermediate &); // prevent assignments
+    void operator=(TIntermediate &);  // prevent assignments
 };
 
 }  // namespace sh

@@ -125,8 +125,10 @@ void TOutputGLSLBase::writeFloat(TInfoSinkBase &out, float f)
     }
 }
 
-void TOutputGLSLBase::writeTriplet(
-    Visit visit, const char *preStr, const char *inStr, const char *postStr)
+void TOutputGLSLBase::writeTriplet(Visit visit,
+                                   const char *preStr,
+                                   const char *inStr,
+                                   const char *postStr)
 {
     TInfoSinkBase &out = objSink();
     if (visit == PreVisit && preStr)
@@ -137,11 +139,12 @@ void TOutputGLSLBase::writeTriplet(
         out << postStr;
 }
 
-void TOutputGLSLBase::writeBuiltInFunctionTriplet(
-    Visit visit, const char *preStr, bool useEmulatedFunction)
+void TOutputGLSLBase::writeBuiltInFunctionTriplet(Visit visit,
+                                                  const char *preStr,
+                                                  bool useEmulatedFunction)
 {
-    TString preString = useEmulatedFunction ?
-        BuiltInFunctionEmulator::GetEmulatedFunctionName(preStr) : preStr;
+    TString preString =
+        useEmulatedFunction ? BuiltInFunctionEmulator::GetEmulatedFunctionName(preStr) : preStr;
     writeTriplet(visit, preString.c_str(), ", ", ")");
 }
 
@@ -212,7 +215,7 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
 void TOutputGLSLBase::writeVariableType(const TType &type)
 {
     TQualifier qualifier = type.getQualifier();
-    TInfoSinkBase &out = objSink();
+    TInfoSinkBase &out   = objSink();
     if (type.isInvariant())
     {
         writeInvariantQualifier(type);
@@ -290,8 +293,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type)
 void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence &args)
 {
     TInfoSinkBase &out = objSink();
-    for (TIntermSequence::const_iterator iter = args.begin();
-         iter != args.end(); ++iter)
+    for (TIntermSequence::const_iterator iter = args.begin(); iter != args.end(); ++iter)
     {
         const TIntermSymbol *arg = (*iter)->getAsSymbolNode();
         ASSERT(arg != NULL);
@@ -310,8 +312,8 @@ void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence &args)
     }
 }
 
-const TConstantUnion *TOutputGLSLBase::writeConstantUnion(
-    const TType &type, const TConstantUnion *pConstUnion)
+const TConstantUnion *TOutputGLSLBase::writeConstantUnion(const TType &type,
+                                                          const TConstantUnion *pConstUnion)
 {
     TInfoSinkBase &out = objSink();
 
@@ -333,7 +335,7 @@ const TConstantUnion *TOutputGLSLBase::writeConstantUnion(
     }
     else
     {
-        size_t size = type.getObjectSize();
+        size_t size    = type.getObjectSize();
         bool writeType = size > 1;
         if (writeType)
             out << getTypeName(type) << "(";
@@ -341,19 +343,20 @@ const TConstantUnion *TOutputGLSLBase::writeConstantUnion(
         {
             switch (pConstUnion->getType())
             {
-              case EbtFloat:
-                  writeFloat(out, pConstUnion->getFConst());
-                  break;
-              case EbtInt:
-                out << pConstUnion->getIConst();
-                break;
-              case EbtUInt:
-                out << pConstUnion->getUConst() << "u";
-                break;
-              case EbtBool:
-                out << pConstUnion->getBConst();
-                break;
-              default: UNREACHABLE();
+                case EbtFloat:
+                    writeFloat(out, pConstUnion->getFConst());
+                    break;
+                case EbtInt:
+                    out << pConstUnion->getIConst();
+                    break;
+                case EbtUInt:
+                    out << pConstUnion->getUConst() << "u";
+                    break;
+                case EbtBool:
+                    out << pConstUnion->getBConst();
+                    break;
+                default:
+                    UNREACHABLE();
             }
             if (i != size - 1)
                 out << ", ";
@@ -628,179 +631,199 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
 
     switch (node->getOp())
     {
-      case EOpNegative: preString = "(-"; break;
-      case EOpPositive: preString = "(+"; break;
-      case EOpVectorLogicalNot: preString = "not("; break;
-      case EOpLogicalNot: preString = "(!"; break;
-      case EOpBitwiseNot: preString = "(~"; break;
+        case EOpNegative:
+            preString = "(-";
+            break;
+        case EOpPositive:
+            preString = "(+";
+            break;
+        case EOpVectorLogicalNot:
+            preString = "not(";
+            break;
+        case EOpLogicalNot:
+            preString = "(!";
+            break;
+        case EOpBitwiseNot:
+            preString = "(~";
+            break;
 
-      case EOpPostIncrement: preString = "("; postString = "++)"; break;
-      case EOpPostDecrement: preString = "("; postString = "--)"; break;
-      case EOpPreIncrement: preString = "(++"; break;
-      case EOpPreDecrement: preString = "(--"; break;
+        case EOpPostIncrement:
+            preString  = "(";
+            postString = "++)";
+            break;
+        case EOpPostDecrement:
+            preString  = "(";
+            postString = "--)";
+            break;
+        case EOpPreIncrement:
+            preString = "(++";
+            break;
+        case EOpPreDecrement:
+            preString = "(--";
+            break;
 
-      case EOpRadians:
-        preString = "radians(";
-        break;
-      case EOpDegrees:
-        preString = "degrees(";
-        break;
-      case EOpSin:
-        preString = "sin(";
-        break;
-      case EOpCos:
-        preString = "cos(";
-        break;
-      case EOpTan:
-        preString = "tan(";
-        break;
-      case EOpAsin:
-        preString = "asin(";
-        break;
-      case EOpAcos:
-        preString = "acos(";
-        break;
-      case EOpAtan:
-        preString = "atan(";
-        break;
+        case EOpRadians:
+            preString = "radians(";
+            break;
+        case EOpDegrees:
+            preString = "degrees(";
+            break;
+        case EOpSin:
+            preString = "sin(";
+            break;
+        case EOpCos:
+            preString = "cos(";
+            break;
+        case EOpTan:
+            preString = "tan(";
+            break;
+        case EOpAsin:
+            preString = "asin(";
+            break;
+        case EOpAcos:
+            preString = "acos(";
+            break;
+        case EOpAtan:
+            preString = "atan(";
+            break;
 
-      case EOpSinh:
-        preString = "sinh(";
-        break;
-      case EOpCosh:
-        preString = "cosh(";
-        break;
-      case EOpTanh:
-        preString = "tanh(";
-        break;
-      case EOpAsinh:
-        preString = "asinh(";
-        break;
-      case EOpAcosh:
-        preString = "acosh(";
-        break;
-      case EOpAtanh:
-        preString = "atanh(";
-        break;
+        case EOpSinh:
+            preString = "sinh(";
+            break;
+        case EOpCosh:
+            preString = "cosh(";
+            break;
+        case EOpTanh:
+            preString = "tanh(";
+            break;
+        case EOpAsinh:
+            preString = "asinh(";
+            break;
+        case EOpAcosh:
+            preString = "acosh(";
+            break;
+        case EOpAtanh:
+            preString = "atanh(";
+            break;
 
-      case EOpExp:
-        preString = "exp(";
-        break;
-      case EOpLog:
-        preString = "log(";
-        break;
-      case EOpExp2:
-        preString = "exp2(";
-        break;
-      case EOpLog2:
-        preString = "log2(";
-        break;
-      case EOpSqrt:
-        preString = "sqrt(";
-        break;
-      case EOpInverseSqrt:
-        preString = "inversesqrt(";
-        break;
+        case EOpExp:
+            preString = "exp(";
+            break;
+        case EOpLog:
+            preString = "log(";
+            break;
+        case EOpExp2:
+            preString = "exp2(";
+            break;
+        case EOpLog2:
+            preString = "log2(";
+            break;
+        case EOpSqrt:
+            preString = "sqrt(";
+            break;
+        case EOpInverseSqrt:
+            preString = "inversesqrt(";
+            break;
 
-      case EOpAbs:
-        preString = "abs(";
-        break;
-      case EOpSign:
-        preString = "sign(";
-        break;
-      case EOpFloor:
-        preString = "floor(";
-        break;
-      case EOpTrunc:
-        preString = "trunc(";
-        break;
-      case EOpRound:
-        preString = "round(";
-        break;
-      case EOpRoundEven:
-        preString = "roundEven(";
-        break;
-      case EOpCeil:
-        preString = "ceil(";
-        break;
-      case EOpFract:
-        preString = "fract(";
-        break;
-      case EOpIsNan:
-        preString = "isnan(";
-        break;
-      case EOpIsInf:
-        preString = "isinf(";
-        break;
+        case EOpAbs:
+            preString = "abs(";
+            break;
+        case EOpSign:
+            preString = "sign(";
+            break;
+        case EOpFloor:
+            preString = "floor(";
+            break;
+        case EOpTrunc:
+            preString = "trunc(";
+            break;
+        case EOpRound:
+            preString = "round(";
+            break;
+        case EOpRoundEven:
+            preString = "roundEven(";
+            break;
+        case EOpCeil:
+            preString = "ceil(";
+            break;
+        case EOpFract:
+            preString = "fract(";
+            break;
+        case EOpIsNan:
+            preString = "isnan(";
+            break;
+        case EOpIsInf:
+            preString = "isinf(";
+            break;
 
-      case EOpFloatBitsToInt:
-        preString = "floatBitsToInt(";
-        break;
-      case EOpFloatBitsToUint:
-        preString = "floatBitsToUint(";
-        break;
-      case EOpIntBitsToFloat:
-        preString = "intBitsToFloat(";
-        break;
-      case EOpUintBitsToFloat:
-        preString = "uintBitsToFloat(";
-        break;
+        case EOpFloatBitsToInt:
+            preString = "floatBitsToInt(";
+            break;
+        case EOpFloatBitsToUint:
+            preString = "floatBitsToUint(";
+            break;
+        case EOpIntBitsToFloat:
+            preString = "intBitsToFloat(";
+            break;
+        case EOpUintBitsToFloat:
+            preString = "uintBitsToFloat(";
+            break;
 
-      case EOpPackSnorm2x16:
-        preString = "packSnorm2x16(";
-        break;
-      case EOpPackUnorm2x16:
-        preString = "packUnorm2x16(";
-        break;
-      case EOpPackHalf2x16:
-        preString = "packHalf2x16(";
-        break;
-      case EOpUnpackSnorm2x16:
-        preString = "unpackSnorm2x16(";
-        break;
-      case EOpUnpackUnorm2x16:
-        preString = "unpackUnorm2x16(";
-        break;
-      case EOpUnpackHalf2x16:
-        preString = "unpackHalf2x16(";
-        break;
+        case EOpPackSnorm2x16:
+            preString = "packSnorm2x16(";
+            break;
+        case EOpPackUnorm2x16:
+            preString = "packUnorm2x16(";
+            break;
+        case EOpPackHalf2x16:
+            preString = "packHalf2x16(";
+            break;
+        case EOpUnpackSnorm2x16:
+            preString = "unpackSnorm2x16(";
+            break;
+        case EOpUnpackUnorm2x16:
+            preString = "unpackUnorm2x16(";
+            break;
+        case EOpUnpackHalf2x16:
+            preString = "unpackHalf2x16(";
+            break;
 
-      case EOpLength:
-        preString = "length(";
-        break;
-      case EOpNormalize:
-        preString = "normalize(";
-        break;
+        case EOpLength:
+            preString = "length(";
+            break;
+        case EOpNormalize:
+            preString = "normalize(";
+            break;
 
-      case EOpDFdx:
-        preString = "dFdx(";
-        break;
-      case EOpDFdy:
-        preString = "dFdy(";
-        break;
-      case EOpFwidth:
-        preString = "fwidth(";
-        break;
+        case EOpDFdx:
+            preString = "dFdx(";
+            break;
+        case EOpDFdy:
+            preString = "dFdy(";
+            break;
+        case EOpFwidth:
+            preString = "fwidth(";
+            break;
 
-      case EOpTranspose:
-        preString = "transpose(";
-        break;
-      case EOpDeterminant:
-        preString = "determinant(";
-        break;
-      case EOpInverse:
-        preString = "inverse(";
-        break;
+        case EOpTranspose:
+            preString = "transpose(";
+            break;
+        case EOpDeterminant:
+            preString = "determinant(";
+            break;
+        case EOpInverse:
+            preString = "inverse(";
+            break;
 
-      case EOpAny:
-        preString = "any(";
-        break;
-      case EOpAll:
-        preString = "all(";
-        break;
+        case EOpAny:
+            preString = "any(";
+            break;
+        case EOpAll:
+            preString = "all(";
+            break;
 
-      default:
-        UNREACHABLE();
+        default:
+            UNREACHABLE();
     }
 
     if (visit == PreVisit && node->getUseEmulatedFunction())
@@ -938,164 +961,164 @@ bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefini
 
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    bool visitChildren = true;
-    TInfoSinkBase &out = objSink();
+    bool visitChildren       = true;
+    TInfoSinkBase &out       = objSink();
     bool useEmulatedFunction = (visit == PreVisit && node->getUseEmulatedFunction());
     switch (node->getOp())
     {
-      case EOpPrototype:
-        // Function declaration.
-        ASSERT(visit == PreVisit);
-        {
-            const TType &type = node->getType();
-            writeVariableType(type);
-            if (type.isArray())
-                out << arrayBrackets(type);
-        }
+        case EOpPrototype:
+            // Function declaration.
+            ASSERT(visit == PreVisit);
+            {
+                const TType &type = node->getType();
+                writeVariableType(type);
+                if (type.isArray())
+                    out << arrayBrackets(type);
+            }
 
-        out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+            out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
 
-        out << "(";
-        writeFunctionParameters(*(node->getSequence()));
-        out << ")";
-
-        visitChildren = false;
-        break;
-      case EOpFunctionCall:
-        // Function call.
-        if (visit == PreVisit)
-            out << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";
-        else if (visit == InVisit)
-            out << ", ";
-        else
+            out << "(";
+            writeFunctionParameters(*(node->getSequence()));
             out << ")";
-        break;
-      case EOpParameters:
-        // Function parameters.
-        ASSERT(visit == PreVisit);
-        out << "(";
-        writeFunctionParameters(*(node->getSequence()));
-        out << ")";
-        visitChildren = false;
-        break;
-      case EOpInvariantDeclaration:
-        // Invariant declaration.
-        ASSERT(visit == PreVisit);
-        {
-            const TIntermSequence *sequence = node->getSequence();
-            ASSERT(sequence && sequence->size() == 1);
-            const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
-            ASSERT(symbol);
-            out << "invariant " << hashVariableName(symbol->getName());
-        }
-        visitChildren = false;
-        break;
-      case EOpConstructFloat:
-      case EOpConstructVec2:
-      case EOpConstructVec3:
-      case EOpConstructVec4:
-      case EOpConstructBool:
-      case EOpConstructBVec2:
-      case EOpConstructBVec3:
-      case EOpConstructBVec4:
-      case EOpConstructInt:
-      case EOpConstructIVec2:
-      case EOpConstructIVec3:
-      case EOpConstructIVec4:
-      case EOpConstructUInt:
-      case EOpConstructUVec2:
-      case EOpConstructUVec3:
-      case EOpConstructUVec4:
-      case EOpConstructMat2:
-      case EOpConstructMat2x3:
-      case EOpConstructMat2x4:
-      case EOpConstructMat3x2:
-      case EOpConstructMat3:
-      case EOpConstructMat3x4:
-      case EOpConstructMat4x2:
-      case EOpConstructMat4x3:
-      case EOpConstructMat4:
-      case EOpConstructStruct:
-          writeConstructorTriplet(visit, node->getType());
-          break;
 
-      case EOpOuterProduct:
-        writeBuiltInFunctionTriplet(visit, "outerProduct(", useEmulatedFunction);
-        break;
+            visitChildren = false;
+            break;
+        case EOpFunctionCall:
+            // Function call.
+            if (visit == PreVisit)
+                out << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";
+            else if (visit == InVisit)
+                out << ", ";
+            else
+                out << ")";
+            break;
+        case EOpParameters:
+            // Function parameters.
+            ASSERT(visit == PreVisit);
+            out << "(";
+            writeFunctionParameters(*(node->getSequence()));
+            out << ")";
+            visitChildren = false;
+            break;
+        case EOpInvariantDeclaration:
+            // Invariant declaration.
+            ASSERT(visit == PreVisit);
+            {
+                const TIntermSequence *sequence = node->getSequence();
+                ASSERT(sequence && sequence->size() == 1);
+                const TIntermSymbol *symbol = sequence->front()->getAsSymbolNode();
+                ASSERT(symbol);
+                out << "invariant " << hashVariableName(symbol->getName());
+            }
+            visitChildren = false;
+            break;
+        case EOpConstructFloat:
+        case EOpConstructVec2:
+        case EOpConstructVec3:
+        case EOpConstructVec4:
+        case EOpConstructBool:
+        case EOpConstructBVec2:
+        case EOpConstructBVec3:
+        case EOpConstructBVec4:
+        case EOpConstructInt:
+        case EOpConstructIVec2:
+        case EOpConstructIVec3:
+        case EOpConstructIVec4:
+        case EOpConstructUInt:
+        case EOpConstructUVec2:
+        case EOpConstructUVec3:
+        case EOpConstructUVec4:
+        case EOpConstructMat2:
+        case EOpConstructMat2x3:
+        case EOpConstructMat2x4:
+        case EOpConstructMat3x2:
+        case EOpConstructMat3:
+        case EOpConstructMat3x4:
+        case EOpConstructMat4x2:
+        case EOpConstructMat4x3:
+        case EOpConstructMat4:
+        case EOpConstructStruct:
+            writeConstructorTriplet(visit, node->getType());
+            break;
 
-      case EOpLessThan:
-        writeBuiltInFunctionTriplet(visit, "lessThan(", useEmulatedFunction);
-        break;
-      case EOpGreaterThan:
-        writeBuiltInFunctionTriplet(visit, "greaterThan(", useEmulatedFunction);
-        break;
-      case EOpLessThanEqual:
-        writeBuiltInFunctionTriplet(visit, "lessThanEqual(", useEmulatedFunction);
-        break;
-      case EOpGreaterThanEqual:
-        writeBuiltInFunctionTriplet(visit, "greaterThanEqual(", useEmulatedFunction);
-        break;
-      case EOpVectorEqual:
-        writeBuiltInFunctionTriplet(visit, "equal(", useEmulatedFunction);
-        break;
-      case EOpVectorNotEqual:
-        writeBuiltInFunctionTriplet(visit, "notEqual(", useEmulatedFunction);
-        break;
+        case EOpOuterProduct:
+            writeBuiltInFunctionTriplet(visit, "outerProduct(", useEmulatedFunction);
+            break;
 
-      case EOpMod:
-        writeBuiltInFunctionTriplet(visit, "mod(", useEmulatedFunction);
-        break;
-      case EOpModf:
-        writeBuiltInFunctionTriplet(visit, "modf(", useEmulatedFunction);
-        break;
-      case EOpPow:
-        writeBuiltInFunctionTriplet(visit, "pow(", useEmulatedFunction);
-        break;
-      case EOpAtan:
-        writeBuiltInFunctionTriplet(visit, "atan(", useEmulatedFunction);
-        break;
-      case EOpMin:
-        writeBuiltInFunctionTriplet(visit, "min(", useEmulatedFunction);
-        break;
-      case EOpMax:
-        writeBuiltInFunctionTriplet(visit, "max(", useEmulatedFunction);
-        break;
-      case EOpClamp:
-        writeBuiltInFunctionTriplet(visit, "clamp(", useEmulatedFunction);
-        break;
-      case EOpMix:
-        writeBuiltInFunctionTriplet(visit, "mix(", useEmulatedFunction);
-        break;
-      case EOpStep:
-        writeBuiltInFunctionTriplet(visit, "step(", useEmulatedFunction);
-        break;
-      case EOpSmoothStep:
-        writeBuiltInFunctionTriplet(visit, "smoothstep(", useEmulatedFunction);
-        break;
-      case EOpDistance:
-        writeBuiltInFunctionTriplet(visit, "distance(", useEmulatedFunction);
-        break;
-      case EOpDot:
-        writeBuiltInFunctionTriplet(visit, "dot(", useEmulatedFunction);
-        break;
-      case EOpCross:
-        writeBuiltInFunctionTriplet(visit, "cross(", useEmulatedFunction);
-        break;
-      case EOpFaceForward:
-        writeBuiltInFunctionTriplet(visit, "faceforward(", useEmulatedFunction);
-        break;
-      case EOpReflect:
-        writeBuiltInFunctionTriplet(visit, "reflect(", useEmulatedFunction);
-        break;
-      case EOpRefract:
-        writeBuiltInFunctionTriplet(visit, "refract(", useEmulatedFunction);
-        break;
-      case EOpMul:
-        writeBuiltInFunctionTriplet(visit, "matrixCompMult(", useEmulatedFunction);
-        break;
+        case EOpLessThan:
+            writeBuiltInFunctionTriplet(visit, "lessThan(", useEmulatedFunction);
+            break;
+        case EOpGreaterThan:
+            writeBuiltInFunctionTriplet(visit, "greaterThan(", useEmulatedFunction);
+            break;
+        case EOpLessThanEqual:
+            writeBuiltInFunctionTriplet(visit, "lessThanEqual(", useEmulatedFunction);
+            break;
+        case EOpGreaterThanEqual:
+            writeBuiltInFunctionTriplet(visit, "greaterThanEqual(", useEmulatedFunction);
+            break;
+        case EOpVectorEqual:
+            writeBuiltInFunctionTriplet(visit, "equal(", useEmulatedFunction);
+            break;
+        case EOpVectorNotEqual:
+            writeBuiltInFunctionTriplet(visit, "notEqual(", useEmulatedFunction);
+            break;
 
-      default:
-        UNREACHABLE();
+        case EOpMod:
+            writeBuiltInFunctionTriplet(visit, "mod(", useEmulatedFunction);
+            break;
+        case EOpModf:
+            writeBuiltInFunctionTriplet(visit, "modf(", useEmulatedFunction);
+            break;
+        case EOpPow:
+            writeBuiltInFunctionTriplet(visit, "pow(", useEmulatedFunction);
+            break;
+        case EOpAtan:
+            writeBuiltInFunctionTriplet(visit, "atan(", useEmulatedFunction);
+            break;
+        case EOpMin:
+            writeBuiltInFunctionTriplet(visit, "min(", useEmulatedFunction);
+            break;
+        case EOpMax:
+            writeBuiltInFunctionTriplet(visit, "max(", useEmulatedFunction);
+            break;
+        case EOpClamp:
+            writeBuiltInFunctionTriplet(visit, "clamp(", useEmulatedFunction);
+            break;
+        case EOpMix:
+            writeBuiltInFunctionTriplet(visit, "mix(", useEmulatedFunction);
+            break;
+        case EOpStep:
+            writeBuiltInFunctionTriplet(visit, "step(", useEmulatedFunction);
+            break;
+        case EOpSmoothStep:
+            writeBuiltInFunctionTriplet(visit, "smoothstep(", useEmulatedFunction);
+            break;
+        case EOpDistance:
+            writeBuiltInFunctionTriplet(visit, "distance(", useEmulatedFunction);
+            break;
+        case EOpDot:
+            writeBuiltInFunctionTriplet(visit, "dot(", useEmulatedFunction);
+            break;
+        case EOpCross:
+            writeBuiltInFunctionTriplet(visit, "cross(", useEmulatedFunction);
+            break;
+        case EOpFaceForward:
+            writeBuiltInFunctionTriplet(visit, "faceforward(", useEmulatedFunction);
+            break;
+        case EOpReflect:
+            writeBuiltInFunctionTriplet(visit, "reflect(", useEmulatedFunction);
+            break;
+        case EOpRefract:
+            writeBuiltInFunctionTriplet(visit, "refract(", useEmulatedFunction);
+            break;
+        case EOpMul:
+            writeBuiltInFunctionTriplet(visit, "matrixCompMult(", useEmulatedFunction);
+            break;
+
+        default:
+            UNREACHABLE();
     }
     return visitChildren;
 }
@@ -1184,20 +1207,20 @@ bool TOutputGLSLBase::visitBranch(Visit visit, TIntermBranch *node)
 {
     switch (node->getFlowOp())
     {
-      case EOpKill:
-        writeTriplet(visit, "discard", NULL, NULL);
-        break;
-      case EOpBreak:
-        writeTriplet(visit, "break", NULL, NULL);
-        break;
-      case EOpContinue:
-        writeTriplet(visit, "continue", NULL, NULL);
-        break;
-      case EOpReturn:
-        writeTriplet(visit, "return ", NULL, NULL);
-        break;
-      default:
-        UNREACHABLE();
+        case EOpKill:
+            writeTriplet(visit, "discard", NULL, NULL);
+            break;
+        case EOpBreak:
+            writeTriplet(visit, "break", NULL, NULL);
+            break;
+        case EOpContinue:
+            writeTriplet(visit, "continue", NULL, NULL);
+            break;
+        case EOpReturn:
+            writeTriplet(visit, "return ", NULL, NULL);
+            break;
+        default:
+            UNREACHABLE();
     }
 
     return true;
@@ -1266,7 +1289,7 @@ TString TOutputGLSLBase::hashVariableName(const TName &name)
 TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TName &mangledName)
 {
     TString mangledStr = mangledName.getString();
-    TString name = TFunction::unmangleName(mangledStr);
+    TString name       = TFunction::unmangleName(mangledStr);
     if (mSymbolTable.findBuiltIn(mangledStr, mShaderVersion) != nullptr || name == "main")
         return translateTextureFunction(name);
     if (mangledName.isInternal())

@@ -3,7 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// The ArrayReturnValueToOutParameter function changes return values of an array type to out parameters in
+// The ArrayReturnValueToOutParameter function changes return values of an array type to out
+// parameters in
 // function definitions, prototypes, and call sites.
 
 #include "compiler/translator/ArrayReturnValueToOutParameter.h"
@@ -39,7 +40,8 @@ TIntermSymbol *CreateReturnValueOutSymbol(const TType &type)
     return CreateReturnValueSymbol(outType);
 }
 
-TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall, TIntermTyped *returnValueTarget)
+TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
+                                        TIntermTyped *returnValueTarget)
 {
     TIntermAggregate *replacementCall = new TIntermAggregate(EOpFunctionCall);
     replacementCall->setType(TType(EbtVoid));
@@ -47,7 +49,7 @@ TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall, TIntermT
     *replacementCall->getFunctionSymbolInfo() = *originalCall->getFunctionSymbolInfo();
     replacementCall->setLine(originalCall->getLine());
     TIntermSequence *replacementParameters = replacementCall->getSequence();
-    TIntermSequence *originalParameters = originalCall->getSequence();
+    TIntermSequence *originalParameters    = originalCall->getSequence();
     for (auto &param : *originalParameters)
     {
         replacementParameters->push_back(param);
@@ -60,6 +62,7 @@ class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
 {
   public:
     static void apply(TIntermNode *root, unsigned int *temporaryIndex);
+
   private:
     ArrayReturnValueToOutParameterTraverser();
 
@@ -80,8 +83,7 @@ void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, unsigned 
 }
 
 ArrayReturnValueToOutParameterTraverser::ArrayReturnValueToOutParameterTraverser()
-    : TIntermTraverser(true, false, true),
-      mInFunctionWithArrayReturnValue(false)
+    : TIntermTraverser(true, false, true), mInFunctionWithArrayReturnValue(false)
 {
 }
 
@@ -127,7 +129,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
         {
             if (node->getOp() == EOpPrototype)
             {
-                // Replace the whole prototype node with another node that has the out parameter added.
+                // Replace the whole prototype node with another node that has the out parameter
+                // added.
                 TIntermAggregate *replacement = new TIntermAggregate;
                 replacement->setOp(EOpPrototype);
                 CopyAggregateChildren(node, replacement);
@@ -147,8 +150,10 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
                 // 2. another_array == f();
                 // 3. another_function(f());
                 // 4. return f();
-                // Cases 2 to 4 are already converted to simpler cases by SeparateExpressionsReturningArrays, so we
-                // only need to worry about the case where a function call returning an array forms an expression by
+                // Cases 2 to 4 are already converted to simpler cases by
+                // SeparateExpressionsReturningArrays, so we
+                // only need to worry about the case where a function call returning an array forms
+                // an expression by
                 // itself.
                 TIntermBlock *parentBlock = getParentNode()->getAsBlock();
                 if (parentBlock)
@@ -198,7 +203,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
     if (node->getOp() == EOpAssign && node->getLeft()->isArray())
     {
         TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
-        if (rightAgg != nullptr && rightAgg->getOp() == EOpFunctionCall && rightAgg->isUserDefined())
+        if (rightAgg != nullptr && rightAgg->getOp() == EOpFunctionCall &&
+            rightAgg->isUserDefined())
         {
             TIntermAggregate *replacementCall = CreateReplacementCall(rightAgg, node->getLeft());
             queueReplacement(node, replacementCall, OriginalNode::IS_DROPPED);
@@ -207,7 +213,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
     return false;
 }
 
-} // namespace
+}  // namespace
 
 void ArrayReturnValueToOutParameter(TIntermNode *root, unsigned int *temporaryIndex)
 {

@@ -117,7 +117,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     ASSERT(lhs);
 
     TIntermDeclaration *init = createTempInitDeclaration(lhs);
-    TIntermTyped *current  = createTempSymbol(lhs->getType());
+    TIntermTyped *current    = createTempSymbol(lhs->getType());
 
     insertStatementInParentBlock(init);
 
@@ -136,7 +136,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         oneVal->setFConst(1.0f);
         TIntermConstantUnion *oneNode = new TIntermConstantUnion(oneVal, node->getType());
         TIntermBinary *div            = new TIntermBinary(EOpDiv, oneNode, current);
-        current = div;
+        current                       = div;
     }
 
     queueReplacement(node, current, OriginalNode::IS_DROPPED);

@@ -131,12 +131,13 @@ size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
     }
 }
 
-namespace {
+namespace
+{
 
 class TScopedPoolAllocator
 {
   public:
-    TScopedPoolAllocator(TPoolAllocator* allocator) : mAllocator(allocator)
+    TScopedPoolAllocator(TPoolAllocator *allocator) : mAllocator(allocator)
     {
         mAllocator->push();
         SetGlobalPoolAllocator(mAllocator);
@@ -148,13 +149,13 @@ class TScopedPoolAllocator
     }
 
   private:
-    TPoolAllocator* mAllocator;
+    TPoolAllocator *mAllocator;
 };
 
 class TScopedSymbolTableLevel
 {
   public:
-    TScopedSymbolTableLevel(TSymbolTable* table) : mTable(table)
+    TScopedSymbolTableLevel(TSymbolTable *table) : mTable(table)
     {
         ASSERT(mTable->atBuiltInLevel());
         mTable->push();
@@ -166,7 +167,7 @@ class TScopedSymbolTableLevel
     }
 
   private:
-    TSymbolTable* mTable;
+    TSymbolTable *mTable;
 };
 
 int MapSpecToShaderVersion(ShShaderSpec spec)
@@ -234,12 +235,11 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptio
            (compileOptions & SH_VALIDATE_LOOP_INDEXING);
 }
 
-bool TCompiler::Init(const ShBuiltInResources& resources)
+bool TCompiler::Init(const ShBuiltInResources &resources)
 {
-    shaderVersion = 100;
-    maxUniformVectors = (shaderType == GL_VERTEX_SHADER) ?
-        resources.MaxVertexUniformVectors :
-        resources.MaxFragmentUniformVectors;
+    shaderVersion     = 100;
+    maxUniformVectors = (shaderType == GL_VERTEX_SHADER) ? resources.MaxVertexUniformVectors
+                                                         : resources.MaxFragmentUniformVectors;
     maxExpressionComplexity = resources.MaxExpressionComplexity;
     maxCallStackDepth       = resources.MaxCallStackDepth;
     maxFunctionParameters   = resources.MaxFunctionParameters;
@@ -298,9 +298,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     TScopedSymbolTableLevel scopedSymbolLevel(&symbolTable);
 
     // Parse shader.
-    bool success =
-        (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], nullptr, &parseContext) == 0) &&
-        (parseContext.getTreeRoot() != nullptr);
+    bool success = (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], nullptr,
+                                   &parseContext) == 0) &&
+                   (parseContext.getTreeRoot() != nullptr);
 
     shaderVersion = parseContext.getShaderVersion();
     if (success && MapSpecToShaderVersion(shaderSpec) < shaderVersion)
@@ -347,7 +347,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && !(compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS))
             success = pruneUnusedFunctions(root);
 
-        // Prune empty declarations to work around driver bugs and to keep declaration output simple.
+        // Prune empty declarations to work around driver bugs and to keep declaration output
+        // simple.
         if (success)
             PruneEmptyDeclarations(root);
 
@@ -518,10 +519,10 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     setResourceString();
 
     assert(symbolTable.isEmpty());
-    symbolTable.push();   // COMMON_BUILTINS
-    symbolTable.push();   // ESSL1_BUILTINS
-    symbolTable.push();   // ESSL3_BUILTINS
-    symbolTable.push();   // ESSL3_1_BUILTINS
+    symbolTable.push();  // COMMON_BUILTINS
+    symbolTable.push();  // ESSL1_BUILTINS
+    symbolTable.push();  // ESSL3_BUILTINS
+    symbolTable.push();  // ESSL3_1_BUILTINS
 
     TPublicType integer;
     integer.initializeBasicType(EbtInt);
@@ -654,7 +655,7 @@ void TCompiler::clearResults()
 
     nameMap.clear();
 
-    mSourcePath = NULL;
+    mSourcePath     = NULL;
     mTemporaryIndex = 0;
 }
 
@@ -686,7 +687,7 @@ bool TCompiler::checkCallDepth()
 
     for (size_t i = 0; i < mCallDag.size(); i++)
     {
-        int depth = 0;
+        int depth    = 0;
         auto &record = mCallDag.getRecordFromIndex(i);
 
         for (auto &calleeIndex : record.callees)
@@ -704,14 +705,14 @@ bool TCompiler::checkCallDepth()
                           << ") with the following call chain: " << record.name;
 
             int currentFunction = static_cast<int>(i);
-            int currentDepth = depth;
+            int currentDepth    = depth;
 
             while (currentFunction != -1)
             {
                 infoSink.info << " -> " << mCallDag.getRecordFromIndex(currentFunction).name;
 
                 int nextFunction = -1;
-                for (auto& calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
+                for (auto &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
                 {
                     if (depths[calleeIndex] == currentDepth - 1)
                     {
@@ -771,9 +772,9 @@ class TCompiler::UnusedPredicate
     {
     }
 
-    bool operator ()(TIntermNode *node)
+    bool operator()(TIntermNode *node)
     {
-        const TIntermAggregate *asAggregate = node->getAsAggregate();
+        const TIntermAggregate *asAggregate         = node->getAsAggregate();
         const TIntermFunctionDefinition *asFunction = node->getAsFunctionDefinition();
 
         const TFunctionSymbolInfo *functionInfo = nullptr;
@@ -818,27 +819,28 @@ bool TCompiler::pruneUnusedFunctions(TIntermBlock *root)
 
     if (!sequence->empty())
     {
-        sequence->erase(std::remove_if(sequence->begin(), sequence->end(), isUnused), sequence->end());
+        sequence->erase(std::remove_if(sequence->begin(), sequence->end(), isUnused),
+                        sequence->end());
     }
 
     return true;
 }
 
-bool TCompiler::validateOutputs(TIntermNode* root)
+bool TCompiler::validateOutputs(TIntermNode *root)
 {
     ValidateOutputs validateOutputs(getExtensionBehavior(), compileResources.MaxDrawBuffers);
     root->traverse(&validateOutputs);
     return (validateOutputs.validateAndCountErrors(infoSink.info) == 0);
 }
 
-bool TCompiler::validateLimitations(TIntermNode* root)
+bool TCompiler::validateLimitations(TIntermNode *root)
 {
     ValidateLimitations validate(shaderType, &infoSink.info);
     root->traverse(&validate);
     return validate.numErrors() == 0;
 }
 
-bool TCompiler::limitExpressionComplexity(TIntermNode* root)
+bool TCompiler::limitExpressionComplexity(TIntermNode *root)
 {
     TMaxDepthTraverser traverser(maxExpressionComplexity + 1);
     root->traverse(&traverser);
@@ -858,7 +860,7 @@ bool TCompiler::limitExpressionComplexity(TIntermNode* root)
     return true;
 }
 
-void TCompiler::collectVariables(TIntermNode* root)
+void TCompiler::collectVariables(TIntermNode *root)
 {
     if (!variablesCollected)
     {
@@ -889,7 +891,7 @@ bool TCompiler::enforcePackingRestrictions()
     return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
 }
 
-void TCompiler::initializeGLPosition(TIntermNode* root)
+void TCompiler::initializeGLPosition(TIntermNode *root)
 {
     InitVariableList list;
     sh::ShaderVariable var(GL_FLOAT_VEC4, 0);
@@ -935,7 +937,7 @@ void TCompiler::initializeOutputVariables(TIntermNode *root)
     InitializeVariables(root, list, symbolTable);
 }
 
-const TExtensionBehavior& TCompiler::getExtensionBehavior() const
+const TExtensionBehavior &TCompiler::getExtensionBehavior() const
 {
     return extensionBehavior;
 }
@@ -945,12 +947,12 @@ const char *TCompiler::getSourcePath() const
     return mSourcePath;
 }
 
-const ShBuiltInResources& TCompiler::getResources() const
+const ShBuiltInResources &TCompiler::getResources() const
 {
     return compileResources;
 }
 
-const ArrayBoundsClamper& TCompiler::getArrayBoundsClamper() const
+const ArrayBoundsClamper &TCompiler::getArrayBoundsClamper() const
 {
     return arrayBoundsClamper;
 }
@@ -960,7 +962,7 @@ ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
     return clampingStrategy;
 }
 
-const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
+const BuiltInFunctionEmulator &TCompiler::getBuiltInFunctionEmulator() const
 {
     return builtInFunctionEmulator;
 }
