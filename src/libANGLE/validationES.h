@@ -39,7 +39,7 @@ bool ValidFramebufferTarget(GLenum target);
 bool ValidBufferTarget(const ValidationContext *context, GLenum target);
 bool ValidBufferParameter(const ValidationContext *context, GLenum pname, GLsizei *numParams);
 bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level);
-bool ValidImageSizeParameters(const Context *context,
+bool ValidImageSizeParameters(const ValidationContext *context,
                               GLenum target,
                               GLint level,
                               GLsizei width,

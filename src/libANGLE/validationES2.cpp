@@ -740,6 +740,12 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
         return false;
     }
 
+    if (!ValidImageSizeParameters(context, target, level, width, height, 1, isSubImage))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid texture dimensions."));
+        return false;
+    }
+
     Format textureFormat = Format::Invalid();
     if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
                                             xoffset, yoffset, 0, x, y, width, height, border,

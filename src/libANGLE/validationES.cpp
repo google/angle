@@ -1494,7 +1494,7 @@ bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level)
     return level <= gl::log2(static_cast<int>(maxDimension));
 }
 
-bool ValidImageSizeParameters(const Context *context,
+bool ValidImageSizeParameters(const ValidationContext *context,
                               GLenum target,
                               GLint level,
                               GLsizei width,
@@ -1509,7 +1509,9 @@ bool ValidImageSizeParameters(const Context *context,
 
     // TexSubImage parameters can be NPOT without textureNPOT extension,
     // as long as the destination texture is POT.
-    if (!isSubImage && !context->getExtensions().textureNPOT &&
+    bool hasNPOTSupport =
+        context->getExtensions().textureNPOT && context->getClientVersion() >= Version(3, 0);
+    if (!isSubImage && !hasNPOTSupport &&
         (level != 0 && (!gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth))))
     {
         return false;
