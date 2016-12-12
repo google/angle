@@ -1,0 +1,533 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_ac9f09ee",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "this should not return an error, it should return void. Some of the functions in Context are old and not updated to this new style.\n\nCall handleError(mImplementation-\u003edrawIndirect)",
+      "range": {
+        "startLine": 1673,
+        "startChar": 0,
+        "endLine": 1673,
+        "endChar": 5
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_4c8e35c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "you can do\n\nreturn gl::InternalError();\n\n(This is new)",
+      "range": {
+        "startLine": 198,
+        "startChar": 15,
+        "endLine": 198,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2c8bf9b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 185,
+        "startChar": 15,
+        "endLine": 185,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_cc45a591",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: type \u003d\u003d GL_NONE (don\u0027t use yoda conditions)",
+      "range": {
+        "startLine": 286,
+        "startChar": 12,
+        "endLine": 286,
+        "endChar": 28
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ac4a699e",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: NoError",
+      "range": {
+        "startLine": 291,
+        "startChar": 15,
+        "endLine": 291,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_8c4fadaf",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 669,
+        "startChar": 8,
+        "endLine": 669,
+        "endChar": 23
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_6c54513f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: ANGLE_TRY(vaoGL-\u003esyncElementArrayState)",
+      "range": {
+        "startLine": 673,
+        "startChar": 8,
+        "endLine": 677,
+        "endChar": 9
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2c565946",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "Is this undefined behaviour in the spec? If so, generating an error is fine. If this is a defined error, it should be in the validation layer.\n\nIf this is undefined you should structure this so that\n\n if (drawIndirectBuffer \u003d\u003d nullptr)\n {\n     // return the error\n }\n\n // no else case\n const BufferGL *buffferGL \u003d GetImplAs..\n bindBuffer ...\n // etc",
+      "range": {
+        "startLine": 680,
+        "startChar": 4,
+        "endLine": 680,
+        "endChar": 38
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_4c599575",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: return gl::InternalError() \u003c\u003c \"Draw indirect...\";",
+      "range": {
+        "startLine": 687,
+        "startChar": 19,
+        "endLine": 687,
+        "endChar": 24
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_0c639d23",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "same comment about the if statement here. make sure this is undefined behaviour. if it is not, put this in the validation. if it is, return the error first, then flatten the condition.",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 38
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ec5f4157",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: gl::InternalError",
+      "range": {
+        "startLine": 114,
+        "startChar": 15,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_cc2c85cb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: NoError",
+      "range": {
+        "startLine": 117,
+        "startChar": 11,
+        "endLine": 117,
+        "endChar": 16
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ac31491e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: Same",
+      "range": {
+        "startLine": 112,
+        "startChar": 15,
+        "endLine": 112,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ac1ca992",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3414,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "this should be in validationES31.cpp/.h. if you need access to ValidateDrawBase, export that function in validationES.h.",
+      "range": {
+        "startLine": 3414,
+        "startChar": 5,
+        "endLine": 3414,
+        "endChar": 29
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_6c2691df",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3450,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "nit: extra ()",
+      "range": {
+        "startLine": 3450,
+        "startChar": 48,
+        "endLine": 3450,
+        "endChar": 50
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_8c21edc7",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 3459,
+        "startChar": 5,
+        "endLine": 3459,
+        "endChar": 31
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_6c2b31af",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3467,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "every error you generate here should have a description in the second argument to Error(). use the spec language when possible.",
+      "range": {
+        "startLine": 3467,
+        "startChar": 35,
+        "endLine": 3467,
+        "endChar": 55
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ec118173",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s necessary to define this structure here -- maybe it would make more sense to define a constant size and explain from the spec why this specific size is chosen.",
+      "range": {
+        "startLine": 3474,
+        "startChar": 4,
+        "endLine": 3480,
+        "endChar": 6
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_8cf8cd09",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3520,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 3513,
+        "startChar": 4,
+        "endLine": 3520,
+        "endChar": 6
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_0c3a7df5",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "use \n\n if (!context-\u003eskipValidation() \u0026\u0026 !Validate())\n {\n    return;\n }",
+      "range": {
+        "startLine": 58,
+        "startChar": 13,
+        "endLine": 58,
+        "endChar": 39
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_4c407573",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "errors should be handled in Context",
+      "range": {
+        "startLine": 64,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 9
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2c3d39ee",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "same comments",
+      "range": {
+        "startLine": 72,
+        "startChar": 17,
+        "endLine": 72,
+        "endChar": 37
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ec36210f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-12T14:19:59Z",
+      "side": 1,
+      "message": "can we open specific angle bugs for this work? or use 1595 if you intend on fixing them.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 4
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
