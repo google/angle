@@ -22,6 +22,24 @@
       "revId": "a8f3915f86efb89f44c4b0fb1b2aecbbbd0e1155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_4c3e357d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T16:06:15Z",
+      "side": 1,
+      "message": "Done, the two CheckedNumeric added in this patch might cause some overhead, so if the draw perf test regresses, we might try to get rid of them and do manual overflow checks.",
+      "parentUuid": "fa1b2f68_fbe6e02a",
+      "revId": "a8f3915f86efb89f44c4b0fb1b2aecbbbd0e1155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
