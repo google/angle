@@ -25,6 +25,63 @@
     },
     {
       "key": {
+        "uuid": "5af43b41_c25c6497",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-12T12:04:31Z",
+      "side": 1,
+      "message": "I\u0027d rather use \"loopScopeSequence\" as the variable name, so it\u0027s clearer that it doesn\u0027t refer to the loop body sequence.",
+      "range": {
+        "startLine": 234,
+        "startChar": 29,
+        "endLine": 234,
+        "endChar": 41
+      },
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa024ff6_bfcf3343",
+        "filename": "src/compiler/translator/SimplifyLoopConditions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-12T12:04:31Z",
+      "side": 1,
+      "message": "Nice fix!",
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a179337_39d10f10",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2356,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-12T12:04:31Z",
+      "side": 1,
+      "message": "Can you include justification why these tests should be end2end tests instead of unit tests in the comments? These might be future candidates for simplifying tests, now there\u0027s overhead from compiling the vertex shader and linking the program.",
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_3b60d8b7",
         "filename": "src/tests/gl_tests/GLSLTest.cpp",
         "patchSetId": 2
@@ -41,6 +98,29 @@
         "startChar": 4,
         "endLine": 2371,
         "endChar": 29
+      },
+      "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5af43b41_a25960a5",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2374,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-12T12:04:31Z",
+      "side": 1,
+      "message": "Typo",
+      "range": {
+        "startLine": 2374,
+        "startChar": 71,
+        "endLine": 2374,
+        "endChar": 72
       },
       "revId": "39ed5d96c8d327abb7b4d398238c970abc83ae2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
