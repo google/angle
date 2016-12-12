@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_c95117f3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3441,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T08:36:10Z",
+      "side": 1,
+      "message": "Never mind. It\u0027s valid to do reinterpret_cast on \"void *\".",
+      "parentUuid": "fa1b2f68_6954433f",
+      "range": {
+        "startLine": 3441,
+        "startChar": 4,
+        "endLine": 3441,
+        "endChar": 11
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_09882fb1",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -116,6 +140,30 @@
       "writtenOn": "2016-12-12T05:55:43Z",
       "side": 1,
       "message": "Is this correct for 32-bit OSes?",
+      "range": {
+        "startLine": 3526,
+        "startChar": 4,
+        "endLine": 3526,
+        "endChar": 11
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a956dbe7",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3526,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-12T08:36:10Z",
+      "side": 1,
+      "message": "Never mind. It\u0027s valid to do reinterpret_cast on \"void *\".",
+      "parentUuid": "fa1b2f68_09714ff7",
       "range": {
         "startLine": 3526,
         "startChar": 4,
