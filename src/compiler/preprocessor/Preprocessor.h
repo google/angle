@@ -42,7 +42,7 @@ class Preprocessor : angle::NonCopyable
     // Each element in the length array may contain the length of the
     // corresponding string or a value less than 0 to indicate that the string
     // is null terminated.
-    bool init(size_t count, const char * const string[], const int length[]);
+    bool init(size_t count, const char *const string[], const int length[]);
     // Adds a pre-defined macro.
     void predefineMacro(const char *name, int value);
 

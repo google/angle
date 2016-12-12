@@ -86,9 +86,7 @@ class Diagnostics
     Severity severity(ID id);
     std::string message(ID id);
 
-    virtual void print(ID id,
-                       const SourceLocation &loc,
-                       const std::string &text) = 0;
+    virtual void print(ID id, const SourceLocation &loc, const std::string &text) = 0;
 };
 
 }  // namespace pp

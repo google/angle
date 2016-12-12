@@ -38,9 +38,7 @@ class MacroExpander : public Lexer
     bool pushMacro(const Macro &macro, const Token &identifier);
     void popMacro();
 
-    bool expandMacro(const Macro &macro,
-                     const Token &identifier,
-                     std::vector<Token> *replacements);
+    bool expandMacro(const Macro &macro, const Token &identifier, std::vector<Token> *replacements);
 
     typedef std::vector<Token> MacroArg;
     bool collectMacroArgs(const Macro &macro,
