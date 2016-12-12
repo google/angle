@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fa1b2f68_8c3a0dd8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "nit: OpenGL",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ac9f09ee",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 6
@@ -186,6 +203,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_ec7ce189",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "The spec says 0 is generated if the indirect buffer binding is 0, so we should assume the pointer is valid (and ASSERT it)",
+      "parentUuid": "fa1b2f68_2c565946",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_4c599575",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
@@ -347,6 +382,23 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_cc6b65d0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3450,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "This could be removed as it is handled in the non-Base functions.",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_8c21edc7",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -416,6 +468,41 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_4c5f552c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "We might need to define this structure for D3D or CPU emulation, maybe we could put it in angletypes.h?",
+      "parentUuid": "fa1b2f68_ec118173",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_0c695dd2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3483,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "To avoid overflows, it would be better to do offset + sizeof(...) \u003c static_cast\u003cGLint64\u003e(drawIndirectBuffer-\u003egetSize())",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_8cf8cd09",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -433,6 +520,23 @@
         "endLine": 3520,
         "endChar": 6
       },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ec6501f6",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3523,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T15:28:30Z",
+      "side": 1,
+      "message": "ditto.",
       "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
