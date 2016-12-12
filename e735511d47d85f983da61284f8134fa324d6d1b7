@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_2c83f958",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-12T15:28:28Z",
+      "side": 0,
+      "message": "Maybe we should retire the ANGLE_*_VERSION stuff eventually.  We haven\u0027t updated it in a very long time.",
+      "range": {
+        "startLine": 731,
+        "startChar": 24,
+        "endLine": 731,
+        "endChar": 43
+      },
+      "revId": "e735511d47d85f983da61284f8134fa324d6d1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
