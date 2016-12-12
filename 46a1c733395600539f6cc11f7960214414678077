@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_4cf075ad",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T16:49:36Z",
+      "side": 1,
+      "message": "Having state for mDependencyId is weird, how about having the addEmulatedFunction* return a FunctionId, and have the dependency explicitly given as a FunctionId here?",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_cfbb57a6",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T16:49:36Z",
+      "side": 1,
+      "message": "Math looks ok, nit: the last three branches could be 1.57... * sign(y).",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_6fca0340",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-12T16:49:36Z",
+      "side": 1,
+      "message": "nit: can you add a comment stating the driver versions, so we can make the workaround ore specific when we have driver version detection?",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
