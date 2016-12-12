@@ -621,6 +621,7 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
     destroyEGLWindow(&eglWindow);
 }
 
+// clang-format off
 ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        //                     | Save the program   | Load the program      | Expected
                        //                     | using these params | using these params    | link result
@@ -631,9 +632,6 @@ ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        PlatformsWithLinkResult(ES2_D3D11_FL9_3(),   ES2_D3D11_FL9_3_WARP(), false        ), // Switching from hardware to software shouldn't work for FL9 either
                        PlatformsWithLinkResult(ES2_D3D11(),         ES2_D3D9(),             false        ), // Switching from D3D11 to D3D9 shouldn't work
                        PlatformsWithLinkResult(ES2_D3D9(),          ES2_D3D11(),            false        ), // Switching from D3D9 to D3D11 shouldn't work
-                       PlatformsWithLinkResult(ES2_D3D11(),         ES3_D3D11(),            true         )  // Switching to newer client version should work
-
-                       // TODO: ANGLE issue 523
-                       // Compiling a program with client version 3, saving the binary, then loading it with client version 2 should not work
-                       // PlatformsWithLinkResult(ES3_D3D11(),         ES2_D3D11(),            false       )
+                       PlatformsWithLinkResult(ES2_D3D11(),         ES3_D3D11(),            false        ), // Switching to newer client version shouldn't work
                        );
+// clang-format on

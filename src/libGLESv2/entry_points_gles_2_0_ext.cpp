@@ -768,7 +768,7 @@ void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
         Program *programObject = context->getProgram(program);
         ASSERT(programObject != nullptr);
 
-        Error error = programObject->saveBinary(binaryFormat, binary, bufSize, length);
+        Error error = programObject->saveBinary(context, binaryFormat, binary, bufSize, length);
         if (error.isError())
         {
             context->handleError(error);
@@ -793,7 +793,7 @@ void GL_APIENTRY ProgramBinaryOES(GLuint program, GLenum binaryFormat, const voi
         Program *programObject = context->getProgram(program);
         ASSERT(programObject != nullptr);
 
-        Error error = programObject->loadBinary(binaryFormat, binary, length);
+        Error error = programObject->loadBinary(context, binaryFormat, binary, length);
         if (error.isError())
         {
             context->handleError(error);

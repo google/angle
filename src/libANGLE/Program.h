@@ -39,6 +39,7 @@ struct TranslatedAttribute;
 namespace gl
 {
 struct Caps;
+class Context;
 class ContextState;
 class ResourceManager;
 class Shader;
@@ -266,8 +267,15 @@ class Program final : angle::NonCopyable, public LabeledObject
     Error link(const ContextState &data);
     bool isLinked() const;
 
-    Error loadBinary(GLenum binaryFormat, const void *binary, GLsizei length);
-    Error saveBinary(GLenum *binaryFormat, void *binary, GLsizei bufSize, GLsizei *length) const;
+    Error loadBinary(const Context *context,
+                     GLenum binaryFormat,
+                     const void *binary,
+                     GLsizei length);
+    Error saveBinary(const Context *context,
+                     GLenum *binaryFormat,
+                     void *binary,
+                     GLsizei bufSize,
+                     GLsizei *length) const;
     GLint getBinaryLength() const;
     void setBinaryRetrievableHint(bool retrievable);
     bool getBinaryRetrievableHint() const;
@@ -392,9 +400,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
     bool linkVaryings(InfoLog &infoLog, const Shader *vertexShader, const Shader *fragmentShader) const;
     bool validateVertexAndFragmentUniforms(InfoLog &infoLog) const;
-    bool linkUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
-    bool indexUniforms(gl::InfoLog &infoLog, const gl::Caps &caps, const Bindings &uniformBindings);
-    bool areMatchingInterfaceBlocks(gl::InfoLog &infoLog,
+    bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
+    bool indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
+    bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock) const;
 
@@ -420,7 +428,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     std::vector<const sh::Varying *> getMergedVaryings() const;
     void linkOutputVariables();
 
-    bool flattenUniformsAndCheckCapsForShader(const gl::Shader &shader,
+    bool flattenUniformsAndCheckCapsForShader(const Shader &shader,
                                               GLuint maxUniformComponents,
                                               GLuint maxTextureImageUnits,
                                               const std::string &componentsErrorMessage,
@@ -497,6 +505,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     std::vector<GLenum> mTextureUnitTypesCache;
     RangeUI mSamplerUniformRange;
 };
-}
+}  // namespace gl
 
 #endif   // LIBANGLE_PROGRAM_H_
