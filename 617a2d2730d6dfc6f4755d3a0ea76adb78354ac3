@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_cce245bc",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3448,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-12T12:09:59Z",
+      "side": 1,
+      "message": "Removed. Done.",
+      "parentUuid": "fa1b2f68_09882fb1",
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_e984d39e",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -77,6 +95,24 @@
       "writtenOn": "2016-12-12T05:55:43Z",
       "side": 1,
       "message": "I think you validate this in ValidateDraw[Arrays|Elements]Indirect. Do you still need this in base?",
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ace709cb",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-12T12:09:59Z",
+      "side": 1,
+      "message": "Here is only a pre-check. If buffer.size \u003c\u003d offset, in ValidateDraw[Arrays|Elements]Indirect, we don\u0027t need to further define the command struct.",
+      "parentUuid": "fa1b2f68_e984d39e",
       "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -106,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_8cdc4d02",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3479,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-12T12:09:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_c9459791",
+      "range": {
+        "startLine": 3479,
+        "startChar": 11,
+        "endLine": 3479,
+        "endChar": 28
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_29640b3a",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -117,6 +177,30 @@
       "writtenOn": "2016-12-12T05:55:43Z",
       "side": 1,
       "message": "DrawElementsIndirectCommand",
+      "range": {
+        "startLine": 3517,
+        "startChar": 11,
+        "endLine": 3517,
+        "endChar": 30
+      },
+      "revId": "617a2d2730d6dfc6f4755d3a0ea76adb78354ac3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_6ce1f1b3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3517,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-12T12:09:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_29640b3a",
       "range": {
         "startLine": 3517,
         "startChar": 11,
