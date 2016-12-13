@@ -1952,7 +1952,7 @@ ANGLE_EXPORT void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLu
     }
 }
 
-GL_APICALL void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
+ANGLE_EXPORT void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
 {
     EVENT("(const GLchar *name = %p)", name);
 
