@@ -1188,9 +1188,8 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     }
     else if (!infoLog)
     {
-        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic pixel executable:\n%s\n", &tempCharBuffer[0]);
+        ERR() << "Error compiling dynamic pixel executable:" << std::endl
+              << tempInfoLog.str() << std::endl;
     }
 
     *outExectuable = pixelExecutable;
@@ -1234,9 +1233,8 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     }
     else if (!infoLog)
     {
-        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
+        ERR() << "Error compiling dynamic vertex executable:" << std::endl
+              << tempInfoLog.str() << std::endl;
     }
 
     *outExectuable = vertexExecutable;
@@ -1285,9 +1283,8 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
 
     if (!infoLog && error.isError())
     {
-        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
-        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic geometry executable:\n%s\n", &tempCharBuffer[0]);
+        ERR() << "Error compiling dynamic geometry executable:" << std::endl
+              << tempInfoLog.str() << std::endl;
     }
 
     if (geometryExecutable != nullptr)
@@ -1454,9 +1451,8 @@ LinkResult ProgramD3D::compileComputeExecutable(gl::InfoLog &infoLog)
 
     if (computeExecutable == nullptr)
     {
-        std::vector<char> tempCharBuffer(infoLog.getLength() + 3);
-        infoLog.getLog(static_cast<GLsizei>(infoLog.getLength()), nullptr, &tempCharBuffer[0]);
-        ERR("Error compiling dynamic compute executable:\n%s\n", &tempCharBuffer[0]);
+        ERR() << "Error compiling dynamic compute executable:" << std::endl
+              << infoLog.str() << std::endl;
     }
     else
     {

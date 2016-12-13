@@ -2258,13 +2258,13 @@ bool Renderer9::resetDevice()
 
     if (FAILED(result))
     {
-        ERR("Reset/ResetEx failed multiple times: 0x%08X", result);
+        ERR() << "Reset/ResetEx failed multiple times, " << gl::FmtHR(result);
         return false;
     }
 
     if (removedDevice && lost)
     {
-        ERR("Device lost reset failed multiple times");
+        ERR() << "Device lost reset failed multiple times";
         return false;
     }
 

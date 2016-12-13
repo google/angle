@@ -61,7 +61,7 @@ class DXGISupportHelper : angle::NonCopyable
             else
             {
                 // TODO(jmadill): find out why we fail this call sometimes in FL9_3
-                // ERR("Error checking format support for format 0x%x", dxgiFormat);
+                // ERR() << "Error checking format support for format 0x" << std::hex << dxgiFormat;
             }
         }
 

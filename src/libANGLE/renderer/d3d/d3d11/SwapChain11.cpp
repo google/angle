@@ -227,7 +227,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
         if (FAILED(result))
         {
-            ERR("Could not create offscreen texture: %08lX", result);
+            ERR() << "Could not create offscreen texture, " << gl::FmtHR(result);
             release();
 
             if (d3d11::isDeviceLostError(result))
@@ -251,7 +251,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
             // Fall back to no share handle on failure
             if (FAILED(result))
             {
-                ERR("Could not query offscreen texture resource: %08lX", result);
+                ERR() << "Could not query offscreen texture resource, " << gl::FmtHR(result);
             }
             else
             {
@@ -261,7 +261,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
                 if (FAILED(result))
                 {
                     mShareHandle = NULL;
-                    ERR("Could not get offscreen texture shared handle: %08lX", result);
+                    ERR() << "Could not get offscreen texture shared handle, " << gl::FmtHR(result);
                 }
             }
         }
@@ -348,7 +348,8 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
             device->CreateTexture2D(&depthStencilTextureDesc, NULL, &mDepthStencilTexture);
         if (FAILED(result))
         {
-            ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
+            ERR() << "Could not create depthstencil surface for new swap chain, "
+                  << gl::FmtHR(result);
             release();
 
             if (d3d11::isDeviceLostError(result))
@@ -423,7 +424,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     HRESULT result = mSwapChain->GetDesc(&desc);
     if (FAILED(result))
     {
-        ERR("Error reading swap chain description: 0x%08X", result);
+        ERR() << "Error reading swap chain description, " << gl::FmtHR(result);
         release();
         return EGL_BAD_ALLOC;
     }
@@ -432,7 +433,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
 
     if (FAILED(result))
     {
-        ERR("Error resizing swap chain buffers: 0x%08X", result);
+        ERR() << "Error resizing swap chain buffers, " << gl::FmtHR(result);
         release();
 
         if (d3d11::isDeviceLostError(result))
@@ -523,7 +524,8 @@ EGLint SwapChain11::reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLin
 
         if (FAILED(result))
         {
-            ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
+            ERR() << "Could not create additional swap chains or offscreen surfaces, "
+                  << gl::FmtHR(result);
             release();
 
             if (d3d11::isDeviceLostError(result))
@@ -810,18 +812,18 @@ EGLint SwapChain11::present(EGLint x, EGLint y, EGLint width, EGLint height)
 
     if (result == DXGI_ERROR_DEVICE_REMOVED)
     {
-        ERR("Present failed: the D3D11 device was removed: 0x%08X",
-            mRenderer->getDevice()->GetDeviceRemovedReason());
+        ERR() << "Present failed: the D3D11 device was removed, "
+              << gl::FmtHR(mRenderer->getDevice()->GetDeviceRemovedReason());
         return EGL_CONTEXT_LOST;
     }
     else if (result == DXGI_ERROR_DEVICE_RESET)
     {
-        ERR("Present failed: the D3D11 device was reset from a bad command.");
+        ERR() << "Present failed: the D3D11 device was reset from a bad command.";
         return EGL_CONTEXT_LOST;
     }
     else if (FAILED(result))
     {
-        ERR("Present failed with error code 0x%08X", result);
+        ERR() << "Present failed with " << gl::FmtHR(result);
     }
 
     mNativeWindow->commitChange();

@@ -83,7 +83,8 @@ bool IsEGLConfiguredPropertySet(EGLNativeWindowType window, ABI::Windows::Founda
     // considered invalid.
     if (SUCCEEDED(result) && !hasEglNativeWindowPropertyKey)
     {
-        ERR("Could not find EGLNativeWindowTypeProperty in IPropertySet. Valid EGLNativeWindowTypeProperty values include ICoreWindow");
+        ERR() << "Could not find EGLNativeWindowTypeProperty in IPropertySet. Valid "
+                 "EGLNativeWindowTypeProperty values include ICoreWindow";
         return false;
     }
 

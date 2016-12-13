@@ -1910,8 +1910,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                                   dstX0, dstY0, dstX1, dstY1))
                 {
                     // only whole-buffer copies are permitted
-                    ERR("Only whole-buffer depth and stencil blits are supported by this "
-                        "implementation.");
+                    ERR() << "Only whole-buffer depth and stencil blits are supported by this "
+                             "implementation.";
                     context->handleError(Error(GL_INVALID_OPERATION));
                     return false;
                 }
@@ -3839,9 +3839,9 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
 
         if (constantColorUsed && constantAlphaUsed)
         {
-            ERR("Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
-                "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
-                "implementation.");
+            ERR() << "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
+                     "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
+                     "implementation.";
             context->handleError(Error(GL_INVALID_OPERATION,
                                        "Simultaneous use of "
                                        "GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
