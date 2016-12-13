@@ -412,7 +412,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
 
     void destroyEGLWindow(EGLWindow **eglWindow)
     {
-        ASSERT(*eglWindow != nullptr);
+        ASSERT_NE(nullptr, *eglWindow);
         (*eglWindow)->destroyGL();
         SafeDelete(*eglWindow);
         *eglWindow = nullptr;

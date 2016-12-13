@@ -6,8 +6,6 @@
 
 #include "test_utils/ANGLETest.h"
 
-#include "libANGLE/Context.h"
-#include "libANGLE/Program.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -436,6 +434,12 @@ class GLSLTest : public ANGLETest
     }
 
     std::string mSimpleVSSource;
+};
+
+class GLSLTestNoValidation : public GLSLTest
+{
+  public:
+    GLSLTestNoValidation() { setNoErrorEnabled(true); }
 };
 
 class GLSLTest_ES3 : public GLSLTest
@@ -1538,7 +1542,7 @@ TEST_P(GLSLTest, StructSpecifiersUniforms)
 // beginning with "gl_" are filtered out by our validation logic, we must
 // bypass the validation to test the behaviour of the implementation.
 // (note this test is still Impl-independent)
-TEST_P(GLSLTest, DepthRangeUniforms)
+TEST_P(GLSLTestNoValidation, DepthRangeUniforms)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
     (
@@ -1550,21 +1554,16 @@ TEST_P(GLSLTest, DepthRangeUniforms)
         }
     );
 
-    GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
-    EXPECT_NE(0u, program);
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
 
-    // dive into the ANGLE internals, so we can bypass validation.
-    gl::Context *context = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
-    gl::Program *glProgram = context->getProgram(program);
-    GLint nearIndex = glProgram->getUniformLocation("gl_DepthRange.near");
+    // We need to bypass validation for this call.
+    GLint nearIndex = glGetUniformLocation(program.get(), "gl_DepthRange.near");
     EXPECT_EQ(-1, nearIndex);
 
     // Test drawing does not throw an exception.
-    drawQuad(program, "inputAttribute", 0.5f);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
 
     EXPECT_GL_NO_ERROR();
-
-    glDeleteProgram(program);
 }
 
 std::string GenerateSmallPowShader(double base, double exponent)
@@ -2248,13 +2247,11 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 
     ANGLE_GL_PROGRAM(prog, vert, frag);
 
-    gl::Context *context   = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
-    gl::Program *glProgram = context->getProgram(prog.get());
-    GLint oneIndex         = glProgram->getUniformLocation("ui_one");
+    GLint oneIndex = glGetUniformLocation(prog.get(), "ui_one");
     ASSERT_NE(-1, oneIndex);
-    GLint twoIndex = glProgram->getUniformLocation("ui_two");
+    GLint twoIndex = glGetUniformLocation(prog.get(), "ui_two");
     ASSERT_NE(-1, twoIndex);
-    GLint threeIndex = glProgram->getUniformLocation("ui_three");
+    GLint threeIndex = glGetUniformLocation(prog.get(), "ui_three");
     ASSERT_NE(-1, threeIndex);
     glUseProgram(prog.get());
     glUniform1i(oneIndex, 1);
@@ -2297,13 +2294,11 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
 
     ANGLE_GL_PROGRAM(prog, vert, frag);
 
-    gl::Context *context   = reinterpret_cast<gl::Context *>(getEGLWindow()->getContext());
-    gl::Program *glProgram = context->getProgram(prog.get());
-    GLint oneIndex         = glProgram->getUniformLocation("ui_one");
+    GLint oneIndex = glGetUniformLocation(prog.get(), "ui_one");
     ASSERT_NE(-1, oneIndex);
-    GLint twoIndex = glProgram->getUniformLocation("ui_two");
+    GLint twoIndex = glGetUniformLocation(prog.get(), "ui_two");
     ASSERT_NE(-1, twoIndex);
-    GLint threeIndex = glProgram->getUniformLocation("ui_three");
+    GLint threeIndex = glGetUniformLocation(prog.get(), "ui_three");
     ASSERT_NE(-1, threeIndex);
     glUseProgram(prog.get());
     glUniform1ui(oneIndex, 1u);

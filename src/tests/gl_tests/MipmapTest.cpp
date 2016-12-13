@@ -919,7 +919,7 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevel)
 
     glBindTexture(GL_TEXTURE_2D, mTexture);
 
-    ASSERT(getWindowWidth() == getWindowHeight());
+    ASSERT_EQ(getWindowWidth(), getWindowHeight());
 
     // Fill level 0 with blue
     std::vector<GLColor> pixelsBlue(getWindowWidth() * getWindowHeight(), GLColor::blue);

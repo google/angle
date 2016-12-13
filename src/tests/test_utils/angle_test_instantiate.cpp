@@ -52,8 +52,8 @@ bool IsPlatformAvailable(const PlatformParameters &param)
           break;
 
       default:
-        UNREACHABLE();
-        break;
+          std::cout << "Unknown test platform: " << param << std::endl;
+          return false;
     }
 
     static std::map<PlatformParameters, bool> paramAvailabilityCache;

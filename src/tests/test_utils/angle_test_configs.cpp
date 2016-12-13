@@ -78,8 +78,8 @@ std::ostream &operator<<(std::ostream& stream, const PlatformParameters &pp)
         stream << "DEFAULT";
         break;
       default:
-        UNREACHABLE();
-        break;
+          stream << "UNDEFINED";
+          break;
     }
 
     if (pp.eglParameters.majorVersion != EGL_DONT_CARE)

@@ -29,7 +29,7 @@ GLColor SliceFormatColor(GLenum format, GLColor full)
         case GL_RGBA:
             return full;
         default:
-            UNREACHABLE();
+            EXPECT_TRUE(false);
             return GLColor::white;
     }
 }

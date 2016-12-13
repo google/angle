@@ -26,7 +26,7 @@ GLsizei TypeStride(GLenum attribType)
         case GL_FLOAT:
             return 4;
         default:
-            UNREACHABLE();
+            EXPECT_TRUE(false);
             return 0;
     }
 }
