@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da182b71_f68ddec5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1104,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-13T12:59:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d3b075b_a03c5ad6",
+      "range": {
+        "startLine": 1104,
+        "startChar": 65,
+        "endLine": 1104,
+        "endChar": 83
+      },
+      "revId": "22c325b103f20f7188a9129c3863c649e6106809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d4003d4_5f576b1d",
         "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2016-12-05T15:29:37Z",
       "side": 1,
       "message": "You should still mention here that this specific test is testing a shared qualifier on a local variable. Now it just mentions the spec rule that the test is based on, not the specific thing being tested.",
+      "revId": "22c325b103f20f7188a9129c3863c649e6106809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da182b71_5631321b",
+        "filename": "src/tests/compiler_tests/MalformedShader_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-13T12:59:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d4003d4_5f576b1d",
       "revId": "22c325b103f20f7188a9129c3863c649e6106809",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
