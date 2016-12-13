@@ -72,6 +72,39 @@ Once the build completes, the output directory for your selected configuration (
 Run `ninja -C out/Debug` or `ninja -C out/Release`. Ninja is provided by `depot_tools` so make sure you set up your `PATH` correctly.
 Once the build completes, the `out/Debug` or `out/Release` directories will contain the .so or .dylib libraries and test binaries.
 
+### Building ANGLE for Android
+Presently, it is not possible to build standalone ANGLE for Android.
+But, ANGLE for Android can be built within a Chromium checkout.
+The reason for that is a dependency on Chromium for Android toolchain and that it only supports GN.
+Also, it can only be built on Linux, as this is the only platfrom that Chromium for Android supports.
+In theory, once ANGLE supports standalone GN build, it may be possible to put Chromium for Android toolchain in `third_party` or `buildtools` to build standalone ANGLE for Android.
+
+But, for now, the steps in [Checking out and building Chromium for Android](https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md) should be followed to check out Chromium for Android and set up build environment.
+Name your output directories `out/Debug` and `out/Release`, because Chromium GPU tests look for browser binaries in these folders. Replacing `out` with other names seems to be OK when working with multiple build configurations.
+It's best to use a build configuration of some Android bot on [GPU.FYI waterfall](https://build.chromium.org/p/chromium.gpu.fyi/waterfall). Look for `generate_build_files` step output of that bot. Remove `goma_dir` flag.
+For example, these are the build flags from Nexus 5X bot:
+```
+build_angle_deqp_tests = true
+dcheck_always_on = true
+ffmpeg_branding = "Chrome"
+is_component_build = false
+is_debug = false
+proprietary_codecs = true
+symbol_level = 1
+target_cpu = "arm64"          # Nexus 5X is 64 bit, remove this on 32 bit devices
+target_os = "android"
+use_goma = true               # Remove this if you don't have goma
+```
+
+These ANGLE targets are supported:
+`ninja -C out/Release translator libEGL libGLESv2 angle_unittests angle_end2end_tests angle_deqp_gles2_tests angle_deqp_gles3_tests angle_deqp_egl_tests`
+In order to run ANGLE tests, prepend `bin/run_` to the test name, for example: `./out/Release/bin/run_angle_unittests`.
+Additional details are in [Android Test Instructions](https://chromium.googlesource.com/chromium/src/+/master/docs/android_test_instructions.md).
+
+In order to run GPU telemetry tests, build `chrome_public_apk` target. Then follow [GPU Testing](http://www.chromium.org/developers/testing/gpu-testing#TOC-Running-the-GPU-Tests-Locally) doc, using `--browser=android-chromium` argument. Make sure to set your `CHROMIUM_OUT_DIR` environment variable, so that your browser is found, otherwise the stock one will run.
+
+Also, follow [How to build ANGLE in Chromium for dev](doc/BuildingAngleForChromiumDevelopment.md) to work with Top of Tree ANGLE in Chromium.
+
 ## Application Development with ANGLE
 This sections describes how to use ANGLE to build an OpenGL ES application.
 
