@@ -26,8 +26,12 @@ debug.txt
 /testing/gtest
 /third_party/cherry
 /third_party/deqp/src
+/third_party/glslang-angle/src
 /third_party/gyp
 /third_party/libpng
+/third_party/spirv-headers/src
+/third_party/spirv-tools-angle/src
+/third_party/vulkan-validation-layers/src
 /third_party/zlib
 /src/tests/third_party/gles_conformance_tests
 out
