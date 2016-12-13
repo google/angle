@@ -934,8 +934,10 @@ egl::ConfigSet Renderer11::generateConfigs()
 
     if (mRenderer11DeviceCaps.featureLevel >= D3D_FEATURE_LEVEL_10_0)
     {
-        // floating point formats
+        // Additional high bit depth formats added in D3D 10.0
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/bb173064.aspx
         colorBufferFormats.push_back(GL_RGBA16F);
+        colorBufferFormats.push_back(GL_RGB10_A2);
     }
 
     if (!mPresentPathFastEnabled)

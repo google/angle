@@ -267,9 +267,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
     // Finish the attribute list
     configAttributes.push_back(EGL_NONE);
 
-    EGLint configCount;
-    if (!eglChooseConfig(mDisplay, configAttributes.data(), &mConfig, 1, &configCount) ||
-        (configCount != 1))
+    if (!FindEGLConfig(mDisplay, configAttributes.data(), &mConfig))
     {
         destroyGL();
         return false;
@@ -399,6 +397,11 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
         bool matchFound = true;
         for (const EGLint *curAttrib = attrib_list; curAttrib[0] != EGL_NONE; curAttrib += 2)
         {
+            if (curAttrib[1] == EGL_DONT_CARE)
+            {
+                continue;
+            }
+
             EGLint actualValue = EGL_DONT_CARE;
             eglGetConfigAttrib(dpy, allConfigs[i], curAttrib[0], &actualValue);
             if (curAttrib[1] != actualValue)

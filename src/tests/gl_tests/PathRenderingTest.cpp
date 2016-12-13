@@ -71,7 +71,7 @@ class CHROMIUMPathRenderingTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setConfigDepthBits(8);
+        setConfigDepthBits(24);
         setConfigStencilBits(8);
     }
 
@@ -696,7 +696,7 @@ class CHROMIUMPathRenderingDrawTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setConfigDepthBits(8);
+        setConfigDepthBits(24);
         setConfigStencilBits(8);
     }
 
@@ -1050,7 +1050,7 @@ class CHROMIUMPathRenderingWithTexturingTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-        setConfigDepthBits(8);
+        setConfigDepthBits(24);
         setConfigStencilBits(8);
     }
 
