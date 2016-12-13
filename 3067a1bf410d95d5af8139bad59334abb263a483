@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_0cfcabbc",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-13T14:27:40Z",
+      "side": 1,
+      "message": "i think we need to use CheckedNumeric here to ensure the addition is safe.. see safe_math.h. I think offset can be arbitrary.",
+      "range": {
+        "startLine": 131,
+        "startChar": 10,
+        "endLine": 131,
+        "endChar": 72
+      },
+      "revId": "3067a1bf410d95d5af8139bad59334abb263a483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ecf04fe1",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-13T14:27:40Z",
+      "side": 1,
+      "message": "same comment here.",
+      "range": {
+        "startLine": 165,
+        "startChar": 9,
+        "endLine": 165,
+        "endChar": 70
+      },
+      "revId": "3067a1bf410d95d5af8139bad59334abb263a483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_acea57ef",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-13T14:27:40Z",
+      "side": 1,
+      "message": "maybe we should open bugs for these?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 4
+      },
+      "revId": "3067a1bf410d95d5af8139bad59334abb263a483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
