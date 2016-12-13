@@ -818,6 +818,14 @@ Error Program::loadBinary(const Context *context,
         mState.mUniformBlocks.push_back(uniformBlock);
     }
 
+    for (GLuint bindingIndex = 0; bindingIndex < mState.mUniformBlockBindings.size();
+         ++bindingIndex)
+    {
+        stream.readInt(&mState.mUniformBlockBindings[bindingIndex]);
+        mState.mActiveUniformBlockBindings.set(bindingIndex,
+                                               mState.mUniformBlockBindings[bindingIndex] != 0);
+    }
+
     unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
     ASSERT(mState.mTransformFeedbackVaryingVars.empty());
     for (unsigned int transformFeedbackVaryingIndex = 0;
@@ -848,7 +856,7 @@ Error Program::loadBinary(const Context *context,
     stream.readInt(&mSamplerUniformRange.start);
     stream.readInt(&mSamplerUniformRange.end);
 
-    ANGLE_TRY_RESULT(mProgram->load(mInfoLog, &stream), mLinked);
+    ANGLE_TRY_RESULT(mProgram->load(context->getImplementation(), mInfoLog, &stream), mLinked);
 
     return NoError();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
@@ -934,6 +942,11 @@ Error Program::saveBinary(const Context *context,
         {
             stream.writeInt(memberUniformIndex);
         }
+    }
+
+    for (GLuint binding : mState.mUniformBlockBindings)
+    {
+        stream.writeInt(binding);
     }
 
     stream.writeInt(mState.mTransformFeedbackVaryingVars.size());
@@ -1685,6 +1698,7 @@ const UniformBlock &Program::getUniformBlockByIndex(GLuint index) const
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
     mState.mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
+    mState.mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlockBinding != 0);
     mProgram->setUniformBlockBinding(uniformBlockIndex, uniformBlockBinding);
 }
 

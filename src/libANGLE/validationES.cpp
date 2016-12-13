@@ -4003,6 +4003,12 @@ bool ValidateGetProgramBinaryBase(Context *context,
         return false;
     }
 
+    if (context->getCaps().programBinaryFormats.empty())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "No program binary formats supported."));
+        return false;
+    }
+
     return true;
 }
 

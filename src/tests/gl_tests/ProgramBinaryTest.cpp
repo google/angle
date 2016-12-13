@@ -12,6 +12,7 @@
 #include "EGLWindow.h"
 #include "OSWindow.h"
 #include "test_utils/angle_test_configs.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -221,6 +222,93 @@ ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
                        ES3_D3D11(),
                        ES2_OPENGL(),
                        ES3_OPENGL());
+
+class ProgramBinaryES3Test : public ANGLETest
+{
+};
+
+// Tests that saving and loading a program perserves uniform block binding info.
+TEST_P(ProgramBinaryES3Test, UniformBlockBinding)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    if (binaryFormatCount == 0)
+    {
+        std::cout << "Test skipped because no program binary formats available." << std::endl;
+        return;
+    }
+
+    const std::string &vertexShader =
+        "#version 300 es\n"
+        "uniform block {\n"
+        "    float f;\n"
+        "};\n"
+        "in vec4 position;\n"
+        "out vec4 color;\n"
+        "void main() {\n"
+        "    gl_Position = position;\n"
+        "    color = vec4(f, f, f, 1);\n"
+        "}";
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "in vec4 color;\n"
+        "out vec4 colorOut;\n"
+        "void main() {\n"
+        "    colorOut = color;\n"
+        "}";
+
+    // Init and draw with the program.
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    float fData[4]   = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLuint bindIndex = 2;
+
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo.get());
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(fData), &fData, GL_STATIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, bindIndex, ubo.get(), 0, sizeof(fData));
+
+    GLint blockIndex = glGetUniformBlockIndex(program.get(), "block");
+    ASSERT_NE(-1, blockIndex);
+
+    glUniformBlockBinding(program.get(), blockIndex, bindIndex);
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(program.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary and draw.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    drawQuad(binaryProgram.get(), "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 class ProgramBinaryTransformFeedbackTest : public ANGLETest
 {

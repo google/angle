@@ -22,7 +22,9 @@ ProgramNULL::~ProgramNULL()
 {
 }
 
-LinkResult ProgramNULL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
+LinkResult ProgramNULL::load(const ContextImpl *contextImpl,
+                             gl::InfoLog &infoLog,
+                             gl::BinaryInputStream *stream)
 {
     return true;
 }

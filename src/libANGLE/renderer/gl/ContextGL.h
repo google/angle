@@ -172,7 +172,7 @@ class ContextGL : public ContextImpl
     // Handle helpers
     const FunctionsGL *getFunctions() const;
     StateManagerGL *getStateManager();
-    const WorkaroundsGL &getWorkaroundsGL();
+    const WorkaroundsGL &getWorkaroundsGL() const;
 
   private:
     RendererGL *mRenderer;

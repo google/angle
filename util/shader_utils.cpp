@@ -79,6 +79,9 @@ GLuint CompileShaderFromFile(GLenum type, const std::string &sourcePath)
 
 GLuint CheckLinkStatusAndReturnProgram(GLuint program, bool outputErrorMessages)
 {
+    if (glGetError() != GL_NO_ERROR)
+        return 0;
+
     GLint linkStatus;
     glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
     if (linkStatus == 0)
@@ -188,4 +191,18 @@ GLuint CompileComputeProgram(const std::string &csSource, bool outputErrorMessag
     glLinkProgram(program);
 
     return CheckLinkStatusAndReturnProgram(program, outputErrorMessages);
+}
+
+GLuint LoadBinaryProgramOES(const std::vector<uint8_t> &binary, GLenum binaryFormat)
+{
+    GLuint program = glCreateProgram();
+    glProgramBinaryOES(program, binaryFormat, binary.data(), static_cast<GLint>(binary.size()));
+    return CheckLinkStatusAndReturnProgram(program, true);
+}
+
+GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary, GLenum binaryFormat)
+{
+    GLuint program = glCreateProgram();
+    glProgramBinary(program, binaryFormat, binary.data(), static_cast<GLint>(binary.size()));
+    return CheckLinkStatusAndReturnProgram(program, true);
 }

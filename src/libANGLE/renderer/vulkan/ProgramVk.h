@@ -21,7 +21,9 @@ class ProgramVk : public ProgramImpl
     ProgramVk(const gl::ProgramState &state);
     ~ProgramVk() override;
 
-    LinkResult load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream) override;
+    LinkResult load(const ContextImpl *contextImpl,
+                    gl::InfoLog &infoLog,
+                    gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
 

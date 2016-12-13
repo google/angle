@@ -8,10 +8,12 @@
 
 #include "libANGLE/renderer/gl/ProgramGL.h"
 
+#include "common/BitSetIterator.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "common/string_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
@@ -46,7 +48,9 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-LinkResult ProgramGL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
+LinkResult ProgramGL::load(const ContextImpl *contextImpl,
+                           gl::InfoLog &infoLog,
+                           gl::BinaryInputStream *stream)
 {
     preLink();
 
@@ -66,6 +70,16 @@ LinkResult ProgramGL::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
     }
 
     postLink();
+
+    // Re-apply UBO bindings to work around driver bugs.
+    const WorkaroundsGL &workaroundsGL = GetAs<ContextGL>(contextImpl)->getWorkaroundsGL();
+    if (workaroundsGL.reapplyUBOBindingsAfterLoadingBinaryProgram)
+    {
+        for (GLuint bindingIndex : angle::IterateBitSet(mState.getActiveUniformBlockBindingsMask()))
+        {
+            setUniformBlockBinding(bindingIndex, mState.getUniformBlockBinding(bindingIndex));
+        }
+    }
 
     return true;
 }

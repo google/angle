@@ -13,6 +13,7 @@
 #include <GLES2/gl2.h>
 #include <GLSLANG/ShaderVars.h>
 
+#include <array>
 #include <map>
 #include <set>
 #include <sstream>
@@ -211,7 +212,7 @@ class ProgramState final : angle::NonCopyable
     std::vector<sh::Varying> mTransformFeedbackVaryingVars;
     GLenum mTransformFeedbackBufferMode;
 
-    GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
+    std::array<GLuint, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> mUniformBlockBindings;
     UniformBlockBindingMask mActiveUniformBlockBindings;
 
     std::vector<sh::Attribute> mAttributes;

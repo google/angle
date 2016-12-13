@@ -783,8 +783,12 @@ void ProgramD3D::updateSamplerMapping()
     }
 }
 
-LinkResult ProgramD3D::load(gl::InfoLog &infoLog, gl::BinaryInputStream *stream)
+LinkResult ProgramD3D::load(const ContextImpl *contextImpl,
+                            gl::InfoLog &infoLog,
+                            gl::BinaryInputStream *stream)
 {
+    // TODO(jmadill): Use Renderer from contextImpl.
+
     reset();
 
     DeviceIdentifier binaryDeviceIdentifier = {0};
