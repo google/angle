@@ -113,6 +113,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_4ce1830f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1141994
+      },
+      "writtenOn": "2016-12-13T14:32:59Z",
+      "side": 1,
+      "message": "We try to make the methods on our GL objects match the real GL functions as closely as possible.  We don\u0027t want to abstract too much away at this level, it lets the GL backend do as little work as possible and other backends can merge functions where they need internally.",
+      "parentUuid": "fa1b2f68_61ea08c1",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 72
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_4c8e35c3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 6
