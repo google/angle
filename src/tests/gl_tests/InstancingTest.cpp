@@ -431,7 +431,7 @@ TEST_P(InstancingTestPoints, DrawElements)
     GLint instancePosLoc = glGetAttribLocation(mProgram, "a_instancePos");
 
     // Load the vertex position
-    GLfloat pos[3] = {0, 0, 0};
+    Vector3 pos[] = {Vector3(0), Vector3(0), Vector3(0), Vector3(0)};
     glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, pos);
     glEnableVertexAttribArray(positionLoc);
 
