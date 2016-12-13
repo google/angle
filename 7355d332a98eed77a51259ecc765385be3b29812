@@ -1,0 +1,755 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa1b2f68_9e0901e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Make a clear commit description.\n\nTitle in a line with first letter in capital case.\n(empty line)\nDescribe what issue does your CL fix and how to fix.\n\nlink the bug id with BUG\u003dbug_id and test with TEST\u003d",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 53
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_3ee78df7",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Add a new empty line.",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_ded1b910",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "keep the same style as other case.",
+      "range": {
+        "startLine": 38,
+        "startChar": 12,
+        "endLine": 38,
+        "endChar": 33
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_bed6fd05",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_9ebb41c3",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 50,
+        "startChar": 12,
+        "endLine": 50,
+        "endChar": 34
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_7eb865c5",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Keep the same formating as other case here and other places",
+      "range": {
+        "startLine": 288,
+        "startChar": 0,
+        "endLine": 289,
+        "endChar": 16
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_1eaf317f",
+        "filename": "src/compiler/translator/generate_parser.sh",
+        "patchSetId": 16
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Why the mode of this file is changed from 644 to 755?",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_5e9c8954",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Keep same style as other case here and other places in this file.",
+      "range": {
+        "startLine": 303,
+        "startChar": 10,
+        "endLine": 303,
+        "endChar": 43
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e173b852",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3698,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "handleError(mImplementation-\u003egetMultisamplefv) if any errors will be raised.",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_c178bc31",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 135,
+        "startChar": 30,
+        "endLine": 135,
+        "endChar": 34
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e18a98fe",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1012,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Use fixedSampleLocations",
+      "range": {
+        "startLine": 1012,
+        "startChar": 47,
+        "endLine": 1012,
+        "endChar": 67
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a17dc020",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 1021,
+        "startChar": 20,
+        "endLine": 1021,
+        "endChar": 24
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2191b031",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Use the new style: return gl::InternalError();",
+      "range": {
+        "startLine": 1024,
+        "startChar": 8,
+        "endLine": 1024,
+        "endChar": 47
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_619e883f",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Use fixedSampleLocations",
+      "range": {
+        "startLine": 84,
+        "startChar": 54,
+        "endLine": 84,
+        "endChar": 74
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_21bc109e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 151,
+        "startChar": 54,
+        "endLine": 151,
+        "endChar": 74
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_01c11422",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Use gl::InternalError() \u003c\u003c \"setStorage....",
+      "range": {
+        "startLine": 154,
+        "startChar": 11,
+        "endLine": 154,
+        "endChar": 20
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_419b8c4c",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 125,
+        "startChar": 46,
+        "endLine": 125,
+        "endChar": 67
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a1af0061",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "return gl::InternalError();",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_81ac046d",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "return gl::InternalError();",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_61b9e8a7",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Use gl::InternalError() to handle error.",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_21e3f0c1",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e1dcd802",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 831,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "return NoError()",
+      "range": {
+        "startLine": 831,
+        "startChar": 11,
+        "endLine": 831,
+        "endChar": 20
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_01e8f499",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "fixedSampleLocations and other places in cpp file",
+      "range": {
+        "startLine": 103,
+        "startChar": 46,
+        "endLine": 103,
+        "endChar": 67
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_c1e1dcb5",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "return gl::NoError();",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a1d6e0dc",
+        "filename": "src/libANGLE/renderer/null/TextureNULL.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 90,
+        "startChar": 46,
+        "endLine": 90,
+        "endChar": 66
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_61d0c8df",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 73,
+        "startChar": 57,
+        "endLine": 73,
+        "endChar": 77
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_41cdcc48",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "is less",
+      "range": {
+        "startLine": 94,
+        "startChar": 70,
+        "endLine": 94,
+        "endChar": 74
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_210e50ae",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Internalformat",
+      "range": {
+        "startLine": 112,
+        "startChar": 36,
+        "endLine": 112,
+        "endChar": 56
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_011354d2",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "an",
+      "range": {
+        "startLine": 117,
+        "startChar": 47,
+        "endLine": 117,
+        "endChar": 49
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e11738bb",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "internalformats",
+      "range": {
+        "startLine": 118,
+        "startChar": 34,
+        "endLine": 118,
+        "endChar": 51
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_c11c3ce2",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Internalformat is one of the unsupported unsized base internalformats.",
+      "range": {
+        "startLine": 124,
+        "startChar": 13,
+        "endLine": 124,
+        "endChar": 92
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_21f53062",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "Missing . at the end of sentence. Also fix other places.",
+      "range": {
+        "startLine": 152,
+        "startChar": 83,
+        "endLine": 152,
+        "endChar": 90
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_41282cf5",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "SAMPLE_POSITION.",
+      "range": {
+        "startLine": 158,
+        "startChar": 66,
+        "endLine": 158,
+        "endChar": 81
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_81d3e4ec",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 31,
+        "startChar": 57,
+        "endLine": 31,
+        "endChar": 77
+      },
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_01fa3452",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-13T06:46:40Z",
+      "side": 1,
+      "message": "remove empty line.",
+      "revId": "7355d332a98eed77a51259ecc765385be3b29812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
