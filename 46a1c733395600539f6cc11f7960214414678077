@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "da182b71_b68646fd",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-13T12:10:33Z",
+      "side": 1,
+      "message": "Done. I did it with the mDependencyId to avoid exposing any of the internals of BuiltInFunctionEmulator, but in the end returning FunctionId does make a cleaner API.",
+      "parentUuid": "fa1b2f68_4cf075ad",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_cfbb57a6",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3afdc727_210428c8",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorGLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-13T12:10:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_cfbb57a6",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_6fca0340",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2016-12-12T16:49:36Z",
       "side": 1,
       "message": "nit: can you add a comment stating the driver versions, so we can make the workaround ore specific when we have driver version detection?",
+      "revId": "46a1c733395600539f6cc11f7960214414678077",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa024ff6_22caea3e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-13T12:10:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_6fca0340",
       "revId": "46a1c733395600539f6cc11f7960214414678077",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
