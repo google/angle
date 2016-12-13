@@ -406,6 +406,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_4c0aa303",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-13T14:27:40Z",
+      "side": 1,
+      "message": "Right, this is checked in the validation layer.",
+      "parentUuid": "fa1b2f68_c1d67c07",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_4c599575",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
@@ -845,6 +863,24 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "fa1b2f68_4c5f552c",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2cf767dc",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-13T14:27:40Z",
+      "side": 1,
+      "message": "We might.. do you think it would be better to define this structure when we need it?",
+      "parentUuid": "fa1b2f68_415a6c99",
       "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
