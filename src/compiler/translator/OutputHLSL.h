@@ -174,6 +174,11 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesInstanceID;
     bool mUsesVertexID;
     bool mUsesFragDepth;
+    bool mUsesNumWorkGroups;
+    bool mUsesWorkGroupID;
+    bool mUsesLocalInvocationID;
+    bool mUsesGlobalInvocationID;
+    bool mUsesLocalInvocationIndex;
     bool mUsesXor;
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;

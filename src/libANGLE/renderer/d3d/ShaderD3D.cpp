@@ -29,6 +29,9 @@ const char *GetShaderTypeString(GLenum type)
         case GL_FRAGMENT_SHADER:
             return "FRAGMENT";
 
+        case GL_COMPUTE_SHADER:
+            return "COMPUTE";
+
         default:
             UNREACHABLE();
             return "";
@@ -192,7 +195,7 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
     mUsesPointSize             = translatedSource.find("GL_USES_POINT_SIZE") != std::string::npos;
     mUsesPointCoord            = translatedSource.find("GL_USES_POINT_COORD") != std::string::npos;
     mUsesDepthRange            = translatedSource.find("GL_USES_DEPTH_RANGE") != std::string::npos;
-    mUsesFragDepth = translatedSource.find("GL_USES_FRAG_DEPTH") != std::string::npos;
+    mUsesFragDepth             = translatedSource.find("GL_USES_FRAG_DEPTH") != std::string::npos;
     mUsesDiscardRewriting =
         translatedSource.find("ANGLE_USES_DISCARD_REWRITING") != std::string::npos;
     mUsesNestedBreak  = translatedSource.find("ANGLE_USES_NESTED_BREAK") != std::string::npos;

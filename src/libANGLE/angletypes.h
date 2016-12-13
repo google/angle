@@ -42,7 +42,8 @@ PrimitiveType GetPrimitiveType(GLenum drawMode);
 enum SamplerType
 {
     SAMPLER_PIXEL,
-    SAMPLER_VERTEX
+    SAMPLER_VERTEX,
+    SAMPLER_COMPUTE
 };
 
 struct Rectangle
@@ -288,6 +289,11 @@ inline DestT *GetImplAs(SrcT *src)
     return GetAs<DestT>(src->getImplementation());
 }
 
+template <typename DestT, typename SrcT>
+inline DestT *SafeGetImplAs(SrcT *src)
+{
+    return src != nullptr ? GetAs<DestT>(src->getImplementation()) : nullptr;
+}
 }
 
 #include "angletypes.inl"
