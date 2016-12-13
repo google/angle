@@ -3460,15 +3460,14 @@ gl::Error Renderer11::loadExecutable(const void *function,
     {
         case SHADER_VERTEX:
         {
-            ID3D11VertexShader *vertexShader      = NULL;
-            ID3D11GeometryShader *streamOutShader = NULL;
+            ID3D11VertexShader *vertexShader      = nullptr;
+            ID3D11GeometryShader *streamOutShader = nullptr;
 
             HRESULT result = mDevice->CreateVertexShader(function, length, NULL, &vertexShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create vertex shader, result: 0x%X.",
-                                 result);
+                return gl::OutOfMemory() << "Failed to create vertex shader, " << result;
             }
 
             if (!streamOutVaryings.empty())
@@ -3496,8 +3495,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
                 ASSERT(SUCCEEDED(result));
                 if (FAILED(result))
                 {
-                    return gl::Error(GL_OUT_OF_MEMORY,
-                                     "Failed to create steam output shader, result: 0x%X.", result);
+                    return gl::OutOfMemory() << "Failed to create steam output shader, " << result;
                 }
             }
 
@@ -3507,14 +3505,13 @@ gl::Error Renderer11::loadExecutable(const void *function,
         break;
         case SHADER_PIXEL:
         {
-            ID3D11PixelShader *pixelShader = NULL;
+            ID3D11PixelShader *pixelShader = nullptr;
 
             HRESULT result = mDevice->CreatePixelShader(function, length, NULL, &pixelShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to create pixel shader, result: 0x%X.",
-                                 result);
+                return gl::OutOfMemory() << "Failed to create pixel shader, " << result;
             }
 
             *outExecutable = new ShaderExecutable11(function, length, pixelShader);
@@ -3522,17 +3519,30 @@ gl::Error Renderer11::loadExecutable(const void *function,
         break;
         case SHADER_GEOMETRY:
         {
-            ID3D11GeometryShader *geometryShader = NULL;
+            ID3D11GeometryShader *geometryShader = nullptr;
 
             HRESULT result = mDevice->CreateGeometryShader(function, length, NULL, &geometryShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
-                return gl::Error(GL_OUT_OF_MEMORY,
-                                 "Failed to create geometry shader, result: 0x%X.", result);
+                return gl::OutOfMemory() << "Failed to create geometry shader, " << result;
             }
 
             *outExecutable = new ShaderExecutable11(function, length, geometryShader);
+        }
+        break;
+        case SHADER_COMPUTE:
+        {
+            ID3D11ComputeShader *computeShader = nullptr;
+
+            HRESULT result = mDevice->CreateComputeShader(function, length, NULL, &computeShader);
+            ASSERT(SUCCEEDED(result));
+            if (FAILED(result))
+            {
+                return gl::OutOfMemory() << "Failed to create compute shader, " << result;
+            }
+
+            *outExecutable = new ShaderExecutable11(function, length, computeShader);
         }
         break;
         default:
@@ -3563,6 +3573,9 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
             break;
         case SHADER_GEOMETRY:
             profileStream << "gs";
+            break;
+        case SHADER_COMPUTE:
+            profileStream << "cs";
             break;
         default:
             UNREACHABLE();

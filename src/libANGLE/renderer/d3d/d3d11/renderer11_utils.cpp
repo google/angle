@@ -830,6 +830,84 @@ size_t GetMaximumPixelTextureUnits(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+std::array<GLuint, 3> GetMaxComputeWorkGroupCount(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return {{D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION,
+                     D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION,
+                     D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION}};
+            break;
+        default:
+            return {{0, 0, 0}};
+    }
+}
+
+std::array<GLuint, 3> GetMaxComputeWorkGroupSize(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return {{D3D11_CS_THREAD_GROUP_MAX_X, D3D11_CS_THREAD_GROUP_MAX_Y,
+                     D3D11_CS_THREAD_GROUP_MAX_Z}};
+            break;
+        default:
+            return {{0, 0, 0}};
+    }
+}
+
+size_t GetMaxComputeWorkGroupInvocations(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_CS_THREAD_GROUP_MAX_THREADS_PER_GROUP;
+        default:
+            return 0;
+    }
+}
+
+size_t GetMaximumComputeUniformVectors(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT;
+        default:
+            return 0;
+    }
+}
+
+size_t GetMaximumComputeUniformBlocks(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT -
+                   d3d11::RESERVED_CONSTANT_BUFFER_SLOT_COUNT;
+        default:
+            return 0;
+    }
+}
+
+size_t GetMaximumComputeTextureUnits(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_COMMONSHADER_SAMPLER_SLOT_COUNT;
+        default:
+            return 0;
+    }
+}
+
 int GetMinimumTexelOffset(D3D_FEATURE_LEVEL featureLevel)
 {
     switch (featureLevel)
@@ -1160,6 +1238,18 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     caps->minProgramTexelOffset = GetMinimumTexelOffset(featureLevel);
     caps->maxProgramTexelOffset = GetMaximumTexelOffset(featureLevel);
 
+    // Compute shader limits
+    caps->maxComputeWorkGroupCount = GetMaxComputeWorkGroupCount(featureLevel);
+    caps->maxComputeWorkGroupSize  = GetMaxComputeWorkGroupSize(featureLevel);
+    caps->maxComputeWorkGroupInvocations =
+        static_cast<GLuint>(GetMaxComputeWorkGroupInvocations(featureLevel));
+    caps->maxComputeUniformComponents =
+        static_cast<GLuint>(GetMaximumComputeUniformVectors(featureLevel)) * 4;
+    caps->maxComputeUniformBlocks =
+        static_cast<GLuint>(GetMaximumComputeUniformBlocks(featureLevel));
+    caps->maxComputeTextureImageUnits =
+        static_cast<GLuint>(GetMaximumComputeTextureUnits(featureLevel));
+
     // Aggregate shader limits
     caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
     caps->maxUniformBlockSize = GetMaximumConstantBufferSize(featureLevel);
@@ -1175,6 +1265,9 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
                                                static_cast<GLint64>(caps->maxVertexUniformComponents);
     caps->maxCombinedFragmentUniformComponents = (static_cast<GLint64>(caps->maxFragmentUniformBlocks) * static_cast<GLint64>(caps->maxUniformBlockSize / 4)) +
                                                  static_cast<GLint64>(caps->maxFragmentUniformComponents);
+    caps->maxCombinedComputeUniformComponents =
+        static_cast<GLuint>(caps->maxComputeUniformBlocks * (caps->maxUniformBlockSize / 4) +
+                            caps->maxComputeUniformComponents);
     caps->maxVaryingComponents =
         static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel)) * 4;
     caps->maxVaryingVectors            = static_cast<GLuint>(GetMaximumVertexOutputVectors(featureLevel));
