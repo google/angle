@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_3e0aed02",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ac9f09ee",
+      "range": {
+        "startLine": 1673,
+        "startChar": 0,
+        "endLine": 1673,
+        "endChar": 5
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ac14a929",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 6
@@ -53,6 +77,30 @@
       "writtenOn": "2016-12-12T15:40:17Z",
       "side": 1,
       "message": "Please split this into two functions, drawArraysIndirect and drawElementsIndirect (in the other places too).",
+      "range": {
+        "startLine": 313,
+        "startChar": 4,
+        "endLine": 313,
+        "endChar": 72
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_61ea08c1",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done. But can you give more details why it should be split?",
+      "parentUuid": "fa1b2f68_ac14a929",
       "range": {
         "startLine": 313,
         "startChar": 4,
@@ -88,6 +136,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_41e70cf6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_4c8e35c3",
+      "range": {
+        "startLine": 198,
+        "startChar": 15,
+        "endLine": 198,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_2c8bf9b1",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
         "patchSetId": 6
@@ -99,6 +171,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "nit: same",
+      "range": {
+        "startLine": 185,
+        "startChar": 15,
+        "endLine": 185,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_21c89067",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_2c8bf9b1",
       "range": {
         "startLine": 185,
         "startChar": 15,
@@ -157,6 +253,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_01cd9477",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ac4a699e",
+      "range": {
+        "startLine": 291,
+        "startChar": 15,
+        "endLine": 291,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_8c4fadaf",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
@@ -191,6 +311,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "nit: ANGLE_TRY(vaoGL-\u003esyncElementArrayState)",
+      "range": {
+        "startLine": 673,
+        "startChar": 8,
+        "endLine": 677,
+        "endChar": 9
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e1d17810",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_6c54513f",
       "range": {
         "startLine": 673,
         "startChar": 8,
@@ -244,6 +388,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_c1d67c07",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ec7ce189",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_4c599575",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
@@ -278,6 +440,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "same comment about the if statement here. make sure this is undefined behaviour. if it is not, put this in the validation. if it is, return the error first, then flatten the condition.",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 38
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a1bb80c2",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_0c639d23",
       "range": {
         "startLine": 103,
         "startChar": 4,
@@ -336,6 +522,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_61c56849",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_cc2c85cb",
+      "range": {
+        "startLine": 117,
+        "startChar": 11,
+        "endLine": 117,
+        "endChar": 16
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ac31491e",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 6
@@ -359,6 +569,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_41c26c42",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ac31491e",
+      "range": {
+        "startLine": 112,
+        "startChar": 15,
+        "endLine": 112,
+        "endChar": 20
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ac1ca992",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -370,6 +604,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "this should be in validationES31.cpp/.h. if you need access to ValidateDrawBase, export that function in validationES.h.",
+      "range": {
+        "startLine": 3414,
+        "startChar": 5,
+        "endLine": 3414,
+        "endChar": 29
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_3ec2ed41",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3414,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ac1ca992",
       "range": {
         "startLine": 3414,
         "startChar": 5,
@@ -422,6 +680,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_811e44d5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3450,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_cc6b65d0",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_8c21edc7",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -445,6 +721,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_612b28f4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3459,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_8c21edc7",
+      "range": {
+        "startLine": 3459,
+        "startChar": 5,
+        "endLine": 3459,
+        "endChar": 31
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_6c2b31af",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -456,6 +756,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "every error you generate here should have a description in the second argument to Error(). use the spec language when possible.",
+      "range": {
+        "startLine": 3467,
+        "startChar": 35,
+        "endLine": 3467,
+        "endChar": 55
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_615d6890",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3467,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_6c2b31af",
       "range": {
         "startLine": 3467,
         "startChar": 35,
@@ -509,6 +833,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_415a6c99",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_4c5f552c",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_0c695dd2",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
@@ -520,6 +862,24 @@
       "writtenOn": "2016-12-12T15:28:30Z",
       "side": 1,
       "message": "To avoid overflows, it would be better to do offset + sizeof(...) \u003c static_cast\u003cGLint64\u003e(drawIndirectBuffer-\u003egetSize())",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_2c0e47ae",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3483,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_0c695dd2",
       "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -566,6 +926,24 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_0c138bd2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3523,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ec6501f6",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_0c3a7df5",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 6
@@ -577,6 +955,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "use \n\n if (!context-\u003eskipValidation() \u0026\u0026 !Validate())\n {\n    return;\n }",
+      "range": {
+        "startLine": 58,
+        "startChar": 13,
+        "endLine": 58,
+        "endChar": 39
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_e13a98d8",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_0c3a7df5",
       "range": {
         "startLine": 58,
         "startChar": 13,
@@ -612,6 +1014,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_c13f9cc7",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_4c407573",
+      "range": {
+        "startLine": 64,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 9
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_2c3d39ee",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 6
@@ -635,6 +1061,30 @@
     },
     {
       "key": {
+        "uuid": "fa1b2f68_a154a016",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_2c3d39ee",
+      "range": {
+        "startLine": 72,
+        "startChar": 17,
+        "endLine": 72,
+        "endChar": 37
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ec36210f",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 6
@@ -646,6 +1096,30 @@
       "writtenOn": "2016-12-12T14:19:59Z",
       "side": 1,
       "message": "can we open specific angle bugs for this work? or use 1595 if you intend on fixing them.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 4
+      },
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa1b2f68_a1f020ae",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-13T09:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_ec36210f",
       "range": {
         "startLine": 27,
         "startChar": 0,
