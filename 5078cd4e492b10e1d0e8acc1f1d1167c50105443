@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a7adff7_28a1e047",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T14:30:43Z",
+      "side": 1,
+      "message": "nit: Name your output directories \u0027out/Debug\u0027 and \u0027out/Release\u0027, because Chromium GPU tests look for browser binaries in these folders.",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 71
+      },
+      "revId": "5078cd4e492b10e1d0e8acc1f1d1167c50105443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_48a61461",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T14:30:43Z",
+      "side": 1,
+      "message": "nit: when working with..",
+      "range": {
+        "startLine": 83,
+        "startChar": 188,
+        "endLine": 83,
+        "endChar": 191
+      },
+      "revId": "5078cd4e492b10e1d0e8acc1f1d1167c50105443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_88b00c90",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T14:30:43Z",
+      "side": 1,
+      "message": "nit: just \"Remove `goma_dir`.\" I think is fine.",
+      "range": {
+        "startLine": 84,
+        "startChar": 226,
+        "endLine": 84,
+        "endChar": 251
+      },
+      "revId": "5078cd4e492b10e1d0e8acc1f1d1167c50105443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_68abd827",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T14:30:43Z",
+      "side": 1,
+      "message": "maybe phrase this as:\n\n\"To use the same build configuration as an ANGLE bot, look for the `generate_build_files` step of an Android bot on....\"",
+      "range": {
+        "startLine": 84,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 45
+      },
+      "revId": "5078cd4e492b10e1d0e8acc1f1d1167c50105443",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
