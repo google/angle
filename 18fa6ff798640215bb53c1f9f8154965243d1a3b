@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "7a7adff7_8fb01690",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-14T03:04:41Z",
+      "side": 1,
+      "message": "Add a comment as the code above.",
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_6f4f62b0",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-14T03:04:41Z",
+      "side": 1,
+      "message": "Why not add gsampler2DMS for textureSize?",
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_e175f8a8",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 17
