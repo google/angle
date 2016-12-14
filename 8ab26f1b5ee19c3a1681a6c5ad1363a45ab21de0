@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a7adff7_b4a36583",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1115160
+      },
+      "writtenOn": "2016-12-14T19:00:51Z",
+      "side": 1,
+      "message": "Can you add this inside the !mPresentPathFastEnabled conditional (line 937) below please?\n\nThis new format can\u0027t be supported if mPresentPathFastEnabled \u003d true for the same reason 16-bit formats aren\u0027t supported (i.e. you can\u0027t create a RGB10A2 swapchain).\n\nThanks!",
+      "range": {
+        "startLine": 932,
+        "startChar": 4,
+        "endLine": 932,
+        "endChar": 46
+      },
+      "revId": "8ab26f1b5ee19c3a1681a6c5ad1363a45ab21de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
