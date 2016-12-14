@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7a7adff7_250f491b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-14T10:56:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_0cfcabbc",
+      "range": {
+        "startLine": 131,
+        "startChar": 10,
+        "endLine": 131,
+        "endChar": 72
+      },
+      "revId": "3067a1bf410d95d5af8139bad59334abb263a483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_ecf04fe1",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 7
@@ -59,6 +83,30 @@
       "writtenOn": "2016-12-13T14:27:40Z",
       "side": 1,
       "message": "maybe we should open bugs for these?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 4
+      },
+      "revId": "3067a1bf410d95d5af8139bad59334abb263a483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_05afa5c7",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-14T10:56:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_acea57ef",
       "range": {
         "startLine": 108,
         "startChar": 0,
