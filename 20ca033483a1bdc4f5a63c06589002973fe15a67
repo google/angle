@@ -22,6 +22,30 @@
       "revId": "20ca033483a1bdc4f5a63c06589002973fe15a67",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed0297f6_461bc359",
+        "filename": "DEPS.chromium",
+        "patchSetId": 16
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T21:50:48Z",
+      "side": 1,
+      "message": "Yeah. I hope that once we have standalone GN builds and testing DEPS rolls on the CQ, we can keep the build files integration in ANGLE and make Chromium use ANGLE\u0027s targets.",
+      "parentUuid": "308fa83f_490d421e",
+      "range": {
+        "startLine": 26,
+        "startChar": 28,
+        "endLine": 26,
+        "endChar": 34
+      },
+      "revId": "20ca033483a1bdc4f5a63c06589002973fe15a67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
