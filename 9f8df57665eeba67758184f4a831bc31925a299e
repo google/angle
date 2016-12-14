@@ -911,6 +911,24 @@
     },
     {
       "key": {
+        "uuid": "7a7adff7_45143d29",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3480,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-14T10:56:42Z",
+      "side": 1,
+      "message": "Agree. Have removed the structure.",
+      "parentUuid": "fa1b2f68_2cf767dc",
+      "revId": "9f8df57665eeba67758184f4a831bc31925a299e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_0c695dd2",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 6
