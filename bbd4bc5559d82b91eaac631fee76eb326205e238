@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ed0297f6_06fdbbbe",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T21:50:48Z",
+      "side": 1,
+      "message": "Just used a dumb for loop, let me know if that\u0027s OK. The std::set was a leftover from when I was checking multiple layer names.",
+      "parentUuid": "308fa83f_89ee4a04",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_e2d7eea8",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 15
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "7a7adff7_e35b693c",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T21:50:48Z",
+      "side": 1,
+      "message": "This is a total hack and I don\u0027t know how or why it works -- //third_party does not. Let\u0027s fix the standalone GN build and we can proceed with removing this. Added a TODO.",
+      "parentUuid": "308fa83f_e2d7eea8",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "308fa83f_e24fee7f",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 15
@@ -65,6 +101,24 @@
       "writtenOn": "2016-11-17T20:48:45Z",
       "side": 1,
       "message": "GN should be able to figure out the two helpers are deps from files in sources being in their outputs.",
+      "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_63c21999",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-14T21:50:48Z",
+      "side": 1,
+      "message": "It can figure this out, but it doesn\u0027t like it:\n\nIf you have generated inputs, there needs to be a dependency path between the\ntwo targets in addition to just listing the files. For indirect dependencies,\nthe intermediate ones must be public_deps. data_deps don\u0027t count since they\u0027re\nonly runtime dependencies. If you think a dependency chain exists, it might be\nbecause the chain is private. Try \"gn path\" to analyze.",
+      "parentUuid": "308fa83f_e24fee7f",
       "revId": "bbd4bc5559d82b91eaac631fee76eb326205e238",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
