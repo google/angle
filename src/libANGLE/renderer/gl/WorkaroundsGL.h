@@ -116,7 +116,7 @@ struct WorkaroundsGL
     // Some drivers seem to forget about UBO bindings when loading program binaries. Work around
     // this by re-applying the bindings after the program binary is loaded.
     // This only seems to affect AMD OpenGL drivers, and some Android devices.
-    // http://anglebug.com/1660
+    // http://anglebug.com/1637
     bool reapplyUBOBindingsAfterLoadingBinaryProgram = false;
 };
 }  // namespace rx
