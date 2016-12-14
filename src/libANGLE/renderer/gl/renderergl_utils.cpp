@@ -959,6 +959,11 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->emulateAtan2Float = IsNvidia(vendor);
 
     workarounds->reapplyUBOBindingsAfterLoadingBinaryProgram = IsAMD(vendor);
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // TODO(jmadill): Narrow workaround range for specific devices.
+    workarounds->reapplyUBOBindingsAfterLoadingBinaryProgram = true;
+#endif
 }
 
 }  // namespace nativegl_gl
