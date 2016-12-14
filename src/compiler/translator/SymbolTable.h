@@ -242,10 +242,23 @@ class TSymbolTableLevel
 
     void setGlobalInvariant(bool invariant) { mGlobalInvariant = invariant; }
 
+    void insertUnmangledBuiltInName(const std::string &name)
+    {
+        mUnmangledBuiltInNames.insert(name);
+    }
+
+    bool hasUnmangledBuiltIn(const std::string &name)
+    {
+        return mUnmangledBuiltInNames.count(name) > 0;
+    }
+
   protected:
     tLevel level;
     std::set<std::string> mInvariantVaryings;
     bool mGlobalInvariant;
+
+  private:
+    std::set<std::string> mUnmangledBuiltInNames;
 };
 
 // Define ESymbolLevel as int rather than an enum since level can go
@@ -360,7 +373,7 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype4 = 0,
                        const TType *ptype5 = 0)
     {
-        insertUnmangledBuiltIn(name);
+        insertUnmangledBuiltInName(name, level);
         insertBuiltIn(level, EOpNull, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
@@ -374,7 +387,7 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype4 = 0,
                        const TType *ptype5 = 0)
     {
-        insertUnmangledBuiltIn(name);
+        insertUnmangledBuiltInName(name, level);
         insertBuiltIn(level, EOpNull, ext, rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
@@ -388,7 +401,7 @@ class TSymbolTable : angle::NonCopyable
                        const TType *ptype4 = 0,
                        const TType *ptype5 = 0)
     {
-        insertUnmangledBuiltIn(name);
+        insertUnmangledBuiltInName(name, level);
         insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
     }
 
@@ -452,25 +465,21 @@ class TSymbolTable : angle::NonCopyable
 
     static int nextUniqueId() { return ++uniqueIdCounter; }
 
-    bool hasUnmangledBuiltIn(const char *name)
-    {
-        return mUnmangledBuiltinNames.count(std::string(name)) > 0;
-    }
+    // Checks whether there is a built-in accessible by a shader with the specified version.
+    bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
 
   private:
     ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
 
-    // Used to insert unmangled functions to check redeclaration of built-ins in ESSL 3.00.
-    void insertUnmangledBuiltIn(const char *name)
-    {
-        mUnmangledBuiltinNames.insert(std::string(name));
-    }
+    // Used to insert unmangled functions to check redeclaration of built-ins in ESSL 3.00 and
+    // above.
+    void insertUnmangledBuiltInName(const char *name, ESymbolLevel level);
+
+    bool hasUnmangledBuiltInAtLevel(const char *name, ESymbolLevel level);
 
     std::vector<TSymbolTableLevel *> table;
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
     std::vector<PrecisionStackLevel *> precisionStack;
-
-    std::set<std::string> mUnmangledBuiltinNames;
 
     static int uniqueIdCounter;
 };
