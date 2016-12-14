@@ -22,6 +22,30 @@
       "revId": "8ab26f1b5ee19c3a1681a6c5ad1363a45ab21de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_14d8b17e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1115926
+      },
+      "writtenOn": "2016-12-14T19:27:54Z",
+      "side": 1,
+      "message": "Done.\nHowever, this leaves me in a bit of a quandry.\n\nWhen is mPresentPathFastEnabled true?\n\nFor my purposes, I don\u0027t need a RGBA10A2 swapchain, I\u0027m just trying to wrap a pbuffer, which is presumably always possible, regardless of mPresentPathFastEnabled ?",
+      "parentUuid": "7a7adff7_b4a36583",
+      "range": {
+        "startLine": 932,
+        "startChar": 4,
+        "endLine": 932,
+        "endChar": 46
+      },
+      "revId": "8ab26f1b5ee19c3a1681a6c5ad1363a45ab21de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
