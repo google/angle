@@ -46,19 +46,15 @@ class DisplayNULL : public DisplayImpl
     gl::Version getMaxSupportedESVersion() const override;
 
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
-                                     const egl::Config *configuration,
                                      EGLNativeWindowType window,
                                      const egl::AttributeMap &attribs) override;
     SurfaceImpl *createPbufferSurface(const egl::SurfaceState &state,
-                                      const egl::Config *configuration,
                                       const egl::AttributeMap &attribs) override;
     SurfaceImpl *createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                               const egl::Config *configuration,
                                                EGLenum buftype,
                                                EGLClientBuffer buffer,
                                                const egl::AttributeMap &attribs) override;
     SurfaceImpl *createPixmapSurface(const egl::SurfaceState &state,
-                                     const egl::Config *configuration,
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 

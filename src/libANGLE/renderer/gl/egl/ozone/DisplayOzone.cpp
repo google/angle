@@ -829,7 +829,6 @@ void DisplayOzone::terminate()
 }
 
 SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
-                                               const egl::Config *configuration,
                                                EGLNativeWindowType window,
                                                const egl::AttributeMap &attribs)
 {
@@ -843,7 +842,6 @@ SurfaceImpl *DisplayOzone::createWindowSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
-                                                const egl::Config *configuration,
                                                 const egl::AttributeMap &attribs)
 {
     EGLAttrib width  = attribs.get(EGL_WIDTH, 0);
@@ -858,7 +856,6 @@ SurfaceImpl *DisplayOzone::createPbufferSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                         const egl::Config *configuration,
                                                          EGLenum buftype,
                                                          EGLClientBuffer clientBuffer,
                                                          const egl::AttributeMap &attribs)
@@ -868,7 +865,6 @@ SurfaceImpl *DisplayOzone::createPbufferFromClientBuffer(const egl::SurfaceState
 }
 
 SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
-                                               const egl::Config *configuration,
                                                NativePixmapType nativePixmap,
                                                const egl::AttributeMap &attribs)
 {

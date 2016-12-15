@@ -93,7 +93,6 @@ egl::Error DisplayVk::waitNative(EGLint engine,
 }
 
 SurfaceImpl *DisplayVk::createWindowSurface(const egl::SurfaceState &state,
-                                            const egl::Config *configuration,
                                             EGLNativeWindowType window,
                                             const egl::AttributeMap &attribs)
 {
@@ -102,7 +101,6 @@ SurfaceImpl *DisplayVk::createWindowSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayVk::createPbufferSurface(const egl::SurfaceState &state,
-                                             const egl::Config *configuration,
                                              const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
@@ -110,7 +108,6 @@ SurfaceImpl *DisplayVk::createPbufferSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayVk::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                      const egl::Config *configuration,
                                                       EGLenum buftype,
                                                       EGLClientBuffer clientBuffer,
                                                       const egl::AttributeMap &attribs)
@@ -120,7 +117,6 @@ SurfaceImpl *DisplayVk::createPbufferFromClientBuffer(const egl::SurfaceState &s
 }
 
 SurfaceImpl *DisplayVk::createPixmapSurface(const egl::SurfaceState &state,
-                                            const egl::Config *configuration,
                                             NativePixmapType nativePixmap,
                                             const egl::AttributeMap &attribs)
 {

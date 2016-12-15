@@ -59,7 +59,6 @@ class SurfaceD3D : public SurfaceImpl
     SurfaceD3D(const egl::SurfaceState &state,
                RendererD3D *renderer,
                egl::Display *display,
-               const egl::Config *config,
                EGLNativeWindowType window,
                EGLenum buftype,
                EGLClientBuffer clientBuffer,
@@ -97,7 +96,6 @@ class WindowSurfaceD3D : public SurfaceD3D
     WindowSurfaceD3D(const egl::SurfaceState &state,
                      RendererD3D *renderer,
                      egl::Display *display,
-                     const egl::Config *config,
                      EGLNativeWindowType window,
                      const egl::AttributeMap &attribs);
     ~WindowSurfaceD3D() override;
@@ -109,7 +107,6 @@ class PbufferSurfaceD3D : public SurfaceD3D
     PbufferSurfaceD3D(const egl::SurfaceState &state,
                       RendererD3D *renderer,
                       egl::Display *display,
-                      const egl::Config *config,
                       EGLenum buftype,
                       EGLClientBuffer clientBuffer,
                       const egl::AttributeMap &attribs);

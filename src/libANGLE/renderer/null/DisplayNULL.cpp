@@ -132,7 +132,6 @@ gl::Version DisplayNULL::getMaxSupportedESVersion() const
 }
 
 SurfaceImpl *DisplayNULL::createWindowSurface(const egl::SurfaceState &state,
-                                              const egl::Config *configuration,
                                               EGLNativeWindowType window,
                                               const egl::AttributeMap &attribs)
 {
@@ -140,14 +139,12 @@ SurfaceImpl *DisplayNULL::createWindowSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayNULL::createPbufferSurface(const egl::SurfaceState &state,
-                                               const egl::Config *configuration,
                                                const egl::AttributeMap &attribs)
 {
     return new SurfaceNULL(state);
 }
 
 SurfaceImpl *DisplayNULL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                        const egl::Config *configuration,
                                                         EGLenum buftype,
                                                         EGLClientBuffer buffer,
                                                         const egl::AttributeMap &attribs)
@@ -156,7 +153,6 @@ SurfaceImpl *DisplayNULL::createPbufferFromClientBuffer(const egl::SurfaceState 
 }
 
 SurfaceImpl *DisplayNULL::createPixmapSurface(const egl::SurfaceState &state,
-                                              const egl::Config *configuration,
                                               NativePixmapType nativePixmap,
                                               const egl::AttributeMap &attribs)
 {

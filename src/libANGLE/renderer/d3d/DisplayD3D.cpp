@@ -159,35 +159,30 @@ DisplayD3D::DisplayD3D() : mRenderer(nullptr)
 }
 
 SurfaceImpl *DisplayD3D::createWindowSurface(const egl::SurfaceState &state,
-                                             const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new WindowSurfaceD3D(state, mRenderer, mDisplay, configuration, window, attribs);
+    return new WindowSurfaceD3D(state, mRenderer, mDisplay, window, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferSurface(const egl::SurfaceState &state,
-                                              const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, configuration, 0, nullptr, attribs);
+    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, 0, nullptr, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                       const egl::Config *configuration,
                                                        EGLenum buftype,
                                                        EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs)
 {
     ASSERT(mRenderer != nullptr);
-    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, configuration, buftype, clientBuffer,
-                                 attribs);
+    return new PbufferSurfaceD3D(state, mRenderer, mDisplay, buftype, clientBuffer, attribs);
 }
 
 SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::SurfaceState &state,
-                                             const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs)
 {

@@ -39,9 +39,10 @@ struct Config;
 
 struct SurfaceState final : angle::NonCopyable
 {
-    SurfaceState();
+    SurfaceState(const egl::Config *configIn);
 
     gl::Framebuffer *defaultFramebuffer;
+    const egl::Config *config;
 };
 
 class Surface : public gl::FramebufferAttachmentObject
@@ -117,8 +118,6 @@ class Surface : public gl::FramebufferAttachmentObject
     bool mDestroyed;
 
     EGLint mType;
-
-    const egl::Config *mConfig;
 
     bool mPostSubBufferRequested;
     bool mFlexibleSurfaceCompatibilityRequested;

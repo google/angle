@@ -24,17 +24,18 @@
 namespace egl
 {
 
-SurfaceState::SurfaceState() : defaultFramebuffer(nullptr)
+SurfaceState::SurfaceState(const egl::Config *configIn)
+    : defaultFramebuffer(nullptr), config(configIn)
 {
 }
 
 Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes)
     : FramebufferAttachmentObject(),
+      mState(config),
       mImplementation(nullptr),
       mCurrentCount(0),
       mDestroyed(false),
       mType(surfaceType),
-      mConfig(config),
       mPostSubBufferRequested(false),
       mFixedSize(false),
       mFixedWidth(0),
@@ -166,7 +167,7 @@ void Surface::setSwapInterval(EGLint interval)
 
 const Config *Surface::getConfig() const
 {
-    return mConfig;
+    return mState.config;
 }
 
 EGLint Surface::getPixelAspectRatio() const
@@ -270,13 +271,13 @@ gl::Framebuffer *Surface::createDefaultFramebuffer()
     framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(),
                                this);
 
-    if (mConfig->depthSize > 0)
+    if (mState.config->depthSize > 0)
     {
         framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(),
                                    this);
     }
 
-    if (mConfig->stencilSize > 0)
+    if (mState.config->stencilSize > 0)
     {
         framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL,
                                    gl::ImageIndex::MakeInvalid(), this);
@@ -291,7 +292,7 @@ WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
                              const AttributeMap &attribs)
     : Surface(EGL_WINDOW_BIT, config, attribs)
 {
-    mImplementation = implFactory->createWindowSurface(mState, config, window, attribs);
+    mImplementation = implFactory->createWindowSurface(mState, window, attribs);
 }
 
 WindowSurface::~WindowSurface()
@@ -303,7 +304,7 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
                                const AttributeMap &attribs)
     : Surface(EGL_PBUFFER_BIT, config, attribs)
 {
-    mImplementation = implFactory->createPbufferSurface(mState, config, attribs);
+    mImplementation = implFactory->createPbufferSurface(mState, attribs);
 }
 
 PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
@@ -314,7 +315,7 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
     : Surface(EGL_PBUFFER_BIT, config, attribs)
 {
     mImplementation =
-        implFactory->createPbufferFromClientBuffer(mState, config, buftype, clientBuffer, attribs);
+        implFactory->createPbufferFromClientBuffer(mState, buftype, clientBuffer, attribs);
 }
 
 PbufferSurface::~PbufferSurface()
@@ -327,7 +328,7 @@ PixmapSurface::PixmapSurface(rx::EGLImplFactory *implFactory,
                              const AttributeMap &attribs)
     : Surface(EGL_PIXMAP_BIT, config, attribs)
 {
-    mImplementation = implFactory->createPixmapSurface(mState, config, nativePixmap, attribs);
+    mImplementation = implFactory->createPixmapSurface(mState, nativePixmap, attribs);
 }
 
 PixmapSurface::~PixmapSurface()

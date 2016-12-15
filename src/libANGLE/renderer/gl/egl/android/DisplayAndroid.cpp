@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/renderer/gl/egl/android/DisplayAndroid.h"
 #include "libANGLE/renderer/gl/egl/FunctionsEGLDL.h"
@@ -147,7 +148,6 @@ void DisplayAndroid::terminate()
 }
 
 SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
-                                                 const egl::Config *configuration,
                                                  EGLNativeWindowType window,
                                                  const egl::AttributeMap &attribs)
 {
@@ -155,8 +155,7 @@ SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
     EGLint numConfig;
     EGLBoolean success;
 
-    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[configuration->configID],
-                                       EGL_NONE};
+    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
     success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
@@ -165,15 +164,13 @@ SurfaceImpl *DisplayAndroid::createWindowSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state,
-                                                  const egl::Config *configuration,
                                                   const egl::AttributeMap &attribs)
 {
     EGLConfig config;
     EGLint numConfig;
     EGLBoolean success;
 
-    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[configuration->configID],
-                                       EGL_NONE};
+    const EGLint configAttribList[] = {EGL_CONFIG_ID, mConfigIds[state.config->configID], EGL_NONE};
     success = mEGL->chooseConfig(configAttribList, &config, 1, &numConfig);
     ASSERT(success && numConfig == 1);
 
@@ -182,7 +179,6 @@ SurfaceImpl *DisplayAndroid::createPbufferSurface(const egl::SurfaceState &state
 }
 
 SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                           const egl::Config *configuration,
                                                            EGLenum buftype,
                                                            EGLClientBuffer clientBuffer,
                                                            const egl::AttributeMap &attribs)
@@ -192,7 +188,6 @@ SurfaceImpl *DisplayAndroid::createPbufferFromClientBuffer(const egl::SurfaceSta
 }
 
 SurfaceImpl *DisplayAndroid::createPixmapSurface(const egl::SurfaceState &state,
-                                                 const egl::Config *configuration,
                                                  NativePixmapType nativePixmap,
                                                  const egl::AttributeMap &attribs)
 {

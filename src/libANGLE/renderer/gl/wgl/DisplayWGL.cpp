@@ -431,7 +431,6 @@ void DisplayWGL::terminate()
 }
 
 SurfaceImpl *DisplayWGL::createWindowSurface(const egl::SurfaceState &state,
-                                             const egl::Config *configuration,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
@@ -450,7 +449,6 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
-                                              const egl::Config *configuration,
                                               const egl::AttributeMap &attribs)
 {
     EGLint width          = static_cast<EGLint>(attribs.get(EGL_WIDTH, 0));
@@ -464,7 +462,6 @@ SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
 }
 
 SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
-                                                       const egl::Config *configuration,
                                                        EGLenum buftype,
                                                        EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs)
@@ -475,7 +472,6 @@ SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &
 }
 
 SurfaceImpl *DisplayWGL::createPixmapSurface(const egl::SurfaceState &state,
-                                             const egl::Config *configuration,
                                              NativePixmapType nativePixmap,
                                              const egl::AttributeMap &attribs)
 {

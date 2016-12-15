@@ -94,24 +94,19 @@ class MockGLFactory : public GLImplFactory
 class MockEGLFactory : public EGLImplFactory
 {
   public:
-    MOCK_METHOD4(createWindowSurface,
+    MOCK_METHOD3(createWindowSurface,
                  SurfaceImpl *(const egl::SurfaceState &,
-                               const egl::Config *,
                                EGLNativeWindowType,
                                const egl::AttributeMap &));
-    MOCK_METHOD3(createPbufferSurface,
+    MOCK_METHOD2(createPbufferSurface,
+                 SurfaceImpl *(const egl::SurfaceState &, const egl::AttributeMap &));
+    MOCK_METHOD4(createPbufferFromClientBuffer,
                  SurfaceImpl *(const egl::SurfaceState &,
-                               const egl::Config *,
-                               const egl::AttributeMap &));
-    MOCK_METHOD5(createPbufferFromClientBuffer,
-                 SurfaceImpl *(const egl::SurfaceState &,
-                               const egl::Config *,
                                EGLenum,
                                EGLClientBuffer,
                                const egl::AttributeMap &));
-    MOCK_METHOD4(createPixmapSurface,
+    MOCK_METHOD3(createPixmapSurface,
                  SurfaceImpl *(const egl::SurfaceState &,
-                               const egl::Config *,
                                NativePixmapType,
                                const egl::AttributeMap &));
     MOCK_METHOD3(createImage, ImageImpl *(EGLenum, egl::ImageSibling *, const egl::AttributeMap &));
