@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a7adff7_ead6c70f",
+        "filename": "BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "this will have to go. should be fixed.",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_8a10ebff",
+        "filename": "BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "we\u0027ll have to delete these. should be fixed with the ToT Vulkan/my work.",
+      "range": {
+        "startLine": 301,
+        "startChar": 1,
+        "endLine": 305,
+        "endChar": 5
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_4aed13d7",
+        "filename": "BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 561,
+        "startChar": 2,
+        "endLine": 561,
+        "endChar": 9
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_2abb7fc4",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "wat?",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 6
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_8a99cb65",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "doh, thought this was fixed in ToT",
+      "range": {
+        "startLine": 658,
+        "startChar": 10,
+        "endLine": 658,
+        "endChar": 35
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_2d7d591f",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "what\u0027s this for?",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 11
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_4d7a8d27",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "hopefully my ToT has the necessary fixes. Also note this is exported to libANGLE which we don\u0027t want.. I made a separate internal config.",
+      "range": {
+        "startLine": 42,
+        "startChar": 2,
+        "endLine": 49,
+        "endChar": 3
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_ad90692e",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "hopefully all this stuff is fixed now in ToT.",
+      "range": {
+        "startLine": 284,
+        "startChar": 2,
+        "endLine": 289,
+        "endChar": 3
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_ed8a61fe",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 12
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-15T21:18:38Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 385,
+        "startChar": 2,
+        "endLine": 391,
+        "endChar": 5
+      },
+      "revId": "cea090b7211a548e1840d56985ba92b69ea454a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
