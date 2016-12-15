@@ -25,7 +25,7 @@ bool IsCoreWindow(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Core::ICo
     {
         if (coreWindow != nullptr)
         {
-            *coreWindow = coreWin.Detach();
+            *coreWindow = coreWin;
         }
         return true;
     }
@@ -46,7 +46,7 @@ bool IsSwapChainPanel(EGLNativeWindowType window, ComPtr<ABI::Windows::UI::Xaml:
     {
         if (swapChainPanel != nullptr)
         {
-            *swapChainPanel = panel.Detach();
+            *swapChainPanel = panel;
         }
         return true;
     }
