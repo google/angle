@@ -63,6 +63,11 @@ void TDiagnostics::error(const TSourceLoc &loc,
     writeInfo(pp::Diagnostics::PP_ERROR, srcLoc, reason, token, extraInfo);
 }
 
+void TDiagnostics::error(const TSourceLoc &loc, const char *reason, const char *token)
+{
+    error(loc, reason, token, "");
+}
+
 void TDiagnostics::warning(const TSourceLoc &loc,
                            const char *reason,
                            const char *token,

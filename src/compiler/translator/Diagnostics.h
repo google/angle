@@ -34,6 +34,7 @@ class TDiagnostics : public pp::Diagnostics, angle::NonCopyable
                    const std::string &extra);
 
     void error(const TSourceLoc &loc, const char *reason, const char *token, const char *extraInfo);
+    void error(const TSourceLoc &loc, const char *reason, const char *token);
     void warning(const TSourceLoc &loc,
                  const char *reason,
                  const char *token,

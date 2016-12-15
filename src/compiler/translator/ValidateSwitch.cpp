@@ -6,26 +6,69 @@
 
 #include "compiler/translator/ValidateSwitch.h"
 
-#include "compiler/translator/ParseContext.h"
+#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Diagnostics.h"
 
 namespace sh
 {
 
+namespace
+{
+
+class ValidateSwitch : public TIntermTraverser
+{
+  public:
+    static bool validate(TBasicType switchType,
+                         TDiagnostics *diagnostics,
+                         TIntermBlock *statementList,
+                         const TSourceLoc &loc);
+
+    void visitSymbol(TIntermSymbol *) override;
+    void visitConstantUnion(TIntermConstantUnion *) override;
+    bool visitBinary(Visit, TIntermBinary *) override;
+    bool visitUnary(Visit, TIntermUnary *) override;
+    bool visitTernary(Visit, TIntermTernary *) override;
+    bool visitIfElse(Visit visit, TIntermIfElse *) override;
+    bool visitSwitch(Visit, TIntermSwitch *) override;
+    bool visitCase(Visit, TIntermCase *node) override;
+    bool visitAggregate(Visit, TIntermAggregate *) override;
+    bool visitLoop(Visit visit, TIntermLoop *) override;
+    bool visitBranch(Visit, TIntermBranch *) override;
+
+  private:
+    ValidateSwitch(TBasicType switchType, TDiagnostics *context);
+
+    bool validateInternal(const TSourceLoc &loc);
+
+    TBasicType mSwitchType;
+    TDiagnostics *mDiagnostics;
+    bool mCaseTypeMismatch;
+    bool mFirstCaseFound;
+    bool mStatementBeforeCase;
+    bool mLastStatementWasCase;
+    int mControlFlowDepth;
+    bool mCaseInsideControlFlow;
+    int mDefaultCount;
+    std::set<int> mCasesSigned;
+    std::set<unsigned int> mCasesUnsigned;
+    bool mDuplicateCases;
+};
+
 bool ValidateSwitch::validate(TBasicType switchType,
-                              TParseContext *context,
+                              TDiagnostics *diagnostics,
                               TIntermBlock *statementList,
                               const TSourceLoc &loc)
 {
-    ValidateSwitch validate(switchType, context);
+    ValidateSwitch validate(switchType, diagnostics);
     ASSERT(statementList);
     statementList->traverse(&validate);
     return validate.validateInternal(loc);
 }
 
-ValidateSwitch::ValidateSwitch(TBasicType switchType, TParseContext *context)
+ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, true),
       mSwitchType(switchType),
-      mContext(context),
+      mDiagnostics(diagnostics),
       mCaseTypeMismatch(false),
       mFirstCaseFound(false),
       mStatementBeforeCase(false),
@@ -103,7 +146,7 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
     const char *nodeStr = node->hasCondition() ? "case" : "default";
     if (mControlFlowDepth > 0)
     {
-        mContext->error(node->getLine(), "label statement nested inside control flow", nodeStr);
+        mDiagnostics->error(node->getLine(), "label statement nested inside control flow", nodeStr);
         mCaseInsideControlFlow = true;
     }
     mFirstCaseFound       = true;
@@ -113,7 +156,7 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
         ++mDefaultCount;
         if (mDefaultCount > 1)
         {
-            mContext->error(node->getLine(), "duplicate default label", nodeStr);
+            mDiagnostics->error(node->getLine(), "duplicate default label", nodeStr);
         }
     }
     else
@@ -127,8 +170,9 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
         TBasicType conditionType = condition->getBasicType();
         if (conditionType != mSwitchType)
         {
-            mContext->error(condition->getLine(),
-                            "case label type does not match switch init-expression type", nodeStr);
+            mDiagnostics->error(condition->getLine(),
+                                "case label type does not match switch init-expression type",
+                                nodeStr);
             mCaseTypeMismatch = true;
         }
 
@@ -137,7 +181,7 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
             int iConst = condition->getIConst(0);
             if (mCasesSigned.find(iConst) != mCasesSigned.end())
             {
-                mContext->error(condition->getLine(), "duplicate case label", nodeStr);
+                mDiagnostics->error(condition->getLine(), "duplicate case label", nodeStr);
                 mDuplicateCases = true;
             }
             else
@@ -150,7 +194,7 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
             unsigned int uConst = condition->getUConst(0);
             if (mCasesUnsigned.find(uConst) != mCasesUnsigned.end())
             {
-                mContext->error(condition->getLine(), "duplicate case label", nodeStr);
+                mDiagnostics->error(condition->getLine(), "duplicate case label", nodeStr);
                 mDuplicateCases = true;
             }
             else
@@ -201,16 +245,26 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
 {
     if (mStatementBeforeCase)
     {
-        mContext->error(loc, "statement before the first label", "switch");
+        mDiagnostics->error(loc, "statement before the first label", "switch");
     }
     if (mLastStatementWasCase)
     {
-        mContext->error(loc,
-                        "no statement between the last label and the end of the switch statement",
-                        "switch");
+        mDiagnostics->error(
+            loc, "no statement between the last label and the end of the switch statement",
+            "switch");
     }
     return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
            !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases;
+}
+
+}  // anonymous namespace
+
+bool ValidateSwitchStatementList(TBasicType switchType,
+                                 TDiagnostics *diagnostics,
+                                 TIntermBlock *statementList,
+                                 const TSourceLoc &loc)
+{
+    return ValidateSwitch::validate(switchType, diagnostics, statementList, loc);
 }
 
 }  // namespace sh

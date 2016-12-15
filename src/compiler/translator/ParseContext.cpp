@@ -3542,7 +3542,7 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
 
     if (statementList)
     {
-        if (!ValidateSwitch::validate(switchType, this, statementList, loc))
+        if (!ValidateSwitchStatementList(switchType, &mDiagnostics, statementList, loc))
         {
             return nullptr;
         }
