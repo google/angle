@@ -72,7 +72,7 @@ static int GetWGLTextureTarget(EGLenum eglTextureTarget)
     }
 }
 
-egl::Error PbufferSurfaceWGL::initialize()
+egl::Error PbufferSurfaceWGL::initialize(const DisplayImpl *displayImpl)
 {
     const int pbufferCreationAttributes[] =
     {
@@ -122,7 +122,7 @@ egl::Error PbufferSurfaceWGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error PbufferSurfaceWGL::swap()
+egl::Error PbufferSurfaceWGL::swap(const DisplayImpl *displayImpl)
 {
     return egl::Error(EGL_SUCCESS);
 }

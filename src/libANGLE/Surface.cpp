@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include "libANGLE/Config.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
@@ -87,9 +88,9 @@ Surface::~Surface()
     SafeDelete(mImplementation);
 }
 
-Error Surface::initialize()
+Error Surface::initialize(const Display &display)
 {
-    ANGLE_TRY(mImplementation->initialize());
+    ANGLE_TRY(mImplementation->initialize(display.getImplementation()));
 
     // Initialized here since impl is nullptr in the constructor.
     // Must happen after implementation initialize for Android.
@@ -133,9 +134,9 @@ EGLint Surface::getType() const
     return mType;
 }
 
-Error Surface::swap()
+Error Surface::swap(const Display &display)
 {
-    return mImplementation->swap();
+    return mImplementation->swap(display.getImplementation());
 }
 
 Error Surface::swapWithDamage(EGLint *rects, EGLint n_rects)

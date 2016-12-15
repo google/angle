@@ -47,7 +47,7 @@ egl::Error SurfaceEGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error SurfaceEGL::swap()
+egl::Error SurfaceEGL::swap(const DisplayImpl *displayImpl)
 {
     EGLBoolean success = mEGL->swapBuffers(mSurface);
     if (success == EGL_FALSE)

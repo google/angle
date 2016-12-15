@@ -24,7 +24,7 @@ SurfaceNULL::~SurfaceNULL()
 {
 }
 
-egl::Error SurfaceNULL::initialize()
+egl::Error SurfaceNULL::initialize(const DisplayImpl *displayImpl)
 {
     return egl::NoError();
 }
@@ -34,7 +34,7 @@ FramebufferImpl *SurfaceNULL::createDefaultFramebuffer(const gl::FramebufferStat
     return new FramebufferNULL(state);
 }
 
-egl::Error SurfaceNULL::swap()
+egl::Error SurfaceNULL::swap(const DisplayImpl *displayImpl)
 {
     return egl::NoError();
 }

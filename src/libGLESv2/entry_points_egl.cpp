@@ -840,7 +840,7 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
         return EGL_FALSE;
     }
 
-    error = eglSurface->swap();
+    error = eglSurface->swap(*display);
     if (error.isError())
     {
         thread->setError(error);

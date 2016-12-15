@@ -82,7 +82,7 @@ void SurfaceD3D::releaseSwapChain()
     SafeDelete(mSwapChain);
 }
 
-egl::Error SurfaceD3D::initialize()
+egl::Error SurfaceD3D::initialize(const DisplayImpl *displayImpl)
 {
     if (mNativeWindow->getNativeWindow())
     {
@@ -280,7 +280,7 @@ bool SurfaceD3D::checkForOutOfDateSwapChain()
     return wasDirty;
 }
 
-egl::Error SurfaceD3D::swap()
+egl::Error SurfaceD3D::swap(const DisplayImpl *displayImpl)
 {
     return swapRect(0, 0, mWidth, mHeight);
 }

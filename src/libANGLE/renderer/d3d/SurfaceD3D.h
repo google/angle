@@ -28,10 +28,10 @@ class SurfaceD3D : public SurfaceImpl
     ~SurfaceD3D() override;
     void releaseSwapChain();
 
-    egl::Error initialize() override;
+    egl::Error initialize(const DisplayImpl *displayImpl) override;
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
 
-    egl::Error swap() override;
+    egl::Error swap(const DisplayImpl *displayImpl) override;
     egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
     egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) override;
     egl::Error bindTexImage(gl::Texture *texture, EGLint buffer) override;

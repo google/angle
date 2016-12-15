@@ -41,7 +41,7 @@ WindowSurfaceWGL::~WindowSurfaceWGL()
     mDeviceContext = nullptr;
 }
 
-egl::Error WindowSurfaceWGL::initialize()
+egl::Error WindowSurfaceWGL::initialize(const DisplayImpl *displayImpl)
 {
     mDeviceContext = GetDC(mWindow);
     if (!mDeviceContext)
@@ -100,7 +100,7 @@ egl::Error WindowSurfaceWGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceWGL::swap()
+egl::Error WindowSurfaceWGL::swap(const DisplayImpl *displayImpl)
 {
     if (!mFunctionsWGL->swapBuffers(mDeviceContext))
     {

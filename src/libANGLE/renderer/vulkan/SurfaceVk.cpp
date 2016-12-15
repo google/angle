@@ -22,7 +22,7 @@ SurfaceVk::~SurfaceVk()
 {
 }
 
-egl::Error SurfaceVk::initialize()
+egl::Error SurfaceVk::initialize(const DisplayImpl *displayImpl)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_ACCESS);
@@ -34,7 +34,7 @@ FramebufferImpl *SurfaceVk::createDefaultFramebuffer(const gl::FramebufferState 
     return static_cast<FramebufferImpl *>(0);
 }
 
-egl::Error SurfaceVk::swap()
+egl::Error SurfaceVk::swap(const DisplayImpl *displayImpl)
 {
     UNIMPLEMENTED();
     return egl::Error(EGL_BAD_ACCESS);

@@ -116,7 +116,7 @@ class Display final : angle::NonCopyable
     const AttributeMap &getAttributeMap() const { return mAttributeMap; }
     EGLNativeDisplayType getNativeDisplayId() const { return mDisplayId; }
 
-    rx::DisplayImpl *getImplementation() { return mImplementation; }
+    rx::DisplayImpl *getImplementation() const { return mImplementation; }
     Device *getDevice() const;
     EGLenum getPlatform() const { return mPlatform; }
 

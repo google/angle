@@ -557,7 +557,7 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
 
     std::unique_ptr<Surface> surface(
         new WindowSurface(mImplementation, configuration, window, attribs));
-    ANGLE_TRY(surface->initialize());
+    ANGLE_TRY(surface->initialize(*this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -580,7 +580,7 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
     }
 
     std::unique_ptr<Surface> surface(new PbufferSurface(mImplementation, configuration, attribs));
-    ANGLE_TRY(surface->initialize());
+    ANGLE_TRY(surface->initialize(*this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -604,7 +604,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
 
     std::unique_ptr<Surface> surface(
         new PbufferSurface(mImplementation, configuration, buftype, clientBuffer, attribs));
-    ANGLE_TRY(surface->initialize());
+    ANGLE_TRY(surface->initialize(*this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -625,7 +625,7 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
 
     std::unique_ptr<Surface> surface(
         new PixmapSurface(mImplementation, configuration, nativePixmap, attribs));
-    ANGLE_TRY(surface->initialize());
+    ANGLE_TRY(surface->initialize(*this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
