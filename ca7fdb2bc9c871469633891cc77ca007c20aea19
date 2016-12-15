@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa7c0f2f_4ca4bf8b",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T08:01:47Z",
+      "side": 1,
+      "message": "Actually, there is no need for the vector to grow or shrink like table and precisionStack. I will do the change and submit the patch later.",
+      "range": {
+        "startLine": 475,
+        "startChar": 4,
+        "endLine": 475,
+        "endChar": 65
+      },
+      "revId": "ca7fdb2bc9c871469633891cc77ca007c20aea19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
