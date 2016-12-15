@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a887374_d1a04446",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T13:35:39Z",
+      "side": 1,
+      "message": "I changed it, but both pieces of code do the exactly same thing I feel.",
+      "parentUuid": "fa7c0f2f_acf20376",
+      "revId": "4dfc5775969319f7523f45c3160938d6c862ab9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa7c0f2f_4c083f95",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7a149fd4_f84a11c8",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T13:35:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa7c0f2f_4c083f95",
+      "revId": "4dfc5775969319f7523f45c3160938d6c862ab9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa7c0f2f_6c05fb79",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2016-12-15T11:56:48Z",
       "side": 1,
       "message": "How about the alternative of just making mUnmangledBuiltinNames a member of TSymbolTableLevel? I think that might be more elegant.",
+      "revId": "4dfc5775969319f7523f45c3160938d6c862ab9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa7c0f2f_4c535f87",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T13:35:39Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "fa7c0f2f_6c05fb79",
       "revId": "4dfc5775969319f7523f45c3160938d6c862ab9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
