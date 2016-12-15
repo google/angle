@@ -22,6 +22,30 @@
       "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa7c0f2f_4cb59f7c",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-15T13:55:31Z",
+      "side": 1,
+      "message": "If shaderVersion is 310, the ESSL3_BUILTINS should be included as well. That\u0027s why the code is how it is.",
+      "parentUuid": "3a322788_56b5147c",
+      "range": {
+        "startLine": 432,
+        "startChar": 53,
+        "endLine": 432,
+        "endChar": 54
+      },
+      "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
