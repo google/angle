@@ -482,6 +482,8 @@ void Display::terminate()
 
     mImplementation->terminate();
 
+    mDeviceLost = false;
+
     mInitialized = false;
 
     // Never de-init default platform.. terminate is not that final.
