@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a7adff7_c4b3bae3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1037,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-15T19:16:17Z",
+      "side": 1,
+      "message": "nit: formatting.  git cl format works in ANGLE",
+      "range": {
+        "startLine": 1037,
+        "startChar": 0,
+        "endLine": 1037,
+        "endChar": 4
+      },
+      "revId": "596cb5b3df42b819073d60d39689645d9975dada",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
