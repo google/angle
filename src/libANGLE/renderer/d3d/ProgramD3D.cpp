@@ -199,84 +199,64 @@ static inline void SetIfDirty(T *dest, const T &source, bool *dirtyFlag)
     *dest      = source;
 }
 
-template <typename T>
-bool TransposeMatrix(T *target,
-                     const GLfloat *value,
-                     int targetWidth,
-                     int targetHeight,
-                     int srcWidth,
-                     int srcHeight)
+template <typename T, int cols, int rows>
+bool TransposeExpandMatrix(T *target, const GLfloat *value)
 {
-    bool dirty = false;
-    int copyWidth = std::min(targetHeight, srcWidth);
-    int copyHeight = std::min(targetWidth, srcHeight);
+    constexpr int targetWidth  = 4;
+    constexpr int targetHeight = rows;
+    constexpr int srcWidth     = rows;
+    constexpr int srcHeight    = cols;
+
+    constexpr int copyWidth  = std::min(targetHeight, srcWidth);
+    constexpr int copyHeight = std::min(targetWidth, srcHeight);
+
+    T staging[targetWidth * targetHeight] = {0};
 
     for (int x = 0; x < copyWidth; x++)
     {
         for (int y = 0; y < copyHeight; y++)
         {
-            SetIfDirty(target + (x * targetWidth + y), static_cast<T>(value[y * srcWidth + x]),
-                       &dirty);
-        }
-    }
-    // clear unfilled right side
-    for (int y = 0; y < copyWidth; y++)
-    {
-        for (int x = copyHeight; x < targetWidth; x++)
-        {
-            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
-        }
-    }
-    // clear unfilled bottom.
-    for (int y = copyWidth; y < targetHeight; y++)
-    {
-        for (int x = 0; x < targetWidth; x++)
-        {
-            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
+            staging[x * targetWidth + y] = static_cast<T>(value[y * srcWidth + x]);
         }
     }
 
-    return dirty;
+    if (memcmp(target, staging, targetWidth * targetHeight * sizeof(T)) == 0)
+    {
+        return false;
+    }
+
+    memcpy(target, staging, targetWidth * targetHeight * sizeof(T));
+    return true;
 }
 
-template <typename T>
-bool ExpandMatrix(T *target,
-                  const GLfloat *value,
-                  int targetWidth,
-                  int targetHeight,
-                  int srcWidth,
-                  int srcHeight)
+template <typename T, int cols, int rows>
+bool ExpandMatrix(T *target, const GLfloat *value)
 {
-    bool dirty = false;
-    int copyWidth = std::min(targetWidth, srcWidth);
-    int copyHeight = std::min(targetHeight, srcHeight);
+    constexpr int targetWidth  = 4;
+    constexpr int targetHeight = rows;
+    constexpr int srcWidth = cols;
+    constexpr int srcHeight = rows;
+
+    constexpr int copyWidth  = std::min(targetWidth, srcWidth);
+    constexpr int copyHeight = std::min(targetHeight, srcHeight);
+
+    T staging[targetWidth * targetHeight] = {0};
 
     for (int y = 0; y < copyHeight; y++)
     {
         for (int x = 0; x < copyWidth; x++)
         {
-            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(value[y * srcWidth + x]),
-                       &dirty);
-        }
-    }
-    // clear unfilled right side
-    for (int y = 0; y < copyHeight; y++)
-    {
-        for (int x = copyWidth; x < targetWidth; x++)
-        {
-            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
-        }
-    }
-    // clear unfilled bottom.
-    for (int y = copyHeight; y < targetHeight; y++)
-    {
-        for (int x = 0; x < targetWidth; x++)
-        {
-            SetIfDirty(target + (y * targetWidth + x), static_cast<T>(0), &dirty);
+            staging[y * targetWidth + x] = static_cast<T>(value[y * srcWidth + x]);
         }
     }
 
-    return dirty;
+    if (memcmp(target, staging, targetWidth * targetHeight * sizeof(T)) == 0)
+    {
+        return false;
+    }
+
+    memcpy(target, staging, targetWidth * targetHeight * sizeof(T));
+    return true;
 }
 
 gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(GLenum drawMode)
@@ -2147,13 +2127,13 @@ void ProgramD3D::setUniformMatrixfv(GLint location,
         // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
         if (transpose == GL_FALSE)
         {
-            targetUniform->dirty = TransposeMatrix<GLfloat>(target, value, 4, rows, rows, cols) ||
-                                   targetUniform->dirty;
+            targetUniform->dirty =
+                TransposeExpandMatrix<GLfloat, cols, rows>(target, value) || targetUniform->dirty;
         }
         else
         {
             targetUniform->dirty =
-                ExpandMatrix<GLfloat>(target, value, 4, rows, cols, rows) || targetUniform->dirty;
+                ExpandMatrix<GLfloat, cols, rows>(target, value) || targetUniform->dirty;
         }
         target += targetMatrixStride;
         value += cols * rows;
