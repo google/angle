@@ -70,6 +70,30 @@
       "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aa30717_ae68d765",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-15T15:26:42Z",
+      "side": 1,
+      "message": "Just think of the case where shaderVersion is 310. Now what happens if this condition would be \"shaderVersion !\u003d 300\"?\n\nFirst \"level\" is \"ESSL3_1_BUILTINS\". So the code checks table[ESSL3_1_BUILTINS] on the first iteration of the for loop. On the second iteration it comes to this if statement with \"level\" being \"ESSL3_BUILTINS\". shaderVersion !\u003d 300 is true, so \"level\" is decremented to \"ESSL1_BUILTINS\". The result is that table[ESSL3_BUILTINS] is not checked.\n\nIf the condition is \"shaderVersion \u003c 300\", table[ESSL3_BUILTINS] is checked as it should be.\n\nThe switch statement version was also wrong, though actually in a different way - I didn\u0027t notice earlier that there weren\u0027t breaks. ESSL1_BUILTINS need to be skipped in case version !\u003d 100, they are exclusive to only that shader version.",
+      "parentUuid": "fa7c0f2f_4cdcbfce",
+      "range": {
+        "startLine": 432,
+        "startChar": 53,
+        "endLine": 432,
+        "endChar": 54
+      },
+      "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
