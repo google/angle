@@ -46,6 +46,30 @@
       "revId": "8ab26f1b5ee19c3a1681a6c5ad1363a45ab21de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_eb3fb0e5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-15T15:00:44Z",
+      "side": 1,
+      "message": "I don\u0027t think adding it to the \"!mPresentPathFastEnabled\" case is the best solution.  We could instead expose it in a config that has a surfaceType of EGL_PBUFFER_BIT only.  If you refactor this code a bit, the formats in the \"!mPresentPathFastEnabled\" can be pbuffers when it is enabled (including GL_RGB10_A2).  Maybe make colorBufferFormats a vector of pair\u003cGLenum, bool\u003e.",
+      "parentUuid": "7a7adff7_14d8b17e",
+      "range": {
+        "startLine": 932,
+        "startChar": 4,
+        "endLine": 932,
+        "endChar": 46
+      },
+      "revId": "8ab26f1b5ee19c3a1681a6c5ad1363a45ab21de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
