@@ -180,6 +180,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
     const d3d11::Format &backbufferFormatInfo =
         d3d11::Format::Get(mOffscreenRenderTargetFormat, mRenderer->getRenderer11DeviceCaps());
+    D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
 
     // If the app passed in a share handle or D3D texture, open the resource
     // See EGL_ANGLE_d3d_share_handle_client_buffer and EGL_ANGLE_d3d_texture_client_buffer
@@ -204,13 +205,13 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
             UNREACHABLE();
         }
         ASSERT(mOffscreenTexture != nullptr);
+        mOffscreenTexture->GetDesc(&offscreenTextureDesc);
     }
     else
     {
         const bool useSharedResource =
             !mNativeWindow->getNativeWindow() && mRenderer->getShareHandleSupport();
 
-        D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
         offscreenTextureDesc.Width = backbufferWidth;
         offscreenTextureDesc.Height = backbufferHeight;
         offscreenTextureDesc.Format               = backbufferFormatInfo.texFormat;
@@ -285,9 +286,13 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     offscreenSRVDesc.Texture2D.MostDetailedMip = 0;
     offscreenSRVDesc.Texture2D.MipLevels = static_cast<UINT>(-1);
 
-    result = device->CreateShaderResourceView(mOffscreenTexture, &offscreenSRVDesc, &mOffscreenSRView);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
+    if (offscreenTextureDesc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
+    {
+        result = device->CreateShaderResourceView(mOffscreenTexture, &offscreenSRVDesc,
+                                                  &mOffscreenSRView);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mOffscreenSRView, "Offscreen back buffer shader resource");
+    }
 
     if (previousOffscreenTexture != nullptr)
     {

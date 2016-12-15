@@ -1016,6 +1016,7 @@ gl::Error StateManager11::syncFramebuffer(gl::Framebuffer *framebuffer)
     size_t appliedRTIndex  = 0;
     bool skipInactiveRTs   = mRenderer->getWorkarounds().mrtPerfWorkaround;
     const auto &drawStates = framebuffer->getDrawBufferStates();
+    UINT maxExistingRT     = 0;
 
     for (size_t rtIndex = 0; rtIndex < colorRTs.size(); ++rtIndex)
     {
@@ -1031,6 +1032,7 @@ gl::Error StateManager11::syncFramebuffer(gl::Framebuffer *framebuffer)
         {
             framebufferRTVs[appliedRTIndex] = renderTarget->getRenderTargetView();
             ASSERT(framebufferRTVs[appliedRTIndex]);
+            maxExistingRT = static_cast<UINT>(appliedRTIndex) + 1;
 
             if (missingColorRenderTarget)
             {
@@ -1071,10 +1073,10 @@ gl::Error StateManager11::syncFramebuffer(gl::Framebuffer *framebuffer)
     }
 
     // TODO(jmadill): Use context caps?
-    UINT drawBuffers = mRenderer->getNativeCaps().maxDrawBuffers;
+    ASSERT(maxExistingRT <= static_cast<UINT>(mRenderer->getNativeCaps().maxDrawBuffers));
 
     // Apply the render target and depth stencil
-    mRenderer->getDeviceContext()->OMSetRenderTargets(drawBuffers, framebufferRTVs.data(),
+    mRenderer->getDeviceContext()->OMSetRenderTargets(maxExistingRT, framebufferRTVs.data(),
                                                       framebufferDSV);
 
     // The D3D11 blend state is heavily dependent on the current render target.
