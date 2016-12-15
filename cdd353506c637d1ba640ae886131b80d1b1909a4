@@ -2,6 +2,125 @@
   "comments": [
     {
       "key": {
+        "uuid": "7a7adff7_86e709cb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "nit: mPhysicalDevice \u003d VK_NULL_HANDLE",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_660db5b0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "nit: familyIndex",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_a6696d38",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "Usually the family supporting graphics operations is the one supporting present too so we can assume that for now. When we want to be robust, we can create one queue of each family, and when given a surface present on the correct queue while still doing all the rest on the graphics queue.\nI also vaguely remember an WSI extension in the works that will allow to know which family supports present, that doesn\u0027t need an actually surface.",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_46bc3168",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "I didn\u0027t see this used anywhere.",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_6673f506",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "This can be replaced by vkQueueWaitIdle",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_c62bc1ac",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "nit: UNREACHABLE();",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_0ae23bb9",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": ":thumbsup:",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_834f0638",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 23
@@ -19,6 +138,24 @@
         "endLine": 64,
         "endChar": 19
       },
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_6645b58f",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T20:18:29Z",
+      "side": 1,
+      "message": "That\u0027s going to be an interesting decision, because the object can only be deleted when they are done being used.",
+      "parentUuid": "7a7adff7_834f0638",
       "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
