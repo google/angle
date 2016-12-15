@@ -46,6 +46,30 @@
       "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa7c0f2f_4cdcbfce",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T14:07:37Z",
+      "side": 1,
+      "message": "There was no break in the first two cases of the switch statement, so the search would have continued in the lower levels.",
+      "parentUuid": "fa7c0f2f_4cb59f7c",
+      "range": {
+        "startLine": 432,
+        "startChar": 53,
+        "endLine": 432,
+        "endChar": 54
+      },
+      "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
