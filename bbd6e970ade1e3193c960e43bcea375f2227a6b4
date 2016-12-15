@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a322788_56b5147c",
+        "filename": "src/compiler/translator/SymbolTable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1167079
+      },
+      "writtenOn": "2016-12-15T13:35:39Z",
+      "side": 1,
+      "message": "I kept the same checks and format, but there really is no reason to have \u003c instead of !\u003d. Maybe all such comparisons can be changed to !\u003d ones somebody refactors the code.",
+      "range": {
+        "startLine": 432,
+        "startChar": 53,
+        "endLine": 432,
+        "endChar": 54
+      },
+      "revId": "bbd6e970ade1e3193c960e43bcea375f2227a6b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
