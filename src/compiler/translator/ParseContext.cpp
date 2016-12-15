@@ -106,7 +106,10 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mUsesSecondaryOutputs(false),
       mMinProgramTexelOffset(resources.MinProgramTexelOffset),
       mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
+      mMultiviewAvailable(resources.OVR_multiview == 1),
       mComputeShaderLocalSizeDeclared(false),
+      mNumViews(-1),
+      mMaxNumViews(resources.MaxViewsOVR),
       mDeclaringFunction(false)
 {
     mComputeShaderLocalSize.fill(-1);
@@ -1085,6 +1088,12 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
+        // TODO(oetuaho@nvidia.com): This is slightly hacky. Might be better if symbols could be
+        // associated with more than one extension.
+        if (extension == "GL_OVR_multiview")
+        {
+            return checkCanUseExtension(line, "GL_OVR_multiview2");
+        }
         error(line, "extension is disabled", extension.c_str());
         return false;
     }
@@ -1480,6 +1489,14 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
                                                      const TSymbol *symbol)
 {
     const TVariable *variable = getNamedVariable(location, name, symbol);
+
+    if (variable->getType().getQualifier() == EvqViewIDOVR && IsWebGLBasedSpec(mShaderSpec) &&
+        mShaderType == GL_FRAGMENT_SHADER && !isExtensionEnabled("GL_OVR_multiview2"))
+    {
+        // WEBGL_multiview spec
+        error(location, "Need to enable OVR_multiview2 to use gl_ViewID_OVR in fragment shader",
+              "gl_ViewID_OVR");
+    }
 
     if (variable->getConstPointer())
     {
@@ -2315,10 +2332,37 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
 
         mComputeShaderLocalSizeDeclared = true;
     }
+    else if (mMultiviewAvailable &&
+             (isExtensionEnabled("GL_OVR_multiview") || isExtensionEnabled("GL_OVR_multiview2")) &&
+             typeQualifier.qualifier == EvqVertexIn)
+    {
+        // This error is only specified in WebGL, but tightens unspecified behavior in the native
+        // specification.
+        if (mNumViews != -1 && layoutQualifier.numViews != mNumViews)
+        {
+            error(typeQualifier.line, "Number of views does not match the previous declaration",
+                  "layout");
+            return;
+        }
+
+        if (layoutQualifier.numViews == -1)
+        {
+            error(typeQualifier.line, "No num_views specified", "layout");
+            return;
+        }
+
+        if (layoutQualifier.numViews > mMaxNumViews)
+        {
+            error(typeQualifier.line, "num_views greater than the value of GL_MAX_VIEWS_OVR",
+                  "layout");
+            return;
+        }
+
+        mNumViews = layoutQualifier.numViews;
+    }
     else
     {
-
-        if (!checkWorkGroupSizeIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier))
+        if (!checkWorkGroupSizeIsNotSpecified(typeQualifier.line, layoutQualifier))
         {
             return;
         }
@@ -2337,7 +2381,7 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
             return;
         }
 
-        checkLocationIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier);
+        checkLocationIsNotSpecified(typeQualifier.line, layoutQualifier);
 
         if (layoutQualifier.matrixPacking != EmpUnspecified)
         {
@@ -3348,6 +3392,20 @@ void TParseContext::parseLocalSize(const TString &qualifierType,
     (*localSize)[index] = intValue;
 }
 
+void TParseContext::parseNumViews(int intValue,
+                                  const TSourceLoc &intValueLine,
+                                  const std::string &intValueString,
+                                  int *numViews)
+{
+    // This error is only specified in WebGL, but tightens unspecified behavior in the native
+    // specification.
+    if (intValue < 1)
+    {
+        error(intValueLine, "out of range: num_views must be positive", intValueString.c_str());
+    }
+    *numViews = intValue;
+}
+
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,
                                                      const TSourceLoc &qualifierTypeLine,
                                                      int intValue,
@@ -3385,6 +3443,12 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     {
         parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 2u,
                        &qualifier.localSize);
+    }
+    else if (qualifierType == "num_views" && mMultiviewAvailable &&
+             (isExtensionEnabled("GL_OVR_multiview") || isExtensionEnabled("GL_OVR_multiview2")) &&
+             mShaderType == GL_VERTEX_SHADER)
+    {
+        parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
     }
     else
     {

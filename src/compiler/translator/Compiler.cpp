@@ -30,6 +30,7 @@
 #include "compiler/translator/UseInterfaceBlockFields.h"
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateMaxParameters.h"
+#include "compiler/translator/ValidateMultiviewWebGL.h"
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/VariablePacker.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
@@ -320,10 +321,21 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         mComputeShaderLocalSizeDeclared = parseContext.isComputeShaderLocalSizeDeclared();
         mComputeShaderLocalSize         = parseContext.getComputeShaderLocalSize();
 
+        mNumViews = parseContext.getNumViews();
+
         root = parseContext.getTreeRoot();
 
         // Highp might have been auto-enabled based on shader version
         fragmentPrecisionHigh = parseContext.getFragmentPrecisionHigh();
+
+        if (success && (IsWebGLBasedSpec(shaderSpec) &&
+                        IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview") &&
+                        IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview2")))
+        {
+            // Can't enable both extensions at the same time.
+            mDiagnostics.globalError("Can't enable both OVR_multiview and OVR_multiview2");
+            success = false;
+        }
 
         // Disallow expressions deemed too complex.
         if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
@@ -357,6 +369,11 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
             success = validateLimitations(root);
+
+        bool multiview2 = IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview2");
+        if (success && compileResources.OVR_multiview && IsWebGLBasedSpec(shaderSpec) &&
+            (IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview") || multiview2))
+            success = ValidateMultiviewWebGL(root, shaderType, multiview2, &mDiagnostics);
 
         // Fail compilation if precision emulation not supported.
         if (success && getResources().WEBGL_debug_shader_precision &&
@@ -649,6 +666,8 @@ void TCompiler::clearResults()
     varyings.clear();
     interfaceBlocks.clear();
     variablesCollected = false;
+
+    mNumViews = -1;
 
     builtInFunctionEmulator.Cleanup();
 

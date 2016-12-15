@@ -584,6 +584,11 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
         }
     }
 
+    if (rightQualifier.numViews != -1)
+    {
+        joinedQualifier.numViews = rightQualifier.numViews;
+    }
+
     if (rightQualifier.imageInternalFormat != EiifUnspecified)
     {
         joinedQualifier.imageInternalFormat = rightQualifier.imageInternalFormat;

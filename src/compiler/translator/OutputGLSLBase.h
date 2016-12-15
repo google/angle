@@ -30,6 +30,11 @@ class TOutputGLSLBase : public TIntermTraverser
 
     ShShaderOutput getShaderOutput() const { return mOutput; }
 
+    // Return the original name if hash function pointer is NULL;
+    // otherwise return the hashed name. Has special handling for internal names, which are not
+    // hashed.
+    TString hashName(const TName &name);
+
   protected:
     TInfoSinkBase &objSink() { return mObjSink; }
     void writeFloat(TInfoSinkBase &out, float f);
@@ -62,9 +67,6 @@ class TOutputGLSLBase : public TIntermTraverser
 
     void visitCodeBlock(TIntermBlock *node);
 
-    // Return the original name if hash function pointer is NULL;
-    // otherwise return the hashed name.
-    TString hashName(const TName &name);
     // Same as hashName(), but without hashing built-in variables.
     TString hashVariableName(const TName &name);
     // Same as hashName(), but without hashing built-in functions and with unmangling.

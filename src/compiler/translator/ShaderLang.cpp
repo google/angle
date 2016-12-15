@@ -161,6 +161,7 @@ void ShInitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_shader_framebuffer_fetch    = 0;
     resources->NV_shader_framebuffer_fetch     = 0;
     resources->ARM_shader_framebuffer_fetch    = 0;
+    resources->OVR_multiview                   = 0;
 
     resources->NV_draw_buffers = 0;
 
@@ -175,6 +176,8 @@ void ShInitBuiltInResources(ShBuiltInResources *resources)
 
     // Extensions constants.
     resources->MaxDualSourceDrawBuffers = 0;
+
+    resources->MaxViewsOVR = 2;
 
     // Disable name hashing by default.
     resources->HashFunction = NULL;
@@ -371,6 +374,16 @@ WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle)
     return compiler->getComputeShaderLocalSize();
 }
 
+int ShGetVertexShaderNumViews(const ShHandle handle)
+{
+    ASSERT(handle);
+    TShHandleBase *base = static_cast<TShHandleBase *>(handle);
+    TCompiler *compiler = base->getAsCompiler();
+    ASSERT(compiler);
+
+    return compiler->getNumViews();
+}
+
 bool ShCheckVariablesWithinPackingLimits(int maxVectors,
                                          const std::vector<ShaderVariable> &variables)
 {
@@ -510,6 +523,11 @@ const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle)
 sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle)
 {
     return ShGetComputeShaderLocalGroupSize(handle);
+}
+
+int GetVertexShaderNumViews(const ShHandle handle)
+{
+    return ShGetVertexShaderNumViews(handle);
 }
 
 bool CheckVariablesWithinPackingLimits(int maxVectors,

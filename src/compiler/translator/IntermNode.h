@@ -430,6 +430,7 @@ class TIntermSwizzle : public TIntermTyped
     void writeOffsetsAsXYZW(TInfoSinkBase *out) const;
 
     bool hasDuplicateOffsets() const;
+    bool offsetsMatch(int offset) const;
 
     TIntermTyped *fold();
 

@@ -17,34 +17,6 @@ namespace sh
 namespace
 {
 
-class ShaderVariableFinder : public TIntermTraverser
-{
-  public:
-    ShaderVariableFinder(const TString &variableName, TBasicType basicType)
-        : TIntermTraverser(true, false, false),
-          mVariableName(variableName),
-          mNodeFound(nullptr),
-          mBasicType(basicType)
-    {
-    }
-
-    void visitSymbol(TIntermSymbol *node)
-    {
-        if (node->getBasicType() == mBasicType && node->getSymbol() == mVariableName)
-        {
-            mNodeFound = node;
-        }
-    }
-
-    bool isFound() const { return mNodeFound != nullptr; }
-    const TIntermSymbol *getNode() const { return mNodeFound; }
-
-  private:
-    TString mVariableName;
-    TIntermSymbol *mNodeFound;
-    TBasicType mBasicType;
-};
-
 class FunctionCallFinder : public TIntermTraverser
 {
   public:
@@ -235,15 +207,6 @@ bool MatchOutputCodeTest::notFoundInCode(const char *stringToFind) const
         }
     }
     return true;
-}
-
-const TIntermSymbol *FindSymbolNode(TIntermNode *root,
-                                    const TString &symbolName,
-                                    TBasicType basicType)
-{
-    ShaderVariableFinder finder(symbolName, basicType);
-    root->traverse(&finder);
-    return finder.getNode();
 }
 
 const TIntermAggregate *FindFunctionCallNode(TIntermNode *root, const TString &functionName)

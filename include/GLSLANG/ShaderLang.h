@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 169
+#define ANGLE_SH_VERSION 170
 
 enum ShShaderSpec
 {
@@ -214,6 +214,10 @@ const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 29
 // It works by using an expression to emulate this function.
 const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
 
+// Set to 1 to translate gl_ViewID_OVR to an uniform so that the extension can be emulated.
+// "uniform highp uint webgl_angle_ViewID_OVR".
+const ShCompileOptions SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM = UINT64_C(1) << 31;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {
@@ -259,6 +263,7 @@ struct ShBuiltInResources
     int EXT_shader_framebuffer_fetch;
     int NV_shader_framebuffer_fetch;
     int ARM_shader_framebuffer_fetch;
+    int OVR_multiview;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate
@@ -284,6 +289,9 @@ struct ShBuiltInResources
     // Value of GL_MAX_DUAL_SOURCE_DRAW_BUFFERS for OpenGL output context.
     // GLES SL version 100 gl_MaxDualSourceDrawBuffersEXT value for EXT_blend_func_extended.
     int MaxDualSourceDrawBuffers;
+
+    // Value of GL_MAX_VIEWS_OVR.
+    int MaxViewsOVR;
 
     // Name Hashing.
     // Set a 64 bit hash function to enable user-defined name hashing.
@@ -488,6 +496,7 @@ const std::vector<sh::Attribute> *ShGetAttributes(const ShHandle handle);
 const std::vector<sh::OutputVariable> *ShGetOutputVariables(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *ShGetInterfaceBlocks(const ShHandle handle);
 sh::WorkGroupSize ShGetComputeShaderLocalGroupSize(const ShHandle handle);
+int ShGetVertexShaderNumViews(const ShHandle handle);
 
 // Returns true if the passed in variables pack in maxVectors following
 // the packing rules from the GLSL 1.017 spec, Appendix A, section 7.
@@ -629,6 +638,7 @@ const std::vector<sh::Attribute> *GetAttributes(const ShHandle handle);
 const std::vector<sh::OutputVariable> *GetOutputVariables(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle);
 sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle);
+int GetVertexShaderNumViews(const ShHandle handle);
 
 // Returns true if the passed in variables pack in maxVectors followingthe packing rules from the
 // GLSL 1.017 spec, Appendix A, section 7.

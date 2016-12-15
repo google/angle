@@ -40,7 +40,7 @@ void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOption
     }
 
     // Write built-in extension behaviors.
-    writeExtensionBehavior();
+    writeExtensionBehavior(compileOptions);
 
     // Write pragmas after extensions because some drivers consider pragmas
     // like non-preprocessor tokens.
@@ -94,6 +94,14 @@ void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOption
     TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
                            getSymbolTable(), getShaderType(), shaderVer, precisionEmulation,
                            compileOptions);
+
+    if (compileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM)
+    {
+        TName uniformName(TString("ViewId_OVR"));
+        uniformName.setInternal(true);
+        sink << "highp uniform int " << outputESSL.hashName(uniformName) << ";\n";
+    }
+
     root->traverse(&outputESSL);
 }
 
@@ -103,7 +111,7 @@ bool TranslatorESSL::shouldFlattenPragmaStdglInvariantAll()
     return false;
 }
 
-void TranslatorESSL::writeExtensionBehavior()
+void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
 {
     TInfoSinkBase &sink                   = getInfoSink().obj;
     const TExtensionBehavior &extBehavior = getExtensionBehavior();
@@ -122,6 +130,12 @@ void TranslatorESSL::writeExtensionBehavior()
             {
                 sink << "#extension GL_NV_draw_buffers : " << getBehaviorString(iter->second)
                      << "\n";
+            }
+            else if (compileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM &&
+                     (iter->first == "GL_OVR_multiview" || iter->first == "GL_OVR_multiview2"))
+            {
+                // No output
+                continue;
             }
             else
             {

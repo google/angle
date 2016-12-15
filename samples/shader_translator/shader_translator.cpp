@@ -205,6 +205,10 @@ int main(int argc, char *argv[])
                       case 'f': resources.EXT_shader_framebuffer_fetch = 1; break;
                       case 'n': resources.NV_shader_framebuffer_fetch = 1; break;
                       case 'a': resources.ARM_shader_framebuffer_fetch = 1; break;
+                      case 'm':
+                          resources.OVR_multiview = 1;
+                          compileOptions |= SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM;
+                          break;
                       default: failCode = EFailUsage;
                     }
                     // clang-format on
@@ -339,7 +343,8 @@ void usage()
         "       -x=l     : enable EXT_shader_texture_lod\n"
         "       -x=f     : enable EXT_shader_framebuffer_fetch\n"
         "       -x=n     : enable NV_shader_framebuffer_fetch\n"
-        "       -x=a     : enable ARM_shader_framebuffer_fetch\n");
+        "       -x=a     : enable ARM_shader_framebuffer_fetch\n"
+        "       -x=m     : enable OVR_multiview\n");
     // clang-format on
 }
 

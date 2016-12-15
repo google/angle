@@ -16,6 +16,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/TranslatorESSL.h"
 #include "GLSLANG/ShaderLang.h"
+#include "compiler/translator/FindSymbolNode.h"
 
 namespace sh
 {
@@ -91,10 +92,6 @@ class MatchOutputCodeTest : public testing::Test
 
     std::map<ShShaderOutput, std::string> mOutputCode;
 };
-
-const TIntermSymbol *FindSymbolNode(TIntermNode *root,
-                                    const TString &symbolName,
-                                    TBasicType basicType);
 
 // Returns a pointer to a function call node with a mangled name functionName.
 const TIntermAggregate *FindFunctionCallNode(TIntermNode *root, const TString &functionName);

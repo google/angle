@@ -3269,3 +3269,19 @@ TEST_F(FragmentShaderValidationTest, BuiltinESSL31FunctionDeclaredInESSL30Shader
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Attempting to declare num_views without enabling OVR_multiview.
+TEST_F(VertexShaderValidationTest, InvalidNumViews)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout (num_views = 2) in;\n"
+        "void main() {\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

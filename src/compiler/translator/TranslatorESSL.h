@@ -25,7 +25,7 @@ class TranslatorESSL : public TCompiler
     bool shouldFlattenPragmaStdglInvariantAll() override;
 
   private:
-    void writeExtensionBehavior();
+    void writeExtensionBehavior(ShCompileOptions compileOptions);
 };
 
 }  // namespace sh

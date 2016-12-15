@@ -1279,7 +1279,16 @@ TString TOutputGLSLBase::hashName(const TName &name)
 TString TOutputGLSLBase::hashVariableName(const TName &name)
 {
     if (mSymbolTable.findBuiltIn(name.getString(), mShaderVersion) != NULL)
+    {
+        if (mCompileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM &&
+            name.getString() == "gl_ViewID_OVR")
+        {
+            TName uniformName(TString("ViewId_OVR"));
+            uniformName.setInternal(true);
+            return hashName(uniformName);
+        }
         return name.getString();
+    }
     return hashName(name);
 }
 

@@ -838,6 +838,11 @@ bool TIntermSwizzle::hasDuplicateOffsets() const
     return false;
 }
 
+bool TIntermSwizzle::offsetsMatch(int offset) const
+{
+    return mSwizzleOffsets.size() == 1 && mSwizzleOffsets[0] == offset;
+}
+
 void TIntermSwizzle::writeOffsetsAsXYZW(TInfoSinkBase *out) const
 {
     for (const int offset : mSwizzleOffsets)

@@ -72,6 +72,7 @@
             '<(angle_path)/src/tests/compiler_tests/ShCompile_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/TypeTracking_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/VariablePacker_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/WEBGL_multiview_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/WorkGroupSize_test.cpp',
             '<(angle_path)/src/tests/preprocessor_tests/char_test.cpp',
             '<(angle_path)/src/tests/preprocessor_tests/comment_test.cpp',

@@ -81,6 +81,8 @@ class TParseContext : angle::NonCopyable
     bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
     sh::WorkGroupSize getComputeShaderLocalSize() const;
 
+    int getNumViews() const { return mNumViews; }
+
     void enterFunctionDeclaration() { mDeclaringFunction = true; }
 
     void exitFunctionDeclaration() { mDeclaringFunction = false; }
@@ -294,6 +296,10 @@ class TParseContext : angle::NonCopyable
                         const std::string &intValueString,
                         size_t index,
                         sh::WorkGroupSize *localSize);
+    void parseNumViews(int intValue,
+                       const TSourceLoc &intValueLine,
+                       const std::string &intValueString,
+                       int *numViews);
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType,
                                           const TSourceLoc &qualifierTypeLine);
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType,
@@ -445,9 +451,14 @@ class TParseContext : angle::NonCopyable
     int mMinProgramTexelOffset;
     int mMaxProgramTexelOffset;
 
+    bool mMultiviewAvailable;
+
     // keep track of local group size declared in layout. It should be declared only once.
     bool mComputeShaderLocalSizeDeclared;
     sh::WorkGroupSize mComputeShaderLocalSize;
+    // keep track of number of views declared in layout.
+    int mNumViews;
+    int mMaxNumViews;
     // keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
 };

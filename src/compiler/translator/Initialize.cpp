@@ -706,6 +706,14 @@ void IdentifyBuiltIns(sh::GLenum type,
     // Insert some special built-in variables that are not in
     // the built-in header files.
     //
+
+    if (resources.OVR_multiview && type != GL_COMPUTE_SHADER)
+    {
+        symbolTable.insert(COMMON_BUILTINS, "GL_OVR_multiview",
+                           new TVariable(NewPoolTString("gl_ViewID_OVR"),
+                                         TType(EbtUInt, EbpHigh, EvqViewIDOVR, 1)));
+    }
+
     switch (type)
     {
         case GL_FRAGMENT_SHADER:
@@ -858,6 +866,11 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
         extBehavior["GL_NV_shader_framebuffer_fetch"] = EBhUndefined;
     if (resources.ARM_shader_framebuffer_fetch)
         extBehavior["GL_ARM_shader_framebuffer_fetch"] = EBhUndefined;
+    if (resources.OVR_multiview)
+    {
+        extBehavior["GL_OVR_multiview"]  = EBhUndefined;
+        extBehavior["GL_OVR_multiview2"] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(TExtensionBehavior &extBehavior)

@@ -204,6 +204,14 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
     TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
                            getSymbolTable(), getShaderType(), getShaderVersion(), getOutputType(),
                            compileOptions);
+
+    if (compileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM)
+    {
+        TName uniformName(TString("ViewId_OVR"));
+        uniformName.setInternal(true);
+        sink << "uniform int " << outputGLSL.hashName(uniformName) << ";\n";
+    }
+
     root->traverse(&outputGLSL);
 }
 

@@ -488,6 +488,8 @@ enum TQualifier
     EvqSecondaryFragColorEXT,  // EXT_blend_func_extended
     EvqSecondaryFragDataEXT,   // EXT_blend_func_extended
 
+    EvqViewIDOVR,  // OVR_multiview
+
     // built-ins written by the shader_framebuffer_fetch extension(s)
     EvqLastFragColor,
     EvqLastFragData,
@@ -575,6 +577,9 @@ struct TLayoutQualifier
     // Image format layout qualifier
     TLayoutImageInternalFormat imageInternalFormat;
 
+    // OVR_multiview num_views.
+    int numViews;
+
     static TLayoutQualifier create()
     {
         TLayoutQualifier layoutQualifier;
@@ -585,6 +590,7 @@ struct TLayoutQualifier
         layoutQualifier.blockStorage       = EbsUnspecified;
 
         layoutQualifier.localSize.fill(-1);
+        layoutQualifier.numViews = -1;
 
         layoutQualifier.imageInternalFormat = EiifUnspecified;
         return layoutQualifier;
@@ -592,7 +598,7 @@ struct TLayoutQualifier
 
     bool isEmpty() const
     {
-        return location == -1 && matrixPacking == EmpUnspecified &&
+        return location == -1 && numViews == -1 && matrixPacking == EmpUnspecified &&
                blockStorage == EbsUnspecified && !localSize.isAnyValueSet() &&
                imageInternalFormat == EiifUnspecified;
     }
@@ -600,12 +606,16 @@ struct TLayoutQualifier
     bool isCombinationValid() const
     {
         bool workSizeSpecified = localSize.isAnyValueSet();
+        bool numViewsSet       = (numViews != -1);
         bool otherLayoutQualifiersSpecified =
             (location != -1 || matrixPacking != EmpUnspecified || blockStorage != EbsUnspecified ||
              imageInternalFormat != EiifUnspecified);
 
-        // we can have either the work group size specified, or the other layout qualifiers
-        return !(workSizeSpecified && otherLayoutQualifiersSpecified);
+        // we can have either the work group size specified, or number of views, or the other layout
+        // qualifiers.
+        return (workSizeSpecified ? 1 : 0) + (numViewsSet ? 1 : 0) +
+                   (otherLayoutQualifiersSpecified ? 1 : 0) <=
+               1;
     }
 
     bool isLocalSizeEqual(const sh::WorkGroupSize &localSizeIn) const
@@ -697,6 +707,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqFragDepth:              return "FragDepth";
     case EvqSecondaryFragColorEXT:  return "SecondaryFragColorEXT";
     case EvqSecondaryFragDataEXT:   return "SecondaryFragDataEXT";
+    case EvqViewIDOVR:              return "ViewIDOVR";
     case EvqLastFragColor:          return "LastFragColor";
     case EvqLastFragData:           return "LastFragData";
     case EvqSmoothOut:              return "smooth out";
