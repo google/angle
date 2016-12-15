@@ -678,29 +678,26 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // depth blit request should be silently ignored, because the read FBO has no depth attachment
-    glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(), getWindowHeight(),
-                           GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST); 
+    // generate INVALID_OPERATION if the read FBO has no depth attachment
+    glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                           getWindowHeight(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
+                           GL_NEAREST);
 
-    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
+    // generate INVALID_OPERATION if the read FBO has no stencil attachment
+    glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                           getWindowHeight(), GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                           GL_NEAREST);
 
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0, 255,   0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255,   0,   0, 255);
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0, 255,   0, 255);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    // unlike in the depth blit tests, this *should* draw a blue quad, because depth info
-    // has not been copied
-    glEnable(GL_DEPTH_TEST);
-    drawQuad(mBlueProgram, "position", 0.8f);
-    glDisable(GL_DEPTH_TEST);
+    // generate INVALID_OPERATION if we read from a missing color attachment
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                           getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4,     getWindowHeight() / 4,   0,   0, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4,     getWindowHeight() / 4,   0,   0, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0,   0, 255, 255);
-    EXPECT_PIXEL_EQ(    getWindowWidth() / 4, 3 * getWindowHeight() / 4,   0,   0, 255, 255);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 TEST_P(BlitFramebufferANGLETest, BlitStencil)

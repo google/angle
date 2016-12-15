@@ -1987,10 +1987,9 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
     if (mask & GL_COLOR_BUFFER_BIT)
     {
         const gl::FramebufferAttachment *readColorBuffer = readFramebuffer->getReadColorbuffer();
-        const gl::FramebufferAttachment *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
         const Extensions &extensions                     = context->getExtensions();
 
-        if (readColorBuffer && drawColorBuffer)
+        if (readColorBuffer)
         {
             const Format &readFormat = readColorBuffer->getFormat();
 
@@ -2070,6 +2069,17 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                 return false;
             }
         }
+        // WebGL 2.0 BlitFramebuffer when blitting from a missing attachment
+        // In OpenGL ES it is undefined what happens when an operation tries to blit from a missing
+        // attachment and WebGL defines it to be an error. We do the check unconditionally as the
+        // situation is an application error that would lead to a crash in ANGLE.
+        else if (drawFramebuffer->hasEnabledDrawBuffer())
+        {
+            context->handleError(Error(
+                GL_INVALID_OPERATION,
+                "Attempt to read from a missing color attachment of a complete framebuffer."));
+            return false;
+        }
     }
 
     GLenum masks[]       = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
@@ -2096,6 +2106,14 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                     context->handleError(Error(GL_INVALID_OPERATION));
                     return false;
                 }
+            }
+            // WebGL 2.0 BlitFramebuffer when blitting from a missing attachment
+            else if (drawBuffer)
+            {
+                context->handleError(Error(GL_INVALID_OPERATION,
+                                           "Attempt to read from a missing depth/stencil "
+                                           "attachment of a complete framebuffer."));
+                return false;
             }
         }
     }
@@ -2974,7 +2992,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
 
     // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
-    // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the
+    // attachment and WebGL defines it to be an error. We do the check unconditionally as the
     // situation is an application error that would lead to a crash in ANGLE.
     if (readFramebuffer->getReadColorbuffer() == nullptr)
     {
