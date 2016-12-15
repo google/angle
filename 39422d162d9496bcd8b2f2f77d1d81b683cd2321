@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a7adff7_0b0084e1",
+        "filename": "src/libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-15T16:43:25Z",
+      "side": 1,
+      "message": "nit: namespace",
+      "revId": "39422d162d9496bcd8b2f2f77d1d81b683cd2321",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
