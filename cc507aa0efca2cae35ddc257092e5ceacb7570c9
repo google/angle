@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_6c2b77f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-16T17:59:53Z",
+      "side": 0,
+      "message": "just put this if\n\n#if !defined(NDEBUG)\n//\n#endif",
+      "range": {
+        "startLine": 1348,
+        "startChar": 0,
+        "endLine": 1355,
+        "endChar": 20
+      },
+      "revId": "cc507aa0efca2cae35ddc257092e5ceacb7570c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
