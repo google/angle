@@ -89,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_e6a786a0",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3710,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "I don\u0027t think caps, but this state is in \"Table 20.49: Framebuffer Dependent Values\" so it should be a property of the current draw framebuffer.  We should add method to gl::Framebuffer and rx::FramebufferImpl:\n\n  Error getSamplePosition(size_t index, GLfloat* xy) const\n\nYou can then have a switch here (only one case so far) and call the method on the current draw framebuffer.",
+      "parentUuid": "ba4b7745_e69dc6a5",
+      "range": {
+        "startLine": 3710,
+        "startChar": 33,
+        "endLine": 3710,
+        "endChar": 49
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6a8c2c6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 22
@@ -158,6 +182,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_e1721050",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "+1, you can add the assert in Context::framebufferTexture2D.",
+      "parentUuid": "ba4b7745_06a3aae6",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 10
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_26b8ae0e",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 22
@@ -174,6 +222,145 @@
         "startChar": 4,
         "endLine": 1025,
         "endChar": 5
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_21217814",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "My guess is that the zero or incomplete texture can\u0027t be created yet.  I don\u0027t think this is the right solution though, it breaks a lot of assumptions in this class.  Can you add a TextureD3D_2DMultisample that no-ops everything?",
+      "parentUuid": "ba4b7745_26b8ae0e",
+      "range": {
+        "startLine": 1021,
+        "startChar": 4,
+        "endLine": 1025,
+        "endChar": 5
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_612b80f4",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "It has 1 level.",
+      "range": {
+        "startLine": 1031,
+        "startChar": 30,
+        "endLine": 1031,
+        "endChar": 52
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_a1f3a87d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "Just 0 is fine (0u if the computer warns)",
+      "range": {
+        "startLine": 1033,
+        "startChar": 32,
+        "endLine": 1033,
+        "endChar": 54
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_016e343e",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "Samples should be a property of the ImageDesc struct, it is queried with GetTexLevelParameter.  I realize that it\u0027s not currently possible to have levels with different numbers of samples but this is more in line with the spec.",
+      "range": {
+        "startLine": 143,
+        "startChar": 4,
+        "endLine": 143,
+        "endChar": 20
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_41e75c27",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "Once this is part of the ImageDesc, add a level parameter and move it with the getWidth/Height/Depth functions below.",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 245,
+        "endChar": 37
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_41503c79",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "nit:\n  \n   const Extents \u0026size\n\n(cpp and Impl too)",
+      "range": {
+        "startLine": 320,
+        "startChar": 32,
+        "endLine": 320,
+        "endChar": 48
       },
       "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -209,6 +396,29 @@
       "writtenOn": "2016-12-16T16:01:12Z",
       "side": 1,
       "message": "make this function \u003d 0, since this isn\u0027t an extension.",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_816ce4b2",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "Merge this with the GL_TEXTURE_2D case and pass texture-\u003egetTarget() instead of GL_TEXTURE_2D.",
+      "range": {
+        "startLine": 103,
+        "startChar": 12,
+        "endLine": 108,
+        "endChar": 13
+      },
       "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -450,6 +660,29 @@
         "startChar": 55,
         "endLine": 225,
         "endChar": 62
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_0132b4b7",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-16T17:31:43Z",
+      "side": 1,
+      "message": "We have utilities that should cover this:\n\n   InternalFormat \u0026formatInfo \u003d GetInternalFormatInfo(internalformat);\n   if (formatInfo.pixelBytes \u003d\u003d 0)\n   {\n      error\n   }",
+      "range": {
+        "startLine": 232,
+        "startChar": 3,
+        "endLine": 248,
+        "endChar": 5
       },
       "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
