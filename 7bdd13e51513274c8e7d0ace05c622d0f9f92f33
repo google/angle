@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_5b882fb3",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-16T06:41:08Z",
+      "side": 1,
+      "message": "In ES3.1 spec 9.2.8, it says If \u0027textarget is TEXTURE_2D_MULTISAMPLE, then level must be zero\u0027, so here the fourth parameter is 0 not attachment-\u003emipLevel()",
+      "revId": "7bdd13e51513274c8e7d0ace05c622d0f9f92f33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_1b3a2728",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-16T06:41:08Z",
+      "side": 1,
+      "message": "Why not directly use if (target !\u003d GL_TEXTURE_2D_MULTISAMPLE)",
+      "revId": "7bdd13e51513274c8e7d0ace05c622d0f9f92f33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
