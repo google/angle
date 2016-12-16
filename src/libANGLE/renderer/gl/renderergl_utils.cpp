@@ -900,6 +900,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
                                      functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                      functions->hasGLESExtension("GL_EXT_discard_framebuffer") ||
                                      functions->hasGLESExtension("GL_ARB_invalidate_subdata");
+
+    extensions->translatedShaderSource = true;
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

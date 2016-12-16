@@ -142,7 +142,7 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
 
 std::string ShaderGL::getDebugInfo() const
 {
-    return std::string();
+    return mData.getTranslatedSource();
 }
 
 GLuint ShaderGL::getShaderID() const
