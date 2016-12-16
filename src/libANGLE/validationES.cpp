@@ -241,9 +241,13 @@ bool ValidateReadPixelsBase(ValidationContext *context,
     }
 
     const FramebufferAttachment *readBuffer = framebuffer->getReadColorbuffer();
-    if (!readBuffer)
+    // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
+    // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
+    // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the
+    // situation is an application error that would lead to a crash in ANGLE.
+    if (readBuffer == nullptr)
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(Error(GL_INVALID_OPERATION, "Missing read attachment"));
         return false;
     }
 
@@ -2949,6 +2953,16 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     if (readFramebuffer->getReadBufferState() == GL_NONE)
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Read buffer is GL_NONE"));
+        return false;
+    }
+
+    // WebGL 1.0 [Section 6.26] Reading From a Missing Attachment
+    // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
+    // attachment and WebGL defines it to be an error. We do the check unconditionnaly as the
+    // situation is an application error that would lead to a crash in ANGLE.
+    if (readFramebuffer->getReadColorbuffer() == nullptr)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Missing read attachment"));
         return false;
     }
 
