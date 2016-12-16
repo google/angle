@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_263eee7b",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 22
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-16T16:01:12Z",
+      "side": 0,
+      "message": "shouldn\u0027t these go in the list above with ES2_ident_ES3_reserved_ES3_1_keyword?",
+      "revId": "439a55e55038b357d76f306cfa2e034e3b93fe5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
