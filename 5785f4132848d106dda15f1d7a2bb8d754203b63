@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_bc490e37",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-16T21:27:48Z",
+      "side": 1,
+      "message": "We do memcmp the previous data here.",
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
