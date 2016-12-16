@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a7adff7_b07d23d3",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T06:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a7adff7_8fb01690",
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_6f4f62b0",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2016-12-14T03:04:41Z",
       "side": 1,
       "message": "Why not add gsampler2DMS for textureSize?",
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_10642f3a",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 497,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T06:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a7adff7_6f4f62b0",
       "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "7a7adff7_b0736353",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T06:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_e175f8a8",
+      "range": {
+        "startLine": 85,
+        "startChar": 13,
+        "endLine": 85,
+        "endChar": 21
+      },
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa1b2f68_c17afc97",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 17
@@ -70,6 +130,30 @@
       "writtenOn": "2016-12-13T07:29:49Z",
       "side": 1,
       "message": "Can this cover internalformats listed in table 8.11?",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 51
+      },
+      "revId": "18fa6ff798640215bb53c1f9f8154965243d1a3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_90781fe3",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T06:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1b2f68_c17afc97",
       "range": {
         "startLine": 120,
         "startChar": 8,
