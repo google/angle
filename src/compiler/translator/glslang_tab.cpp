@@ -755,13 +755,13 @@ static const yytype_uint16 yyrline[] =
     1147,  1150,  1153,  1156,  1159,  1162,  1165,  1168,  1171,  1174,
     1177,  1180,  1183,  1190,  1196,  1199,  1202,  1205,  1208,  1211,
     1214,  1217,  1220,  1223,  1226,  1229,  1232,  1235,  1247,  1247,
-    1250,  1250,  1256,  1259,  1274,  1277,  1284,  1288,  1294,  1300,
-    1312,  1316,  1320,  1321,  1327,  1328,  1329,  1330,  1331,  1332,
-    1333,  1337,  1338,  1338,  1338,  1347,  1348,  1352,  1352,  1353,
-    1353,  1358,  1361,  1370,  1375,  1382,  1383,  1387,  1394,  1398,
-    1405,  1405,  1412,  1415,  1422,  1426,  1439,  1439,  1444,  1444,
-    1450,  1450,  1458,  1461,  1467,  1470,  1476,  1480,  1487,  1490,
-    1493,  1496,  1499,  1508,  1514,  1520,  1523,  1529,  1529
+    1250,  1250,  1256,  1259,  1265,  1268,  1275,  1279,  1285,  1291,
+    1303,  1307,  1311,  1312,  1318,  1319,  1320,  1321,  1322,  1323,
+    1324,  1328,  1329,  1329,  1329,  1338,  1339,  1343,  1343,  1344,
+    1344,  1349,  1352,  1361,  1366,  1373,  1374,  1378,  1385,  1389,
+    1396,  1396,  1403,  1406,  1413,  1417,  1430,  1430,  1435,  1435,
+    1441,  1441,  1449,  1452,  1458,  1461,  1467,  1471,  1478,  1481,
+    1484,  1487,  1490,  1499,  1505,  1511,  1514,  1520,  1520
 };
 #endif
 
@@ -3677,7 +3677,7 @@ yyreduce:
     {
         if (!context->declaringFunction())
         {
-            context->error((yylsp[0]), "invalid inout qualifier", "'inout' can be only used with function parameters");
+            context->error((yylsp[0]), "invalid qualifier: can be only used with function parameters", "inout");
         }
         (yyval.interm.qualifierWrapper) = new TStorageQualifierWrapper(EvqInOut, (yylsp[0]));
     }
@@ -4402,16 +4402,7 @@ yyreduce:
   case 223:
 
     {
-        (yyval.interm.fieldList) = (yyvsp[-1].interm.fieldList);
-        for (size_t i = 0; i < (yyvsp[0].interm.fieldList)->size(); ++i) {
-            TField* field = (*(yyvsp[0].interm.fieldList))[i];
-            for (size_t j = 0; j < (yyval.interm.fieldList)->size(); ++j) {
-                if ((*(yyval.interm.fieldList))[j]->name() == field->name()) {
-                    context->error((yylsp[0]), "duplicate field name in structure:", "struct", field->name().c_str());
-                }
-            }
-            (yyval.interm.fieldList)->push_back(field);
-        }
+        (yyval.interm.fieldList) = context->combineStructFieldLists((yyvsp[-1].interm.fieldList), (yyvsp[0].interm.fieldList), (yylsp[0]));
     }
 
     break;

@@ -30,15 +30,10 @@ class TDiagnostics : public pp::Diagnostics, angle::NonCopyable
     void writeInfo(Severity severity,
                    const pp::SourceLocation &loc,
                    const std::string &reason,
-                   const std::string &token,
-                   const std::string &extra);
+                   const std::string &token);
 
-    void error(const TSourceLoc &loc, const char *reason, const char *token, const char *extraInfo);
     void error(const TSourceLoc &loc, const char *reason, const char *token);
-    void warning(const TSourceLoc &loc,
-                 const char *reason,
-                 const char *token,
-                 const char *extraInfo);
+    void warning(const TSourceLoc &loc, const char *reason, const char *token);
 
   protected:
     void print(ID id, const pp::SourceLocation &loc, const std::string &text) override;

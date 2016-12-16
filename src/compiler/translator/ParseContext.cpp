@@ -225,35 +225,28 @@ bool TParseContext::parseVectorFields(const TString &compString,
 //
 // Used by flex/bison to output all syntax and parsing errors.
 //
-void TParseContext::error(const TSourceLoc &loc,
-                          const char *reason,
-                          const char *token,
-                          const char *extraInfo)
+void TParseContext::error(const TSourceLoc &loc, const char *reason, const char *token)
 {
-    mDiagnostics.error(loc, reason, token, extraInfo);
+    mDiagnostics.error(loc, reason, token);
 }
 
-void TParseContext::warning(const TSourceLoc &loc,
-                            const char *reason,
-                            const char *token,
-                            const char *extraInfo)
+void TParseContext::warning(const TSourceLoc &loc, const char *reason, const char *token)
 {
-    mDiagnostics.warning(loc, reason, token, extraInfo);
+    mDiagnostics.warning(loc, reason, token);
 }
 
 void TParseContext::outOfRangeError(bool isError,
                                     const TSourceLoc &loc,
                                     const char *reason,
-                                    const char *token,
-                                    const char *extraInfo)
+                                    const char *token)
 {
     if (isError)
     {
-        error(loc, reason, token, extraInfo);
+        error(loc, reason, token);
     }
     else
     {
-        warning(loc, reason, token, extraInfo);
+        warning(loc, reason, token);
     }
 }
 
@@ -262,10 +255,10 @@ void TParseContext::outOfRangeError(bool isError,
 //
 void TParseContext::assignError(const TSourceLoc &line, const char *op, TString left, TString right)
 {
-    std::stringstream extraInfoStream;
-    extraInfoStream << "cannot convert from '" << right << "' to '" << left << "'";
-    std::string extraInfo = extraInfoStream.str();
-    error(line, "", op, extraInfo.c_str());
+    std::stringstream reasonStream;
+    reasonStream << "cannot convert from '" << right << "' to '" << left << "'";
+    std::string reason = reasonStream.str();
+    error(line, reason.c_str(), op);
 }
 
 //
@@ -273,11 +266,12 @@ void TParseContext::assignError(const TSourceLoc &line, const char *op, TString 
 //
 void TParseContext::unaryOpError(const TSourceLoc &line, const char *op, TString operand)
 {
-    std::stringstream extraInfoStream;
-    extraInfoStream << "no operation '" << op << "' exists that takes an operand of type "
-                    << operand << " (or there is no acceptable conversion)";
-    std::string extraInfo = extraInfoStream.str();
-    error(line, " wrong operand type", op, extraInfo.c_str());
+    std::stringstream reasonStream;
+    reasonStream << "wrong operand type - no operation '" << op
+                 << "' exists that takes an operand of type " << operand
+                 << " (or there is no acceptable conversion)";
+    std::string reason = reasonStream.str();
+    error(line, reason.c_str(), op);
 }
 
 //
@@ -288,12 +282,13 @@ void TParseContext::binaryOpError(const TSourceLoc &line,
                                   TString left,
                                   TString right)
 {
-    std::stringstream extraInfoStream;
-    extraInfoStream << "no operation '" << op << "' exists that takes a left-hand operand of type '"
-                    << left << "' and a right operand of type '" << right
-                    << "' (or there is no acceptable conversion)";
-    std::string extraInfo = extraInfoStream.str();
-    error(line, " wrong operand types ", op, extraInfo.c_str());
+    std::stringstream reasonStream;
+    reasonStream << "wrong operand types - no operation '" << op
+                 << "' exists that takes a left-hand operand of type '" << left
+                 << "' and a right operand of type '" << right
+                 << "' (or there is no acceptable conversion)";
+    std::string reason = reasonStream.str();
+    error(line, reason.c_str(), op);
 }
 
 void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
@@ -370,10 +365,6 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         return false;
     }
 
-    const char *symbol = 0;
-    if (symNode != 0)
-        symbol = symNode->getSymbol().c_str();
-
     const char *message = 0;
     switch (node->getQualifier())
     {
@@ -448,7 +439,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
 
     if (message == 0 && binaryNode == 0 && symNode == 0)
     {
-        error(line, " l-value required", op);
+        error(line, "l-value required", op);
 
         return false;
     }
@@ -464,17 +455,18 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
     //
     if (symNode)
     {
-        std::stringstream extraInfoStream;
-        extraInfoStream << "\"" << symbol << "\" (" << message << ")";
-        std::string extraInfo = extraInfoStream.str();
-        error(line, " l-value required", op, extraInfo.c_str());
+        const char *symbol = symNode->getSymbol().c_str();
+        std::stringstream reasonStream;
+        reasonStream << "l-value required (" << message << " \"" << symbol << "\")";
+        std::string reason = reasonStream.str();
+        error(line, reason.c_str(), op);
     }
     else
     {
-        std::stringstream extraInfoStream;
-        extraInfoStream << "(" << message << ")";
-        std::string extraInfo = extraInfoStream.str();
-        error(line, " l-value required", op, extraInfo.c_str());
+        std::stringstream reasonStream;
+        reasonStream << "l-value required (" << message << ")";
+        std::string reason = reasonStream.str();
+        error(line, reason.c_str(), op);
     }
 
     return false;
@@ -697,7 +689,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             ASSERT(!argType.isArray());
             if (!argType.sameElementType(type))
             {
-                error(line, "Array constructor argument has an incorrect type", "Error");
+                error(line, "Array constructor argument has an incorrect type", "constructor");
                 return false;
             }
         }
@@ -712,7 +704,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             if (i >= args->size() || (*args)[i]->getAsTyped()->getType() != *fields[i]->type())
             {
                 error(line, "Structure constructor arguments do not match structure fields",
-                      "Error");
+                      "constructor");
                 return false;
             }
         }
@@ -767,7 +759,10 @@ bool TParseContext::checkIsNotSampler(const TSourceLoc &line,
     {
         if (ContainsSampler(*pType.userDef))
         {
-            error(line, reason, getBasicString(pType.type), "(structure contains a sampler)");
+            std::stringstream reasonStream;
+            reasonStream << reason << " (structure contains a sampler)";
+            std::string reasonStr = reasonStream.str();
+            error(line, reasonStr.c_str(), getBasicString(pType.type));
             return false;
         }
 
@@ -790,7 +785,10 @@ bool TParseContext::checkIsNotImage(const TSourceLoc &line,
     {
         if (ContainsImage(*pType.userDef))
         {
-            error(line, reason, getBasicString(pType.type), "(structure contains an image)");
+            std::stringstream reasonStream;
+            reasonStream << reason << " (structure contains an image)";
+            std::string reasonStr = reasonStream.str();
+            error(line, reasonStr.c_str(), getBasicString(pType.type));
 
             return false;
         }
@@ -822,8 +820,8 @@ void TParseContext::checkLocationIsNotSpecified(const TSourceLoc &location,
 {
     if (layoutQualifier.location != -1)
     {
-        error(location, "invalid layout qualifier:", "location",
-              "only valid on program inputs and outputs");
+        error(location, "invalid layout qualifier: only valid on program inputs and outputs",
+              "location");
     }
 }
 
@@ -1081,18 +1079,18 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     TExtensionBehavior::const_iterator iter = extBehavior.find(extension.c_str());
     if (iter == extBehavior.end())
     {
-        error(line, "extension", extension.c_str(), "is not supported");
+        error(line, "extension is not supported", extension.c_str());
         return false;
     }
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
-        error(line, "extension", extension.c_str(), "is disabled");
+        error(line, "extension is disabled", extension.c_str());
         return false;
     }
     if (iter->second == EBhWarn)
     {
-        warning(line, "extension", extension.c_str(), "is being used");
+        warning(line, "extension is being used", extension.c_str());
         return true;
     }
 
@@ -1156,17 +1154,15 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
 
     if (layoutQualifier.matrixPacking != EmpUnspecified)
     {
-        error(identifierLocation, "layout qualifier",
-              getMatrixPackingString(layoutQualifier.matrixPacking),
-              "only valid for interface blocks");
+        error(identifierLocation, "layout qualifier only valid for interface blocks",
+              getMatrixPackingString(layoutQualifier.matrixPacking));
         return;
     }
 
     if (layoutQualifier.blockStorage != EbsUnspecified)
     {
-        error(identifierLocation, "layout qualifier",
-              getBlockStorageString(layoutQualifier.blockStorage),
-              "only valid for interface blocks");
+        error(identifierLocation, "layout qualifier only valid for interface blocks",
+              getBlockStorageString(layoutQualifier.blockStorage));
         return;
     }
 
@@ -1266,7 +1262,7 @@ void TParseContext::checkLayoutQualifierSupported(const TSourceLoc &location,
 
     if (mShaderVersion < versionRequired)
     {
-        error(location, "invalid layout qualifier:", layoutQualifierName.c_str(), "not supported");
+        error(location, "invalid layout qualifier: not supported", layoutQualifierName.c_str());
     }
 }
 
@@ -1278,8 +1274,10 @@ bool TParseContext::checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
     {
         if (localSize[i] != -1)
         {
-            error(location, "invalid layout qualifier:", getWorkGroupSizeString(i),
-                  "only valid when used with 'in' in a compute shader global layout declaration");
+            error(location,
+                  "invalid layout qualifier: only valid when used with 'in' in a compute shader "
+                  "global layout declaration",
+                  getWorkGroupSizeString(i));
             return false;
         }
     }
@@ -1292,8 +1290,8 @@ bool TParseContext::checkInternalFormatIsNotSpecified(const TSourceLoc &location
 {
     if (internalFormat != EiifUnspecified)
     {
-        error(location, "invalid layout qualifier:", getImageInternalFormatString(internalFormat),
-              "only valid when used with images");
+        error(location, "invalid layout qualifier: only valid when used with images",
+              getImageInternalFormatString(internalFormat));
         return false;
     }
     return true;
@@ -1310,8 +1308,11 @@ void TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate,
             TIntermTyped *argument = (*(fnCall->getSequence()))[i]->getAsTyped();
             if (!checkCanBeLValue(argument->getLine(), "assign", argument))
             {
+                TString unmangledName =
+                    TFunction::unmangleName(fnCall->getFunctionSymbolInfo()->getName());
                 error(argument->getLine(),
-                      "Constant value cannot be passed for 'out' or 'inout' parameters.", "Error");
+                      "Constant value cannot be passed for 'out' or 'inout' parameters.",
+                      unmangledName.c_str());
                 return;
             }
         }
@@ -1617,10 +1618,11 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     {
         if (qualifier != initializer->getType().getQualifier())
         {
-            std::stringstream extraInfoStream;
-            extraInfoStream << "'" << variable->getType().getCompleteString() << "'";
-            std::string extraInfo = extraInfoStream.str();
-            error(line, " assigning non-constant to", "=", extraInfo.c_str());
+            std::stringstream reasonStream;
+            reasonStream << "assigning non-constant to '" << variable->getType().getCompleteString()
+                         << "'";
+            std::string reason = reasonStream.str();
+            error(line, reason.c_str(), "=");
             variable->getType().setQualifier(EvqTemporary);
             return true;
         }
@@ -2300,13 +2302,12 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
                 if (mComputeShaderLocalSize[i] < 1 ||
                     mComputeShaderLocalSize[i] > maxComputeWorkGroupSizeValue)
                 {
-                    std::stringstream errorMessageStream;
-                    errorMessageStream << "Value must be at least 1 and no greater than "
-                                       << maxComputeWorkGroupSizeValue;
-                    const std::string &errorMessage = errorMessageStream.str();
+                    std::stringstream reasonStream;
+                    reasonStream << "invalid value: Value must be at least 1 and no greater than "
+                                 << maxComputeWorkGroupSizeValue;
+                    const std::string &reason = reasonStream.str();
 
-                    error(typeQualifier.line, "invalid value:", getWorkGroupSizeString(i),
-                          errorMessage.c_str());
+                    error(typeQualifier.line, reason.c_str(), getWorkGroupSizeString(i));
                     return;
                 }
             }
@@ -2324,8 +2325,8 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
 
         if (typeQualifier.qualifier != EvqUniform)
         {
-            error(typeQualifier.line, "invalid qualifier:",
-                  getQualifierString(typeQualifier.qualifier), "global layout must be uniform");
+            error(typeQualifier.line, "invalid qualifier: global layout must be uniform",
+                  getQualifierString(typeQualifier.qualifier));
             return;
         }
 
@@ -2412,7 +2413,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
-        error(location, "function does not return a value:", "", function.getName().c_str());
+        error(location, "function does not return a value:", function.getName().c_str());
     }
 
     if (functionBody == nullptr)
@@ -2479,8 +2480,8 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
         }
         if ((*function)->getReturnType().getBasicType() != EbtVoid)
         {
-            error(location, "", (*function)->getReturnType().getBasicString(),
-                  "main function cannot return a value");
+            error(location, "main function cannot return a value",
+                  (*function)->getReturnType().getBasicString());
         }
     }
 
@@ -2584,7 +2585,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     {
         if (!prevSym->isFunction())
         {
-            error(location, "redefinition", function->getName().c_str(), "function");
+            error(location, "redefinition of a function", function->getName().c_str());
         }
     }
     else
@@ -2757,8 +2758,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     if (typeQualifier.qualifier != EvqUniform)
     {
-        error(typeQualifier.line, "invalid qualifier:", getQualifierString(typeQualifier.qualifier),
-              "interface blocks must be uniform");
+        error(typeQualifier.line, "invalid qualifier: interface blocks must be uniform",
+              getQualifierString(typeQualifier.qualifier));
     }
 
     if (typeQualifier.invariant)
@@ -2788,7 +2789,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     TSymbol *blockNameSymbol = new TInterfaceBlockName(&blockName);
     if (!symbolTable.declare(blockNameSymbol))
     {
-        error(nameLine, "redefinition", blockName.c_str(), "interface block name");
+        error(nameLine, "redefinition of an interface block name", blockName.c_str());
     }
 
     // check for sampler types and apply layout qualifiers
@@ -2798,14 +2799,16 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         TType *fieldType = field->type();
         if (IsSampler(fieldType->getBasicType()))
         {
-            error(field->line(), "unsupported type", fieldType->getBasicString(),
-                  "sampler types are not allowed in interface blocks");
+            error(field->line(),
+                  "unsupported type - sampler types are not allowed in interface blocks",
+                  fieldType->getBasicString());
         }
 
         if (IsImage(fieldType->getBasicType()))
         {
-            error(field->line(), "unsupported type", fieldType->getBasicString(),
-                  "image types are not allowed in interface blocks");
+            error(field->line(),
+                  "unsupported type - image types are not allowed in interface blocks",
+                  fieldType->getBasicString());
         }
 
         const TQualifier qualifier = fieldType->getQualifier();
@@ -2831,8 +2834,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
         if (fieldLayoutQualifier.blockStorage != EbsUnspecified)
         {
-            error(field->line(), "invalid layout qualifier:",
-                  getBlockStorageString(fieldLayoutQualifier.blockStorage), "cannot be used here");
+            error(field->line(), "invalid layout qualifier: cannot be used here",
+                  getBlockStorageString(fieldLayoutQualifier.blockStorage));
         }
 
         if (fieldLayoutQualifier.matrixPacking == EmpUnspecified)
@@ -2841,9 +2844,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         }
         else if (!fieldType->isMatrix() && fieldType->getBasicType() != EbtStruct)
         {
-            warning(field->line(), "extraneous layout qualifier:",
-                    getMatrixPackingString(fieldLayoutQualifier.matrixPacking),
-                    "only has an effect on matrix types");
+            warning(field->line(),
+                    "extraneous layout qualifier: only has an effect on matrix types",
+                    getMatrixPackingString(fieldLayoutQualifier.matrixPacking));
         }
 
         fieldType->setLayoutQualifier(fieldLayoutQualifier);
@@ -2880,8 +2883,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
             if (!symbolTable.declare(fieldVariable))
             {
-                error(field->line(), "redefinition", field->name().c_str(),
-                      "interface block member name");
+                error(field->line(), "redefinition of an interface block member name",
+                      field->name().c_str());
             }
         }
     }
@@ -2895,8 +2898,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
         if (!symbolTable.declare(instanceTypeDef))
         {
-            error(instanceLine, "redefinition", instanceName->c_str(),
-                  "interface block instance name");
+            error(instanceLine, "redefinition of an interface block instance name",
+                  instanceName->c_str());
         }
 
         symbolId   = instanceTypeDef->getUniqueId();
@@ -2918,11 +2921,10 @@ void TParseContext::enterStructDeclaration(const TSourceLoc &line, const TString
     ++mStructNestingLevel;
 
     // Embedded structure definitions are not supported per GLSL ES spec.
-    // They aren't allowed in GLSL either, but we need to detect this here
-    // so we don't rely on the GLSL compiler to catch it.
+    // ESSL 1.00.17 section 10.9. ESSL 3.00.6 section 12.11.
     if (mStructNestingLevel > 1)
     {
-        error(line, "", "Embedded struct definitions are not allowed");
+        error(line, "Embedded struct definitions are not allowed", "struct");
     }
 }
 
@@ -2951,7 +2953,7 @@ void TParseContext::checkIsBelowStructNestingLimit(const TSourceLoc &line, const
         reasonStream << "Reference of struct type " << field.type()->getStruct()->name().c_str()
                      << " exceeds maximum allowed nesting level of " << kWebGLMaxStructNesting;
         std::string reason = reasonStream.str();
-        error(line, reason.c_str(), field.name().c_str(), "");
+        error(line, reason.c_str(), field.name().c_str());
         return;
     }
 }
@@ -2991,18 +2993,18 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     {
         if (baseExpression->isInterfaceBlock())
         {
-            error(
-                location, "", "[",
-                "array indexes for interface blocks arrays must be constant integral expressions");
+            error(location,
+                  "array indexes for interface blocks arrays must be constant integral expressions",
+                  "[");
         }
         else if (baseExpression->getQualifier() == EvqFragmentOut)
         {
-            error(location, "", "[",
-                  "array indexes for fragment outputs must be constant integral expressions");
+            error(location,
+                  "array indexes for fragment outputs must be constant integral expressions", "[");
         }
         else if (mShaderSpec == SH_WEBGL2_SPEC && baseExpression->getQualifier() == EvqFragData)
         {
-            error(location, "", "[", "array index for gl_FragData must be constant zero");
+            error(location, "array index for gl_FragData must be constant zero", "[");
         }
     }
 
@@ -3027,16 +3029,16 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                     // Error has been already generated if index is not const.
                     if (indexExpression->getQualifier() == EvqConst)
                     {
-                        error(location, "", "[",
-                              "array index for gl_FragData must be constant zero");
+                        error(location, "array index for gl_FragData must be constant zero", "[");
                     }
                     safeIndex = 0;
                 }
                 else if (!isExtensionEnabled("GL_EXT_draw_buffers"))
                 {
-                    outOfRangeError(outOfRangeIndexIsError, location, "", "[",
+                    outOfRangeError(outOfRangeIndexIsError, location,
                                     "array index for gl_FragData must be zero when "
-                                    "GL_EXT_draw_buffers is disabled");
+                                    "GL_EXT_draw_buffers is disabled",
+                                    "[");
                     safeIndex = 0;
                 }
             }
@@ -3045,20 +3047,20 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
             {
                 safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
                                                  baseExpression->getArraySize(),
-                                                 "array index out of range", "[]");
+                                                 "array index out of range");
             }
         }
         else if (baseExpression->isMatrix())
         {
             safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
                                              baseExpression->getType().getCols(),
-                                             "matrix field selection out of range", "[]");
+                                             "matrix field selection out of range");
         }
         else if (baseExpression->isVector())
         {
             safeIndex = checkIndexOutOfRange(outOfRangeIndexIsError, location, index,
                                              baseExpression->getType().getNominalSize(),
-                                             "vector field selection out of range", "[]");
+                                             "vector field selection out of range");
         }
 
         ASSERT(safeIndex >= 0);
@@ -3086,15 +3088,14 @@ int TParseContext::checkIndexOutOfRange(bool outOfRangeIndexIsError,
                                         const TSourceLoc &location,
                                         int index,
                                         int arraySize,
-                                        const char *reason,
-                                        const char *token)
+                                        const char *reason)
 {
     if (index >= arraySize || index < 0)
     {
-        std::stringstream extraInfoStream;
-        extraInfoStream << "'" << index << "'";
-        std::string extraInfo = extraInfoStream.str();
-        outOfRangeError(outOfRangeIndexIsError, location, reason, token, extraInfo.c_str());
+        std::stringstream reasonStream;
+        reasonStream << reason << " '" << index << "'";
+        std::string token = reasonStream.str();
+        outOfRangeError(outOfRangeIndexIsError, location, reason, "[]");
         if (index < 0)
         {
             return 0;
@@ -3251,8 +3252,8 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     }
     else if (qualifierType == "location")
     {
-        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str(),
-              "location requires an argument");
+        error(qualifierTypeLine, "invalid layout qualifier: location requires an argument",
+              qualifierType.c_str());
     }
     else if (qualifierType == "rgba32f")
     {
@@ -3339,8 +3340,10 @@ void TParseContext::parseLocalSize(const TString &qualifierType,
     checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
     if (intValue < 1)
     {
-        std::string errorMessage = std::string(getWorkGroupSizeString(index)) + " must be positive";
-        error(intValueLine, "out of range:", intValueString.c_str(), errorMessage.c_str());
+        std::stringstream reasonStream;
+        reasonStream << "out of range: " << getWorkGroupSizeString(index) << " must be positive";
+        std::string reason = reasonStream.str();
+        error(intValueLine, reason.c_str(), intValueString.c_str());
     }
     (*localSize)[index] = intValue;
 }
@@ -3359,8 +3362,8 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         // must check that location is non-negative
         if (intValue < 0)
         {
-            error(intValueLine, "out of range:", intValueString.c_str(),
-                  "location must be non-negative");
+            error(intValueLine, "out of range: location must be non-negative",
+                  intValueString.c_str());
         }
         else
         {
@@ -3404,6 +3407,24 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
 {
     return sh::JoinLayoutQualifiers(leftQualifier, rightQualifier, rightQualifierLocation,
                                     &mDiagnostics);
+}
+
+TFieldList *TParseContext::combineStructFieldLists(TFieldList *processedFields,
+                                                   const TFieldList *newlyAddedFields,
+                                                   const TSourceLoc &location)
+{
+    for (TField *field : *newlyAddedFields)
+    {
+        for (TField *oldField : *processedFields)
+        {
+            if (oldField->name() == field->name())
+            {
+                error(location, "duplicate field name in structure", field->name().c_str());
+            }
+        }
+        processedFields->push_back(field);
+    }
+    return processedFields;
 }
 
 TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
@@ -3485,7 +3506,7 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
         TVariable *userTypeDef = new TVariable(structName, *structureType, true);
         if (!symbolTable.declare(userTypeDef))
         {
-            error(nameLine, "redefinition", structName->c_str(), "struct");
+            error(nameLine, "redefinition of a struct", structName->c_str());
         }
     }
 
@@ -4361,13 +4382,11 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                                                &fnCandidate->getReturnType());
                     if (callNode == nullptr)
                     {
-                        std::stringstream extraInfoStream;
-                        extraInfoStream
-                            << "built in unary operator function.  Type: "
-                            << static_cast<TIntermTyped *>(paramNode)->getCompleteString();
-                        std::string extraInfo = extraInfoStream.str();
-                        error(paramNode->getLine(), " wrong operand type", "Internal Error",
-                              extraInfo.c_str());
+                        std::stringstream reasonStream;
+                        reasonStream << "wrong operand type for built in unary function: "
+                                     << static_cast<TIntermTyped *>(paramNode)->getCompleteString();
+                        std::string reason = reasonStream.str();
+                        error(paramNode->getLine(), reason.c_str(), "Internal Error");
                         *fatalError = true;
                         return nullptr;
                     }

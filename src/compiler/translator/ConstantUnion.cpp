@@ -21,11 +21,11 @@ float CheckedSum(float lhs, float rhs, TDiagnostics *diag, const TSourceLoc &lin
     float result = lhs + rhs;
     if (gl::isNaN(result) && !gl::isNaN(lhs) && !gl::isNaN(rhs))
     {
-        diag->warning(line, "Constant folded undefined addition generated NaN", "+", "");
+        diag->warning(line, "Constant folded undefined addition generated NaN", "+");
     }
     else if (gl::isInf(result) && !gl::isInf(lhs) && !gl::isInf(rhs))
     {
-        diag->warning(line, "Constant folded addition overflowed to infinity", "+", "");
+        diag->warning(line, "Constant folded addition overflowed to infinity", "+");
     }
     return result;
 }
@@ -35,11 +35,11 @@ float CheckedDiff(float lhs, float rhs, TDiagnostics *diag, const TSourceLoc &li
     float result = lhs - rhs;
     if (gl::isNaN(result) && !gl::isNaN(lhs) && !gl::isNaN(rhs))
     {
-        diag->warning(line, "Constant folded undefined subtraction generated NaN", "-", "");
+        diag->warning(line, "Constant folded undefined subtraction generated NaN", "-");
     }
     else if (gl::isInf(result) && !gl::isInf(lhs) && !gl::isInf(rhs))
     {
-        diag->warning(line, "Constant folded subtraction overflowed to infinity", "-", "");
+        diag->warning(line, "Constant folded subtraction overflowed to infinity", "-");
     }
     return result;
 }
@@ -49,11 +49,11 @@ float CheckedMul(float lhs, float rhs, TDiagnostics *diag, const TSourceLoc &lin
     float result = lhs * rhs;
     if (gl::isNaN(result) && !gl::isNaN(lhs) && !gl::isNaN(rhs))
     {
-        diag->warning(line, "Constant folded undefined multiplication generated NaN", "*", "");
+        diag->warning(line, "Constant folded undefined multiplication generated NaN", "*");
     }
     else if (gl::isInf(result) && !gl::isInf(lhs) && !gl::isInf(rhs))
     {
-        diag->warning(line, "Constant folded multiplication overflowed to infinity", "*", "");
+        diag->warning(line, "Constant folded multiplication overflowed to infinity", "*");
     }
     return result;
 }
@@ -380,7 +380,7 @@ TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
     if ((rhs.type == EbtInt && (rhs.iConst < 0 || rhs.iConst > 31)) ||
         (rhs.type == EbtUInt && rhs.uConst > 31u))
     {
-        diag->error(line, "Undefined shift (operand out of range)", ">>", "");
+        diag->error(line, "Undefined shift (operand out of range)", ">>");
         switch (lhs.type)
         {
             case EbtInt:
@@ -487,7 +487,7 @@ TConstantUnion TConstantUnion::lshift(const TConstantUnion &lhs,
     if ((rhs.type == EbtInt && (rhs.iConst < 0 || rhs.iConst > 31)) ||
         (rhs.type == EbtUInt && rhs.uConst > 31u))
     {
-        diag->error(line, "Undefined shift (operand out of range)", "<<", "");
+        diag->error(line, "Undefined shift (operand out of range)", "<<");
         switch (lhs.type)
         {
             case EbtInt:

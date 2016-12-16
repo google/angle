@@ -50,21 +50,14 @@ class TParseContext : angle::NonCopyable
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
     int numErrors() const { return mDiagnostics.numErrors(); }
     TInfoSink &infoSink() { return mDiagnostics.infoSink(); }
-    void error(const TSourceLoc &loc,
-               const char *reason,
-               const char *token,
-               const char *extraInfo = "");
-    void warning(const TSourceLoc &loc,
-                 const char *reason,
-                 const char *token,
-                 const char *extraInfo = "");
+    void error(const TSourceLoc &loc, const char *reason, const char *token);
+    void warning(const TSourceLoc &loc, const char *reason, const char *token);
 
     // If isError is false, a warning will be reported instead.
     void outOfRangeError(bool isError,
                          const TSourceLoc &loc,
                          const char *reason,
-                         const char *token,
-                         const char *extraInfo = "");
+                         const char *token);
 
     TIntermBlock *getTreeRoot() const { return mTreeRoot; }
     void setTreeRoot(TIntermBlock *treeRoot) { mTreeRoot = treeRoot; }
@@ -273,6 +266,9 @@ class TParseContext : angle::NonCopyable
                                               const TString &fieldString,
                                               const TSourceLoc &fieldLocation);
 
+    TFieldList *combineStructFieldLists(TFieldList *processedFields,
+                                        const TFieldList *newlyAddedFields,
+                                        const TSourceLoc &location);
     TFieldList *addStructDeclaratorListWithQualifiers(
         const TTypeQualifierBuilder &typeQualifierBuilder,
         TPublicType *typeSpecifier,
@@ -362,13 +358,12 @@ class TParseContext : angle::NonCopyable
     TSymbolTable &symbolTable;   // symbol table that goes with the language currently being parsed
 
   private:
-    // Returns a clamped index.
+    // Returns a clamped index. If it prints out an error message, the token is "[]".
     int checkIndexOutOfRange(bool outOfRangeIndexIsError,
                              const TSourceLoc &location,
                              int index,
                              int arraySize,
-                             const char *reason,
-                             const char *token);
+                             const char *reason);
 
     bool declareVariable(const TSourceLoc &line,
                          const TString &identifier,

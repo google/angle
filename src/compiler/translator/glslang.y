@@ -932,7 +932,7 @@ storage_qualifier
     | INOUT_QUAL {
         if (!context->declaringFunction())
         {
-            context->error(@1, "invalid inout qualifier", "'inout' can be only used with function parameters");
+            context->error(@1, "invalid qualifier: can be only used with function parameters", "inout");
         }
         $$ = new TStorageQualifierWrapper(EvqInOut, @1);
     }
@@ -1257,16 +1257,7 @@ struct_declaration_list
         $$ = $1;
     }
     | struct_declaration_list struct_declaration {
-        $$ = $1;
-        for (size_t i = 0; i < $2->size(); ++i) {
-            TField* field = (*$2)[i];
-            for (size_t j = 0; j < $$->size(); ++j) {
-                if ((*$$)[j]->name() == field->name()) {
-                    context->error(@2, "duplicate field name in structure:", "struct", field->name().c_str());
-                }
-            }
-            $$->push_back(field);
-        }
+        $$ = context->combineStructFieldLists($1, $2, @2);
     }
     ;
 

@@ -54,7 +54,7 @@ void UndefinedConstantFoldingError(const TSourceLoc &loc,
                                    TConstantUnion *result)
 {
     diagnostics->warning(loc, "operation result is undefined for the values passed in",
-                         GetOperatorString(op), "");
+                         GetOperatorString(op));
 
     switch (basicType)
     {
@@ -1342,13 +1342,13 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                                 diagnostics->warning(
                                     getLine(),
                                     "Zero divided by zero during constant folding generated NaN",
-                                    "/", "");
+                                    "/");
                                 resultArray[i].setFConst(std::numeric_limits<float>::quiet_NaN());
                             }
                             else
                             {
-                                diagnostics->warning(
-                                    getLine(), "Divide by zero during constant folding", "/", "");
+                                diagnostics->warning(getLine(),
+                                                     "Divide by zero during constant folding", "/");
                                 bool negativeResult =
                                     std::signbit(dividend) != std::signbit(divisor);
                                 resultArray[i].setFConst(
@@ -1361,7 +1361,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                             diagnostics->warning(getLine(),
                                                  "Infinity divided by infinity during constant "
                                                  "folding generated NaN",
-                                                 "/", "");
+                                                 "/");
                             resultArray[i].setFConst(std::numeric_limits<float>::quiet_NaN());
                         }
                         else
@@ -1371,7 +1371,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                             {
                                 diagnostics->warning(
                                     getLine(), "Constant folded division overflowed to infinity",
-                                    "/", "");
+                                    "/");
                             }
                             resultArray[i].setFConst(result);
                         }
@@ -1381,7 +1381,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                         if (rightArray[i] == 0)
                         {
                             diagnostics->warning(
-                                getLine(), "Divide by zero error during constant folding", "/", "");
+                                getLine(), "Divide by zero error during constant folding", "/");
                             resultArray[i].setIConst(INT_MAX);
                         }
                         else
@@ -1418,7 +1418,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                                     diagnostics->warning(getLine(),
                                                          "Negative modulus operator operand "
                                                          "encountered during constant folding",
-                                                         "%", "");
+                                                         "%");
                                     resultArray[i].setIConst(0);
                                 }
                                 else
@@ -1433,7 +1433,7 @@ TConstantUnion *TIntermConstantUnion::foldBinary(TOperator op,
                         if (rightArray[i] == 0)
                         {
                             diagnostics->warning(
-                                getLine(), "Divide by zero error during constant folding", "/", "");
+                                getLine(), "Divide by zero error during constant folding", "/");
                             resultArray[i].setUConst(UINT_MAX);
                         }
                         else

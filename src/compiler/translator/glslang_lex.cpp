@@ -1,3 +1,4 @@
+#line 17 "./glslang.l"
 //
 // Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -221,7 +222,7 @@ typedef size_t yy_size_t;
     #define  YY_LESS_LINENO(n) \
             do { \
                 yy_size_t yyl;\
-                for ( yyl = n; yyl < static_cast<yy_site_t>(yyleng); ++yyl )\
+                for ( yyl = n; yyl < yyleng; ++yyl )\
                     if ( yytext[yyl] == '\n' )\
                         --yylineno;\
             }while(0)
@@ -396,7 +397,7 @@ static void yy_fatal_error (yyconst char msg[] ,yyscan_t yyscanner );
  */
 #define YY_DO_BEFORE_ACTION \
 	yyg->yytext_ptr = yy_bp; \
-	yyleng = (size_t) (yy_cp - yy_bp); \
+	yyleng = (yy_size_t) (yy_cp - yy_bp); \
 	yyg->yy_hold_char = *yy_cp; \
 	*yy_cp = '\0'; \
 	yyg->yy_c_buf_p = yy_cp;
@@ -1380,7 +1381,7 @@ yy_find_action:
 		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
 			{
 			yy_size_t yyl;
-			for ( yyl = 0; yyl < static_cast<yy_size_t>(yyleng); ++yyl )
+			for ( yyl = 0; yyl < yyleng; ++yyl )
 				if ( yytext[yyl] == '\n' )
 					   
     do{ yylineno++;
@@ -2141,7 +2142,7 @@ YY_RULE_SETUP
 case 238:
 YY_RULE_SETUP
 {
-    yyextra->error(*yylloc, "Illegal character at fieldname start", yytext, "");
+    yyextra->error(*yylloc, "Illegal character at fieldname start", yytext);
     return 0;
 }
 	YY_BREAK
@@ -2384,7 +2385,7 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			yyg->yy_c_buf_p = &b->yy_ch_buf[yy_c_buf_p_offset];
 
 			num_to_read = YY_CURRENT_BUFFER_LVALUE->yy_buf_size -
-						static_cast<int>(number_to_move) - 1;
+						number_to_move - 1;
 
 			}
 
@@ -2392,10 +2393,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			num_to_read = YY_READ_BUF_SIZE;
 
 		/* Read in more data. */
-        size_t result = 0;
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-            result, num_to_read );
-        yyg->yy_n_chars = static_cast<int>(result);
+			yyg->yy_n_chars, num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = yyg->yy_n_chars;
 		}
@@ -2836,7 +2835,7 @@ static void yyensure_buffer_stack (yyscan_t yyscanner)
 		/* Increase the buffer to prepare for a possible push. */
 		int grow_size = 8 /* arbitrary grow size */;
 
-		num_to_alloc = static_cast<int>(yyg->yy_buffer_stack_max + grow_size);
+		num_to_alloc = yyg->yy_buffer_stack_max + grow_size;
 		yyg->yy_buffer_stack = (struct yy_buffer_state**)yyrealloc
 								(yyg->yy_buffer_stack,
 								num_to_alloc * sizeof(struct yy_buffer_state*)
@@ -2870,7 +2869,7 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size , yyscan_t yyscann
 	if ( ! b )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
 
-	b->yy_buf_size = static_cast<int>(size) - 2;	/* "- 2" to take care of EOB's */
+	b->yy_buf_size = size - 2;	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
 	b->yy_is_our_buffer = 0;
 	b->yy_input_file = 0;
@@ -2919,7 +2918,7 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len 
 	if ( ! buf )
 		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_bytes()" );
 
-	for ( i = 0; i < static_cast<yy_size_t>(_yybytes_len); ++i )
+	for ( i = 0; i < _yybytes_len; ++i )
 		buf[i] = yybytes[i];
 
 	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
@@ -3342,7 +3341,7 @@ int check_type(yyscan_t yyscanner) {
 int reserved_word(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
-    yyextra->error(*yylloc, "Illegal use of reserved word", yytext, "");
+    yyextra->error(*yylloc, "Illegal use of reserved word", yytext);
     return 0;
 }
 
@@ -3436,12 +3435,12 @@ int uint_constant(TParseContext *context)
 
     if (context->getShaderVersion() < 300)
     {
-        context->error(*yylloc, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext, "");
+        context->error(*yylloc, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext);
         return 0;
     }
 
     if (!atoi_clamp(yytext, &(yylval->lex.u)))
-        yyextra->error(*yylloc, "Integer overflow", yytext, "");
+        yyextra->error(*yylloc, "Integer overflow", yytext);
 
     return UINTCONSTANT;
 }
@@ -3459,7 +3458,7 @@ int floatsuffix_check(TParseContext* context)
     std::string text = yytext;
     text.resize(text.size() - 1);
     if (!strtof_clamp(text, &(yylval->lex.f)))
-        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+        yyextra->warning(*yylloc, "Float overflow", yytext);
 
     return(FLOATCONSTANT);
 }
@@ -3475,9 +3474,9 @@ int int_constant(TParseContext *context) {
     if (!atoi_clamp(yytext, &u))
     {
         if (context->getShaderVersion() >= 300)
-            yyextra->error(*yylloc, "Integer overflow", yytext, "");
+            yyextra->error(*yylloc, "Integer overflow", yytext);
         else
-            yyextra->warning(*yylloc, "Integer overflow", yytext, "");
+            yyextra->warning(*yylloc, "Integer overflow", yytext);
     }
     yylval->lex.i = static_cast<int>(u);
     return INTCONSTANT;
@@ -3487,7 +3486,7 @@ int float_constant(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
     if (!strtof_clamp(yytext, &(yylval->lex.f)))
-        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+        yyextra->warning(*yylloc, "Float overflow", yytext);
     return FLOATCONSTANT;
 }
 

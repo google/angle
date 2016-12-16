@@ -401,7 +401,7 @@ O           [0-7]
 }
 <FIELDS>[ \t\v\f\r] {}
 <FIELDS>. {
-    yyextra->error(*yylloc, "Illegal character at fieldname start", yytext, "");
+    yyextra->error(*yylloc, "Illegal character at fieldname start", yytext);
     return 0;
 }
 
@@ -445,7 +445,7 @@ int check_type(yyscan_t yyscanner) {
 int reserved_word(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
-    yyextra->error(*yylloc, "Illegal use of reserved word", yytext, "");
+    yyextra->error(*yylloc, "Illegal use of reserved word", yytext);
     return 0;
 }
 
@@ -539,12 +539,12 @@ int uint_constant(TParseContext *context)
 
     if (context->getShaderVersion() < 300)
     {
-        context->error(*yylloc, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext, "");
+        context->error(*yylloc, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext);
         return 0;
     }
 
     if (!atoi_clamp(yytext, &(yylval->lex.u)))
-        yyextra->error(*yylloc, "Integer overflow", yytext, "");
+        yyextra->error(*yylloc, "Integer overflow", yytext);
 
     return UINTCONSTANT;
 }
@@ -562,7 +562,7 @@ int floatsuffix_check(TParseContext* context)
     std::string text = yytext;
     text.resize(text.size() - 1);
     if (!strtof_clamp(text, &(yylval->lex.f)))
-        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+        yyextra->warning(*yylloc, "Float overflow", yytext);
 
     return(FLOATCONSTANT);
 }
@@ -578,9 +578,9 @@ int int_constant(TParseContext *context) {
     if (!atoi_clamp(yytext, &u))
     {
         if (context->getShaderVersion() >= 300)
-            yyextra->error(*yylloc, "Integer overflow", yytext, "");
+            yyextra->error(*yylloc, "Integer overflow", yytext);
         else
-            yyextra->warning(*yylloc, "Integer overflow", yytext, "");
+            yyextra->warning(*yylloc, "Integer overflow", yytext);
     }
     yylval->lex.i = static_cast<int>(u);
     return INTCONSTANT;
@@ -590,7 +590,7 @@ int float_constant(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
     if (!strtof_clamp(yytext, &(yylval->lex.f)))
-        yyextra->warning(*yylloc, "Float overflow", yytext, "");
+        yyextra->warning(*yylloc, "Float overflow", yytext);
     return FLOATCONSTANT;
 }
 

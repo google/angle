@@ -476,7 +476,7 @@ TTypeQualifier GetVariableTypeQualifierFromSortedSequence(
         {
             const TString &qualifierString = qualifier->getQualifierString();
             diagnostics->error(qualifier->getLine(), "invalid qualifier combination",
-                               qualifierString.c_str(), "");
+                               qualifierString.c_str());
             break;
         }
     }
@@ -521,7 +521,7 @@ TTypeQualifier GetParameterTypeQualifierFromSortedSequence(
         {
             const TString &qualifierString = qualifier->getQualifierString();
             diagnostics->error(qualifier->getLine(), "invalid parameter qualifier",
-                               qualifierString.c_str(), "");
+                               qualifierString.c_str());
             break;
         }
     }
@@ -542,7 +542,7 @@ TTypeQualifier GetParameterTypeQualifierFromSortedSequence(
             break;
         default:
             diagnostics->error(sortedSequence[0]->getLine(), "Invalid parameter qualifier ",
-                               getQualifierString(typeQualifier.qualifier), "");
+                               getQualifierString(typeQualifier.qualifier));
     }
     return typeQualifier;
 }
@@ -578,7 +578,7 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
             {
                 diagnostics->error(rightQualifierLocation,
                                    "Cannot have multiple different work group size specifiers",
-                                   getWorkGroupSizeString(i), "");
+                                   getWorkGroupSizeString(i));
             }
             joinedQualifier.localSize[i] = rightQualifier.localSize[i];
         }
@@ -661,15 +661,13 @@ bool TTypeQualifierBuilder::checkSequenceIsValid(TDiagnostics *diagnostics) cons
     std::string errorMessage;
     if (HasRepeatingQualifiers(mQualifiers, areQualifierChecksRelaxed, &errorMessage))
     {
-        diagnostics->error(mQualifiers[0]->getLine(), "qualifier sequence", errorMessage.c_str(),
-                           "");
+        diagnostics->error(mQualifiers[0]->getLine(), errorMessage.c_str(), "qualifier sequence");
         return false;
     }
 
     if (!areQualifierChecksRelaxed && !AreQualifiersInOrder(mQualifiers, &errorMessage))
     {
-        diagnostics->error(mQualifiers[0]->getLine(), "qualifier sequence", errorMessage.c_str(),
-                           "");
+        diagnostics->error(mQualifiers[0]->getLine(), errorMessage.c_str(), "qualifier sequence");
         return false;
     }
 

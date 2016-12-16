@@ -26,8 +26,7 @@ TDiagnostics::~TDiagnostics()
 void TDiagnostics::writeInfo(Severity severity,
                              const pp::SourceLocation &loc,
                              const std::string &reason,
-                             const std::string &token,
-                             const std::string &extra)
+                             const std::string &token)
 {
     TPrefixType prefix = EPrefixNone;
     switch (severity)
@@ -49,39 +48,28 @@ void TDiagnostics::writeInfo(Severity severity,
     /* VC++ format: file(linenum) : error #: 'token' : extrainfo */
     sink.prefix(prefix);
     sink.location(loc.file, loc.line);
-    sink << "'" << token << "' : " << reason << " " << extra << "\n";
-}
-
-void TDiagnostics::error(const TSourceLoc &loc,
-                         const char *reason,
-                         const char *token,
-                         const char *extraInfo)
-{
-    pp::SourceLocation srcLoc;
-    srcLoc.file = loc.first_file;
-    srcLoc.line = loc.first_line;
-    writeInfo(pp::Diagnostics::PP_ERROR, srcLoc, reason, token, extraInfo);
+    sink << "'" << token << "' : " << reason << "\n";
 }
 
 void TDiagnostics::error(const TSourceLoc &loc, const char *reason, const char *token)
 {
-    error(loc, reason, token, "");
+    pp::SourceLocation srcLoc;
+    srcLoc.file = loc.first_file;
+    srcLoc.line = loc.first_line;
+    writeInfo(pp::Diagnostics::PP_ERROR, srcLoc, reason, token);
 }
 
-void TDiagnostics::warning(const TSourceLoc &loc,
-                           const char *reason,
-                           const char *token,
-                           const char *extraInfo)
+void TDiagnostics::warning(const TSourceLoc &loc, const char *reason, const char *token)
 {
     pp::SourceLocation srcLoc;
     srcLoc.file = loc.first_file;
     srcLoc.line = loc.first_line;
-    writeInfo(pp::Diagnostics::PP_WARNING, srcLoc, reason, token, extraInfo);
+    writeInfo(pp::Diagnostics::PP_WARNING, srcLoc, reason, token);
 }
 
 void TDiagnostics::print(ID id, const pp::SourceLocation &loc, const std::string &text)
 {
-    writeInfo(severity(id), loc, message(id), text, "");
+    writeInfo(severity(id), loc, message(id), text);
 }
 
 }  // namespace sh
