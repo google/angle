@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_bbc11b95",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T09:49:16Z",
+      "side": 1,
+      "message": "I initialize mipIndex in ImageIndex::Make2DMultisample(level), so attachment-\u003emipLevel() should be 0 here if the code is correct.",
+      "parentUuid": "ba4b7745_5b882fb3",
+      "revId": "7bdd13e51513274c8e7d0ace05c622d0f9f92f33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_1b3a2728",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 19
@@ -30,6 +48,24 @@
       "writtenOn": "2016-12-16T06:41:08Z",
       "side": 1,
       "message": "Why not directly use if (target !\u003d GL_TEXTURE_2D_MULTISAMPLE)",
+      "revId": "7bdd13e51513274c8e7d0ace05c622d0f9f92f33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_fbcba3b0",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-16T09:49:16Z",
+      "side": 1,
+      "message": "Sorry, I forget to modify the code, it used to have two cases here.",
+      "parentUuid": "ba4b7745_1b3a2728",
       "revId": "7bdd13e51513274c8e7d0ace05c622d0f9f92f33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
