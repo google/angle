@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_3b5c4b35",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 3710,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-16T06:41:08Z",
+      "side": 1,
+      "message": "return void instead of Error.\n   syncRendererState();\n   handleError(mImplementation-\u003egetMultisamplefv(pname, index, val));",
+      "revId": "5659a89fd048da25edade55e4c375ac10d548f10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
