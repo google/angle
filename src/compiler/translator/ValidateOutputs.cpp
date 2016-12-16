@@ -14,12 +14,9 @@ namespace sh
 
 namespace
 {
-void error(int *errorCount, TInfoSinkBase &sink, const TIntermSymbol &symbol, const char *reason)
+void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagnostics)
 {
-    sink.prefix(EPrefixError);
-    sink.location(symbol.getLine());
-    sink << "'" << symbol.getSymbol() << "' : " << reason << "\n";
-    (*errorCount)++;
+    diagnostics->error(symbol.getLine(), reason, symbol.getSymbol().c_str());
 }
 
 }  // namespace
@@ -55,10 +52,10 @@ void ValidateOutputs::visitSymbol(TIntermSymbol *symbol)
     }
 }
 
-int ValidateOutputs::validateAndCountErrors(TInfoSinkBase &sink) const
+void ValidateOutputs::validate(TDiagnostics *diagnostics) const
 {
+    ASSERT(diagnostics);
     OutputVector validOutputs(mMaxDrawBuffers);
-    int errorCount = 0;
 
     for (const auto &symbol : mOutputs)
     {
@@ -78,7 +75,7 @@ int ValidateOutputs::validateAndCountErrors(TInfoSinkBase &sink) const
                     std::stringstream strstr;
                     strstr << "conflicting output locations with previously defined output '"
                            << validOutputs[offsetLocation]->getSymbol() << "'";
-                    error(&errorCount, sink, *symbol, strstr.str().c_str());
+                    error(*symbol, strstr.str().c_str(), diagnostics);
                 }
                 else
                 {
@@ -90,9 +87,10 @@ int ValidateOutputs::validateAndCountErrors(TInfoSinkBase &sink) const
         {
             if (elementCount > 0)
             {
-                error(&errorCount, sink, *symbol,
+                error(*symbol,
                       elementCount > 1 ? "output array locations would exceed MAX_DRAW_BUFFERS"
-                                       : "output location must be < MAX_DRAW_BUFFERS");
+                                       : "output location must be < MAX_DRAW_BUFFERS",
+                      diagnostics);
             }
         }
     }
@@ -103,11 +101,11 @@ int ValidateOutputs::validateAndCountErrors(TInfoSinkBase &sink) const
     {
         for (const auto &symbol : mUnspecifiedLocationOutputs)
         {
-            error(&errorCount, sink, *symbol,
-                  "must explicitly specify all locations when using multiple fragment outputs");
+            error(*symbol,
+                  "must explicitly specify all locations when using multiple fragment outputs",
+                  diagnostics);
         }
     }
-    return errorCount;
 }
 
 }  // namespace sh

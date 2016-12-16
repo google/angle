@@ -65,7 +65,7 @@ void OutputTreeText(TInfoSinkBase &sink, TIntermNode *node, const int depth)
 {
     int i;
 
-    sink.location(node->getLine());
+    sink.location(node->getLine().first_file, node->getLine().first_line);
 
     for (i = 0; i < depth; ++i)
         sink << "  ";
@@ -476,7 +476,7 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
             break;
 
         default:
-            out.prefix(EPrefixError);
+            out.prefix(SH_ERROR);
             out << "Bad unary op";
     }
 
@@ -512,7 +512,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     if (node->getOp() == EOpNull)
     {
-        out.prefix(EPrefixError);
+        out.prefix(SH_ERROR);
         out << "node is still EOpNull!\n";
         return true;
     }
@@ -687,7 +687,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
 
         default:
-            out.prefix(EPrefixError);
+            out.prefix(SH_ERROR);
             out << "Bad aggregation op";
     }
 
@@ -853,7 +853,8 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
                 out << " (const uint)\n";
                 break;
             default:
-                out.message(EPrefixInternalError, node->getLine(), "Unknown constant");
+                out.prefix(SH_ERROR);
+                out << "Unknown constant";
                 break;
         }
     }

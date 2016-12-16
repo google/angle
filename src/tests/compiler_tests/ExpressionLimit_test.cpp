@@ -203,7 +203,7 @@ const char* ExpressionLimitTest::kExpressionTooComplex =
 const char* ExpressionLimitTest::kCallStackTooDeep =
     "Call stack too deep";
 const char* ExpressionLimitTest::kHasRecursion =
-    "Function recursion detected";
+    "Recursive function call in the following call chain";
 const char* ExpressionLimitTest::kTooManyParameters =
     "Function has too many parameters";
 

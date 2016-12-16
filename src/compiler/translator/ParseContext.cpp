@@ -74,7 +74,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
                              ShShaderSpec spec,
                              ShCompileOptions options,
                              bool checksPrecErrors,
-                             TInfoSink &is,
+                             TDiagnostics *diagnostics,
                              const ShBuiltInResources &resources)
     : intermediate(),
       symbolTable(symt),
@@ -93,13 +93,13 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mFragmentPrecisionHighOnESSL1(false),
       mDefaultMatrixPacking(EmpColumnMajor),
       mDefaultBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
-      mDiagnostics(is),
+      mDiagnostics(diagnostics),
       mDirectiveHandler(ext,
-                        mDiagnostics,
+                        *mDiagnostics,
                         mShaderVersion,
                         mShaderType,
                         resources.WEBGL_debug_shader_precision == 1),
-      mPreprocessor(&mDiagnostics, &mDirectiveHandler, pp::PreprocessorSettings()),
+      mPreprocessor(mDiagnostics, &mDirectiveHandler, pp::PreprocessorSettings()),
       mScanner(nullptr),
       mUsesFragData(false),
       mUsesFragColor(false),
@@ -227,12 +227,12 @@ bool TParseContext::parseVectorFields(const TString &compString,
 //
 void TParseContext::error(const TSourceLoc &loc, const char *reason, const char *token)
 {
-    mDiagnostics.error(loc, reason, token);
+    mDiagnostics->error(loc, reason, token);
 }
 
 void TParseContext::warning(const TSourceLoc &loc, const char *reason, const char *token)
 {
-    mDiagnostics.warning(loc, reason, token);
+    mDiagnostics->warning(loc, reason, token);
 }
 
 void TParseContext::outOfRangeError(bool isError,
@@ -1049,7 +1049,7 @@ void TParseContext::checkIsParameterQualifierValid(
     const TTypeQualifierBuilder &typeQualifierBuilder,
     TType *type)
 {
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getParameterTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getParameterTypeQualifier(mDiagnostics);
 
     if (typeQualifier.qualifier == EvqOut || typeQualifier.qualifier == EvqInOut)
     {
@@ -1688,7 +1688,7 @@ void TParseContext::addFullySpecifiedType(TPublicType *typeSpecifier)
 TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &typeQualifierBuilder,
                                                  const TPublicType &typeSpecifier)
 {
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
     TPublicType returnType     = typeSpecifier;
     returnType.qualifier       = typeQualifier.qualifier;
@@ -2052,7 +2052,7 @@ TIntermInvariantDeclaration *TParseContext::parseInvariantDeclaration(
     const TString *identifier,
     const TSymbol *symbol)
 {
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
     if (!typeQualifier.invariant)
     {
@@ -2242,7 +2242,7 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &publicType,
 
 void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder)
 {
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
     const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
 
     checkInvariantVariableQualifier(typeQualifier.invariant, typeQualifier.qualifier,
@@ -2627,7 +2627,7 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     {
         // Array return values are forbidden, but there's also no valid syntax for declaring array
         // return values in ESSL 1.00.
-        ASSERT(type.arraySize == 0 || mDiagnostics.numErrors() > 0);
+        ASSERT(type.arraySize == 0 || mDiagnostics->numErrors() > 0);
 
         if (type.isStructureContainingArrays())
         {
@@ -2730,7 +2730,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermNode *arguments,
 
     constructor->setType(type);
 
-    TIntermTyped *constConstructor = intermediate.foldAggregateBuiltIn(constructor, &mDiagnostics);
+    TIntermTyped *constConstructor = intermediate.foldAggregateBuiltIn(constructor, mDiagnostics);
     if (constConstructor)
     {
         return constConstructor;
@@ -2754,7 +2754,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 {
     checkIsNotReserved(nameLine, blockName);
 
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
     if (typeQualifier.qualifier != EvqUniform)
     {
@@ -3075,12 +3075,12 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         }
 
         return intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location,
-                                     &mDiagnostics);
+                                     mDiagnostics);
     }
     else
     {
         return intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location,
-                                     &mDiagnostics);
+                                     mDiagnostics);
     }
 }
 
@@ -3156,7 +3156,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                 TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
                 index->setLine(fieldLocation);
                 return intermediate.addIndex(EOpIndexDirectStruct, baseExpression, index,
-                                             dotLocation, &mDiagnostics);
+                                             dotLocation, mDiagnostics);
             }
             else
             {
@@ -3190,7 +3190,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
                 TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
                 index->setLine(fieldLocation);
                 return intermediate.addIndex(EOpIndexDirectInterfaceBlock, baseExpression, index,
-                                             dotLocation, &mDiagnostics);
+                                             dotLocation, mDiagnostics);
             }
             else
             {
@@ -3406,7 +3406,7 @@ TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualif
                                                      const TSourceLoc &rightQualifierLocation)
 {
     return sh::JoinLayoutQualifiers(leftQualifier, rightQualifier, rightQualifierLocation,
-                                    &mDiagnostics);
+                                    mDiagnostics);
 }
 
 TFieldList *TParseContext::combineStructFieldLists(TFieldList *processedFields,
@@ -3432,7 +3432,7 @@ TFieldList *TParseContext::addStructDeclaratorListWithQualifiers(
     TPublicType *typeSpecifier,
     TFieldList *fieldList)
 {
-    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(&mDiagnostics);
+    TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
 
     typeSpecifier->qualifier       = typeQualifier.qualifier;
     typeSpecifier->layoutQualifier = typeQualifier.layoutQualifier;
@@ -3563,7 +3563,7 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
 
     if (statementList)
     {
-        if (!ValidateSwitchStatementList(switchType, &mDiagnostics, statementList, loc))
+        if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
         {
             return nullptr;
         }
@@ -3673,7 +3673,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
     TIntermUnary *node = new TIntermUnary(op, child);
     node->setLine(loc);
 
-    TIntermTyped *foldedNode = node->fold(&mDiagnostics);
+    TIntermTyped *foldedNode = node->fold(mDiagnostics);
     if (foldedNode)
         return foldedNode;
 
@@ -4008,7 +4008,7 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
     node->setLine(loc);
 
     // See if we can fold constants.
-    TIntermTyped *foldedNode = node->fold(&mDiagnostics);
+    TIntermTyped *foldedNode = node->fold(mDiagnostics);
     if (foldedNode)
         return foldedNode;
 
@@ -4408,7 +4408,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                     // See if we can constant fold a built-in. Note that this may be possible even
                     // if it is not const-qualified.
                     TIntermTyped *foldedNode =
-                        intermediate.foldAggregateBuiltIn(aggregate, &mDiagnostics);
+                        intermediate.foldAggregateBuiltIn(aggregate, mDiagnostics);
                     if (foldedNode)
                     {
                         callNode = foldedNode;

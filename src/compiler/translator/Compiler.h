@@ -16,6 +16,7 @@
 
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/CallDAG.h"
+#include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/ExtensionBehavior.h"
 #include "compiler/translator/HashNames.h"
 #include "compiler/translator/InfoSink.h"
@@ -239,6 +240,7 @@ class TCompiler : public TShHandleBase
     // Results of compilation.
     int shaderVersion;
     TInfoSink infoSink;       // Output sink.
+    TDiagnostics mDiagnostics;
     const char *mSourcePath;  // Path of source file or NULL
 
     // compute shader local group size

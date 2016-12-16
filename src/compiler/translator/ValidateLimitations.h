@@ -12,23 +12,19 @@
 namespace sh
 {
 
-class TInfoSinkBase;
+class TDiagnostics;
 
 // Traverses intermediate tree to ensure that the shader does not exceed the
 // minimum functionality mandated in GLSL 1.0 spec, Appendix A.
 class ValidateLimitations : public TIntermTraverser
 {
   public:
-    ValidateLimitations(sh::GLenum shaderType, TInfoSinkBase *sink);
-
-    int numErrors() const { return mNumErrors; }
+    ValidateLimitations(sh::GLenum shaderType, TDiagnostics *diagnostics);
 
     bool visitBinary(Visit, TIntermBinary *) override;
     bool visitUnary(Visit, TIntermUnary *) override;
     bool visitAggregate(Visit, TIntermAggregate *) override;
     bool visitLoop(Visit, TIntermLoop *) override;
-
-    static bool IsLimitedForLoop(TIntermLoop *node);
 
   private:
     void error(TSourceLoc loc, const char *reason, const char *token);
@@ -55,8 +51,7 @@ class ValidateLimitations : public TIntermTraverser
     bool validateIndexing(TIntermBinary *node);
 
     sh::GLenum mShaderType;
-    TInfoSinkBase *mSink;
-    int mNumErrors;
+    TDiagnostics *mDiagnostics;
     std::vector<int> mLoopSymbolIds;
     bool mValidateIndexing;
     bool mValidateInnerLoops;

@@ -176,7 +176,7 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(treeRoot);
 
     // Now that we are done changing the AST, do the analyses need for HLSL generation
-    CallDAG::InitResult success = mCallDag.init(treeRoot, &objSink);
+    CallDAG::InitResult success = mCallDag.init(treeRoot, nullptr);
     ASSERT(success == CallDAG::INITDAG_SUCCESS);
     mASTMetadataList = CreateASTMetadataHLSL(treeRoot, mCallDag);
 

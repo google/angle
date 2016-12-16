@@ -215,6 +215,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       fragmentPrecisionHigh(false),
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(),
+      mDiagnostics(infoSink.info),
       mSourcePath(NULL),
       mComputeShaderLocalSizeDeclared(false),
       mTemporaryIndex(0)
@@ -288,7 +289,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     }
 
     TParseContext parseContext(symbolTable, extensionBehavior, shaderType, shaderSpec,
-                               compileOptions, true, infoSink, getResources());
+                               compileOptions, true, &mDiagnostics, getResources());
 
     parseContext.setFragmentPrecisionHighOnESSL1(fragmentPrecisionHigh);
     SetGlobalParseContext(&parseContext);
@@ -305,8 +306,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     shaderVersion = parseContext.getShaderVersion();
     if (success && MapSpecToShaderVersion(shaderSpec) < shaderVersion)
     {
-        infoSink.info.prefix(EPrefixError);
-        infoSink.info << "unsupported shader version";
+        mDiagnostics.globalError("unsupported shader version");
         success = false;
     }
 
@@ -364,8 +364,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         {
             if (!EmulatePrecision::SupportedInLanguage(outputType))
             {
-                infoSink.info.prefix(EPrefixError);
-                infoSink.info << "Precision emulation not supported for this output type.";
+                mDiagnostics.globalError("Precision emulation not supported for this output type.");
                 success = false;
             }
         }
@@ -424,8 +423,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                 success = enforcePackingRestrictions();
                 if (!success)
                 {
-                    infoSink.info.prefix(EPrefixError);
-                    infoSink.info << "too many uniforms";
+                    mDiagnostics.globalError("too many uniforms");
                 }
             }
             if (success && (compileOptions & SH_INIT_OUTPUT_VARIABLES))
@@ -642,6 +640,7 @@ void TCompiler::clearResults()
     infoSink.info.erase();
     infoSink.obj.erase();
     infoSink.debug.erase();
+    mDiagnostics.resetErrorCount();
 
     attributes.clear();
     outputVariables.clear();
@@ -663,17 +662,14 @@ bool TCompiler::initCallDag(TIntermNode *root)
 {
     mCallDag.clear();
 
-    switch (mCallDag.init(root, &infoSink.info))
+    switch (mCallDag.init(root, &mDiagnostics))
     {
         case CallDAG::INITDAG_SUCCESS:
             return true;
         case CallDAG::INITDAG_RECURSION:
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Function recursion detected";
-            return false;
         case CallDAG::INITDAG_UNDEFINED:
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Unimplemented function detected";
+            // Error message has already been written out.
+            ASSERT(mDiagnostics.numErrors() > 0);
             return false;
     }
 
@@ -700,16 +696,16 @@ bool TCompiler::checkCallDepth()
         if (depth >= maxCallStackDepth)
         {
             // Trace back the function chain to have a meaningful info log.
-            infoSink.info.prefix(EPrefixError);
-            infoSink.info << "Call stack too deep (larger than " << maxCallStackDepth
-                          << ") with the following call chain: " << record.name;
+            std::stringstream errorStream;
+            errorStream << "Call stack too deep (larger than " << maxCallStackDepth
+                        << ") with the following call chain: " << record.name;
 
             int currentFunction = static_cast<int>(i);
             int currentDepth    = depth;
 
             while (currentFunction != -1)
             {
-                infoSink.info << " -> " << mCallDag.getRecordFromIndex(currentFunction).name;
+                errorStream << " -> " << mCallDag.getRecordFromIndex(currentFunction).name;
 
                 int nextFunction = -1;
                 for (auto &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
@@ -723,6 +719,9 @@ bool TCompiler::checkCallDepth()
 
                 currentFunction = nextFunction;
             }
+
+            std::string errorStr = errorStream.str();
+            mDiagnostics.globalError(errorStr.c_str());
 
             return false;
         }
@@ -743,8 +742,7 @@ bool TCompiler::tagUsedFunctions()
         }
     }
 
-    infoSink.info.prefix(EPrefixError);
-    infoSink.info << "Missing main()\n";
+    mDiagnostics.globalError("Missing main()");
     return false;
 }
 
@@ -830,14 +828,15 @@ bool TCompiler::validateOutputs(TIntermNode *root)
 {
     ValidateOutputs validateOutputs(getExtensionBehavior(), compileResources.MaxDrawBuffers);
     root->traverse(&validateOutputs);
-    return (validateOutputs.validateAndCountErrors(infoSink.info) == 0);
+    validateOutputs.validate(&mDiagnostics);
+    return (mDiagnostics.numErrors() == 0);
 }
 
 bool TCompiler::validateLimitations(TIntermNode *root)
 {
-    ValidateLimitations validate(shaderType, &infoSink.info);
+    ValidateLimitations validate(shaderType, &mDiagnostics);
     root->traverse(&validate);
-    return validate.numErrors() == 0;
+    return mDiagnostics.numErrors() == 0;
 }
 
 bool TCompiler::limitExpressionComplexity(TIntermNode *root)
@@ -847,13 +846,13 @@ bool TCompiler::limitExpressionComplexity(TIntermNode *root)
 
     if (traverser.getMaxDepth() > maxExpressionComplexity)
     {
-        infoSink.info << "Expression too complex.";
+        mDiagnostics.globalError("Expression too complex.");
         return false;
     }
 
     if (!ValidateMaxParameters::validate(root, maxFunctionParameters))
     {
-        infoSink.info << "Function has too many parameters.";
+        mDiagnostics.globalError("Function has too many parameters.");
         return false;
     }
 

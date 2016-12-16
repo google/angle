@@ -17,23 +17,22 @@ Diagnostics::~Diagnostics()
 
 void Diagnostics::report(ID id, const SourceLocation &loc, const std::string &text)
 {
-    // TODO(alokp): Keep a count of errors and warnings.
     print(id, loc, text);
 }
 
-Diagnostics::Severity Diagnostics::severity(ID id)
+bool Diagnostics::isError(ID id)
 {
     if ((id > PP_ERROR_BEGIN) && (id < PP_ERROR_END))
-        return PP_ERROR;
+        return true;
 
     if ((id > PP_WARNING_BEGIN) && (id < PP_WARNING_END))
-        return PP_WARNING;
+        return false;
 
     UNREACHABLE();
-    return PP_ERROR;
+    return true;
 }
 
-std::string Diagnostics::message(ID id)
+const char *Diagnostics::message(ID id)
 {
     switch (id)
     {

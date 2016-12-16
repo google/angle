@@ -52,7 +52,7 @@ TDirectiveHandler::~TDirectiveHandler()
 
 void TDirectiveHandler::handleError(const pp::SourceLocation &loc, const std::string &msg)
 {
-    mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc, msg, "");
+    mDiagnostics.error(loc, msg.c_str(), "");
 }
 
 void TDirectiveHandler::handlePragma(const pp::SourceLocation &loc,
@@ -70,9 +70,9 @@ void TDirectiveHandler::handlePragma(const pp::SourceLocation &loc,
             if (mShaderVersion == 300 && mShaderType == GL_FRAGMENT_SHADER)
             {
                 // ESSL 3.00.4 section 4.6.1
-                mDiagnostics.writeInfo(
-                    pp::Diagnostics::PP_ERROR, loc,
-                    "#pragma STDGL invariant(all) can not be used in fragment shader", name);
+                mDiagnostics.error(
+                    loc, "#pragma STDGL invariant(all) can not be used in fragment shader",
+                    name.c_str());
             }
             mPragma.stdgl.invariantAll = true;
         }
@@ -125,8 +125,7 @@ void TDirectiveHandler::handlePragma(const pp::SourceLocation &loc,
 
         if (invalidValue)
         {
-            mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
-                                   "invalid pragma value - 'on' or 'off' expected", value);
+            mDiagnostics.error(loc, "invalid pragma value - 'on' or 'off' expected", value.c_str());
         }
     }
 }
@@ -140,7 +139,7 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation &loc,
     TBehavior behaviorVal = getBehavior(behavior);
     if (behaviorVal == EBhUndefined)
     {
-        mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc, "behavior invalid", name);
+        mDiagnostics.error(loc, "behavior invalid", name.c_str());
         return;
     }
 
@@ -148,13 +147,11 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation &loc,
     {
         if (behaviorVal == EBhRequire)
         {
-            mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
-                                   "extension cannot have 'require' behavior", name);
+            mDiagnostics.error(loc, "extension cannot have 'require' behavior", name.c_str());
         }
         else if (behaviorVal == EBhEnable)
         {
-            mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc,
-                                   "extension cannot have 'enable' behavior", name);
+            mDiagnostics.error(loc, "extension cannot have 'enable' behavior", name.c_str());
         }
         else
         {
@@ -172,22 +169,20 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation &loc,
         return;
     }
 
-    pp::Diagnostics::Severity severity = pp::Diagnostics::PP_ERROR;
     switch (behaviorVal)
     {
         case EBhRequire:
-            severity = pp::Diagnostics::PP_ERROR;
+            mDiagnostics.error(loc, "extension is not supported", name.c_str());
             break;
         case EBhEnable:
         case EBhWarn:
         case EBhDisable:
-            severity = pp::Diagnostics::PP_WARNING;
+            mDiagnostics.warning(loc, "extension is not supported", name.c_str());
             break;
         default:
             UNREACHABLE();
             break;
     }
-    mDiagnostics.writeInfo(severity, loc, "extension is not supported", name);
 }
 
 void TDirectiveHandler::handleVersion(const pp::SourceLocation &loc, int version)
@@ -201,7 +196,7 @@ void TDirectiveHandler::handleVersion(const pp::SourceLocation &loc, int version
         std::stringstream stream;
         stream << version;
         std::string str = stream.str();
-        mDiagnostics.writeInfo(pp::Diagnostics::PP_ERROR, loc, "version number not supported", str);
+        mDiagnostics.error(loc, "version number not supported", str.c_str());
     }
 }
 

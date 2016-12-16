@@ -9,26 +9,15 @@
 namespace sh
 {
 
-void TInfoSinkBase::prefix(TPrefixType p)
+void TInfoSinkBase::prefix(Severity severity)
 {
-    switch (p)
+    switch (severity)
     {
-        case EPrefixNone:
-            break;
-        case EPrefixWarning:
+        case SH_WARNING:
             sink.append("WARNING: ");
             break;
-        case EPrefixError:
+        case SH_ERROR:
             sink.append("ERROR: ");
-            break;
-        case EPrefixInternalError:
-            sink.append("INTERNAL ERROR: ");
-            break;
-        case EPrefixUnimplemented:
-            sink.append("UNIMPLEMENTED: ");
-            break;
-        case EPrefixNote:
-            sink.append("NOTE: ");
             break;
         default:
             sink.append("UNKOWN ERROR: ");
@@ -46,19 +35,6 @@ void TInfoSinkBase::location(int file, int line)
     stream << ": ";
 
     sink.append(stream.str());
-}
-
-void TInfoSinkBase::location(const TSourceLoc &loc)
-{
-    location(loc.first_file, loc.first_line);
-}
-
-void TInfoSinkBase::message(TPrefixType p, const TSourceLoc &loc, const char *m)
-{
-    prefix(p);
-    location(loc);
-    sink.append(m);
-    sink.append("\n");
 }
 
 }  // namespace sh

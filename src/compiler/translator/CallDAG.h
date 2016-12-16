@@ -55,8 +55,8 @@ class CallDAG : angle::NonCopyable
     };
 
     // Returns INITDAG_SUCCESS if it was able to create the DAG, otherwise prints
-    // the initialization error in info, if present.
-    InitResult init(TIntermNode *root, TInfoSinkBase *info);
+    // the initialization error in diagnostics, if present.
+    InitResult init(TIntermNode *root, TDiagnostics *diagnostics);
 
     // Returns InvalidIndex if the function wasn't found
     size_t findIndex(const TFunctionSymbolInfo *functionInfo) const;

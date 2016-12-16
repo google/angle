@@ -10,6 +10,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "compiler/translator/Common.h"
+#include "compiler/translator/Severity.h"
 
 namespace sh
 {
@@ -20,20 +21,6 @@ inline float fractionalPart(float f)
     float intPart = 0.0f;
     return modff(f, &intPart);
 }
-
-//
-// TPrefixType is used to centralize how info log messages start.
-// See below.
-//
-enum TPrefixType
-{
-    EPrefixNone,
-    EPrefixWarning,
-    EPrefixError,
-    EPrefixInternalError,
-    EPrefixUnimplemented,
-    EPrefixNote
-};
 
 //
 // Encapsulate info logs for all objects that have them.
@@ -113,10 +100,8 @@ class TInfoSinkBase
     const TPersistString &str() const { return sink; }
     const char *c_str() const { return sink.c_str(); }
 
-    void prefix(TPrefixType p);
+    void prefix(Severity severity);
     void location(int file, int line);
-    void location(const TSourceLoc &loc);
-    void message(TPrefixType p, const TSourceLoc &loc, const char *m);
 
   private:
     TPersistString sink;

@@ -103,6 +103,7 @@
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
             'compiler/translator/SearchSymbol.cpp',
             'compiler/translator/SearchSymbol.h',
+            'compiler/translator/Severity.h',
             'compiler/translator/ShaderLang.cpp',
             'compiler/translator/ShaderVars.cpp',
             'compiler/translator/SymbolTable.cpp',

@@ -19,11 +19,6 @@ struct SourceLocation;
 class Diagnostics
 {
   public:
-    enum Severity
-    {
-        PP_ERROR,
-        PP_WARNING
-    };
     enum ID
     {
         PP_ERROR_BEGIN,
@@ -83,8 +78,8 @@ class Diagnostics
     void report(ID id, const SourceLocation &loc, const std::string &text);
 
   protected:
-    Severity severity(ID id);
-    std::string message(ID id);
+    bool isError(ID id);
+    const char *message(ID id);
 
     virtual void print(ID id, const SourceLocation &loc, const std::string &text) = 0;
 };

@@ -38,7 +38,7 @@ class TParseContext : angle::NonCopyable
                   ShShaderSpec spec,
                   ShCompileOptions options,
                   bool checksPrecErrors,
-                  TInfoSink &is,
+                  TDiagnostics *diagnostics,
                   const ShBuiltInResources &resources);
 
     const pp::Preprocessor &getPreprocessor() const { return mPreprocessor; }
@@ -48,8 +48,7 @@ class TParseContext : angle::NonCopyable
     int getShaderVersion() const { return mShaderVersion; }
     sh::GLenum getShaderType() const { return mShaderType; }
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
-    int numErrors() const { return mDiagnostics.numErrors(); }
-    TInfoSink &infoSink() { return mDiagnostics.infoSink(); }
+    int numErrors() const { return mDiagnostics->numErrors(); }
     void error(const TSourceLoc &loc, const char *reason, const char *token);
     void warning(const TSourceLoc &loc, const char *reason, const char *token);
 
@@ -435,7 +434,7 @@ class TParseContext : angle::NonCopyable
     TLayoutMatrixPacking mDefaultMatrixPacking;
     TLayoutBlockStorage mDefaultBlockStorage;
     TString mHashErrMsg;
-    TDiagnostics mDiagnostics;
+    TDiagnostics *mDiagnostics;
     TDirectiveHandler mDirectiveHandler;
     pp::Preprocessor mPreprocessor;
     void *mScanner;

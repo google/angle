@@ -9,7 +9,7 @@
 // order.
 
 #include "compiler/translator/CallDAG.h"
-#include "compiler/translator/InfoSink.h"
+#include "compiler/translator/Diagnostics.h"
 
 namespace sh
 {
@@ -19,9 +19,9 @@ namespace sh
 class CallDAG::CallDAGCreator : public TIntermTraverser
 {
   public:
-    CallDAGCreator(TInfoSinkBase *info)
+    CallDAGCreator(TDiagnostics *diagnostics)
         : TIntermTraverser(true, false, true),
-          mCreationInfo(info),
+          mDiagnostics(diagnostics),
           mCurrentFunction(nullptr),
           mCurrentIndex(0)
     {
@@ -38,7 +38,6 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 InitResult result = assignIndicesInternal(&it.second);
                 if (result != INITDAG_SUCCESS)
                 {
-                    *mCreationInfo << "\n";
                     return result;
                 }
             }
@@ -190,6 +189,8 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
         InitResult result = INITDAG_SUCCESS;
 
+        std::stringstream errorStream;
+
         while (!functionsToProcess.empty())
         {
             CreatorFunctionData *function = functionsToProcess.back();
@@ -206,8 +207,8 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
 
             if (!function->node)
             {
-                *mCreationInfo << "Undefined function '" << function->name
-                               << ")' used in the following call chain:";
+                errorStream << "Undefined function '" << function->name
+                            << ")' used in the following call chain:";
                 result = INITDAG_UNDEFINED;
                 break;
             }
@@ -228,7 +229,7 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 // in the chain printed in the info log.
                 if (callee->visiting)
                 {
-                    *mCreationInfo << "Recursive function call in the following call chain:";
+                    errorStream << "Recursive function call in the following call chain:";
                     result = INITDAG_RECURSION;
                     break;
                 }
@@ -250,18 +251,23 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 {
                     if (!first)
                     {
-                        *mCreationInfo << " -> ";
+                        errorStream << " -> ";
                     }
-                    *mCreationInfo << function->name << ")";
+                    errorStream << function->name << ")";
                     first = false;
                 }
+            }
+            if (mDiagnostics)
+            {
+                std::string errorStr = errorStream.str();
+                mDiagnostics->globalError(errorStr.c_str());
             }
         }
 
         return result;
     }
 
-    TInfoSinkBase *mCreationInfo;
+    TDiagnostics *mDiagnostics;
 
     std::map<TString, CreatorFunctionData> mFunctions;
     CreatorFunctionData *mCurrentFunction;
@@ -318,11 +324,9 @@ void CallDAG::clear()
     mFunctionIdToIndex.clear();
 }
 
-CallDAG::InitResult CallDAG::init(TIntermNode *root, TInfoSinkBase *info)
+CallDAG::InitResult CallDAG::init(TIntermNode *root, TDiagnostics *diagnostics)
 {
-    ASSERT(info);
-
-    CallDAGCreator creator(info);
+    CallDAGCreator creator(diagnostics);
 
     // Creates the mapping of functions to callees
     root->traverse(&creator);

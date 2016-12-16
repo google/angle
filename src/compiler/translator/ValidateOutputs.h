@@ -22,7 +22,7 @@ class ValidateOutputs : public TIntermTraverser
   public:
     ValidateOutputs(const TExtensionBehavior &extBehavior, int maxDrawBuffers);
 
-    int validateAndCountErrors(TInfoSinkBase &sink) const;
+    void validate(TDiagnostics *diagnostics) const;
 
     void visitSymbol(TIntermSymbol *) override;
 

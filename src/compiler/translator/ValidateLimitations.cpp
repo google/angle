@@ -5,7 +5,8 @@
 //
 
 #include "compiler/translator/ValidateLimitations.h"
-#include "compiler/translator/InfoSink.h"
+
+#include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/ParseContext.h"
 #include "angle_gl.h"
@@ -66,35 +67,14 @@ class ValidateConstIndexExpr : public TIntermTraverser
 
 }  // namespace anonymous
 
-ValidateLimitations::ValidateLimitations(sh::GLenum shaderType, TInfoSinkBase *sink)
+ValidateLimitations::ValidateLimitations(sh::GLenum shaderType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, false),
       mShaderType(shaderType),
-      mSink(sink),
-      mNumErrors(0),
+      mDiagnostics(diagnostics),
       mValidateIndexing(true),
       mValidateInnerLoops(true)
 {
-}
-
-// static
-bool ValidateLimitations::IsLimitedForLoop(TIntermLoop *loop)
-{
-    // The shader type doesn't matter in this case.
-    ValidateLimitations validate(GL_FRAGMENT_SHADER, nullptr);
-    validate.mValidateIndexing   = false;
-    validate.mValidateInnerLoops = false;
-    if (!validate.validateLoopType(loop))
-        return false;
-    if (!validate.validateForLoopHeader(loop))
-        return false;
-    TIntermNode *body = loop->getBody();
-    if (body != nullptr)
-    {
-        validate.mLoopSymbolIds.push_back(GetLoopSymbolId(loop));
-        body->traverse(&validate);
-        validate.mLoopSymbolIds.pop_back();
-    }
-    return (validate.mNumErrors == 0);
+    ASSERT(diagnostics);
 }
 
 bool ValidateLimitations::visitBinary(Visit, TIntermBinary *node)
@@ -162,13 +142,7 @@ bool ValidateLimitations::visitLoop(Visit, TIntermLoop *node)
 
 void ValidateLimitations::error(TSourceLoc loc, const char *reason, const char *token)
 {
-    if (mSink)
-    {
-        mSink->prefix(EPrefixError);
-        mSink->location(loc);
-        (*mSink) << "'" << token << "' : " << reason << "\n";
-    }
-    ++mNumErrors;
+    mDiagnostics->error(loc, reason, token);
 }
 
 bool ValidateLimitations::withinLoopBody() const
