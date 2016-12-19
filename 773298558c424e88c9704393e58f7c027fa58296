@@ -39,6 +39,30 @@
       "revId": "773298558c424e88c9704393e58f7c027fa58296",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_743df2ec",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-19T16:52:00Z",
+      "side": 1,
+      "message": "Please let\u0027s give these explicit names!",
+      "parentUuid": "773d9abc_506dcc71",
+      "range": {
+        "startLine": 408,
+        "startChar": 9,
+        "endLine": 408,
+        "endChar": 46
+      },
+      "revId": "773298558c424e88c9704393e58f7c027fa58296",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
