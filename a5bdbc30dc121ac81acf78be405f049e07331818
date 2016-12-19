@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_89d9bd85",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T23:14:43Z",
+      "side": 1,
+      "message": "nit: re-sort the file in the list.",
+      "revId": "a5bdbc30dc121ac81acf78be405f049e07331818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
