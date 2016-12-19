@@ -1618,56 +1618,61 @@ void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-Error Context::drawArrays(GLenum mode, GLint first, GLsizei count)
+void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
     syncRendererState();
-    ANGLE_TRY(mImplementation->drawArrays(mode, first, count));
-    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
-
-    return NoError();
+    auto error = mImplementation->drawArrays(mode, first, count);
+    handleError(error);
+    if (!error.isError())
+    {
+        MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
+    }
 }
 
-Error Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
+void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
 {
     syncRendererState();
-    ANGLE_TRY(mImplementation->drawArraysInstanced(mode, first, count, instanceCount));
-    MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
-
-    return NoError();
+    auto error = mImplementation->drawArraysInstanced(mode, first, count, instanceCount);
+    handleError(error);
+    if (!error.isError())
+    {
+        MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
+    }
 }
 
-Error Context::drawElements(GLenum mode,
-                            GLsizei count,
-                            GLenum type,
-                            const GLvoid *indices,
-                            const IndexRange &indexRange)
+void Context::drawElements(GLenum mode,
+                           GLsizei count,
+                           GLenum type,
+                           const GLvoid *indices,
+                           const IndexRange &indexRange)
 {
     syncRendererState();
-    return mImplementation->drawElements(mode, count, type, indices, indexRange);
+    handleError(mImplementation->drawElements(mode, count, type, indices, indexRange));
 }
 
-Error Context::drawElementsInstanced(GLenum mode,
-                                     GLsizei count,
-                                     GLenum type,
-                                     const GLvoid *indices,
-                                     GLsizei instances,
-                                     const IndexRange &indexRange)
+void Context::drawElementsInstanced(GLenum mode,
+                                    GLsizei count,
+                                    GLenum type,
+                                    const GLvoid *indices,
+                                    GLsizei instances,
+                                    const IndexRange &indexRange)
 {
     syncRendererState();
-    return mImplementation->drawElementsInstanced(mode, count, type, indices, instances,
-                                                  indexRange);
+    handleError(
+        mImplementation->drawElementsInstanced(mode, count, type, indices, instances, indexRange));
 }
 
-Error Context::drawRangeElements(GLenum mode,
-                                 GLuint start,
-                                 GLuint end,
-                                 GLsizei count,
-                                 GLenum type,
-                                 const GLvoid *indices,
-                                 const IndexRange &indexRange)
+void Context::drawRangeElements(GLenum mode,
+                                GLuint start,
+                                GLuint end,
+                                GLsizei count,
+                                GLenum type,
+                                const GLvoid *indices,
+                                const IndexRange &indexRange)
 {
     syncRendererState();
-    return mImplementation->drawRangeElements(mode, start, end, count, type, indices, indexRange);
+    handleError(
+        mImplementation->drawRangeElements(mode, start, end, count, type, indices, indexRange));
 }
 
 void Context::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
@@ -1682,14 +1687,14 @@ void Context::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indir
     handleError(mImplementation->drawElementsIndirect(mode, type, indirect));
 }
 
-Error Context::flush()
+void Context::flush()
 {
-    return mImplementation->flush();
+    handleError(mImplementation->flush());
 }
 
-Error Context::finish()
+void Context::finish()
 {
-    return mImplementation->finish();
+    handleError(mImplementation->finish());
 }
 
 void Context::insertEventMarker(GLsizei length, const char *marker)

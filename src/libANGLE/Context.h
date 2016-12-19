@@ -289,27 +289,27 @@ class Context final : public ValidationContext
     void clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values);
     void clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 
-    Error drawArrays(GLenum mode, GLint first, GLsizei count);
-    Error drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
+    void drawArrays(GLenum mode, GLint first, GLsizei count);
+    void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
 
-    Error drawElements(GLenum mode,
-                       GLsizei count,
-                       GLenum type,
-                       const GLvoid *indices,
-                       const IndexRange &indexRange);
-    Error drawElementsInstanced(GLenum mode,
-                                GLsizei count,
-                                GLenum type,
-                                const GLvoid *indices,
-                                GLsizei instances,
-                                const IndexRange &indexRange);
-    Error drawRangeElements(GLenum mode,
-                            GLuint start,
-                            GLuint end,
-                            GLsizei count,
-                            GLenum type,
-                            const GLvoid *indices,
-                            const IndexRange &indexRange);
+    void drawElements(GLenum mode,
+                      GLsizei count,
+                      GLenum type,
+                      const GLvoid *indices,
+                      const IndexRange &indexRange);
+    void drawElementsInstanced(GLenum mode,
+                               GLsizei count,
+                               GLenum type,
+                               const GLvoid *indices,
+                               GLsizei instances,
+                               const IndexRange &indexRange);
+    void drawRangeElements(GLenum mode,
+                           GLuint start,
+                           GLuint end,
+                           GLsizei count,
+                           GLenum type,
+                           const GLvoid *indices,
+                           const IndexRange &indexRange);
     void drawArraysIndirect(GLenum mode, const GLvoid *indirect);
     void drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect);
 
@@ -488,8 +488,8 @@ class Context final : public ValidationContext
 
     void generateMipmap(GLenum target);
 
-    Error flush();
-    Error finish();
+    void flush();
+    void finish();
 
     void getBufferPointerv(GLenum target, GLenum pname, void **params);
     GLvoid *mapBuffer(GLenum target, GLenum access);

@@ -764,12 +764,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
             return;
         }
 
-        Error error = context->drawArrays(mode, first, count);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawArrays(mode, first, count);
     }
 }
 
@@ -787,12 +782,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
             return;
         }
 
-        Error error = context->drawElements(mode, count, type, indices, indexRange);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawElements(mode, count, type, indices, indexRange);
     }
 }
 
@@ -836,12 +826,7 @@ void GL_APIENTRY Finish(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Error error = context->finish();
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->finish();
     }
 }
 
@@ -852,12 +837,7 @@ void GL_APIENTRY Flush(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        Error error = context->flush();
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->flush();
     }
 }
 

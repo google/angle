@@ -61,17 +61,7 @@ void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
             return;
         }
 
-        // As long as index validation is done, it doesn't matter whether the context receives a drawElements or
-        // a drawRangeElements call - the GL back-end is free to choose to call drawRangeElements based on the
-        // validated index range. If index validation is removed, adding drawRangeElements to the context interface
-        // should be reconsidered.
-        Error error =
-            context->drawRangeElements(mode, start, end, count, type, indices, indexRange);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawRangeElements(mode, start, end, count, type, indices, indexRange);
     }
 }
 
@@ -1702,12 +1692,7 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
             return;
         }
 
-        Error error = context->drawArraysInstanced(mode, first, count, instanceCount);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawArraysInstanced(mode, first, count, instanceCount);
     }
 }
 
@@ -1731,13 +1716,7 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, 
             return;
         }
 
-        Error error =
-            context->drawElementsInstanced(mode, count, type, indices, instanceCount, indexRange);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawElementsInstanced(mode, count, type, indices, instanceCount, indexRange);
     }
 }
 

@@ -276,12 +276,7 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
             return;
         }
 
-        Error error = context->drawArraysInstanced(mode, first, count, primcount);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawArraysInstanced(mode, first, count, primcount);
     }
 }
 
@@ -306,13 +301,7 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
             return;
         }
 
-        Error error =
-            context->drawElementsInstanced(mode, count, type, indices, primcount, indexRange);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->drawElementsInstanced(mode, count, type, indices, primcount, indexRange);
     }
 }
 
