@@ -232,6 +232,23 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_4773db54",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1501,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T20:41:46Z",
+      "side": 1,
+      "message": "nit: the else clause can be removed and everything unindented.",
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_d5bcd810",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 11
