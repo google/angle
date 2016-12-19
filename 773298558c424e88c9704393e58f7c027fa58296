@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "773d9abc_f0096050",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 836,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-19T16:31:02Z",
+      "side": 1,
+      "message": "This isn\u0027t the right place for adding functions, they should be in InsertBuiltInFunctions.",
+      "revId": "773298558c424e88c9704393e58f7c027fa58296",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_506dcc71",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-19T16:31:02Z",
+      "side": 1,
+      "message": "Could be just another overload of insertBuiltIn.",
+      "range": {
+        "startLine": 408,
+        "startChar": 9,
+        "endLine": 408,
+        "endChar": 46
+      },
+      "revId": "773298558c424e88c9704393e58f7c027fa58296",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
