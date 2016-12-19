@@ -56,40 +56,56 @@ bool ValidateDrawAttribs(ValidationContext *context,
 
             if (buffer)
             {
-                CheckedNumeric<GLint64> maxVertexElement = 0;
-                bool readsData                           = false;
+                GLint maxVertexElement = 0;
+                bool readsData         = false;
                 if (attrib.divisor == 0)
                 {
                     readsData        = vertexCount > 0;
-                    maxVertexElement = static_cast<GLint64>(maxVertex);
+                    maxVertexElement = maxVertex;
                 }
                 else if (primcount > 0)
                 {
                     readsData = true;
-                    maxVertexElement =
-                        static_cast<GLint64>(primcount - 1) / static_cast<GLint64>(attrib.divisor);
+                    maxVertexElement = (primcount - 1) / attrib.divisor;
                 }
 
                 // If we're drawing zero vertices, we have enough data.
                 if (readsData)
                 {
-                    // Note: Last vertex element does not take the full stride!
-                    CheckedNumeric<GLint64> attribStride = ComputeVertexAttributeStride(attrib);
-                    CheckedNumeric<GLint64> attribSize   = ComputeVertexAttributeTypeSize(attrib);
-                    CheckedNumeric<GLint64> attribDataSize =
-                        maxVertexElement * attribStride + attribSize;
-                    CheckedNumeric<GLint64> maxOffset = attribDataSize + attrib.offset;
+                    // We do manual overflow checks here instead of using safe_math.h because it was
+                    // a bottleneck. Thanks to some properties of GL we know inequalities that can
+                    // help us make the overflow checks faster.
 
-                    if (!maxOffset.IsValid())
+                    // The max possible attribSize is 16 for a vector of 4 32 bit values.
+                    constexpr uint64_t kMaxAttribSize = 16;
+                    constexpr uint64_t kIntMax        = std::numeric_limits<int>::max();
+                    constexpr uint64_t kUint64Max     = std::numeric_limits<uint64_t>::max();
+
+                    // We know attribStride is given as a GLsizei which is typedefed to int.
+                    // We also know an upper bound for attribSize.
+                    static_assert(std::is_same<int, GLsizei>::value, "");
+                    uint64_t attribStride = ComputeVertexAttributeStride(attrib);
+                    uint64_t attribSize   = ComputeVertexAttributeTypeSize(attrib);
+                    ASSERT(attribStride <= kIntMax && attribSize <= kMaxAttribSize);
+
+                    // Computing the max offset using uint64_t without attrib.offset is overflow
+                    // safe. Note: Last vertex element does not take the full stride!
+                    static_assert(kIntMax * kIntMax < kUint64Max - kMaxAttribSize, "");
+                    uint64_t attribDataSizeNoOffset = maxVertexElement * attribStride + attribSize;
+
+                    // An overflow can happen when adding the offset, check for it.
+                    uint64_t attribOffset = attrib.offset;
+                    if (attribDataSizeNoOffset > kUint64Max - attrib.offset)
                     {
                         context->handleError(Error(GL_INVALID_OPERATION, "Integer overflow."));
                         return false;
                     }
+                    uint64_t attribDataSizeWithOffset = attribDataSizeNoOffset + attribOffset;
 
                     // [OpenGL ES 3.0.2] section 2.9.4 page 40:
                     // We can return INVALID_OPERATION if our vertex attribute does not have
                     // enough backing data.
-                    if (maxOffset.ValueOrDie() > buffer->getSize())
+                    if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
                     {
                         context->handleError(
                             Error(GL_INVALID_OPERATION,
@@ -3207,17 +3223,19 @@ bool ValidateDrawArrays(ValidationContext *context,
         return false;
     }
 
-    CheckedNumeric<GLint> maxVertex = first;
-    maxVertex += count;
-    maxVertex -= 1;
-
-    if (!maxVertex.IsValid())
+    // Check the computation of maxVertex doesn't overflow.
+    // - first < 0 or count < 0 have been checked as an error condition
+    // - count > 0 has been checked in ValidateDrawBase as it makes the call a noop
+    // From this we know maxVertex will be positive, and only need to check if it overflows GLint.
+    ASSERT(count > 0 && first >= 0);
+    int64_t maxVertex = static_cast<int64_t>(first) + static_cast<int64_t>(count) - 1;
+    if (maxVertex > static_cast<int64_t>(std::numeric_limits<GLint>::max()))
     {
         context->handleError(Error(GL_INVALID_OPERATION, "Integer overflow."));
         return false;
     }
 
-    if (!ValidateDrawAttribs(context, primcount, maxVertex.ValueOrDie(), count))
+    if (!ValidateDrawAttribs(context, primcount, static_cast<GLint>(maxVertex), count))
     {
         return false;
     }
