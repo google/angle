@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba4b7745_d53f78c9",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T20:14:28Z",
+      "side": 1,
+      "message": "nit: grammar looks weird to me in the first sentence.\nAlso when we to the integration with Chromium for the workarounds, it will supersede this.",
+      "revId": "0f7c4ab1dc478aee4dbec383456f4e48e8017abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_b56674ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T20:14:28Z",
+      "side": 1,
+      "message": "nit: src -\u003e SRV",
+      "revId": "0f7c4ab1dc478aee4dbec383456f4e48e8017abb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
