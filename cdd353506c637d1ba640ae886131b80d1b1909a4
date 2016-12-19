@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7a7adff7_eb85f05c",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-19T14:36:11Z",
+      "side": 1,
+      "message": "I don\u0027t see this type referenced.",
+      "range": {
+        "startLine": 21,
+        "startChar": 45,
+        "endLine": 21,
+        "endChar": 64
+      },
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_86e709cb",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 23
@@ -156,6 +179,30 @@
       "side": 1,
       "message": "That\u0027s going to be an interesting decision, because the object can only be deleted when they are done being used.",
       "parentUuid": "7a7adff7_834f0638",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a7adff7_0bcec4c0",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-19T14:36:11Z",
+      "side": 1,
+      "message": "I think we should either go all the way (like this) with the wrapping or simply have raii wrappers to prevent leaks.",
+      "parentUuid": "7a7adff7_834f0638",
+      "range": {
+        "startLine": 64,
+        "startChar": 6,
+        "endLine": 64,
+        "endChar": 19
+      },
       "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
