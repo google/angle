@@ -63,6 +63,30 @@
       "revId": "773298558c424e88c9704393e58f7c027fa58296",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_b0ecf84a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-19T16:56:32Z",
+      "side": 1,
+      "message": "If we\u0027re going to rename these all (in a separate patch, the other functions can be left as is in this one), I think \"insertBuiltInFunctionNoParameters\" would be better. These are not really operators, though they have a TOperator value.",
+      "parentUuid": "ba4b7745_743df2ec",
+      "range": {
+        "startLine": 408,
+        "startChar": 9,
+        "endLine": 408,
+        "endChar": 46
+      },
+      "revId": "773298558c424e88c9704393e58f7c027fa58296",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
