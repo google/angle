@@ -281,15 +281,9 @@ config("libANGLE_config") {
   ]
 
   if (is_win) {
-    defines += [
-      "GL_APICALL=",
-      "EGLAPI=",
-    ]
+    defines += [ "GL_APICALL=" ]
   } else {
-    defines += [
-      "GL_APICALL=__attribute__((visibility(\"default\")))",
-      "EGLAPI=__attribute__((visibility(\"default\")))",
-    ]
+    defines += [ "GL_APICALL=__attribute__((visibility(\"default\")))" ]
   }
   if (is_win) {
     cflags += [ "/wd4530" ]  # C++ exception handler used, but unwind semantics are not enabled.
@@ -473,10 +467,14 @@ shared_library("libEGL") {
     ":debug_annotations_config",
     ":extra_warnings",
     ":internal_config",
-    ":libANGLE_config",
   ]
 
   defines = [ "LIBEGL_IMPLEMENTATION" ]
+  if (is_win) {
+    defines += [ "EGLAPI=" ]
+  } else {
+    defines += [ "EGLAPI=__attribute__((visibility(\"default\")))" ]
+  }
 
   deps = [
     ":includes",

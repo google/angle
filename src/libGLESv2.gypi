@@ -763,13 +763,11 @@
                         'defines':
                         [
                             'GL_APICALL=',
-                            'EGLAPI=',
                         ],
                     }, {
                         'defines':
                         [
                             'GL_APICALL=__attribute__((visibility("default")))',
-                            'EGLAPI=__attribute__((visibility("default")))',
                         ],
                     }],
                     ['OS == "mac"',

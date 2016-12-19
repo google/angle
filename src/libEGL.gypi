@@ -12,7 +12,6 @@
             'type': '<(angle_gl_library_type)',
             'dependencies':
             [
-                'libANGLE',
                 'libGLESv2',
             ],
             'includes':
@@ -33,6 +32,24 @@
                 ['angle_build_winrt==1',
                 {
                     'msvs_requires_importlibrary' : 'true',
+                }],
+                ['OS=="win"', {
+                    'defines':
+                    [
+                        'EGLAPI=',
+                    ],
+                }, {
+                    'defines':
+                    [
+                        'EGLAPI=__attribute__((visibility("default")))',
+                    ],
+                }],
+                ['OS == "mac"',
+                {
+                    'xcode_settings':
+                    {
+                        'DYLIB_INSTALL_NAME_BASE': '@rpath',
+                    },
                 }],
             ],
         },
