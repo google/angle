@@ -32,7 +32,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerAdd)
         "   const int i = 1124 + 5;\n"
         "   my_Int = i;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(1129));
@@ -48,7 +48,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerSub)
         "   const int i = 1124 - 5;\n"
         "   my_Int = i;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(1119));
@@ -64,7 +64,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerMul)
         "   const int i = 1124 * 5;\n"
         "   my_Int = i;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(5620));
@@ -80,7 +80,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerDiv)
         "   const int i = 1124 / 5;\n"
         "   my_Int = i;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     // Rounding mode of division is undefined in the spec but ANGLE can be expected to round down.
@@ -97,7 +97,7 @@ TEST_F(ConstantFoldingTest, FoldIntegerModulus)
         "   const int i = 1124 % 5;\n"
         "   my_Int = i;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_FALSE(constantFoundInAST(1124));
     ASSERT_FALSE(constantFoundInAST(5));
     ASSERT_TRUE(constantFoundInAST(4));
@@ -113,7 +113,7 @@ TEST_F(ConstantFoldingTest, FoldVectorCrossProduct)
         "   const vec3 v3 = cross(vec3(1.0f, 1.0f, 1.0f), vec3(1.0f, -1.0f, 1.0f));\n"
         "   my_Vec3 = v3;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     std::vector<float> input1(3, 1.0f);
     ASSERT_FALSE(constantVectorFoundInAST(input1));
     std::vector<float> input2;
@@ -145,7 +145,7 @@ TEST_F(ConstantFoldingTest, Fold2x2MatrixInverse)
         "   mat2 m = m2 * mat2(i);\n"
         "   my_Vec = m[0];\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         2.0f, 3.0f,
@@ -177,7 +177,7 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixInverse)
         "   mat3 m = m3 * mat3(i);\n"
         "   my_Vec = m3[0];\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         11.0f, 13.0f, 19.0f,
@@ -213,7 +213,7 @@ TEST_F(ConstantFoldingTest, Fold4x4MatrixInverse)
         "   mat4 m = m4 * mat4(i);\n"
         "   my_Vec = m[0];\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         29.0f, 31.0f, 37.0f, 41.0f,
@@ -250,7 +250,7 @@ TEST_F(ConstantFoldingTest, Fold2x2MatrixDeterminant)
         "                                    5.0f, 7.0f));\n"
         "   my_Float = f;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         2.0f, 3.0f,
@@ -274,7 +274,7 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixDeterminant)
         "                                    37.0f, 41.0f, 43.0f));\n"
         "   my_Float = f;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         11.0f, 13.0f, 19.0f,
@@ -300,7 +300,7 @@ TEST_F(ConstantFoldingTest, Fold4x4MatrixDeterminant)
         "                                    79.0f, 83.0f, 89.0f, 97.0f));\n"
         "   my_Float = f;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         29.0f, 31.0f, 37.0f, 41.0f,
@@ -329,7 +329,7 @@ TEST_F(ConstantFoldingTest, Fold3x3MatrixTranspose)
         "   mat3 m = m3 * mat3(i);\n"
         "   my_Vec = m[0];\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float inputElements[] =
     {
         11.0f, 13.0f, 19.0f,
@@ -363,7 +363,7 @@ TEST_F(ConstantFoldingTest, ParseWrappedHexIntLiteral)
         "   const int i = 0xFFFFFFFF;\n"
         "   my_Vec = vec4(i * inInt);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(-1));
 }
 
@@ -382,7 +382,7 @@ TEST_F(ConstantFoldingTest, ParseWrappedDecimalIntLiteral)
         "   const int i = 3000000000;\n"
         "   my_Vec = vec4(i * inInt);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(-1294967296));
 }
 
@@ -401,7 +401,7 @@ TEST_F(ConstantFoldingTest, ParseMaxUintLiteral)
         "   const uint i = 0xFFFFFFFFu;\n"
         "   my_Vec = vec4(i * inInt);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xFFFFFFFFu));
 }
 
@@ -420,7 +420,7 @@ TEST_F(ConstantFoldingTest, FoldUnaryMinusOnUintLiteral)
         "   const uint i = -1u;\n"
         "   my_Vec = vec4(i * inInt);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xFFFFFFFFu));
 }
 
@@ -435,7 +435,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat2)
         "   mat2 m = cm * mult;\n"
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         0.0f, 1.0f,
@@ -456,7 +456,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingScalar)
         "   mat2 m = cm * mult;\n"
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         3.0f, 0.0f,
@@ -477,7 +477,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMix)
         "   mat2 m = cm * mult;\n"
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         -1.0, 0.0f,
@@ -498,7 +498,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingMat3)
         "   mat2 m = cm * mult;\n"
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         0.0f, 1.0f,
@@ -523,7 +523,7 @@ TEST_F(ConstantFoldingTest, FoldMat4x3ConstructorTakingMat3x2)
         "   mat4x3 m = cm * mult;\n"
         "   my_FragColor = vec4(m[0], m[1][0]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         1.0f, 2.0f, 0.0f,
@@ -547,7 +547,7 @@ TEST_F(ConstantFoldingTest, FoldMat2ConstructorTakingVec4)
         "   mat2 m = cm * mult;\n"
         "   gl_FragColor = vec4(m[0], m[1]);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] =
     {
         0.0f, 1.0f,
@@ -576,7 +576,7 @@ TEST_F(ConstantFoldingTest, FoldNestedDifferentStructEqualityComparison)
         "    const S s2 = S(nested(0.0), 3.0);\n"
         "    gl_FragColor = (s1 == s2 ? 1.0 : 0.5) * mult;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0.5f));
 }
 
@@ -600,7 +600,7 @@ TEST_F(ConstantFoldingTest, FoldNestedIdenticalStructEqualityComparison)
         "    const S s2 = S(nested(0.0), 2.0, 3);\n"
         "    gl_FragColor = (s1 == s2 ? 1.0 : 0.5) * mult;\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(1.0f));
 }
 
@@ -615,7 +615,7 @@ TEST_F(ConstantFoldingTest, FoldNonSquareMatrixIndexing)
         "{\n"
         "    my_FragColor = mat3x4(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)[1];\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     float outputElements[] = {4.0f, 5.0f, 6.0f, 7.0f};
     std::vector<float> result(outputElements, outputElements + 4);
     ASSERT_TRUE(constantVectorFoundInAST(result));
@@ -633,7 +633,7 @@ TEST_F(ConstantFoldingTest, FoldNonSquareOuterProduct)
         "    mat3x2 prod = outerProduct(vec2(2.0, 3.0), vec3(5.0, 7.0, 11.0));\n"
         "    my_FragColor = vec4(prod[0].x);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     // clang-format off
     float outputElements[] =
     {
@@ -658,7 +658,7 @@ TEST_F(ConstantFoldingTest, FoldBitShiftLeftDifferentSignedness)
         "    uint u = 0xffffffffu << 31;\n"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x80000000u));
 }
 
@@ -674,7 +674,7 @@ TEST_F(ConstantFoldingTest, FoldBitShiftRightDifferentSignedness)
         "    uint u = 0xffffffffu >> 30;\n"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x3u));
 }
 
@@ -692,7 +692,7 @@ TEST_F(ConstantFoldingTest, FoldBitShiftRightExtendSignBit)
         "    uint u = uint(i);"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     // The bits of the operand are 0x8fffe000 = 1000 1111 1111 1111 1110 0000 0000 0000
     // After shifting, they become              1111 1110 0011 1111 1111 1111 1000 0000 = 0xfe3fff80
     ASSERT_TRUE(constantFoundInAST(0xfe3fff80u));
@@ -713,7 +713,7 @@ TEST_F(ConstantFoldingTest, FoldBitShiftLeftInterpretedAsBitPattern)
         "    uint u = uint(i);"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xfffffff8u));
 }
 
@@ -732,7 +732,7 @@ TEST_F(ConstantFoldingTest, FoldDivideMinimumIntegerByMinusOne)
         "    int i = 0x80000000 / (-1);\n"
         "    my_FragColor = vec4(i);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x7fffffff) || constantFoundInAST(-0x7fffffff - 1));
 }
 
@@ -752,7 +752,7 @@ TEST_F(ConstantFoldingTest, FoldUnsignedIntegerAddOverflow)
         "    uint u = 0xffffffffu + 43u;\n"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(42u));
 }
 
@@ -772,7 +772,7 @@ TEST_F(ConstantFoldingTest, FoldSignedIntegerAddOverflow)
         "    int i = 0x7fffffff + 4;\n"
         "    my_FragColor = vec4(i);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(-0x7ffffffd));
 }
 
@@ -792,7 +792,7 @@ TEST_F(ConstantFoldingTest, FoldUnsignedIntegerDiffOverflow)
         "    uint u = 0u - 5u;\n"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xfffffffbu));
 }
 
@@ -812,7 +812,7 @@ TEST_F(ConstantFoldingTest, FoldSignedIntegerDiffOverflow)
         "    int i = -0x7fffffff - 7;\n"
         "    my_FragColor = vec4(i);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0x7ffffffa));
 }
 
@@ -832,7 +832,7 @@ TEST_F(ConstantFoldingTest, FoldUnsignedIntegerMultiplyOverflow)
         "    uint u = 0xffffffffu * 10u;\n"
         "    my_FragColor = vec4(u);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(0xfffffff6u));
 }
 
@@ -852,7 +852,7 @@ TEST_F(ConstantFoldingTest, FoldSignedIntegerMultiplyOverflow)
         "    int i = 0x7fffffff * 42;\n"
         "    my_FragColor = vec4(i);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(-42));
 }
 
@@ -873,7 +873,7 @@ TEST_F(ConstantFoldingTest, FoldMinimumSignedIntegerNegation)
         "    int i = -0x80000000;\n"
         "    my_FragColor = vec4(i);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     // Negating the minimum signed integer overflows the positive range, so it wraps back to itself.
     ASSERT_TRUE(constantFoundInAST(-0x7fffffff - 1));
 }
@@ -891,7 +891,7 @@ TEST_F(ConstantFoldingTest, FoldMinimumSignedIntegerRightShift)
         "    int j = (0x80000000 >> 7);\n"
         "    my_FragColor = vec4(i, j, i, j);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(-0x40000000));
     ASSERT_TRUE(constantFoundInAST(-0x01000000));
 }
@@ -909,7 +909,7 @@ TEST_F(ConstantFoldingTest, FoldShiftByZero)
         "    int j = (73 << 0);\n"
         "    my_FragColor = vec4(i, j, i, j);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(3));
     ASSERT_TRUE(constantFoundInAST(73));
 }
@@ -931,7 +931,7 @@ TEST_F(ConstantFoldingTest, FoldIsInfOutOfRangeFloatLiteral)
         "    bool b = isinf(1.0e2048);\n"
         "    my_FragColor = vec4(b);\n"
         "}\n";
-    compile(shaderString);
+    compileAssumeSuccess(shaderString);
     ASSERT_TRUE(constantFoundInAST(true));
 }
 

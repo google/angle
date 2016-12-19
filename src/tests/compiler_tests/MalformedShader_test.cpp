@@ -11,142 +11,77 @@
 #include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
 #include "compiler/translator/TranslatorESSL.h"
+#include "tests/test_utils/ShaderCompileTreeTest.h"
 
 using namespace sh;
 
-class MalformedShaderTest : public testing::Test
+class MalformedShaderTest : public ShaderCompileTreeTest
 {
   public:
-    MalformedShaderTest() : mExtraCompileOptions(0) {}
-
+    MalformedShaderTest() {}
   protected:
-    virtual void SetUp()
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
-
-    virtual void TearDown()
-    {
-        delete mTranslator;
-    }
-
-    // Return true when compilation succeeds
-    bool compile(const std::string& shaderString)
-    {
-        const char *shaderStrings[] = { shaderString.c_str() };
-        bool compilationSuccess =
-            mTranslator->compile(shaderStrings, 1, SH_INTERMEDIATE_TREE | mExtraCompileOptions);
-        TInfoSink &infoSink = mTranslator->getInfoSink();
-        mInfoLog = infoSink.info.c_str();
-        return compilationSuccess;
-    }
-
-    bool hasWarning() const
-    {
-        return mInfoLog.find("WARNING: ") != std::string::npos;
-    }
-
-  protected:
-    std::string mInfoLog;
-    TranslatorESSL *mTranslator;
-    ShCompileOptions mExtraCompileOptions;
+    ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_SPEC; }
 };
 
-class MalformedVertexShaderTest : public MalformedShaderTest
+class MalformedVertexShaderTest : public ShaderCompileTreeTest
 {
   public:
     MalformedVertexShaderTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorESSL(GL_VERTEX_SHADER, SH_GLES3_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_SPEC; }
 };
 
-class MalformedWebGL2ShaderTest : public MalformedShaderTest
+class MalformedWebGL2ShaderTest : public ShaderCompileTreeTest
 {
   public:
     MalformedWebGL2ShaderTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL2_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_WEBGL2_SPEC; }
 };
 
-class MalformedWebGL1ShaderTest : public MalformedShaderTest
+class MalformedWebGL1ShaderTest : public ShaderCompileTreeTest
 {
   public:
     MalformedWebGL1ShaderTest() {}
 
   protected:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_WEBGL_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_WEBGL_SPEC; }
 };
 
-class MalformedVertexShaderGLES31Test : public MalformedShaderTest
+class MalformedVertexShaderGLES31Test : public ShaderCompileTreeTest
 {
   public:
     MalformedVertexShaderGLES31Test() {}
 
   private:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-        mTranslator = new TranslatorESSL(GL_VERTEX_SHADER, SH_GLES3_1_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_VERTEX_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 };
 
-class MalformedFragmentShaderGLES31Test : public MalformedShaderTest
+class MalformedFragmentShaderGLES31Test : public ShaderCompileTreeTest
 {
   public:
     MalformedFragmentShaderGLES31Test() {}
 
   private:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_1_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 };
 
-class MalformedComputeShaderTest : public MalformedShaderTest
+class MalformedComputeShaderTest : public ShaderCompileTreeTest
 {
   public:
     MalformedComputeShaderTest() {}
 
   private:
-    void SetUp() override
-    {
-        ShBuiltInResources resources;
-        sh::InitBuiltInResources(&resources);
-        mTranslator = new TranslatorESSL(GL_COMPUTE_SHADER, SH_GLES3_1_SPEC);
-        ASSERT_TRUE(mTranslator->Init(resources));
-    }
+    ::GLenum getShaderType() const override { return GL_COMPUTE_SHADER; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 };
 
 // This is a test for a bug that used to exist in ANGLE:
