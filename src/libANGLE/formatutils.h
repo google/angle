@@ -293,6 +293,7 @@ VertexFormatType GetVertexFormatType(GLenum type, GLboolean normalized, GLuint c
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib);
 VertexFormatType GetVertexFormatType(const VertexAttribute &attrib, GLenum currentValueType);
 const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType);
+size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType);
 
 // Implemented in format_map_autogen.cpp
 bool ValidES3Format(GLenum format);

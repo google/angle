@@ -372,6 +372,13 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
 
 bool ValidateGetString(Context *context, GLenum name);
 bool ValidateLineWidth(ValidationContext *context, GLfloat width);
+bool ValidateVertexAttribPointer(ValidationContext *context,
+                                 GLuint index,
+                                 GLint size,
+                                 GLenum type,
+                                 GLboolean normalized,
+                                 GLsizei stride,
+                                 const GLvoid *ptr);
 
 }  // namespace gl
 

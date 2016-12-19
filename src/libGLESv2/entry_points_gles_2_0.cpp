@@ -21,7 +21,6 @@
 #include "libANGLE/Program.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/VertexAttribute.h"
 #include "libANGLE/FramebufferAttachment.h"
 
 #include "libANGLE/validationES.h"
@@ -2740,65 +2739,9 @@ void GL_APIENTRY VertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (index >= MAX_VERTEX_ATTRIBS)
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribPointer(context, index, size, type, normalized, stride, ptr))
         {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (size < 1 || size > 4)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        switch (type)
-        {
-            case GL_BYTE:
-            case GL_UNSIGNED_BYTE:
-            case GL_SHORT:
-            case GL_UNSIGNED_SHORT:
-            case GL_FIXED:
-            case GL_FLOAT:
-                break;
-
-            case GL_HALF_FLOAT:
-            case GL_INT:
-            case GL_UNSIGNED_INT:
-            case GL_INT_2_10_10_10_REV:
-            case GL_UNSIGNED_INT_2_10_10_10_REV:
-                if (context->getClientMajorVersion() < 3)
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return;
-                }
-                break;
-
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return;
-        }
-
-        if (stride < 0)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        // [OpenGL ES 3.0.2] Section 2.8 page 24:
-        // An INVALID_OPERATION error is generated when a non-zero vertex array object
-        // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
-        // and the pointer argument is not NULL.
-        if (context->getGLState().getVertexArray()->id() != 0 &&
-            context->getGLState().getArrayBufferId() == 0 && ptr != NULL)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 

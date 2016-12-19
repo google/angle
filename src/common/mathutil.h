@@ -33,8 +33,10 @@ namespace gl
 const unsigned int Float32One = 0x3F800000;
 const unsigned short Float16One = 0x3C00;
 
-inline bool isPow2(int x)
+template<typename T>
+inline bool isPow2(T x)
 {
+    static_assert(std::is_integral<T>::value, "isPow2 must be called on an integer type.");
     return (x & (x - 1)) == 0 && (x != 0);
 }
 

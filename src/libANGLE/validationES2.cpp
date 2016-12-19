@@ -23,6 +23,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES3.h"
+#include "libANGLE/VertexArray.h"
 
 namespace gl
 {
@@ -3876,6 +3877,128 @@ bool ValidateLineWidth(ValidationContext *context, GLfloat width)
     {
         context->handleError(Error(GL_INVALID_VALUE, "Invalid width value."));
         return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexAttribPointer(ValidationContext *context,
+                                 GLuint index,
+                                 GLint size,
+                                 GLenum type,
+                                 GLboolean normalized,
+                                 GLsizei stride,
+                                 const GLvoid *ptr)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid index value."));
+        return false;
+    }
+
+    if (size < 1 || size > 4)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalide size value."));
+        return false;
+    }
+
+    switch (type)
+    {
+        case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
+        case GL_SHORT:
+        case GL_UNSIGNED_SHORT:
+        case GL_FIXED:
+        case GL_FLOAT:
+            break;
+
+        case GL_HALF_FLOAT:
+        case GL_INT:
+        case GL_UNSIGNED_INT:
+        case GL_INT_2_10_10_10_REV:
+        case GL_UNSIGNED_INT_2_10_10_10_REV:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "Vertex type not supported before OpenGL ES 3.0."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid vertex type."));
+            return false;
+    }
+
+    if (stride < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid stride."));
+        return false;
+    }
+
+    if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Invalid size for a sized vertex type."));
+        return false;
+    }
+
+    // [OpenGL ES 3.0.2] Section 2.8 page 24:
+    // An INVALID_OPERATION error is generated when a non-zero vertex array object
+    // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
+    // and the pointer argument is not NULL.
+    if (context->getGLState().getVertexArray()->id() != 0 &&
+        context->getGLState().getArrayBufferId() == 0 && ptr != NULL)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Pointer is null with a non-zero VAO bound and zero bound to GL_ARRAY_BUFFER."));
+        return false;
+    }
+
+    if (context->getExtensions().webglCompatibility)
+    {
+        // WebGL 1.0 [Section 6.14] Fixed point support
+        // The WebGL API does not support the GL_FIXED data type.
+        if (type == GL_FIXED)
+        {
+            context->handleError(Error(GL_INVALID_ENUM, "GL_FIXED is not supported in WebGL."));
+            return false;
+        }
+
+        // WebGL 1.0 [Section 6.11] Vertex Attribute Data Stride
+        // The WebGL API supports vertex attribute data strides up to 255 bytes. A call to
+        // vertexAttribPointer will generate an INVALID_VALUE error if the value for the stride
+        // parameter exceeds 255.
+        constexpr GLsizei kMaxWebGLStride = 255;
+        if (stride > kMaxWebGLStride)
+        {
+            context->handleError(
+                Error(GL_INVALID_VALUE, "Stride is over the maximum stride allowed by WebGL."));
+            return false;
+        }
+
+        // WebGL 1.0 [Section 6.4] Buffer Offset and Stride Requirements
+        // The offset arguments to drawElements and vertexAttribPointer, and the stride argument to
+        // vertexAttribPointer, must be a multiple of the size of the data type passed to the call,
+        // or an INVALID_OPERATION error is generated.
+        VertexFormatType internalType = GetVertexFormatType(type, normalized, 1, false);
+        size_t typeSize = GetVertexFormatTypeSize(internalType);
+
+        ASSERT(isPow2(typeSize) && typeSize > 0);
+        size_t sizeMask = (typeSize - 1);
+        if ((reinterpret_cast<intptr_t>(ptr) & sizeMask) != 0)
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Offset is not a multiple of the type size."));
+            return false;
+        }
+
+        if ((stride & sizeMask) != 0)
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Stride is not a multiple of the type size."));
+            return false;
+        }
     }
 
     return true;

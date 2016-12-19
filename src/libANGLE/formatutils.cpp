@@ -1654,6 +1654,123 @@ const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType)
     }
 }
 
+size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType)
+{
+    switch (vertexFormatType)
+    {
+        case VERTEX_FORMAT_SBYTE1:
+        case VERTEX_FORMAT_SBYTE1_NORM:
+        case VERTEX_FORMAT_UBYTE1:
+        case VERTEX_FORMAT_UBYTE1_NORM:
+        case VERTEX_FORMAT_SBYTE1_INT:
+        case VERTEX_FORMAT_UBYTE1_INT:
+            return 1;
+
+        case VERTEX_FORMAT_SBYTE2:
+        case VERTEX_FORMAT_SBYTE2_NORM:
+        case VERTEX_FORMAT_UBYTE2:
+        case VERTEX_FORMAT_UBYTE2_NORM:
+        case VERTEX_FORMAT_SBYTE2_INT:
+        case VERTEX_FORMAT_UBYTE2_INT:
+        case VERTEX_FORMAT_SSHORT1:
+        case VERTEX_FORMAT_SSHORT1_NORM:
+        case VERTEX_FORMAT_USHORT1:
+        case VERTEX_FORMAT_USHORT1_NORM:
+        case VERTEX_FORMAT_SSHORT1_INT:
+        case VERTEX_FORMAT_USHORT1_INT:
+        case VERTEX_FORMAT_HALF1:
+            return 2;
+
+        case VERTEX_FORMAT_SBYTE3:
+        case VERTEX_FORMAT_SBYTE3_NORM:
+        case VERTEX_FORMAT_UBYTE3:
+        case VERTEX_FORMAT_UBYTE3_NORM:
+        case VERTEX_FORMAT_SBYTE3_INT:
+        case VERTEX_FORMAT_UBYTE3_INT:
+            return 3;
+
+        case VERTEX_FORMAT_SBYTE4:
+        case VERTEX_FORMAT_SBYTE4_NORM:
+        case VERTEX_FORMAT_UBYTE4:
+        case VERTEX_FORMAT_UBYTE4_NORM:
+        case VERTEX_FORMAT_SBYTE4_INT:
+        case VERTEX_FORMAT_UBYTE4_INT:
+        case VERTEX_FORMAT_SSHORT2:
+        case VERTEX_FORMAT_SSHORT2_NORM:
+        case VERTEX_FORMAT_USHORT2:
+        case VERTEX_FORMAT_USHORT2_NORM:
+        case VERTEX_FORMAT_SSHORT2_INT:
+        case VERTEX_FORMAT_USHORT2_INT:
+        case VERTEX_FORMAT_SINT1:
+        case VERTEX_FORMAT_SINT1_NORM:
+        case VERTEX_FORMAT_UINT1:
+        case VERTEX_FORMAT_UINT1_NORM:
+        case VERTEX_FORMAT_SINT1_INT:
+        case VERTEX_FORMAT_UINT1_INT:
+        case VERTEX_FORMAT_HALF2:
+        case VERTEX_FORMAT_FIXED1:
+        case VERTEX_FORMAT_FLOAT1:
+        case VERTEX_FORMAT_SINT210:
+        case VERTEX_FORMAT_UINT210:
+        case VERTEX_FORMAT_SINT210_NORM:
+        case VERTEX_FORMAT_UINT210_NORM:
+        case VERTEX_FORMAT_SINT210_INT:
+        case VERTEX_FORMAT_UINT210_INT:
+            return 4;
+
+        case VERTEX_FORMAT_SSHORT3:
+        case VERTEX_FORMAT_SSHORT3_NORM:
+        case VERTEX_FORMAT_USHORT3:
+        case VERTEX_FORMAT_USHORT3_NORM:
+        case VERTEX_FORMAT_SSHORT3_INT:
+        case VERTEX_FORMAT_USHORT3_INT:
+        case VERTEX_FORMAT_HALF3:
+            return 6;
+
+        case VERTEX_FORMAT_SSHORT4:
+        case VERTEX_FORMAT_SSHORT4_NORM:
+        case VERTEX_FORMAT_USHORT4:
+        case VERTEX_FORMAT_USHORT4_NORM:
+        case VERTEX_FORMAT_SSHORT4_INT:
+        case VERTEX_FORMAT_USHORT4_INT:
+        case VERTEX_FORMAT_SINT2:
+        case VERTEX_FORMAT_SINT2_NORM:
+        case VERTEX_FORMAT_UINT2:
+        case VERTEX_FORMAT_UINT2_NORM:
+        case VERTEX_FORMAT_SINT2_INT:
+        case VERTEX_FORMAT_UINT2_INT:
+        case VERTEX_FORMAT_HALF4:
+        case VERTEX_FORMAT_FIXED2:
+        case VERTEX_FORMAT_FLOAT2:
+            return 8;
+
+        case VERTEX_FORMAT_SINT3:
+        case VERTEX_FORMAT_SINT3_NORM:
+        case VERTEX_FORMAT_UINT3:
+        case VERTEX_FORMAT_UINT3_NORM:
+        case VERTEX_FORMAT_SINT3_INT:
+        case VERTEX_FORMAT_UINT3_INT:
+        case VERTEX_FORMAT_FIXED3:
+        case VERTEX_FORMAT_FLOAT3:
+            return 12;
+
+        case VERTEX_FORMAT_SINT4:
+        case VERTEX_FORMAT_SINT4_NORM:
+        case VERTEX_FORMAT_UINT4:
+        case VERTEX_FORMAT_UINT4_NORM:
+        case VERTEX_FORMAT_SINT4_INT:
+        case VERTEX_FORMAT_UINT4_INT:
+        case VERTEX_FORMAT_FIXED4:
+        case VERTEX_FORMAT_FLOAT4:
+            return 16;
+
+        case VERTEX_FORMAT_INVALID:
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 VertexFormat::VertexFormat(GLenum typeIn, GLboolean normalizedIn, GLuint componentsIn, bool pureIntegerIn)
     : type(typeIn),
       normalized(normalizedIn),
