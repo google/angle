@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_d40e9e1c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2057,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-19T17:37:40Z",
+      "side": 1,
+      "message": "instead of  \n\nif (read \u0026\u0026 draw)\n{\n}\nelse if (draw)\n{\n   return false;\n}\n\nhow about\n\nif (!read)\n{\n   return false;\n}\n\nif (draw)\n{\n}\n\nIs it impossible to have a null draw buffer?",
+      "range": {
+        "startLine": 2053,
+        "startChar": 7,
+        "endLine": 2057,
+        "endChar": 9
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_34e1aab5",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
@@ -64,6 +87,29 @@
         "startChar": 48,
         "endLine": 2088,
         "endChar": 86
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_14190661",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2090,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-19T17:37:40Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2071,
+        "startChar": 12,
+        "endLine": 2090,
+        "endChar": 13
       },
       "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
