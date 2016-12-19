@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_54654ec6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T18:41:07Z",
+      "side": 1,
+      "message": "Yes, we need to zero-initialize the array so that elements that aren\u0027t set get the default value of 0. See the second and third loops in the original TransposeMatrix function.\n\nFrom the generated assembly, we can see the compiler only writes zeroes where there are not overwritten.",
+      "parentUuid": "ba4b7745_f46d6274",
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_9487b6f9",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 4
@@ -42,6 +60,24 @@
         "endLine": 217,
         "endChar": 44
       },
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_548c6e58",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T18:41:07Z",
+      "side": 1,
+      "message": "They do and get optimized to copying more than one float when possible.",
+      "parentUuid": "ba4b7745_9487b6f9",
       "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -82,6 +118,24 @@
         "endLine": 249,
         "endChar": 83
       },
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_f4272279",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-19T18:41:07Z",
+      "side": 1,
+      "message": "The static_cast still needs to happen. I checked that ExpandMatrix\u003cfloat, 4, 4\u003e just does a memcpy, and even inlines it. (it copies data 4 floats at a time)",
+      "parentUuid": "ba4b7745_547d4e1d",
       "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
