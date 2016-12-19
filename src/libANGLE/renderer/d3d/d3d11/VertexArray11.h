@@ -24,6 +24,8 @@ class VertexArray11 : public VertexArrayImpl, public angle::SignalReceiver
     ~VertexArray11() override;
 
     void syncState(const gl::VertexArray::DirtyBits &dirtyBits) override;
+    // This will flush any pending attrib updates and then check the dynamic attribs mask.
+    bool hasDynamicAttrib(const gl::State &state);
     gl::Error updateDirtyAndDynamicAttribs(VertexDataManager *vertexDataManager,
                                            const gl::State &state,
                                            GLint start,
@@ -38,6 +40,7 @@ class VertexArray11 : public VertexArrayImpl, public angle::SignalReceiver
 
   private:
     void updateVertexAttribStorage(size_t attribIndex);
+    void flushAttribUpdates(const gl::State &state);
 
     std::vector<VertexStorageType> mAttributeStorageTypes;
     std::vector<TranslatedAttribute> mTranslatedAttribs;

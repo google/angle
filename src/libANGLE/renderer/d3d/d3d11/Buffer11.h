@@ -35,6 +35,8 @@ enum BufferUsage
     BUFFER_USAGE_STAGING,
     BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
     BUFFER_USAGE_INDEX,
+    // TODO: possibly share this buffer type with shader storage buffers.
+    BUFFER_USAGE_INDIRECT,
     BUFFER_USAGE_PIXEL_UNPACK,
     BUFFER_USAGE_PIXEL_PACK,
     BUFFER_USAGE_UNIFORM,

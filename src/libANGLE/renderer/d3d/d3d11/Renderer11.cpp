@@ -2013,6 +2013,67 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
     return gl::NoError();
 }
 
+gl::Error Renderer11::drawArraysIndirectImpl(const gl::ContextState &data,
+                                             GLenum mode,
+                                             const GLvoid *indirect)
+{
+    if (skipDraw(data, mode))
+    {
+        return gl::NoError();
+    }
+
+    const auto &glState            = data.getState();
+    gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
+    ASSERT(drawIndirectBuffer);
+    Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
+    uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
+
+    const auto &vertexArray = glState.getVertexArray();
+    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+    // If there is no dynamic attribute, we can directly use the indirect buffer.
+    if (!vertexArray11->hasDynamicAttrib(glState) && mode != GL_LINE_LOOP &&
+        mode != GL_TRIANGLE_FAN)
+    {
+        applyVertexBuffer(glState, mode, 0, 0, 0, nullptr);
+        ID3D11Buffer *buffer = nullptr;
+        ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDIRECT), buffer);
+        mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
+        return gl::NoError();
+    }
+
+    const uint8_t *bufferData = nullptr;
+    ANGLE_TRY(storage->getData(&bufferData));
+    ASSERT(bufferData);
+    const gl::DrawArraysIndirectCommand *args =
+        reinterpret_cast<const gl::DrawArraysIndirectCommand *>(bufferData + offset);
+    GLuint count     = args->count;
+    GLuint instances = args->instanceCount;
+    GLuint first     = args->first;
+
+    ANGLE_TRY(applyVertexBuffer(glState, mode, first, count, instances, nullptr));
+
+    if (mode == GL_LINE_LOOP)
+    {
+        return drawLineLoop(data, count, GL_NONE, nullptr, 0, instances);
+    }
+    if (mode == GL_TRIANGLE_FAN)
+    {
+        return drawTriangleFan(data, count, GL_NONE, nullptr, 0, instances);
+    }
+
+    mDeviceContext->DrawInstanced(count, instances, 0, 0);
+    return gl::NoError();
+}
+
+gl::Error Renderer11::drawElementsIndirectImpl(const gl::ContextState &data,
+                                               GLenum mode,
+                                               GLenum type,
+                                               const GLvoid *indirect)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "DrawElementsIndirect hasn't been implemented for D3D11 backend.";
+}
+
 gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
                                    GLsizei count,
                                    GLenum type,
@@ -4578,6 +4639,40 @@ gl::Error Renderer11::genericDrawArrays(Context11 *context,
         {
             ANGLE_TRY(markTransformFeedbackUsage(data));
         }
+    }
+
+    return gl::NoError();
+}
+
+gl::Error Renderer11::genericDrawIndirect(Context11 *context,
+                                          GLenum mode,
+                                          GLenum type,
+                                          const GLvoid *indirect)
+{
+    const auto &data     = context->getContextState();
+    const auto &glState  = data.getState();
+    gl::Program *program = glState.getProgram();
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+    bool usesPointSize     = programD3D->usesPointSize();
+    programD3D->updateSamplerMapping();
+
+    ANGLE_TRY(generateSwizzles(data));
+    applyPrimitiveType(mode, 0, usesPointSize);
+    ANGLE_TRY(updateState(data, mode));
+    ANGLE_TRY(applyTransformFeedbackBuffers(data));
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(programD3D->applyUniformBuffers(data));
+
+    if (type == GL_NONE)
+    {
+        ANGLE_TRY(drawArraysIndirectImpl(data, mode, indirect));
+    }
+    else
+    {
+        ANGLE_TRY(drawElementsIndirectImpl(data, mode, type, indirect));
     }
 
     return gl::NoError();

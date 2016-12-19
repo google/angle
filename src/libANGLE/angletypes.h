@@ -168,6 +168,27 @@ struct DepthStencilState
     GLuint stencilBackWritemask;
 };
 
+struct DrawArraysIndirectCommand
+{
+    GLuint count;
+    GLuint instanceCount;
+    GLuint first;
+    GLuint baseInstance;
+};
+static_assert(sizeof(DrawArraysIndirectCommand) == 16,
+              "Unexpected size of DrawArraysIndirectCommand");
+
+struct DrawElementsIndirectCommand
+{
+    GLuint count;
+    GLuint primCount;
+    GLuint firstIndex;
+    GLint baseVertex;
+    GLuint baseInstance;
+};
+static_assert(sizeof(DrawElementsIndirectCommand) == 20,
+              "Unexpected size of DrawElementsIndirectCommand");
+
 // State from Table 6.10 (state per sampler object)
 struct SamplerState
 {
