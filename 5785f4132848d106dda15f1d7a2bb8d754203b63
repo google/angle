@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "ba4b7745_f46d6274",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-19T14:53:46Z",
+      "side": 1,
+      "message": "Do we need to initialize?",
+      "range": {
+        "startLine": 213,
+        "startChar": 44,
+        "endLine": 213,
+        "endChar": 47
+      },
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_9487b6f9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-19T14:53:46Z",
+      "side": 1,
+      "message": "Any idea if these loops get unrolled?",
+      "range": {
+        "startLine": 215,
+        "startChar": 4,
+        "endLine": 217,
+        "endChar": 44
+      },
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_bc490e37",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 4
@@ -13,6 +59,29 @@
       "writtenOn": "2016-12-16T21:27:48Z",
       "side": 1,
       "message": "We do memcmp the previous data here.",
+      "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_547d4e1d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-19T14:53:46Z",
+      "side": 1,
+      "message": "If srcWidth \u003d\u003d targetWidth, I think we can just copy the source data directly.",
+      "range": {
+        "startLine": 249,
+        "startChar": 12,
+        "endLine": 249,
+        "endChar": 83
+      },
       "revId": "5785f4132848d106dda15f1d7a2bb8d754203b63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
