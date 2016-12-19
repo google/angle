@@ -13,12 +13,27 @@
 #include <random>
 #include <sstream>
 
+#include "Matrix.h"
 #include "shader_utils.h"
 
 using namespace angle;
 
 namespace
 {
+
+// Controls when we call glUniform, if the data is the same as last frame.
+enum DataMode
+{
+    UPDATE,
+    REPEAT,
+};
+
+// TODO(jmadill): Use an ANGLE enum for this?
+enum DataType
+{
+    VEC4,
+    MAT4,
+};
 
 struct UniformsParams final : public RenderTestParams
 {
@@ -29,18 +44,17 @@ struct UniformsParams final : public RenderTestParams
         minorVersion = 0;
         windowWidth  = 720;
         windowHeight = 720;
-        iterations   = 4;
-
-        numVertexUniforms   = 200;
-        numFragmentUniforms = 200;
     }
 
     std::string suffix() const override;
-    size_t numVertexUniforms;
-    size_t numFragmentUniforms;
+    size_t numVertexUniforms   = 200;
+    size_t numFragmentUniforms = 200;
+
+    DataType dataType = DataType::VEC4;
+    DataMode dataMode = DataMode::REPEAT;
 
     // static parameters
-    size_t iterations;
+    size_t iterations = 4;
 };
 
 std::ostream &operator<<(std::ostream &os, const UniformsParams &params)
@@ -54,8 +68,20 @@ std::string UniformsParams::suffix() const
     std::stringstream strstr;
 
     strstr << RenderTestParams::suffix();
-    strstr << "_" << numVertexUniforms << "_vertex_uniforms";
-    strstr << "_" << numFragmentUniforms << "_fragment_uniforms";
+
+    if (dataType == DataType::VEC4)
+    {
+        strstr << "_" << numVertexUniforms << "_vertex_uniforms";
+        strstr << "_" << numFragmentUniforms << "_fragment_uniforms";
+    }
+    else if (dataMode == DataMode::REPEAT)
+    {
+        strstr << "_matrix_repeating";
+    }
+    else
+    {
+        strstr << "_matrix_updating";
+    }
 
     return strstr.str();
 }
@@ -77,7 +103,30 @@ class UniformsBenchmark : public ANGLERenderTest,
 
     GLuint mProgram;
     std::vector<GLuint> mUniformLocations;
+    std::vector<Matrix4> mMatrixData[2];
 };
+
+std::vector<Matrix4> GenMatrixData(size_t count, int parity)
+{
+    std::vector<Matrix4> data;
+
+    // Very simple matrix data allocation scheme.
+    for (size_t index = 0; index < count; ++index)
+    {
+        Matrix4 mat;
+        for (int row = 0; row < 4; ++row)
+        {
+            for (int col = 0; col < 4; ++col)
+            {
+                mat.data[row * 4 + col] = (row * col + parity) % 2 == 0 ? 1.0f : -1.0f;
+            }
+        }
+
+        data.push_back(mat);
+    }
+
+    return data;
+}
 
 UniformsBenchmark::UniformsBenchmark() : ANGLERenderTest("Uniforms", GetParam()), mProgram(0u)
 {
@@ -109,6 +158,21 @@ void UniformsBenchmark::initializeBenchmark()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
+    if (params.dataType == DataType::MAT4)
+    {
+        size_t count = params.numVertexUniforms + params.numFragmentUniforms;
+
+        mMatrixData[0] = GenMatrixData(count, 0);
+        if (params.dataMode == DataMode::REPEAT)
+        {
+            mMatrixData[1] = GenMatrixData(count, 0);
+        }
+        else
+        {
+            mMatrixData[1] = GenMatrixData(count, 1);
+        }
+    }
+
     ASSERT_GL_NO_ERROR();
 }
 
@@ -122,35 +186,60 @@ std::string GetUniformLocationName(size_t idx, bool vertexShader)
 void UniformsBenchmark::initShaders()
 {
     const auto &params = GetParam();
+    bool isMatrix      = (params.dataType == DataType::MAT4);
 
     std::stringstream vstrstr;
     vstrstr << "precision mediump float;\n";
+    std::string typeString  = isMatrix ? "mat4" : "vec4";
+    std::string constVector = "const vec4 one = vec4(1, 1, 1, 1);\n";
+
+    if (isMatrix)
+    {
+        vstrstr << constVector;
+    }
+
     for (size_t i = 0; i < params.numVertexUniforms; i++)
     {
-        vstrstr << "uniform vec4 " << GetUniformLocationName(i, true) << ";\n";
+        vstrstr << "uniform " << typeString << " " << GetUniformLocationName(i, true) << ";\n";
     }
+
     vstrstr << "void main()\n"
                "{\n"
                "    gl_Position = vec4(0, 0, 0, 0);\n";
     for (size_t i = 0; i < params.numVertexUniforms; i++)
     {
-        vstrstr << "    gl_Position = gl_Position + " << GetUniformLocationName(i, true) << ";\n";
+        vstrstr << "    gl_Position += " << GetUniformLocationName(i, true);
+        if (isMatrix)
+        {
+            vstrstr << " * one";
+        }
+        vstrstr << ";\n";
     }
     vstrstr << "}";
 
     std::stringstream fstrstr;
     fstrstr << "precision mediump float;\n";
+
+    if (isMatrix)
+    {
+        fstrstr << constVector;
+    }
+
     for (size_t i = 0; i < params.numFragmentUniforms; i++)
     {
-        fstrstr << "uniform vec4 " << GetUniformLocationName(i, false) << ";\n";
+        fstrstr << "uniform " << typeString << " " << GetUniformLocationName(i, false) << ";\n";
     }
     fstrstr << "void main()\n"
                "{\n"
                "    gl_FragColor = vec4(0, 0, 0, 0);\n";
     for (size_t i = 0; i < params.numFragmentUniforms; i++)
     {
-        fstrstr << "    gl_FragColor = gl_FragColor + " << GetUniformLocationName(i, false)
-                << ";\n";
+        fstrstr << "    gl_FragColor += " << GetUniformLocationName(i, false);
+        if (isMatrix)
+        {
+            fstrstr << " * one";
+        }
+        fstrstr << ";\n";
     }
     fstrstr << "}";
 
@@ -183,12 +272,22 @@ void UniformsBenchmark::drawBenchmark()
 {
     const auto &params = GetParam();
 
-    for (size_t it = 0; it < params.iterations; ++it)
+    size_t frameIndex = 0;
+
+    for (size_t it = 0; it < params.iterations; ++it, frameIndex = (frameIndex == 0 ? 1 : 0))
     {
         for (size_t uniform = 0; uniform < mUniformLocations.size(); ++uniform)
         {
-            float value = static_cast<float>(uniform);
-            glUniform4f(mUniformLocations[uniform], value, value, value, value);
+            if (params.dataType == DataType::MAT4)
+            {
+                glUniformMatrix4fv(mUniformLocations[uniform], 1, GL_FALSE,
+                                   mMatrixData[frameIndex][uniform].data);
+            }
+            else
+            {
+                float value = static_cast<float>(uniform);
+                glUniform4f(mUniformLocations[uniform], value, value, value, value);
+            }
         }
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -197,24 +296,21 @@ void UniformsBenchmark::drawBenchmark()
     ASSERT_GL_NO_ERROR();
 }
 
-UniformsParams D3D11Params()
+using namespace egl_platform;
+
+UniformsParams VectorUniforms(const EGLPlatformParameters &egl)
 {
     UniformsParams params;
-    params.eglParameters = egl_platform::D3D11();
+    params.eglParameters = egl;
     return params;
 }
 
-UniformsParams D3D9Params()
+UniformsParams MatrixUniforms(const EGLPlatformParameters &egl, DataMode dataMode)
 {
     UniformsParams params;
-    params.eglParameters = egl_platform::D3D9();
-    return params;
-}
-
-UniformsParams OpenGLParams()
-{
-    UniformsParams params;
-    params.eglParameters = egl_platform::OPENGL();
+    params.eglParameters = egl;
+    params.dataType      = DataType::MAT4;
+    params.dataMode      = dataMode;
     return params;
 }
 
@@ -225,4 +321,11 @@ TEST_P(UniformsBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(UniformsBenchmark, D3D11Params(), D3D9Params(), OpenGLParams());
+ANGLE_INSTANTIATE_TEST(UniformsBenchmark,
+                       VectorUniforms(D3D11()),
+                       VectorUniforms(D3D9()),
+                       VectorUniforms(OPENGL()),
+                       MatrixUniforms(D3D11(), DataMode::REPEAT),
+                       MatrixUniforms(D3D11(), DataMode::UPDATE),
+                       MatrixUniforms(OPENGL(), DataMode::REPEAT),
+                       MatrixUniforms(OPENGL(), DataMode::UPDATE));
