@@ -62,6 +62,7 @@ class FramebufferState final : angle::NonCopyable
     const FramebufferAttachment *getReadAttachment() const;
     const FramebufferAttachment *getFirstColorAttachment() const;
     const FramebufferAttachment *getDepthOrStencilAttachment() const;
+    const FramebufferAttachment *getStencilOrDepthStencilAttachment() const;
     const FramebufferAttachment *getColorAttachment(size_t colorAttachment) const;
     const FramebufferAttachment *getDepthAttachment() const;
     const FramebufferAttachment *getStencilAttachment() const;
@@ -121,6 +122,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     const FramebufferAttachment *getStencilbuffer() const;
     const FramebufferAttachment *getDepthStencilBuffer() const;
     const FramebufferAttachment *getDepthOrStencilbuffer() const;
+    const FramebufferAttachment *getStencilOrDepthStencilAttachment() const;
     const FramebufferAttachment *getReadColorbuffer() const;
     GLenum getReadColorbufferType() const;
     const FramebufferAttachment *getFirstColorbuffer() const;

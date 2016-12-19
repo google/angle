@@ -132,6 +132,15 @@ const FramebufferAttachment *FramebufferState::getDepthOrStencilAttachment() con
     return nullptr;
 }
 
+const FramebufferAttachment *FramebufferState::getStencilOrDepthStencilAttachment() const
+{
+    if (mStencilAttachment.isAttached())
+    {
+        return &mStencilAttachment;
+    }
+    return getDepthStencilAttachment();
+}
+
 const FramebufferAttachment *FramebufferState::getColorAttachment(size_t colorAttachment) const
 {
     ASSERT(colorAttachment < mColorAttachments.size());
@@ -358,6 +367,11 @@ const FramebufferAttachment *Framebuffer::getDepthStencilBuffer() const
 const FramebufferAttachment *Framebuffer::getDepthOrStencilbuffer() const
 {
     return mState.getDepthOrStencilAttachment();
+}
+
+const FramebufferAttachment *Framebuffer::getStencilOrDepthStencilAttachment() const
+{
+    return mState.getStencilOrDepthStencilAttachment();
 }
 
 const FramebufferAttachment *Framebuffer::getReadColorbuffer() const

@@ -531,8 +531,7 @@ GLuint Context::createProgram()
 
 GLuint Context::createShader(GLenum type)
 {
-    return mResourceManager->createShader(mImplementation.get(),
-                                          mImplementation->getNativeLimitations(), type);
+    return mResourceManager->createShader(mImplementation.get(), mLimitations, type);
 }
 
 GLuint Context::createTexture()

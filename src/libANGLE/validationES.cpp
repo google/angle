@@ -3114,17 +3114,23 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
     }
 
     Framebuffer *framebuffer = state.getDrawFramebuffer();
-    if (context->getLimitations().noSeparateStencilRefsAndMasks)
+    if (context->getLimitations().noSeparateStencilRefsAndMasks ||
+        context->getExtensions().webglCompatibility)
     {
-        const FramebufferAttachment *stencilBuffer = framebuffer->getStencilbuffer();
-        GLuint stencilBits                = stencilBuffer ? stencilBuffer->getStencilSize() : 0;
+        const FramebufferAttachment *dsAttachment =
+            framebuffer->getStencilOrDepthStencilAttachment();
+        GLuint stencilBits                = dsAttachment ? dsAttachment->getStencilSize() : 0;
         GLuint minimumRequiredStencilMask = (1 << stencilBits) - 1;
         const DepthStencilState &depthStencilState = state.getDepthStencilState();
-        if ((depthStencilState.stencilWritemask & minimumRequiredStencilMask) !=
-                (depthStencilState.stencilBackWritemask & minimumRequiredStencilMask) ||
-            state.getStencilRef() != state.getStencilBackRef() ||
-            (depthStencilState.stencilMask & minimumRequiredStencilMask) !=
-                (depthStencilState.stencilBackMask & minimumRequiredStencilMask))
+
+        bool differentRefs = state.getStencilRef() != state.getStencilBackRef();
+        bool differentWritemasks =
+            (depthStencilState.stencilWritemask & minimumRequiredStencilMask) !=
+            (depthStencilState.stencilBackWritemask & minimumRequiredStencilMask);
+        bool differentMasks = (depthStencilState.stencilMask & minimumRequiredStencilMask) !=
+                              (depthStencilState.stencilBackMask & minimumRequiredStencilMask);
+
+        if (differentRefs || differentWritemasks || differentMasks)
         {
             // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
             // Section 6.10 of the WebGL 1.0 spec
