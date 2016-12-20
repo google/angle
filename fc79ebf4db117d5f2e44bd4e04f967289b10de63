@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_10f0891c",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T15:55:17Z",
+      "side": 1,
+      "message": "can we call this TextureD3D_Multisample2D? or something less ALL CAPS like TextureD3D_2DMultisample",
+      "range": {
+        "startLine": 516,
+        "startChar": 6,
+        "endLine": 516,
+        "endChar": 30
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_50fe01f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Framebuffer9.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T15:55:17Z",
+      "side": 1,
+      "message": "gl::InternalError()",
+      "range": {
+        "startLine": 62,
+        "startChar": 15,
+        "endLine": 62,
+        "endChar": 33
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_30f9050c",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T15:55:17Z",
+      "side": 1,
+      "message": "nit: remove extra space",
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d010b171",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T15:55:17Z",
+      "side": 1,
+      "message": "nit: ValidateTexStorage2DMultisample.. match the name of the entry point exactly.",
+      "range": {
+        "startLine": 1022,
+        "startChar": 13,
+        "endLine": 1022,
+        "endChar": 44
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_9046b973",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 23
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T15:55:17Z",
+      "side": 1,
+      "message": "why do these tests fail still, do you know?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 4
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
