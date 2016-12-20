@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "37b082be_b034153a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:42:45Z",
+      "side": 1,
+      "message": "how about:\n\nAdd out-of-bounds read validation to BlitFramebuffer.\n\u003cspace\u003e\nmore description...",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 65
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_10064989",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 7
