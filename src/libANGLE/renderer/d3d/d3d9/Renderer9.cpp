@@ -1712,6 +1712,9 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
 
 gl::Error Renderer9::applyShaders(const gl::ContextState &data, GLenum drawMode)
 {
+    // This method is called single-threaded.
+    ANGLE_TRY(ensureHLSLCompilerInitialized());
+
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
     programD3D->updateCachedInputLayout(data.getState());
 

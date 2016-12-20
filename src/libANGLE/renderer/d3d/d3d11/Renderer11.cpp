@@ -2179,6 +2179,9 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
 
 gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode)
 {
+    // This method is called single-threaded.
+    ANGLE_TRY(ensureHLSLCompilerInitialized());
+
     const auto &glState    = data.getState();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
     programD3D->updateCachedInputLayout(glState);
