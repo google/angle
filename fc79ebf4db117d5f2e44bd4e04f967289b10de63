@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "37b082be_90aa39ba",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:19:21Z",
+      "side": 1,
+      "message": "ASSERT(mTarget \u003d\u003d GL_TEXTURE_2D_MULTISAMPLE);",
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b035f5ee",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:19:21Z",
+      "side": 1,
+      "message": "You can remove this function.",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 85
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_10f0891c",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 23
@@ -48,6 +88,23 @@
     },
     {
       "key": {
+        "uuid": "37b082be_f0f28d26",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:19:21Z",
+      "side": 1,
+      "message": "You need to make sure the framebuffer is bound:\n\n   mStateManager-\u003ebindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);",
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_30f9050c",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 23
@@ -59,6 +116,52 @@
       "writtenOn": "2016-12-20T15:55:17Z",
       "side": 1,
       "message": "nit: remove extra space",
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_1084095f",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:19:21Z",
+      "side": 1,
+      "message": "This can never be true, the zero texture is a texture object in ANGLE.",
+      "range": {
+        "startLine": 255,
+        "startChar": 4,
+        "endLine": 258,
+        "endChar": 5
+      },
+      "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_70bc5d0e",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:19:21Z",
+      "side": 1,
+      "message": "GLint maxSamples \u003d context-\u003egetCaps().maxSamples;",
+      "range": {
+        "startLine": 286,
+        "startChar": 4,
+        "endLine": 287,
+        "endChar": 60
+      },
       "revId": "fc79ebf4db117d5f2e44bd4e04f967289b10de63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
