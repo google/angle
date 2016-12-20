@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_46e2c7bb",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T18:27:40Z",
+      "side": 1,
+      "message": "you can assert here too if you feel like it. (probably unnecessary)",
+      "range": {
+        "startLine": 791,
+        "startChar": 18,
+        "endLine": 791,
+        "endChar": 30
+      },
+      "revId": "bccfe1be74454a5e5a76508800b4ac33c3200c13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
