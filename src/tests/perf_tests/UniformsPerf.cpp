@@ -145,8 +145,10 @@ void UniformsBenchmark::initializeBenchmark()
 
     bool isMatrix = params.dataType == DataType::MAT4;
 
-    GLint numVertexUniformVectors   = params.numVertexUniforms * (isMatrix ? 4 : 1);
-    GLint numFragmentUniformVectors = params.numFragmentUniforms * (isMatrix ? 4 : 1);
+    GLint numVertexUniformVectors =
+        static_cast<GLint>(params.numVertexUniforms) * (isMatrix ? 4 : 1);
+    GLint numFragmentUniformVectors =
+        static_cast<GLint>(params.numFragmentUniforms) * (isMatrix ? 4 : 1);
 
     if (numVertexUniformVectors > maxVertexUniformVectors)
     {
