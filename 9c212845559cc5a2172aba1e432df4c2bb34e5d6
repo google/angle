@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_3073458f",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-20T16:31:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_b00bb505",
+      "revId": "9c212845559cc5a2172aba1e432df4c2bb34e5d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_d07d1184",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 3
@@ -77,6 +95,24 @@
         "endLine": 296,
         "endChar": 34
       },
+      "revId": "9c212845559cc5a2172aba1e432df4c2bb34e5d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7079bd6c",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-20T16:31:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_d07d1184",
       "revId": "9c212845559cc5a2172aba1e432df4c2bb34e5d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
