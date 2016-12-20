@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_54f90e0a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-20T22:52:26Z",
+      "side": 1,
+      "message": "I believe your comment is about the suffix, Buffer vs. Attachment. I\u0027d like to keep the StencilOrDepthStencil part so that it is clear that we want the buffer containing the stencil bits, if any.\nDone",
+      "parentUuid": "37b082be_a6d61bac",
+      "revId": "517e7dc880a7e96126991fe69391874638078f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_66c90313",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -42,6 +60,24 @@
         "endLine": 3104,
         "endChar": 50
       },
+      "revId": "517e7dc880a7e96126991fe69391874638078f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_54c6eeac",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3104,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-20T22:52:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_66c90313",
       "revId": "517e7dc880a7e96126991fe69391874638078f21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
