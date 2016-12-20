@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7498a7c_c7b6a0da",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-20T15:04:09Z",
+      "side": 1,
+      "message": "This should not be needed - these values are always constant folded during parsing.",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_87c0a83a",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-20T15:04:09Z",
+      "side": 1,
+      "message": "This and the corresponding member variable can be removed - see comment in OutputHLSL.cpp",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_0a771f42",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-20T15:04:09Z",
+      "side": 1,
+      "message": "mUsesWorkGroupSize and mComputeShaderWorkGroupSize can be removed from here as well.",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
