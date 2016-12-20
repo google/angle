@@ -91,8 +91,9 @@ struct WorkaroundsD3D
     bool rewriteUnaryMinusOperator = false;
 
     // On some Intel drivers, using isnan() on highp float will get wrong answer. To work around
-    // this bug, we use an expression to emulate function isnan(). Tracking bug:
-    // https://crbug.com/650547
+    // this bug, we use an expression to emulate function isnan().
+    // Tracking bug: https://crbug.com/650547
+    // This driver bug is fixed in 21.20.16.4542.
     bool emulateIsnanFloat = false;
 
     // On some Intel drivers, using clear() may not take effect. One of such situation is to clear
