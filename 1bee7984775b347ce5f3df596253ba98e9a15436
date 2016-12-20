@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_0dff12b7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-20T10:26:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_74d332ee",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 48
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_14dca6ff",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2016-12-19T15:13:30Z",
       "side": 1,
       "message": "\"No read color buffer is bound.\"",
+      "range": {
+        "startLine": 2055,
+        "startChar": 62,
+        "endLine": 2055,
+        "endChar": 86
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ad0b5e05",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2055,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-20T10:26:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_14dca6ff",
       "range": {
         "startLine": 2055,
         "startChar": 62,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_2df1aee4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2057,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-20T10:26:37Z",
+      "side": 1,
+      "message": "The logic is slightly changed. Please see the latest patch set. \nBTW, it is possible to have a null draw buffer. If one image is appropriately attached to a fbo as color/depth/stencil attachment, the fbo can be thought fbo complete. If an imange is attached to depth attachment, then the draw buffer is null, and vice versa.",
+      "parentUuid": "ba4b7745_d40e9e1c",
+      "range": {
+        "startLine": 2053,
+        "startChar": 7,
+        "endLine": 2057,
+        "endChar": 9
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_34e1aab5",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2016-12-19T15:13:30Z",
       "side": 1,
       "message": "\"No read depth/stencil buffer is bound.\"",
+      "range": {
+        "startLine": 2088,
+        "startChar": 48,
+        "endLine": 2088,
+        "endChar": 86
+      },
+      "revId": "1bee7984775b347ce5f3df596253ba98e9a15436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cd081a0b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2088,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-20T10:26:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_34e1aab5",
       "range": {
         "startLine": 2088,
         "startChar": 48,
