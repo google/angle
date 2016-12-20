@@ -37,6 +37,29 @@
     },
     {
       "key": {
+        "uuid": "37b082be_b00bb505",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-20T16:25:42Z",
+      "side": 1,
+      "message": "add default: below this and remove the return at the end of the function.",
+      "range": {
+        "startLine": 1767,
+        "startChar": 8,
+        "endLine": 1767,
+        "endChar": 35
+      },
+      "revId": "9c212845559cc5a2172aba1e432df4c2bb34e5d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_d07d1184",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 3
