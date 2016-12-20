@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_a6d61bac",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T18:39:28Z",
+      "side": 1,
+      "message": "nit: might as well call this getDepthOrStencilAttachment to resolve to the correct naming. the others we can rename when we have time. (it\u0027s fine if you want to call this StencilOrDepth, just in my mind Depth is sorted first)",
+      "range": {
+        "startLine": 372,
+        "startChar": 42,
+        "endLine": 372,
+        "endChar": 72
+      },
+      "revId": "517e7dc880a7e96126991fe69391874638078f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_66c90313",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T18:39:28Z",
+      "side": 1,
+      "message": "nit: depthOrStencilAttachment (or dsAttachment)",
+      "range": {
+        "startLine": 3104,
+        "startChar": 37,
+        "endLine": 3104,
+        "endChar": 50
+      },
+      "revId": "517e7dc880a7e96126991fe69391874638078f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
