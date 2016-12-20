@@ -46,17 +46,18 @@ GLubyte ColorDenorm(float colorValue)
 class TestPlatform : public angle::Platform
 {
   public:
-    TestPlatform() : mIgnoreMessages(false) {}
-
     void logError(const char *errorMessage) override;
     void logWarning(const char *warningMessage) override;
     void logInfo(const char *infoMessage) override;
+    void overrideWorkaroundsD3D(WorkaroundsD3D *workaroundsD3D) override;
 
     void ignoreMessages();
     void enableMessages();
+    void setCurrentTest(ANGLETest *currentTest);
 
   private:
-    bool mIgnoreMessages;
+    bool mIgnoreMessages    = false;
+    ANGLETest *mCurrentTest = nullptr;
 };
 
 void TestPlatform::logError(const char *errorMessage)
@@ -83,6 +84,14 @@ void TestPlatform::logInfo(const char *infoMessage)
     angle::WriteDebugMessage("%s\n", infoMessage);
 }
 
+void TestPlatform::overrideWorkaroundsD3D(WorkaroundsD3D *workaroundsD3D)
+{
+    if (mCurrentTest)
+    {
+        mCurrentTest->overrideWorkaroundsD3D(workaroundsD3D);
+    }
+}
+
 void TestPlatform::ignoreMessages()
 {
     mIgnoreMessages = true;
@@ -91,6 +100,11 @@ void TestPlatform::ignoreMessages()
 void TestPlatform::enableMessages()
 {
     mIgnoreMessages = false;
+}
+
+void TestPlatform::setCurrentTest(ANGLETest *currentTest)
+{
+    mCurrentTest = currentTest;
 }
 
 TestPlatform g_testPlatformInstance;
@@ -205,6 +219,7 @@ ANGLETest::~ANGLETest()
 void ANGLETest::SetUp()
 {
     angle::g_testPlatformInstance.enableMessages();
+    angle::g_testPlatformInstance.setCurrentTest(this);
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
@@ -242,6 +257,7 @@ void ANGLETest::SetUp()
 
 void ANGLETest::TearDown()
 {
+    angle::g_testPlatformInstance.setCurrentTest(nullptr);
     checkD3D11SDKLayersMessages();
 
     const auto &info = testing::UnitTest::GetInstance()->current_test_info();

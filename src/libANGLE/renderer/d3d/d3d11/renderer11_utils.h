@@ -30,7 +30,6 @@ namespace rx
 {
 class Renderer11;
 class RenderTarget11;
-struct WorkaroundsD3D;
 struct Renderer11DeviceCaps;
 
 using RenderTargetArray = std::array<RenderTarget11 *, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
@@ -353,8 +352,8 @@ void SetBufferData(ID3D11DeviceContext *context, ID3D11Buffer *constantBuffer, c
     }
 }
 
-WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                   const DXGI_ADAPTER_DESC &adapterDesc);
+angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
+                                          const DXGI_ADAPTER_DESC &adapterDesc);
 
 enum ReservedConstantBufferSlot
 {

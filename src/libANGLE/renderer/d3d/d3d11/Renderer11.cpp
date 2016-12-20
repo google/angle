@@ -2978,7 +2978,7 @@ std::string Renderer11::getShaderModelSuffix() const
     }
 }
 
-const WorkaroundsD3D &RendererD3D::getWorkarounds() const
+const angle::WorkaroundsD3D &RendererD3D::getWorkarounds() const
 {
     if (!mWorkaroundsInitialized)
     {
@@ -3548,7 +3548,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
                                           ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
-                                          const D3DCompilerWorkarounds &workarounds,
+                                          const angle::CompilerWorkaroundsD3D &workarounds,
                                           ShaderExecutableD3D **outExectuable)
 {
     std::stringstream profileStream;
@@ -4425,7 +4425,7 @@ void Renderer11::generateCaps(gl::Caps *outCaps,
                            outExtensions, outLimitations);
 }
 
-WorkaroundsD3D Renderer11::generateWorkarounds() const
+angle::WorkaroundsD3D Renderer11::generateWorkarounds() const
 {
     return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
 }

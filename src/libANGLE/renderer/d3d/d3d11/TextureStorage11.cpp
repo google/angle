@@ -217,16 +217,28 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
     // 2. this is a stencil texture.
     bool hasStencil = (mFormatInfo.format().stencilBits > 0);
     // 3. the texture has a 1x1 or 2x2 mip.
-    bool hasSmallMips = (getLevelWidth(mMipLevels - 1) <= 2 || getLevelHeight(mMipLevels - 1) <= 2);
+    int effectiveTopLevel = effectiveBaseLevel + mipLevels - 1;
+    bool hasSmallMips =
+        (getLevelWidth(effectiveTopLevel) <= 2 || getLevelHeight(effectiveTopLevel) <= 2);
 
     bool useDropStencil = (workaround && hasStencil && hasSmallMips);
+    SRVKey key(effectiveBaseLevel, mipLevels, swizzleRequired, useDropStencil);
     if (useDropStencil)
     {
-        // Ensure drop texture gets re-created, if SRV is cached.
-        ANGLE_TRY(createDropStencilTexture());
+        // Ensure drop texture gets created.
+        DropStencil result = DropStencil::CREATED;
+        ANGLE_TRY_RESULT(ensureDropStencilTexture(), result);
+
+        // Clear the SRV cache if necessary.
+        // TODO(jmadill): Re-use find query result.
+        auto srvEntry = mSrvCache.find(key);
+        if (result == DropStencil::CREATED && srvEntry != mSrvCache.end())
+        {
+            SafeRelease(srvEntry->second);
+            mSrvCache.erase(key);
+        }
     }
 
-    SRVKey key(effectiveBaseLevel, mipLevels, swizzleRequired, useDropStencil);
     ANGLE_TRY(getCachedOrCreateSRV(key, outSRV));
 
     return gl::NoError();
@@ -687,10 +699,10 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::createDropStencilTexture()
+gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11::ensureDropStencilTexture()
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION, "Drop stencil texture not implemented.");
+    return gl::InternalError() << "Drop stencil texture not implemented.";
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swapchain)
@@ -1309,11 +1321,11 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::createDropStencilTexture()
+gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2D::ensureDropStencilTexture()
 {
     if (mDropStencilTexture)
     {
-        return gl::NoError();
+        return DropStencil::ALREADY_EXISTS;
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -1334,13 +1346,13 @@ gl::Error TextureStorage11_2D::createDropStencilTexture()
     HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
     if (FAILED(hr))
     {
-        return gl::Error(GL_INVALID_OPERATION, "Error creating drop stencil texture.");
+        return gl::InternalError() << "Error creating drop stencil texture.";
     }
     d3d11::SetDebugName(mDropStencilTexture, "TexStorage2D.DropStencil");
 
     ANGLE_TRY(initDropStencilTexture(gl::ImageIndexIterator::Make2D(0, mMipLevels)));
 
-    return gl::NoError();
+    return DropStencil::CREATED;
 }
 
 TextureStorage11_External::TextureStorage11_External(
@@ -2473,11 +2485,11 @@ gl::Error TextureStorage11::initDropStencilTexture(const gl::ImageIndexIterator 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::createDropStencilTexture()
+gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_Cube::ensureDropStencilTexture()
 {
     if (mDropStencilTexture)
     {
-        return gl::NoError();
+        return DropStencil::ALREADY_EXISTS;
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -2498,13 +2510,13 @@ gl::Error TextureStorage11_Cube::createDropStencilTexture()
     HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
     if (FAILED(hr))
     {
-        return gl::Error(GL_INVALID_OPERATION, "Error creating drop stencil texture.");
+        return gl::InternalError() << "Error creating drop stencil texture.";
     }
     d3d11::SetDebugName(mDropStencilTexture, "TexStorageCube.DropStencil");
 
     ANGLE_TRY(initDropStencilTexture(gl::ImageIndexIterator::MakeCube(0, mMipLevels)));
 
-    return gl::NoError();
+    return DropStencil::CREATED;
 }
 
 TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer,
@@ -3350,11 +3362,12 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::createDropStencilTexture()
+gl::ErrorOrResult<TextureStorage11::DropStencil>
+TextureStorage11_2DArray::ensureDropStencilTexture()
 {
     if (mDropStencilTexture)
     {
-        return gl::NoError();
+        return DropStencil::ALREADY_EXISTS;
     }
 
     D3D11_TEXTURE2D_DESC dropDesc = {};
@@ -3375,7 +3388,7 @@ gl::Error TextureStorage11_2DArray::createDropStencilTexture()
     HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
     if (FAILED(hr))
     {
-        return gl::Error(GL_INVALID_OPERATION, "Error creating drop stencil texture.");
+        return gl::InternalError() << "Error creating drop stencil texture.";
     }
     d3d11::SetDebugName(mDropStencilTexture, "TexStorage2DArray.DropStencil");
 
@@ -3384,7 +3397,7 @@ gl::Error TextureStorage11_2DArray::createDropStencilTexture()
     ANGLE_TRY(initDropStencilTexture(
         gl::ImageIndexIterator::Make2DArray(0, mMipLevels, layerCounts.data())));
 
-    return gl::NoError();
+    return DropStencil::CREATED;
 }
 
 }  // namespace rx

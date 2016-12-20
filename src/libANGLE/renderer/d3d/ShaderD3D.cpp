@@ -40,7 +40,7 @@ const char *GetShaderTypeString(GLenum type)
 namespace rx
 {
 
-ShaderD3D::ShaderD3D(const gl::ShaderState &data, const WorkaroundsD3D &workarounds)
+ShaderD3D::ShaderD3D(const gl::ShaderState &data, const angle::WorkaroundsD3D &workarounds)
     : ShaderImpl(data), mAdditionalOptions(0)
 {
     uncompile();
@@ -101,7 +101,7 @@ void ShaderD3D::uncompile()
     mDebugInfo.clear();
 }
 
-void ShaderD3D::generateWorkarounds(D3DCompilerWorkarounds *workarounds) const
+void ShaderD3D::generateWorkarounds(angle::CompilerWorkaroundsD3D *workarounds) const
 {
     if (mUsesDiscardRewriting)
     {

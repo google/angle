@@ -890,10 +890,10 @@ LinkResult ProgramD3D::load(const ContextImpl *contextImpl,
 
     stream->readString(&mVertexHLSL);
     stream->readBytes(reinterpret_cast<unsigned char *>(&mVertexWorkarounds),
-                      sizeof(D3DCompilerWorkarounds));
+                      sizeof(angle::CompilerWorkaroundsD3D));
     stream->readString(&mPixelHLSL);
     stream->readBytes(reinterpret_cast<unsigned char *>(&mPixelWorkarounds),
-                      sizeof(D3DCompilerWorkarounds));
+                      sizeof(angle::CompilerWorkaroundsD3D));
     stream->readBool(&mUsesFragDepth);
     stream->readBool(&mUsesPointSize);
     stream->readBool(&mUsesFlatInterpolation);
@@ -1075,10 +1075,10 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
 
     stream->writeString(mVertexHLSL);
     stream->writeBytes(reinterpret_cast<unsigned char *>(&mVertexWorkarounds),
-                       sizeof(D3DCompilerWorkarounds));
+                       sizeof(angle::CompilerWorkaroundsD3D));
     stream->writeString(mPixelHLSL);
     stream->writeBytes(reinterpret_cast<unsigned char *>(&mPixelWorkarounds),
-                       sizeof(D3DCompilerWorkarounds));
+                       sizeof(angle::CompilerWorkaroundsD3D));
     stream->writeInt(mUsesFragDepth);
     stream->writeInt(mUsesPointSize);
     stream->writeInt(mUsesFlatInterpolation);
@@ -1309,8 +1309,8 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
 
     gl::Error error = mRenderer->compileToExecutable(
         *currentInfoLog, geometryHLSL, SHADER_GEOMETRY, mStreamOutVaryings,
-        (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS), D3DCompilerWorkarounds(),
-        &mGeometryExecutables[geometryShaderType]);
+        (mState.getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS),
+        angle::CompilerWorkaroundsD3D(), &mGeometryExecutables[geometryShaderType]);
 
     if (!infoLog && error.isError())
     {
@@ -2249,10 +2249,10 @@ void ProgramD3D::reset()
     }
 
     mVertexHLSL.clear();
-    mVertexWorkarounds = D3DCompilerWorkarounds();
+    mVertexWorkarounds = angle::CompilerWorkaroundsD3D();
 
     mPixelHLSL.clear();
-    mPixelWorkarounds = D3DCompilerWorkarounds();
+    mPixelWorkarounds = angle::CompilerWorkaroundsD3D();
     mUsesFragDepth = false;
     mPixelShaderKey.clear();
     mUsesPointSize = false;

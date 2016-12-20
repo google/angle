@@ -6,16 +6,16 @@
 
 // WorkaroundsD3D.h: Workarounds for D3D driver bugs and other issues.
 
-#ifndef LIBANGLE_RENDERER_D3D_WORKAROUNDSD3D_H_
-#define LIBANGLE_RENDERER_D3D_WORKAROUNDSD3D_H_
+#ifndef ANGLE_PLATFORM_WORKAROUNDSD3D_H_
+#define ANGLE_PLATFORM_WORKAROUNDSD3D_H_
 
 // TODO(jmadill,zmo,geofflang): make a workarounds library that can operate
 // independent of ANGLE's renderer. Workarounds should also be accessible
 // outside of the Renderer.
 
-namespace rx
+namespace angle
 {
-struct D3DCompilerWorkarounds
+struct CompilerWorkaroundsD3D
 {
     bool skipOptimization   = false;
     bool useMaxOptimization = false;
@@ -107,6 +107,6 @@ struct WorkaroundsD3D
     bool useSystemMemoryForConstantBuffers = false;
 };
 
-}  // namespace rx
+}  // namespace angle
 
-#endif  // LIBANGLE_RENDERER_D3D_WORKAROUNDSD3D_H_
+#endif  // ANGLE_PLATFORM_WORKAROUNDSD3D_H_

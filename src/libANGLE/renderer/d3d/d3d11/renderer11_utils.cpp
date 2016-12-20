@@ -21,8 +21,9 @@
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 #include "libANGLE/renderer/driver_utils.h"
+#include "platform/Platform.h"
+#include "platform/WorkaroundsD3D.h"
 
 namespace rx
 {
@@ -1818,12 +1819,12 @@ ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
     return mResource;
 }
 
-WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
-                                   const DXGI_ADAPTER_DESC &adapterDesc)
+angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
+                                          const DXGI_ADAPTER_DESC &adapterDesc)
 {
     bool is9_3 = (deviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3);
 
-    WorkaroundsD3D workarounds;
+    angle::WorkaroundsD3D workarounds;
     workarounds.mrtPerfWorkaround = true;
     workarounds.setDataFasterThanImageUpload = true;
     workarounds.zeroMaxLodWorkaround             = is9_3;
@@ -1875,6 +1876,9 @@ WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,
     }
 
     workarounds.useSystemMemoryForConstantBuffers = IsIntel(adapterDesc.VendorId);
+
+    // Call platform hooks for testing overrides.
+    ANGLEPlatformCurrent()->overrideWorkaroundsD3D(&workarounds);
 
     return workarounds;
 }

@@ -17,7 +17,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
+#include "platform/WorkaroundsD3D.h"
 
 namespace rx
 {
@@ -374,10 +374,10 @@ class ProgramD3D : public ProgramImpl
     std::vector<ShaderExecutableD3D *> mGeometryExecutables;
 
     std::string mVertexHLSL;
-    D3DCompilerWorkarounds mVertexWorkarounds;
+    angle::CompilerWorkaroundsD3D mVertexWorkarounds;
 
     std::string mPixelHLSL;
-    D3DCompilerWorkarounds mPixelWorkarounds;
+    angle::CompilerWorkaroundsD3D mPixelWorkarounds;
     bool mUsesFragDepth;
     std::vector<PixelShaderOutputVariable> mPixelShaderKey;
 

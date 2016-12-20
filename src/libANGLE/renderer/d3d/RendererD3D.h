@@ -17,11 +17,11 @@
 #include "libANGLE/Device.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/WorkaroundsD3D.h"
 #include "libANGLE/renderer/d3d/hlsl/hlsl_utils.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/WorkerThread.h"
+#include "platform/WorkaroundsD3D.h"
 
 namespace egl
 {
@@ -148,7 +148,7 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual int getMajorShaderModel() const = 0;
 
-    const WorkaroundsD3D &getWorkarounds() const;
+    const angle::WorkaroundsD3D &getWorkarounds() const;
 
     // Pixel operations
     virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
@@ -191,7 +191,7 @@ class RendererD3D : public BufferFactoryD3D
                                           ShaderType type,
                                           const std::vector<D3DVarying> &streamOutVaryings,
                                           bool separatedOutputBuffers,
-                                          const D3DCompilerWorkarounds &workarounds,
+                                          const angle::CompilerWorkaroundsD3D &workarounds,
                                           ShaderExecutableD3D **outExectuable) = 0;
     virtual gl::Error ensureHLSLCompilerInitialized()                          = 0;
 
@@ -292,7 +292,7 @@ class RendererD3D : public BufferFactoryD3D
                                        FramebufferTextureArray *outTextureArray);
     gl::Texture *getIncompleteTexture(GLImplFactory *implFactory, GLenum type);
 
-    virtual WorkaroundsD3D generateWorkarounds() const = 0;
+    virtual angle::WorkaroundsD3D generateWorkarounds() const = 0;
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -303,7 +303,7 @@ class RendererD3D : public BufferFactoryD3D
     gl::TextureMap mIncompleteTextures;
 
     mutable bool mWorkaroundsInitialized;
-    mutable WorkaroundsD3D mWorkarounds;
+    mutable angle::WorkaroundsD3D mWorkarounds;
 
     bool mDisjoint;
     bool mDeviceLost;

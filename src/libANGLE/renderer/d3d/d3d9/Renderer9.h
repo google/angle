@@ -245,7 +245,7 @@ class Renderer9 : public RendererD3D
                                   ShaderType type,
                                   const std::vector<D3DVarying> &streamOutVaryings,
                                   bool separatedOutputBuffers,
-                                  const D3DCompilerWorkarounds &workarounds,
+                                  const angle::CompilerWorkaroundsD3D &workarounds,
                                   ShaderExecutableD3D **outExectuable) override;
     gl::Error ensureHLSLCompilerInitialized() override;
 
@@ -370,7 +370,7 @@ class Renderer9 : public RendererD3D
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const override;
 
-    WorkaroundsD3D generateWorkarounds() const override;
+    angle::WorkaroundsD3D generateWorkarounds() const override;
 
     gl::Error setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode);
 

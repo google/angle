@@ -84,6 +84,8 @@ struct GLColor
     static const GLColor yellow;
 };
 
+struct WorkaroundsD3D;
+
 // Useful to cast any type to GLubyte.
 template <typename TR, typename TG, typename TB, typename TA>
 GLColor MakeGLColor(TR r, TG g, TB b, TA a)
@@ -144,6 +146,8 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     static bool DestroyTestWindow();
     static void SetWindowVisible(bool isVisible);
     static bool eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName);
+
+    virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
 
   protected:
     virtual void SetUp();

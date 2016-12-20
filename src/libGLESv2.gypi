@@ -69,6 +69,7 @@
             '../include/GLSLANG/ShaderVars.h',
             '../include/KHR/khrplatform.h',
             '../include/platform/Platform.h',
+            '../include/platform/WorkaroundsD3D.h',
         ],
         'libangle_sources':
         [
@@ -269,7 +270,6 @@
             'libANGLE/renderer/d3d/VertexBuffer.h',
             'libANGLE/renderer/d3d/VertexDataManager.cpp',
             'libANGLE/renderer/d3d/VertexDataManager.h',
-            'libANGLE/renderer/d3d/WorkaroundsD3D.h',
         ],
         'libangle_d3d_hlsl_sources':
         [

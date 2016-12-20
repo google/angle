@@ -30,7 +30,6 @@ namespace rx
 {
 class RendererD3D;
 class RenderTargetD3D;
-struct WorkaroundsD3D;
 
 struct ClearParameters
 {

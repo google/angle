@@ -33,6 +33,8 @@
 namespace angle
 {
 
+struct WorkaroundsD3D;
+
 class Platform
 {
   public:
@@ -144,6 +146,9 @@ class Platform
     virtual void histogramSparse(const char *name, int sample) { }
     // Boolean histograms track two-state variables.
     virtual void histogramBoolean(const char *name, bool sample) { }
+
+    // Allows us to programatically override ANGLE's default workarounds for testing purposes.
+    virtual void overrideWorkaroundsD3D(WorkaroundsD3D *workaroundsD3D) {}
 
   protected:
     virtual ~Platform() { }
