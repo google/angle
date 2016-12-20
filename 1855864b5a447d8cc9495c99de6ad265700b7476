@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_d5542619",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-20T02:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_c93447f1",
+      "range": {
+        "startLine": 9,
+        "startChar": 67,
+        "endLine": 9,
+        "endChar": 73
+      },
+      "revId": "1855864b5a447d8cc9495c99de6ad265700b7476",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_89b5df16",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_b54baa74",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-20T02:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_89b5df16",
+      "range": {
+        "startLine": 118,
+        "startChar": 34,
+        "endLine": 118,
+        "endChar": 41
+      },
+      "revId": "1855864b5a447d8cc9495c99de6ad265700b7476",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_69d19b5d",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 4
@@ -59,6 +107,24 @@
       "writtenOn": "2016-12-19T10:12:47Z",
       "side": 1,
       "message": "Is this still needed in cpp file?",
+      "revId": "1855864b5a447d8cc9495c99de6ad265700b7476",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f55a8238",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-20T02:16:59Z",
+      "side": 1,
+      "message": "I have verified it is not needed. Thanks to point out this!\nDone",
+      "parentUuid": "ba4b7745_69d19b5d",
       "revId": "1855864b5a447d8cc9495c99de6ad265700b7476",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
