@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_f0860d69",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T16:11:50Z",
+      "side": 1,
+      "message": "nit: use static_cast\u003c\u003e style.",
+      "range": {
+        "startLine": 3231,
+        "startChar": 24,
+        "endLine": 3231,
+        "endChar": 31
+      },
+      "revId": "e66475e12de9bec5697c954d6e3c3c8b91165f6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
