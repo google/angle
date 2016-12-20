@@ -139,26 +139,33 @@ void UniformsBenchmark::initializeBenchmark()
     ASSERT_GT(params.iterations, 0u);
 
     // Verify the uniform counts are within the limits
-    GLint maxVertexUniforms, maxFragmentUniforms;
-    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxVertexUniforms);
-    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &maxFragmentUniforms);
+    GLint maxVertexUniformVectors, maxFragmentUniformVectors;
+    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxVertexUniformVectors);
+    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_VECTORS, &maxFragmentUniformVectors);
 
-    if (params.numVertexUniforms > static_cast<size_t>(maxVertexUniforms))
+    bool isMatrix = params.dataType == DataType::MAT4;
+
+    GLint numVertexUniformVectors   = params.numVertexUniforms * (isMatrix ? 4 : 1);
+    GLint numFragmentUniformVectors = params.numFragmentUniforms * (isMatrix ? 4 : 1);
+
+    if (numVertexUniformVectors > maxVertexUniformVectors)
     {
-        FAIL() << "Vertex uniform count (" << params.numVertexUniforms << ")"
-               << " exceeds maximum vertex uniform count: " << maxVertexUniforms << std::endl;
+        FAIL() << "Vertex uniform vector count (" << numVertexUniformVectors << ")"
+               << " exceeds maximum vertex uniform vector count: " << maxVertexUniformVectors
+               << std::endl;
     }
-    if (params.numFragmentUniforms > static_cast<size_t>(maxFragmentUniforms))
+    if (numFragmentUniformVectors > maxFragmentUniformVectors)
     {
-        FAIL() << "Fragment uniform count (" << params.numFragmentUniforms << ")"
-               << " exceeds maximum fragment uniform count: " << maxFragmentUniforms << std::endl;
+        FAIL() << "Fragment uniform vector count (" << numFragmentUniformVectors << ")"
+               << " exceeds maximum fragment uniform vector count: " << maxFragmentUniformVectors
+               << std::endl;
     }
 
     initShaders();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
-    if (params.dataType == DataType::MAT4)
+    if (isMatrix)
     {
         size_t count = params.numVertexUniforms + params.numFragmentUniforms;
 
@@ -311,6 +318,11 @@ UniformsParams MatrixUniforms(const EGLPlatformParameters &egl, DataMode dataMod
     params.eglParameters = egl;
     params.dataType      = DataType::MAT4;
     params.dataMode      = dataMode;
+
+    // Reduce the number of uniforms to fit within smaller upper limis on some configs.
+    params.numVertexUniforms   = 100;
+    params.numFragmentUniforms = 100;
+
     return params;
 }
 
