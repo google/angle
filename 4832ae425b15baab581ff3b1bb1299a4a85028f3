@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_2d168ec2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_75896c47",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_f5cc7c25",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_ed1f16d1",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_f5cc7c25",
+      "range": {
+        "startLine": 141,
+        "startChar": 3,
+        "endLine": 145,
+        "endChar": 5
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_b56e7418",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "just pass a const WorkGroupSize\u0026",
+      "range": {
+        "startLine": 59,
+        "startChar": 35,
+        "endLine": 59,
+        "endChar": 81
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6df56662",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_b56e7418",
       "range": {
         "startLine": 59,
         "startChar": 35,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_8dfa2250",
+        "filename": "src/compiler/translator/TranslatorHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_154f40b0",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 128,
+        "endChar": 5
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_753decec",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 11
@@ -128,6 +224,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "I think for our vertex and fragment shaders we prefix these with dx_ instead of just _.",
+      "range": {
+        "startLine": 787,
+        "startChar": 36,
+        "endLine": 787,
+        "endChar": 48
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2def6e94",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_753decec",
       "range": {
         "startLine": 787,
         "startChar": 36,
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_4df42a64",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_15f82008",
+      "range": {
+        "startLine": 837,
+        "startChar": 0,
+        "endLine": 838,
+        "endChar": 36
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_3528c499",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 11
@@ -174,6 +318,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "nit: gl::NoError()",
+      "range": {
+        "startLine": 1374,
+        "startChar": 15,
+        "endLine": 1374,
+        "endChar": 37
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ad34be39",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_3528c499",
       "range": {
         "startLine": 1374,
         "startChar": 15,
@@ -209,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_cd31fa48",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_954ed085",
+      "range": {
+        "startLine": 1380,
+        "startChar": 4,
+        "endLine": 1380,
+        "endChar": 22
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_f5447c6c",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 11
@@ -220,6 +412,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "Just pass an empty list and false, trasform feedback mode is irrelevant to compute shaders.",
+      "range": {
+        "startLine": 1381,
+        "startChar": 55,
+        "endLine": 1382,
+        "endChar": 72
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6da00645",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1382,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_f5447c6c",
       "range": {
         "startLine": 1381,
         "startChar": 55,
@@ -249,6 +465,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_2daa0e23",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1501,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_4773db54",
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_d5bcd810",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 11
@@ -260,6 +494,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "Can you refactor this code? Maybe add a new function:\n\n   initUniformBlockInfo(const gl::Shader *shader)\n\nand call it here depending on which shaders are used.",
+      "range": {
+        "startLine": 1693,
+        "startChar": 7,
+        "endLine": 1703,
+        "endChar": 9
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4daf4a32",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1703,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_d5bcd810",
       "range": {
         "startLine": 1693,
         "startChar": 7,
@@ -295,6 +553,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_0db15291",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_95ec104c",
+      "range": {
+        "startLine": 387,
+        "startChar": 43,
+        "endLine": 387,
+        "endChar": 44
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_95e41023",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 11
@@ -318,6 +600,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_adbd9e65",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_95e41023",
+      "range": {
+        "startLine": 839,
+        "startChar": 12,
+        "endLine": 841,
+        "endChar": 92
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_558c6858",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 11
@@ -329,6 +635,30 @@
       "writtenOn": "2016-12-19T20:27:08Z",
       "side": 1,
       "message": "We have a helper for this.  You can replace this code with:\n\n   ANGLE_GL_COMPUTE_PROGRAM(program, csSource);\n\n(below too)",
+      "range": {
+        "startLine": 235,
+        "startChar": 2,
+        "endLine": 248,
+        "endChar": 25
+      },
+      "revId": "4832ae425b15baab581ff3b1bb1299a4a85028f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cdba5a6b",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T11:50:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_558c6858",
       "range": {
         "startLine": 235,
         "startChar": 2,
