@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_23721d52",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T16:52:50Z",
+      "side": 1,
+      "message": "Yes, gl_WorkGroupSize values are constant folded by https://chromium-review.googlesource.com/#/c/418735/",
+      "parentUuid": "f7498a7c_c7b6a0da",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7498a7c_87c0a83a",
         "filename": "src/compiler/translator/OutputHLSL.h",
         "patchSetId": 15
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_43771941",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T16:52:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7498a7c_87c0a83a",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7498a7c_0a771f42",
         "filename": "src/libANGLE/renderer/d3d/ShaderD3D.h",
         "patchSetId": 15
@@ -47,6 +83,24 @@
       "writtenOn": "2016-12-20T15:04:09Z",
       "side": 1,
       "message": "mUsesWorkGroupSize and mComputeShaderWorkGroupSize can be removed from here as well.",
+      "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_03a28180",
+        "filename": "src/libANGLE/renderer/d3d/ShaderD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-20T16:52:50Z",
+      "side": 1,
+      "message": "mUsesWorkGroupSize had been removed.\nmComputeShaderWorkGroupSize should be used to initialize \"[numthreads([...])\" in shader.",
+      "parentUuid": "f7498a7c_0a771f42",
       "revId": "267afbdb11fbb4fba1294a33c86f123b44c71f51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
