@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_10064989",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1974,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 1974,
+        "startChar": 8,
+        "endLine": 1974,
+        "endChar": 98
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_104f29dd",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1979,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "good comment, but put this next to the error.",
+      "range": {
+        "startLine": 1977,
+        "startChar": 8,
+        "endLine": 1979,
+        "endChar": 97
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_70f53d62",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1979,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "unconditionally",
+      "range": {
+        "startLine": 1979,
+        "startChar": 75,
+        "endLine": 1979,
+        "endChar": 90
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_506da13f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 1981,
+        "startChar": 8,
+        "endLine": 1981,
+        "endChar": 35
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b002d571",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 1983,
+        "startChar": 27,
+        "endLine": 1983,
+        "endChar": 46
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_30682531",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2064,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "else if (drawBuffer-\u003ehasEnabledDrawBuffer())\n{",
+      "range": {
+        "startLine": 2064,
+        "startChar": 8,
+        "endLine": 2064,
+        "endChar": 46
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_705e9d94",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2066,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "Attempt to read from a missing color attachment of a complete framebuffer.",
+      "range": {
+        "startLine": 2066,
+        "startChar": 62,
+        "endLine": 2066,
+        "endChar": 92
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d058b1a0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2099,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "Attempt to read from a missing depth/stencil attachment of a complete framebuffer.",
+      "range": {
+        "startLine": 2099,
+        "startChar": 49,
+        "endLine": 2099,
+        "endChar": 87
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_504601c4",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-20T14:41:13Z",
+      "side": 1,
+      "message": "it\u0027s more correct to say \u0027if we read from a missing color attachment\u0027",
+      "range": {
+        "startLine": 695,
+        "startChar": 53,
+        "endLine": 695,
+        "endChar": 59
+      },
+      "revId": "f0f1286aba5a1afde7933b6e509cd1d335116911",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
