@@ -289,7 +289,12 @@ Error FramebufferGL::blit(ContextImpl *context,
     const Framebuffer *destFramebuffer       = context->getGLState().getDrawFramebuffer();
 
     const FramebufferAttachment *colorReadAttachment = sourceFramebuffer->getReadColorbuffer();
-    GLsizei readAttachmentSamples                    = colorReadAttachment->getSamples();
+
+    GLsizei readAttachmentSamples = 0;
+    if (colorReadAttachment != nullptr)
+    {
+        readAttachmentSamples = colorReadAttachment->getSamples();
+    }
 
     bool needManualColorBlit = false;
 
