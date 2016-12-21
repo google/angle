@@ -272,6 +272,23 @@
     },
     {
       "key": {
+        "uuid": "37b082be_4a795a2f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T20:24:11Z",
+      "side": 1,
+      "message": "This condition is always true and could be removed.",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_4f8c0cc7",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 9
