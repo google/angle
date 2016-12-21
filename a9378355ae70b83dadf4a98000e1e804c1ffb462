@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_9e1d5c4d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1869,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T16:48:03Z",
+      "side": 1,
+      "message": "can you comment in the workaround description the driver version this is fixed in? (in WorkaroundsD3D.h)",
+      "range": {
+        "startLine": 1869,
+        "startChar": 12,
+        "endLine": 1869,
+        "endChar": 73
+      },
+      "revId": "a9378355ae70b83dadf4a98000e1e804c1ffb462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
