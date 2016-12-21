@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_4f3e4ceb",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "what\u0027s this for? I don\u0027t see many (any?) api calls in here.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 18
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cf323c22",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "if git cl format doesn\u0027t do this indenting business, leave it out. (Unless you can figure out how to make git cl format do it)",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 9
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ef61381b",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "I think you can use an #error Unsupported Vulkan platform. Here.",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 27
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ef13787b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "maybe the display should have a virtual method to query this, (const char *) and it passes it into RendererVk::initialize.",
+      "range": {
+        "startLine": 197,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 29
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2f0af044",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "I\u0027ll put this into my CL.",
+      "range": {
+        "startLine": 675,
+        "startChar": 3,
+        "endLine": 676,
+        "endChar": 35
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_8ffe84f2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "ANGLE_TRY",
+      "range": {
+        "startLine": 163,
+        "startChar": 4,
+        "endLine": 167,
+        "endChar": 5
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6ff9c80a",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "can we use gl::Extents? Or the VK extents struct. And you should be able to use gl::ErrorOrResult (though it\u0027s pretty similar to passing a pointer)",
+      "range": {
+        "startLine": 92,
+        "startChar": 38,
+        "endLine": 92,
+        "endChar": 71
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cf6f9cda",
+        "filename": "src/libANGLE/renderer/vulkan/WindowSurfaceVkWin32.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "update",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 17
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6f7468ad",
+        "filename": "src/libANGLE/renderer/vulkan/WindowSurfaceVkWin32.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "update",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 50
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_8f2764ca",
+        "filename": "src/libANGLE/renderer/vulkan/WindowSurfaceVkXcb.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "update",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 49
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cf1d5c7e",
+        "filename": "src/libANGLE/renderer/vulkan/WindowSurfaceVkXcb.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "is this possible? should do this. seems more like a FIXME than a TODO. :)",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 40
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_af41005e",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "why don\u0027t I see this? can you share a gist with the error?\n\nIf necessary it should probably go in vulkan_loader_internal_config.",
+      "range": {
+        "startLine": 44,
+        "startChar": 18,
+        "endLine": 44,
+        "endChar": 36
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6f3b08dd",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "can this go in _internal_config?",
+      "range": {
+        "startLine": 46,
+        "startChar": 1,
+        "endLine": 51,
+        "endChar": 3
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2f551013",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "don\u0027t use else.. use is_linux.",
+      "range": {
+        "startLine": 194,
+        "startChar": 2,
+        "endLine": 194,
+        "endChar": 10
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4f52cc2b",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 17
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T19:44:36Z",
+      "side": 1,
+      "message": "weird, i feel like this should be in the current build files.",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 58
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
