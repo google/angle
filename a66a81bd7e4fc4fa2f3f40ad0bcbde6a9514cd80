@@ -1,0 +1,354 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_fe8810b3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "Can you change these to mCaps.maxVertexAttribs and mCaps.maxVertexAttribBindings",
+      "range": {
+        "startLine": 2081,
+        "startChar": 80,
+        "endLine": 2082,
+        "endChar": 64
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3edd48ca",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "This is set by setVertexBindingDivisor",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 55
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5eda84d2",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "This is set by setVertexAttribFormat",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 64
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_1e008c68",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "nit: can remove gl:: (and below)",
+      "range": {
+        "startLine": 89,
+        "startChar": 26,
+        "endLine": 89,
+        "endChar": 30
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_de4c34e5",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "This can be updated to have both the attrib and binding. (ComputeVertexAttributeElementCount too)",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 65
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_9e6d5c43",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "Let\u0027s remove this, I think it is cleaner to just store the binding index without a reference to the VertexBufferBinding object.  All the code that needs to access the binding object should be able to get it from the vertex array object.",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7e4180a9",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 9
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "nit: fix tabs (.inl files are currently not formatted with git cl format)",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 1
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_dea0b42d",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "I think this file can be merged into VertexAttrib.h",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5e38442c",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "The binding shouldn\u0027t need to know its index.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 17
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_9e46bcc1",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "This should not be stored.  A binding can be bound to multiple attribs.",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 23
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_1e32cc4c",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "This can be updated to pass both the attrib and binding.",
+      "range": {
+        "startLine": 638,
+        "startChar": 31,
+        "endLine": 638,
+        "endChar": 60
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_fe3a50f3",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "Instead of checking the version number, check that one of the entry points exists, maybe glVertexAttribBinding.  These could have been loaded from an extension instead of the core GL version.\n\nPlease also add a boolean member (mVertexAttribBindingAvailable?) to track if these features are available, it will be needed to fully support these attribute bindings later.\n\nPlease also update FunctionsGL::initializeProcsDesktopGL to load the entry points for GL_ARB_vertex_attrib_binding.",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 44
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4f8c0cc7",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "Assert that the binding never changes, many parts of this class will no longer work.  Something like:\n\n   size_t attribIndex \u003d static_cast\u003csize_t\u003e(dirtyBit) - VertexArray::DIRTY_BIT_ATTRIB_0_BINDING;\n   ASSERT(mData.getVertexAttribute(attribIndex).vertexBufferBinding \u003d\u003d attribIndex);",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_cfa55c55",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "\"Vertex attrib bindings\"",
+      "range": {
+        "startLine": 513,
+        "startChar": 44,
+        "endLine": 513,
+        "endChar": 73
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0fbb7470",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "\"Vertex attrib bindings\"",
+      "range": {
+        "startLine": 525,
+        "startChar": 48,
+        "endLine": 525,
+        "endChar": 77
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_fe6fb014",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T19:37:15Z",
+      "side": 1,
+      "message": "nit: remove empty line.",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
