@@ -40,6 +40,24 @@
       "revId": "208541ce4a5b0b7becf9b7bf61c6502ec98e1bee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_9e79dca4",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T16:27:50Z",
+      "side": 1,
+      "message": "This was intentional, dEQP requires exceptions and weird compile flags. There might be another design possible but not sure it\u0027s a trivial change.",
+      "parentUuid": "37b082be_3ed788dd",
+      "revId": "208541ce4a5b0b7becf9b7bf61c6502ec98e1bee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
