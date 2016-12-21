@@ -102,7 +102,7 @@ if (is_win || is_linux || is_mac || is_android) {
   }
 }
 
-if (is_win) {
+if (is_win || is_linux) {
   perftests_gypi = exec_script("//build/gypi_to_gn.py",
                                [
                                  rebase_path("angle_perftests.gypi"),
@@ -120,8 +120,10 @@ if (is_win) {
 
     sources = rebase_path(perftests_gypi.angle_perf_tests_sources, ".", "../..")
 
-    sources +=
-        rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
+    if (is_win) {
+      sources +=
+          rebase_path(perftests_gypi.angle_perf_tests_win_sources, ".", "../..")
+    }
 
     sources += [ "//gpu/angle_perftests_main.cc" ]
 
