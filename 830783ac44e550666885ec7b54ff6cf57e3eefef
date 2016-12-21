@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "37b082be_7ef180e3",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T16:52:47Z",
+      "side": 1,
+      "message": "nit: top-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_be2db8c5",
         "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
         "patchSetId": 5
@@ -64,6 +87,52 @@
       "writtenOn": "2016-12-21T16:01:37Z",
       "side": 1,
       "message": "Maybe introduce a helper function that says if a builtin function has side effect, so that we don\u0027t have to remember to change it here.",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3eeb08f6",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T16:52:47Z",
+      "side": 1,
+      "message": "nit: top-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5ee844f6",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-21T16:52:47Z",
+      "side": 1,
+      "message": "nit: using? can we not include shadervars.h here?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 28
+      },
       "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
