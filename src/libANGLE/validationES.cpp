@@ -50,87 +50,92 @@ bool ValidateDrawAttribs(ValidationContext *context,
     for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
-        if (program->isAttribLocationActive(attributeIndex) && attrib.enabled)
+        if (!program->isAttribLocationActive(attributeIndex) || !attrib.enabled)
         {
-            gl::Buffer *buffer = attrib.buffer.get();
+            continue;
+        }
 
-            if (buffer)
-            {
-                GLint maxVertexElement = 0;
-                bool readsData         = false;
-                if (attrib.divisor == 0)
-                {
-                    readsData        = vertexCount > 0;
-                    maxVertexElement = maxVertex;
-                }
-                else if (primcount > 0)
-                {
-                    readsData = true;
-                    maxVertexElement = (primcount - 1) / attrib.divisor;
-                }
-
-                // If we're drawing zero vertices, we have enough data.
-                if (readsData)
-                {
-                    // We do manual overflow checks here instead of using safe_math.h because it was
-                    // a bottleneck. Thanks to some properties of GL we know inequalities that can
-                    // help us make the overflow checks faster.
-
-                    // The max possible attribSize is 16 for a vector of 4 32 bit values.
-                    constexpr uint64_t kMaxAttribSize = 16;
-                    constexpr uint64_t kIntMax        = std::numeric_limits<int>::max();
-                    constexpr uint64_t kUint64Max     = std::numeric_limits<uint64_t>::max();
-
-                    // We know attribStride is given as a GLsizei which is typedefed to int.
-                    // We also know an upper bound for attribSize.
-                    static_assert(std::is_same<int, GLsizei>::value, "");
-                    uint64_t attribStride = ComputeVertexAttributeStride(attrib);
-                    uint64_t attribSize   = ComputeVertexAttributeTypeSize(attrib);
-                    ASSERT(attribStride <= kIntMax && attribSize <= kMaxAttribSize);
-
-                    // Computing the max offset using uint64_t without attrib.offset is overflow
-                    // safe. Note: Last vertex element does not take the full stride!
-                    static_assert(kIntMax * kIntMax < kUint64Max - kMaxAttribSize, "");
-                    uint64_t attribDataSizeNoOffset = maxVertexElement * attribStride + attribSize;
-
-                    // An overflow can happen when adding the offset, check for it.
-                    uint64_t attribOffset = attrib.offset;
-                    if (attribDataSizeNoOffset > kUint64Max - attrib.offset)
-                    {
-                        context->handleError(Error(GL_INVALID_OPERATION, "Integer overflow."));
-                        return false;
-                    }
-                    uint64_t attribDataSizeWithOffset = attribDataSizeNoOffset + attribOffset;
-
-                    // [OpenGL ES 3.0.2] section 2.9.4 page 40:
-                    // We can return INVALID_OPERATION if our vertex attribute does not have
-                    // enough backing data.
-                    if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
-                    {
-                        context->handleError(
-                            Error(GL_INVALID_OPERATION,
-                                  "Vertex buffer is not big enough for the draw call"));
-                        return false;
-                    }
-                }
-            }
-            else if (webglCompatibility)
+        // If we have no buffer, then we either get an error, or there are no more checks to be done.
+        gl::Buffer *buffer = attrib.buffer.get();
+        if (!buffer)
+        {
+            if (webglCompatibility)
             {
                 // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
-                // If a vertex attribute is enabled as an array via enableVertexAttribArray but no
-                // buffer is bound to that attribute via bindBuffer and vertexAttribPointer, then
-                // calls to drawArrays or drawElements will generate an INVALID_OPERATION error.
+                // If a vertex attribute is enabled as an array via enableVertexAttribArray but
+                // no buffer is bound to that attribute via bindBuffer and vertexAttribPointer,
+                // then calls to drawArrays or drawElements will generate an INVALID_OPERATION
+                // error.
                 context->handleError(
                     Error(GL_INVALID_OPERATION, "An enabled vertex array has no buffer."));
+                return false;
             }
-            else if (attrib.pointer == NULL)
+            else if (attrib.pointer == nullptr)
             {
                 // This is an application error that would normally result in a crash,
                 // but we catch it and return an error
-                context->handleError(Error(
-                    GL_INVALID_OPERATION, "An enabled vertex array has no buffer and no pointer."));
+                context->handleError(
+                    Error(GL_INVALID_OPERATION,
+                          "An enabled vertex array has no buffer and no pointer."));
                 return false;
             }
+            continue;
+        }
+
+        // If we're drawing zero vertices, we have enough data.
+        if (vertexCount <= 0 || primcount <= 0)
+        {
+            continue;
+        }
+
+        GLint maxVertexElement = 0;
+        if (attrib.divisor == 0)
+        {
+            maxVertexElement = maxVertex;
+        }
+        else
+        {
+            maxVertexElement = (primcount - 1) / attrib.divisor;
+        }
+
+        // We do manual overflow checks here instead of using safe_math.h because it was
+        // a bottleneck. Thanks to some properties of GL we know inequalities that can
+        // help us make the overflow checks faster.
+
+        // The max possible attribSize is 16 for a vector of 4 32 bit values.
+        constexpr uint64_t kMaxAttribSize = 16;
+        constexpr uint64_t kIntMax        = std::numeric_limits<int>::max();
+        constexpr uint64_t kUint64Max     = std::numeric_limits<uint64_t>::max();
+
+        // We know attribStride is given as a GLsizei which is typedefed to int.
+        // We also know an upper bound for attribSize.
+        static_assert(std::is_same<int, GLsizei>::value, "");
+        uint64_t attribStride = ComputeVertexAttributeStride(attrib);
+        uint64_t attribSize   = ComputeVertexAttributeTypeSize(attrib);
+        ASSERT(attribStride <= kIntMax && attribSize <= kMaxAttribSize);
+
+        // Computing the max offset using uint64_t without attrib.offset is overflow
+        // safe. Note: Last vertex element does not take the full stride!
+        static_assert(kIntMax * kIntMax < kUint64Max - kMaxAttribSize, "");
+        uint64_t attribDataSizeNoOffset = maxVertexElement * attribStride + attribSize;
+
+        // An overflow can happen when adding the offset, check for it.
+        uint64_t attribOffset = attrib.offset;
+        if (attribDataSizeNoOffset > kUint64Max - attrib.offset)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Integer overflow."));
+            return false;
+        }
+        uint64_t attribDataSizeWithOffset = attribDataSizeNoOffset + attribOffset;
+
+        // [OpenGL ES 3.0.2] section 2.9.4 page 40:
+        // We can return INVALID_OPERATION if our vertex attribute does not have
+        // enough backing data.
+        if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
+        {
+            context->handleError(Error(GL_INVALID_OPERATION,
+                                       "Vertex buffer is not big enough for the draw call"));
+            return false;
         }
     }
 

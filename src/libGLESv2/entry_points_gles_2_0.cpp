@@ -758,7 +758,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDrawArrays(context, mode, first, count, 0))
+        if (!ValidateDrawArrays(context, mode, first, count, 1))
         {
             return;
         }
@@ -776,7 +776,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     if (context)
     {
         IndexRange indexRange;
-        if (!ValidateDrawElements(context, mode, count, type, indices, 0, &indexRange))
+        if (!ValidateDrawElements(context, mode, count, type, indices, 1, &indexRange))
         {
             return;
         }
