@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_6073158e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T23:07:55Z",
+      "side": 1,
+      "message": "This is mostly a reducing of the nestedness of the condition, except in a couple places noted below.",
+      "revId": "6b9fe00cf3cafd952b4ec579fca3e3b22899b7ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_c027697b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T23:07:55Z",
+      "side": 1,
+      "message": "Added this return statement.",
+      "revId": "6b9fe00cf3cafd952b4ec579fca3e3b22899b7ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4013791e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T23:07:55Z",
+      "side": 1,
+      "message": "Replace readsData with this early out, DrawArrays and DrawElements now give an instance count of 1 instead of 0.",
+      "revId": "6b9fe00cf3cafd952b4ec579fca3e3b22899b7ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0036e1a0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T23:07:55Z",
+      "side": 1,
+      "message": "We don\u0027t need to check for primcount \u003e 0 here anymore as it is done in the early out above.",
+      "revId": "6b9fe00cf3cafd952b4ec579fca3e3b22899b7ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_00e821c3",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T23:07:55Z",
+      "side": 1,
+      "message": "This is not testing the interaction with index buffers yet.",
+      "revId": "6b9fe00cf3cafd952b4ec579fca3e3b22899b7ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
