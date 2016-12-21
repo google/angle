@@ -22,6 +22,24 @@
       "revId": "208541ce4a5b0b7becf9b7bf61c6502ec98e1bee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3ed788dd",
+        "filename": "src/tests/deqp.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T15:04:55Z",
+      "side": 1,
+      "message": "I think this is because angl_deqp_libgles2 is a shared library, you could try making it static.",
+      "parentUuid": "37b082be_bee378c0",
+      "revId": "208541ce4a5b0b7becf9b7bf61c6502ec98e1bee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
