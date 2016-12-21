@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "f7498a7c_0dd5f9fb",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_bef5b864",
+      "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_7eaae023",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2016-12-21T16:01:37Z",
       "side": 1,
       "message": "Maybe we could have tests that check that the OVR_multiview restrictions are lifted when OVR_multiview2 is used.",
+      "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_2dd0b50b",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Done, also noticed some small errors in the tests when adding this test, fixed them.",
+      "parentUuid": "37b082be_7eaae023",
       "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
