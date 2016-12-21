@@ -117,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "37b082be_6a2776e4",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-21T20:41:15Z",
+      "side": 1,
+      "message": "Can also remove this, it shouldn\u0027t be needed.",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 17
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_9e6d5c43",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 9
