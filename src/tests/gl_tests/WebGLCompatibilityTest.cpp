@@ -272,6 +272,34 @@ TEST_P(WebGLCompatibilityTest, RequiresSameStencilMaskAndRef)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that GL_FIXED is forbidden
+TEST_P(WebGLCompatibilityTest, ForbidsGLFixed)
+{
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glVertexAttribPointer(0, 1, GL_FIXED, GL_FALSE, 0, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Test the WebGL limit of 255 for the attribute stride
+TEST_P(WebGLCompatibilityTest, MaxStride)
+{
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 255, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 256, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
