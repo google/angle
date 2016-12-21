@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_7ec3c0f3",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "I think the name hashing is used to avoid web pages supplying conflicting names. Here we control the string so adding this special case might not be needed.",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_be2db8c5",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "The WEBGL_multiview spec seems to allow if (0 \u003d\u003d gl_ViewID)",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3e41c878",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "The spec says that the if block *may* contain an assignment to gl_Position.x",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5e3e04eb",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "Maybe introduce a helper function that says if a builtin function has side effect, so that we don\u0027t have to remember to change it here.",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
