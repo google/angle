@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_7eef4093",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "anglproject:1669",
+      "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_bef5b864",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "nit: succeeded -\u003e failed\nSame for tests testing valid shaders above and below",
+      "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7eaae023",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2016-12-21T16:01:37Z",
+      "side": 1,
+      "message": "Maybe we could have tests that check that the OVR_multiview restrictions are lifted when OVR_multiview2 is used.",
+      "revId": "d002729de9ed7d37b7b41affbbe990565864fc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
