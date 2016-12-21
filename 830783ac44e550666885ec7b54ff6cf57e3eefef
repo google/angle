@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f7498a7c_2dd7950f",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "\"gl_ViewID_OVR\" can\u0027t be used as a uniform name, that\u0027s why this special case is here. The hashing function is used so that it gets the webgl_angle prefix in the same way as other internal variables do.",
+      "parentUuid": "37b082be_7ec3c0f3",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_7ef180e3",
         "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
         "patchSetId": 5
@@ -30,6 +48,30 @@
       "writtenOn": "2016-12-21T16:52:47Z",
       "side": 1,
       "message": "nit: top-level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_f8a4998e",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_7ef180e3",
       "range": {
         "startLine": 5,
         "startChar": 0,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "f7498a7c_8d0e89e4",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_be2db8c5",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_3e41c878",
         "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
         "patchSetId": 5
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "f7498a7c_6ddd8d2d",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Fixing this in the spec: https://github.com/KhronosGroup/WebGL/pull/2218",
+      "parentUuid": "37b082be_3e41c878",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_5e3e04eb",
         "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
         "patchSetId": 5
@@ -87,6 +165,24 @@
       "writtenOn": "2016-12-21T16:01:37Z",
       "side": 1,
       "message": "Maybe introduce a helper function that says if a builtin function has side effect, so that we don\u0027t have to remember to change it here.",
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_0ddcd92d",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "This is a good idea, but I think I\u0027ll just add a TODO about this for now - this extension is still somewhat experimental, so I wouldn\u0027t want to spend too much time on this kind of enhancements up front to enable it.",
+      "parentUuid": "37b082be_5e3e04eb",
       "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "f7498a7c_adc38546",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_3eeb08f6",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_5ee844f6",
         "filename": "src/compiler/translator/ValidateMultiviewWebGL.h",
         "patchSetId": 5
@@ -127,6 +247,30 @@
       "writtenOn": "2016-12-21T16:52:47Z",
       "side": 1,
       "message": "nit: using? can we not include shadervars.h here?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 28
+      },
+      "revId": "830783ac44e550666885ec7b54ff6cf57e3eefef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7498a7c_8dc0c93a",
+        "filename": "src/compiler/translator/ValidateMultiviewWebGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2016-12-21T18:17:21Z",
+      "side": 1,
+      "message": "Should be fine, done.",
+      "parentUuid": "37b082be_5ee844f6",
       "range": {
         "startLine": 16,
         "startChar": 0,
