@@ -225,10 +225,11 @@ ANGLE_INSTANTIATE_TEST(ProgramBinaryTest,
 
 class ProgramBinaryES3Test : public ANGLETest
 {
+  protected:
+    void testBinaryAndUBOBlockIndexes(bool drawWithProgramFirst);
 };
 
-// Tests that saving and loading a program perserves uniform block binding info.
-TEST_P(ProgramBinaryES3Test, UniformBlockBinding)
+void ProgramBinaryES3Test::testBinaryAndUBOBlockIndexes(bool drawWithProgramFirst)
 {
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
@@ -279,9 +280,12 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBinding)
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
-    drawQuad(program.get(), "position", 0.5f);
-    ASSERT_GL_NO_ERROR();
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    if (drawWithProgramFirst)
+    {
+        drawQuad(program.get(), "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    }
 
     // Read back the binary.
     GLint programLength = 0;
@@ -306,6 +310,19 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBinding)
     drawQuad(binaryProgram.get(), "position", 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that saving and loading a program perserves uniform block binding info.
+TEST_P(ProgramBinaryES3Test, UniformBlockBindingWithDraw)
+{
+    testBinaryAndUBOBlockIndexes(true);
+}
+
+// Same as above, but does not do an initial draw with the program. Covers an ANGLE crash.
+// http://anglebug.com/1637
+TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
+{
+    testBinaryAndUBOBlockIndexes(false);
 }
 
 ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

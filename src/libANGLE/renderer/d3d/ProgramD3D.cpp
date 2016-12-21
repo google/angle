@@ -1037,6 +1037,10 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         stream->writeInt(uniform->registerElement);
     }
 
+    // Ensure we init the uniform block structure data if we should.
+    // http://anglebug.com/1637
+    ensureUniformBlocksInitialized();
+
     stream->writeInt(mD3DUniformBlocks.size());
     for (const D3DUniformBlock &uniformBlock : mD3DUniformBlocks)
     {
@@ -1131,7 +1135,7 @@ gl::Error ProgramD3D::save(gl::BinaryOutputStream *stream)
         stream->writeBytes(geometryExe->getFunction(), geometryShaderSize);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void ProgramD3D::setBinaryRetrievableHint(bool /* retrievable */)
@@ -1174,7 +1178,7 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
         if (mPixelExecutables[executableIndex]->matchesSignature(outputSignature))
         {
             *outExectuable = mPixelExecutables[executableIndex]->shaderExecutable();
-            return gl::Error(GL_NO_ERROR);
+            return gl::NoError();
         }
     }
 
@@ -1218,7 +1222,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
         if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
         {
             *outExectuable = mVertexExecutables[executableIndex]->shaderExecutable();
-            return gl::Error(GL_NO_ERROR);
+            return gl::NoError();
         }
     }
 
@@ -1266,7 +1270,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
     // Return a null shader if the current rendering doesn't use a geometry shader
     if (!usesGeometryShader(drawMode))
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
@@ -1277,7 +1281,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
         {
             *outExecutable = mGeometryExecutables[geometryShaderType];
         }
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
@@ -1588,9 +1592,13 @@ void ProgramD3D::initUniformBlockInfo()
     }
 }
 
-void ProgramD3D::assignUniformBlockRegisters()
+void ProgramD3D::ensureUniformBlocksInitialized()
 {
-    mD3DUniformBlocks.clear();
+    // Lazy init.
+    if (mState.getUniformBlocks().empty() || !mD3DUniformBlocks.empty())
+    {
+        return;
+    }
 
     // Assign registers and update sizes.
     const ShaderD3D *vertexShaderD3D   = GetImplAs<ShaderD3D>(mState.getAttachedVertexShader());
@@ -1657,21 +1665,17 @@ gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
         d3dUniform->dirty = false;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
 {
     if (mState.getUniformBlocks().empty())
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
-    // Lazy init.
-    if (mD3DUniformBlocks.empty())
-    {
-        assignUniformBlockRegisters();
-    }
+    ensureUniformBlocksInitialized();
 
     mVertexUBOCache.clear();
     mFragmentUBOCache.clear();

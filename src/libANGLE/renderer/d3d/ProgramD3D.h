@@ -361,7 +361,7 @@ class ProgramD3D : public ProgramImpl
     void initAttribLocationsToD3DSemantic();
 
     void reset();
-    void assignUniformBlockRegisters();
+    void ensureUniformBlocksInitialized();
 
     void initUniformBlockInfo();
     size_t getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock);
