@@ -1357,7 +1357,12 @@ TEST_P(GLSLTest, MaxVaryingVec2Arrays)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(0, 0, 0, maxVaryings, 0, 0, 0, 0, false, false, false, true);
+    // Special case: because arrays of mat2 are packed as small grids of two rows by two columns,
+    // we should be aware that when we're packing into an odd number of varying registers the
+    // last row will be empty and can not fit the final vec2 arrary.
+    GLint maxVec2Arrays = (maxVaryings >> 1) << 1;
+
+    VaryingTestBase(0, 0, 0, maxVec2Arrays, 0, 0, 0, 0, false, false, false, true);
 }
 
 // Verify shader source with a fixed length that is less than the null-terminated length will compile.
@@ -2520,6 +2525,73 @@ TEST_P(GLSLTest_ES3, MultipleDeclarationInForLoopEmptyExpression)
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }
 
+class WebGLGLSLTest : public GLSLTest
+{
+  protected:
+    WebGLGLSLTest() { setWebGLCompatibilityEnabled(true); }
+};
+
+TEST_P(WebGLGLSLTest, MaxVaryingVec4PlusFragCoord)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
+    // This test should fail, since we are really using (maxVaryings + 1) varyings.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, true, false, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxVaryingVec4PlusPointCoord)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    // Generate shader code that uses gl_FragCoord, a special fragment shader variables.
+    // This test should fail, since we are really using (maxVaryings + 1) varyings.
+    VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings, 0, false, true, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxPlusOneVaryingVec3)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, 0, 0, 0, maxVaryings + 1, 0, 0, 0, false, false, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxPlusOneVaryingVec3Array)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2 + 1, 0, 0, false, false, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxVaryingVec3AndOneVec2)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, 0, 1, 0, maxVaryings, 0, 0, 0, false, false, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxPlusOneVaryingVec2)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, 0, 2 * maxVaryings + 1, 0, 0, 0, 0, 0, false, false, false, false);
+}
+
+TEST_P(WebGLGLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
+{
+    GLint maxVaryings = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
+
+    VaryingTestBase(0, maxVaryings / 2 + 1, 0, 0, 0, 0, 0, maxVaryings / 2, false, false, false,
+                    false);
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
@@ -2534,3 +2606,5 @@ ANGLE_INSTANTIATE_TEST(GLSLTest,
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(WebGLGLSLTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());

@@ -14,6 +14,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/VaryingPacking.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
@@ -22,7 +23,6 @@
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/hlsl/VaryingPacking.h"
 
 using namespace angle;
 
@@ -80,77 +80,6 @@ bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
 bool IsRowMajorLayout(const sh::ShaderVariable &var)
 {
     return false;
-}
-
-// true if varying x has a higher priority in packing than y
-bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
-{
-    return gl::CompareShaderVar(*x.varying, *y.varying);
-}
-
-std::vector<PackedVarying> MergeVaryings(const gl::Shader &vertexShader,
-                                         const gl::Shader &fragmentShader,
-                                         const std::vector<std::string> &tfVaryings)
-{
-    std::vector<PackedVarying> packedVaryings;
-
-    for (const sh::Varying &output : vertexShader.getVaryings())
-    {
-        bool packed = false;
-
-        // Built-in varyings obey special rules
-        if (output.isBuiltIn())
-        {
-            continue;
-        }
-
-        for (const sh::Varying &input : fragmentShader.getVaryings())
-        {
-            if (output.name == input.name)
-            {
-                if (output.isStruct())
-                {
-                    ASSERT(!output.isArray());
-                    for (const auto &field : output.fields)
-                    {
-                        ASSERT(!field.isStruct() && !field.isArray());
-                        packedVaryings.push_back(
-                            PackedVarying(field, input.interpolation, input.name));
-                    }
-                }
-                else
-                {
-                    packedVaryings.push_back(PackedVarying(input, input.interpolation));
-                }
-                packed = true;
-                break;
-            }
-        }
-
-        // Keep Transform FB varyings in the merged list always.
-        if (!packed)
-        {
-            for (const std::string &tfVarying : tfVaryings)
-            {
-                if (tfVarying == output.name)
-                {
-                    // Transform feedback for varying structs is underspecified.
-                    // See Khronos bug 9856.
-                    // TODO(jmadill): Figure out how to be spec-compliant here.
-                    if (!output.isStruct())
-                    {
-                        packedVaryings.push_back(PackedVarying(output, output.interpolation));
-                        packedVaryings.back().vertexOnly = true;
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    std::sort(packedVaryings.begin(), packedVaryings.end(), ComparePackedVarying);
-
-    return packedVaryings;
 }
 
 template <typename VarT>
@@ -286,6 +215,20 @@ gl::PrimitiveType GetGeometryShaderTypeFromDrawMode(GLenum drawMode)
             UNREACHABLE();
             return gl::PRIMITIVE_TYPE_MAX;
     }
+}
+
+bool FindFlatInterpolationVarying(const std::vector<sh::Varying> &varyings)
+{
+    // Note: this assumes nested structs can only be packed with one interpolation.
+    for (const auto &varying : varyings)
+    {
+        if (varying.interpolation == sh::INTERPOLATION_FLAT)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }  // anonymous namespace
@@ -451,60 +394,6 @@ GLint ProgramD3DMetadata::getMajorShaderVersion() const
 const ShaderD3D *ProgramD3DMetadata::getFragmentShader() const
 {
     return mFragmentShader;
-}
-
-void ProgramD3DMetadata::updatePackingBuiltins(ShaderType shaderType, VaryingPacking *packing)
-{
-    const std::string &userSemantic =
-        GetVaryingSemantic(mRendererMajorShaderModel, usesSystemValuePointSize());
-
-    unsigned int reservedSemanticIndex = packing->getMaxSemanticIndex();
-
-    VaryingPacking::BuiltinInfo *builtins = &packing->builtins(shaderType);
-
-    if (mRendererMajorShaderModel >= 4)
-    {
-        builtins->dxPosition.enableSystem("SV_Position");
-    }
-    else if (shaderType == SHADER_PIXEL)
-    {
-        builtins->dxPosition.enableSystem("VPOS");
-    }
-    else
-    {
-        builtins->dxPosition.enableSystem("POSITION");
-    }
-
-    if (usesTransformFeedbackGLPosition())
-    {
-        builtins->glPosition.enable(userSemantic, reservedSemanticIndex++);
-    }
-
-    if (usesFragCoord())
-    {
-        builtins->glFragCoord.enable(userSemantic, reservedSemanticIndex++);
-    }
-
-    if (shaderType == SHADER_VERTEX ? addsPointCoordToVertexShader() : usesPointCoord())
-    {
-        // SM3 reserves the TEXCOORD semantic for point sprite texcoords (gl_PointCoord)
-        // In D3D11 we manually compute gl_PointCoord in the GS.
-        if (mRendererMajorShaderModel >= 4)
-        {
-            builtins->glPointCoord.enable(userSemantic, reservedSemanticIndex++);
-        }
-        else
-        {
-            builtins->glPointCoord.enable("TEXCOORD", 0);
-        }
-    }
-
-    // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders
-    if (usesSystemValuePointSize() &&
-        (shaderType != SHADER_PIXEL || mRendererMajorShaderModel >= 4))
-    {
-        builtins->glPointSize.enableSystem("PSIZE");
-    }
 }
 
 // ProgramD3D Implementation
@@ -1448,7 +1337,9 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::ContextState &context
             (!usesGeometryShader(GL_POINTS) || pointGS));
 }
 
-LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
+LinkResult ProgramD3D::link(const gl::ContextState &data,
+                            const gl::VaryingPacking &packing,
+                            gl::InfoLog &infoLog)
 {
     reset();
 
@@ -1473,70 +1364,40 @@ LinkResult ProgramD3D::link(const gl::ContextState &data, gl::InfoLog &infoLog)
         }
     }
 
-    std::vector<PackedVarying> packedVaryings =
-        MergeVaryings(*vertexShader, *fragmentShader, mState.getTransformFeedbackVaryingNames());
-
-    // Map the varyings to the register file
-    VaryingPacking varyingPacking(data.getCaps().maxVaryingVectors);
-    if (!varyingPacking.packUserVaryings(infoLog, packedVaryings,
-                                         mState.getTransformFeedbackVaryingNames()))
-    {
-        return false;
-    }
-
-    ProgramD3DMetadata metadata(mRenderer, vertexShaderD3D, fragmentShaderD3D);
-
-    metadata.updatePackingBuiltins(SHADER_VERTEX, &varyingPacking);
-    metadata.updatePackingBuiltins(SHADER_PIXEL, &varyingPacking);
-
-    if (!varyingPacking.validateBuiltins())
-    {
-        infoLog << "No varying registers left to support gl_FragCoord/gl_PointCoord";
-        return false;
-    }
-
     // TODO(jmadill): Implement more sophisticated component packing in D3D9.
     // We can fail here because we use one semantic per GLSL varying. D3D11 can pack varyings
     // intelligently, but D3D9 assumes one semantic per register.
     if (mRenderer->getRendererClass() == RENDERER_D3D9 &&
-        varyingPacking.getMaxSemanticIndex() > data.getCaps().maxVaryingVectors)
+        packing.getMaxSemanticIndex() > data.getCaps().maxVaryingVectors)
     {
         infoLog << "Cannot pack these varyings on D3D9.";
         return false;
     }
 
-    if (!mDynamicHLSL->generateShaderLinkHLSL(data, mState, metadata, varyingPacking, &mPixelHLSL,
-                                              &mVertexHLSL))
-    {
-        return false;
-    }
+    ProgramD3DMetadata metadata(mRenderer, vertexShaderD3D, fragmentShaderD3D);
+    BuiltinVaryingsD3D builtins(metadata, packing);
+
+    mDynamicHLSL->generateShaderLinkHLSL(data, mState, metadata, packing, builtins, &mPixelHLSL,
+                                         &mVertexHLSL);
 
     mUsesPointSize = vertexShaderD3D->usesPointSize();
     mDynamicHLSL->getPixelShaderOutputKey(data, mState, metadata, &mPixelShaderKey);
     mUsesFragDepth = metadata.usesFragDepth();
 
     // Cache if we use flat shading
-    mUsesFlatInterpolation = false;
-    for (const auto &varying : packedVaryings)
-    {
-        if (varying.interpolation == sh::INTERPOLATION_FLAT)
-        {
-            mUsesFlatInterpolation = true;
-            break;
-        }
-    }
+    mUsesFlatInterpolation = (FindFlatInterpolationVarying(fragmentShader->getVaryings()) ||
+                              FindFlatInterpolationVarying(vertexShader->getVaryings()));
 
     if (mRenderer->getMajorShaderModel() >= 4)
     {
-        metadata.updatePackingBuiltins(SHADER_GEOMETRY, &varyingPacking);
-        mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(varyingPacking);
+        mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(packing, builtins);
     }
 
     initAttribLocationsToD3DSemantic();
 
     defineUniformsAndAssignRegisters();
 
-    gatherTransformFeedbackVaryings(varyingPacking);
+    gatherTransformFeedbackVaryings(packing, builtins[SHADER_VERTEX]);
 
     LinkResult result = compileProgramExecutables(data, infoLog);
     if (result.isError())
@@ -2312,10 +2173,9 @@ void ProgramD3D::updateCachedInputLayout(const gl::State &state)
     }
 }
 
-void ProgramD3D::gatherTransformFeedbackVaryings(const VaryingPacking &varyingPacking)
+void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyingPacking,
+                                                 const BuiltinInfo &builtins)
 {
-    const auto &builtins = varyingPacking.builtins(SHADER_VERTEX);
-
     const std::string &varyingSemantic =
         GetVaryingSemantic(mRenderer->getMajorShaderModel(), usesPointSize());
 
@@ -2352,7 +2212,7 @@ void ProgramD3D::gatherTransformFeedbackVaryings(const VaryingPacking &varyingPa
         }
         else
         {
-            for (const PackedVaryingRegister &registerInfo : varyingPacking.getRegisterList())
+            for (const auto &registerInfo : varyingPacking.getRegisterList())
             {
                 const auto &varying   = *registerInfo.packedVarying->varying;
                 GLenum transposedType = gl::TransposeMatrixType(varying.type);

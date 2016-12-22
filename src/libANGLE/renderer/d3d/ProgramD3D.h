@@ -119,9 +119,6 @@ class ProgramD3DMetadata final : angle::NonCopyable
     GLint getMajorShaderVersion() const;
     const ShaderD3D *getFragmentShader() const;
 
-    // Applies the metadata structure to the varying packing.
-    void updatePackingBuiltins(ShaderType shaderType, VaryingPacking *packing);
-
   private:
     const int mRendererMajorShaderModel;
     const std::string mShaderModelSuffix;
@@ -170,7 +167,9 @@ class ProgramD3D : public ProgramImpl
                                                     ShaderExecutableD3D **outExecutable,
                                                     gl::InfoLog *infoLog);
 
-    LinkResult link(const gl::ContextState &data, gl::InfoLog &infoLog) override;
+    LinkResult link(const gl::ContextState &data,
+                    const gl::VaryingPacking &packing,
+                    gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     bool getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const override;
@@ -354,7 +353,8 @@ class ProgramD3D : public ProgramImpl
 
     LinkResult compileProgramExecutables(const gl::ContextState &data, gl::InfoLog &infoLog);
 
-    void gatherTransformFeedbackVaryings(const VaryingPacking &varyings);
+    void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,
+                                         const BuiltinInfo &builtins);
     D3DUniform *getD3DUniformByName(const std::string &name);
     D3DUniform *getD3DUniformFromLocation(GLint location);
 

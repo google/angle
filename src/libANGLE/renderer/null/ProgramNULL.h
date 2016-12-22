@@ -27,7 +27,9 @@ class ProgramNULL : public ProgramImpl
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
 
-    LinkResult link(const gl::ContextState &data, gl::InfoLog &infoLog) override;
+    LinkResult link(const gl::ContextState &data,
+                    const gl::VaryingPacking &packing,
+                    gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;

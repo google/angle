@@ -111,7 +111,9 @@ void ProgramGL::setBinaryRetrievableHint(bool retrievable)
     }
 }
 
-LinkResult ProgramGL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
+LinkResult ProgramGL::link(const gl::ContextState &data,
+                           const gl::VaryingPacking &packing,
+                           gl::InfoLog &infoLog)
 {
     preLink();
 

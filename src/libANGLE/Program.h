@@ -49,6 +49,7 @@ class Buffer;
 class Framebuffer;
 struct UniformBlock;
 struct LinkedUniform;
+struct PackedVarying;
 
 extern const char * const g_fakepath;
 
@@ -386,6 +387,16 @@ class Program final : angle::NonCopyable, public LabeledObject
         std::unordered_map<std::string, GLuint> mBindings;
     };
 
+    struct VaryingRef
+    {
+        const sh::Varying *get() const { return vertex ? vertex : fragment; }
+
+        const sh::Varying *vertex   = nullptr;
+        const sh::Varying *fragment = nullptr;
+    };
+
+    using MergedVaryings = std::map<std::string, VaryingRef>;
+
     void unlink(bool destroy = false);
     void resetUniformBlockBindings();
 
@@ -399,7 +410,7 @@ class Program final : angle::NonCopyable, public LabeledObject
         const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
         InfoLog &infoLog) const;
     bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
-    bool linkVaryings(InfoLog &infoLog, const Shader *vertexShader, const Shader *fragmentShader) const;
+    bool linkVaryings(InfoLog &infoLog) const;
     bool validateVertexAndFragmentUniforms(InfoLog &infoLog) const;
     bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
     bool indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
@@ -419,14 +430,15 @@ class Program final : angle::NonCopyable, public LabeledObject
                                      const sh::Varying &fragmentVarying,
                                      int shaderVersion);
     bool linkValidateTransformFeedback(InfoLog &infoLog,
-                                       const std::vector<const sh::Varying *> &linkedVaryings,
+                                       const MergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
 
-    void gatherTransformFeedbackVaryings(const std::vector<const sh::Varying *> &varyings);
+    void gatherTransformFeedbackVaryings(const MergedVaryings &varyings);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex, const Caps &caps);
     void defineOutputVariables(Shader *fragmentShader);
 
-    std::vector<const sh::Varying *> getMergedVaryings() const;
+    MergedVaryings getMergedVaryings() const;
+    std::vector<PackedVarying> getPackedVaryings(const MergedVaryings &mergedVaryings) const;
     void linkOutputVariables();
 
     bool flattenUniformsAndCheckCapsForShader(const Shader &shader,

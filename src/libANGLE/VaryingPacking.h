@@ -4,26 +4,23 @@
 // found in the LICENSE file.
 //
 // VaryingPacking:
-//   Class which describes a mapping from varyings to registers in D3D
-//   for linking between shader stages.
+//   Class which describes a mapping from varyings to registers, according
+//   to the spec, or using custom packing algorithms. We also keep a register
+//   allocation list for the D3D renderer.
 //
 
-#ifndef LIBANGLE_RENDERER_D3D_HLSL_VARYINGPACKING_H_
-#define LIBANGLE_RENDERER_D3D_HLSL_VARYINGPACKING_H_
+#ifndef LIBANGLE_VARYINGPACKING_H_
+#define LIBANGLE_VARYINGPACKING_H_
 
 #include <GLSLANG/ShaderVars.h>
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include "libANGLE/renderer/d3d/hlsl/hlsl_utils.h"
 
 namespace gl
 {
 class InfoLog;
-}
 
-namespace rx
-{
 struct PackedVarying
 {
     PackedVarying(const sh::ShaderVariable &varyingIn, sh::InterpolationType interpolationIn)
@@ -103,18 +100,24 @@ struct PackedVaryingRegister final
     std::string structFieldName;
 };
 
+// Supported packing modes:
+enum class PackMode
+{
+    // We treat mat2 arrays as taking two full rows.
+    WEBGL_STRICT,
+
+    // We allow mat2 to take a 2x2 chunk.
+    ANGLE_RELAXED,
+};
+
 class VaryingPacking final : angle::NonCopyable
 {
   public:
-    VaryingPacking(GLuint maxVaryingVectors);
+    VaryingPacking(GLuint maxVaryingVectors, PackMode packMode);
 
     bool packUserVaryings(gl::InfoLog &infoLog,
                           const std::vector<PackedVarying> &packedVaryings,
                           const std::vector<std::string> &transformFeedbackVaryings);
-
-    // Some built-in varyings require emulation that eats up available registers. This method
-    // checks that we're within the register limits of the implementation.
-    bool validateBuiltins() const;
 
     struct Register
     {
@@ -135,34 +138,7 @@ class VaryingPacking final : angle::NonCopyable
         return static_cast<unsigned int>(mRegisterList.size());
     }
     unsigned int getRegisterCount() const;
-
-    struct BuiltinVarying final : angle::NonCopyable
-    {
-        BuiltinVarying();
-
-        std::string str() const;
-        void enableSystem(const std::string &systemValueSemantic);
-        void enable(const std::string &semanticVal, unsigned int indexVal);
-
-        bool enabled;
-        std::string semantic;
-        unsigned int index;
-        bool systemValue;
-    };
-
-    struct BuiltinInfo
-    {
-        BuiltinVarying dxPosition;
-        BuiltinVarying glPosition;
-        BuiltinVarying glFragCoord;
-        BuiltinVarying glPointCoord;
-        BuiltinVarying glPointSize;
-    };
-
-    const BuiltinInfo &builtins(ShaderType shaderType) const { return mBuiltinInfo[shaderType]; }
-    BuiltinInfo &builtins(ShaderType shaderType) { return mBuiltinInfo[shaderType]; }
-
-    bool usesPointSize() const { return mBuiltinInfo[SHADER_VERTEX].glPointSize.enabled; }
+    size_t getRegisterMapSize() const { return mRegisterMap.size(); }
 
   private:
     bool packVarying(const PackedVarying &packedVarying);
@@ -177,9 +153,9 @@ class VaryingPacking final : angle::NonCopyable
     std::vector<Register> mRegisterMap;
     std::vector<PackedVaryingRegister> mRegisterList;
 
-    std::vector<BuiltinInfo> mBuiltinInfo;
+    PackMode mPackMode;
 };
 
-}  // namespace rx
+}  // namespace gl
 
-#endif  // LIBANGLE_RENDERER_D3D_HLSL_VARYINGPACKING_H_
+#endif  // LIBANGLE_VARYINGPACKING_H_

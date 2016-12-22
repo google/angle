@@ -38,7 +38,9 @@ void ProgramNULL::setBinaryRetrievableHint(bool retrievable)
 {
 }
 
-LinkResult ProgramNULL::link(const gl::ContextState &data, gl::InfoLog &infoLog)
+LinkResult ProgramNULL::link(const gl::ContextState &data,
+                             const gl::VaryingPacking &packing,
+                             gl::InfoLog &infoLog)
 {
     return true;
 }

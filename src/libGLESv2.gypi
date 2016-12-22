@@ -146,6 +146,8 @@
             'libANGLE/TransformFeedback.h',
             'libANGLE/Uniform.cpp',
             'libANGLE/Uniform.h',
+            'libANGLE/VaryingPacking.cpp',
+            'libANGLE/VaryingPacking.h',
             'libANGLE/Version.h',
             'libANGLE/Version.inl',
             'libANGLE/VertexArray.cpp',
@@ -270,12 +272,6 @@
             'libANGLE/renderer/d3d/VertexBuffer.h',
             'libANGLE/renderer/d3d/VertexDataManager.cpp',
             'libANGLE/renderer/d3d/VertexDataManager.h',
-        ],
-        'libangle_d3d_hlsl_sources':
-        [
-            'libANGLE/renderer/d3d/hlsl/VaryingPacking.cpp',
-            'libANGLE/renderer/d3d/hlsl/VaryingPacking.h',
-            'libANGLE/renderer/d3d/hlsl/hlsl_utils.h',
         ],
         'libangle_d3d9_sources':
         [
@@ -830,7 +826,6 @@
                 {
                     'sources':
                     [
-                        '<@(libangle_d3d_hlsl_sources)',
                         '<@(libangle_d3d_shared_sources)',
                     ],
                 }],

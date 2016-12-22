@@ -7,11 +7,13 @@
 //   Tests for ANGLE's internal varying packing algorithm.
 //
 
-#include "libANGLE/renderer/d3d/hlsl/VaryingPacking.h"
+#include "libANGLE/VaryingPacking.h"
 
 #include <gtest/gtest.h>
 
 #include "libANGLE/Program.h"
+
+using namespace gl;
 
 namespace
 {
@@ -22,26 +24,31 @@ class VaryingPackingTest : public ::testing::TestWithParam<GLuint>
     VaryingPackingTest() {}
 
     bool testVaryingPacking(const std::vector<sh::Varying> &shVaryings,
-                            rx::VaryingPacking *varyingPacking)
+                            VaryingPacking *varyingPacking)
     {
-        std::vector<rx::PackedVarying> packedVaryings;
+        std::vector<PackedVarying> packedVaryings;
         for (const auto &shVarying : shVaryings)
         {
-            packedVaryings.push_back(rx::PackedVarying(shVarying, shVarying.interpolation));
+            packedVaryings.push_back(PackedVarying(shVarying, shVarying.interpolation));
         }
 
-        gl::InfoLog infoLog;
+        InfoLog infoLog;
         std::vector<std::string> transformFeedbackVaryings;
 
-        if (!varyingPacking->packUserVaryings(infoLog, packedVaryings, transformFeedbackVaryings))
-            return false;
-
-        return varyingPacking->validateBuiltins();
+        return varyingPacking->packUserVaryings(infoLog, packedVaryings, transformFeedbackVaryings);
     }
 
+    // Uses the "relaxed" ANGLE packing mode.
     bool packVaryings(GLuint maxVaryings, const std::vector<sh::Varying> &shVaryings)
     {
-        rx::VaryingPacking varyingPacking(maxVaryings);
+        VaryingPacking varyingPacking(maxVaryings, PackMode::ANGLE_RELAXED);
+        return testVaryingPacking(shVaryings, &varyingPacking);
+    }
+
+    // Uses the stricter WebGL style packing rules.
+    bool packVaryingsStrict(GLuint maxVaryings, const std::vector<sh::Varying> &shVaryings)
+    {
+        VaryingPacking varyingPacking(maxVaryings, PackMode::WEBGL_STRICT);
         return testVaryingPacking(shVaryings, &varyingPacking);
     }
 
@@ -83,38 +90,6 @@ void AddVaryings(std::vector<sh::Varying> *varyings, GLenum type, size_t count, 
 TEST_P(VaryingPackingTest, OneVaryingLargerThanMax)
 {
     ASSERT_FALSE(packVaryings(1, MakeVaryings(GL_FLOAT_MAT4, 1, 0)));
-}
-
-// Tests that using FragCoord as a user varying will eat up a register.
-TEST_P(VaryingPackingTest, MaxVaryingVec4PlusFragCoord)
-{
-    const std::string &userSemantic = rx::GetVaryingSemantic(4, false);
-
-    rx::VaryingPacking varyingPacking(kMaxVaryings);
-    unsigned int reservedSemanticIndex = varyingPacking.getMaxSemanticIndex();
-
-    varyingPacking.builtins(rx::SHADER_PIXEL)
-        .glFragCoord.enable(userSemantic, reservedSemanticIndex);
-
-    const auto &varyings = MakeVaryings(GL_FLOAT_VEC4, kMaxVaryings, 0);
-
-    ASSERT_FALSE(testVaryingPacking(varyings, &varyingPacking));
-}
-
-// Tests that using PointCoord as a user varying will eat up a register.
-TEST_P(VaryingPackingTest, MaxVaryingVec4PlusPointCoord)
-{
-    const std::string &userSemantic = rx::GetVaryingSemantic(4, false);
-
-    rx::VaryingPacking varyingPacking(kMaxVaryings);
-    unsigned int reservedSemanticIndex = varyingPacking.getMaxSemanticIndex();
-
-    varyingPacking.builtins(rx::SHADER_PIXEL)
-        .glPointCoord.enable(userSemantic, reservedSemanticIndex);
-
-    const auto &varyings = MakeVaryings(GL_FLOAT_VEC4, kMaxVaryings, 0);
-
-    ASSERT_FALSE(testVaryingPacking(varyings, &varyingPacking));
 }
 
 // This will overflow the available varying space.
@@ -170,6 +145,13 @@ TEST_P(VaryingPackingTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
     std::vector<sh::Varying> varyings = MakeVaryings(GL_FLOAT_VEC3, kMaxVaryings / 2, 2);
     AddVaryings(&varyings, GL_FLOAT, kMaxVaryings / 2 + 1, 2);
     ASSERT_FALSE(packVaryings(kMaxVaryings, varyings));
+}
+
+// WebGL should fail to pack max+1 vec2 arrays, unlike our more relaxed packing.
+TEST_P(VaryingPackingTest, MaxPlusOneMat2VaryingsFailsWebGL)
+{
+    auto varyings = MakeVaryings(GL_FLOAT_MAT2, kMaxVaryings / 2 + 1, 0);
+    ASSERT_FALSE(packVaryingsStrict(kMaxVaryings, varyings));
 }
 
 // Makes separate tests for different values of kMaxVaryings.

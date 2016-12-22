@@ -32,6 +32,7 @@
             '<(angle_path)/src/libANGLE/ResourceManager_unittest.cpp',
             '<(angle_path)/src/libANGLE/Surface_unittest.cpp',
             '<(angle_path)/src/libANGLE/TransformFeedback_unittest.cpp',
+            '<(angle_path)/src/libANGLE/VaryingPacking_unittest.cpp',
             '<(angle_path)/src/libANGLE/WorkerThread_unittest.cpp',
             '<(angle_path)/src/libANGLE/renderer/BufferImpl_mock.h',
             '<(angle_path)/src/libANGLE/renderer/FramebufferImpl_mock.h',
@@ -103,7 +104,6 @@
         # TODO(jmadill): should probably call this windows sources
         'angle_unittests_hlsl_sources':
         [
-            '<(angle_path)/src/libANGLE/renderer/d3d/VaryingPacking_unittest.cpp',
             '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
         ],
     },

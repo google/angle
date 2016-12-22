@@ -22,6 +22,7 @@
 #include "libANGLE/features.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/VaryingPacking.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/Uniform.h"
 
@@ -133,6 +134,12 @@ bool UniformInList(const std::vector<LinkedUniform> &list, const std::string &na
     }
 
     return false;
+}
+
+// true if varying x has a higher priority in packing than y
+bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
+{
+    return gl::CompareShaderVar(*x.varying, *y.varying);
 }
 
 }  // anonymous namespace
@@ -556,9 +563,12 @@ Error Program::link(const ContextState &data)
 
     const Caps &caps = data.getCaps();
 
-    bool isComputeShaderAttached = (mState.mAttachedComputeShader != nullptr);
-    bool nonComputeShadersAttached =
-        (mState.mAttachedVertexShader != nullptr || mState.mAttachedFragmentShader != nullptr);
+    auto vertexShader   = mState.mAttachedVertexShader;
+    auto fragmentShader = mState.mAttachedFragmentShader;
+    auto computeShader  = mState.mAttachedComputeShader;
+
+    bool isComputeShaderAttached   = (computeShader != nullptr);
+    bool nonComputeShadersAttached = (vertexShader != nullptr || fragmentShader != nullptr);
     // Check whether we both have a compute and non-compute shaders attached.
     // If there are of both types attached, then linking should fail.
     // OpenGL ES 3.10, 7.3 Program Objects, under LinkProgram
@@ -568,16 +578,16 @@ Error Program::link(const ContextState &data)
         return NoError();
     }
 
-    if (mState.mAttachedComputeShader)
+    if (computeShader)
     {
-        if (!mState.mAttachedComputeShader->isCompiled())
+        if (!computeShader->isCompiled())
         {
             mInfoLog << "Attached compute shader is not compiled.";
             return NoError();
         }
-        ASSERT(mState.mAttachedComputeShader->getType() == GL_COMPUTE_SHADER);
+        ASSERT(computeShader->getType() == GL_COMPUTE_SHADER);
 
-        mState.mComputeShaderLocalSize = mState.mAttachedComputeShader->getWorkGroupSize();
+        mState.mComputeShaderLocalSize = computeShader->getWorkGroupSize();
 
         // GLSL ES 3.10, 4.4.1.1 Compute Shader Inputs
         // If the work group size is not specified, a link time error should occur.
@@ -597,7 +607,8 @@ Error Program::link(const ContextState &data)
             return NoError();
         }
 
-        ANGLE_TRY_RESULT(mProgram->link(data, mInfoLog), mLinked);
+        gl::VaryingPacking noVaryingPacking(0, PackMode::ANGLE_RELAXED);
+        ANGLE_TRY_RESULT(mProgram->link(data, noVaryingPacking, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -605,20 +616,19 @@ Error Program::link(const ContextState &data)
     }
     else
     {
-        if (!mState.mAttachedFragmentShader || !mState.mAttachedFragmentShader->isCompiled())
+        if (!fragmentShader || !fragmentShader->isCompiled())
         {
             return NoError();
         }
-        ASSERT(mState.mAttachedFragmentShader->getType() == GL_FRAGMENT_SHADER);
+        ASSERT(fragmentShader->getType() == GL_FRAGMENT_SHADER);
 
-        if (!mState.mAttachedVertexShader || !mState.mAttachedVertexShader->isCompiled())
+        if (!vertexShader || !vertexShader->isCompiled())
         {
             return NoError();
         }
-        ASSERT(mState.mAttachedVertexShader->getType() == GL_VERTEX_SHADER);
+        ASSERT(vertexShader->getType() == GL_VERTEX_SHADER);
 
-        if (mState.mAttachedFragmentShader->getShaderVersion() !=
-            mState.mAttachedVertexShader->getShaderVersion())
+        if (fragmentShader->getShaderVersion() != vertexShader->getShaderVersion())
         {
             mInfoLog << "Fragment shader version does not match vertex shader version.";
             return NoError();
@@ -629,7 +639,7 @@ Error Program::link(const ContextState &data)
             return NoError();
         }
 
-        if (!linkVaryings(mInfoLog, mState.mAttachedVertexShader, mState.mAttachedFragmentShader))
+        if (!linkVaryings(mInfoLog))
         {
             return NoError();
         }
@@ -653,7 +663,21 @@ Error Program::link(const ContextState &data)
 
         linkOutputVariables();
 
-        ANGLE_TRY_RESULT(mProgram->link(data, mInfoLog), mLinked);
+        // Validate we can pack the varyings.
+        std::vector<PackedVarying> packedVaryings = getPackedVaryings(mergedVaryings);
+
+        // Map the varyings to the register file
+        // In WebGL, we use a slightly different handling for packing variables.
+        auto packMode = data.getExtensions().webglCompatibility ? PackMode::WEBGL_STRICT
+                                                                : PackMode::ANGLE_RELAXED;
+        VaryingPacking varyingPacking(data.getCaps().maxVaryingVectors, packMode);
+        if (!varyingPacking.packUserVaryings(mInfoLog, packedVaryings,
+                                             mState.getTransformFeedbackVaryingNames()))
+        {
+            return NoError();
+        }
+
+        ANGLE_TRY_RESULT(mProgram->link(data, varyingPacking, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -1789,10 +1813,11 @@ GLenum Program::getTransformFeedbackBufferMode() const
     return mState.mTransformFeedbackBufferMode;
 }
 
-bool Program::linkVaryings(InfoLog &infoLog,
-                           const Shader *vertexShader,
-                           const Shader *fragmentShader) const
+bool Program::linkVaryings(InfoLog &infoLog) const
 {
+    const Shader *vertexShader   = mState.mAttachedVertexShader;
+    const Shader *fragmentShader = mState.mAttachedFragmentShader;
+
     ASSERT(vertexShader->getShaderVersion() == fragmentShader->getShaderVersion());
 
     const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
@@ -2372,7 +2397,7 @@ bool Program::linkValidateVaryings(InfoLog &infoLog,
 }
 
 bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
-                                            const std::vector<const sh::Varying *> &varyings,
+                                            const Program::MergedVaryings &varyings,
                                             const Caps &caps) const
 {
     size_t totalComponents = 0;
@@ -2382,8 +2407,10 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
     for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
         bool found = false;
-        for (const sh::Varying *varying : varyings)
+        for (const auto &ref : varyings)
         {
+            const sh::Varying *varying = ref.second.get();
+
             if (tfVaryingName == varying->name)
             {
                 if (uniqueNames.count(tfVaryingName) > 0)
@@ -2439,14 +2466,15 @@ bool Program::linkValidateTransformFeedback(InfoLog &infoLog,
     return true;
 }
 
-void Program::gatherTransformFeedbackVaryings(const std::vector<const sh::Varying *> &varyings)
+void Program::gatherTransformFeedbackVaryings(const Program::MergedVaryings &varyings)
 {
     // Gather the linked varyings that are used for transform feedback, they should all exist.
     mState.mTransformFeedbackVaryingVars.clear();
     for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
     {
-        for (const sh::Varying *varying : varyings)
+        for (const auto &ref : varyings)
         {
+            const sh::Varying *varying = ref.second.get();
             if (tfVaryingName == varying->name)
             {
                 mState.mTransformFeedbackVaryingVars.push_back(*varying);
@@ -2456,30 +2484,83 @@ void Program::gatherTransformFeedbackVaryings(const std::vector<const sh::Varyin
     }
 }
 
-std::vector<const sh::Varying *> Program::getMergedVaryings() const
+Program::MergedVaryings Program::getMergedVaryings() const
 {
-    std::set<std::string> uniqueNames;
-    std::vector<const sh::Varying *> varyings;
+    MergedVaryings merged;
 
     for (const sh::Varying &varying : mState.mAttachedVertexShader->getVaryings())
     {
-        if (uniqueNames.count(varying.name) == 0)
-        {
-            uniqueNames.insert(varying.name);
-            varyings.push_back(&varying);
-        }
+        merged[varying.name].vertex = &varying;
     }
 
     for (const sh::Varying &varying : mState.mAttachedFragmentShader->getVaryings())
     {
-        if (uniqueNames.count(varying.name) == 0)
+        merged[varying.name].fragment = &varying;
+    }
+
+    return merged;
+}
+
+std::vector<PackedVarying> Program::getPackedVaryings(
+    const Program::MergedVaryings &mergedVaryings) const
+{
+    const std::vector<std::string> &tfVaryings = mState.getTransformFeedbackVaryingNames();
+    std::vector<PackedVarying> packedVaryings;
+
+    for (const auto &ref : mergedVaryings)
+    {
+        const sh::Varying *input  = ref.second.vertex;
+        const sh::Varying *output = ref.second.fragment;
+
+        // Only pack varyings that have a matched input or output, plus special builtins.
+        if ((input && output) || (output && output->isBuiltIn()))
         {
-            uniqueNames.insert(varying.name);
-            varyings.push_back(&varying);
+            // Will get the vertex shader interpolation by default.
+            auto interpolation = ref.second.get()->interpolation;
+
+            // Interpolation qualifiers must match.
+            if (output->isStruct())
+            {
+                ASSERT(!output->isArray());
+                for (const auto &field : output->fields)
+                {
+                    ASSERT(!field.isStruct() && !field.isArray());
+                    packedVaryings.push_back(PackedVarying(field, interpolation, output->name));
+                }
+            }
+            else
+            {
+                packedVaryings.push_back(PackedVarying(*output, interpolation));
+            }
+            continue;
+        }
+
+        // Keep Transform FB varyings in the merged list always.
+        if (!input)
+        {
+            continue;
+        }
+
+        for (const std::string &tfVarying : tfVaryings)
+        {
+            if (tfVarying == input->name)
+            {
+                // Transform feedback for varying structs is underspecified.
+                // See Khronos bug 9856.
+                // TODO(jmadill): Figure out how to be spec-compliant here.
+                if (!input->isStruct())
+                {
+                    packedVaryings.push_back(PackedVarying(*input, input->interpolation));
+                    packedVaryings.back().vertexOnly = true;
+                }
+                break;
+            }
         }
     }
 
-    return varyings;
+    std::sort(packedVaryings.begin(), packedVaryings.end(), ComparePackedVarying);
+
+    return packedVaryings;
 }
 
 void Program::linkOutputVariables()

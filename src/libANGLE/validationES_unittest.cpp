@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "libANGLE/ContextState.h"
+#include "libANGLE/VaryingPacking.h"
 #include "libANGLE/renderer/FramebufferImpl_mock.h"
 #include "libANGLE/renderer/ProgramImpl_mock.h"
 #include "libANGLE/renderer/TextureImpl_mock.h"

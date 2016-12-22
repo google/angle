@@ -4,46 +4,22 @@
 // found in the LICENSE file.
 //
 // VaryingPacking:
-//   Class which describes a mapping from varyings to registers in D3D
-//   for linking between shader stages.
+//   Class which describes a mapping from varyings to registers, according
+//   to the spec, or using custom packing algorithms. We also keep a register
+//   allocation list for the D3D renderer.
 //
 
-#include "libANGLE/renderer/d3d/hlsl/VaryingPacking.h"
+#include "libANGLE/VaryingPacking.h"
 
 #include "common/utilities.h"
-#include "compiler/translator/blocklayoutHLSL.h"
 #include "libANGLE/Program.h"
 
-namespace rx
+namespace gl
 {
-
-// Implementation of VaryingPacking::BuiltinVarying
-VaryingPacking::BuiltinVarying::BuiltinVarying() : enabled(false), index(0), systemValue(false)
-{
-}
-
-std::string VaryingPacking::BuiltinVarying::str() const
-{
-    return (systemValue ? semantic : (semantic + Str(index)));
-}
-
-void VaryingPacking::BuiltinVarying::enableSystem(const std::string &systemValueSemantic)
-{
-    enabled     = true;
-    semantic    = systemValueSemantic;
-    systemValue = true;
-}
-
-void VaryingPacking::BuiltinVarying::enable(const std::string &semanticVal, unsigned int indexVal)
-{
-    enabled  = true;
-    semantic = semanticVal;
-    index    = indexVal;
-}
 
 // Implementation of VaryingPacking
-VaryingPacking::VaryingPacking(GLuint maxVaryingVectors)
-    : mRegisterMap(maxVaryingVectors), mBuiltinInfo(SHADER_TYPE_MAX)
+VaryingPacking::VaryingPacking(GLuint maxVaryingVectors, PackMode packMode)
+    : mRegisterMap(maxVaryingVectors), mPackMode(packMode)
 {
 }
 
@@ -56,13 +32,20 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     const auto &varying = *packedVarying.varying;
 
     // "Non - square matrices of type matCxR consume the same space as a square matrix of type matN
-    // where N is the greater of C and R.Variables of type mat2 occupies 2 complete rows."
+    // where N is the greater of C and R."
     // Here we are a bit more conservative and allow packing non-square matrices more tightly.
     // Make sure we use transposed matrix types to count registers correctly.
     ASSERT(!varying.isStruct());
     GLenum transposedType       = gl::TransposeMatrixType(varying.type);
     unsigned int varyingRows    = gl::VariableRowCount(transposedType);
     unsigned int varyingColumns = gl::VariableColumnCount(transposedType);
+
+    // "Variables of type mat2 occupies 2 complete rows."
+    // For non-WebGL contexts, we allow mat2 to occupy only two columns per row.
+    if (mPackMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
+    {
+        varyingColumns = 4;
+    }
 
     // "Arrays of size N are assumed to take N times the size of the base type"
     varyingRows *= varying.elementCount();
@@ -161,7 +144,12 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
                     registerInfo.registerColumn    = bestColumn;
                     registerInfo.varyingArrayIndex = arrayIndex;
                     registerInfo.varyingRowIndex   = 0;
-                    mRegisterList.push_back(registerInfo);
+                    // Do not record register info for builtins.
+                    // TODO(jmadill): Clean this up.
+                    if (!packedVarying.varying->isBuiltIn())
+                    {
+                        mRegisterList.push_back(registerInfo);
+                    }
                     mRegisterMap[row + arrayIndex][bestColumn] = true;
                 }
                 break;
@@ -218,7 +206,12 @@ void VaryingPacking::insert(unsigned int registerRow,
             registerInfo.registerRow     = registerRow + (arrayElement * varyingRows) + varyingRow;
             registerInfo.varyingRowIndex = varyingRow;
             registerInfo.varyingArrayIndex = arrayElement;
-            mRegisterList.push_back(registerInfo);
+            // Do not record register info for builtins.
+            // TODO(jmadill): Clean this up.
+            if (!packedVarying.varying->isBuiltIn())
+            {
+                mRegisterList.push_back(registerInfo);
+            }
 
             for (unsigned int columnIndex = 0; columnIndex < varyingColumns; ++columnIndex)
             {
@@ -242,7 +235,7 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
         const auto &varying = *packedVarying.varying;
 
         // Do not assign registers to built-in or unreferenced varyings
-        if (varying.isBuiltIn() || (!varying.staticUse && !packedVarying.isStructField()))
+        if (!varying.staticUse && !packedVarying.isStructField())
         {
             continue;
         }
@@ -315,11 +308,6 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     return true;
 }
 
-bool VaryingPacking::validateBuiltins() const
-{
-    return (static_cast<size_t>(getRegisterCount()) <= mRegisterMap.size());
-}
-
 unsigned int VaryingPacking::getRegisterCount() const
 {
     unsigned int count = 0;
@@ -330,16 +318,6 @@ unsigned int VaryingPacking::getRegisterCount() const
         {
             ++count;
         }
-    }
-
-    if (mBuiltinInfo[SHADER_PIXEL].glFragCoord.enabled)
-    {
-        ++count;
-    }
-
-    if (mBuiltinInfo[SHADER_PIXEL].glPointCoord.enabled)
-    {
-        ++count;
     }
 
     return count;
