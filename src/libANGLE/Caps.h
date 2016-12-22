@@ -160,6 +160,12 @@ struct Extensions
     bool textureCompressionDXT3;
     bool textureCompressionDXT5;
 
+    // GL_EXT_texture_compression_s3tc_srgb
+    // Implies that TextureCaps for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
+    // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, and
+    // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
+    bool textureCompressionS3TCsRGB;
+
     // GL_KHR_texture_compression_astc_hdr
     bool textureCompressionASTCHDR;
 

@@ -702,6 +702,58 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          nullptr);
             return info;
         }
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT:
+        {
+            static constexpr Format info(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT,
+                                         angle::Format::ID::BC1_RGBA_UNORM_SRGB_BLOCK,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         GL_RGBA8,
+                                         nullptr);
+            return info;
+        }
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT:
+        {
+            static constexpr Format info(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT,
+                                         angle::Format::ID::BC2_RGBA_UNORM_SRGB_BLOCK,
+                                         DXGI_FORMAT_BC2_UNORM_SRGB,
+                                         DXGI_FORMAT_BC2_UNORM_SRGB,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_BC2_UNORM_SRGB,
+                                         GL_RGBA8,
+                                         nullptr);
+            return info;
+        }
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT:
+        {
+            static constexpr Format info(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT,
+                                         angle::Format::ID::BC3_RGBA_UNORM_SRGB_BLOCK,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_BC3_UNORM_SRGB,
+                                         GL_RGBA8,
+                                         nullptr);
+            return info;
+        }
+        case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
+        {
+            static constexpr Format info(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
+                                         angle::Format::ID::BC1_RGB_UNORM_SRGB_BLOCK,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_BC1_UNORM_SRGB,
+                                         GL_RGBA8,
+                                         nullptr);
+            return info;
+        }
         case GL_DEPTH24_STENCIL8:
         {
             if (OnlyFL10Plus(deviceCaps))

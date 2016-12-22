@@ -107,7 +107,7 @@ def get_internal_format_initializer(internal_format, angle_format):
     gl_channels = gl_format_channels(internal_format)
     gl_format_no_alpha = gl_channels == 'rgb' or gl_channels == 'l'
     if gl_format_no_alpha and angle_format['channels'] == 'rgba':
-        if angle_format['texFormat'] == 'DXGI_FORMAT_BC1_UNORM':
+        if angle_format['texFormat'].startswith('DXGI_FORMAT_BC1_UNORM'):
             # BC1 is a special case since the texture data determines whether each block has an alpha channel or not.
             # This if statement is hit by COMPRESSED_RGB_S3TC_DXT1, which is a bit of a mess.
             # TODO(oetuaho): Look into whether COMPRESSED_RGB_S3TC_DXT1 works right in general.

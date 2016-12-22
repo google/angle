@@ -564,6 +564,13 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     // From GL_OES_compressed_ETC1_RGB8_texture
     map.insert(InternalFormatInfoPair(GL_ETC1_RGB8_OES,                   CompressedFormat(4, 4,  64, 3, GL_ETC1_RGB8_OES,                   GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::compressedETC1RGB8Texture>, NeverSupported, AlwaysSupported)));
 
+    // From GL_EXT_texture_compression_s3tc_srgb
+    //                               | Internal format                       |                |W |H | BS |CC| Format                                | Type            | SRGB | Supported                                         | Renderable    | Filterable    |
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,       CompressedFormat(4, 4,  64, 3, GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,       GL_UNSIGNED_BYTE, true, RequireExt<&Extensions::textureCompressionS3TCsRGB>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, CompressedFormat(4, 4,  64, 4, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, GL_UNSIGNED_BYTE, true, RequireExt<&Extensions::textureCompressionS3TCsRGB>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, GL_UNSIGNED_BYTE, true, RequireExt<&Extensions::textureCompressionS3TCsRGB>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, CompressedFormat(4, 4, 128, 4, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, GL_UNSIGNED_BYTE, true, RequireExt<&Extensions::textureCompressionS3TCsRGB>, NeverSupported, AlwaysSupported)));
+
     // From KHR_texture_compression_astc_hdr
     //                               | Internal format                          |                | W | H | BS |CC| Format                                   | Type            | SRGB | Supported                                                                                     | Renderable     | Filterable    |
     map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGBA_ASTC_4x4_KHR,           CompressedFormat( 4,  4, 128, 4, GL_COMPRESSED_RGBA_ASTC_4x4_KHR,           GL_UNSIGNED_BYTE, false, RequireExtOrExt<&Extensions::textureCompressionASTCHDR, &Extensions::textureCompressionASTCLDR>, NeverSupported, AlwaysSupported)));

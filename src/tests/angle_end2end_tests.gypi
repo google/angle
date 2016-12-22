@@ -35,6 +35,7 @@
             '<(angle_path)/src/tests/gl_tests/DrawBuffersTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DrawElementsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/DXT1CompressedTextureTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ETCTextureTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FenceSyncTests.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferMixedSamplesTest.cpp',

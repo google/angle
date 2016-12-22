@@ -558,5 +558,25 @@
     "R16G16B16A16_SNORM": {
       "GL_SHORT": "LoadToNative<GLushort, 4>"
     }
+  },
+  "GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
+  },
+  "GL_COMPRESSED_SRGB_S3TC_DXT1_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 8>"
+    }
+  },
+  "GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 8>"
+    }
+  },
+  "GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "LoadCompressedToNative<4, 4, 16>"
+    }
   }
 }

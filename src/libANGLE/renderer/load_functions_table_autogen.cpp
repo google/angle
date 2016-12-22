@@ -382,6 +382,54 @@ LoadImageFunctionInfo COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2_to_R8G8B8A8_UNOR
     }
 }
 
+LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 16>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
+LoadImageFunctionInfo COMPRESSED_SRGB_S3TC_DXT1_EXT_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(LoadCompressedToNative<4, 4, 8>, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo DEPTH24_STENCIL8_to_D24_UNORM_S8_UINT(GLenum type)
 {
     switch (type)
@@ -1607,6 +1655,14 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, Format::ID angleForma
                     break;
             }
         }
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT:
+            return COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT_to_default;
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT:
+            return COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT_to_default;
+        case GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT:
+            return COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT_to_default;
+        case GL_COMPRESSED_SRGB_S3TC_DXT1_EXT:
+            return COMPRESSED_SRGB_S3TC_DXT1_EXT_to_default;
         case GL_DEPTH24_STENCIL8:
         {
             switch (angleFormat)

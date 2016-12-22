@@ -149,6 +149,7 @@ Extensions::Extensions()
       textureCompressionDXT1(false),
       textureCompressionDXT3(false),
       textureCompressionDXT5(false),
+      textureCompressionS3TCsRGB(false),
       textureCompressionASTCHDR(false),
       textureCompressionASTCLDR(false),
       compressedETC1RGB8Texture(false),
@@ -395,6 +396,18 @@ static bool DetermineDXT5TextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
 }
 
+// Check for GL_EXT_texture_compression_s3tc_srgb
+static bool DetermineS3TCsRGBTextureSupport(const TextureCapsMap &textureCaps)
+{
+    std::vector<GLenum> requiredFormats;
+    requiredFormats.push_back(GL_COMPRESSED_SRGB_S3TC_DXT1_EXT);
+    requiredFormats.push_back(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT);
+    requiredFormats.push_back(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT);
+    requiredFormats.push_back(GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT);
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, true, false);
+}
+
 // Check for GL_KHR_texture_compression_astc_hdr and GL_KHR_texture_compression_astc_ldr
 static bool DetermineASTCTextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -525,6 +538,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     textureCompressionDXT1 = DetermineDXT1TextureSupport(textureCaps);
     textureCompressionDXT3 = DetermineDXT3TextureSupport(textureCaps);
     textureCompressionDXT5 = DetermineDXT5TextureSupport(textureCaps);
+    textureCompressionS3TCsRGB = DetermineS3TCsRGBTextureSupport(textureCaps);
     textureCompressionASTCHDR = DetermineASTCTextureSupport(textureCaps);
     textureCompressionASTCLDR = textureCompressionASTCHDR;
     compressedETC1RGB8Texture = DetermineETC1RGB8TextureSupport(textureCaps);
@@ -571,6 +585,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_compression_dxt1"] = esOnlyExtension(&Extensions::textureCompressionDXT1);
         map["GL_ANGLE_texture_compression_dxt3"] = esOnlyExtension(&Extensions::textureCompressionDXT3);
         map["GL_ANGLE_texture_compression_dxt5"] = esOnlyExtension(&Extensions::textureCompressionDXT5);
+        map["GL_EXT_texture_compression_s3tc_srgb"] = esOnlyExtension(&Extensions::textureCompressionS3TCsRGB);
         map["GL_KHR_texture_compression_astc_hdr"] = esOnlyExtension(&Extensions::textureCompressionASTCHDR);
         map["GL_KHR_texture_compression_astc_ldr"] = esOnlyExtension(&Extensions::textureCompressionASTCLDR);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = esOnlyExtension(&Extensions::compressedETC1RGB8Texture);
