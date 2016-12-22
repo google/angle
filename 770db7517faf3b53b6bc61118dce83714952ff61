@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_c7e3f5bf",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-22T15:31:54Z",
+      "side": 1,
+      "message": "I don\u0027t see this requirement in the spec, we should skip this check.",
+      "range": {
+        "startLine": 375,
+        "startChar": 4,
+        "endLine": 379,
+        "endChar": 5
+      },
+      "revId": "770db7517faf3b53b6bc61118dce83714952ff61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
