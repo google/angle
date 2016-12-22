@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "37b082be_54eb35f4",
+        "filename": "include/angle_gl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T14:38:38Z",
+      "side": 1,
+      "message": "Probably not. Is this a GLES2 or GLES3 extension? It would probably go in gl2ext.h, using the same style as the other extensions. If you want you can update gl2ext.h from the latest master https://www.khronos.org/registry/gles/api/GLES2/gl2ext.h, just have to make sure you preserve any custom stuff. Can do that in a prior CL.\n\nAlso I see these enums defined in a desktop extension for SRGB.",
+      "parentUuid": "37b082be_f04b542a",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 84
+      },
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_14e5bd1e",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T14:38:38Z",
+      "side": 1,
+      "message": "i think git cl format would wrap this line.",
+      "range": {
+        "startLine": 164,
+        "startChar": 70,
+        "endLine": 164,
+        "endChar": 108
+      },
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_30124c0a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
         "patchSetId": 1
@@ -36,6 +83,24 @@
       "writtenOn": "2016-12-22T01:32:52Z",
       "side": 1,
       "message": "I\u0027m not totally clear on whether this is correct - I imitated BC1_RGB_UNORM_BLOCK above. But why do we have an RGBA internal format for an RGB format? The WebGL tests pass - but I\u0027d have to check whether they verify the lack of alpha in this case.",
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b4786967",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T14:38:38Z",
+      "side": 1,
+      "message": "This is only use for determining the cached swizzle texture format. Since you explicitly specify the swizzle format anyway I think you could even remove these glInternalFormat entries and not affect code generation.\n\nRegarding the alpha thing, in D3D11 there is no RGB BC1 format that I see, so we represent it with an RGBA version. I can\u0027t recall the exact context but there were some peculiarities with DXT and RGB/RGBA.\n\nIt\u0027s on my list of low priority items to finish cleaning up the texture format tables. The stuff like channels and component type shouldn\u0027t really be necessary to store here, and we can get rid of glInternalFormat at some point. We might even replace our swizzle code with dynamic shader generation.",
+      "parentUuid": "37b082be_30124c0a",
       "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

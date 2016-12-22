@@ -16,6 +16,24 @@
       "revId": "d90198385c2ec0429039558b3f2f6b968e5172f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b4dce92f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T14:38:38Z",
+      "side": 0,
+      "message": "Yeah, I agree. Probably an oversight. Thanks for cleaning it up.",
+      "parentUuid": "37b082be_d0dc1831",
+      "revId": "d90198385c2ec0429039558b3f2f6b968e5172f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
