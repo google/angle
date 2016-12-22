@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_47a5c587",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-22T15:14:52Z",
+      "side": 1,
+      "message": "Some thoughts about the code before real blitting, \n1) we can remove corresponding bitfield from mask directly, then If mask it zero, we can return early. If not, only blit bitfields those are really meaningful.\n2) we can move the main part of this function to high-level class, say FramebufferImpl.cpp. The logic is not specific for d3d backend, it can be applied to gl/gles/egl backends too.\n3) Is it OK to put the logic into validation code? I mean remove unnecessary bitfields from mask during validation. Then return early if mask equals to zero. I saw some validation functions (with *Robust*) can change the original parameter(s).\n\nWDYT?",
+      "revId": "1416b737f74d4261bc2c8c97d83e0026e33a4903",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
