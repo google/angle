@@ -161,6 +161,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_47ae2566",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3710,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2016-12-22T15:31:54Z",
+      "side": 1,
+      "message": "That note is with the symbol † which is for IMPLEMENTATION_COLOR_READ_TYPE and IMPLEMENTATION_COLOR_READ_FORMAT only.",
+      "parentUuid": "ba4b7745_e95e6b92",
+      "range": {
+        "startLine": 3710,
+        "startChar": 33,
+        "endLine": 3710,
+        "endChar": 49
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6a8c2c6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 22
