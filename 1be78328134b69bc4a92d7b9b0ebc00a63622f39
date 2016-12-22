@@ -25,6 +25,47 @@
     },
     {
       "key": {
+        "uuid": "37b082be_d377423f",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-12-22T03:57:01Z",
+      "side": 1,
+      "message": "line 46 see below.\nboth clang and gcc barf.  perhaps the header files are organized differently on windows such that you pick up the necessary declaration.",
+      "parentUuid": "37b082be_4f3e4ceb",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 18
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_50c1083c",
+        "filename": "src/common/Optional.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-12-22T03:57:01Z",
+      "side": 1,
+      "message": "here",
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_cf323c22",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 17
@@ -278,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_be412dac",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 17
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-12-22T03:57:01Z",
+      "side": 1,
+      "message": "because you didn\u0027t compile on linux.\nhttps://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/pull/1301",
+      "parentUuid": "37b082be_af41005e",
+      "range": {
+        "startLine": 44,
+        "startChar": 18,
+        "endLine": 44,
+        "endChar": 36
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6f3b08dd",
         "filename": "src/vulkan_support/BUILD.gn",
         "patchSetId": 17
@@ -335,6 +400,30 @@
       "writtenOn": "2016-12-21T19:44:36Z",
       "side": 1,
       "message": "weird, i feel like this should be in the current build files.",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 58
+      },
+      "revId": "1be78328134b69bc4a92d7b9b0ebc00a63622f39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_de7989a3",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 17
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2016-12-22T03:57:01Z",
+      "side": 1,
+      "message": "You didn\u0027t need this, my gyp build didn\u0027t need this, but my gn build fails without this.  Do we care why?",
+      "parentUuid": "37b082be_4f52cc2b",
       "range": {
         "startLine": 192,
         "startChar": 0,
