@@ -208,24 +208,6 @@
 1633 WIN AMD : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.nearest_nearest = FAIL
 1633 WIN AMD : dEQP-GLES3.functional.texture.mipmap.3d.max_lod.linear_nearest = FAIL
 
-// Win AMD with the latest driver (16.12.1) has a bunch of new failures related to 3D textures (crbug.com/676333)
-676333 WIN AMD : dEQP_GLES3.functional.texture.filtering.3d.formats.rgb565_linear_mipmap_linear = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.filtering.3d.formats.rgb565_linear_mipmap_nearest = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.filtering.3d.formats.rgb565_nearest_mipmap_linear = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.filtering.3d.formats.rgb565_nearest_mipmap_nearest = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb16f_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb16i_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb16ui_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb32f_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb32i_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb32ui_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb565_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb8_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb8_snorm_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb8i_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.rgb8ui_3d = FAIL
-676333 WIN AMD : dEQP_GLES3.functional.texture.specification.basic.texsubimage3d.srgb8_3d = FAIL
-
 // Windows Intel-specific failures
 
 1349 WIN INTEL : dEQP-GLES3.functional.shaders.texture_functions.texturelod.isamplercube_* = FAIL

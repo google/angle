@@ -105,12 +105,6 @@ TEST_P(TimerQueriesTest, ProcAddresses)
 // Tests the time elapsed query
 TEST_P(TimerQueriesTest, TimeElapsed)
 {
-    if (IsWindows() && IsAMD())
-    {
-        std::cout << "Test skipped on Windows AMD." << std::endl;
-        return;
-    }
-
     if (!extensionEnabled("GL_EXT_disjoint_timer_query"))
     {
         std::cout << "Test skipped because GL_EXT_disjoint_timer_query is not available."
