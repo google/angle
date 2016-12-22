@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_86894c4a",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_a6bc9e0f",
+      "range": {
+        "startLine": 131,
+        "startChar": 11,
+        "endLine": 131,
+        "endChar": 36
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6c1a294",
         "filename": "src/compiler/translator/glslang_tab.h",
         "patchSetId": 22
@@ -113,6 +137,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_e95e6b92",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3710,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "The es 3.1 spec states that \" Unlike most framebuffer-dependent state which is queried from the currently bound draw framebuffer, this state is queried from the currently bound read framebuffer\" below Table 20.49, so it may be read framebuffer here?",
+      "parentUuid": "ba4b7745_e6a786a0",
+      "range": {
+        "startLine": 3710,
+        "startChar": 33,
+        "endLine": 3710,
+        "endChar": 49
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6a8c2c6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 22
@@ -136,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_863b0c8a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3712,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_c6a8c2c6",
+      "range": {
+        "startLine": 3712,
+        "startChar": 3,
+        "endLine": 3712,
+        "endChar": 25
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_e6c6a6a9",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 22
@@ -147,6 +219,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "never return errors from context api methods. handle them inside the context.",
+      "range": {
+        "startLine": 585,
+        "startChar": 4,
+        "endLine": 585,
+        "endChar": 9
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_29695337",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_e6c6a6a9",
       "range": {
         "startLine": 585,
         "startChar": 4,
@@ -206,6 +302,54 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_89507f7a",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_06a3aae6",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 10
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_a95d4392",
+        "filename": "src/libANGLE/ImageIndex.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_e1721050",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 10
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_26b8ae0e",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 22
@@ -253,6 +397,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_09780fe1",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. It failed to createTexture in Texture::Texture(rx::GLImplFactory *factory, GLuint id, GLenum target), so mTexture would be null here if the context is D3D11, \nI will add a class TextureD3D_2DMultisample so that texture can be created.",
+      "parentUuid": "ba4b7745_21217814",
+      "range": {
+        "startLine": 1021,
+        "startChar": 4,
+        "endLine": 1025,
+        "endChar": 5
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_612b80f4",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 22
@@ -264,6 +432,30 @@
       "writtenOn": "2016-12-16T17:31:43Z",
       "side": 1,
       "message": "It has 1 level.",
+      "range": {
+        "startLine": 1031,
+        "startChar": 30,
+        "endLine": 1031,
+        "endChar": 52
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_29c233ef",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_612b80f4",
       "range": {
         "startLine": 1031,
         "startChar": 30,
@@ -299,6 +491,53 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_49c777fd",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_a1f3a87d",
+      "range": {
+        "startLine": 1033,
+        "startChar": 32,
+        "endLine": 1033,
+        "endChar": 54
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_09a9efc7",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "I add TextureState::setImageDescChainMultisample to set samples instead of setSamples here as getImageDesc returns const ImageDesc here.",
+      "range": {
+        "startLine": 125,
+        "startChar": 19,
+        "endLine": 125,
+        "endChar": 20
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_016e343e",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 22
@@ -310,6 +549,30 @@
       "writtenOn": "2016-12-16T17:31:43Z",
       "side": 1,
       "message": "Samples should be a property of the ImageDesc struct, it is queried with GetTexLevelParameter.  I realize that it\u0027s not currently possible to have levels with different numbers of samples but this is more in line with the spec.",
+      "range": {
+        "startLine": 143,
+        "startChar": 4,
+        "endLine": 143,
+        "endChar": 20
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_c9d8c782",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "ba4b7745_016e343e",
       "range": {
         "startLine": 143,
         "startChar": 4,
@@ -345,6 +608,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_e9a3cbe6",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_41e75c27",
+      "range": {
+        "startLine": 245,
+        "startChar": 4,
+        "endLine": 245,
+        "endChar": 37
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_41503c79",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 22
@@ -356,6 +643,30 @@
       "writtenOn": "2016-12-16T17:31:43Z",
       "side": 1,
       "message": "nit:\n  \n   const Extents \u0026size\n\n(cpp and Impl too)",
+      "range": {
+        "startLine": 320,
+        "startChar": 32,
+        "endLine": 320,
+        "endChar": 48
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_491e9749",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_41503c79",
       "range": {
         "startLine": 320,
         "startChar": 32,
@@ -385,6 +696,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_89ef9f3f",
+        "filename": "src/libANGLE/renderer/TextureImpl.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_e6d0660e",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_86e79af4",
         "filename": "src/libANGLE/renderer/TextureImpl.h",
         "patchSetId": 22
@@ -402,6 +731,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_a9ec634b",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_86e79af4",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_816ce4b2",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 22
@@ -413,6 +760,30 @@
       "writtenOn": "2016-12-16T17:31:43Z",
       "side": 1,
       "message": "Merge this with the GL_TEXTURE_2D case and pass texture-\u003egetTarget() instead of GL_TEXTURE_2D.",
+      "range": {
+        "startLine": 103,
+        "startChar": 12,
+        "endLine": 108,
+        "endChar": 13
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_a90d431c",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_816ce4b2",
       "range": {
         "startLine": 103,
         "startChar": 12,
@@ -448,6 +819,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_297dd3d0",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_46b5b213",
+      "range": {
+        "startLine": 592,
+        "startChar": 3,
+        "endLine": 596,
+        "endChar": 5
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6e0c2e5",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 22
@@ -465,6 +860,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_c9e9a73b",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_c6e0c2e5",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_66b2b62e",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 22
@@ -476,6 +889,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "I think you have to validate the context version here, otherwise the query will work in ES 2 contexts. please add a test for this.",
+      "range": {
+        "startLine": 1291,
+        "startChar": 13,
+        "endLine": 1291,
+        "endChar": 38
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_099f2fef",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1291,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Add test MultisampleTargetGetInternalFormativBase",
+      "parentUuid": "ba4b7745_66b2b62e",
       "range": {
         "startLine": 1291,
         "startChar": 13,
@@ -511,6 +948,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_b974e7ad",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3570,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Add test MultisampleTarFramebufferTexture2D.\nI tried to test in ES3, and it will get GL_INVALID_OPERATION in function ValidateFramebufferTextureBase,see line 3521 and 3481 because multisampled texture cannot be created. So I think it won\u0027t reach this case if it\u0027s ES2 or ES3, how do you think about this?",
+      "parentUuid": "ba4b7745_86af9ac5",
+      "range": {
+        "startLine": 3570,
+        "startChar": 17,
+        "endLine": 3570,
+        "endChar": 42
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_06f56ace",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -522,6 +983,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "nit: must be",
+      "range": {
+        "startLine": 199,
+        "startChar": 60,
+        "endLine": 199,
+        "endChar": 66
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_4954d73e",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_06f56ace",
       "range": {
         "startLine": 199,
         "startChar": 60,
@@ -575,6 +1060,48 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_69599b76",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_c16d0c75",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_8956bf43",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_46e77227",
+      "range": {
+        "startLine": 203,
+        "startChar": 8,
+        "endLine": 203,
+        "endChar": 13
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_26ea6ef2",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -586,6 +1113,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "Width and height must be positive.",
+      "range": {
+        "startLine": 205,
+        "startChar": 70,
+        "endLine": 205,
+        "endChar": 84
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_e92bcbaf",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_26ea6ef2",
       "range": {
         "startLine": 205,
         "startChar": 70,
@@ -621,6 +1172,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_0931ef1c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_66e47622",
+      "range": {
+        "startLine": 213,
+        "startChar": 53,
+        "endLine": 213,
+        "endChar": 68
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_86e15a13",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -632,6 +1207,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "may not be",
+      "range": {
+        "startLine": 218,
+        "startChar": 62,
+        "endLine": 218,
+        "endChar": 69
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_2926b3e6",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_86e15a13",
       "range": {
         "startLine": 218,
         "startChar": 62,
@@ -667,6 +1266,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_492bf7ae",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_a6501eef",
+      "range": {
+        "startLine": 225,
+        "startChar": 55,
+        "endLine": 225,
+        "endChar": 62
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_0132b4b7",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -678,6 +1301,30 @@
       "writtenOn": "2016-12-16T17:31:43Z",
       "side": 1,
       "message": "We have utilities that should cover this:\n\n   InternalFormat \u0026formatInfo \u003d GetInternalFormatInfo(internalformat);\n   if (formatInfo.pixelBytes \u003d\u003d 0)\n   {\n      error\n   }",
+      "range": {
+        "startLine": 232,
+        "startChar": 3,
+        "endLine": 248,
+        "endChar": 5
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_893ddfef",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_0132b4b7",
       "range": {
         "startLine": 232,
         "startChar": 3,
@@ -713,6 +1360,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_a93aa3f3",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_26650ec8",
+      "range": {
+        "startLine": 286,
+        "startChar": 59,
+        "endLine": 286,
+        "endChar": 65
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c1942c23",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -730,6 +1401,24 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_292153c6",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_c1942c23",
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_466212c1",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 22
@@ -741,6 +1430,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "must be less than",
+      "range": {
+        "startLine": 293,
+        "startChar": 42,
+        "endLine": 293,
+        "endChar": 69
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_492697de",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_466212c1",
       "range": {
         "startLine": 293,
         "startChar": 42,
@@ -776,6 +1489,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_690b5b4a",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1022,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_061e4a48",
+      "range": {
+        "startLine": 1022,
+        "startChar": 13,
+        "endLine": 1022,
+        "endChar": 54
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_660d561a",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 22
@@ -787,6 +1524,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "put all this in a method Context::texStorage2DMultisample(target, samples, etc...)",
+      "range": {
+        "startLine": 1027,
+        "startChar": 8,
+        "endLine": 1035,
+        "endChar": 9
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_89087f4d",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_660d561a",
       "range": {
         "startLine": 1027,
         "startChar": 8,
@@ -822,6 +1583,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_a9154361",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1046,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_860a3a01",
+      "range": {
+        "startLine": 1046,
+        "startChar": 43,
+        "endLine": 1046,
+        "endChar": 65
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_a6f57ed3",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 22
@@ -845,6 +1630,30 @@
     },
     {
       "key": {
+        "uuid": "ba4b7745_c9128777",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1056,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba4b7745_a6f57ed3",
+      "range": {
+        "startLine": 1051,
+        "startChar": 7,
+        "endLine": 1056,
+        "endChar": 9
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba4b7745_c6fa82c2",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 22
@@ -856,6 +1665,30 @@
       "writtenOn": "2016-12-16T15:26:03Z",
       "side": 1,
       "message": "shouldn\u0027t these be in a different issue? do some of the tests from multisample.* pass now?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 4
+      },
+      "revId": "4bc7480ee46e4d7a891de40d6c0da6d9e5177d8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_29f87308",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 22
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 1,
+      "message": "20 tests from multisample.* and 2 of texture_size.* for OPENGL can pass now. Other tests are failed because some features are unimplemented. I put passed tests in the description.",
+      "parentUuid": "ba4b7745_c6fa82c2",
       "range": {
         "startLine": 55,
         "startChar": 0,

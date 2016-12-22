@@ -16,6 +16,24 @@
       "revId": "439a55e55038b357d76f306cfa2e034e3b93fe5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ba4b7745_69f27b28",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 22
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-22T13:00:06Z",
+      "side": 0,
+      "message": "I have put them in line 183,  ES2_ident_ES3_reserved_ES3_1_keyword(context, SAMPLER2DMS)",
+      "parentUuid": "ba4b7745_263eee7b",
+      "revId": "439a55e55038b357d76f306cfa2e034e3b93fe5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
