@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_f04b542a",
+        "filename": "include/angle_gl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T01:32:52Z",
+      "side": 1,
+      "message": "Is this the right place to put this, since this extension is not ratified?",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 84
+      },
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_30124c0a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T01:32:52Z",
+      "side": 1,
+      "message": "I\u0027m not totally clear on whether this is correct - I imitated BC1_RGB_UNORM_BLOCK above. But why do we have an RGBA internal format for an RGB format? The WebGL tests pass - but I\u0027d have to check whether they verify the lack of alpha in this case.",
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

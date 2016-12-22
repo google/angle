@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_d0dc1831",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T01:32:52Z",
+      "side": 0,
+      "message": "This isn\u0027t a necessary change, but as far as I can tell, this doesn\u0027t do anything (because angle_format_map.json defines it).",
+      "revId": "d90198385c2ec0429039558b3f2f6b968e5172f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
