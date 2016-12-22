@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_366d591d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T21:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_20ebcfc3",
+      "range": {
+        "startLine": 15,
+        "startChar": 15,
+        "endLine": 15,
+        "endChar": 23
+      },
+      "revId": "27bd15771bbec35f708784288d0939fafa9ab24b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_3b8304f0",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-12-22T20:37:34Z",
       "side": 1,
       "message": "nit: remove this or add it to the other case.",
+      "range": {
+        "startLine": 672,
+        "startChar": 54,
+        "endLine": 672,
+        "endChar": 64
+      },
+      "revId": "27bd15771bbec35f708784288d0939fafa9ab24b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d69ba500",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T21:19:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_3b8304f0",
       "range": {
         "startLine": 672,
         "startChar": 54,
