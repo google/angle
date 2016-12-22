@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_38922738",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T21:56:30Z",
+      "side": 1,
+      "message": "+1, needs a bug id.",
+      "parentUuid": "37b082be_47206510",
+      "revId": "1416b737f74d4261bc2c8c97d83e0026e33a4903",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_47a5c587",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 2
@@ -71,6 +89,24 @@
       "side": 1,
       "message": "I think this code is fine as is or it can be moved into the gl::Framebuffer class.  I\u0027d prefer not to modify any parameters at the validation level, the Robust entry points don\u0027t modify original arguments but copies of them.",
       "parentUuid": "37b082be_47a5c587",
+      "revId": "1416b737f74d4261bc2c8c97d83e0026e33a4903",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_98831bee",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-22T21:56:30Z",
+      "side": 1,
+      "message": "yes, you should put this hasEnableDrawBuffer check in gl::Framebuffer::blit, or gl::Context::blitFramebuffer. Since the latter method already has the drawFramebuffer pointer I would put it there.",
+      "parentUuid": "37b082be_e71151ca",
       "revId": "1416b737f74d4261bc2c8c97d83e0026e33a4903",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
