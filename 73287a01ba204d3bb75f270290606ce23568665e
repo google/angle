@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_ca41bc5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T23:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_14c4dd4d",
+      "revId": "73287a01ba204d3bb75f270290606ce23568665e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_94d0cd0d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
         "patchSetId": 3
@@ -42,6 +60,24 @@
         "endLine": 110,
         "endChar": 23
       },
+      "revId": "73287a01ba204d3bb75f270290606ce23568665e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f8224fba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T23:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_94d0cd0d",
       "revId": "73287a01ba204d3bb75f270290606ce23568665e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
