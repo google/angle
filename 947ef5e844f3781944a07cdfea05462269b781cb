@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_5fe27317",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "Does reinterpret_cast\u003cunsigned int\u003e work?",
+      "range": {
+        "startLine": 2013,
+        "startChar": 26,
+        "endLine": 2013,
+        "endChar": 79
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5f1d9325",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "Move this line behind line 2018",
+      "range": {
+        "startLine": 2016,
+        "startChar": 4,
+        "endLine": 2016,
+        "endChar": 37
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7f3f2f77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2036,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "from",
+      "range": {
+        "startLine": 2036,
+        "startChar": 15,
+        "endLine": 2036,
+        "endChar": 22
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3fc4574e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "I am not sure if GLint64 or GLsizeiptr should be used here. Can you verify it?",
+      "range": {
+        "startLine": 2037,
+        "startChar": 4,
+        "endLine": 2037,
+        "endChar": 10
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f1bfd38f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "delete[] indirectData;",
+      "range": {
+        "startLine": 2044,
+        "startChar": 4,
+        "endLine": 2044,
+        "endChar": 23
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_71abe353",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2068,
+        "startChar": 26,
+        "endLine": 2068,
+        "endChar": 79
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_711d23d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2077,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "Does reinterpret_cast\u003cuint8_t *\u003e(firstIndex * typeInfo.bytes) work?",
+      "range": {
+        "startLine": 2077,
+        "startChar": 31,
+        "endLine": 2077,
+        "endChar": 86
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_11894fb5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "from",
+      "range": {
+        "startLine": 2110,
+        "startChar": 15,
+        "endLine": 2110,
+        "endChar": 22
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d1441797",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2112,
+        "startChar": 4,
+        "endLine": 2112,
+        "endChar": 10
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_914e9fb1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-22T09:34:46Z",
+      "side": 1,
+      "message": "delete[] indirectData",
+      "range": {
+        "startLine": 2120,
+        "startChar": 4,
+        "endLine": 2120,
+        "endChar": 23
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
