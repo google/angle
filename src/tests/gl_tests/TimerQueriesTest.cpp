@@ -183,8 +183,9 @@ TEST_P(TimerQueriesTest, TimeElapsed)
     EXPECT_LT(0ul, result1);
     EXPECT_LT(0ul, result2);
 
+    // TODO(geofflang): Re-enable this check when it is non-flaky
     // The costly quad should take longer than the cheap quad
-    EXPECT_LT(result1, result2);
+    // EXPECT_LT(result1, result2);
 }
 
 // Tests time elapsed for a non draw call (texture upload)
