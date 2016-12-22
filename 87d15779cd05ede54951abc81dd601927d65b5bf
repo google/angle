@@ -49,6 +49,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_fb8b2900",
+        "filename": "include/angle_gl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T23:13:43Z",
+      "side": 1,
+      "message": "It\u0027s for both GLES2 and GLES3, so yeah, I think it goes into gl2ext.h. I pushed a CL underneath this one. I also updated gl2ext.h, though the draft is not in there yet.\n\nYes, these enum names come from the desktop extension. They just have not been exposed into ES previously.",
+      "parentUuid": "37b082be_54eb35f4",
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_14e5bd1e",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
@@ -66,6 +84,24 @@
         "endLine": 164,
         "endChar": 108
       },
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_38422762",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T23:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_14e5bd1e",
       "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -101,6 +137,24 @@
       "side": 1,
       "message": "This is only use for determining the cached swizzle texture format. Since you explicitly specify the swizzle format anyway I think you could even remove these glInternalFormat entries and not affect code generation.\n\nRegarding the alpha thing, in D3D11 there is no RGB BC1 format that I see, so we represent it with an RGBA version. I can\u0027t recall the exact context but there were some peculiarities with DXT and RGB/RGBA.\n\nIt\u0027s on my list of low priority items to finish cleaning up the texture format tables. The stuff like channels and component type shouldn\u0027t really be necessary to store here, and we can get rid of glInternalFormat at some point. We might even replace our swizzle code with dynamic shader generation.",
       "parentUuid": "37b082be_30124c0a",
+      "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_58336326",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-22T23:13:43Z",
+      "side": 1,
+      "message": "Yup, if I remove these glInternalFormats, the generated file doesn\u0027t change.\n\nalpha: Ah, makes sense. Yeah, the way these formats are exposed changed a lot between DX9 (which I assume the original S3TC extension was based on) and DX11.",
+      "parentUuid": "37b082be_b4786967",
       "revId": "87d15779cd05ede54951abc81dd601927d65b5bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
