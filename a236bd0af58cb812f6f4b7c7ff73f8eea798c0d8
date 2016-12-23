@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "37b082be_8c84392f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "ASSERT this.",
+      "range": {
+        "startLine": 647,
+        "startChar": 10,
+        "endLine": 647,
+        "endChar": 27
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_8cd439a5",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 18
@@ -18,6 +41,237 @@
         "startChar": 0,
         "endLine": 653,
         "endChar": 68
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2c23c572",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "this is acceptable. it\u0027s the best place for it, although it might take some tweaking to Renderer11 to get this correct.",
+      "parentUuid": "37b082be_8cd439a5",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 68
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ac16d50d",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "please add a comment that these are initialized in DyanmicHLSL::linkComputeShader.",
+      "range": {
+        "startLine": 659,
+        "startChar": 33,
+        "endLine": 659,
+        "endChar": 47
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6c20dd5e",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "how about linkComputeShader.",
+      "range": {
+        "startLine": 118,
+        "startChar": 9,
+        "endLine": 118,
+        "endChar": 38
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_8c1d1929",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "return void.",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 8
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4c5161d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3540,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 3540,
+        "startChar": 49,
+        "endLine": 3540,
+        "endChar": 53
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2c4c2543",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3546,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "return gl::OutOfMemory() \u003c\u003c \"Failed to create compute shader, \" \u003c\u003c result;",
+      "range": {
+        "startLine": 3546,
+        "startChar": 27,
+        "endLine": 3546,
+        "endChar": 32
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ec45ad17",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ShaderExecutable11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "nullptr everywhere",
+      "range": {
+        "startLine": 23,
+        "startChar": 25,
+        "endLine": 23,
+        "endChar": 29
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0c4b692a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "disable these for 10_0 and 10_1. We won\u0027t support compute on these targets.",
+      "range": {
+        "startLine": 847,
+        "startChar": 13,
+        "endLine": 847,
+        "endChar": 35
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ac3fb575",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "same, and so on below.",
+      "range": {
+        "startLine": 877,
+        "startChar": 13,
+        "endLine": 877,
+        "endChar": 35
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6c39bd8e",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:41:22Z",
+      "side": 1,
+      "message": "remove these. we won\u0027t support ES3.1 on FL10.1 or 10.0.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 39
       },
       "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
