@@ -141,6 +141,29 @@
     },
     {
       "key": {
+        "uuid": "37b082be_2cf505ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:42:27Z",
+      "side": 1,
+      "message": "you\u0027ll need to add the compute driver uniform workgroup size somewhere in this function. I\u0027d suggest using a different ID3D11Buffer.",
+      "range": {
+        "startLine": 2360,
+        "startChar": 2,
+        "endLine": 2394,
+        "endChar": 5
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_4c5161d8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 18
