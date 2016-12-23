@@ -45,19 +45,72 @@ VkResult VerifyExtensionsPresent(const std::vector<VkExtensionProperties> &exten
     return VK_SUCCESS;
 }
 
+VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
+                                        VkDebugReportObjectTypeEXT objectType,
+                                        uint64_t object,
+                                        size_t location,
+                                        int32_t messageCode,
+                                        const char *layerPrefix,
+                                        const char *message,
+                                        void *userData)
+{
+    if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
+    {
+        ANGLEPlatformCurrent()->logError(message);
+#if !defined(NDEBUG)
+        // Abort the call in Debug builds.
+        return VK_TRUE;
+#endif
+    }
+    else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0)
+    {
+        ANGLEPlatformCurrent()->logWarning(message);
+    }
+    else
+    {
+        ANGLEPlatformCurrent()->logInfo(message);
+    }
+
+    return VK_FALSE;
+}
+
 }  // anonymous namespace
 
-RendererVk::RendererVk() : mCapsInitialized(false), mInstance(VK_NULL_HANDLE)
+RendererVk::RendererVk()
+    : mCapsInitialized(false),
+      mInstance(VK_NULL_HANDLE),
+      mEnableValidationLayers(false),
+      mDebugReportCallback(VK_NULL_HANDLE)
 {
 }
 
 RendererVk::~RendererVk()
 {
+    if (mDebugReportCallback)
+    {
+        ASSERT(mInstance);
+        auto destroyDebugReportCallback = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(
+            vkGetInstanceProcAddr(mInstance, "vkDestroyDebugReportCallbackEXT"));
+        ASSERT(destroyDebugReportCallback);
+        destroyDebugReportCallback(mInstance, mDebugReportCallback, nullptr);
+    }
+
     vkDestroyInstance(mInstance, nullptr);
 }
 
 vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 {
+    // Gather global layer properties.
+    uint32_t instanceLayerCount = 0;
+    ANGLE_VK_TRY(vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
+
+    std::vector<VkLayerProperties> instanceLayerProps(instanceLayerCount);
+    if (instanceLayerCount > 0)
+    {
+        ANGLE_VK_TRY(
+            vkEnumerateInstanceLayerProperties(&instanceLayerCount, instanceLayerProps.data()));
+    }
+
     uint32_t instanceExtensionCount = 0;
     ANGLE_VK_TRY(vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, nullptr));
 
@@ -68,6 +121,37 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
                                                             instanceExtensionProps.data()));
     }
 
+#if !defined(NDEBUG)
+    // Validation layers enabled by default in Debug.
+    mEnableValidationLayers = true;
+#endif
+
+    // If specified in the attributes, override the default.
+    if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
+    {
+        mEnableValidationLayers =
+            (attribs.get(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE, EGL_FALSE) == EGL_TRUE);
+    }
+
+    if (mEnableValidationLayers)
+    {
+        // Verify the standard validation layers are available.
+        if (!HasStandardValidationLayer(instanceLayerProps))
+        {
+            // Generate an error if the attribute was requested, warning otherwise.
+            if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
+            {
+                ANGLEPlatformCurrent()->logError("Vulkan standard validation layers are missing.");
+            }
+            else
+            {
+                ANGLEPlatformCurrent()->logWarning(
+                    "Vulkan standard validation layers are missing.");
+            }
+            mEnableValidationLayers = false;
+        }
+    }
+
     std::vector<const char *> enabledInstanceExtensions;
     enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -75,6 +159,12 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 #else
 #error Unsupported Vulkan platform.
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
+
+    // TODO(jmadill): Should be able to continue initialization if debug report ext missing.
+    if (mEnableValidationLayers)
+    {
+        enabledInstanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+    }
 
     // Verify the required extensions are in the extension names set. Fail if not.
     ANGLE_VK_TRY(VerifyExtensionsPresent(instanceExtensionProps, enabledInstanceExtensions));
@@ -98,10 +188,30 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
     instanceInfo.enabledExtensionCount = static_cast<uint32_t>(enabledInstanceExtensions.size());
     instanceInfo.ppEnabledExtensionNames =
         enabledInstanceExtensions.empty() ? nullptr : enabledInstanceExtensions.data();
-    instanceInfo.enabledLayerCount   = 0u;
-    instanceInfo.ppEnabledLayerNames = nullptr;
+    instanceInfo.enabledLayerCount = mEnableValidationLayers ? 1u : 0u;
+    instanceInfo.ppEnabledLayerNames =
+        mEnableValidationLayers ? &g_VkStdValidationLayerName : nullptr;
 
     ANGLE_VK_TRY(vkCreateInstance(&instanceInfo, nullptr, &mInstance));
+
+    if (mEnableValidationLayers)
+    {
+        VkDebugReportCallbackCreateInfoEXT debugReportInfo;
+
+        debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
+        debugReportInfo.pNext = nullptr;
+        debugReportInfo.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_WARNING_BIT_EXT |
+                                VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
+                                VK_DEBUG_REPORT_INFORMATION_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT;
+        debugReportInfo.pfnCallback = &DebugReportCallback;
+        debugReportInfo.pUserData   = this;
+
+        auto createDebugReportCallback = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(
+            vkGetInstanceProcAddr(mInstance, "vkCreateDebugReportCallbackEXT"));
+        ASSERT(createDebugReportCallback);
+        ANGLE_VK_TRY(
+            createDebugReportCallback(mInstance, &debugReportInfo, nullptr, &mDebugReportCallback));
+    }
 
     return vk::NoError();
 }

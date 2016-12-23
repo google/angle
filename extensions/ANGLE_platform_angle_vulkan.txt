@@ -63,7 +63,7 @@ Additions to the EGL Specification
 
 New Behavior
 
-    To request a display that is backed by a Vulken driver, the value of
+    To request a display that is backed by a Vulkan driver, the value of
     EGL_PLATFORM_ANGLE_TYPE_ANGLE should be
     EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE.
 

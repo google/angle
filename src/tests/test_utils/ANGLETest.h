@@ -196,6 +196,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setNoErrorEnabled(bool enabled);
     void setWebGLCompatibilityEnabled(bool webglCompatibility);
     void setBindGeneratesResource(bool bindGeneratesResource);
+    void setVulkanLayersEnabled(bool enabled);
 
     int getClientMajorVersion() const;
     int getClientMinorVersion() const;
@@ -208,6 +209,8 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     EGLint getPlatformRenderer() const;
 
     void ignoreD3D11SDKLayersWarnings();
+
+    static OSWindow *GetOSWindow() { return mOSWindow; }
 
   private:
     bool createEGLContext();

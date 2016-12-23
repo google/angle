@@ -205,6 +205,12 @@ ANGLETest::ANGLETest()
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
+
+    // Default vulkan layers to enabled.
+    if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+    {
+        mEGLWindow->setVulkanLayersEnabled(true);
+    }
 }
 
 ANGLETest::~ANGLETest()
@@ -642,6 +648,11 @@ void ANGLETest::setWebGLCompatibilityEnabled(bool webglCompatibility)
 void ANGLETest::setBindGeneratesResource(bool bindGeneratesResource)
 {
     mEGLWindow->setBindGeneratesResource(bindGeneratesResource);
+}
+
+void ANGLETest::setVulkanLayersEnabled(bool enabled)
+{
+    mEGLWindow->setVulkanLayersEnabled(enabled);
 }
 
 int ANGLETest::getClientMajorVersion() const

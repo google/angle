@@ -20,6 +20,7 @@
 #include <EGL/eglext.h>
 
 #include "common/angleutils.h"
+#include "common/Optional.h"
 
 class OSWindow;
 
@@ -76,6 +77,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     {
         mBindGeneratesResource = bindGeneratesResource;
     }
+    void setVulkanLayersEnabled(bool enabled) { mVulkanLayersEnabled = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -124,6 +126,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mWebGLCompatibility;
     bool mBindGeneratesResource;
     EGLint mSwapInterval;
+    Optional<bool> mVulkanLayersEnabled;
 };
 
 #endif // UTIL_EGLWINDOW_H_

@@ -181,6 +181,14 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         displayAttributes.push_back(EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE);
         displayAttributes.push_back(mPlatform.presentPath);
     }
+
+    // Set vulkan validation layer settings if requested.
+    if (mVulkanLayersEnabled.valid())
+    {
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE);
+        displayAttributes.push_back(mVulkanLayersEnabled.value() ? EGL_TRUE : EGL_FALSE);
+    }
+
     displayAttributes.push_back(EGL_NONE);
 
     mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,

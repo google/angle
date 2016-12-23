@@ -48,6 +48,10 @@ EGLint DefaultEGLErrorCode(VkResult result)
 }
 }  // anonymous namespace
 
+// Mirrors std_validation_str in loader.h
+// TODO(jmadill): Possibly wrap the loader into a safe source file. Can't be included trivially.
+const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
+
 const char *VulkanResultString(VkResult result)
 {
     switch (result)
@@ -172,5 +176,18 @@ bool Error::isError() const
 }
 
 }  // namespace vk
+
+bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+{
+    for (const auto &layerProp : layerProps)
+    {
+        if (std::string(layerProp.layerName) == g_VkStdValidationLayerName)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 }  // namespace rx

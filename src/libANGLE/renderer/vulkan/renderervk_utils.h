@@ -18,6 +18,9 @@ namespace rx
 {
 
 const char *VulkanResultString(VkResult result);
+bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps);
+
+extern const char *g_VkStdValidationLayerName;
 
 namespace vk
 {

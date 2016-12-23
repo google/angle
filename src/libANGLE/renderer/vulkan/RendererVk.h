@@ -55,6 +55,8 @@ class RendererVk : angle::NonCopyable
     mutable gl::Limitations mNativeLimitations;
 
     VkInstance mInstance;
+    bool mEnableValidationLayers;
+    VkDebugReportCallbackEXT mDebugReportCallback;
 };
 
 }  // namespace rx
