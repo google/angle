@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_e72706e2",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "needed it for the NoErrorVal type",
+      "parentUuid": "7a7adff7_eb85f05c",
+      "range": {
+        "startLine": 21,
+        "startChar": 45,
+        "endLine": 21,
+        "endChar": 64
+      },
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_86e709cb",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 23
@@ -36,6 +60,24 @@
       "writtenOn": "2016-12-15T20:18:29Z",
       "side": 1,
       "message": "nit: mPhysicalDevice \u003d VK_NULL_HANDLE",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_072d82c0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a7adff7_86e709cb",
       "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_a7410e7a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a7adff7_660db5b0",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_a6696d38",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 23
@@ -70,6 +130,24 @@
       "writtenOn": "2016-12-15T20:18:29Z",
       "side": 1,
       "message": "Usually the family supporting graphics operations is the one supporting present too so we can assume that for now. When we want to be robust, we can create one queue of each family, and when given a surface present on the correct queue while still doing all the rest on the graphics queue.\nI also vaguely remember an WSI extension in the works that will allow to know which family supports present, that doesn\u0027t need an actually surface.",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2700be1f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "This is a good suggestion. Haven\u0027t implemented this yet, want to get feedback on it.",
+      "parentUuid": "7a7adff7_a6696d38",
       "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_c73e8ae9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "7a7adff7_46bc3168",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_6673f506",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 23
@@ -110,6 +206,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_a70a6e42",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "Thanks, done.",
+      "parentUuid": "7a7adff7_6673f506",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a7adff7_c62bc1ac",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
         "patchSetId": 23
@@ -121,6 +235,24 @@
       "writtenOn": "2016-12-15T20:18:29Z",
       "side": 1,
       "message": "nit: UNREACHABLE();",
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_27175e71",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a7adff7_c62bc1ac",
       "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -197,6 +329,30 @@
       "side": 1,
       "message": "I think we should either go all the way (like this) with the wrapping or simply have raii wrappers to prevent leaks.",
       "parentUuid": "7a7adff7_834f0638",
+      "range": {
+        "startLine": 64,
+        "startChar": 6,
+        "endLine": 64,
+        "endChar": 19
+      },
+      "revId": "cdd353506c637d1ba640ae886131b80d1b1909a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_873892fb",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:33:06Z",
+      "side": 1,
+      "message": "How about I leave it as is for now, and we revisit design once the basic clear and readpixels implementation is done.",
+      "parentUuid": "7a7adff7_0bcec4c0",
       "range": {
         "startLine": 64,
         "startChar": 6,
