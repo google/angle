@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_c1551a14",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-23T03:42:16Z",
+      "side": 1,
+      "message": "Sorry this logic is excessively complex (and also duplicated); I\u0027ll clean this up.",
+      "range": {
+        "startLine": 248,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 5
+      },
+      "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_814f2282",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-23T03:42:16Z",
+      "side": 1,
+      "message": "I don\u0027t know why, but the SRGB*S3TC formats don\u0027t seem to be available on ES2 on D3D11. I couldn\u0027t spot anything in the JSON that would cause this.\n\nI need to either fix it, or not expose the extension on ES2. Any advice?",
+      "range": {
+        "startLine": 269,
+        "startChar": 23,
+        "endLine": 269,
+        "endChar": 82
+      },
+      "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
