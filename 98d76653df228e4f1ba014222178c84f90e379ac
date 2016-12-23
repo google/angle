@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_763e71eb",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:24:00Z",
+      "side": 1,
+      "message": "nit: comment",
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d6ff25f1",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:24:00Z",
+      "side": 1,
+      "message": "nit: Caps",
+      "range": {
+        "startLine": 29,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 26
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f604a135",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:24:00Z",
+      "side": 1,
+      "message": "dit, and so on",
+      "range": {
+        "startLine": 37,
+        "startChar": 7,
+        "endLine": 37,
+        "endChar": 19
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b6406956",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:24:00Z",
+      "side": 1,
+      "message": "fyi this default capture type is cautioned against:\n\nhttps://google.github.io/styleguide/cppguide.html#Lambda_expressions\nhttps://chromium-cpp.appspot.com/",
+      "range": {
+        "startLine": 306,
+        "startChar": 74,
+        "endLine": 306,
+        "endChar": 75
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b62709ca",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T21:24:00Z",
+      "side": 1,
+      "message": "if you can find a way to design this code to avoid lambas, please go ahead. Otherwise let\u0027s work together to either find the right perf test for stuff like bindBuffer, or write one if it doesn\u0027t exist. A certain internal benchmark important to MS is heavily performance-dependent on Bind calls. See http://anglebug.com/1458.\n\nthinking about this more... you can avoid the cost of virtual calls to create/check methods by using the CRTP. Pass the derived class as a template parameter of the base class, and the base class calls a method, say create(), which casts itself to the derived class:\n\ntemplate class ResourceManagerBase\u003ctypename Derived\u003e\n{\n   void create() {\n     static_cast\u003cDerived\u003e(this)-\u003ecreateImpl();\n   }\n};",
+      "range": {
+        "startLine": 306,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 7
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
