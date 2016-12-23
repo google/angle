@@ -666,12 +666,14 @@ gl::Error StateManagerGL::setDrawIndirectState(const gl::ContextState &data, GLe
 {
     const gl::State &state = data.getState();
 
+    const gl::VertexArray *vao = state.getVertexArray();
+    const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
+
     if (type != GL_NONE)
     {
-        const gl::VertexArray *vao = state.getVertexArray();
-        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
         ANGLE_TRY(vaoGL->syncElementArrayState());
     }
+    bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
     gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
     ASSERT(drawIndirectBuffer);
