@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_8cd439a5",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-23T11:12:16Z",
+      "side": 1,
+      "message": "Hi, all. Is it reasonable to put \"gl_NumWorkGroups\" in DriverConstants here? Which kinds of contents could be saved in DriverConstants?",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 68
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
