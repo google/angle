@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_beeb5ff3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "It will have the following error:\nwarning treated as error - no \u0027object\u0027 file generated\nwarning C4311: \u0027reinterpret_cast\u0027: pointer truncation from \u0027const GLvoid*\u0027 to \u0027unsigned int\u0027",
+      "parentUuid": "37b082be_5fe27317",
+      "range": {
+        "startLine": 2013,
+        "startChar": 26,
+        "endLine": 2013,
+        "endChar": 79
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_5f1d9325",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-12-22T09:34:46Z",
       "side": 1,
       "message": "Move this line behind line 2018",
+      "range": {
+        "startLine": 2016,
+        "startChar": 4,
+        "endLine": 2016,
+        "endChar": 37
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_9ee22315",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_5f1d9325",
       "range": {
         "startLine": 2016,
         "startChar": 4,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_dea09b89",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "getSize() will return GLint64.\nUse size_t size \u003d static_cast\u003csize_t\u003e(drawIndirectBuffer-\u003egetSize()) since line 2039 need size\u0027s type as size_t.",
+      "parentUuid": "37b082be_3fc4574e",
+      "range": {
+        "startLine": 2037,
+        "startChar": 4,
+        "endLine": 2037,
+        "endChar": 10
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_f1bfd38f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2016-12-22T09:34:46Z",
       "side": 1,
       "message": "delete[] indirectData;",
+      "range": {
+        "startLine": 2044,
+        "startChar": 4,
+        "endLine": 2044,
+        "endChar": 23
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_fe73178b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_f1bfd38f",
       "range": {
         "startLine": 2044,
         "startChar": 4,
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_1e79536a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_71abe353",
+      "range": {
+        "startLine": 2068,
+        "startChar": 26,
+        "endLine": 2068,
+        "endChar": 79
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_711d23d8",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -163,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_1e32b3b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2077,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "It will have the below error:\nwarning C4312: \u0027reinterpret_cast\u0027: conversion from \u0027GLuint\u0027 to \u0027uint8_t *\u0027 of greater size",
+      "parentUuid": "37b082be_711d23d8",
+      "range": {
+        "startLine": 2077,
+        "startChar": 31,
+        "endLine": 2077,
+        "endChar": 86
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_11894fb5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -174,6 +318,30 @@
       "writtenOn": "2016-12-22T09:34:46Z",
       "side": 1,
       "message": "from",
+      "range": {
+        "startLine": 2110,
+        "startChar": 15,
+        "endLine": 2110,
+        "endChar": 22
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_be16ff0d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2110,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_11894fb5",
       "range": {
         "startLine": 2110,
         "startChar": 15,
@@ -220,6 +388,30 @@
       "writtenOn": "2016-12-22T09:34:46Z",
       "side": 1,
       "message": "delete[] indirectData",
+      "range": {
+        "startLine": 2120,
+        "startChar": 4,
+        "endLine": 2120,
+        "endChar": 23
+      },
+      "revId": "947ef5e844f3781944a07cdfea05462269b781cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_de13bb1c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2016-12-23T01:51:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_914e9fb1",
       "range": {
         "startLine": 2120,
         "startChar": 4,
