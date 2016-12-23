@@ -45,6 +45,24 @@
       "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6170e6b9",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-23T03:51:00Z",
+      "side": 1,
+      "message": "Clarification: s/don\u0027t seem to be available/cause GL_INVALID_ENUM errors/",
+      "parentUuid": "37b082be_814f2282",
+      "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
