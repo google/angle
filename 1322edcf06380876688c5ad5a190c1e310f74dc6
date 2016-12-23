@@ -449,6 +449,24 @@
       "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4c7f2152",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T15:20:52Z",
+      "side": 1,
+      "message": "This is a legitimate bug -- good work on catching this with the test. The problem is the ES2 texture validation code is custom and very different from the ES3.\n\nYou can trap this by putting a breakpoint in gl::Context::handleError inside the isError if statement. It finds that there\u0027s an error generated in ValidateES2TexImageParameters where it explicitly checks a list of specified compressed formats. I sort of forget the intricacies of our texture support code, but I think you should be able to change this code to the same logic as the ES3 validation:\n\nhttps://chromium.googlesource.com/angle/angle.git/+/master/src/libANGLE/validationES3.cpp#181\n\nGeoff can you confirm?",
+      "parentUuid": "37b082be_2cf8a5c8",
+      "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
