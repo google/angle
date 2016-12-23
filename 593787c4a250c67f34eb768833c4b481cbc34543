@@ -157,6 +157,29 @@
     },
     {
       "key": {
+        "uuid": "37b082be_c779aa31",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-23T17:03:04Z",
+      "side": 1,
+      "message": "Remove this.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 27
+      },
+      "revId": "593787c4a250c67f34eb768833c4b481cbc34543",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_8ce2f914",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 4
