@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_8ce8b9c5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-23T16:26:04Z",
+      "side": 1,
+      "message": "pass the renderer, don\u0027t use mInstance/mDevice",
+      "range": {
+        "startLine": 163,
+        "startChar": 21,
+        "endLine": 163,
+        "endChar": 36
+      },
+      "revId": "678f13f95c5104ed8ac66d44786418563b3a300d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
