@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_629f8139",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_8c84392f",
+      "range": {
+        "startLine": 647,
+        "startChar": 10,
+        "endLine": 647,
+        "endChar": 27
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_8cd439a5",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 18
@@ -95,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_82ce3d44",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_ac16d50d",
+      "range": {
+        "startLine": 659,
+        "startChar": 33,
+        "endLine": 659,
+        "endChar": 47
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6c20dd5e",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
         "patchSetId": 18
@@ -141,6 +189,54 @@
     },
     {
       "key": {
+        "uuid": "37b082be_42e9259d",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "I am also troubled how to name the function. This function is only used to generate compute shader, I think that \"link\" include \"compile\", it is similar with \"generateShaderLinkHLSL\" function, so I think \"generateComputeShaderLinkHLSL\" is better. Do you think you?",
+      "parentUuid": "37b082be_6c20dd5e",
+      "range": {
+        "startLine": 118,
+        "startChar": 9,
+        "endLine": 118,
+        "endChar": 38
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_22bbc9a7",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_8c1d1929",
+      "range": {
+        "startLine": 118,
+        "startChar": 4,
+        "endLine": 118,
+        "endChar": 8
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_2cf505ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 18
@@ -152,6 +248,30 @@
       "writtenOn": "2016-12-23T15:42:27Z",
       "side": 1,
       "message": "you\u0027ll need to add the compute driver uniform workgroup size somewhere in this function. I\u0027d suggest using a different ID3D11Buffer.",
+      "range": {
+        "startLine": 2360,
+        "startChar": 2,
+        "endLine": 2394,
+        "endChar": 5
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4264c55f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2394,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Because \"default uniform block\" and \"driver constants\" have used two cbuffers. According \nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ff476400(v\u003dvs.85).aspx\nvoid CSSetConstantBuffers(\n  [in]           UINT                StartSlot,\n  [in]           UINT                NumBuffers,\n  [in, optional] ID3D11Buffer *const *ppConstantBuffers\n);\nStartSlot ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1. Does it mean that there are 14 cbuffers? If I use another cbuffer, there are not enough (there are 11 cbuffers) for MAX_COMPUTE_UNIFORM_BLOCKS. According ES3.1 spec, MAX_COMPUTE_UNIFORM_BLOCKS must be greater or equal to 12.",
+      "parentUuid": "37b082be_2cf505ab",
       "range": {
         "startLine": 2360,
         "startChar": 2,
@@ -187,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_42fb6555",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3540,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_4c5161d8",
+      "range": {
+        "startLine": 3540,
+        "startChar": 49,
+        "endLine": 3540,
+        "endChar": 53
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_2c4c2543",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 18
@@ -198,6 +342,30 @@
       "writtenOn": "2016-12-23T15:41:22Z",
       "side": 1,
       "message": "return gl::OutOfMemory() \u003c\u003c \"Failed to create compute shader, \" \u003c\u003c result;",
+      "range": {
+        "startLine": 3546,
+        "startChar": 27,
+        "endLine": 3546,
+        "endChar": 32
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_22f66970",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3546,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_2c4c2543",
       "range": {
         "startLine": 3546,
         "startChar": 27,
@@ -233,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_e2eff190",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ShaderExecutable11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_ec45ad17",
+      "range": {
+        "startLine": 23,
+        "startChar": 25,
+        "endLine": 23,
+        "endChar": 29
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_0c4b692a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 18
@@ -244,6 +436,30 @@
       "writtenOn": "2016-12-23T15:41:22Z",
       "side": 1,
       "message": "disable these for 10_0 and 10_1. We won\u0027t support compute on these targets.",
+      "range": {
+        "startLine": 847,
+        "startChar": 13,
+        "endLine": 847,
+        "endChar": 35
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_02f56d5f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_0c4b692a",
       "range": {
         "startLine": 847,
         "startChar": 13,
@@ -279,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_a209f998",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_ac3fb575",
+      "range": {
+        "startLine": 877,
+        "startChar": 13,
+        "endLine": 877,
+        "endChar": 35
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6c39bd8e",
         "filename": "src/tests/test_utils/angle_test_configs.h",
         "patchSetId": 18
@@ -290,6 +530,30 @@
       "writtenOn": "2016-12-23T15:41:22Z",
       "side": 1,
       "message": "remove these. we won\u0027t support ES3.1 on FL10.1 or 10.0.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 39
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_62030178",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-26T11:58:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_6c39bd8e",
       "range": {
         "startLine": 120,
         "startChar": 0,
