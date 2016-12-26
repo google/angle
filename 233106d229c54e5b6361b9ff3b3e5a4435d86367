@@ -16,6 +16,24 @@
       "revId": "233106d229c54e5b6361b9ff3b3e5a4435d86367",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3f5686eb",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2016-12-26T06:32:24Z",
+      "side": 1,
+      "message": "Done.\nI removed all SUCCEED() in this file.",
+      "parentUuid": "37b082be_ffa46eef",
+      "revId": "233106d229c54e5b6361b9ff3b3e5a4435d86367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
