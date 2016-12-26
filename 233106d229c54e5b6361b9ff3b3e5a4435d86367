@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_ffa46eef",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-26T05:54:13Z",
+      "side": 1,
+      "message": "I think you want to say \"Shader compilation succeed, expecting failure\".\n\nBTW, why not use a if-else? \nif (compile(shaderString)) \n{ FAIL() \u003c\u003c ....} - \nelse\n{ SUCCEED() \u003c\u003c }",
+      "revId": "233106d229c54e5b6361b9ff3b3e5a4435d86367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
