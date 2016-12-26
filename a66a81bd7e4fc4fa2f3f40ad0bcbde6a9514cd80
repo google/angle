@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_dffe528c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done. I also update mCaps in following files:\nrenderer11_utils.cpp\nrenderer9_utils.cpp\nrenderergl_utils.cpp",
+      "parentUuid": "37b082be_fe8810b3",
+      "range": {
+        "startLine": 2081,
+        "startChar": 80,
+        "endLine": 2082,
+        "endChar": 64
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_3edd48ca",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "This is set by setVertexBindingDivisor",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 55
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_bf0596c5",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done. I have removed this.",
+      "parentUuid": "37b082be_3edd48ca",
       "range": {
         "startLine": 153,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_5f12620a",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done. I have removed this.",
+      "parentUuid": "37b082be_5eda84d2",
+      "range": {
+        "startLine": 186,
+        "startChar": 4,
+        "endLine": 186,
+        "endChar": 64
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_1e008c68",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "nit: can remove gl:: (and below)",
+      "range": {
+        "startLine": 89,
+        "startChar": 26,
+        "endLine": 89,
+        "endChar": 30
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ff030ec0",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_1e008c68",
       "range": {
         "startLine": 89,
         "startChar": 26,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_dfd7320c",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done.\nI have updated other functions that use VertexAttribute in this way.",
+      "parentUuid": "37b082be_de4c34e5",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 65
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6a2776e4",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 9
@@ -128,6 +248,30 @@
       "writtenOn": "2016-12-21T20:41:15Z",
       "side": 1,
       "message": "Can also remove this, it shouldn\u0027t be needed.",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 23,
+        "endChar": 17
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7f0f1ee2",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_6a2776e4",
       "range": {
         "startLine": 23,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_1fde2a2b",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done. \nNow all functions that uses VertexAttribute should use both VertexAttribute and its binding VertexBufferBinding.",
+      "parentUuid": "37b082be_9e6d5c43",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_7e4180a9",
         "filename": "src/libANGLE/VertexAttribute.inl",
         "patchSetId": 9
@@ -174,6 +342,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "nit: fix tabs (.inl files are currently not formatted with git cl format)",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 1
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ffdc6e30",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 9
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_7e4180a9",
       "range": {
         "startLine": 14,
         "startChar": 0,
@@ -203,6 +395,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_9ff1bab4",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_dea0b42d",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_5e38442c",
         "filename": "src/libANGLE/VertexBufferBinding.h",
         "patchSetId": 9
@@ -214,6 +424,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "The binding shouldn\u0027t need to know its index.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 17
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_bfeef6d1",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_5e38442c",
       "range": {
         "startLine": 20,
         "startChar": 4,
@@ -249,6 +483,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_5feb42c2",
+        "filename": "src/libANGLE/VertexBufferBinding.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_9e46bcc1",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 23
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_1e32cc4c",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 9
@@ -260,6 +518,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "This can be updated to pass both the attrib and binding.",
+      "range": {
+        "startLine": 638,
+        "startChar": 31,
+        "endLine": 638,
+        "endChar": 60
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7fe87ec4",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_1e32cc4c",
       "range": {
         "startLine": 638,
         "startChar": 31,
@@ -295,6 +577,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_1fc70a5b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_fe3a50f3",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 44
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_4a795a2f",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 9
@@ -306,6 +612,24 @@
       "writtenOn": "2016-12-21T20:24:11Z",
       "side": 1,
       "message": "This condition is always true and could be removed.",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3fcc467a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_4a795a2f",
       "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -329,6 +653,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_dfd0920e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_4f8c0cc7",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_cfa55c55",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 9
@@ -340,6 +682,30 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "\"Vertex attrib bindings\"",
+      "range": {
+        "startLine": 513,
+        "startChar": 44,
+        "endLine": 513,
+        "endChar": 73
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_ffd54efc",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_cfa55c55",
       "range": {
         "startLine": 513,
         "startChar": 44,
@@ -375,6 +741,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_9fba1abd",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_0fbb7470",
+      "range": {
+        "startLine": 525,
+        "startChar": 48,
+        "endLine": 525,
+        "endChar": 77
+      },
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_fe6fb014",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -386,6 +776,24 @@
       "writtenOn": "2016-12-21T19:37:15Z",
       "side": 1,
       "message": "nit: remove empty line.",
+      "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_bfb7d6d5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-26T08:47:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_fe6fb014",
       "revId": "a66a81bd7e4fc4fa2f3f40ad0bcbde6a9514cd80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
