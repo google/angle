@@ -83,7 +83,7 @@ struct WorkaroundsD3D
 
     // In Intel driver, the data with format DXGI_FORMAT_B5G6R5_UNORM will be parsed incorrectly.
     // This workaroud will disable B5G6R5 support when it's Intel driver. By default, it will use
-    // R8G8B8A8 format.
+    // R8G8B8A8 format. This bug is fixed in version 4539 on Intel drivers.
     bool disableB5G6R5Support = false;
 
     // On some Intel drivers, evaluating unary minus operator on integer may get wrong answer in
