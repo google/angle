@@ -237,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_73275527",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "it\u0027s pretty minor - this class is a bit messy. generateLinkComputerShaderHLSL keeps the same naming convention as the current function, but it is too long. anyway, I think you can leave it like it is here.",
+      "parentUuid": "37b082be_42e9259d",
+      "range": {
+        "startLine": 118,
+        "startChar": 9,
+        "endLine": 118,
+        "endChar": 38
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_2cf505ab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 18
@@ -272,6 +296,30 @@
       "side": 1,
       "message": "Because \"default uniform block\" and \"driver constants\" have used two cbuffers. According \nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ff476400(v\u003dvs.85).aspx\nvoid CSSetConstantBuffers(\n  [in]           UINT                StartSlot,\n  [in]           UINT                NumBuffers,\n  [in, optional] ID3D11Buffer *const *ppConstantBuffers\n);\nStartSlot ranges from 0 to D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1. Does it mean that there are 14 cbuffers? If I use another cbuffer, there are not enough (there are 11 cbuffers) for MAX_COMPUTE_UNIFORM_BLOCKS. According ES3.1 spec, MAX_COMPUTE_UNIFORM_BLOCKS must be greater or equal to 12.",
       "parentUuid": "37b082be_2cf505ab",
+      "range": {
+        "startLine": 2360,
+        "startChar": 2,
+        "endLine": 2394,
+        "endChar": 5
+      },
+      "revId": "a236bd0af58cb812f6f4b7c7ff73f8eea798c0d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_134861ce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "Right, OK.\n\n#1) I forgot this patch doesn\u0027t add support for *running* compute programs. So you don\u0027t need to modify this in this patch, it should go in the next patch, where you add compute program invocation support.\n\n#2) We\u0027ll still need only two reserved constant buffers: one for the default uniforms, and one for driver uniforms. No extra slot for compute - we can use the driver uniform slot. Hence, we\u0027ll have exactly 12 available to OpenGL which is convenient. As I said in #1, this is for the next patch. Sorry.\n\n#3) This is a note to Geoff and Corentin and the other reviewers - we should probably add a sanity ASSERT check somewhere in the GL layer that when we return a conformant config, that it advertises resource limits that are \u003e\u003d the minimum OpenGL required.",
+      "parentUuid": "37b082be_4264c55f",
       "range": {
         "startLine": 2360,
         "startChar": 2,
