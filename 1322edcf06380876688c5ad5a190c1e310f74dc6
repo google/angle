@@ -791,6 +791,24 @@
       "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_5389f9b3",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-27T19:59:20Z",
+      "side": 1,
+      "message": "Actually, if it\u0027s alright, I just updated the ES2 code. It would take me a while to dig through what\u0027s necessary to copy over the logic from validationES3.",
+      "parentUuid": "37b082be_739c3543",
+      "revId": "1322edcf06380876688c5ad5a190c1e310f74dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
