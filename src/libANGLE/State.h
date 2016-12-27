@@ -227,6 +227,14 @@ class State : angle::NonCopyable
     void setIndexedUniformBufferBinding(GLuint index, Buffer *buffer, GLintptr offset, GLsizeiptr size);
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
 
+    // GL_ATOMIC_COUNTER_BUFFER - Both indexed and generic targets
+    void setGenericAtomicCounterBufferBinding(Buffer *buffer);
+    void setIndexedAtomicCounterBufferBinding(GLuint index,
+                                              Buffer *buffer,
+                                              GLintptr offset,
+                                              GLsizeiptr size);
+    const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
+
     // GL_COPY_[READ/WRITE]_BUFFER
     void setCopyReadBufferBinding(Buffer *buffer);
     void setCopyWriteBufferBinding(Buffer *buffer);
@@ -472,6 +480,9 @@ class State : angle::NonCopyable
     BufferVector mUniformBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;
+
+    BindingPointer<Buffer> mGenericAtomicCounterBuffer;
+    BufferVector mAtomicCounterBuffers;
 
     BindingPointer<Buffer> mCopyReadBuffer;
     BindingPointer<Buffer> mCopyWriteBuffer;

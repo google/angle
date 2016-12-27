@@ -581,6 +581,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
 
     switch (pname)
     {
+        case GL_ATOMIC_COUNTER_BUFFER_BINDING:
         case GL_DRAW_INDIRECT_BUFFER_BINDING:
         case GL_MAX_FRAMEBUFFER_WIDTH:
         case GL_MAX_FRAMEBUFFER_HEIGHT:
@@ -673,8 +674,16 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
     {
         case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
         case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
+        case GL_ATOMIC_COUNTER_BUFFER_BINDING:
         {
             *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
+        case GL_ATOMIC_COUNTER_BUFFER_START:
+        case GL_ATOMIC_COUNTER_BUFFER_SIZE:
+        {
+            *type      = GL_INT_64_ANGLEX;
             *numParams = 1;
             return true;
         }

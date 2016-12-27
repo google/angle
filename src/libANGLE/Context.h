@@ -139,6 +139,11 @@ class Context final : public ValidationContext
                                             GLuint index,
                                             GLintptr offset,
                                             GLsizeiptr size);
+    void bindGenericAtomicCounterBuffer(GLuint bufferHandle);
+    void bindIndexedAtomicCounterBuffer(GLuint bufferHandle,
+                                        GLuint index,
+                                        GLintptr offset,
+                                        GLsizeiptr size);
     void bindCopyReadBuffer(GLuint bufferHandle);
     void bindCopyWriteBuffer(GLuint bufferHandle);
     void bindPixelPackBuffer(GLuint bufferHandle);
@@ -592,6 +597,12 @@ class Context final : public ValidationContext
     void attachShader(GLuint program, GLuint shader);
     void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);
     void bindBuffer(GLenum target, GLuint buffer);
+    void bindBufferBase(GLenum target, GLuint index, GLuint buffer);
+    void bindBufferRange(GLenum target,
+                         GLuint index,
+                         GLuint buffer,
+                         GLintptr offset,
+                         GLsizeiptr size);
     void bindFramebuffer(GLenum target, GLuint framebuffer);
     void bindRenderbuffer(GLenum target, GLuint renderbuffer);
 

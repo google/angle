@@ -704,90 +704,12 @@ void GL_APIENTRY BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateBindBufferRange(context, target, index, buffer, offset, size))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
-
-        const Caps &caps = context->getCaps();
-        switch (target)
-        {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            if (index >= caps.maxTransformFeedbackSeparateAttributes)
-            {
-                context->handleError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          case GL_UNIFORM_BUFFER:
-            if (index >= caps.maxUniformBufferBindings)
-            {
-                context->handleError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        if (buffer != 0 && size <= 0)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-            !context->isBufferGenerated(buffer))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Buffer was not generated"));
-            return;
-        }
-
-        switch (target)
-        {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            {
-                // size and offset must be a multiple of 4
-                if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
-                {
-                    context->handleError(Error(GL_INVALID_VALUE));
-                    return;
-                }
-
-                // Cannot bind a transform feedback buffer if the current transform feedback is active (3.0.4 pg 91 section 2.15.2)
-                TransformFeedback *curTransformFeedback =
-                    context->getGLState().getCurrentTransformFeedback();
-                if (curTransformFeedback && curTransformFeedback->isActive())
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return;
-                }
-
-                context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
-                context->bindGenericTransformFeedbackBuffer(buffer);
-                break;
-            }
-
-          case GL_UNIFORM_BUFFER:
-
-            // it is an error to bind an offset not a multiple of the alignment
-            if (buffer != 0 && (offset % caps.uniformBufferOffsetAlignment) != 0)
-            {
-                context->handleError(Error(GL_INVALID_VALUE));
-                return;
-            }
-
-            context->bindIndexedUniformBuffer(buffer, index, offset, size);
-            context->bindGenericUniformBuffer(buffer);
-            break;
-
-          default:
-            UNREACHABLE();
-        }
+        context->bindBufferRange(target, index, buffer, offset, size);
     }
 }
 
@@ -799,104 +721,11 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateBindBufferBase(context, target, index, buffer))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
-
-        const Caps &caps = context->getCaps();
-        switch (target)
-        {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            if (index >= caps.maxTransformFeedbackSeparateAttributes)
-            {
-                context->handleError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          case GL_UNIFORM_BUFFER:
-            if (index >= caps.maxUniformBufferBindings)
-            {
-                context->handleError(Error(GL_INVALID_VALUE));
-                return;
-            }
-            break;
-
-          case GL_ATOMIC_COUNTER_BUFFER:
-              if (index >= caps.maxAtomicCounterBufferBindings)
-              {
-                  context->handleError(Error(
-                      GL_INVALID_VALUE,
-                      "Binding index must be less than GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS."));
-                  return;
-              }
-              break;
-
-          case GL_SHADER_STORAGE_BUFFER:
-              if (index >= caps.maxShaderStorageBufferBindings)
-              {
-                  context->handleError(Error(
-                      GL_INVALID_VALUE,
-                      "Binding index must be less than GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS."));
-                  return;
-              }
-              break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        if (!context->getGLState().isBindGeneratesResourceEnabled() &&
-            !context->isBufferGenerated(buffer))
-        {
-            context->handleError(Error(GL_INVALID_OPERATION, "Buffer was not generated"));
-            return;
-        }
-
-        switch (target)
-        {
-          case GL_TRANSFORM_FEEDBACK_BUFFER:
-            {
-                // Cannot bind a transform feedback buffer if the current transform feedback is active (3.0.4 pg 91 section 2.15.2)
-                TransformFeedback *curTransformFeedback =
-                    context->getGLState().getCurrentTransformFeedback();
-                if (curTransformFeedback && curTransformFeedback->isActive())
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return;
-                }
-
-                context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, 0);
-                context->bindGenericTransformFeedbackBuffer(buffer);
-                break;
-            }
-          case GL_UNIFORM_BUFFER:
-            context->bindIndexedUniformBuffer(buffer, index, 0, 0);
-            context->bindGenericUniformBuffer(buffer);
-            break;
-
-          case GL_ATOMIC_COUNTER_BUFFER:
-              if (buffer != 0)
-              {
-                  // Binding buffers to this binding point is not implemented yet.
-                  UNIMPLEMENTED();
-              }
-              break;
-
-          case GL_SHADER_STORAGE_BUFFER:
-              if (buffer != 0)
-              {
-                  // Binding buffers to this binding point is not implemented yet.
-                  UNIMPLEMENTED();
-              }
-              break;
-
-          default:
-            UNREACHABLE();
-        }
+        context->bindBufferBase(target, index, buffer);
     }
 }
 
