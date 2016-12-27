@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_b3d4edd6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1859,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T19:27:56Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be more specific? Maybe we should make a helper for testing intel drivers. Something like\n\n(IntelDriverVersion(deviceCaps.driverVersion) \u003c\u003d IntelDriverVersion(\"...\") ?",
+      "range": {
+        "startLine": 1859,
+        "startChar": 8,
+        "endLine": 1859,
+        "endChar": 45
+      },
+      "revId": "59b74ad5cd6e5e4d937181a544ba5e893d9c7287",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
