@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_f346e5c1",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "You can remove this. reserveUniformRegisters only makes sense for D3D9, where we don\u0027t use constant buffers.",
+      "range": {
+        "startLine": 142,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 49
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_53357933",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "uniform space is reserved here.",
+      "range": {
+        "startLine": 157,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 52
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_13a14148",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3011,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "why is there a whitespace change here?",
+      "range": {
+        "startLine": 3011,
+        "startChar": 0,
+        "endLine": 3011,
+        "endChar": 18
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_93dd31cc",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "you\u0027ll need to add binary loading/saving support to ::load and ::save with mComputeHLSL and the compute binary... also could you add a test for this in ProgramBinaryTest.cpp? You won\u0027t be able to run the compute program in the test, but if you leave a TODO there, you can update the test in the next patch to run the compute program that you load and save.",
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_d3aac921",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 1239,
+        "startChar": 30,
+        "endLine": 1239,
+        "endChar": 34
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f3afc52f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 1252,
+        "startChar": 30,
+        "endLine": 1252,
+        "endChar": 34
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_b3b14d93",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "nullptr",
+      "range": {
+        "startLine": 1255,
+        "startChar": 74,
+        "endLine": 1255,
+        "endChar": 78
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_93b45184",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-27T21:25:26Z",
+      "side": 1,
+      "message": "NoError",
+      "range": {
+        "startLine": 1260,
+        "startChar": 15,
+        "endLine": 1260,
+        "endChar": 20
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
