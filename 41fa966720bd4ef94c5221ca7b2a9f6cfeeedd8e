@@ -22,6 +22,24 @@
       "revId": "41fa966720bd4ef94c5221ca7b2a9f6cfeeedd8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_845e452d",
+        "filename": "src/tests/gl_tests/DXTSRGBCompressedTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2016-12-28T01:58:27Z",
+      "side": 1,
+      "message": "This one is an override so I can\u0027t change it. Others: Done.",
+      "parentUuid": "37b082be_ee77da3e",
+      "revId": "41fa966720bd4ef94c5221ca7b2a9f6cfeeedd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
