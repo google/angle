@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_d79dce50",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-28T20:09:22Z",
+      "side": 1,
+      "message": "I\u0027m looking at this function. Is there anything here which is dynamically generated that can\u0027t be generated at compile time? I don\u0027t know if we need ProgramD3D::mComputeHLSL.",
+      "range": {
+        "startLine": 767,
+        "startChar": 18,
+        "endLine": 767,
+        "endChar": 47
+      },
+      "revId": "926281c8d26629d8217c102272d8e086db2189e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_17a4c69b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-28T20:09:22Z",
+      "side": 1,
+      "message": "put this in this CL, not in a follow up CL.",
+      "range": {
+        "startLine": 688,
+        "startChar": 0,
+        "endLine": 690,
+        "endChar": 35
+      },
+      "revId": "926281c8d26629d8217c102272d8e086db2189e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_227dfe1d",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-28T20:09:22Z",
+      "side": 1,
+      "message": "please add a TODO(yourname) to indicate you added these. Same below. Unless we don\u0027t intend to solve these failures. Also these should include IsOpenGL(), since presumably they wouldn\u0027t be assumed to fail for a complete Vulkan implementation.",
+      "range": {
+        "startLine": 217,
+        "startChar": 4,
+        "endLine": 217,
+        "endChar": 31
+      },
+      "revId": "926281c8d26629d8217c102272d8e086db2189e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
