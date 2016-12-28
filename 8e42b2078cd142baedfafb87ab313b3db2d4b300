@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_97c75659",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-28T20:03:19Z",
+      "side": 1,
+      "message": "It\u0027s not really what I had in mind. I think we should make this clear and specific for all Intel driver versions. Make a new class IntelDriverVersion, which has two constructors, one with const Optional\u003cLARGE_INTEGER\u003e \u0026 and one with const char *, which takes a string version (\"123.456.89.76\"). Also define operator\u003d\u003d, operator!\u003d, and \u003c, \u003e, \u003c\u003d and \u003e\u003d. Internally you can parse the string into four parts, and the same for LARGE_INTEGER.\n\nHopefully we could re-use the same structure on Linux with a new constructor.",
+      "range": {
+        "startLine": 983,
+        "startChar": 0,
+        "endLine": 995,
+        "endChar": 1
+      },
+      "revId": "8e42b2078cd142baedfafb87ab313b3db2d4b300",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
