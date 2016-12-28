@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_e25cc695",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2016-12-28T20:27:36Z",
+      "side": 1,
+      "message": "why are we not calling syncDrawArraysState if type \u003d\u003d GL_NONE? Something doesn\u0027t make sense to me here.",
+      "range": {
+        "startLine": 675,
+        "startChar": 4,
+        "endLine": 675,
+        "endChar": 5
+      },
+      "revId": "584874e9bb832a485d274329c8576995740ca107",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
