@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_ae1c7f81",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 994,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2016-12-28T08:10:43Z",
+      "side": 1,
+      "message": "return part1 \u003c\u003d fixedVersionPart1 \u0026\u0026 part2 \u003c fixedVersionPart2;",
+      "range": {
+        "startLine": 991,
+        "startChar": 8,
+        "endLine": 994,
+        "endChar": 25
+      },
+      "revId": "c44286ea2ae873c2444621b1d88957b6b2f49586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
