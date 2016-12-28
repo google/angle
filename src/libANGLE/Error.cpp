@@ -111,6 +111,11 @@ Error::Error(EGLint errorCode, EGLint id, const char *msg, ...) : mCode(errorCod
     va_end(vararg);
 }
 
+Error::Error(EGLint errorCode, EGLint id, const std::string &msg)
+    : mCode(errorCode), mID(id), mMessage(new std::string(msg))
+{
+}
+
 void Error::createMessageString() const
 {
     if (!mMessage)

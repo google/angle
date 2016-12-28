@@ -28,6 +28,7 @@ namespace vk
 class Error final
 {
   public:
+    Error(VkResult result);
     Error(VkResult result, const char *file, unsigned int line);
     ~Error();
 
@@ -50,11 +51,95 @@ class Error final
     unsigned int mLine;
 };
 
+template <typename ResultT>
+using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, VkResult, VK_SUCCESS>;
+
 // Avoid conflicting with X headers which define "Success".
 inline Error NoError()
 {
-    return Error(VK_SUCCESS, nullptr, 0);
+    return Error(VK_SUCCESS);
 }
+
+template <typename HandleT>
+class WrappedObject : angle::NonCopyable
+{
+  public:
+    WrappedObject() : mDevice(VK_NULL_HANDLE), mHandle(VK_NULL_HANDLE) {}
+    explicit WrappedObject(VkDevice device) : mDevice(device), mHandle(VK_NULL_HANDLE) {}
+    WrappedObject(WrappedObject &&other) : mDevice(other.mDevice), mHandle(other.mHandle)
+    {
+        other.mDevice = VK_NULL_HANDLE;
+        other.mHandle = VK_NULL_HANDLE;
+    }
+    virtual ~WrappedObject() {}
+
+    HandleT getHandle() const { return mHandle; }
+    bool validDevice() const { return (mDevice != VK_NULL_HANDLE); }
+    bool valid() const { return (mHandle != VK_NULL_HANDLE) && validDevice(); }
+
+  protected:
+    void assignOpBase(WrappedObject &&other)
+    {
+        std::swap(mDevice, other.mDevice);
+        std::swap(mHandle, other.mHandle);
+    }
+
+    VkDevice mDevice;
+    HandleT mHandle;
+};
+
+// Helper class that wraps a Vulkan command buffer.
+class CommandBuffer final : public WrappedObject<VkCommandBuffer>
+{
+  public:
+    CommandBuffer(VkDevice device, VkCommandPool commandPool);
+    ~CommandBuffer() override;
+
+    Error begin();
+    Error end();
+    Error reset();
+    void singleImageBarrier(VkPipelineStageFlags srcStageMask,
+                            VkPipelineStageFlags dstStageMask,
+                            VkDependencyFlags dependencyFlags,
+                            const VkImageMemoryBarrier &imageMemoryBarrier);
+
+  private:
+    VkCommandPool mCommandPool;
+};
+
+class Image final : public WrappedObject<VkImage>
+{
+  public:
+    // Use this constructor if the lifetime of the image is not controlled by ANGLE. (SwapChain)
+    Image();
+    explicit Image(VkImage image);
+    Image(Image &&other);
+
+    Image &operator=(Image &&other);
+
+    ~Image() override;
+
+    void changeLayout(VkImageAspectFlags aspectMask,
+                      VkImageLayout newLayout,
+                      CommandBuffer *commandBuffer);
+
+  private:
+    VkImageLayout mCurrentLayout;
+};
+
+class ImageView final : public WrappedObject<VkImageView>
+{
+  public:
+    ImageView();
+    explicit ImageView(VkDevice device);
+    ImageView(ImageView &&other);
+
+    ImageView &operator=(ImageView &&other);
+
+    ~ImageView() override;
+
+    Error init(const VkImageViewCreateInfo &createInfo);
+};
 
 }  // namespace vk
 
@@ -69,5 +154,7 @@ inline Error NoError()
         }                                                              \
     }                                                                  \
     ANGLE_EMPTY_STATEMENT
+
+#define ANGLE_VK_CHECK(test, error) ANGLE_VK_TRY(test ? VK_SUCCESS : error)
 
 #endif  // LIBANGLE_RENDERER_VULKAN_RENDERERVK_UTILS_H_

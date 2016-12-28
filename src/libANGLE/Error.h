@@ -16,11 +16,33 @@
 #include <string>
 #include <memory>
 
+namespace angle
+{
+template <typename ErrorT, typename ResultT, typename ErrorBaseT, ErrorBaseT NoErrorVal>
+class ErrorOrResultBase
+{
+  public:
+    ErrorOrResultBase(const ErrorT &error) : mError(error) {}
+    ErrorOrResultBase(ErrorT &&error) : mError(std::move(error)) {}
+
+    ErrorOrResultBase(ResultT &&result) : mError(NoErrorVal), mResult(std::forward<ResultT>(result))
+    {
+    }
+
+    ErrorOrResultBase(const ResultT &result) : mError(NoErrorVal), mResult(result) {}
+
+    bool isError() const { return mError.isError(); }
+    const ErrorT &getError() const { return mError; }
+    ResultT &&getResult() { return std::move(mResult); }
+
+  private:
+    ErrorT mError;
+    ResultT mResult;
+};
+}  // namespace angle
+
 namespace gl
 {
-
-template <typename T>
-class ErrorOrResult;
 
 class Error final
 {
@@ -52,6 +74,9 @@ class Error final
     GLuint mID;
     mutable std::unique_ptr<std::string> mMessage;
 };
+
+template <typename ResultT>
+using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, GLenum, GL_NO_ERROR>;
 
 namespace priv
 {
@@ -110,32 +135,6 @@ ErrorStream<EnumT> &ErrorStream<EnumT>::operator<<(T value)
 using OutOfMemory   = priv::ErrorStream<GL_OUT_OF_MEMORY>;
 using InternalError = priv::ErrorStream<GL_INVALID_OPERATION>;
 
-template <typename T>
-class ErrorOrResult
-{
-  public:
-    ErrorOrResult(const gl::Error &error) : mError(error) {}
-    ErrorOrResult(gl::Error &&error) : mError(std::move(error)) {}
-
-    ErrorOrResult(T &&result)
-        : mError(GL_NO_ERROR), mResult(std::forward<T>(result))
-    {
-    }
-
-    ErrorOrResult(const T &result)
-        : mError(GL_NO_ERROR), mResult(result)
-    {
-    }
-
-    bool isError() const { return mError.isError(); }
-    const gl::Error &getError() const { return mError; }
-    T &&getResult() { return std::move(mResult); }
-
-  private:
-    Error mError;
-    T mResult;
-};
-
 inline Error NoError()
 {
     return Error(GL_NO_ERROR);
@@ -152,6 +151,7 @@ class Error final
     explicit inline Error(EGLint errorCode);
     Error(EGLint errorCode, const char *msg, ...);
     Error(EGLint errorCode, EGLint id, const char *msg, ...);
+    Error(EGLint errorCode, EGLint id, const std::string &msg);
     inline Error(const Error &other);
     inline Error(Error &&other);
 
@@ -176,6 +176,9 @@ inline Error NoError()
 {
     return Error(EGL_SUCCESS);
 }
+
+template <typename ResultT>
+using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, EGLint, EGL_SUCCESS>;
 
 }  // namespace egl
 

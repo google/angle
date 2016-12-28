@@ -110,8 +110,13 @@ bool DisplayVk::isValidNativeWindow(EGLNativeWindowType window) const
 
 std::string DisplayVk::getVendorString() const
 {
-    // TODO(jmadill): Determine GPU vendor from Renderer.
-    return std::string("Google Inc.");
+    std::string vendorString = "Google Inc.";
+    if (mRenderer)
+    {
+        vendorString += " " + mRenderer->getVendorString();
+    }
+
+    return vendorString;
 }
 
 egl::Error DisplayVk::getDevice(DeviceImpl **device)
@@ -137,7 +142,10 @@ SurfaceImpl *DisplayVk::createWindowSurface(const egl::SurfaceState &state,
                                             EGLNativeWindowType window,
                                             const egl::AttributeMap &attribs)
 {
-    return new WindowSurfaceVk(state, window);
+    EGLint width  = attribs.getAsInt(EGL_WIDTH, 0);
+    EGLint height = attribs.getAsInt(EGL_HEIGHT, 0);
+
+    return new WindowSurfaceVk(state, window, width, height);
 }
 
 SurfaceImpl *DisplayVk::createPbufferSurface(const egl::SurfaceState &state,

@@ -10,7 +10,10 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 
+#include <vulkan/vulkan.h>
+
 #include "libANGLE/renderer/SurfaceImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
@@ -49,7 +52,10 @@ class OffscreenSurfaceVk : public SurfaceImpl
 class WindowSurfaceVk : public SurfaceImpl
 {
   public:
-    WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativeWindowType window);
+    WindowSurfaceVk(const egl::SurfaceState &surfaceState,
+                    EGLNativeWindowType window,
+                    EGLint width,
+                    EGLint height);
     ~WindowSurfaceVk() override;
 
     egl::Error initialize(const DisplayImpl *displayImpl) override;
@@ -70,6 +76,24 @@ class WindowSurfaceVk : public SurfaceImpl
 
     gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
+
+  private:
+    vk::Error initializeImpl(RendererVk *renderer);
+    vk::Error nextSwapchainImage(RendererVk *renderer);
+    vk::Error swapImpl(RendererVk *renderer);
+
+    EGLNativeWindowType mNativeWindowType;
+    EGLint mWidth;
+    EGLint mHeight;
+    VkSurfaceKHR mSurface;
+    VkSwapchainKHR mSwapchain;
+    // These are needed for resource deallocation.
+    // TODO(jmadill): Don't store these here.
+    VkDevice mDevice;
+    VkInstance mInstance;
+
+    std::vector<vk::Image> mSwapchainImages;
+    std::vector<vk::ImageView> mSwapchainImageViews;
 };
 
 }  // namespace rx

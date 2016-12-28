@@ -69,6 +69,8 @@ class DisplayVk : public DisplayImpl
         const egl::AttributeMap &attribs) override;
     gl::Version getMaxSupportedESVersion() const override;
 
+    RendererVk *getRenderer() const { return mRenderer.get(); }
+
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;

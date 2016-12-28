@@ -10,6 +10,7 @@
 #include "renderervk_utils.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
 {
@@ -44,6 +45,28 @@ EGLint DefaultEGLErrorCode(VkResult result)
             return EGL_CONTEXT_LOST;
         default:
             return EGL_BAD_ACCESS;
+    }
+}
+
+// Gets access flags that are common between source and dest layouts.
+VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
+{
+    switch (layout)
+    {
+        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            return VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+            return VK_ACCESS_TRANSFER_WRITE_BIT;
+        case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+            return VK_ACCESS_MEMORY_READ_BIT;
+        case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+            return VK_ACCESS_TRANSFER_READ_BIT;
+        case VK_IMAGE_LAYOUT_UNDEFINED:
+            return 0;
+        default:
+            // TODO(jmadill): Investigate other flags.
+            UNREACHABLE();
+            return 0;
     }
 }
 }  // anonymous namespace
@@ -116,6 +139,11 @@ const char *VulkanResultString(VkResult result)
 namespace vk
 {
 
+Error::Error(VkResult result) : mResult(result), mFile(nullptr), mLine(0)
+{
+    ASSERT(result == VK_SUCCESS);
+}
+
 Error::Error(VkResult result, const char *file, unsigned int line)
     : mResult(result), mFile(file), mLine(line)
 {
@@ -173,6 +201,198 @@ Error::operator egl::Error() const
 bool Error::isError() const
 {
     return (mResult != VK_SUCCESS);
+}
+
+// CommandBuffer implementation.
+CommandBuffer::CommandBuffer(VkDevice device, VkCommandPool commandPool)
+    : WrappedObject(device), mCommandPool(commandPool)
+{
+}
+
+Error CommandBuffer::begin()
+{
+    if (mHandle == VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        VkCommandBufferAllocateInfo commandBufferInfo;
+        commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        commandBufferInfo.pNext              = nullptr;
+        commandBufferInfo.commandPool        = mCommandPool;
+        commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        commandBufferInfo.commandBufferCount = 1;
+
+        ANGLE_VK_TRY(vkAllocateCommandBuffers(mDevice, &commandBufferInfo, &mHandle));
+    }
+    else
+    {
+        reset();
+    }
+
+    VkCommandBufferBeginInfo beginInfo;
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.pNext = nullptr;
+    // TODO(jmadill): Use other flags?
+    beginInfo.flags            = 0;
+    beginInfo.pInheritanceInfo = nullptr;
+
+    ANGLE_VK_TRY(vkBeginCommandBuffer(mHandle, &beginInfo));
+
+    return NoError();
+}
+
+Error CommandBuffer::end()
+{
+    ASSERT(valid());
+    ANGLE_VK_TRY(vkEndCommandBuffer(mHandle));
+    return NoError();
+}
+
+Error CommandBuffer::reset()
+{
+    ASSERT(valid());
+    ANGLE_VK_TRY(vkResetCommandBuffer(mHandle, 0));
+    return NoError();
+}
+
+void CommandBuffer::singleImageBarrier(VkPipelineStageFlags srcStageMask,
+                                       VkPipelineStageFlags dstStageMask,
+                                       VkDependencyFlags dependencyFlags,
+                                       const VkImageMemoryBarrier &imageMemoryBarrier)
+{
+    ASSERT(valid());
+    vkCmdPipelineBarrier(mHandle, srcStageMask, dstStageMask, dependencyFlags, 0, nullptr, 0,
+                         nullptr, 1, &imageMemoryBarrier);
+}
+
+CommandBuffer::~CommandBuffer()
+{
+    if (mHandle)
+    {
+        ASSERT(validDevice());
+        vkFreeCommandBuffers(mDevice, mCommandPool, 1, &mHandle);
+    }
+}
+
+// Image implementation.
+Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+{
+}
+
+Image::Image(VkImage image) : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+{
+    mHandle = image;
+}
+
+Image::Image(Image &&other) : WrappedObject(std::move(other)), mCurrentLayout(other.mCurrentLayout)
+{
+    other.mCurrentLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+}
+
+Image &Image::operator=(Image &&other)
+{
+    assignOpBase(std::move(other));
+    std::swap(mCurrentLayout, other.mCurrentLayout);
+    return *this;
+}
+
+Image::~Image()
+{
+    // If the device handle is null, we aren't managing the handle.
+    if (valid())
+    {
+        vkDestroyImage(mDevice, mHandle, nullptr);
+    }
+}
+
+void Image::changeLayout(VkImageAspectFlags aspectMask,
+                         VkImageLayout newLayout,
+                         CommandBuffer *commandBuffer)
+{
+    if (newLayout == mCurrentLayout)
+    {
+        // No-op.
+        return;
+    }
+
+    VkImageMemoryBarrier imageMemoryBarrier;
+    imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    imageMemoryBarrier.pNext               = nullptr;
+    imageMemoryBarrier.srcAccessMask       = 0;
+    imageMemoryBarrier.dstAccessMask       = 0;
+    imageMemoryBarrier.oldLayout           = mCurrentLayout;
+    imageMemoryBarrier.newLayout           = newLayout;
+    imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+    imageMemoryBarrier.image               = mHandle;
+
+    // TODO(jmadill): Is this needed for mipped/layer images?
+    imageMemoryBarrier.subresourceRange.aspectMask     = aspectMask;
+    imageMemoryBarrier.subresourceRange.baseMipLevel   = 0;
+    imageMemoryBarrier.subresourceRange.levelCount     = 1;
+    imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+    imageMemoryBarrier.subresourceRange.layerCount     = 1;
+
+    // TODO(jmadill): Test all the permutations of the access flags.
+    imageMemoryBarrier.srcAccessMask = GetBasicLayoutAccessFlags(mCurrentLayout);
+
+    if (mCurrentLayout == VK_IMAGE_LAYOUT_PREINITIALIZED)
+    {
+        imageMemoryBarrier.srcAccessMask |= VK_ACCESS_HOST_WRITE_BIT;
+    }
+
+    imageMemoryBarrier.dstAccessMask = GetBasicLayoutAccessFlags(newLayout);
+
+    if (newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    {
+        imageMemoryBarrier.srcAccessMask |=
+            (VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
+        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_SHADER_READ_BIT;
+    }
+
+    if (newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+    {
+        imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    }
+
+    commandBuffer->singleImageBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, imageMemoryBarrier);
+
+    mCurrentLayout = newLayout;
+}
+
+// ImageView implementation.
+ImageView::ImageView()
+{
+}
+
+ImageView::ImageView(VkDevice device) : WrappedObject(device)
+{
+}
+
+ImageView::ImageView(ImageView &&other) : WrappedObject(std::move(other))
+{
+}
+
+ImageView &ImageView::operator=(ImageView &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+ImageView::~ImageView()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyImageView(mDevice, mHandle, nullptr);
+    }
+}
+
+Error ImageView::init(const VkImageViewCreateInfo &createInfo)
+{
+    ASSERT(validDevice());
+    ANGLE_VK_TRY(vkCreateImageView(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
 }
 
 }  // namespace vk
