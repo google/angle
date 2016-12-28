@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_6e80c795",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_f346e5c1",
+      "range": {
+        "startLine": 142,
+        "startChar": 7,
+        "endLine": 143,
+        "endChar": 49
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_53357933",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 19
@@ -59,6 +83,30 @@
       "writtenOn": "2016-12-27T21:25:26Z",
       "side": 1,
       "message": "why is there a whitespace change here?",
+      "range": {
+        "startLine": 3011,
+        "startChar": 0,
+        "endLine": 3011,
+        "endChar": 18
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f136da0f",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3011,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_13a14148",
       "range": {
         "startLine": 3011,
         "startChar": 0,
@@ -111,6 +159,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_d1b87ea5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1239,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_d3aac921",
+      "range": {
+        "startLine": 1239,
+        "startChar": 30,
+        "endLine": 1239,
+        "endChar": 34
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_f3afc52f",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 19
@@ -122,6 +194,30 @@
       "writtenOn": "2016-12-27T21:25:26Z",
       "side": 1,
       "message": "nullptr",
+      "range": {
+        "startLine": 1252,
+        "startChar": 30,
+        "endLine": 1252,
+        "endChar": 34
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f1b33ac6",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_f3afc52f",
       "range": {
         "startLine": 1252,
         "startChar": 30,
@@ -157,6 +253,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_91e446ca",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_b3b14d93",
+      "range": {
+        "startLine": 1255,
+        "startChar": 74,
+        "endLine": 1255,
+        "endChar": 78
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_93b45184",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 19
@@ -168,6 +288,30 @@
       "writtenOn": "2016-12-27T21:25:26Z",
       "side": 1,
       "message": "NoError",
+      "range": {
+        "startLine": 1260,
+        "startChar": 15,
+        "endLine": 1260,
+        "endChar": 20
+      },
+      "revId": "2baa16f0e614546eb4b8543c3d9afd8168c94aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_51decef9",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2016-12-28T14:16:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_93b45184",
       "range": {
         "startLine": 1260,
         "startChar": 15,
