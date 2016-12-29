@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_98ad4283",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 845,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2016-12-29T13:20:12Z",
+      "side": 1,
+      "message": "It is not necessary to check the read color/depth/stencil buffer like the original code in FramebufferD3D.cpp::blit(). Because the read color/depth/stencil buffer will never be null alone but draw color/depth/stencil buffer has image(It will report INVALID_OPERATION in validateES3.cpp in this situation).",
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
