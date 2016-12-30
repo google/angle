@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_dff87ca2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-30T08:02:36Z",
+      "side": 1,
+      "message": "One VertexBufferBinding may be bound to multiple VertexAttribute targets. Since GetAttribIndex() cannot handle this situation, I remove this function and implement its logic here.",
+      "revId": "ff1bb1d3542c999d49cb2940457c805ff000dade",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_7fff0889",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2016-12-30T08:02:36Z",
+      "side": 1,
+      "message": "Is there a better way to initialize these values?",
+      "revId": "ff1bb1d3542c999d49cb2940457c805ff000dade",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
