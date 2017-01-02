@@ -272,7 +272,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
                               bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAny, bool1, "any", bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAll, bool1, "all", bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorLogicalNot, bvec, "not", bvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLogicalNotComponentWise, bvec, "not", bvec);
 
     const TType *sampler2D   = TCache::getType(EbtSampler2D);
     const TType *samplerCube = TCache::getType(EbtSamplerCube);

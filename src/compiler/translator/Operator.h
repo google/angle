@@ -25,7 +25,6 @@ enum TOperator
     EOpNegative,
     EOpPositive,
     EOpLogicalNot,
-    EOpVectorLogicalNot,
     EOpBitwiseNot,
 
     EOpPostIncrement,
@@ -34,7 +33,8 @@ enum TOperator
     EOpPreDecrement,
 
     //
-    // binary operations
+    // binary operations (ones with special GLSL syntax are used in TIntermBinary nodes, others in
+    // TIntermAggregate nodes)
     //
 
     EOpAdd,
@@ -82,7 +82,7 @@ enum TOperator
     EOpIndexDirectInterfaceBlock,
 
     //
-    // Built-in functions potentially mapped to operators
+    // Built-in functions mapped to operators (either unary or with multiple parameters)
     //
 
     EOpRadians,
@@ -161,6 +161,7 @@ enum TOperator
 
     EOpAny,
     EOpAll,
+    EOpLogicalNotComponentWise,
 
     //
     // Branch

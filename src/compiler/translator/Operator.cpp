@@ -18,8 +18,6 @@ const char *GetOperatorString(TOperator op)
             return "+";
         case EOpLogicalNot:
             return "!";
-        case EOpVectorLogicalNot:
-            return "not";
         case EOpBitwiseNot:
             return "~";
 
@@ -251,6 +249,8 @@ const char *GetOperatorString(TOperator op)
             return "any";
         case EOpAll:
             return "all";
+        case EOpLogicalNotComponentWise:
+            return "not";
 
         case EOpKill:
             return "kill";

@@ -1199,9 +1199,6 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         case EOpPositive:
             outputTriplet(out, visit, "(+", "", ")");
             break;
-        case EOpVectorLogicalNot:
-            outputTriplet(out, visit, "(!", "", ")");
-            break;
         case EOpLogicalNot:
             outputTriplet(out, visit, "(!", "", ")");
             break;
@@ -1254,16 +1251,10 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             outputTriplet(out, visit, "tanh(", "", ")");
             break;
         case EOpAsinh:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "asinh(");
-            break;
         case EOpAcosh:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "acosh(");
-            break;
         case EOpAtanh:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "atanh(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpExp:
             outputTriplet(out, visit, "exp(", "", ")");
@@ -1300,7 +1291,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpRoundEven:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "roundEven(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpCeil:
             outputTriplet(out, visit, "ceil(", "", ")");
@@ -1310,7 +1301,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpIsNan:
             if (node->getUseEmulatedFunction())
-                writeEmulatedFunctionTriplet(out, visit, "isnan(");
+                writeEmulatedFunctionTriplet(out, visit, node->getOp());
             else
                 outputTriplet(out, visit, "isnan(", "", ")");
             mRequiresIEEEStrictCompiling = true;
@@ -1331,28 +1322,13 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             outputTriplet(out, visit, "asfloat(", "", ")");
             break;
         case EOpPackSnorm2x16:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "packSnorm2x16(");
-            break;
         case EOpPackUnorm2x16:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "packUnorm2x16(");
-            break;
         case EOpPackHalf2x16:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "packHalf2x16(");
-            break;
         case EOpUnpackSnorm2x16:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "unpackSnorm2x16(");
-            break;
         case EOpUnpackUnorm2x16:
-            ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "unpackUnorm2x16(");
-            break;
         case EOpUnpackHalf2x16:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "unpackHalf2x16(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpLength:
             outputTriplet(out, visit, "length(", "", ")");
@@ -1398,7 +1374,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpInverse:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "inverse(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
 
         case EOpAny:
@@ -1406,6 +1382,9 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpAll:
             outputTriplet(out, visit, "all(", "", ")");
+            break;
+        case EOpLogicalNotComponentWise:
+            outputTriplet(out, visit, "(!", "", ")");
             break;
         default:
             UNREACHABLE();
@@ -1866,7 +1845,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
         case EOpMod:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "mod(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpModf:
             outputTriplet(out, visit, "modf(", ", ", ")");
@@ -1877,7 +1856,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpAtan:
             ASSERT(node->getSequence()->size() == 2);  // atan(x) is a unary operator
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "atan(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpMin:
             outputTriplet(out, visit, "min(", ", ", ")");
@@ -1897,7 +1876,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 // y, genBType a)",
                 // so use emulated version.
                 ASSERT(node->getUseEmulatedFunction());
-                writeEmulatedFunctionTriplet(out, visit, "mix(");
+                writeEmulatedFunctionTriplet(out, visit, node->getOp());
             }
             else
             {
@@ -1922,7 +1901,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
         case EOpFaceForward:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "faceforward(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpReflect:
             outputTriplet(out, visit, "reflect(", ", ", ")");
@@ -1932,7 +1911,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
         case EOpOuterProduct:
             ASSERT(node->getUseEmulatedFunction());
-            writeEmulatedFunctionTriplet(out, visit, "outerProduct(");
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         case EOpMulMatrixComponentWise:
             outputTriplet(out, visit, "(", " * ", ")");
@@ -2634,10 +2613,18 @@ const TConstantUnion *OutputHLSL::writeConstantUnion(TInfoSinkBase &out,
     return constUnionIterated;
 }
 
-void OutputHLSL::writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, const char *preStr)
+void OutputHLSL::writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, TOperator op)
 {
-    TString preString = BuiltInFunctionEmulator::GetEmulatedFunctionName(preStr);
-    outputTriplet(out, visit, preString.c_str(), ", ", ")");
+    if (visit == PreVisit)
+    {
+        const char *opStr = GetOperatorString(op);
+        BuiltInFunctionEmulator::WriteEmulatedFunctionName(out, opStr);
+        out << "(";
+    }
+    else
+    {
+        outputTriplet(out, visit, nullptr, ", ", ")");
+    }
 }
 
 bool OutputHLSL::writeSameSymbolInitializer(TInfoSinkBase &out,

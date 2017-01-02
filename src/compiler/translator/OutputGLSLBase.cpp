@@ -143,13 +143,24 @@ void TOutputGLSLBase::writeBuiltInFunctionTriplet(Visit visit,
                                                   TOperator op,
                                                   bool useEmulatedFunction)
 {
-    TString opStr(GetOperatorString(op));
-    opStr += "(";
-    if (useEmulatedFunction)
+    TInfoSinkBase &out = objSink();
+    if (visit == PreVisit)
     {
-        opStr = BuiltInFunctionEmulator::GetEmulatedFunctionName(opStr);
+        const char *opStr(GetOperatorString(op));
+        if (useEmulatedFunction)
+        {
+            BuiltInFunctionEmulator::WriteEmulatedFunctionName(out, opStr);
+        }
+        else
+        {
+            out << opStr;
+        }
+        out << "(";
     }
-    writeTriplet(visit, opStr.c_str(), ", ", ")");
+    else
+    {
+        writeTriplet(visit, nullptr, ", ", ")");
+    }
 }
 
 void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
@@ -641,9 +652,6 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         case EOpPositive:
             preString = "(+";
             break;
-        case EOpVectorLogicalNot:
-            preString = "not(";
-            break;
         case EOpLogicalNot:
             preString = "(!";
             break;
@@ -667,171 +675,62 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
             break;
 
         case EOpRadians:
-            preString = "radians(";
-            break;
         case EOpDegrees:
-            preString = "degrees(";
-            break;
         case EOpSin:
-            preString = "sin(";
-            break;
         case EOpCos:
-            preString = "cos(";
-            break;
         case EOpTan:
-            preString = "tan(";
-            break;
         case EOpAsin:
-            preString = "asin(";
-            break;
         case EOpAcos:
-            preString = "acos(";
-            break;
         case EOpAtan:
-            preString = "atan(";
-            break;
-
         case EOpSinh:
-            preString = "sinh(";
-            break;
         case EOpCosh:
-            preString = "cosh(";
-            break;
         case EOpTanh:
-            preString = "tanh(";
-            break;
         case EOpAsinh:
-            preString = "asinh(";
-            break;
         case EOpAcosh:
-            preString = "acosh(";
-            break;
         case EOpAtanh:
-            preString = "atanh(";
-            break;
-
         case EOpExp:
-            preString = "exp(";
-            break;
         case EOpLog:
-            preString = "log(";
-            break;
         case EOpExp2:
-            preString = "exp2(";
-            break;
         case EOpLog2:
-            preString = "log2(";
-            break;
         case EOpSqrt:
-            preString = "sqrt(";
-            break;
         case EOpInverseSqrt:
-            preString = "inversesqrt(";
-            break;
-
         case EOpAbs:
-            preString = "abs(";
-            break;
         case EOpSign:
-            preString = "sign(";
-            break;
         case EOpFloor:
-            preString = "floor(";
-            break;
         case EOpTrunc:
-            preString = "trunc(";
-            break;
         case EOpRound:
-            preString = "round(";
-            break;
         case EOpRoundEven:
-            preString = "roundEven(";
-            break;
         case EOpCeil:
-            preString = "ceil(";
-            break;
         case EOpFract:
-            preString = "fract(";
-            break;
         case EOpIsNan:
-            preString = "isnan(";
-            break;
         case EOpIsInf:
-            preString = "isinf(";
-            break;
-
         case EOpFloatBitsToInt:
-            preString = "floatBitsToInt(";
-            break;
         case EOpFloatBitsToUint:
-            preString = "floatBitsToUint(";
-            break;
         case EOpIntBitsToFloat:
-            preString = "intBitsToFloat(";
-            break;
         case EOpUintBitsToFloat:
-            preString = "uintBitsToFloat(";
-            break;
-
         case EOpPackSnorm2x16:
-            preString = "packSnorm2x16(";
-            break;
         case EOpPackUnorm2x16:
-            preString = "packUnorm2x16(";
-            break;
         case EOpPackHalf2x16:
-            preString = "packHalf2x16(";
-            break;
         case EOpUnpackSnorm2x16:
-            preString = "unpackSnorm2x16(";
-            break;
         case EOpUnpackUnorm2x16:
-            preString = "unpackUnorm2x16(";
-            break;
         case EOpUnpackHalf2x16:
-            preString = "unpackHalf2x16(";
-            break;
-
         case EOpLength:
-            preString = "length(";
-            break;
         case EOpNormalize:
-            preString = "normalize(";
-            break;
-
         case EOpDFdx:
-            preString = "dFdx(";
-            break;
         case EOpDFdy:
-            preString = "dFdy(";
-            break;
         case EOpFwidth:
-            preString = "fwidth(";
-            break;
-
         case EOpTranspose:
-            preString = "transpose(";
-            break;
         case EOpDeterminant:
-            preString = "determinant(";
-            break;
         case EOpInverse:
-            preString = "inverse(";
-            break;
-
         case EOpAny:
-            preString = "any(";
-            break;
         case EOpAll:
-            preString = "all(";
-            break;
-
+        case EOpLogicalNotComponentWise:
+            writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
+            return true;
         default:
             UNREACHABLE();
     }
 
-    if (visit == PreVisit && node->getUseEmulatedFunction())
-        preString = BuiltInFunctionEmulator::GetEmulatedFunctionName(preString);
     writeTriplet(visit, preString.c_str(), NULL, postString.c_str());
 
     return true;
@@ -976,7 +875,6 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren       = true;
     TInfoSinkBase &out       = objSink();
-    bool useEmulatedFunction = (visit == PreVisit && node->getUseEmulatedFunction());
     switch (node->getOp())
     {
         case EOpPrototype:
@@ -1074,7 +972,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpMemoryBarrierImage:
         case EOpMemoryBarrierShared:
         case EOpGroupMemoryBarrier:
-            writeBuiltInFunctionTriplet(visit, node->getOp(), useEmulatedFunction);
+            writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
             break;
         default:
             UNREACHABLE();

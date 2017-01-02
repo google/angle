@@ -109,7 +109,7 @@ class OutputHLSL : public TIntermTraverser
 
     void outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out);
 
-    void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, const char *preStr);
+    void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, TOperator op);
     void makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs);
 
     // Returns true if it found a 'same symbol' initializer (initializer that references the
@@ -122,7 +122,6 @@ class OutputHLSL : public TIntermTraverser
                                      TIntermSymbol *symbolNode,
                                      TIntermTyped *expression);
 
-    void writeDeferredGlobalInitializers(TInfoSinkBase &out);
     void writeIfElse(TInfoSinkBase &out, TIntermIfElse *node);
 
     // Returns the function name

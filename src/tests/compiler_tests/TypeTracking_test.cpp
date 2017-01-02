@@ -197,7 +197,7 @@ TEST_F(TypeTrackingTest, BuiltInBoolFunctionResultType)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("any (bool)"));
     ASSERT_TRUE(foundInIntermediateTree("all (bool)"));
-    ASSERT_TRUE(foundInIntermediateTree("Negate conditional (4-component vector of bool)"));
+    ASSERT_TRUE(foundInIntermediateTree("component-wise not (4-component vector of bool)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInVecToBoolFunctionResultType)

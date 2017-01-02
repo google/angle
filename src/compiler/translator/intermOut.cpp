@@ -300,9 +300,8 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
         case EOpPositive:
             out << "Positive sign";
             break;
-        case EOpVectorLogicalNot:
         case EOpLogicalNot:
-            out << "Negate conditional";
+            out << "negation";
             break;
         case EOpBitwiseNot:
             out << "bit-wise not";
@@ -473,6 +472,9 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpAll:
             out << "all";
+            break;
+        case EOpLogicalNotComponentWise:
+            out << "component-wise not";
             break;
 
         default:

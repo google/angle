@@ -2123,7 +2123,7 @@ TConstantUnion *TIntermConstantUnion::foldUnaryComponentWise(TOperator op,
                 }
                 break;
 
-            case EOpVectorLogicalNot:
+            case EOpLogicalNotComponentWise:
                 ASSERT(getType().getBasicType() == EbtBool);
                 resultArray[i].setBConst(!operandArray[i].getBConst());
                 break;

@@ -228,10 +228,10 @@ void BuiltInFunctionEmulator::Cleanup()
 }
 
 // static
-TString BuiltInFunctionEmulator::GetEmulatedFunctionName(const TString &name)
+void BuiltInFunctionEmulator::WriteEmulatedFunctionName(TInfoSinkBase &out, const char *name)
 {
-    ASSERT(name[name.length() - 1] == '(');
-    return "webgl_" + name.substr(0, name.length() - 1) + "_emu(";
+    ASSERT(name[strlen(name) - 1] != '(');
+    out << "webgl_" << name << "_emu";
 }
 
 BuiltInFunctionEmulator::FunctionId::FunctionId()

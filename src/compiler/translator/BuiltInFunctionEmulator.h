@@ -27,8 +27,8 @@ class BuiltInFunctionEmulator
 
     void Cleanup();
 
-    // "name(" becomes "webgl_name_emu(".
-    static TString GetEmulatedFunctionName(const TString &name);
+    // "name" gets written as "webgl_name_emu".
+    static void WriteEmulatedFunctionName(TInfoSinkBase &out, const char *name);
 
     bool IsOutputEmpty() const;
 
