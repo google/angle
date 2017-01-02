@@ -131,11 +131,9 @@ class FramebufferAttachment final
     template <typename T>
     gl::Error getRenderTarget(T **rtOut) const
     {
-        // Cast through the pointer-to-pointer type
-        rx::FramebufferAttachmentRenderTarget *rtPtr = nullptr;
-        gl::Error error = getRenderTarget(&rtPtr);
-        *rtOut = static_cast<T*>(rtPtr);
-        return error;
+        static_assert(std::is_base_of<rx::FramebufferAttachmentRenderTarget, T>(),
+                      "Invalid RenderTarget class.");
+        return getRenderTarget(reinterpret_cast<rx::FramebufferAttachmentRenderTarget **>(rtOut));
     }
 
     bool operator==(const FramebufferAttachment &other) const;
