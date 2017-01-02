@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_1fd8513a",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T17:32:56Z",
+      "side": 1,
+      "message": "nice!",
+      "range": {
+        "startLine": 1046,
+        "startChar": 8,
+        "endLine": 1047,
+        "endChar": 9
+      },
+      "revId": "9b1e80fb8c581c59b13a5b0f38b1b62b4b58e5a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
