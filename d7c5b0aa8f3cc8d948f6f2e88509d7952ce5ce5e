@@ -22,6 +22,30 @@
       "revId": "d7c5b0aa8f3cc8d948f6f2e88509d7952ce5ce5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_79f79bdc",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T15:44:25Z",
+      "side": 1,
+      "message": "Yes. This has been on my mind for a while now - it could greatly simplify GLSL output. I think I could write the code now.",
+      "parentUuid": "37b082be_bf1b3d32",
+      "range": {
+        "startLine": 1117,
+        "startChar": 12,
+        "endLine": 1117,
+        "endChar": 39
+      },
+      "revId": "d7c5b0aa8f3cc8d948f6f2e88509d7952ce5ce5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
