@@ -40,12 +40,12 @@ class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTr
             // currently identified as problematic.
             switch (node->getOp())
             {
-                case EOpLessThan:
-                case EOpGreaterThan:
-                case EOpLessThanEqual:
-                case EOpGreaterThanEqual:
-                case EOpVectorEqual:
-                case EOpVectorNotEqual:
+                case EOpEqualComponentWise:
+                case EOpNotEqualComponentWise:
+                case EOpLessThanComponentWise:
+                case EOpGreaterThanComponentWise:
+                case EOpLessThanEqualComponentWise:
+                case EOpGreaterThanEqualComponentWise:
                 case EOpMod:
                 case EOpPow:
                 case EOpAtan:
@@ -61,8 +61,8 @@ class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTr
                 case EOpFaceForward:
                 case EOpReflect:
                 case EOpRefract:
+                case EOpMulMatrixComponentWise:
                 case EOpOuterProduct:
-                case EOpMul:
                     break;
                 default:
                     return true;

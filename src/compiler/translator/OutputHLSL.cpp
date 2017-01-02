@@ -1846,23 +1846,23 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             outputTriplet(out, visit, (structName + "_ctor(").c_str(), ", ", ")");
         }
         break;
-        case EOpLessThan:
-            outputTriplet(out, visit, "(", " < ", ")");
-            break;
-        case EOpGreaterThan:
-            outputTriplet(out, visit, "(", " > ", ")");
-            break;
-        case EOpLessThanEqual:
-            outputTriplet(out, visit, "(", " <= ", ")");
-            break;
-        case EOpGreaterThanEqual:
-            outputTriplet(out, visit, "(", " >= ", ")");
-            break;
-        case EOpVectorEqual:
+        case EOpEqualComponentWise:
             outputTriplet(out, visit, "(", " == ", ")");
             break;
-        case EOpVectorNotEqual:
+        case EOpNotEqualComponentWise:
             outputTriplet(out, visit, "(", " != ", ")");
+            break;
+        case EOpLessThanComponentWise:
+            outputTriplet(out, visit, "(", " < ", ")");
+            break;
+        case EOpGreaterThanComponentWise:
+            outputTriplet(out, visit, "(", " > ", ")");
+            break;
+        case EOpLessThanEqualComponentWise:
+            outputTriplet(out, visit, "(", " <= ", ")");
+            break;
+        case EOpGreaterThanEqualComponentWise:
+            outputTriplet(out, visit, "(", " >= ", ")");
             break;
         case EOpMod:
             ASSERT(node->getUseEmulatedFunction());
@@ -1934,7 +1934,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             ASSERT(node->getUseEmulatedFunction());
             writeEmulatedFunctionTriplet(out, visit, "outerProduct(");
             break;
-        case EOpMul:
+        case EOpMulMatrixComponentWise:
             outputTriplet(out, visit, "(", " * ", ")");
             break;
         default:

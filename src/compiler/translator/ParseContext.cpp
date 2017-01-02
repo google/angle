@@ -3898,13 +3898,20 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                       GetOperatorString(op));
                 return false;
             }
+            if ((left->getNominalSize() != right->getNominalSize()) ||
+                (left->getSecondarySize() != right->getSecondarySize()))
+            {
+                error(loc, "dimension mismatch", GetOperatorString(op));
+                return false;
+            }
+            break;
         case EOpLessThan:
         case EOpGreaterThan:
         case EOpLessThanEqual:
         case EOpGreaterThanEqual:
-            if ((left->getNominalSize() != right->getNominalSize()) ||
-                (left->getSecondarySize() != right->getSecondarySize()))
+            if (!left->isScalar() || !right->isScalar())
             {
+                error(loc, "comparison operator only defined for scalars", GetOperatorString(op));
                 return false;
             }
             break;
@@ -4011,17 +4018,10 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
     {
         case EOpEqual:
         case EOpNotEqual:
-            break;
         case EOpLessThan:
         case EOpGreaterThan:
         case EOpLessThanEqual:
         case EOpGreaterThanEqual:
-            ASSERT(!left->isArray() && !right->isArray() && !left->getType().getStruct() &&
-                   !right->getType().getStruct());
-            if (left->isMatrix() || left->isVector())
-            {
-                return nullptr;
-            }
             break;
         case EOpLogicalOr:
         case EOpLogicalXor:

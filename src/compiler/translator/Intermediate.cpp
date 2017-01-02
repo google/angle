@@ -364,14 +364,14 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate,
         case EOpMix:
         case EOpStep:
         case EOpSmoothStep:
-        case EOpMul:
+        case EOpMulMatrixComponentWise:
         case EOpOuterProduct:
-        case EOpLessThan:
-        case EOpLessThanEqual:
-        case EOpGreaterThan:
-        case EOpGreaterThanEqual:
-        case EOpVectorEqual:
-        case EOpVectorNotEqual:
+        case EOpEqualComponentWise:
+        case EOpNotEqualComponentWise:
+        case EOpLessThanComponentWise:
+        case EOpLessThanEqualComponentWise:
+        case EOpGreaterThanComponentWise:
+        case EOpGreaterThanEqualComponentWise:
         case EOpDistance:
         case EOpDot:
         case EOpCross:

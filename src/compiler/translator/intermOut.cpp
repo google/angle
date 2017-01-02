@@ -608,23 +608,23 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             out << "Construct structure";
             break;
 
-        case EOpLessThan:
-            out << "Compare Less Than";
+        case EOpEqualComponentWise:
+            out << "component-wise equal";
             break;
-        case EOpGreaterThan:
-            out << "Compare Greater Than";
+        case EOpNotEqualComponentWise:
+            out << "component-wise not equal";
             break;
-        case EOpLessThanEqual:
-            out << "Compare Less Than or Equal";
+        case EOpLessThanComponentWise:
+            out << "component-wise less than";
             break;
-        case EOpGreaterThanEqual:
-            out << "Compare Greater Than or Equal";
+        case EOpGreaterThanComponentWise:
+            out << "component-wise greater than";
             break;
-        case EOpVectorEqual:
-            out << "Equal";
+        case EOpLessThanEqualComponentWise:
+            out << "component-wise less than or equal";
             break;
-        case EOpVectorNotEqual:
-            out << "NotEqual";
+        case EOpGreaterThanEqualComponentWise:
+            out << "component-wise greater than or equal";
             break;
 
         case EOpMod:
@@ -678,7 +678,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpRefract:
             out << "refract";
             break;
-        case EOpMul:
+        case EOpMulMatrixComponentWise:
             out << "component-wise multiply";
             break;
 

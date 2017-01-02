@@ -170,15 +170,24 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Matrix Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMul, mat2, "matrixCompMult", mat2, mat2);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMul, mat3, "matrixCompMult", mat3, mat3);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMul, mat4, "matrixCompMult", mat4, mat4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat2x3, "matrixCompMult", mat2x3, mat2x3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat3x2, "matrixCompMult", mat3x2, mat3x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat2x4, "matrixCompMult", mat2x4, mat2x4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat4x2, "matrixCompMult", mat4x2, mat4x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat3x4, "matrixCompMult", mat3x4, mat3x4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMul, mat4x3, "matrixCompMult", mat4x3, mat4x3);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat2, "matrixCompMult",
+                              mat2, mat2);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat3, "matrixCompMult",
+                              mat3, mat3);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat4, "matrixCompMult",
+                              mat4, mat4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x3, "matrixCompMult",
+                              mat2x3, mat2x3);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x2, "matrixCompMult",
+                              mat3x2, mat3x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x4, "matrixCompMult",
+                              mat2x4, mat2x4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x2, "matrixCompMult",
+                              mat4x2, mat4x2);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x4, "matrixCompMult",
+                              mat3x4, mat3x4);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x3, "matrixCompMult",
+                              mat4x3, mat4x3);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat2, "outerProduct", float2,
                               float2);
@@ -225,29 +234,42 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Vector relational functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThan, bvec, "lessThan", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThan, bvec, "lessThan", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThan, bvec, "lessThan", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqual, bvec, "lessThanEqual", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqual, bvec, "lessThanEqual", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThanEqual, bvec, "lessThanEqual", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThan, bvec, "greaterThan", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThan, bvec, "greaterThan", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThan, bvec, "greaterThan", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqual, bvec, "greaterThanEqual", vec,
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", vec,
                               vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqual, bvec, "greaterThanEqual", ivec,
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", ivec,
                               ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThanEqual, bvec, "greaterThanEqual", uvec,
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", uvec,
                               uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorEqual, bvec, "equal", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorEqual, bvec, "equal", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpVectorEqual, bvec, "equal", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorEqual, bvec, "equal", bvec, bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorNotEqual, bvec, "notEqual", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorNotEqual, bvec, "notEqual", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpVectorNotEqual, bvec, "notEqual", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorNotEqual, bvec, "notEqual", bvec, bvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
+                              vec, vec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
+                              ivec, ivec);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
+                              uvec, uvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
+                              vec, vec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
+                              ivec, ivec);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
+                              uvec, uvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
+                              "greaterThanEqual", vec, vec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
+                              "greaterThanEqual", ivec, ivec);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
+                              "greaterThanEqual", uvec, uvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", vec, vec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", ivec, ivec);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpEqualComponentWise, bvec, "equal", uvec, uvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", bvec, bvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", vec,
+                              vec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", ivec,
+                              ivec);
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", uvec,
+                              uvec);
+    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", bvec,
+                              bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAny, bool1, "any", bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAll, bool1, "all", bvec);
     symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpVectorLogicalNot, bvec, "not", bvec);

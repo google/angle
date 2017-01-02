@@ -42,20 +42,28 @@ enum TOperator
     EOpMul,
     EOpDiv,
     EOpIMod,
+
     EOpEqual,
     EOpNotEqual,
-    EOpVectorEqual,
-    EOpVectorNotEqual,
     EOpLessThan,
     EOpGreaterThan,
     EOpLessThanEqual,
     EOpGreaterThanEqual,
+
+    EOpEqualComponentWise,
+    EOpNotEqualComponentWise,
+    EOpLessThanComponentWise,
+    EOpLessThanEqualComponentWise,
+    EOpGreaterThanComponentWise,
+    EOpGreaterThanEqualComponentWise,
+
     EOpComma,
 
     EOpVectorTimesScalar,
     EOpVectorTimesMatrix,
     EOpMatrixTimesVector,
     EOpMatrixTimesScalar,
+    EOpMatrixTimesMatrix,
 
     EOpLogicalOr,
     EOpLogicalXor,
@@ -145,8 +153,7 @@ enum TOperator
     EOpDFdy,    // Fragment only, OES_standard_derivatives extension
     EOpFwidth,  // Fragment only, OES_standard_derivatives extension
 
-    EOpMatrixTimesMatrix,
-
+    EOpMulMatrixComponentWise,
     EOpOuterProduct,
     EOpTranspose,
     EOpDeterminant,

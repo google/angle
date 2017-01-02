@@ -42,14 +42,11 @@ const char *GetOperatorString(TOperator op)
             return "/";
         case EOpIMod:
             return "%";
+
         case EOpEqual:
             return "==";
         case EOpNotEqual:
             return "!=";
-        case EOpVectorEqual:
-            return "equal";
-        case EOpVectorNotEqual:
-            return "notEqual";
         case EOpLessThan:
             return "<";
         case EOpGreaterThan:
@@ -58,6 +55,20 @@ const char *GetOperatorString(TOperator op)
             return "<=";
         case EOpGreaterThanEqual:
             return ">=";
+
+        case EOpEqualComponentWise:
+            return "equal";
+        case EOpNotEqualComponentWise:
+            return "notEqual";
+        case EOpLessThanComponentWise:
+            return "lessThan";
+        case EOpGreaterThanComponentWise:
+            return "greaterThan";
+        case EOpLessThanEqualComponentWise:
+            return "lessThanEqual";
+        case EOpGreaterThanEqualComponentWise:
+            return "greaterThanEqual";
+
         case EOpComma:
             return ",";
 
@@ -66,6 +77,7 @@ const char *GetOperatorString(TOperator op)
         case EOpVectorTimesMatrix:
         case EOpMatrixTimesVector:
         case EOpMatrixTimesScalar:
+        case EOpMatrixTimesMatrix:
             return "*";
 
         case EOpLogicalOr:
@@ -224,9 +236,8 @@ const char *GetOperatorString(TOperator op)
         case EOpFwidth:
             return "fwidth";
 
-        case EOpMatrixTimesMatrix:
-            return "*";
-
+        case EOpMulMatrixComponentWise:
+            return "matrixCompMult";
         case EOpOuterProduct:
             return "outerProduct";
         case EOpTranspose:

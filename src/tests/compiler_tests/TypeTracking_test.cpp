@@ -215,8 +215,9 @@ TEST_F(TypeTrackingTest, BuiltInVecToBoolFunctionResultType)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Less Than (2-component vector of bool)"));
-    ASSERT_TRUE(foundInIntermediateTree("Greater Than (2-component vector of bool)"));
+    ASSERT_TRUE(foundInIntermediateTree("component-wise less than (2-component vector of bool)"));
+    ASSERT_TRUE(
+        foundInIntermediateTree("component-wise greater than (2-component vector of bool)"));
 }
 
 TEST_F(TypeTrackingTest, Texture2DResultTypeAndPrecision)

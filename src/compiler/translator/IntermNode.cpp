@@ -2427,7 +2427,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 break;
             }
 
-            case EOpLessThan:
+            case EOpLessThanComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2454,7 +2454,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 break;
             }
 
-            case EOpLessThanEqual:
+            case EOpLessThanEqualComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2481,7 +2481,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 break;
             }
 
-            case EOpGreaterThan:
+            case EOpGreaterThanComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2507,7 +2507,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 }
                 break;
             }
-            case EOpGreaterThanEqual:
+            case EOpGreaterThanEqualComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2534,7 +2534,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             }
             break;
 
-            case EOpVectorEqual:
+            case EOpEqualComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2565,7 +2565,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 break;
             }
 
-            case EOpVectorNotEqual:
+            case EOpNotEqualComponentWise:
             {
                 resultArray = new TConstantUnion[maxObjectSize];
                 for (size_t i = 0; i < maxObjectSize; i++)
@@ -2652,7 +2652,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                 break;
             }
 
-            case EOpMul:
+            case EOpMulMatrixComponentWise:
             {
                 ASSERT(basicType == EbtFloat && (*sequence)[0]->getAsTyped()->isMatrix() &&
                        (*sequence)[1]->getAsTyped()->isMatrix());

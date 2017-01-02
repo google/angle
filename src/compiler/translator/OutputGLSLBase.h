@@ -81,7 +81,7 @@ class TOutputGLSLBase : public TIntermTraverser
     void declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock);
     void declareInterfaceBlock(const TInterfaceBlock *interfaceBlock);
 
-    void writeBuiltInFunctionTriplet(Visit visit, const char *preStr, bool useEmulatedFunction);
+    void writeBuiltInFunctionTriplet(Visit visit, TOperator op, bool useEmulatedFunction);
 
     const char *mapQualifierToString(TQualifier qialifier);
 

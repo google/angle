@@ -140,12 +140,16 @@ void TOutputGLSLBase::writeTriplet(Visit visit,
 }
 
 void TOutputGLSLBase::writeBuiltInFunctionTriplet(Visit visit,
-                                                  const char *preStr,
+                                                  TOperator op,
                                                   bool useEmulatedFunction)
 {
-    TString preString =
-        useEmulatedFunction ? BuiltInFunctionEmulator::GetEmulatedFunctionName(preStr) : preStr;
-    writeTriplet(visit, preString.c_str(), ", ", ")");
+    TString opStr(GetOperatorString(op));
+    opStr += "(";
+    if (useEmulatedFunction)
+    {
+        opStr = BuiltInFunctionEmulator::GetEmulatedFunctionName(opStr);
+    }
+    writeTriplet(visit, opStr.c_str(), ", ", ")");
 }
 
 void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
@@ -1039,100 +1043,38 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
             writeConstructorTriplet(visit, node->getType());
             break;
 
-        case EOpOuterProduct:
-            writeBuiltInFunctionTriplet(visit, "outerProduct(", useEmulatedFunction);
-            break;
-
-        case EOpLessThan:
-            writeBuiltInFunctionTriplet(visit, "lessThan(", useEmulatedFunction);
-            break;
-        case EOpGreaterThan:
-            writeBuiltInFunctionTriplet(visit, "greaterThan(", useEmulatedFunction);
-            break;
-        case EOpLessThanEqual:
-            writeBuiltInFunctionTriplet(visit, "lessThanEqual(", useEmulatedFunction);
-            break;
-        case EOpGreaterThanEqual:
-            writeBuiltInFunctionTriplet(visit, "greaterThanEqual(", useEmulatedFunction);
-            break;
-        case EOpVectorEqual:
-            writeBuiltInFunctionTriplet(visit, "equal(", useEmulatedFunction);
-            break;
-        case EOpVectorNotEqual:
-            writeBuiltInFunctionTriplet(visit, "notEqual(", useEmulatedFunction);
-            break;
-
+        case EOpEqualComponentWise:
+        case EOpNotEqualComponentWise:
+        case EOpLessThanComponentWise:
+        case EOpGreaterThanComponentWise:
+        case EOpLessThanEqualComponentWise:
+        case EOpGreaterThanEqualComponentWise:
         case EOpMod:
-            writeBuiltInFunctionTriplet(visit, "mod(", useEmulatedFunction);
-            break;
         case EOpModf:
-            writeBuiltInFunctionTriplet(visit, "modf(", useEmulatedFunction);
-            break;
         case EOpPow:
-            writeBuiltInFunctionTriplet(visit, "pow(", useEmulatedFunction);
-            break;
         case EOpAtan:
-            writeBuiltInFunctionTriplet(visit, "atan(", useEmulatedFunction);
-            break;
         case EOpMin:
-            writeBuiltInFunctionTriplet(visit, "min(", useEmulatedFunction);
-            break;
         case EOpMax:
-            writeBuiltInFunctionTriplet(visit, "max(", useEmulatedFunction);
-            break;
         case EOpClamp:
-            writeBuiltInFunctionTriplet(visit, "clamp(", useEmulatedFunction);
-            break;
         case EOpMix:
-            writeBuiltInFunctionTriplet(visit, "mix(", useEmulatedFunction);
-            break;
         case EOpStep:
-            writeBuiltInFunctionTriplet(visit, "step(", useEmulatedFunction);
-            break;
         case EOpSmoothStep:
-            writeBuiltInFunctionTriplet(visit, "smoothstep(", useEmulatedFunction);
-            break;
         case EOpDistance:
-            writeBuiltInFunctionTriplet(visit, "distance(", useEmulatedFunction);
-            break;
         case EOpDot:
-            writeBuiltInFunctionTriplet(visit, "dot(", useEmulatedFunction);
-            break;
         case EOpCross:
-            writeBuiltInFunctionTriplet(visit, "cross(", useEmulatedFunction);
-            break;
         case EOpFaceForward:
-            writeBuiltInFunctionTriplet(visit, "faceforward(", useEmulatedFunction);
-            break;
         case EOpReflect:
-            writeBuiltInFunctionTriplet(visit, "reflect(", useEmulatedFunction);
-            break;
         case EOpRefract:
-            writeBuiltInFunctionTriplet(visit, "refract(", useEmulatedFunction);
-            break;
-        case EOpMul:
-            writeBuiltInFunctionTriplet(visit, "matrixCompMult(", useEmulatedFunction);
-            break;
+        case EOpMulMatrixComponentWise:
+        case EOpOuterProduct:
         case EOpBarrier:
-            writeBuiltInFunctionTriplet(visit, "barrier(", useEmulatedFunction);
-            break;
         case EOpMemoryBarrier:
-            writeBuiltInFunctionTriplet(visit, "memoryBarrier(", useEmulatedFunction);
-            break;
         case EOpMemoryBarrierAtomicCounter:
-            writeBuiltInFunctionTriplet(visit, "memoryBarrierAtomicCounter(", useEmulatedFunction);
-            break;
         case EOpMemoryBarrierBuffer:
-            writeBuiltInFunctionTriplet(visit, "memoryBarrierBuffer(", useEmulatedFunction);
-            break;
         case EOpMemoryBarrierImage:
-            writeBuiltInFunctionTriplet(visit, "memoryBarrierImage(", useEmulatedFunction);
-            break;
         case EOpMemoryBarrierShared:
-            writeBuiltInFunctionTriplet(visit, "memoryBarrierShared(", useEmulatedFunction);
-            break;
         case EOpGroupMemoryBarrier:
-            writeBuiltInFunctionTriplet(visit, "groupMemoryBarrier(", useEmulatedFunction);
+            writeBuiltInFunctionTriplet(visit, node->getOp(), useEmulatedFunction);
             break;
         default:
             UNREACHABLE();
