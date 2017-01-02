@@ -22,6 +22,30 @@
       "revId": "5bc41969a32d3772c85a907f9750595abae7fb2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6a5561c_7f25f770",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T15:53:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ec3e0b_5a98c45c",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 24
+      },
+      "revId": "5bc41969a32d3772c85a907f9750595abae7fb2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
