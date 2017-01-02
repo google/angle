@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3745e284_04869aff",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T12:21:23Z",
+      "side": 1,
+      "message": "I don\u0027t think this list is up to date in general, so it should be fixed in a separate patch. Filed https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d1681 about this. But this patch should add the integer and unsigned integer multisample sampler types here as well.",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_79931bac",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T12:21:23Z",
+      "side": 1,
+      "message": "Could clarify with \"Tests compiling shaders that use gsampler2DMS types\"",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_f95dcb32",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T12:21:23Z",
+      "side": 1,
+      "message": "This should be based on ShaderCompileTreeTest.",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_599857c4",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T12:21:23Z",
+      "side": 1,
+      "message": "Proper punctuation in comments would be nice.",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "773d9abc_d95a0739",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-02T12:21:23Z",
+      "side": 1,
+      "message": "Could also add a test to here or ShaderValidation_test.cpp that checks that gsampler2DMS is not exposed to ESSL 3.00 (by declaring one sampler2DMS uniform).",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
