@@ -249,7 +249,14 @@ action("spirv_tools_gen_generators_inc") {
 config("spirv_tools_config") {
   include_dirs = [ "$spirv_tools_dir/include" ]
   if (is_win) {
-    cflags = [ "/wd4706" ]
+    cflags = [
+      "/wd4706",
+
+      # These are triggered in higher optimization levels. Disable for now until
+      # fixes are landed upstream. See https://crbug.com/677837.
+      "/wd4701",
+      "/wd4703",
+    ]
   }
 }
 
