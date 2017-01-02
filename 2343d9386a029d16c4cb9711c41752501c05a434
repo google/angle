@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "37b082be_ff11b515",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T15:04:21Z",
+      "side": 1,
+      "message": "every CL you make should have the following form:\n\nTitle (\u003c\u003d65 characters)\n\u003cblank space\u003e\nDescription (Wrapped to 71 characters)\n\u003cblank space\u003e\nBUG\u003d...",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_98ad4283",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 6
@@ -13,6 +36,52 @@
       "writtenOn": "2016-12-29T13:20:12Z",
       "side": 1,
       "message": "It is not necessary to check the read color/depth/stencil buffer like the original code in FramebufferD3D.cpp::blit(). Because the read color/depth/stencil buffer will never be null alone but draw color/depth/stencil buffer has image(It will report INVALID_OPERATION in validateES3.cpp in this situation).",
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_df16390f",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 845,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T15:04:21Z",
+      "side": 1,
+      "message": "make a local copy of the mask parameter variable. It can lead to strange code sometimes when you mutate function arguments, so avoid it when possible.",
+      "range": {
+        "startLine": 845,
+        "startChar": 9,
+        "endLine": 845,
+        "endChar": 13
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_3f30adae",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T15:04:21Z",
+      "side": 1,
+      "message": "use ANGLE_TRY to catch the error.",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 272,
+        "endChar": 21
+      },
       "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
