@@ -491,11 +491,6 @@ PlatformParameters ES3_D3D11_FL10_1()
     return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1());
 }
 
-PlatformParameters ES3_D3D11_FL10_0()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL10_0());
-}
-
 PlatformParameters ES3_D3D11_WARP()
 {
     return PlatformParameters(3, 0, egl_platform::D3D11_WARP());
@@ -516,11 +511,6 @@ PlatformParameters ES3_D3D11_FL10_1_WARP()
     return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1_WARP());
 }
 
-PlatformParameters ES3_D3D11_FL10_0_WARP()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL10_0_WARP());
-}
-
 PlatformParameters ES3_D3D11_REFERENCE()
 {
     return PlatformParameters(3, 0, egl_platform::D3D11_REFERENCE());
@@ -539,11 +529,6 @@ PlatformParameters ES3_D3D11_FL11_0_REFERENCE()
 PlatformParameters ES3_D3D11_FL10_1_REFERENCE()
 {
     return PlatformParameters(3, 0, egl_platform::D3D11_FL10_1_REFERENCE());
-}
-
-PlatformParameters ES3_D3D11_FL10_0_REFERENCE()
-{
-    return PlatformParameters(3, 0, egl_platform::D3D11_FL10_0_REFERENCE());
 }
 
 PlatformParameters ES2_OPENGLES()
@@ -624,11 +609,6 @@ PlatformParameters ES31_NULL()
 PlatformParameters ES2_VULKAN()
 {
     return PlatformParameters(2, 0, egl_platform::VULKAN());
-}
-
-PlatformParameters ES3_VULKAN()
-{
-    return PlatformParameters(3, 0, egl_platform::VULKAN());
 }
 
 }  // namespace angle

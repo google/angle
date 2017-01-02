@@ -185,23 +185,20 @@ ANGLE_INSTANTIATE_TEST(RendererTest,
                        ES2_D3D11_FL10_0_REFERENCE(),
                        ES2_D3D11_FL9_3_REFERENCE(),
 
-                       // ES3 on top of D3D11 feature level 9.3 to 11.0
+                       // ES3 on top of D3D11.
                        ES3_D3D11(),
                        ES3_D3D11_FL11_0(),
                        ES3_D3D11_FL10_1(),
-                       ES3_D3D11_FL10_0(),
 
-                       // ES3 on top of D3D11 WARP feature level 9.3 to 11.0
+                       // ES3 on top of D3D11 WARP.
                        ES3_D3D11_WARP(),
                        ES3_D3D11_FL11_0_WARP(),
                        ES3_D3D11_FL10_1_WARP(),
-                       ES3_D3D11_FL10_0_WARP(),
 
-                       // ES3 on top of D3D11 reference feature level 9.3 to 11.0
+                       // ES3 on top of the D3D11 reference rasterizer.
                        ES3_D3D11_REFERENCE(),
                        ES3_D3D11_FL11_0_REFERENCE(),
                        ES3_D3D11_FL10_1_REFERENCE(),
-                       ES3_D3D11_FL10_0_REFERENCE(),
 
                        // ES2 on top of desktop OpenGL versions 2.1 to 4.5
                        ES2_OPENGL(),
@@ -247,6 +244,5 @@ ANGLE_INSTANTIATE_TEST(RendererTest,
                        ES31_NULL(),
 
                        // ES on top of Vulkan
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+                       ES2_VULKAN());
 }  // anonymous namespace

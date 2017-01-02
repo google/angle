@@ -113,19 +113,16 @@ PlatformParameters ES3_D3D11();
 PlatformParameters ES3_D3D11_FL11_1();
 PlatformParameters ES3_D3D11_FL11_0();
 PlatformParameters ES3_D3D11_FL10_1();
-PlatformParameters ES3_D3D11_FL10_0();
 
 PlatformParameters ES3_D3D11_WARP();
 PlatformParameters ES3_D3D11_FL11_1_WARP();
 PlatformParameters ES3_D3D11_FL11_0_WARP();
 PlatformParameters ES3_D3D11_FL10_1_WARP();
-PlatformParameters ES3_D3D11_FL10_0_WARP();
 
 PlatformParameters ES3_D3D11_REFERENCE();
 PlatformParameters ES3_D3D11_FL11_1_REFERENCE();
 PlatformParameters ES3_D3D11_FL11_0_REFERENCE();
 PlatformParameters ES3_D3D11_FL10_1_REFERENCE();
-PlatformParameters ES3_D3D11_FL10_0_REFERENCE();
 
 PlatformParameters ES2_OPENGL();
 PlatformParameters ES2_OPENGL(EGLint major, EGLint minor);
@@ -146,7 +143,6 @@ PlatformParameters ES3_NULL();
 PlatformParameters ES31_NULL();
 
 PlatformParameters ES2_VULKAN();
-PlatformParameters ES3_VULKAN();
 
 }  // namespace angle
 

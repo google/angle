@@ -30,6 +30,6 @@ TEST_P(VulkanEXTTest, ValidationLayersAvaialable)
     ASSERT_TRUE(getEGLWindow()->initializeGL(GetOSWindow()));
 }
 
-ANGLE_INSTANTIATE_TEST(VulkanEXTTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(VulkanEXTTest, ES2_VULKAN());
 
 }  // anonymous namespace
