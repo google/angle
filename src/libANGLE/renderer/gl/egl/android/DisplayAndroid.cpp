@@ -32,7 +32,8 @@ const char *GetEGLPath()
 namespace rx
 {
 
-DisplayAndroid::DisplayAndroid() : DisplayEGL(), mDummyPbuffer(EGL_NO_SURFACE)
+DisplayAndroid::DisplayAndroid(const egl::DisplayState &state)
+    : DisplayEGL(state), mDummyPbuffer(EGL_NO_SURFACE)
 {
 }
 

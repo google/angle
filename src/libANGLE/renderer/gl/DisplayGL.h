@@ -25,7 +25,7 @@ class RendererGL;
 class DisplayGL : public DisplayImpl
 {
   public:
-    DisplayGL();
+    DisplayGL(const egl::DisplayState &state);
     ~DisplayGL() override;
 
     egl::Error initialize(egl::Display *display) override;

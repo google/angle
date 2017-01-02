@@ -58,8 +58,8 @@ class FunctionsGLWindows : public FunctionsGL
     PFNWGLGETPROCADDRESSPROC mGetProcAddressWGL;
 };
 
-DisplayWGL::DisplayWGL()
-    : DisplayGL(),
+DisplayWGL::DisplayWGL(const egl::DisplayState &state)
+    : DisplayGL(state),
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mFunctionsGL(nullptr),

@@ -19,7 +19,7 @@
 namespace rx
 {
 
-DisplayVk::DisplayVk() : DisplayImpl(), mRenderer(nullptr)
+DisplayVk::DisplayVk(const egl::DisplayState &state) : DisplayImpl(state), mRenderer(nullptr)
 {
 }
 

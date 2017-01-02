@@ -21,7 +21,7 @@ class FunctionsWGL;
 class DisplayWGL : public DisplayGL
 {
   public:
-    DisplayWGL();
+    DisplayWGL(const egl::DisplayState &state);
     ~DisplayWGL() override;
 
     egl::Error initialize(egl::Display *display) override;

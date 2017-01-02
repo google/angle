@@ -21,7 +21,7 @@ namespace rx
 class DisplayAndroid : public DisplayEGL
 {
   public:
-    DisplayAndroid();
+    DisplayAndroid(const egl::DisplayState &state);
     ~DisplayAndroid() override;
 
     egl::Error initialize(egl::Display *display) override;

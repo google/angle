@@ -107,7 +107,7 @@ class DisplayOzone final : public DisplayEGL
         GLuint mTexture;
     };
 
-    DisplayOzone();
+    DisplayOzone(const egl::DisplayState &state);
     ~DisplayOzone() override;
 
     egl::Error initialize(egl::Display *display) override;

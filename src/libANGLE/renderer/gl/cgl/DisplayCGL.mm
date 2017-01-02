@@ -44,7 +44,8 @@ class FunctionsGLCGL : public FunctionsGL
     void *mDylibHandle;
 };
 
-DisplayCGL::DisplayCGL() : DisplayGL(), mEGLDisplay(nullptr), mFunctions(nullptr), mContext(nullptr)
+DisplayCGL::DisplayCGL(const egl::DisplayState &state)
+    : DisplayGL(state), mEGLDisplay(nullptr), mFunctions(nullptr), mContext(nullptr)
 {
 }
 

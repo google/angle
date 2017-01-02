@@ -325,8 +325,8 @@ void DisplayOzone::Buffer::present()
     }
 }
 
-DisplayOzone::DisplayOzone()
-    : DisplayEGL(),
+DisplayOzone::DisplayOzone(const egl::DisplayState &state)
+    : DisplayEGL(state),
       mSwapControl(SwapControl::ABSENT),
       mMinSwapInterval(0),
       mMaxSwapInterval(0),

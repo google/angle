@@ -19,7 +19,7 @@ class RendererVk;
 class DisplayVk : public DisplayImpl
 {
   public:
-    DisplayVk();
+    DisplayVk(const egl::DisplayState &state);
     ~DisplayVk() override;
 
     egl::Error initialize(egl::Display *display) override;

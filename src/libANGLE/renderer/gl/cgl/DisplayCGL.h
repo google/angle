@@ -20,7 +20,7 @@ namespace rx
 class DisplayCGL : public DisplayGL
 {
   public:
-    DisplayCGL();
+    DisplayCGL(const egl::DisplayState &state);
     ~DisplayCGL() override;
 
     egl::Error initialize(egl::Display *display) override;

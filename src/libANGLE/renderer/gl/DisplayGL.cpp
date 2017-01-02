@@ -22,7 +22,8 @@
 namespace rx
 {
 
-DisplayGL::DisplayGL() : mRenderer(nullptr), mCurrentDrawSurface(nullptr)
+DisplayGL::DisplayGL(const egl::DisplayState &state)
+    : DisplayImpl(state), mRenderer(nullptr), mCurrentDrawSurface(nullptr)
 {
 }
 
@@ -73,7 +74,8 @@ StreamProducerImpl *DisplayGL::createStreamProducerD3DTextureNV12(
 egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
 {
     // Notify the previous surface (if it still exists) that it is no longer current
-    if (mCurrentDrawSurface && mSurfaceSet.find(mCurrentDrawSurface) != mSurfaceSet.end())
+    if (mCurrentDrawSurface &&
+        mState.surfaceSet.find(mCurrentDrawSurface) != mState.surfaceSet.end())
     {
         ANGLE_TRY(GetImplAs<SurfaceGL>(mCurrentDrawSurface)->unMakeCurrent());
     }

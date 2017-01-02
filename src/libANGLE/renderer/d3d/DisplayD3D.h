@@ -19,7 +19,7 @@ class RendererD3D;
 class DisplayD3D : public DisplayImpl
 {
   public:
-    DisplayD3D();
+    DisplayD3D(const egl::DisplayState &state);
 
     egl::Error initialize(egl::Display *display) override;
     virtual void terminate() override;

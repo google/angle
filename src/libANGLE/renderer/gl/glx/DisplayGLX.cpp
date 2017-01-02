@@ -106,8 +106,8 @@ class FunctionsGLGLX : public FunctionsGL
     PFNGETPROCPROC mGetProc;
 };
 
-DisplayGLX::DisplayGLX()
-    : DisplayGL(),
+DisplayGLX::DisplayGLX(const egl::DisplayState &state)
+    : DisplayGL(state),
       mFunctionsGL(nullptr),
       mRequestedVisual(-1),
       mContextConfig(nullptr),

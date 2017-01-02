@@ -18,7 +18,7 @@ namespace rx
 class DisplayNULL : public DisplayImpl
 {
   public:
-    DisplayNULL();
+    DisplayNULL(const egl::DisplayState &state);
     ~DisplayNULL() override;
 
     egl::Error initialize(egl::Display *display) override;

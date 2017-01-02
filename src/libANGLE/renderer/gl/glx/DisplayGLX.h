@@ -38,7 +38,7 @@ struct SwapControlData
 class DisplayGLX : public DisplayGL
 {
   public:
-    DisplayGLX();
+    DisplayGLX(const egl::DisplayState &state);
     ~DisplayGLX() override;
 
     egl::Error initialize(egl::Display *display) override;

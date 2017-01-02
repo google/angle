@@ -37,6 +37,13 @@ class Image;
 class Surface;
 class Stream;
 
+using SurfaceSet = std::set<Surface *>;
+
+struct DisplayState final : angle::NonCopyable
+{
+    SurfaceSet surfaceSet;
+};
+
 class Display final : angle::NonCopyable
 {
   public:
@@ -122,6 +129,8 @@ class Display final : angle::NonCopyable
 
     gl::Version getMaxSupportedESVersion() const;
 
+    const DisplayState &getState() const { return mState; }
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -132,6 +141,7 @@ class Display final : angle::NonCopyable
     void initDisplayExtensions();
     void initVendorString();
 
+    DisplayState mState;
     rx::DisplayImpl *mImplementation;
 
     EGLNativeDisplayType mDisplayId;

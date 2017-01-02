@@ -13,8 +13,8 @@ namespace rx
 
 #define EGL_NO_CONFIG ((EGLConfig)0)
 
-DisplayEGL::DisplayEGL()
-    : DisplayGL(),
+DisplayEGL::DisplayEGL(const egl::DisplayState &state)
+    : DisplayGL(state),
       mEGL(nullptr),
       mConfig(EGL_NO_CONFIG),
       mContext(EGL_NO_CONTEXT),

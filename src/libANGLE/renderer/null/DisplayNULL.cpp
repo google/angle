@@ -19,7 +19,7 @@
 namespace rx
 {
 
-DisplayNULL::DisplayNULL() : DisplayImpl(), mDevice(nullptr)
+DisplayNULL::DisplayNULL(const egl::DisplayState &state) : DisplayImpl(state), mDevice(nullptr)
 {
 }
 

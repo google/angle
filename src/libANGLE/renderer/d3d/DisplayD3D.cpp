@@ -154,7 +154,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
     return result;
 }
 
-DisplayD3D::DisplayD3D() : mRenderer(nullptr)
+DisplayD3D::DisplayD3D(const egl::DisplayState &state) : DisplayImpl(state), mRenderer(nullptr)
 {
 }
 
@@ -249,7 +249,7 @@ bool DisplayD3D::testDeviceLost()
 egl::Error DisplayD3D::restoreLostDevice()
 {
     // Release surface resources to make the Reset() succeed
-    for (auto &surface : mSurfaceSet)
+    for (auto &surface : mState.surfaceSet)
     {
         if (surface->getBoundTexture())
         {
@@ -265,7 +265,7 @@ egl::Error DisplayD3D::restoreLostDevice()
     }
 
     // Restore any surfaces that may have been lost
-    for (const auto &surface : mSurfaceSet)
+    for (const auto &surface : mState.surfaceSet)
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
 
@@ -330,7 +330,7 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
 
 egl::Error DisplayD3D::waitClient() const
 {
-    for (auto &surface : getSurfaceSet())
+    for (auto &surface : mState.surfaceSet)
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
         surfaceD3D->checkForOutOfDateSwapChain();
