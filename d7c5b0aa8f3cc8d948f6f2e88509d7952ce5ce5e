@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_bf1b3d32",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-02T15:08:28Z",
+      "side": 1,
+      "message": "is it possible to make a write function that pulls in the triplet it needs (\"barrier\", \"memoryBarrier\", etc) from the operator?",
+      "range": {
+        "startLine": 1117,
+        "startChar": 12,
+        "endLine": 1117,
+        "endChar": 39
+      },
+      "revId": "d7c5b0aa8f3cc8d948f6f2e88509d7952ce5ce5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
