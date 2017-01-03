@@ -22,6 +22,24 @@
       "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e35d975f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 14
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-01-03T21:34:41Z",
+      "side": 1,
+      "message": "I\u0027m not really sure what fallbackFormat does or why it\u0027s needed. (If it\u0027s omitted, the fallback format defaults to this format so it does nothing.) Can the fallback format be a non-compressed format (i.e. R8G8B8A8_UNORM_SRGB)?",
+      "parentUuid": "37b082be_370462c7",
+      "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
