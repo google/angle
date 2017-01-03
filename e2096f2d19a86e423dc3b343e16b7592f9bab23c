@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_9162f01d",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:32:41Z",
+      "side": 1,
+      "message": "Ah, it\u0027s a shame that source_set is like a static library, I hoped that it\u0027s just a list of files, with no instructions on how to compile them. Well, foreach seems like a good solution.",
+      "parentUuid": "37b082be_05febeb9",
+      "range": {
+        "startLine": 612,
+        "startChar": 0,
+        "endLine": 651,
+        "endChar": 3
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_4224acd5",
         "filename": "src/libGLESv2.gypi",
         "patchSetId": 8
