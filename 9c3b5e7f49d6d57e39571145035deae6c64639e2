@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_a2ed6047",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-03T03:21:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3745e284_04869aff",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773d9abc_79931bac",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-02T12:21:23Z",
       "side": 1,
       "message": "Could clarify with \"Tests compiling shaders that use gsampler2DMS types\"",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_c2e89c36",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-03T03:21:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_79931bac",
       "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_6219a890",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-03T03:21:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_f95dcb32",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773d9abc_599857c4",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 10
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "37b082be_4226eccf",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-03T03:21:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_599857c4",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773d9abc_d95a0739",
         "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
         "patchSetId": 10
@@ -81,6 +153,24 @@
       "writtenOn": "2017-01-02T12:21:23Z",
       "side": 1,
       "message": "Could also add a test to here or ShaderValidation_test.cpp that checks that gsampler2DMS is not exposed to ESSL 3.00 (by declaring one sampler2DMS uniform).",
+      "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e22cb8ad",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-03T03:21:42Z",
+      "side": 1,
+      "message": "Add to ShaderValidation_test.cpp",
+      "parentUuid": "773d9abc_d95a0739",
       "revId": "9c3b5e7f49d6d57e39571145035deae6c64639e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
