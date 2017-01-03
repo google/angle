@@ -92,10 +92,61 @@ if (is_win || is_linux || is_mac || is_android) {
       "//base/test:test_support",
       "//testing/gmock",
       "//testing/gtest",
+      "//third_party/angle:angle_image_util",
       "//third_party/angle:angle_util",
-      "//third_party/angle:libANGLE",
       "//third_party/angle:libEGL",
       "//third_party/angle:libGLESv2",
+      "//third_party/angle:preprocessor",
+      "//third_party/angle:translator",
+    ]
+  }
+
+  white_box_gypi = exec_script("//build/gypi_to_gn.py",
+                               [
+                                 rebase_path("angle_white_box_tests.gypi"),
+                                 "--replace=<(angle_path)=.",
+                               ],
+                               "scope",
+                               [ "angle_white_box_tests.gypi" ])
+
+  test("angle_white_box_tests") {
+    include_dirs = [
+      "testing/gtest/include",
+      "../../src/tests",
+      "../../util",
+    ]
+
+    if (is_android) {
+      use_native_activity = true
+    }
+
+    sources =
+        rebase_path(white_box_gypi.angle_white_box_tests_sources, ".", "../..")
+
+    if (is_win) {
+      sources += rebase_path(white_box_gypi.angle_white_box_tests_win_sources,
+                             ".",
+                             "../..")
+    }
+
+    # Share the same main file as end2end_tests.
+    # TODO(jmadill): Probably should rename this if we're sharing.
+    sources += [ "//gpu/angle_end2end_tests_main.cc" ]
+
+    configs += [
+      "//third_party/angle:internal_config",
+      "//third_party/angle:libANGLE_config",
+    ]
+
+    deps = [
+      "//base",
+      "//base/test:test_support",
+      "//testing/gmock",
+      "//testing/gtest",
+      "//third_party/angle:angle_util_static",
+      "//third_party/angle:libANGLE",
+      "//third_party/angle:libEGL_static",
+      "//third_party/angle:libGLESv2_static",
       "//third_party/angle:preprocessor",
       "//third_party/angle:translator",
     ]

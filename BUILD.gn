@@ -47,6 +47,12 @@ config("internal_config") {
     "include",
     "src",
   ]
+
+  # Prevent the GL headers from redeclaring ANGLE entry points.
+  defines = [
+    "GL_GLEXT_PROTOTYPES",
+    "EGL_EGLEXT_PROTOTYPES",
+  ]
 }
 
 config("extra_warnings") {
@@ -274,17 +280,8 @@ config("libANGLE_config") {
   if (angle_enable_null) {
     defines += [ "ANGLE_ENABLE_NULL" ]
   }
-  defines += [
-    "GL_GLEXT_PROTOTYPES",
-    "EGL_EGLEXT_PROTOTYPES",
-    "LIBANGLE_IMPLEMENTATION",
-  ]
+  defines += [ "LIBANGLE_IMPLEMENTATION" ]
 
-  if (is_win) {
-    defines += [ "GL_APICALL=" ]
-  } else {
-    defines += [ "GL_APICALL=__attribute__((visibility(\"default\")))" ]
-  }
   if (is_win) {
     cflags += [ "/wd4530" ]  # C++ exception handler used, but unwind semantics are not enabled.
   }
@@ -388,9 +385,10 @@ static_library("libANGLE") {
     ":commit_id_config",
     ":debug_annotations_config",
     ":extra_warnings",
-    ":libANGLE_config",
     ":internal_config",
   ]
+
+  public_configs = [ ":libANGLE_config" ]
 
   if (is_win) {
     data_deps = [
@@ -408,6 +406,15 @@ config("shared_library_public_config") {
       "@executable_path/",
     ]
   }
+}
+
+# This config controls export definitions on ANGLE API calls.
+config("angle_static") {
+  defines = [
+    "ANGLE_EXPORT=",
+    "EGLAPI=",
+    "GL_APICALL=",
+  ]
 }
 
 shared_library("libGLESv2") {
@@ -428,13 +435,35 @@ shared_library("libGLESv2") {
 
   configs -= angle_undefine_configs
   configs += [
-    ":internal_config",
     ":commit_id_config",
     ":debug_annotations_config",
-    ":libANGLE_config",
+    ":internal_config",
   ]
 
   defines = [ "LIBGLESV2_IMPLEMENTATION" ]
+  if (is_win) {
+    defines += [ "GL_APICALL=" ]
+  } else {
+    defines += [ "GL_APICALL=__attribute__((visibility(\"default\")))" ]
+  }
+
+  deps = [
+    ":includes",
+    ":libANGLE",
+  ]
+}
+
+static_library("libGLESv2_static") {
+  sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
+
+  configs -= angle_undefine_configs
+  configs += [
+    ":commit_id_config",
+    ":debug_annotations_config",
+    ":internal_config",
+  ]
+
+  public_configs = [ ":angle_static" ]
 
   deps = [
     ":includes",
@@ -444,18 +473,6 @@ shared_library("libGLESv2") {
 
 shared_library("libEGL") {
   sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
-
-  if (is_win) {
-    ldflags = [ "/DEF:" + rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
-  }
-
-  if (is_mac && !is_component_build) {
-    ldflags = [
-      "-install_name",
-      "@rpath/${target_name}.dylib",
-    ]
-    public_configs = [ ":shared_library_public_config" ]
-  }
 
   configs -= angle_undefine_configs
   configs += [
@@ -472,9 +489,40 @@ shared_library("libEGL") {
     defines += [ "EGLAPI=__attribute__((visibility(\"default\")))" ]
   }
 
+  if (is_win) {
+    ldflags = [ "/DEF:" + rebase_path("src/libEGL/libEGL.def", root_build_dir) ]
+  }
+
+  if (is_mac && !is_component_build) {
+    ldflags = [
+      "-install_name",
+      "@rpath/${target_name}.dylib",
+    ]
+    public_configs = [ ":shared_library_public_config" ]
+  }
+
   deps = [
     ":includes",
     ":libGLESv2",
+  ]
+}
+
+static_library("libEGL_static") {
+  sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
+
+  configs -= angle_undefine_configs
+  configs += [
+    ":commit_id_config",
+    ":debug_annotations_config",
+    ":extra_warnings",
+    ":internal_config",
+  ]
+
+  public_configs = [ ":angle_static" ]
+
+  deps = [
+    ":includes",
+    ":libGLESv2_static",
   ]
 }
 
@@ -490,74 +538,89 @@ config("angle_util_config") {
   }
 }
 
-shared_library("angle_util") {
-  sources = rebase_path(util_gypi.util_sources, ".", "util")
-
-  if (is_win) {
-    sources += rebase_path(util_gypi.util_win32_sources, ".", "util")
+foreach(is_shared_library,
+        [
+          true,
+          false,
+        ]) {
+  if (is_shared_library) {
+    library_type = "shared_library"
+    library_name = "angle_util"
+    dep_suffix = ""
+  } else {
+    library_type = "static_library"
+    library_name = "angle_util_static"
+    dep_suffix = "_static"
   }
 
-  if (is_linux) {
-    sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
-    libs = [
-      "rt",
-      "dl",
+  target(library_type, library_name) {
+    sources = rebase_path(util_gypi.util_sources, ".", "util")
+
+    if (is_win) {
+      sources += rebase_path(util_gypi.util_win32_sources, ".", "util")
+    }
+
+    if (is_linux) {
+      sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
+      libs = [
+        "rt",
+        "dl",
+      ]
+    }
+
+    if (is_mac) {
+      sources += rebase_path(util_gypi.util_osx_sources, ".", "util")
+      libs = [
+        "AppKit.framework",
+        "QuartzCore.framework",
+      ]
+    }
+
+    if (use_x11) {
+      sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
+    }
+
+    if (is_android) {
+      # To prevent linux sources filtering on android
+      set_sources_assignment_filter([])
+      sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
+      sources += rebase_path(util_gypi.util_android_sources, ".", "util")
+      libs = [
+        "android",
+        "log",
+      ]
+    }
+
+    if (use_ozone) {
+      sources += rebase_path(util_gypi.util_ozone_sources, ".", "util")
+    }
+
+    configs += [
+      ":debug_annotations_config",
+      ":extra_warnings",
     ]
-  }
 
-  if (is_mac) {
-    sources += rebase_path(util_gypi.util_osx_sources, ".", "util")
-    libs = [
-      "AppKit.framework",
-      "QuartzCore.framework",
+    public_configs = [
+      ":angle_util_config",
+      ":internal_config",
     ]
-  }
 
-  if (use_x11) {
-    sources += rebase_path(util_gypi.util_x11_sources, ".", "util")
-  }
-
-  if (is_android) {
-    # To prevent linux sources filtering on android
-    set_sources_assignment_filter([])
-    sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
-    sources += rebase_path(util_gypi.util_android_sources, ".", "util")
-    libs = [
-      "android",
-      "log",
+    deps = [
+      ":angle_common",
+      ":libEGL${dep_suffix}",
+      ":libGLESv2${dep_suffix}",
     ]
+
+    if (is_shared_library) {
+      defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
+
+      if (is_mac && !is_component_build) {
+        ldflags = [
+          "-install_name",
+          "@rpath/lib${target_name}.dylib",
+        ]
+        public_configs += [ ":shared_library_public_config" ]
+      }
+    }
   }
-
-  if (use_ozone) {
-    sources += rebase_path(util_gypi.util_ozone_sources, ".", "util")
-  }
-
-  defines = [
-    "GL_GLEXT_PROTOTYPES",
-    "EGL_EGLEXT_PROTOTYPES",
-    "LIBANGLE_UTIL_IMPLEMENTATION",
-  ]
-
-  configs += [
-    ":debug_annotations_config",
-    ":extra_warnings",
-  ]
-
-  public_configs = [
-    ":angle_util_config",
-    ":internal_config",
-  ]
-  if (is_mac && !is_component_build) {
-    ldflags = [
-      "-install_name",
-      "@rpath/lib${target_name}.dylib",
-    ]
-    public_configs += [ ":shared_library_public_config" ]
-  }
-
-  deps = [
-    ":angle_common",
-    ":libEGL",
-    ":libGLESv2",
-  ]
 }

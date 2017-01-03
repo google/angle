@@ -711,6 +711,61 @@
     'targets':
     [
         {
+            # This target includes the right ANGLE defines for common/platform.h for D3D11.
+            # It also links against the right libs. This is useful for the tests, which
+            # have special D3D11 code for Debug runtime error message handling.
+            'target_name': 'libANGLE_d3d11_config',
+            'type': 'none',
+            'direct_dependent_settings':
+            {
+                'conditions':
+                [
+                    ['angle_enable_d3d11==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_D3D11',
+                        ],
+                    }],
+                ],
+            },
+            'conditions':
+            [
+                ['angle_enable_d3d11==1',
+                {
+                    'link_settings':
+                    {
+                        'msvs_settings':
+                        {
+                            'VCLinkerTool':
+                            {
+                                'conditions':
+                                [
+                                    ['angle_build_winrt==0',
+                                    {
+                                        'AdditionalDependencies':
+                                        [
+                                            'dxguid.lib',
+                                        ],
+                                    }],
+                                    ['angle_build_winrt==1',
+                                    {
+                                        'AdditionalDependencies':
+                                        [
+                                            'dxguid.lib',
+                                            'd3d11.lib',
+                                            'd3dcompiler.lib',
+                                        ],
+                                    }],
+                                ],
+                            }
+                        },
+                    },
+                }],
+            ],
+        },
+
+        {
             'target_name': 'libANGLE',
             'type': 'static_library',
             'dependencies':
@@ -719,6 +774,7 @@
                 'commit_id',
                 'angle_common',
                 'angle_image_util',
+                'libANGLE_d3d11_config',
             ],
             'includes': [ '../gyp/common_defines.gypi', ],
             'include_dirs':
@@ -739,6 +795,7 @@
             'export_dependent_settings':
             [
                 'angle_common',
+                'libANGLE_d3d11_config',
             ],
             'direct_dependent_settings':
             {
@@ -778,13 +835,6 @@
                         'defines':
                         [
                             'ANGLE_ENABLE_D3D9',
-                        ],
-                    }],
-                    ['angle_enable_d3d11==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_D3D11',
                         ],
                     }],
                     ['angle_enable_gl==1',
@@ -859,38 +909,6 @@
                     [
                         '<@(libangle_d3d11_sources)',
                     ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_D3D11',
-                    ],
-                    'link_settings':
-                    {
-                        'msvs_settings':
-                        {
-                            'VCLinkerTool':
-                            {
-                                'conditions':
-                                [
-                                    ['angle_build_winrt==0',
-                                    {
-                                        'AdditionalDependencies':
-                                        [
-                                            'dxguid.lib',
-                                        ],
-                                    }],
-                                    ['angle_build_winrt==1',
-                                    {
-                                        'AdditionalDependencies':
-                                        [
-                                            'dxguid.lib',
-                                            'd3d11.lib',
-                                            'd3dcompiler.lib',
-                                        ],
-                                    }],
-                                ],
-                            }
-                        },
-                    },
                     'conditions':
                     [
                         ['angle_build_winrt==1',
@@ -1069,6 +1087,28 @@
             'defines':
             [
                 'LIBGLESV2_IMPLEMENTATION',
+            ],
+            'conditions':
+            [
+                ['angle_build_winrt==1',
+                {
+                    'msvs_requires_importlibrary' : 'true',
+                }],
+            ],
+        },
+
+        {
+            'target_name': 'libGLESv2_static',
+            'type': 'static_library',
+            'dependencies': [ 'libANGLE', 'angle_common' ],
+            'export_dependent_settings':
+            [
+                'libANGLE',
+            ],
+            'includes': [ '../gyp/common_defines.gypi', ],
+            'sources':
+            [
+                '<@(libglesv2_sources)',
             ],
             'conditions':
             [

@@ -93,11 +93,110 @@
     'targets':
     [
         {
+            'target_name': 'angle_util_config',
+            'type': 'none',
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    '<(angle_path)/include',
+                    '<(angle_path)/util',
+                ],
+                'sources':
+                [
+                    '<@(util_sources)',
+                ],
+                'defines':
+                [
+                    'GL_GLEXT_PROTOTYPES',
+                    'EGL_EGLEXT_PROTOTYPES',
+                    'LIBANGLE_UTIL_IMPLEMENTATION',
+                ],
+                'conditions':
+                [
+                    ['OS=="win" and angle_build_winrt==0',
+                    {
+                        'sources':
+                        [
+                            '<@(util_win32_sources)',
+                        ],
+                    }],
+                    ['OS=="win" and angle_build_winrt==1',
+                    {
+                        'sources':
+                        [
+                            '<@(util_winrt_sources)',
+                        ],
+                    }],
+                    ['OS=="linux"',
+                    {
+                        'sources':
+                        [
+                            '<@(util_linux_sources)',
+                        ],
+                        'link_settings':
+                        {
+                            'libraries':
+                            [
+                                '-ldl',
+                            ],
+                        },
+                    }],
+                    ['use_x11==1',
+                    {
+                        'sources':
+                        [
+                            '<@(util_x11_sources)',
+                        ],
+                        'link_settings':
+                        {
+                            'ldflags':
+                            [
+                                '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi)',
+                            ],
+                            'libraries':
+                            [
+                                '<!@(<(pkg-config) --libs-only-l x11 xi)',
+                            ],
+                        },
+                    }],
+                    ['use_ozone==1',
+                    {
+                        'sources':
+                        [
+                            '<@(util_ozone_sources)',
+                        ],
+                    }],
+                    ['OS=="mac"',
+                    {
+                        'sources':
+                        [
+                            '<@(util_osx_sources)',
+                        ],
+                        'xcode_settings':
+                        {
+                            'DYLIB_INSTALL_NAME_BASE': '@rpath',
+                        },
+                        'link_settings':
+                        {
+                            'libraries':
+                            [
+                                '$(SDKROOT)/System/Library/Frameworks/AppKit.framework',
+                                '$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework',
+                            ],
+                        },
+                    }],
+                ],
+            },
+        },
+
+        {
             'target_name': 'angle_util',
             'type': 'shared_library',
             'includes': [ '../gyp/common_defines.gypi', ],
             'dependencies':
             [
+                'angle_util_config',
                 '<(angle_path)/src/angle.gyp:angle_common',
                 '<(angle_path)/src/angle.gyp:libEGL',
                 '<(angle_path)/src/angle.gyp:libGLESv2',
@@ -105,21 +204,6 @@
             'export_dependent_settings':
             [
                 '<(angle_path)/src/angle.gyp:angle_common',
-            ],
-            'include_dirs':
-            [
-                '<(angle_path)/include',
-                '<(angle_path)/util',
-            ],
-            'sources':
-            [
-                '<@(util_sources)',
-            ],
-            'defines':
-            [
-                'GL_GLEXT_PROTOTYPES',
-                'EGL_EGLEXT_PROTOTYPES',
-                'LIBANGLE_UTIL_IMPLEMENTATION',
             ],
             'direct_dependent_settings':
             {
@@ -134,81 +218,36 @@
                     'EGL_EGLEXT_PROTOTYPES',
                 ],
             },
-            'conditions':
+        },
+
+        {
+            'target_name': 'angle_util_static',
+            'type': 'static_library',
+            'includes': [ '../gyp/common_defines.gypi', ],
+            'dependencies':
             [
-                ['OS=="win" and angle_build_winrt==0',
-                {
-                    'sources':
-                    [
-                        '<@(util_win32_sources)',
-                    ],
-                }],
-                ['OS=="win" and angle_build_winrt==1',
-                {
-                    'sources':
-                    [
-                        '<@(util_winrt_sources)',
-                    ],
-                }],
-                ['OS=="linux"',
-                {
-                    'sources':
-                    [
-                        '<@(util_linux_sources)',
-                    ],
-                    'link_settings':
-                    {
-                        'libraries':
-                        [
-                            '-ldl',
-                        ],
-                    },
-                }],
-                ['use_x11==1',
-                {
-                    'sources':
-                    [
-                        '<@(util_x11_sources)',
-                    ],
-                    'link_settings':
-                    {
-                        'ldflags':
-                        [
-                            '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi)',
-                        ],
-                        'libraries':
-                        [
-                            '<!@(<(pkg-config) --libs-only-l x11 xi)',
-                        ],
-                    },
-                }],
-                ['use_ozone==1',
-                {
-                    'sources':
-                    [
-                        '<@(util_ozone_sources)',
-                    ],
-                }],
-                ['OS=="mac"',
-                {
-                    'sources':
-                    [
-                        '<@(util_osx_sources)',
-                    ],
-                    'xcode_settings':
-                    {
-                        'DYLIB_INSTALL_NAME_BASE': '@rpath',
-                    },
-                    'link_settings':
-                    {
-                        'libraries':
-                        [
-                            '$(SDKROOT)/System/Library/Frameworks/AppKit.framework',
-                            '$(SDKROOT)/System/Library/Frameworks/QuartzCore.framework',
-                        ],
-                    },
-                }],
+                'angle_util_config',
+                '<(angle_path)/src/angle.gyp:angle_common',
+                '<(angle_path)/src/angle.gyp:libEGL_static',
+                '<(angle_path)/src/angle.gyp:libGLESv2_static',
             ],
+            'export_dependent_settings':
+            [
+                '<(angle_path)/src/angle.gyp:angle_common',
+            ],
+            'direct_dependent_settings':
+            {
+                'include_dirs':
+                [
+                    '<(angle_path)/include',
+                    '<(angle_path)/util',
+                ],
+                'defines':
+                [
+                    'GL_GLEXT_PROTOTYPES',
+                    'EGL_EGLEXT_PROTOTYPES',
+                ],
+            },
         },
     ],
 }
