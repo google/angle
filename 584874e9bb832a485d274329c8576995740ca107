@@ -22,6 +22,30 @@
       "revId": "584874e9bb832a485d274329c8576995740ca107",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a2124007",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-03T12:48:18Z",
+      "side": 1,
+      "message": "Draw*Indirect only source the indirect commands from the buffer object which bound to the corresponding indirect buffer target. They don\u0027t source indirect commands from client memory. And in spec 10.5 page 254 and 258 Errors parts, it says that \u0027An INVALID_OPERATION error is generated if zero is bound to VERTEX_ARRAY_BINDING, DRAW_INDIRECT_BUFFER or to any enabled vertex array.\u0027 So I think they don\u0027t need to stream attribute since there is no data in client memory which is a major step in syncDrawState. In another side, syncDrawArraysState needs lots of arguments which need to be extracted from indirect commands buffer. That\u0027s why I don\u0027t use syncDrawArraysState. I think current logic is more clear. Please correct me if I am wrong.",
+      "parentUuid": "37b082be_e25cc695",
+      "range": {
+        "startLine": 675,
+        "startChar": 4,
+        "endLine": 675,
+        "endChar": 5
+      },
+      "revId": "584874e9bb832a485d274329c8576995740ca107",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
