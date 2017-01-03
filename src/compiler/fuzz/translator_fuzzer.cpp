@@ -105,7 +105,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     size -= kHeaderSize;
     data += kHeaderSize;
 
-    if (!ShInitialize())
+    if (!sh::Initialize())
     {
         return 0;
     }
@@ -126,7 +126,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         }
 
         ShBuiltInResources resources;
-        ShInitBuiltInResources(&resources);
+        sh::InitBuiltInResources(&resources);
 
         // Enable all the extensions to have more coverage
         resources.OES_standard_derivatives        = 1;
