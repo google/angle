@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_65ca120a",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T13:44:41Z",
+      "side": 1,
+      "message": "feels like git cl format would wrap this comment.",
+      "range": {
+        "startLine": 36,
+        "startChar": 93,
+        "endLine": 36,
+        "endChar": 122
+      },
+      "revId": "341fda1ffd8458ff0439b0199f2f576118be3b3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
