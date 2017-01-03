@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_c2d5fc48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T05:16:54Z",
+      "side": 1,
+      "message": "Done.\nThanks for the info, Jamie.",
+      "parentUuid": "37b082be_ff11b515",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_98ad4283",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 6
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_62a688fb",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 845,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T05:16:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_df16390f",
+      "range": {
+        "startLine": 845,
+        "startChar": 9,
+        "endLine": 845,
+        "endChar": 13
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_3f30adae",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
@@ -82,6 +130,47 @@
         "endLine": 272,
         "endChar": 21
       },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_22a090d9",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T05:16:54Z",
+      "side": 1,
+      "message": "Done.\n\nBTW, would you like a code refactoring change to replace the similar code snippet by ANGLE_TRY?",
+      "parentUuid": "37b082be_3f30adae",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 272,
+        "endChar": 21
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_c2ae5cc9",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T05:16:54Z",
+      "side": 1,
+      "message": "Would you like gl::Error(GL_NO_ERROR) or gl::NoError() in renderers? The inconsistency seems to be confusing. I think it is better to be consistent in angle.",
       "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
