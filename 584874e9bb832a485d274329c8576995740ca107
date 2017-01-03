@@ -46,6 +46,30 @@
       "revId": "584874e9bb832a485d274329c8576995740ca107",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2575faa8",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:53:44Z",
+      "side": 1,
+      "message": "Ah yes, sorry. I was confused by the naming similarity of syncDrawElementsState and syncElementArrayState sorry. This looks correct to me.",
+      "parentUuid": "37b082be_a2124007",
+      "range": {
+        "startLine": 675,
+        "startChar": 4,
+        "endLine": 675,
+        "endChar": 5
+      },
+      "revId": "584874e9bb832a485d274329c8576995740ca107",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
