@@ -22,6 +22,30 @@
       "revId": "341fda1ffd8458ff0439b0199f2f576118be3b3f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3726c2ad_5cb4b5cd",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-03T15:22:41Z",
+      "side": 1,
+      "message": "Done, forgot to ran git cl format on the final version of the patch.",
+      "parentUuid": "37b082be_65ca120a",
+      "range": {
+        "startLine": 36,
+        "startChar": 93,
+        "endLine": 36,
+        "endChar": 122
+      },
+      "revId": "341fda1ffd8458ff0439b0199f2f576118be3b3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
