@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_360212bf",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:13:06Z",
+      "side": 1,
+      "message": "Yes, the next step is to have LogMessageHandlerFunction which will use Platform. I kept the original Chromium name. Do you want this to be united with InitializeDebugAnnotations()? So LogMessageHandlerFunction is part of DebugAnnotator class? But we want to handle log messages also when we don\u0027t use debug annotations.",
+      "parentUuid": "37b082be_45991605",
+      "range": {
+        "startLine": 109,
+        "startChar": 5,
+        "endLine": 109,
+        "endChar": 25
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_65453290",
         "filename": "src/common/debug.cpp",
         "patchSetId": 2
@@ -117,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_b60da2ea",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:13:06Z",
+      "side": 1,
+      "message": "If I\u0027m changing the name, it can be anything. Was just keeping the original Chromium naming.",
+      "parentUuid": "37b082be_65453290",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 123,
+        "endChar": 27
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_85486ea7",
         "filename": "src/common/debug.cpp",
         "patchSetId": 2
@@ -128,6 +176,30 @@
       "writtenOn": "2017-01-03T14:10:22Z",
       "side": 1,
       "message": "this is a bit of a WTF.. I didn\u0027t realize we used a static file. this is not going to fly. any thoughts on how to fix this? can always do it in a follow-up patch.",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 10
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_16aa766a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:13:06Z",
+      "side": 1,
+      "message": "Since it\u0027s behind ANGLE_ENABLE_DEBUG_TRACE, maybe static file is OK? Otherwise, output to trace file can be a different kind of LogMessageHandler, and whoever calls SetLogMessageHandler can open the file, and maybe also close it somewhere. Do we need both trace file and Platform logging simultaneously?",
+      "parentUuid": "37b082be_85486ea7",
       "range": {
         "startLine": 159,
         "startChar": 4,
@@ -324,6 +396,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_f69eba4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:13:06Z",
+      "side": 1,
+      "message": "If you say so. I don\u0027t know this code. The original message says \"unimplemented\".",
+      "parentUuid": "37b082be_c5d2e6b7",
+      "range": {
+        "startLine": 753,
+        "startChar": 8,
+        "endLine": 753,
+        "endChar": 21
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6573f207",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
         "patchSetId": 2
@@ -335,6 +431,30 @@
       "writtenOn": "2017-01-03T14:10:22Z",
       "side": 1,
       "message": "didn\u0027t we have it so that WARN() calls the platform? you should remove this.",
+      "range": {
+        "startLine": 633,
+        "startChar": 8,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_11c5a02e",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:13:06Z",
+      "side": 1,
+      "message": "WARN() will call platform if LogMessageHandler is set appropriately. I was going to replace all explicit logWarning/logError calls with the macros once I add the handler which outputs via Platform.",
+      "parentUuid": "37b082be_6573f207",
       "range": {
         "startLine": 633,
         "startChar": 8,
