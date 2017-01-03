@@ -132,11 +132,6 @@
             '<(angle_gen_path)/vulkan/vk_struct_size_helper.h',
             '<(angle_gen_path)/vulkan/vk_struct_string_helper.h',
             '<(angle_gen_path)/vulkan/vk_struct_string_helper_cpp.h',
-            '<(angle_gen_path)/vulkan/vk_struct_string_helper_no_addr.h',
-            '<(angle_gen_path)/vulkan/vk_struct_string_helper_no_addr_cpp.h',
-            '<(angle_gen_path)/vulkan/vk_struct_validate_helper.h',
-            '<(angle_gen_path)/vulkan/vk_struct_wrappers.cpp',
-            '<(angle_gen_path)/vulkan/vk_struct_wrappers.h',
         ],
         'VkLayer_core_validation_sources':
         [
