@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_02b0f48b",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "I think it\u0027s confusing to define it both here and in export.h.",
+      "range": {
+        "startLine": 447,
+        "startChar": 5,
+        "endLine": 447,
+        "endChar": 17
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_42aeec36",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "This would define GL_APICALL. I\u0027m not sure what are GN precedence rules, does static_config below override it?",
+      "range": {
+        "startLine": 461,
+        "startChar": 6,
+        "endLine": 461,
+        "endChar": 21
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_22abb027",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "I think this only affects export of GL API, which you don\u0027t need for static, right?",
+      "range": {
+        "startLine": 466,
+        "startChar": 15,
+        "endLine": 466,
+        "endChar": 39
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_82a4e458",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "I\u0027ve removed libANGLE_config from libEGL, since I think the only thing needed from there is EGLAPI definition. I thought it makes sense that if I\u0027m removing libEGL on libANGLE dependency, then there should be no dependency on config as well. If you think otherwise, EGLAPI below can be moved back to libANGLE_config.",
+      "range": {
+        "startLine": 483,
+        "startChar": 6,
+        "endLine": 483,
+        "endChar": 21
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_42990c05",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "Why is this needed here? angle_util doesn\u0027t need LIBANGLE_IMPLEMENTATION or ANGLE_ENABLE_* defines.",
+      "range": {
+        "startLine": 589,
+        "startChar": 6,
+        "endLine": 589,
+        "endChar": 21
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e28fd8ba",
+        "filename": "BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "Maybe we can have a source set for these?",
+      "range": {
+        "startLine": 612,
+        "startChar": 0,
+        "endLine": 651,
+        "endChar": 3
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4224acd5",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "I wonder why there isn\u0027t something similar for GN",
+      "range": {
+        "startLine": 717,
+        "startChar": 28,
+        "endLine": 717,
+        "endChar": 49
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e20a7843",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "Shouldn\u0027t be necessary for static linking.",
+      "range": {
+        "startLine": 1115,
+        "startChar": 17,
+        "endLine": 1115,
+        "endChar": 41
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0206b440",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 8
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "I thought you have a separate main for whitebox tests? Do you intend to remove it?",
+      "range": {
+        "startLine": 134,
+        "startChar": 24,
+        "endLine": 134,
+        "endChar": 48
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a2148065",
+        "filename": "src/tests/angle_white_box_tests.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "whitebox",
+      "range": {
+        "startLine": 6,
+        "startChar": 2,
+        "endLine": 6,
+        "endChar": 30
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6200c820",
+        "filename": "src/tests/angle_white_box_tests.gypi",
+        "patchSetId": 8
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T01:48:03Z",
+      "side": 1,
+      "message": "Looks like all the whitebox tests are Windows only. Maybe the condition should be on the entire target?",
+      "range": {
+        "startLine": 52,
+        "startChar": 10,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "e2096f2d19a86e423dc3b343e16b7592f9bab23c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
