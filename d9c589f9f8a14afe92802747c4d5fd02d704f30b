@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_65421263",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "make a helper function that takes a const Optional\u003cLARGE_INTEGER\u003e \u0026 and returns an IntelDriverVersion. Make a second helper function that takes a std::string with the four parts - implement it with std::stringstream (using ignore() to skip the decimal points). Put the second helper function in driver_utils.h",
+      "range": {
+        "startLine": 1859,
+        "startChar": 7,
+        "endLine": 1860,
+        "endChar": 9
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_c5318600",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "instead of doing this, compare the parts.",
+      "range": {
+        "startLine": 137,
+        "startChar": 11,
+        "endLine": 137,
+        "endChar": 88
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e52cc2ad",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "can you elaborate here? This comment seems to say that we only need to check the last part.",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 30
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6519b290",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "final, and angle::NonCopyable or define default copy ops.",
+      "range": {
+        "startLine": 48,
+        "startChar": 6,
+        "endLine": 48,
+        "endChar": 24
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_2523bac0",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "like suggested, I think you can replace all this with a single constructor that takes four uint16_t.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_4526f6cf",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "you can remove all these.",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 24
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0528fe94",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "nit: uint16_t.",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 7
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a536caf7",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:46:28Z",
+      "side": 1,
+      "message": "make these member functions, so you don\u0027t need to define them as friends. Also pass by const \u0026, and name the parameters in the prototypes.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 56
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
