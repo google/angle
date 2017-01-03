@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_d1b4e884",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 9
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:32:41Z",
+      "side": 1,
+      "message": "You have angle_end2end_tests_main in GN but angle_white_box_tests_main in GYP. So, do you want to share or not?",
+      "range": {
+        "startLine": 134,
+        "startChar": 24,
+        "endLine": 134,
+        "endChar": 48
+      },
+      "revId": "3b72cdb0ab62ea5f2584e032cb5c7b36d1072447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_f18a44aa",
+        "filename": "util/util.gyp",
+        "patchSetId": 9
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-03T20:32:41Z",
+      "side": 1,
+      "message": "GN looks nice now. Is it possible to share something with angle_util here, too?",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 330,
+        "endChar": 14
+      },
+      "revId": "3b72cdb0ab62ea5f2584e032cb5c7b36d1072447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
