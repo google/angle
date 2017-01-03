@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_6251a8f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1880,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-03T06:05:13Z",
+      "side": 1,
+      "message": "Should be 21.20.16.4542",
+      "range": {
+        "startLine": 1880,
+        "startChar": 36,
+        "endLine": 1880,
+        "endChar": 49
+      },
+      "revId": "87a8dcf6cefc9b01204c03a6f44f4ad08883e0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_8254e4e2",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-03T06:05:13Z",
+      "side": 1,
+      "message": "Is it better just to use four unsigned integers to do initialization?",
+      "revId": "87a8dcf6cefc9b01204c03a6f44f4ad08883e0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
