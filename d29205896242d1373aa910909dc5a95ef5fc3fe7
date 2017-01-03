@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37b082be_659c52fa",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "nit: g_logSeverityNames. also this can be constexpr, and a std::array.",
+      "range": {
+        "startLine": 30,
+        "startChar": 18,
+        "endLine": 30,
+        "endChar": 36
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_859f0eed",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "angle style, so LogSeverityName. I think this can be constexpr too.",
+      "range": {
+        "startLine": 32,
+        "startChar": 12,
+        "endLine": 32,
+        "endChar": 29
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a589eab6",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "this should be\n\n#if trace/annotations\nreturn true;\n#else if asserts\nreturn severity \u003d\u003d LOG_ERR;\n#else\nreturn false;\n#endif",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 6
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_45991605",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "is this for the platform? Maybe we should combine this with the DebugAnnotator?",
+      "range": {
+        "startLine": 109,
+        "startChar": 5,
+        "endLine": 109,
+        "endChar": 25
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_65453290",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "use ANGLE style: strNewline.. although that\u0027s an odd name.",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 123,
+        "endChar": 27
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_85486ea7",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "this is a bit of a WTF.. I didn\u0027t realize we used a static file. this is not going to fly. any thoughts on how to fix this? can always do it in a follow-up patch.",
+      "range": {
+        "startLine": 159,
+        "startChar": 4,
+        "endLine": 159,
+        "endChar": 10
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_257dfacf",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "shouldn\u0027t these be in a private namespace (priv) since they aren\u0027t accessible outside of the logging macros?",
+      "range": {
+        "startLine": 64,
+        "startChar": 5,
+        "endLine": 64,
+        "endChar": 27
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_45803695",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "use using.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 7
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_e5660245",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "COMPACT_ANGLE_LOG_.....",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 88,
+        "endChar": 41
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a5700af5",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "let\u0027s use ANGLE style here... lower case init, m prefix for mSeverity, mStream, etc.",
+      "range": {
+        "startLine": 136,
+        "startChar": 9,
+        "endLine": 136,
+        "endChar": 13
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_45c7d6fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "is it possible to define a stream operator which takes const gl::Format \u0026? Then in the future we could interpret this automatically as the string name of the format (when that is available), for now we can make it output the sized hex format.",
+      "range": {
+        "startLine": 292,
+        "startChar": 71,
+        "endLine": 293,
+        "endChar": 75
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_05d9dedb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "how about making a stream operator that takes HRESULT, like I did for gl::ErrorStream and friends.",
+      "range": {
+        "startLine": 621,
+        "startChar": 12,
+        "endLine": 622,
+        "endChar": 52
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a5d7aaa8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "here we can take a gl::Error stream op.",
+      "range": {
+        "startLine": 793,
+        "startChar": 21,
+        "endLine": 794,
+        "endChar": 45
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_c5d2e6b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/StateManager9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "UNREACHABLE(), no?",
+      "range": {
+        "startLine": 753,
+        "startChar": 8,
+        "endLine": 753,
+        "endChar": 21
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_6573f207",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "didn\u0027t we have it so that WARN() calls the platform? you should remove this.",
+      "range": {
+        "startLine": 633,
+        "startChar": 8,
+        "endLine": 633,
+        "endChar": 60
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_85762ef5",
+        "filename": "src/libANGLE/renderer/gl/egl/SurfaceEGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:10:22Z",
+      "side": 1,
+      "message": "same with egl::Error.",
+      "range": {
+        "startLine": 100,
+        "startChar": 14,
+        "endLine": 100,
+        "endChar": 34
+      },
+      "revId": "d29205896242d1373aa910909dc5a95ef5fc3fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
