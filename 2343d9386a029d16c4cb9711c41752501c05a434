@@ -184,6 +184,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_05cc7ec5",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T15:41:18Z",
+      "side": 1,
+      "message": "Got it. Thanks a lot.",
+      "parentUuid": "37b082be_a54faa81",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 272,
+        "endChar": 21
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_c2ae5cc9",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
@@ -213,6 +237,24 @@
       "side": 1,
       "message": "Always use gl::NoError(). This inconsistency is because we haven\u0027t had time to fix it throughout ANGLE. Feel free to update any instances of GL_NO_ERROR to NoError() whenever you feel like it.",
       "parentUuid": "37b082be_c2ae5cc9",
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_a5da4a76",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-03T15:41:18Z",
+      "side": 1,
+      "message": "Got it. Thanks!",
+      "parentUuid": "37b082be_0551de24",
       "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
