@@ -22,6 +22,30 @@
       "revId": "8e42b2078cd142baedfafb87ab313b3db2d4b300",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_054ebedf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-03T12:27:15Z",
+      "side": 1,
+      "message": "Ok. Refactor it as IntelDriverVersion class in driver_utils.h in case reusing it on linux.",
+      "parentUuid": "37b082be_97c75659",
+      "range": {
+        "startLine": 983,
+        "startChar": 0,
+        "endLine": 995,
+        "endChar": 1
+      },
+      "revId": "8e42b2078cd142baedfafb87ab313b3db2d4b300",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
