@@ -160,6 +160,30 @@
     },
     {
       "key": {
+        "uuid": "37b082be_a54faa81",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:49:43Z",
+      "side": 1,
+      "message": "Sure, feel free to update any of these you see. The only ones that you cannot fix are the ones that delete objects in the if case.",
+      "parentUuid": "37b082be_22a090d9",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 272,
+        "endChar": 21
+      },
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_c2ae5cc9",
         "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
         "patchSetId": 6
@@ -171,6 +195,24 @@
       "writtenOn": "2017-01-03T05:16:54Z",
       "side": 1,
       "message": "Would you like gl::Error(GL_NO_ERROR) or gl::NoError() in renderers? The inconsistency seems to be confusing. I think it is better to be consistent in angle.",
+      "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37b082be_0551de24",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-03T14:49:43Z",
+      "side": 1,
+      "message": "Always use gl::NoError(). This inconsistency is because we haven\u0027t had time to fix it throughout ANGLE. Feel free to update any instances of GL_NO_ERROR to NoError() whenever you feel like it.",
+      "parentUuid": "37b082be_c2ae5cc9",
       "revId": "2343d9386a029d16c4cb9711c41752501c05a434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
