@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_985db934",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T14:36:12Z",
+      "side": 1,
+      "message": "how about:\n\nReplace Error(GL_NO_ERROR) with NoError.\n\u003cspace\u003e\nIn order to make the errors be consistent throughout ANGLE.\n\u003cspace\u003e\nBUG\u003dangleproject:1686",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 54
+      },
+      "revId": "80a582be32f893ab56baace2f53a9dc41e78ed56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
