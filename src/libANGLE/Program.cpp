@@ -742,13 +742,13 @@ Error Program::loadBinary(const Context *context,
     unlink(false);
 
 #if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
-    return Error(GL_NO_ERROR);
+    return NoError();
 #else
     ASSERT(binaryFormat == GL_PROGRAM_BINARY_ANGLE);
     if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
     {
         mInfoLog << "Invalid program binary format.";
-        return Error(GL_NO_ERROR);
+        return NoError();
     }
 
     BinaryInputStream stream(binary, length);
@@ -759,7 +759,7 @@ Error Program::loadBinary(const Context *context,
         0)
     {
         mInfoLog << "Invalid program binary version.";
-        return Error(GL_NO_ERROR);
+        return NoError();
     }
 
     int majorVersion = stream.readInt<int>();
@@ -768,7 +768,7 @@ Error Program::loadBinary(const Context *context,
         minorVersion != context->getClientMinorVersion())
     {
         mInfoLog << "Cannot load program binaries across different ES context versions.";
-        return Error(GL_NO_ERROR);
+        return NoError();
     }
 
     mState.mComputeShaderLocalSize[0] = stream.readInt<int>();
@@ -1028,7 +1028,7 @@ Error Program::saveBinary(const Context *context,
         *length = streamLength;
     }
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 GLint Program::getBinaryLength() const

@@ -152,7 +152,7 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
         }
     }
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 gl::Error VertexArrayGL::syncIndexData(GLsizei count,
@@ -232,7 +232,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count,
         *outIndices = nullptr;
     }
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &activeAttributesMask,
@@ -275,7 +275,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
 
     if (streamingDataSize == 0)
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     if (mStreamingArrayBuffer == 0)
@@ -376,7 +376,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
         return Error(GL_OUT_OF_MEMORY, "Failed to unmap the client data streaming buffer.");
     }
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 GLuint VertexArrayGL::getVertexArrayID() const

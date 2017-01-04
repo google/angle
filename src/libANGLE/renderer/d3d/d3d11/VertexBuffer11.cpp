@@ -71,7 +71,7 @@ gl::Error VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
     mBufferSize   = size;
     mDynamicUsage = dynamicUsage;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error VertexBuffer11::mapResource()
@@ -93,7 +93,7 @@ gl::Error VertexBuffer11::mapResource()
         mMappedResourceData = reinterpret_cast<uint8_t *>(mappedResource.pData);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void VertexBuffer11::hintUnmapResource()
@@ -157,7 +157,7 @@ gl::Error VertexBuffer11::setBufferSize(unsigned int size)
     }
     else
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 }
 
@@ -180,7 +180,7 @@ gl::Error VertexBuffer11::discard()
 
     dxContext->Unmap(mBuffer, 0);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 ID3D11Buffer *VertexBuffer11::getBuffer() const

@@ -89,7 +89,7 @@ gl::Error Query11::queryCounter()
     ASSERT(getType() == GL_TIMESTAMP_EXT);
     mResultSum = 0;
     mPendingQueries.push_back(std::unique_ptr<QueryState>(new QueryState()));
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 template <typename T>
@@ -209,7 +209,7 @@ gl::Error Query11::resume()
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Query11::flush(bool force)
@@ -223,7 +223,7 @@ gl::Error Query11::flush(bool force)
             ANGLE_TRY(testQuery(query));
             if (!query->finished && !force)
             {
-                return gl::Error(GL_NO_ERROR);
+                return gl::NoError();
             }
         } while (!query->finished);
 

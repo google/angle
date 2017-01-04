@@ -98,7 +98,7 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
     stream->writeInt(binaryLength);
     stream->writeBytes(&binary[0], binaryLength);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void ProgramGL::setBinaryRetrievableHint(bool retrievable)

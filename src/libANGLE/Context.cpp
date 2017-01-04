@@ -1095,7 +1095,7 @@ Error Context::beginQuery(GLenum target, GLuint query)
     // set query as active for specified target only if begin succeeded
     mGLState.setActiveQuery(target, queryObject);
 
-    return Error(GL_NO_ERROR);
+    return NoError();
 }
 
 Error Context::endQuery(GLenum target)

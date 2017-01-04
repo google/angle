@@ -182,7 +182,7 @@ gl::Error BufferD3D::getIndexRange(GLenum type,
     ANGLE_TRY(getData(&data));
 
     *outRange = gl::ComputeIndexRange(type, data + offset, count, primitiveRestartEnabled);
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 }  // namespace rx

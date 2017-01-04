@@ -93,7 +93,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
 
     NiceMock<MockTextureImpl> *textureImpl = new NiceMock<MockTextureImpl>();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));
-    EXPECT_CALL(*textureImpl, setStorage(_, _, _, _)).WillOnce(Return(Error(GL_NO_ERROR)));
+    EXPECT_CALL(*textureImpl, setStorage(_, _, _, _)).WillOnce(Return(NoError()));
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
 
     Texture *texture = new Texture(&mockFactory, 0, GL_TEXTURE_2D);

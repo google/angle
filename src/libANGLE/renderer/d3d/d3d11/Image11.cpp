@@ -490,7 +490,7 @@ gl::Error Image11::createStagingTexture()
 {
     if (mStagingTexture)
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     ASSERT(mWidth > 0 && mHeight > 0 && mDepth > 0);
@@ -598,7 +598,7 @@ gl::Error Image11::createStagingTexture()
     }
 
     mDirty = false;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Image11::map(D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map)
@@ -627,7 +627,7 @@ gl::Error Image11::map(D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map)
 
     mDirty = true;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void Image11::unmap()

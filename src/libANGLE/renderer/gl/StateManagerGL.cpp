@@ -755,7 +755,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
@@ -859,7 +859,7 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
         mPrevDrawTransformFeedback = nullptr;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void StateManagerGL::setAttributeCurrentData(size_t index,

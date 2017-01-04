@@ -268,7 +268,7 @@ gl::Error FramebufferD3D::blit(ContextImpl *context,
                        (mask & GL_DEPTH_BUFFER_BIT) != 0, (mask & GL_STENCIL_BUFFER_BIT) != 0,
                        filter, sourceFramebuffer));
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 bool FramebufferD3D::checkStatus() const

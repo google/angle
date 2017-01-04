@@ -154,7 +154,7 @@ Error Compiler::release()
 
     mImplementation->release();
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 ShHandle Compiler::getCompilerHandle(GLenum type)

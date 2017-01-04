@@ -512,7 +512,7 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,
     context->CopySubresourceRegion(dstTexture, dstSubresource, region.x, region.y, region.z,
                                    srcTexture, srcSubresource, pSrcBox);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
@@ -1067,7 +1067,7 @@ gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
         d3d11::SetDebugName(*outputTexture, "TexStorage2D.Texture");
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
@@ -1164,7 +1164,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
         SafeRelease(rtv);
 
         *outRT = mRenderTarget[level];
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     ASSERT(mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
@@ -1247,7 +1247,7 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel,
 
     d3d11::SetDebugName(*outSRV, "TexStorage2D.SRV");
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2D::getSwizzleTexture(ID3D11Resource **outTexture)
@@ -1284,7 +1284,7 @@ gl::Error TextureStorage11_2D::getSwizzleTexture(ID3D11Resource **outTexture)
     }
 
     *outTexture = mSwizzleTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV)
@@ -1435,13 +1435,13 @@ gl::Error TextureStorage11_External::releaseAssociatedImage(const gl::ImageIndex
 gl::Error TextureStorage11_External::getResource(ID3D11Resource **outResource)
 {
     *outResource = mTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_External::getMippedResource(ID3D11Resource **outResource)
 {
     *outResource = mTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_External::getRenderTarget(const gl::ImageIndex &index,
@@ -1600,7 +1600,7 @@ bool TextureStorage11_EGLImage::isAssociatedImageValid(const gl::ImageIndex &, I
 
 gl::Error TextureStorage11_EGLImage::releaseAssociatedImage(const gl::ImageIndex &, Image11 *)
 {
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(bool)
@@ -1643,7 +1643,7 @@ gl::Error TextureStorage11_EGLImage::getSwizzleTexture(ID3D11Resource **outTextu
     }
 
     *outTexture = mSwizzleTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(int mipLevel,
@@ -1739,7 +1739,7 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
         (*outSRV)->AddRef();
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_EGLImage::getImageRenderTarget(RenderTarget11 **outRT) const
@@ -2161,7 +2161,7 @@ gl::Error TextureStorage11_Cube::createRenderTargetSRV(ID3D11Resource *texture,
             "Failed to create internal shader resource view for texture storage, result: 0x%X.",
             result);
     }
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
@@ -2214,7 +2214,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 
             ASSERT(outRT);
             *outRT = mLevelZeroRenderTarget[faceIndex];
-            return gl::Error(GL_NO_ERROR);
+            return gl::NoError();
         }
 
         ID3D11ShaderResourceView *srv = nullptr;
@@ -2315,7 +2315,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 
     ASSERT(outRT);
     *outRT = mRenderTarget[faceIndex][level];
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
@@ -2382,7 +2382,7 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
 
     d3d11::SetDebugName(*outSRV, "TexStorageCube.SRV");
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::getSwizzleTexture(ID3D11Resource **outTexture)
@@ -2419,7 +2419,7 @@ gl::Error TextureStorage11_Cube::getSwizzleTexture(ID3D11Resource **outTexture)
     }
 
     *outTexture = mSwizzleTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
@@ -2708,7 +2708,7 @@ gl::Error TextureStorage11_3D::getResource(ID3D11Resource **outResource)
     }
 
     *outResource = mTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::createSRV(int baseLevel,
@@ -2737,7 +2737,7 @@ gl::Error TextureStorage11_3D::createSRV(int baseLevel,
 
     d3d11::SetDebugName(*outSRV, "TexStorage3D.SRV");
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT)
@@ -2795,7 +2795,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
 
         ASSERT(outRT);
         *outRT = mLevelRenderTargets[mipLevel];
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
     else
     {
@@ -2884,7 +2884,7 @@ gl::Error TextureStorage11_3D::getSwizzleTexture(ID3D11Resource **outTexture)
     }
 
     *outTexture = mSwizzleTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV)
@@ -2922,7 +2922,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel, ID3D11Render
     }
 
     *outRTV = mSwizzleRenderTargets[mipLevel];
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer,
@@ -3115,7 +3115,7 @@ gl::Error TextureStorage11_2DArray::getResource(ID3D11Resource **outResource)
     }
 
     *outResource = mTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
@@ -3144,7 +3144,7 @@ gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
 
     d3d11::SetDebugName(*outSRV, "TexStorage2DArray.SRV");
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *texture,
@@ -3172,7 +3172,7 @@ gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *textur
             result);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
@@ -3322,7 +3322,7 @@ gl::Error TextureStorage11_2DArray::getSwizzleTexture(ID3D11Resource **outTextur
     }
 
     *outTexture = mSwizzleTexture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,

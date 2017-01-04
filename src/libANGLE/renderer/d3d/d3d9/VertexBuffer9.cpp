@@ -53,7 +53,7 @@ gl::Error VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
 
     mBufferSize = size;
     mDynamicUsage = dynamicUsage;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib,
@@ -113,7 +113,7 @@ gl::Error VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib
 
     mVertexBuffer->Unlock();
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 unsigned int VertexBuffer9::getBufferSize() const
@@ -129,7 +129,7 @@ gl::Error VertexBuffer9::setBufferSize(unsigned int size)
     }
     else
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 }
 
@@ -155,7 +155,7 @@ gl::Error VertexBuffer9::discard()
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to unlock internal buffer for discarding, HRESULT: 0x%08x", result);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 IDirect3DVertexBuffer9 * VertexBuffer9::getBuffer() const

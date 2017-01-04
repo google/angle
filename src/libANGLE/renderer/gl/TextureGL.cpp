@@ -307,7 +307,7 @@ gl::Error TextureGL::setSubImage(GLenum target, size_t level, const gl::Box &are
                                   texSubImageFormat.type, pixels);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::setSubImageRowByRowWorkaround(GLenum target,
@@ -482,7 +482,7 @@ gl::Error TextureGL::setCompressedImage(GLenum target, size_t level, GLenum inte
     setLevelInfo(level, 1, GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat));
     ASSERT(!mLevelInfo[level].lumaWorkaround.enabled);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
@@ -516,7 +516,7 @@ gl::Error TextureGL::setCompressedSubImage(GLenum target, size_t level, const gl
     ASSERT(!mLevelInfo[level].lumaWorkaround.enabled &&
            !GetLevelInfo(format, compressedTexSubImageFormat.format).lumaWorkaround.enabled);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
@@ -558,7 +558,7 @@ gl::Error TextureGL::copyImage(GLenum target, size_t level, const gl::Rectangle 
 
     setLevelInfo(level, 1, levelInfo);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
@@ -601,7 +601,7 @@ gl::Error TextureGL::copySubImage(GLenum target, size_t level, const gl::Offset 
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::copyTexture(GLenum internalFormat,
@@ -804,7 +804,7 @@ gl::Error TextureGL::setStorage(GLenum target,
 
     setLevelInfo(0, levels, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error TextureGL::setImageExternal(GLenum target,
@@ -827,7 +827,7 @@ gl::Error TextureGL::generateMipmap()
 
     setLevelInfo(effectiveBaseLevel, maxLevel - effectiveBaseLevel, mLevelInfo[effectiveBaseLevel]);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void TextureGL::bindTexImage(egl::Surface *surface)

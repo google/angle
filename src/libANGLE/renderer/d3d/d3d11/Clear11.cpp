@@ -252,7 +252,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                                        clearParams.scissor.y + clearParams.scissor.height <= 0))
     {
         // Scissor is enabled and the scissor rectangle is outside the renderbuffer
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     bool needScissoredClear =

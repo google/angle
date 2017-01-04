@@ -118,7 +118,7 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
         return error;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 }  // anonymous namespace
@@ -210,7 +210,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         translated->serial = buffer->getSerial();
         translated->startIndex = (offset >> srcTypeInfo.bytesShift);
         translated->startOffset = offset;
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
     else
     {
@@ -277,7 +277,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         translated->startOffset = (offset >> srcTypeInfo.bytesShift) << dstTypeInfo.bytesShift;
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error IndexDataManager::streamIndexData(const GLvoid *data,
@@ -306,7 +306,7 @@ gl::Error IndexDataManager::streamIndexData(const GLvoid *data,
     translated->startIndex = (offset >> dstTypeInfo.bytesShift);
     translated->startOffset = offset;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
@@ -328,7 +328,7 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
         }
 
         *outBuffer = mStreamingBufferInt;
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
     else
     {
@@ -347,7 +347,7 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
         }
 
         *outBuffer = mStreamingBufferShort;
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 }
 

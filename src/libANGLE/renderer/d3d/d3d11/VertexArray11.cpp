@@ -216,7 +216,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(VertexDataManager *vertexD
                                                       start, count, instances);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() const

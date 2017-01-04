@@ -1095,7 +1095,7 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 gl::Error Renderer11::flush()
 {
     mDeviceContext->Flush();
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::finish()
@@ -1143,7 +1143,7 @@ gl::Error Renderer11::finish()
         }
     } while (result == S_FALSE);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 bool Renderer11::isValidNativeWindow(EGLNativeWindowType window) const
@@ -1307,7 +1307,7 @@ gl::Error Renderer11::generateSwizzle(gl::Texture *texture)
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::generateSwizzles(const gl::ContextState &data, gl::SamplerType type)
@@ -1442,7 +1442,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 
     mStateManager.setShaderResource(type, index, textureSRV);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
@@ -1842,7 +1842,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
         // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
         if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
         {
-            return gl::Error(GL_NO_ERROR);
+            return gl::NoError();
         }
 
         ID3D11PixelShader *pixelShader = GetAs<ShaderExecutable11>(pixelExe)->getPixelShader();
@@ -1868,7 +1868,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
         {
             mDeviceContext->Draw(count, 0);
         }
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     if (mode == GL_LINE_LOOP)
@@ -1907,7 +1907,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
         {
             mDeviceContext->DrawInstanced(count, instances, 0, 0);
         }
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
@@ -1921,7 +1921,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
     {
         mDeviceContext->Draw(count, 0);
     }
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
@@ -1969,7 +1969,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
         {
             mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
         }
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
@@ -1991,7 +1991,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
     {
         mDeviceContext->DrawIndexed(count, 0, -minIndex);
     }
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
@@ -2419,7 +2419,7 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         }
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 // SamplerMetadataD3D11 implementation
@@ -3428,7 +3428,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             d3d11::Format::Get(GL_NONE, mRenderer11DeviceCaps), width, height, 1, supportedSamples);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT)
@@ -3446,7 +3446,7 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
                                           0, source11->getTexture(),
                                           source11->getSubresourceIndex(), nullptr);
     *outRT = newRT;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::loadExecutable(const void *function,
@@ -3540,7 +3540,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
             return gl::Error(GL_INVALID_OPERATION);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
@@ -3617,7 +3617,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     if (!binary)
     {
         *outExectuable = NULL;
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     gl::Error error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
@@ -3977,7 +3977,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
 
     mDeviceContext->Unmap(readResource, 0);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,

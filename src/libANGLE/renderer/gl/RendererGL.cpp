@@ -160,7 +160,7 @@ RendererGL::~RendererGL()
 gl::Error RendererGL::flush()
 {
     mFunctions->flush();
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::finish()
@@ -181,7 +181,7 @@ gl::Error RendererGL::finish()
     }
 #endif
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawArrays(const gl::ContextState &data,
@@ -271,7 +271,7 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
         mFunctions->drawRangeElements(mode, start, end, count, type, drawIndexPointer);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error RendererGL::drawArraysIndirect(const gl::ContextState &data,

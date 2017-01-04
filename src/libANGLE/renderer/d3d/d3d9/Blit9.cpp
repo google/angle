@@ -84,7 +84,7 @@ gl::Error Blit9::initialize()
 {
     if (mGeometryLoaded)
     {
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     static const float quad[] =
@@ -134,7 +134,7 @@ gl::Error Blit9::initialize()
     }
 
     mGeometryLoaded = true;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 template <class D3DShaderType>
@@ -164,7 +164,7 @@ gl::Error Blit9::setShader(ShaderId source, const char *profile,
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to set shader for blit operation, result: 0x%X.", hr);
     }
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Blit9::setVertexShader(ShaderId shader)
@@ -229,7 +229,7 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 
     restoreState();
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Blit9::copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, const gl::Offset &destOffset, TextureStorage *storage, GLint level)
@@ -387,7 +387,7 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source,
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to blit between textures, StretchRect result: 0x%X.", result);
         }
 
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
     else
     {
@@ -601,7 +601,7 @@ gl::Error Blit9::setFormatConvertShaders(GLenum destFormat,
 
     mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst, 2);
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
@@ -648,7 +648,7 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
     }
 
     *outTexture = texture;
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void Blit9::setViewportAndShaderConstants(const RECT &sourceRect,

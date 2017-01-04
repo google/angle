@@ -206,7 +206,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(
                 mLastSetVDecl = entry->vertexDeclaration;
             }
 
-            return gl::Error(GL_NO_ERROR);
+            return gl::NoError();
         }
     }
 
@@ -238,7 +238,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(
     mLastSetVDecl = lastCache->vertexDeclaration;
     lastCache->lruCount = ++mMaxLru;
 
-    return gl::Error(GL_NO_ERROR);
+    return gl::NoError();
 }
 
 void VertexDeclarationCache::markStateDirty()

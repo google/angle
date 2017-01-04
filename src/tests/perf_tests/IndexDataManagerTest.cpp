@@ -86,7 +86,7 @@ class MockBufferD3D : public rx::BufferD3D
         {
             memcpy(&mData[0], data, size);
         }
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
     MOCK_METHOD4(setSubData, gl::Error(GLenum, const void *, size_t, size_t));
@@ -105,7 +105,7 @@ class MockBufferD3D : public rx::BufferD3D
     gl::Error getData(const uint8_t **outData) override
     {
         *outData = &mData[0];
-        return gl::Error(GL_NO_ERROR);
+        return gl::NoError();
     }
 
   private:
