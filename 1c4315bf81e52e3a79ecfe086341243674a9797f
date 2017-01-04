@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_03007e68",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "is this first part relevant? probably can remove it? Which parts of the driver version are necessary?",
+      "range": {
+        "startLine": 86,
+        "startChar": 53,
+        "endLine": 86,
+        "endChar": 59
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_23f58263",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 983,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "capitalize.",
+      "range": {
+        "startLine": 983,
+        "startChar": 20,
+        "endLine": 983,
+        "endChar": 41
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_83f46e65",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 986,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "you can pass zeros here.",
+      "range": {
+        "startLine": 986,
+        "startChar": 19,
+        "endLine": 986,
+        "endChar": 37
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_63ef8a93",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "maybe we can ignore the first two parts. comment here as to why.",
+      "range": {
+        "startLine": 990,
+        "startChar": 4,
+        "endLine": 992,
+        "endChar": 62
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_e35b7a9a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1870,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "do not use unique_ptr here. use a value.",
+      "range": {
+        "startLine": 1870,
+        "startChar": 13,
+        "endLine": 1870,
+        "endChar": 23
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_43a52653",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "this is a good comment, but I think some of it is windows-only. you should keep this comment, but update it to mention how Windows stores driver versions vs Linux.",
+      "range": {
+        "startLine": 78,
+        "startChar": 3,
+        "endLine": 88,
+        "endChar": 47
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_e329bafa",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "Can you remove this?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 17
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_230ca2b3",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "can you remove this default constructor?",
+      "range": {
+        "startLine": 54,
+        "startChar": 3,
+        "endLine": 54,
+        "endChar": 25
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_831b8ee6",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "if what you say is true, and the underlying driver version only uses two numbers, let\u0027s make this only take two part numbers.",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 87
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_a3a4128e",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "you can remove the destructor.",
+      "range": {
+        "startLine": 56,
+        "startChar": 3,
+        "endLine": 56,
+        "endChar": 28
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_63414aaa",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:59:57Z",
+      "side": 1,
+      "message": "if this function isn\u0027t used, maybe we can leave it out.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 63
+      },
+      "revId": "1c4315bf81e52e3a79ecfe086341243674a9797f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
