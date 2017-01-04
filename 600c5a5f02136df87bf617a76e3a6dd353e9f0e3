@@ -40,6 +40,24 @@
       "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1ec9b113",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 14
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T18:31:32Z",
+      "side": 1,
+      "message": "No, you\u0027re right. This is for emulation - if you wanted to emulate these formats on FL9_3, which I don\u0027t think is what you want.\n\nYou want to modify dxgi_support_data.json and indicate what features levels these new DXGI formats require according to \n\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ff471325(v\u003dvs.85).aspx\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/cc627091(v\u003dvs.85).aspx\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/cc627090(v\u003dvs.85).aspx\n\nIf you could include these links in gen_dxgi_support_tables.py in the header for dxgi_support_table.cpp and regenerate this file, that would be awesome. Also feel free to open an issue for documenting our D3D11 format tables, that would be appreciated, even if you don\u0027t feel like writing it, documenting your problems would help us write it up.",
+      "parentUuid": "37b082be_e35d975f",
+      "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
