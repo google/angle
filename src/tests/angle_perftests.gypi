@@ -19,6 +19,8 @@
             '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.h',
             '<(angle_path)/src/tests/perf_tests/BufferSubData.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
+            '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.cpp',
+            '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.h',
             '<(angle_path)/src/tests/perf_tests/DynamicPromotionPerfTest.cpp',
             '<(angle_path)/src/tests/perf_tests/EGLInitializePerf.cpp',
             '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
@@ -36,6 +38,8 @@
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.h',
+            '<(angle_path)/src/tests/test_utils/draw_call_perf_utils.cpp',
+            '<(angle_path)/src/tests/test_utils/draw_call_perf_utils.h',
         ],
         'angle_perf_tests_win_sources':
         [
