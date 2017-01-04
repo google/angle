@@ -46,9 +46,9 @@ const char *SimpleFragmentShaderSource()
     // clang-format on
 }
 
-void Generate2DTriangleData(int numTris, std::vector<float> *floatData)
+void Generate2DTriangleData(size_t numTris, std::vector<float> *floatData)
 {
-    for (int triIndex = 0; triIndex < numTris; ++triIndex)
+    for (size_t triIndex = 0; triIndex < numTris; ++triIndex)
     {
         floatData->push_back(1.0f);
         floatData->push_back(2.0f);
@@ -84,7 +84,7 @@ GLuint SetupSimpleScaleAndOffsetProgram()
     return program;
 }
 
-GLuint Create2DTriangleBuffer(int numTris, GLenum usage)
+GLuint Create2DTriangleBuffer(size_t numTris, GLenum usage)
 {
     GLuint buffer = 0u;
     glGenBuffers(1, &buffer);

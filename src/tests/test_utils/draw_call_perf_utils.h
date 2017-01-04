@@ -22,7 +22,7 @@ GLuint SetupSimpleScaleAndOffsetProgram();
 //   / \
 //  /   \
 // B-----C
-GLuint Create2DTriangleBuffer(int numTris, GLenum usage);
+GLuint Create2DTriangleBuffer(size_t numTris, GLenum usage);
 
 // Creates an FBO with a texture color attachment. The texture is GL_RGBA and has dimensions
 // width/height. The FBO and texture ids are written to the out parameters.
