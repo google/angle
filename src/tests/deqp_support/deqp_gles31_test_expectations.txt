@@ -82,8 +82,6 @@
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.samples_16.sample_mask_and_sample_coverage = FAIL
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.samples_16.sample_mask_and_sample_coverage_and_alpha_to_coverage = FAIL
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.samples_16.sample_mask_non_effective_bits = FAIL
-1442 OPENGL : dEQP-GLES31.functional.texture.multisample.negative.fbo_attach_different_fixed_state_tex_tex = FAIL
-1442 OPENGL : dEQP-GLES31.functional.texture.multisample.negative.fbo_attach_different_fixed_state_tex_rbo = FAIL
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.negative.texture_min_filter = FAIL
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.negative.texture_mag_filter = FAIL
 1442 OPENGL : dEQP-GLES31.functional.texture.multisample.negative.texture_wrap_s = FAIL

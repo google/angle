@@ -594,8 +594,9 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
     unsigned int colorbufferSize = 0;
     int samples = -1;
     bool missingAttachment = true;
+    Optional<GLboolean> fixedSampleLocations;
+    bool hasRenderbuffer = false;
 
-    // TODO(yizhou): Check status for default framebuffer parameters.
     for (const FramebufferAttachment &colorAttachment : mState.mColorAttachments)
     {
         if (colorAttachment.isAttached())
@@ -636,9 +637,23 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
+
+                // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS
+                // should be the same for all attached textures.
+                GLboolean fixedSampleloc = colorAttachment.getTexture()->getFixedSampleLocations(
+                    colorAttachment.getTextureImageIndex().type, 0);
+                if (fixedSampleLocations.valid() && fixedSampleloc != fixedSampleLocations.value())
+                {
+                    return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+                }
+                else
+                {
+                    fixedSampleLocations = fixedSampleloc;
+                }
             }
             else if (colorAttachment.type() == GL_RENDERBUFFER)
             {
+                hasRenderbuffer = true;
                 if (!formatCaps.renderable || format.info->depthBits > 0 ||
                     format.info->stencilBits > 0)
                 {
@@ -667,7 +682,7 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
             }
             else
             {
-                samples = colorAttachment.getSamples();
+                samples           = colorAttachment.getSamples();
                 colorbufferSize   = format.info->pixelBytes;
                 missingAttachment = false;
             }
@@ -811,8 +826,14 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
         }
     }
 
-    // we need to have at least one attachment to be complete
-    if (missingAttachment)
+    // ES3.1(section 9.4) requires that if no image is attached to the
+    // framebuffer, and either the value of the framebuffer's FRAMEBUFFER_DEFAULT_WIDTH
+    // or FRAMEBUFFER_DEFAULT_HEIGHT parameters is zero, the framebuffer is
+    // considered incomplete.
+    GLint defaultWidth  = mState.getDefaultWidth();
+    GLint defaultHeight = mState.getDefaultHeight();
+
+    if (missingAttachment && (defaultWidth == 0 || defaultHeight == 0))
     {
         return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
     }
@@ -822,6 +843,14 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
     if (state.getClientMajorVersion() < 3 && !mState.attachmentsHaveSameDimensions())
     {
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
+    }
+
+    // ES3.1(section 9.4) requires that if the attached images are a mix of renderbuffers
+    // and textures, the value of TEXTURE_FIXED_SAMPLE_LOCATIONS must be TRUE for all
+    // attached textures.
+    if (fixedSampleLocations.valid() && hasRenderbuffer && !fixedSampleLocations.value())
+    {
+        return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
     }
 
     syncState();

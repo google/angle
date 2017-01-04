@@ -107,15 +107,8 @@ TEST_P(TextureMultisampleTestES31, ValidateTextureStorageMultisampleParameters)
 {
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
     glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_RGBA8, 1, 1, GL_FALSE);
-    if (getClientMajorVersion() < 3 || getClientMinorVersion() < 1)
-    {
-        ASSERT_GL_ERROR(GL_INVALID_OPERATION);
-        return;
-    }
-    else
-    {
-        ASSERT_GL_NO_ERROR();
-    }
+    ASSERT_GL_NO_ERROR();
+
     GLint params = 0;
     glGetTexParameteriv(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_IMMUTABLE_FORMAT, &params);
     EXPECT_EQ(1, params);
