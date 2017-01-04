@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_b23b7e88",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-04T03:00:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_c4b7beb4",
+      "revId": "5624471f8365f3f8187153a6a65ae0acaaf4a585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773d9abc_84e3f6c0",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 12
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_92075acd",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3360,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-04T03:00:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_84e3f6c0",
+      "range": {
+        "startLine": 3360,
+        "startChar": 56,
+        "endLine": 3360,
+        "endChar": 70
+      },
+      "revId": "5624471f8365f3f8187153a6a65ae0acaaf4a585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773d9abc_a4b4bab0",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 12
@@ -53,6 +95,30 @@
       "writtenOn": "2017-01-03T17:38:13Z",
       "side": 1,
       "message": "ESSL300 would be more accurate.",
+      "range": {
+        "startLine": 3361,
+        "startChar": 50,
+        "endLine": 3361,
+        "endChar": 53
+      },
+      "revId": "5624471f8365f3f8187153a6a65ae0acaaf4a585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_7203d6c2",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3361,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-04T03:00:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_a4b4bab0",
       "range": {
         "startLine": 3361,
         "startChar": 50,
