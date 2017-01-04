@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_1550b4ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_65421263",
+      "range": {
+        "startLine": 1859,
+        "startChar": 7,
+        "endLine": 1860,
+        "endChar": 9
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_c5318600",
         "filename": "src/libANGLE/renderer/driver_utils.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-03T14:46:28Z",
       "side": 1,
       "message": "instead of doing this, compare the parts.",
+      "range": {
+        "startLine": 137,
+        "startChar": 11,
+        "endLine": 137,
+        "endChar": 88
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_d56d4caf",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_c5318600",
       "range": {
         "startLine": 137,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_f56a5094",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Yes, only check the last part is enough.",
+      "parentUuid": "37b082be_e52cc2ad",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 30
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_6519b290",
         "filename": "src/libANGLE/renderer/driver_utils.h",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-03T14:46:28Z",
       "side": 1,
       "message": "final, and angle::NonCopyable or define default copy ops.",
+      "range": {
+        "startLine": 48,
+        "startChar": 6,
+        "endLine": 48,
+        "endChar": 24
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_3555b8de",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_6519b290",
       "range": {
         "startLine": 48,
         "startChar": 6,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_555a3c0d",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_2523bac0",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 26
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_4526f6cf",
         "filename": "src/libANGLE/renderer/driver_utils.h",
         "patchSetId": 9
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-03T14:46:28Z",
       "side": 1,
       "message": "you can remove all these.",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 24
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_755f40fc",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_4526f6cf",
       "range": {
         "startLine": 61,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_9563c4c4",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_0528fe94",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 7
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_a536caf7",
         "filename": "src/libANGLE/renderer/driver_utils.h",
         "patchSetId": 9
@@ -174,6 +342,30 @@
       "writtenOn": "2017-01-03T14:46:28Z",
       "side": 1,
       "message": "make these member functions, so you don\u0027t need to define them as friends. Also pass by const \u0026, and name the parameters in the prototypes.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 56
+      },
+      "revId": "d9c589f9f8a14afe92802747c4d5fd02d704f30b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_b560c8b8",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-04T07:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_a536caf7",
       "range": {
         "startLine": 72,
         "startChar": 0,
