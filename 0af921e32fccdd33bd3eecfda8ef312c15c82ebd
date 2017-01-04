@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_f835e594",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "use nullptr everywhere in new code.",
+      "range": {
+        "startLine": 530,
+        "startChar": 25,
+        "endLine": 530,
+        "endChar": 29
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_980779cd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 751,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "this is incorrect. we can save and load binaries without having any attached shaders. remove this and the if.",
+      "range": {
+        "startLine": 751,
+        "startChar": 4,
+        "endLine": 751,
+        "endChar": 72
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_38cbed64",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "Instead of branching here, move the compute register saving into the code below. Do not branch, instead save the compute executable size and load it if it is not zero.",
+      "range": {
+        "startLine": 754,
+        "startChar": 0,
+        "endLine": 804,
+        "endChar": 41
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_58d0b10c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "similar comments here.",
+      "range": {
+        "startLine": 1046,
+        "startChar": 4,
+        "endLine": 1047,
+        "endChar": 5
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_f8e7a5f4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "move this code into the if computeShader and else blocks. don\u0027t call compileProgramExecutables in the compute shader block, instead make a new method compileComputeExecutable which takes the compute HLSL. therefore you won\u0027t need to store mComputeHLSL at all until we need dynamic generation, which we can solve later.",
+      "range": {
+        "startLine": 1653,
+        "startChar": 3,
+        "endLine": 1673,
+        "endChar": 5
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_38e20ded",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1726,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "merge this with the for loop below instead of making a new for loop here. Make a new method SafeGetImplAs\u003cT\u003e which returns null if the object is null.",
+      "range": {
+        "startLine": 1711,
+        "startChar": 8,
+        "endLine": 1726,
+        "endChar": 9
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_98f059b0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1778,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "merge this with the below loop. you can create a zero size storage for the compute storage / other storages, or skip creating them if the size is zero (you might have to fix other parts of the code which assume them to be non-null).",
+      "range": {
+        "startLine": 1765,
+        "startChar": 7,
+        "endLine": 1778,
+        "endChar": 89
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_78ae557f",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "lower case",
+      "range": {
+        "startLine": 86,
+        "startChar": 9,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_d89ca156",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3500,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "everywhere you are using gl::OutOfMemory or gl::InternalError, remove the result: 0x%X. That will print \"result: 0x%X, result: 0x\u003cactual result\u003e\" in the error stream, which is not what you want",
+      "range": {
+        "startLine": 3500,
+        "startChar": 69,
+        "endLine": 3500,
+        "endChar": 82
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_78d575fb",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "make a default constructor which sets some properties for the width and height of the window, as well as minimum bit sizes for RGBA (8).",
+      "range": {
+        "startLine": 338,
+        "startChar": 6,
+        "endLine": 338,
+        "endChar": 27
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_b8b6fdd8",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "you don\u0027t need to make this a method, include it in the body of the TEST_P.",
+      "range": {
+        "startLine": 341,
+        "startChar": 9,
+        "endLine": 341,
+        "endChar": 43
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_18af097e",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "Please add a TODO(yourname) indicating that you (or someone else) will add dispatch support when available.",
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_d8c3c145",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-04T16:17:07Z",
+      "side": 1,
+      "message": "comment before this test.",
+      "range": {
+        "startLine": 389,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 6
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
