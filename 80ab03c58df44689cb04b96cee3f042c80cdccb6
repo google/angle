@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_64686664",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-05T15:16:43Z",
+      "side": 0,
+      "message": "sadly, I think we need to keep these, because handling VertexAttribPointer will be different in ES 2.0/3.0 contexts and ES 3.1 contexts. Think of the GL back-end implementation - we\u0027ll want to call the matching function call (VertexAttribPointer/VertexAttribFormat/BindVertexBuffer/VertexAttribBinding).",
+      "range": {
+        "startLine": 102,
+        "startChar": 8,
+        "endLine": 104,
+        "endChar": 91
+      },
+      "revId": "80ab03c58df44689cb04b96cee3f042c80cdccb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
