@@ -16,6 +16,24 @@
       "revId": "481b132b144b16882665a5af3faaac4f1167d917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_22e813c4",
+        "filename": "src/tests/compiler_tests/SamplerMultisample_test.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-05T05:45:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "773d9abc_444e2eb4",
+      "revId": "481b132b144b16882665a5af3faaac4f1167d917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
