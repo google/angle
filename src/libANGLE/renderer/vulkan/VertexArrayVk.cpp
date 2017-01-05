@@ -23,10 +23,12 @@ namespace rx
 VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &state)
     : VertexArrayImpl(state),
       mCurrentArrayBufferHandles{},
+      mCurrentArrayBufferOffsets{},
       mCurrentArrayBufferResources{},
       mCurrentElementArrayBufferResource(nullptr)
 {
     mCurrentArrayBufferHandles.fill(VK_NULL_HANDLE);
+    mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBufferResources.fill(nullptr);
 
     mPackedInputBindings.fill({0, 0});
@@ -39,6 +41,53 @@ VertexArrayVk::~VertexArrayVk()
 
 void VertexArrayVk::destroy(const gl::Context *context)
 {
+}
+
+gl::Error VertexArrayVk::streamVertexData(ContextVk *context,
+                                          StreamingBuffer *stream,
+                                          int firstVertex,
+                                          int lastVertex)
+{
+    const auto &attribs          = mState.getVertexAttributes();
+    const auto &bindings         = mState.getVertexBindings();
+    const gl::Program *programGL = context->getGLState().getProgram();
+
+    // TODO(fjhenigman): When we have a bunch of interleaved attributes, they end up
+    // un-interleaved, wasting space and copying time.  Consider improving on that.
+    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
+    {
+        const auto &attrib   = attribs[attribIndex];
+        const auto &binding  = bindings[attrib.bindingIndex];
+        gl::Buffer *bufferGL = binding.getBuffer().get();
+
+        if (attrib.enabled && !bufferGL)
+        {
+            // TODO(fjhenigman): Work with more formats than just GL_FLOAT.
+            if (attrib.type != GL_FLOAT)
+            {
+                UNIMPLEMENTED();
+                return gl::InternalError();
+            }
+
+            // Only [firstVertex, lastVertex] is needed by the upcoming draw so that
+            // is all we copy, but we allocate space for [0, lastVertex] so indexing
+            // will work.  If we don't start at zero all the indices will be off.
+            // TODO(fjhenigman): See if we can account for indices being off by adjusting
+            // the offset, thus avoiding wasted memory.
+            const size_t firstByte = firstVertex * binding.getStride();
+            const size_t lastByte =
+                lastVertex * binding.getStride() + gl::ComputeVertexAttributeTypeSize(attrib);
+            uint8_t *dst = nullptr;
+            ANGLE_TRY(stream->allocate(context, lastByte, &dst,
+                                       &mCurrentArrayBufferHandles[attribIndex],
+                                       &mCurrentArrayBufferOffsets[attribIndex]));
+            memcpy(dst + firstByte, static_cast<const uint8_t *>(attrib.pointer) + firstByte,
+                   lastByte - firstByte);
+        }
+    }
+
+    ANGLE_TRY(stream->flush(context));
+    return gl::NoError();
 }
 
 void VertexArrayVk::syncState(const gl::Context *context,
@@ -94,6 +143,8 @@ void VertexArrayVk::syncState(const gl::Context *context,
                 mCurrentArrayBufferResources[attribIndex] = nullptr;
                 mCurrentArrayBufferHandles[attribIndex]   = VK_NULL_HANDLE;
             }
+            // TODO(jmadill): Offset handling.  Assume zero for now.
+            mCurrentArrayBufferOffsets[attribIndex] = 0;
         }
         else
         {
@@ -107,6 +158,11 @@ const gl::AttribArray<VkBuffer> &VertexArrayVk::getCurrentArrayBufferHandles() c
     return mCurrentArrayBufferHandles;
 }
 
+const gl::AttribArray<VkDeviceSize> &VertexArrayVk::getCurrentArrayBufferOffsets() const
+{
+    return mCurrentArrayBufferOffsets;
+}
+
 void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
                                            const gl::AttributesMask &activeAttribsMask,
                                            Serial serial,
@@ -115,8 +171,8 @@ void VertexArrayVk::updateDrawDependencies(vk::CommandBufferNode *readNode,
     // Handle the bound array buffers.
     for (auto attribIndex : activeAttribsMask)
     {
-        ASSERT(mCurrentArrayBufferResources[attribIndex]);
-        mCurrentArrayBufferResources[attribIndex]->onReadResource(readNode, serial);
+        if (mCurrentArrayBufferResources[attribIndex])
+            mCurrentArrayBufferResources[attribIndex]->onReadResource(readNode, serial);
     }
 
     // Handle the bound element array buffer.

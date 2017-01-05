@@ -16,6 +16,7 @@
 namespace rx
 {
 class BufferVk;
+class StreamingBuffer;
 
 class VertexArrayVk : public VertexArrayImpl
 {
@@ -25,10 +26,15 @@ class VertexArrayVk : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
+    gl::Error streamVertexData(ContextVk *context,
+                               StreamingBuffer *stream,
+                               int firstVertex,
+                               int lastVertex);
     void syncState(const gl::Context *context,
                    const gl::VertexArray::DirtyBits &dirtyBits) override;
 
     const gl::AttribArray<VkBuffer> &getCurrentArrayBufferHandles() const;
+    const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferOffsets() const;
 
     void updateDrawDependencies(vk::CommandBufferNode *readNode,
                                 const gl::AttributesMask &activeAttribsMask,
@@ -49,6 +55,7 @@ class VertexArrayVk : public VertexArrayImpl
                                const gl::VertexAttribute &attrib);
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
+    gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
     gl::AttribArray<ResourceVk *> mCurrentArrayBufferResources;
     ResourceVk *mCurrentElementArrayBufferResource;
 

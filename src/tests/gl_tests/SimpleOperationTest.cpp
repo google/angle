@@ -333,6 +333,18 @@ TEST_P(SimpleOperationTest, DrawQuad)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Simple quad test with data in client memory, not vertex buffer.
+TEST_P(SimpleOperationTest, DrawQuadFromClientMemory)
+{
+    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, false);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Simple double quad test.
 TEST_P(SimpleOperationTest, DrawQuadTwice)
 {
