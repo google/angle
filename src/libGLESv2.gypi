@@ -716,19 +716,6 @@
             # have special D3D11 code for Debug runtime error message handling.
             'target_name': 'libANGLE_d3d11_config',
             'type': 'none',
-            'direct_dependent_settings':
-            {
-                'conditions':
-                [
-                    ['angle_enable_d3d11==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_D3D11',
-                        ],
-                    }],
-                ],
-            },
             'conditions':
             [
                 ['angle_enable_d3d11==1',
@@ -766,6 +753,52 @@
         },
 
         {
+            'target_name': 'libANGLE_renderer_config',
+            'type': 'none',
+            'direct_dependent_settings':
+            {
+                'conditions':
+                [
+                    ['angle_enable_d3d11==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_D3D11',
+                        ],
+                    }],
+                    ['angle_enable_d3d9==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_D3D9',
+                        ],
+                    }],
+                    ['angle_enable_gl==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_OPENGL',
+                        ],
+                    }],
+                    ['angle_enable_vulkan==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_VULKAN',
+                        ],
+                    }],
+                    ['angle_enable_null==1',
+                    {
+                        'defines':
+                        [
+                            'ANGLE_ENABLE_NULL',
+                        ],
+                    }],
+                ],
+            },
+        },
+
+        {
             'target_name': 'libANGLE',
             'type': 'static_library',
             'dependencies':
@@ -775,6 +808,7 @@
                 'angle_common',
                 'angle_image_util',
                 'libANGLE_d3d11_config',
+                'libANGLE_renderer_config',
             ],
             'includes': [ '../gyp/common_defines.gypi', ],
             'include_dirs':
@@ -796,6 +830,7 @@
             [
                 'angle_common',
                 'libANGLE_d3d11_config',
+                'libANGLE_renderer_config',
             ],
             'direct_dependent_settings':
             {
@@ -830,19 +865,8 @@
                             'DYLIB_INSTALL_NAME_BASE': '@rpath',
                         },
                     }],
-                    ['angle_enable_d3d9==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_D3D9',
-                        ],
-                    }],
                     ['angle_enable_gl==1',
                     {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_OPENGL',
-                        ],
                         'conditions':
                         [
                             ['angle_use_glx==1',
@@ -852,20 +876,6 @@
                                     'ANGLE_USE_X11',
                                 ],
                             }],
-                        ],
-                    }],
-                    ['angle_enable_vulkan==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_VULKAN',
-                        ],
-                    }],
-                    ['angle_enable_null==1',
-                    {
-                        'defines':
-                        [
-                            'ANGLE_ENABLE_NULL',
                         ],
                     }],
                 ],
@@ -884,10 +894,6 @@
                     'sources':
                     [
                         '<@(libangle_d3d9_sources)',
-                    ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_D3D9',
                     ],
                     'link_settings':
                     {
@@ -931,10 +937,6 @@
                     'sources':
                     [
                         '<@(libangle_gl_sources)',
-                    ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_OPENGL',
                     ],
                     'conditions':
                     [
@@ -1042,10 +1044,6 @@
                     [
                         'vulkan_loader',
                     ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_VULKAN',
-                    ],
                     'export_dependent_settings':
                     [
                         'vulkan_loader',
@@ -1056,10 +1054,6 @@
                     'sources':
                     [
                         '<@(libangle_null_sources)',
-                    ],
-                    'defines':
-                    [
-                        'ANGLE_ENABLE_NULL',
                     ],
                 }],
                 ['angle_build_winrt==0 and OS=="win"',

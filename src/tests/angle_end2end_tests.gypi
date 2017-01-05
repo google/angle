@@ -115,6 +115,8 @@
         '<(angle_path)/src/angle.gyp:angle_image_util',
         # We use the D3D11 config for enabling Debug runtime error logging.
         '<(angle_path)/src/angle.gyp:libANGLE_d3d11_config',
+        # This lets us filter test configs more intelligently.
+        '<(angle_path)/src/angle.gyp:libANGLE_renderer_config',
         '<(angle_path)/src/angle.gyp:libEGL',
         '<(angle_path)/src/angle.gyp:libGLESv2',
         '<(angle_path)/src/tests/tests.gyp:angle_test_support',
