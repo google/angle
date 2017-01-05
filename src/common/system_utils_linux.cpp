@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Linux_system_utils.cpp: Implementation of OS-specific functions for Linux
+// system_utils_linux.cpp: Implementation of OS-specific functions for Linux
 
 #include "system_utils.h"
 
@@ -38,7 +38,7 @@ std::string GetExecutablePathImpl()
 std::string GetExecutableDirectoryImpl()
 {
     std::string executablePath = GetExecutablePath();
-    size_t lastPathSepLoc = executablePath.find_last_of("/");
+    size_t lastPathSepLoc      = executablePath.find_last_of("/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
@@ -46,12 +46,14 @@ std::string GetExecutableDirectoryImpl()
 
 const char *GetExecutablePath()
 {
+    // TODO(jmadill): Make global static string thread-safe.
     const static std::string &exePath = GetExecutablePathImpl();
     return exePath.c_str();
 }
 
 const char *GetExecutableDirectory()
 {
+    // TODO(jmadill): Make global static string thread-safe.
     const static std::string &exeDir = GetExecutableDirectoryImpl();
     return exeDir.c_str();
 }
@@ -61,4 +63,4 @@ const char *GetSharedLibraryExtension()
     return "so";
 }
 
-} // namespace angle
+}  // namespace angle

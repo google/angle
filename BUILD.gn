@@ -131,6 +131,18 @@ config("angle_common_config") {
 static_library("angle_common") {
   sources = rebase_path(gles_gypi.libangle_common_sources, ".", "src")
 
+  if (is_linux || is_android) {
+    sources += rebase_path(gles_gypi.libangle_common_linux_sources, ".", "src")
+  }
+
+  if (is_mac) {
+    sources += rebase_path(gles_gypi.libangle_common_mac_sources, ".", "src")
+  }
+
+  if (is_win) {
+    sources += rebase_path(gles_gypi.libangle_common_win_sources, ".", "src")
+  }
+
   configs -= angle_undefine_configs
   configs += [
     ":angle_common_config",

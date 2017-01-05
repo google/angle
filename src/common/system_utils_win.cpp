@@ -1,15 +1,16 @@
 //
-// Copyright (c) 2015 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2014 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
 
-// OSX_system_utils.cpp: Implementation of OS-specific functions for OSX
+// system_utils_win.cpp: Implementation of OS-specific functions for Windows
 
 #include "system_utils.h"
 
-#include <cstdlib>
-#include <mach-o/dyld.h>
+#include <stdarg.h>
+#include <windows.h>
+#include <array>
 #include <vector>
 
 namespace angle
@@ -20,28 +21,16 @@ namespace
 
 std::string GetExecutablePathImpl()
 {
-    std::string result;
-
-    uint32_t size = 0;
-    _NSGetExecutablePath(nullptr, &size);
-
-    std::vector<char> buffer;
-    buffer.resize(size + 1);
-
-    _NSGetExecutablePath(buffer.data(), &size);
-    buffer[size] = '\0';
-
-    if (!strrchr(buffer.data(), '/'))
-    {
-        return "";
-    }
-    return buffer.data();
+    std::array<char, MAX_PATH> executableFileBuf;
+    DWORD executablePathLen = GetModuleFileNameA(NULL, executableFileBuf.data(),
+                                                 static_cast<DWORD>(executableFileBuf.size()));
+    return (executablePathLen > 0 ? std::string(executableFileBuf.data()) : "");
 }
 
 std::string GetExecutableDirectoryImpl()
 {
     std::string executablePath = GetExecutablePath();
-    size_t lastPathSepLoc = executablePath.find_last_of("/");
+    size_t lastPathSepLoc      = executablePath.find_last_of("\\/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
 }
 
@@ -49,19 +38,21 @@ std::string GetExecutableDirectoryImpl()
 
 const char *GetExecutablePath()
 {
+    // TODO(jmadill): Make global static string thread-safe.
     const static std::string &exePath = GetExecutablePathImpl();
     return exePath.c_str();
 }
 
 const char *GetExecutableDirectory()
 {
+    // TODO(jmadill): Make global static string thread-safe.
     const static std::string &exeDir = GetExecutableDirectoryImpl();
     return exeDir.c_str();
 }
 
 const char *GetSharedLibraryExtension()
 {
-    return "dylib";
+    return "dll";
 }
 
-} // namespace angle
+}  // namespace angle

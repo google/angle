@@ -280,6 +280,7 @@ if (build_angle_deqp_tests) {
   static_library("angle_deqp_libtester") {
     public_deps = [
       ":angle_deqp_decpp",
+      "//third_party/angle:angle_common",
       "//third_party/angle:angle_util",
       "//third_party/angle:libEGL",
       "//third_party/libpng:libpng",

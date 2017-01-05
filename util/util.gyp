@@ -52,7 +52,6 @@
         ],
         'util_linux_sources':
         [
-            'linux/Linux_system_utils.cpp',
             'linux/LinuxTimer.cpp',
             'linux/LinuxTimer.h',
             'posix/Posix_system_utils.cpp',
@@ -72,7 +71,6 @@
         ],
         'util_osx_sources':
         [
-            'osx/OSX_system_utils.cpp',
             'osx/OSXTimer.cpp',
             'osx/OSXTimer.h',
             'osx/OSXPixmap.mm',

@@ -1528,6 +1528,7 @@
                     'type': 'static_library',
                     'dependencies':
                     [
+                        '<(angle_path)/src/angle.gyp:angle_common',
                         'angle_deqp_decpp',
                         'angle_deqp_support',
                         'angle_libpng',
