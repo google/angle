@@ -22,6 +22,30 @@
       "revId": "69d183356e5639bba10c13f35c3db46ab812bed4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_de90f22d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-05T22:26:38Z",
+      "side": 1,
+      "message": "The rpath is handled. This just gives a base path for the loader to search from, and it uses \".\" as a path parameter, relative the executable.\n\nAndroid is currently a very different situation and is under development, so we\u0027ll cross that bridge when we come to it - maybe you can help there.",
+      "parentUuid": "57a6d6c4_e34a8324",
+      "range": {
+        "startLine": 162,
+        "startChar": 1,
+        "endLine": 163,
+        "endChar": 30
+      },
+      "revId": "69d183356e5639bba10c13f35c3db46ab812bed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
