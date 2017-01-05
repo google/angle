@@ -151,8 +151,6 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_MAX_TEXTURE_IMAGE_UNITS:
         case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
         case GL_MAX_RENDERBUFFER_SIZE:
-        case GL_MAX_COLOR_ATTACHMENTS_EXT:
-        case GL_MAX_DRAW_BUFFERS_EXT:
         case GL_NUM_SHADER_BINARY_FORMATS:
         case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
         case GL_ARRAY_BUFFER_BINDING:
@@ -210,6 +208,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         case GL_NUM_PROGRAM_BINARY_FORMATS_OES:
         {
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
+        case GL_MAX_DRAW_BUFFERS_EXT:
+        case GL_MAX_COLOR_ATTACHMENTS_EXT:
+        {
+            if ((getClientMajorVersion() < 3) && !getExtensions().drawBuffers)
+            {
+                return false;
+            }
             *type      = GL_INT;
             *numParams = 1;
             return true;

@@ -589,6 +589,44 @@ TEST_P(WebGLCompatibilityTest, TextureCopyingFeedbackLoops)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test for the max draw buffers and color attachments.
+TEST_P(WebGLCompatibilityTest, MaxDrawBuffersAttachmentPoints)
+{
+    // This test only applies to ES2.
+    if (getClientMajorVersion() != 2)
+    {
+        return;
+    }
+
+    GLFramebuffer fbo[2];
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0].get());
+
+    // Test that is valid when we bind with a single attachment point.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Test that enabling the draw buffers extension will allow us to bind with a non-zero
+    // attachment point.
+    if (extensionRequestable("GL_EXT_draw_buffers"))
+    {
+        glRequestExtensionANGLE("GL_EXT_draw_buffers");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_draw_buffers"));
+
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[1].get());
+
+        GLTexture texture2;
+        glBindTexture(GL_TEXTURE_2D, texture2.get());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture2.get(),
+                               0);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

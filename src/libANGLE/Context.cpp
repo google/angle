@@ -2293,11 +2293,14 @@ void Context::initExtensionStrings()
     }
     mExtensionString = mergeExtensionStrings(mExtensionStrings);
 
+    const gl::Extensions &nativeExtensions = mImplementation->getNativeExtensions();
+
     mRequestableExtensionStrings.clear();
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         if (extensionInfo.second.Requestable &&
-            !(mExtensions.*(extensionInfo.second.ExtensionsMember)))
+            !(mExtensions.*(extensionInfo.second.ExtensionsMember)) &&
+            nativeExtensions.*(extensionInfo.second.ExtensionsMember))
         {
             mRequestableExtensionStrings.push_back(MakeStaticString(extensionInfo.first));
         }
@@ -2370,6 +2373,10 @@ void Context::requestExtension(const char *name)
     mExtensions.*(extension.ExtensionsMember) = true;
     updateCaps();
     initExtensionStrings();
+
+    // Re-create the compiler with the requested extensions enabled.
+    SafeDelete(mCompiler);
+    mCompiler = new Compiler(mImplementation.get(), mState);
 }
 
 size_t Context::getRequestableExtensionStringCount() const
