@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_e34a8324",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-05T22:16:23Z",
+      "side": 1,
+      "message": "This may cause some problems when we will add Vulkan on Android. data_deps are installed in a special directory. deps libraries are inside APK. Executable directory is some irrelevant place like /system. Guess we can worry later about it, but I wish there would be some generic solution to use data_deps install dir, or wherever these validation layers are installed in. Something like deqp tests search for expectations and other files. Also, only on Windows CWD is by default in search path for loading libraries. On other systems you\u0027ll need \".\" in rpath.",
+      "range": {
+        "startLine": 162,
+        "startChar": 1,
+        "endLine": 163,
+        "endChar": 30
+      },
+      "revId": "69d183356e5639bba10c13f35c3db46ab812bed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
