@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_e1b9a8ca",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_f835e594",
+      "range": {
+        "startLine": 530,
+        "startChar": 25,
+        "endLine": 530,
+        "endChar": 29
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_980779cd",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 22
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "this is incorrect. we can save and load binaries without having any attached shaders. remove this and the if.",
+      "range": {
+        "startLine": 751,
+        "startChar": 4,
+        "endLine": 751,
+        "endChar": 72
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_c1d584fd",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 751,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_980779cd",
       "range": {
         "startLine": 751,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_21c4904e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_38cbed64",
+      "range": {
+        "startLine": 754,
+        "startChar": 0,
+        "endLine": 804,
+        "endChar": 41
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_58d0b10c",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 22
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "similar comments here.",
+      "range": {
+        "startLine": 1046,
+        "startChar": 4,
+        "endLine": 1047,
+        "endChar": 5
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_61af787d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_58d0b10c",
       "range": {
         "startLine": 1046,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_81b45ccf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1673,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_f8e7a5f4",
+      "range": {
+        "startLine": 1653,
+        "startChar": 3,
+        "endLine": 1673,
+        "endChar": 5
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_38e20ded",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 22
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "merge this with the for loop below instead of making a new for loop here. Make a new method SafeGetImplAs\u003cT\u003e which returns null if the object is null.",
+      "range": {
+        "startLine": 1711,
+        "startChar": 8,
+        "endLine": 1726,
+        "endChar": 9
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_a1a96077",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1726,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_38e20ded",
       "range": {
         "startLine": 1711,
         "startChar": 8,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_01a06c86",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1778,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Here create a zero size storage for the compute storage / other storages. Need to fix non-null situation in renderer11::applyUniforms().",
+      "parentUuid": "57a6d6c4_98f059b0",
+      "range": {
+        "startLine": 1765,
+        "startChar": 7,
+        "endLine": 1778,
+        "endChar": 89
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_78ae557f",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 22
@@ -174,6 +342,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "lower case",
+      "range": {
+        "startLine": 86,
+        "startChar": 9,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_e47b7628",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_78ae557f",
       "range": {
         "startLine": 86,
         "startChar": 9,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_24865e00",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 3500,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_d89ca156",
+      "range": {
+        "startLine": 3500,
+        "startChar": 69,
+        "endLine": 3500,
+        "endChar": 82
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_78d575fb",
         "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
         "patchSetId": 22
@@ -220,6 +436,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "make a default constructor which sets some properties for the width and height of the window, as well as minimum bit sizes for RGBA (8).",
+      "range": {
+        "startLine": 338,
+        "startChar": 6,
+        "endLine": 338,
+        "endChar": 27
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_64914632",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_78d575fb",
       "range": {
         "startLine": 338,
         "startChar": 6,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_84962a29",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_b8b6fdd8",
+      "range": {
+        "startLine": 341,
+        "startChar": 9,
+        "endLine": 341,
+        "endChar": 43
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_18af097e",
         "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
         "patchSetId": 22
@@ -272,6 +536,24 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_a48b2e01",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_18af097e",
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_d8c3c145",
         "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
         "patchSetId": 22
@@ -283,6 +565,30 @@
       "writtenOn": "2017-01-04T16:17:07Z",
       "side": 1,
       "message": "comment before this test.",
+      "range": {
+        "startLine": 389,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 6
+      },
+      "revId": "0af921e32fccdd33bd3eecfda8ef312c15c82ebd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_c490322e",
+        "filename": "src/tests/gl_tests/ProgramBinaryTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-05T15:20:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_d8c3c145",
       "range": {
         "startLine": 389,
         "startChar": 0,
