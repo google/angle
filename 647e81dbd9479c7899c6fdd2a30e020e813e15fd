@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_d450ced7",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-06T10:58:26Z",
+      "side": 1,
+      "message": "I have also used unique_ptr for mVertexExecutables and mPixelExecutables, please help to check them, thank you.",
+      "parentUuid": "57a6d6c4_242adeee",
+      "range": {
+        "startLine": 400,
+        "startChar": 4,
+        "endLine": 400,
+        "endChar": 23
+      },
+      "revId": "647e81dbd9479c7899c6fdd2a30e020e813e15fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_4427e226",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 23
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_f445d217",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-06T10:58:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_4427e226",
+      "range": {
+        "startLine": 426,
+        "startChar": 4,
+        "endLine": 426,
+        "endChar": 21
+      },
+      "revId": "647e81dbd9479c7899c6fdd2a30e020e813e15fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_e41ff6d0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 23
@@ -59,6 +107,30 @@
       "writtenOn": "2017-01-05T15:26:41Z",
       "side": 1,
       "message": "it\u0027s nice of you to add this in this patch, but it\u0027s not needed until we have dispatch support.\n\nIn any case, please add default initialization and deallocation of this resource in the constructor and destroy methods.\n\nthinking about this more, please use angle::ComPtr to store this object safely.",
+      "range": {
+        "startLine": 534,
+        "startChar": 4,
+        "endLine": 534,
+        "endChar": 48
+      },
+      "revId": "647e81dbd9479c7899c6fdd2a30e020e813e15fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_143256b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-06T10:58:26Z",
+      "side": 1,
+      "message": "Sorry, I think it is reasonable to remove these code here, and implement it in dispatch support.",
+      "parentUuid": "57a6d6c4_e41ff6d0",
       "range": {
         "startLine": 534,
         "startChar": 4,
