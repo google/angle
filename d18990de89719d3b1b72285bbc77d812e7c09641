@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_9f32df4a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2483,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:40:19Z",
+      "side": 1,
+      "message": "I think that EXT_draw_buffers should be made a requestable extension, and that you should change updateCaps to set the maxDrawBuffers and maxColorAttachments limits appropriately when the user calls RequestExtension.\n\nYou can call mImplementation-\u003egetNativeCaps() to get the unclamped values in updateCaps.",
+      "range": {
+        "startLine": 2483,
+        "startChar": 8,
+        "endLine": 2483,
+        "endChar": 20
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1f47cfbf",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:40:19Z",
+      "side": 1,
+      "message": "nit: GLint",
+      "range": {
+        "startLine": 306,
+        "startChar": 4,
+        "endLine": 306,
+        "endChar": 7
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_5f38772c",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:40:19Z",
+      "side": 1,
+      "message": "switch these (expected, actual)",
+      "range": {
+        "startLine": 310,
+        "startChar": 14,
+        "endLine": 310,
+        "endChar": 31
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_3f3bb32b",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:40:19Z",
+      "side": 1,
+      "message": "nit: GLint",
+      "range": {
+        "startLine": 312,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 7
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_7f353b34",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:40:19Z",
+      "side": 1,
+      "message": "switch these (expected, actual)",
+      "range": {
+        "startLine": 316,
+        "startChar": 14,
+        "endLine": 316,
+        "endChar": 36
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
