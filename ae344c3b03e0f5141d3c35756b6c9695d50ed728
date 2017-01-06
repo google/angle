@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "77e75a57_2a684031",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T17:57:38Z",
+      "side": 1,
+      "message": "you have the shader here.",
+      "range": {
+        "startLine": 771,
+        "startChar": 4,
+        "endLine": 771,
+        "endChar": 79
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_dfce271b",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 24
