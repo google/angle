@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f77c2a2f_2c9cd341",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1160994
+      },
+      "writtenOn": "2017-01-06T18:35:15Z",
+      "side": 1,
+      "message": "s/ANBLE_ENABLE_D3D9/ANGLE_ENABLE_D3D9/",
+      "revId": "47c0e048365412f0463f1517fcc75fcc9371c9fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f77c2a2f_0c9f9739",
+        "filename": "src/common/platform.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1160994
+      },
+      "writtenOn": "2017-01-06T18:35:15Z",
+      "side": 1,
+      "message": "s/ANBLE_ENABLE_D3D9/ANGLE_ENABLE_D3D9/",
+      "revId": "47c0e048365412f0463f1517fcc75fcc9371c9fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
