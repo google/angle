@@ -188,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_7a39c98e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1496,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-06T17:07:25Z",
+      "side": 1,
+      "message": "For example, how to translate\n\"layout(local_size_x\u003d4, local_size_y\u003d3, local_size_z\u003d2) in;\\n\"\nto \n\"[numthreads(4, 3, 2)]\" in generateComputeShaderLinkHLSL.\n\nDo you mean read three local_size values from the translatedSource String?",
+      "parentUuid": "57a6d6c4_9a382dfc",
+      "range": {
+        "startLine": 1496,
+        "startChar": 22,
+        "endLine": 1496,
+        "endChar": 51
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_bf724301",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 24
