@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_dfce271b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "Since you already have the compute shader pointer in generateComputerShaderLinkHLSL, I don\u0027t think you need these at all.",
+      "range": {
+        "startLine": 407,
+        "startChar": 0,
+        "endLine": 430,
+        "endChar": 1
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1fc98f10",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "move this back to the initializer list.",
+      "range": {
+        "startLine": 542,
+        "startChar": 4,
+        "endLine": 542,
+        "endChar": 56
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_ffc3ebf0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "this is unnecessary, remove it.",
+      "range": {
+        "startLine": 543,
+        "startChar": 4,
+        "endLine": 547,
+        "endChar": 5
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_3fdd73ca",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "I think this should already be handled by reset(). Make the test computeShadershader \u003e 0 and remove the else.",
+      "range": {
+        "startLine": 977,
+        "startChar": 8,
+        "endLine": 977,
+        "endChar": 42
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_5fda37d2",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1143,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "make this a range-for loop again.",
+      "range": {
+        "startLine": 1142,
+        "startChar": 5,
+        "endLine": 1143,
+        "endChar": 35
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_9fd49fa5",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1496,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to pass programMetadata.",
+      "range": {
+        "startLine": 1496,
+        "startChar": 22,
+        "endLine": 1496,
+        "endChar": 51
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_bf724301",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 2341,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "use a range-for with auto \u0026",
+      "range": {
+        "startLine": 2340,
+        "startChar": 5,
+        "endLine": 2341,
+        "endChar": 35
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_df7707f1",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T14:57:24Z",
+      "side": 1,
+      "message": "you can remove all this and the compute shader member.",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 67
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
