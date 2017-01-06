@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_dfe2a7eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1897,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:27:37Z",
+      "side": 1,
+      "message": "this is incorrect - the test if we need to force a particular channel to a particular value is \"does the emulated texture format have channels that the GL format does not\". You should remove this workaround and stick to checking the format channels. It happens to only occur on Windows 7 right now but this is coincidental.",
+      "range": {
+        "startLine": 1897,
+        "startChar": 4,
+        "endLine": 1897,
+        "endChar": 61
+      },
+      "revId": "e3e6d2390a1e49ccba5a9da602ffcb1d2d9fe5c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

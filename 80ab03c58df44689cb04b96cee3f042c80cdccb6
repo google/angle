@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_ffd76b0b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:27:37Z",
+      "side": 0,
+      "message": "we should apply this logic always, not just on Windows 7.",
+      "range": {
+        "startLine": 577,
+        "startChar": 8,
+        "endLine": 587,
+        "endChar": 9
+      },
+      "revId": "80ab03c58df44689cb04b96cee3f042c80cdccb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
