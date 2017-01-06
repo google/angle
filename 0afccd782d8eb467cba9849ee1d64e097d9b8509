@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_78b17791",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_3f665346",
+      "range": {
+        "startLine": 51,
+        "startChar": 28,
+        "endLine": 51,
+        "endChar": 31
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_1f826f9e",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-06T15:07:22Z",
       "side": 1,
       "message": "nit: remove trailing ;",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 6
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_18c94b14",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_1f826f9e",
       "range": {
         "startLine": 58,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_58c3d3f3",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_7f70dbf4",
+      "range": {
+        "startLine": 81,
+        "startChar": 28,
+        "endLine": 81,
+        "endChar": 31
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_9f6d7f1f",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-06T15:07:22Z",
       "side": 1,
       "message": "nit: use using",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 7
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_98dd5bcc",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_9f6d7f1f",
       "range": {
         "startLine": 83,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_f848e7a8",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_dfa0e72d",
+      "range": {
+        "startLine": 97,
+        "startChar": 31,
+        "endLine": 97,
+        "endChar": 40
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_ff95abcd",
         "filename": "src/common/debug.h",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-06T15:07:22Z",
       "side": 1,
       "message": "maybe I should replace the custom stuff I have in ErrorStream with this?",
+      "range": {
+        "startLine": 137,
+        "startChar": 6,
+        "endLine": 137,
+        "endChar": 11
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_783e97ea",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Happy you like it. I also thought about it, but didn\u0027t want to mix it with this CL.",
+      "parentUuid": "57a6d6c4_ff95abcd",
       "range": {
         "startLine": 137,
         "startChar": 6,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_588d9384",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_5f8cf7c6",
+      "range": {
+        "startLine": 148,
+        "startChar": 14,
+        "endLine": 148,
+        "endChar": 22
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_9f865fa5",
         "filename": "src/libANGLE/formatutils.cpp",
         "patchSetId": 3
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_58c633ac",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_9f865fa5",
+      "range": {
+        "startLine": 292,
+        "startChar": 4,
+        "endLine": 292,
+        "endChar": 39
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_bf440396",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -197,6 +389,30 @@
       "writtenOn": "2017-01-06T15:07:22Z",
       "side": 1,
       "message": "you can probably remove this newline.",
+      "range": {
+        "startLine": 735,
+        "startChar": 91,
+        "endLine": 735,
+        "endChar": 93
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f77c2a2f_0c5c7792",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-06T22:57:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_bf440396",
       "range": {
         "startLine": 735,
         "startChar": 91,
