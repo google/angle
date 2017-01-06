@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_fac3f9f0",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1496,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-06T16:39:08Z",
+      "side": 1,
+      "message": "Hi, Jamie. If remove programMetadata, how could it get the localSize through sh::GetComputeShaderLocalGroupSize(compilerHandle) in generateComputeShaderLinkHLSL function, \"compilerHandle\" value is not available in DynamicHLSL.\nDoes you mean that localSize need to save in translatedSource?",
+      "parentUuid": "57a6d6c4_9fd49fa5",
+      "range": {
+        "startLine": 1496,
+        "startChar": 22,
+        "endLine": 1496,
+        "endChar": 51
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_bf724301",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 24
