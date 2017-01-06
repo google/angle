@@ -164,6 +164,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_9a382dfc",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 1496,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T16:49:18Z",
+      "side": 1,
+      "message": "I\u0027m having trouble understanding your question.\n\nYou have the compute shader, every value you query from the program metadata is available in the compute shader from what I can see.",
+      "parentUuid": "57a6d6c4_fac3f9f0",
+      "range": {
+        "startLine": 1496,
+        "startChar": 22,
+        "endLine": 1496,
+        "endChar": 51
+      },
+      "revId": "ae344c3b03e0f5141d3c35756b6c9695d50ed728",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_bf724301",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 24
