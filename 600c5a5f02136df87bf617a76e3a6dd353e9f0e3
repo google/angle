@@ -58,6 +58,24 @@
       "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_4f6b6e99",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_data.json",
+        "patchSetId": 14
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-01-06T01:46:13Z",
+      "side": 1,
+      "message": "Alright, looking at dxgi_support_data.json now. gen_dxgi_support_tables.py already has those links (plus DX11.1), it just doesn\u0027t generate them in the .cpp file.\n\nAccording to the table for 9_3, these formats SHOULD be samplable and filterable on 9_3. So I\u0027m not sure why these say \"shaderSample\": \"10_0\" in dxgi_support_data.json. If I change it to \"always\", everything seems fine (all angle e2e tests pass). Updated CL with that change.\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/mt790740(v\u003dvs.85).aspx\n(Maybe this link should be added to the list of links?)",
+      "parentUuid": "57a6d6c4_1ec9b113",
+      "revId": "600c5a5f02136df87bf617a76e3a6dd353e9f0e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
