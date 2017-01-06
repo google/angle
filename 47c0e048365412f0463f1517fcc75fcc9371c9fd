@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_5b8ab43c",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T19:19:00Z",
+      "side": 1,
+      "message": "derp. thanks. I\u0027ll fix this.",
+      "parentUuid": "f77c2a2f_2c9cd341",
+      "revId": "47c0e048365412f0463f1517fcc75fcc9371c9fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f77c2a2f_0c9f9739",
         "filename": "src/common/platform.h",
         "patchSetId": 6
