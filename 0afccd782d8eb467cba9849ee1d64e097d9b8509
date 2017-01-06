@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57a6d6c4_3f665346",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "wouldn\u0027t you make this a LogSeverity? In that case you could move it out of the priv namespace along with the LOG_blah stuff.",
+      "range": {
+        "startLine": 51,
+        "startChar": 28,
+        "endLine": 51,
+        "endChar": 31
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1f826f9e",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "nit: remove trailing ;",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 6
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_7f70dbf4",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "shouldn\u0027t this also be a LogSeverity?",
+      "range": {
+        "startLine": 81,
+        "startChar": 28,
+        "endLine": 81,
+        "endChar": 31
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_9f6d7f1f",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "nit: use using",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 7
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_dfa0e72d",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "technically this comment is incorrect, you should call ERR/WARN/etc.",
+      "range": {
+        "startLine": 97,
+        "startChar": 31,
+        "endLine": 97,
+        "endChar": 40
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_ff95abcd",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "maybe I should replace the custom stuff I have in ErrorStream with this?",
+      "range": {
+        "startLine": 137,
+        "startChar": 6,
+        "endLine": 137,
+        "endChar": 11
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_5f8cf7c6",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "I\u0027m not crazy about these names, it\u0027s really hard to parse what they are. Maybe FormatHexShort/FormatHexInt?",
+      "range": {
+        "startLine": 148,
+        "startChar": 14,
+        "endLine": 148,
+        "endChar": 22
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_9f865fa5",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "can you add a TODO here to add a string representation of the format when possible?",
+      "range": {
+        "startLine": 292,
+        "startChar": 4,
+        "endLine": 292,
+        "endChar": 39
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_bf440396",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-06T15:07:22Z",
+      "side": 1,
+      "message": "you can probably remove this newline.",
+      "range": {
+        "startLine": 735,
+        "startChar": 91,
+        "endLine": 735,
+        "endChar": 93
+      },
+      "revId": "0afccd782d8eb467cba9849ee1d64e097d9b8509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
