@@ -23,9 +23,9 @@
 namespace angle
 {
 
-#if defined(ANBLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 using Microsoft::WRL::ComPtr;
-#endif  // defined(ANBLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#endif  // defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 
 class NonCopyable
 {
