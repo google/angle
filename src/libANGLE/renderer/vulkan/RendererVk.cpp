@@ -15,6 +15,7 @@
 #include <EGL/eglext.h>
 
 #include "common/debug.h"
+#include "common/system_utils.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
@@ -129,6 +130,39 @@ RendererVk::~RendererVk()
 
 vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 {
+#if !defined(NDEBUG)
+    // Validation layers enabled by default in Debug.
+    mEnableValidationLayers = true;
+#endif
+
+    // If specified in the attributes, override the default.
+    if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
+    {
+        mEnableValidationLayers =
+            (attribs.get(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE, EGL_FALSE) == EGL_TRUE);
+    }
+
+    // If we're loading the validation layers, we could be running from any random directory.
+    // Change to the executable directory so we can find the layers, then change back to the
+    // previous directory to be safe we don't disrupt the application.
+    std::string previousCWD;
+
+    if (mEnableValidationLayers)
+    {
+        const auto &cwd = angle::GetCWD();
+        if (!cwd.valid())
+        {
+            ANGLEPlatformCurrent()->logError("Error getting CWD for Vulkan layers init.");
+            mEnableValidationLayers = false;
+        }
+        else
+        {
+            previousCWD = cwd.value();
+        }
+        const char *exeDir = angle::GetExecutableDirectory();
+        angle::SetCWD(exeDir);
+    }
+
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
     ANGLE_VK_TRY(vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
@@ -148,18 +182,6 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
     {
         ANGLE_VK_TRY(vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount,
                                                             instanceExtensionProps.data()));
-    }
-
-#if !defined(NDEBUG)
-    // Validation layers enabled by default in Debug.
-    mEnableValidationLayers = true;
-#endif
-
-    // If specified in the attributes, override the default.
-    if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
-    {
-        mEnableValidationLayers =
-            (attribs.get(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE, EGL_FALSE) == EGL_TRUE);
     }
 
     if (mEnableValidationLayers)
@@ -225,6 +247,10 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
 
     if (mEnableValidationLayers)
     {
+        // Change back to the previous working directory now that we've loaded the instance -
+        // the validation layers should be loaded at this point.
+        angle::SetCWD(previousCWD.c_str());
+
         VkDebugReportCallbackCreateInfoEXT debugReportInfo;
 
         debugReportInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;

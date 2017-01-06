@@ -8,9 +8,13 @@
 
 #include "system_utils.h"
 
+#include <unistd.h>
+
 #include <cstdlib>
 #include <mach-o/dyld.h>
 #include <vector>
+
+#include <array>
 
 namespace angle
 {
@@ -64,6 +68,22 @@ const char *GetExecutableDirectory()
 const char *GetSharedLibraryExtension()
 {
     return "dylib";
+}
+
+Optional<std::string> GetCWD()
+{
+    std::array<char, 4096> pathBuf;
+    char *result = getcwd(pathBuf.data(), pathBuf.size());
+    if (result == nullptr)
+    {
+        return Optional<std::string>::Invalid();
+    }
+    return std::string(pathBuf.data());
+}
+
+bool SetCWD(const char *dirName)
+{
+    return (chdir(dirName) == 0);
 }
 
 }  // namespace angle

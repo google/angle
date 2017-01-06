@@ -10,6 +10,7 @@
 #define COMMON_SYSTEM_UTILS_H_
 
 #include "common/angleutils.h"
+#include "common/Optional.h"
 
 namespace angle
 {
@@ -17,6 +18,8 @@ namespace angle
 const char *GetExecutablePath();
 const char *GetExecutableDirectory();
 const char *GetSharedLibraryExtension();
+Optional<std::string> GetCWD();
+bool SetCWD(const char *dirName);
 
 }  // namespace angle
 

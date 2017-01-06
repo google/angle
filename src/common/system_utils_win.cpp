@@ -55,4 +55,20 @@ const char *GetSharedLibraryExtension()
     return "dll";
 }
 
+Optional<std::string> GetCWD()
+{
+    std::array<char, MAX_PATH> pathBuf;
+    DWORD result = GetCurrentDirectoryA(static_cast<DWORD>(pathBuf.size()), pathBuf.data());
+    if (result == 0)
+    {
+        return Optional<std::string>::Invalid();
+    }
+    return std::string(pathBuf.data());
+}
+
+bool SetCWD(const char *dirName)
+{
+    return (SetCurrentDirectoryA(dirName) == TRUE);
+}
+
 }  // namespace angle

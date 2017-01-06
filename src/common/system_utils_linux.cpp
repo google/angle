@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <array>
+
 namespace angle
 {
 
@@ -61,6 +63,22 @@ const char *GetExecutableDirectory()
 const char *GetSharedLibraryExtension()
 {
     return "so";
+}
+
+Optional<std::string> GetCWD()
+{
+    std::array<char, 4096> pathBuf;
+    char *result = getcwd(pathBuf.data(), pathBuf.size());
+    if (result == nullptr)
+    {
+        return Optional<std::string>::Invalid();
+    }
+    return std::string(pathBuf.data());
+}
+
+bool SetCWD(const char *dirName)
+{
+    return (chdir(dirName) == 0);
 }
 
 }  // namespace angle

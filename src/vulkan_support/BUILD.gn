@@ -26,10 +26,14 @@ vulkan_gypi =
 # Vulkan loader
 # -------------
 
+vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
+raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
+relative_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
+
 config("vulkan_loader_config") {
   include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
   defines = [
-    "LAYERS_SOURCE_PATH=\"./gen/third_party/angle/src/vulkan_support/angle/vulkan/json\"",
+    "LAYERS_SOURCE_PATH=\"$relative_vulkan_gen_dir/json\"",
     "DEFAULT_VK_LAYERS_PATH=\".\"",
     "API_NAME=\"Vulkan\"",
   ]
@@ -67,9 +71,6 @@ static_library("vulkan_loader") {
 
 # Vulkan layer helpers
 # --------------------
-
-vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
-raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
 
 source_set("vulkan_layer_utils") {
   sources = rebase_path(vulkan_gypi.vulkan_layer_utils_sources, ".", "src")
