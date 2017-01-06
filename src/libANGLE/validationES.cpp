@@ -3131,6 +3131,8 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         return false;
     }
 
+    // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
+    // Section 6.10 of the WebGL 1.0 spec.
     Framebuffer *framebuffer = state.getDrawFramebuffer();
     if (context->getLimitations().noSeparateStencilRefsAndMasks ||
         context->getExtensions().webglCompatibility)
@@ -3150,10 +3152,11 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 
         if (differentRefs || differentWritemasks || differentMasks)
         {
-            // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
-            // Section 6.10 of the WebGL 1.0 spec
-            ERR("This ANGLE implementation does not support separate front/back stencil "
-                "writemasks, reference values, or stencil mask values.");
+            if (!context->getExtensions().webglCompatibility)
+            {
+                ERR("This ANGLE implementation does not support separate front/back stencil "
+                    "writemasks, reference values, or stencil mask values.");
+            }
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;
         }
