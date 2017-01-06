@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_522292bc",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-06T21:11:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_1f47cfbf",
+      "range": {
+        "startLine": 306,
+        "startChar": 4,
+        "endLine": 306,
+        "endChar": 7
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_5f38772c",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2017-01-06T14:40:19Z",
       "side": 1,
       "message": "switch these (expected, actual)",
+      "range": {
+        "startLine": 310,
+        "startChar": 14,
+        "endLine": 310,
+        "endChar": 31
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_32270ecc",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-06T21:11:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_5f38772c",
       "range": {
         "startLine": 310,
         "startChar": 14,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_922c1aad",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-06T21:11:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_3f3bb32b",
+      "range": {
+        "startLine": 312,
+        "startChar": 4,
+        "endLine": 312,
+        "endChar": 7
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_7f353b34",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2017-01-06T14:40:19Z",
       "side": 1,
       "message": "switch these (expected, actual)",
+      "range": {
+        "startLine": 316,
+        "startChar": 14,
+        "endLine": 316,
+        "endChar": 36
+      },
+      "revId": "d18990de89719d3b1b72285bbc77d812e7c09641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_7229969a",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-06T21:11:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_7f353b34",
       "range": {
         "startLine": 316,
         "startChar": 14,
