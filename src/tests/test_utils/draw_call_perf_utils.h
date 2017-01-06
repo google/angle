@@ -10,6 +10,8 @@
 #ifndef TESTS_TEST_UTILS_DRAW_CALL_PERF_UTILS_H_
 #define TESTS_TEST_UTILS_DRAW_CALL_PERF_UTILS_H_
 
+#include <stddef.h>
+
 #include "angle_gl.h"
 
 // Returns program ID. The program is left in use and the uniforms are set to default values:
