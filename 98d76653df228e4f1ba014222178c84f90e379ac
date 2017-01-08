@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "37b082be_7ba09c87",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-08T01:47:27Z",
+      "side": 1,
+      "message": "TIL",
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_763e71eb",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 1
@@ -105,6 +122,24 @@
         "endLine": 310,
         "endChar": 7
       },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b710f2cf_cd9f5dec",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-08T01:47:27Z",
+      "side": 1,
+      "message": "Can we replicate that benchmark in a perftests? I\u0027m pretty sure everything will get inlined (because it is used only once) and a benchmark could confirm / disprove that.",
+      "parentUuid": "37b082be_b62709ca",
       "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
