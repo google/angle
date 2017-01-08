@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b710f2cf_ed43418c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-08T02:55:19Z",
+      "side": 1,
+      "message": "same as below",
+      "revId": "02f075c85b5e16b6ca1bfc157f1d619ed255f75a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b710f2cf_0d8695a6",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-08T02:55:19Z",
+      "side": 1,
+      "message": "nit, missing word: exist.",
+      "revId": "02f075c85b5e16b6ca1bfc157f1d619ed255f75a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
