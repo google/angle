@@ -51,11 +51,10 @@
     'dependencies':
     [
         '<(angle_path)/src/angle.gyp:angle_common',
-        '<(angle_path)/src/angle.gyp:libANGLE', # for unit testing
-        '<(angle_path)/src/angle.gyp:libGLESv2',
-        '<(angle_path)/src/angle.gyp:libEGL',
+        '<(angle_path)/src/angle.gyp:libGLESv2_static',
+        '<(angle_path)/src/angle.gyp:libEGL_static',
         '<(angle_path)/src/tests/tests.gyp:angle_test_support',
-        '<(angle_path)/util/util.gyp:angle_util',
+        '<(angle_path)/util/util.gyp:angle_util_static',
     ],
     'include_dirs':
     [
