@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b710f2cf_6d419178",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2482,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-09T00:50:35Z",
+      "side": 1,
+      "message": "I haven\u0027t been able to find this limit in the WebGL specification, where is it?\nAlso this should apply to webgl enabled ES2 contexts, not ES3 contexts.",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
