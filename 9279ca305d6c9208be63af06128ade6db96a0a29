@@ -34,6 +34,58 @@
       "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_b622dcb9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2482,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-09T20:32:28Z",
+      "side": 1,
+      "message": "I don\u0027t think that this is necessary.  The bug is that ANGLE allows querying GL_MAX_COLOR_ATTACHMENTS_EXT and GL_MAX_DRAW_BUFFERS_EXT without an extension check.  These should result in GL_INVALID_ENUM errors unless the draw buffers extension or ES3 is present.  Can you update the cases in ValidationContext::getQueryParameterInfo to do an extension check? (see below the switch statement for examples)",
+      "parentUuid": "77e75a57_42463275",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_163468ee",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-09T20:32:28Z",
+      "side": 1,
+      "message": "This test also runs on ES3, it should check the version.  It\u0027s also an error to query these without the extension present.",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f77c2a2f_6ff08d1e",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-09T20:32:28Z",
+      "side": 1,
+      "message": "Please also add a test that creates a framebuffer and verifies that it is an error to bind things to non-zero attachment points and then enable the extension and verify that it is possible.",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
