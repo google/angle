@@ -361,6 +361,39 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that NPOT is not enabled by default in WebGL 1 and that it can be enabled
+TEST_P(WebGLCompatibilityTest, NPOT)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_texture_npot"));
+
+    // Create a texture and set an NPOT mip 0, should always be acceptable.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Try setting an NPOT mip 1 and verify the error if WebGL 1
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    if (getClientMajorVersion() < 3)
+    {
+        ASSERT_GL_ERROR(GL_INVALID_VALUE);
+    }
+    else
+    {
+        ASSERT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_OES_texture_npot"))
+    {
+        glRequestExtensionANGLE("GL_OES_texture_npot");
+        ASSERT_GL_NO_ERROR();
+
+        // Try again to set NPOT mip 1
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Test the checks for OOB reads in the vertex buffers, instanced version
 TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
 {

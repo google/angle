@@ -1535,7 +1535,7 @@ bool ValidImageSizeParameters(const ValidationContext *context,
     // TexSubImage parameters can be NPOT without textureNPOT extension,
     // as long as the destination texture is POT.
     bool hasNPOTSupport =
-        context->getExtensions().textureNPOT && context->getClientVersion() >= Version(3, 0);
+        context->getExtensions().textureNPOT || context->getClientVersion() >= Version(3, 0);
     if (!isSubImage && !hasNPOTSupport &&
         (level != 0 && (!gl::isPow2(width) || !gl::isPow2(height) || !gl::isPow2(depth))))
     {
