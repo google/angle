@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_6bdd112d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-09T19:55:49Z",
+      "side": 1,
+      "message": "use InfoLog.str() and get rid of the tempCharBuffer",
+      "range": {
+        "startLine": 1097,
+        "startChar": 17,
+        "endLine": 1097,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_0b10c5fe",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1144,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-09T19:55:49Z",
+      "side": 1,
+      "message": "use InfoLog.str() and get rid of the tempCharBuffer",
+      "range": {
+        "startLine": 1144,
+        "startChar": 17,
+        "endLine": 1144,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_4be2cded",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1195,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-09T19:55:49Z",
+      "side": 1,
+      "message": "use InfoLog.str() and get rid of the tempCharBuffer",
+      "range": {
+        "startLine": 1195,
+        "startChar": 17,
+        "endLine": 1195,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
