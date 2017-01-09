@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_9c8b8102",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-09T15:50:43Z",
+      "side": 1,
+      "message": "why are you not using the ShaderD3D to use the cached values you stored?",
+      "range": {
+        "startLine": 774,
+        "startChar": 3,
+        "endLine": 780,
+        "endChar": 85
+      },
+      "revId": "cdc37ce63d3e536c5aa756a6d9abdf91435f8b1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
