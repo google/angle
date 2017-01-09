@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_031d537c",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Framebuffer9.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_6df3d12c",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_4df00d1e",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 25
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-09T02:07:58Z",
       "side": 1,
       "message": "I don\u0027t think we need to check completeness here. ANGLE usually assumes its operations succeed.",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_43275bca",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_4df00d1e",
       "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_c3336b07",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1315,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_0dea152e",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_ed17c15d",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 25
@@ -64,6 +118,24 @@
       "writtenOn": "2017-01-09T02:07:58Z",
       "side": 1,
       "message": "ditto.",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_0346f373",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3637,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_ed17c15d",
       "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_2341775d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3643,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_cd1cfd82",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_ad21c9b8",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 25
@@ -98,6 +188,24 @@
       "writtenOn": "2017-01-09T02:07:58Z",
       "side": 1,
       "message": "nit: \"textarget must match the texture target type\"\nThe same text can be added in other places in this function.",
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_633b7fdd",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3648,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-09T05:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_ad21c9b8",
       "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
