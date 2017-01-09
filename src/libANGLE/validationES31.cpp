@@ -638,8 +638,9 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
         return false;
     }
 
-    GLint maxSamples = context->getCaps().maxSamples;
-    if (index >= static_cast<GLuint>(maxSamples))
+    Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
+
+    if (index >= static_cast<GLuint>(framebuffer->getSamples(context)))
     {
         context->handleError(InvalidValue() << "Index must be less than the value of SAMPLES.");
         return false;

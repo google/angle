@@ -4131,8 +4131,10 @@ void Context::texStorage2DMultisample(GLenum target,
 
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
 {
-    mGLState.syncDirtyObject(this, GL_READ_FRAMEBUFFER);
-    const Framebuffer *framebuffer = mGLState.getReadFramebuffer();
+    // According to spec 3.1 Table 20.49: Framebuffer Dependent Values,
+    // the sample position should be queried by DRAW_FRAMEBUFFER.
+    mGLState.syncDirtyObject(this, GL_DRAW_FRAMEBUFFER);
+    const Framebuffer *framebuffer = mGLState.getDrawFramebuffer();
 
     switch (pname)
     {

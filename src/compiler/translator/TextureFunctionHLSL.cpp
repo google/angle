@@ -168,7 +168,12 @@ const char *GetSamplerCoordinateTypeString(
         switch (hlslCoords)
         {
             case 2:
-                return "int3";
+                if (textureFunction.sampler == EbtSampler2DMS ||
+                    textureFunction.sampler == EbtISampler2DMS ||
+                    textureFunction.sampler == EbtUSampler2DMS)
+                    return "int2";
+                else
+                    return "int3";
             case 3:
                 return "int4";
             default:
@@ -202,6 +207,7 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
         {
             case EbtSampler2D:
             case EbtSamplerExternalOES:
+            case EbtSampler2DMS:
                 hlslCoords = 2;
                 break;
             case EbtSamplerCube:
@@ -393,7 +399,12 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
         case TextureFunctionHLSL::TextureFunction::SIZE:
             break;
         case TextureFunctionHLSL::TextureFunction::FETCH:
-            out << ", int mip";
+            if (textureFunction.sampler == EbtSampler2DMS ||
+                textureFunction.sampler == EbtISampler2DMS ||
+                textureFunction.sampler == EbtUSampler2DMS)
+                out << ", int index";
+            else
+                out << ", int mip";
             break;
         case TextureFunctionHLSL::TextureFunction::GRAD:
             break;
@@ -418,6 +429,9 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             case EbtUSampler2DArray:
             case EbtSampler2DShadow:
             case EbtSampler2DArrayShadow:
+            case EbtSampler2DMS:
+            case EbtISampler2DMS:
+            case EbtUSampler2DMS:
             case EbtSamplerExternalOES:
                 out << ", int2 offset";
                 break;
@@ -942,7 +956,12 @@ void OutputTextureSampleFunctionReturnStatement(
         else if (IsIntegerSampler(textureFunction.sampler) ||
                  textureFunction.method == TextureFunctionHLSL::TextureFunction::FETCH)
         {
-            out << ", mip)";
+            if (textureFunction.sampler == EbtSampler2DMS ||
+                textureFunction.sampler == EbtISampler2DMS ||
+                textureFunction.sampler == EbtUSampler2DMS)
+                out << "), index";
+            else
+                out << ", mip)";
         }
         else if (IsShadowSampler(textureFunction.sampler))
         {

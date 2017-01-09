@@ -463,8 +463,12 @@ void Framebuffer11::signal(size_t channelID)
 
 gl::Error Framebuffer11::getSamplePosition(size_t index, GLfloat *xy) const
 {
-    UNIMPLEMENTED();
-    return gl::InternalError() << "getSamplePosition is unimplemented.";
+    const gl::FramebufferAttachment *attachment = mState.getFirstNonNullAttachment();
+    ASSERT(attachment);
+    GLsizei sampleCount = attachment->getSamples();
+
+    d3d11_gl::GetSamplePosition(sampleCount, index, xy);
+    return gl::NoError();
 }
 
 bool Framebuffer11::hasAnyInternalDirtyBit() const

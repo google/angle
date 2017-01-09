@@ -3032,7 +3032,7 @@ gl::Error TextureStorage11_2DMultisample::ensureTextureExists(int mipLevels)
             mRenderer->getNativeTextureCaps().get(mFormatInfo.internalFormat);
         GLuint supportedSamples = textureCaps.getNearestSamples(mSamples);
         desc.SampleDesc.Count   = (supportedSamples == 0) ? 1 : supportedSamples;
-        desc.SampleDesc.Quality = 0;
+        desc.SampleDesc.Quality = static_cast<UINT>(D3D11_STANDARD_MULTISAMPLE_PATTERN);
 
         ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, &mTexture));
         mTexture.setDebugName("TexStorage2DMS.Texture");
@@ -3116,7 +3116,6 @@ gl::Error TextureStorage11_2DMultisample::createSRV(const gl::Context *context,
 
     ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage2DMS.SRV");
-
     return gl::NoError();
 }
 

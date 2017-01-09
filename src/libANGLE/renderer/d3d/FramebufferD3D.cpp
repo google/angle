@@ -370,9 +370,4 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
     return mColorAttachmentsForRender.value();
 }
 
-gl::Error FramebufferD3D::getSamplePosition(size_t index, GLfloat *xy) const
-{
-    return gl::InternalError() << "getSamplePosition is unimplemented.";
-}
-
 }  // namespace rx
