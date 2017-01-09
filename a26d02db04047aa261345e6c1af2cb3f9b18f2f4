@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_9cc42134",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "I suppose that TexStorage2DMultisample may use this function. Please correct me if I am wrong.",
+      "parentUuid": "b710f2cf_0d11f573",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_2d14b963",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 9
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-09T01:21:40Z",
       "side": 1,
       "message": "This can be\n  const InternalFormat \u0026mState.getImageDesc(target, level).format.info;\n  switch(pname) {\n      case GL_TEXTURE_RED_SIZE_TYPE:\n           if (info-\u003eredBits !\u003d 0) {\n               return info-\u003etype\n           }\n           return GL_NONE:\n      ...\n  }",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_fcb56dac",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1121,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "That\u0027s true. And GetBaseTypeFromInternalFormat above is not necessary. Thanks!",
+      "parentUuid": "b710f2cf_2d14b963",
       "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_5ce3b9c1",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_6d0ab146",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_8d24c5d6",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_5c91f931",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "I tried to keep \u0027size_t\u0027, but it seems to me that it is inconvenient to make the windows bots pass. I can revisit this if you think we need to use \u0027size_t\u0027, instead of \u0027int\u0027. \n\nBTW, in angletype.h, we define width/height/depth as \u0027int\u0027, not \u0027size_t\u0027.",
+      "parentUuid": "b710f2cf_8d24c5d6",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_edfea1f5",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
@@ -81,6 +153,30 @@
       "writtenOn": "2017-01-09T01:21:40Z",
       "side": 1,
       "message": "These could be replaced by const InternalFormat *getLevelInternalFormat(target, level);",
+      "range": {
+        "startLine": 258,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 0
+      },
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_1ca01176",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "You are correct, I didn\u0027t noticed that the \u0027struct InternalFormat\u0027 in formatutil.h|.cpp has had comprehensive info already.",
+      "parentUuid": "b710f2cf_edfea1f5",
       "range": {
         "startLine": 258,
         "startChar": 0,
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_bcd485d6",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "That\u0027s true, thanks for your reminder, Corentin.",
+      "parentUuid": "b710f2cf_cd03dd2b",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 14
+      },
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_cd1abd95",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 9
@@ -127,6 +247,24 @@
       "writtenOn": "2017-01-09T01:21:40Z",
       "side": 1,
       "message": "We should check the context is at least ES 3.1",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_5c0c59b3",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_cd1abd95",
       "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -150,6 +288,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_3c1195ca",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_ad1f8983",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_0d38d5f9",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 9
@@ -161,6 +317,24 @@
       "writtenOn": "2017-01-09T01:21:40Z",
       "side": 1,
       "message": "Replace this with a return;",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_9cef0192",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1063,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_0d38d5f9",
       "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -184,6 +358,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_7cf4bd63",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_ed158167",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_2d3b99fa",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 9
@@ -195,6 +387,24 @@
       "writtenOn": "2017-01-09T01:21:40Z",
       "side": 1,
       "message": "The patch is entirely at the backend-agnostic level, I\u0027m surprised this isn\u0027t passing on D3D11",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_dc41897a",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-09T16:31:42Z",
+      "side": 1,
+      "message": "You are correct, the tests should pass on D3D11 too.",
+      "parentUuid": "b710f2cf_2d3b99fa",
       "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
