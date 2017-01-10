@@ -872,6 +872,26 @@
                         },
                     ],
                 },
+
+                {
+                    'target_name': 'angle_vulkan',
+                    'type': 'none',
+                    'dependencies':
+                    [
+                        'VkLayer_core_validation',
+                        'VkLayer_image',
+                        'VkLayer_object_tracker',
+                        'VkLayer_parameter_validation',
+                        'VkLayer_swapchain',
+                        'VkLayer_threading',
+                        'VkLayer_unique_objects',
+                        'vulkan_loader',
+                    ],
+                    'export_dependent_settings':
+                    [
+                        'vulkan_loader',
+                    ],
+                }
             ],
         }],
     ],

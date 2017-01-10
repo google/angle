@@ -1057,11 +1057,11 @@
                     ],
                     'dependencies':
                     [
-                        'vulkan_loader',
+                        'angle_vulkan',
                     ],
                     'export_dependent_settings':
                     [
-                        'vulkan_loader',
+                        'angle_vulkan',
                     ],
                 }],
                 ['angle_enable_null==1',
