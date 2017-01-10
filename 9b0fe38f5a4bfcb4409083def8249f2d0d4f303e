@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7d8f2b0_2aae9f64",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "nit: newline above the case label, to be consistent",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d8f2b0_cae1c3b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "This step would cause a GPU -\u003e CPU synchronization. Ideally we would like to stay 100% on the GPU, would there be a way to do this using compute shaders to transform the format of the indirect structure from D3D to GL?",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d8f2b0_6ab897a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "nit: offset can be kept as a uintptr",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d8f2b0_eadc8701",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "Doing a whole copy of the buffer looks unnecessary, could we update just the part that is actually modified? Even better, maybe the data could be put in a ring buffer instead to avoid modifying the D3D buffer backing the GL buffer. Otherwise the application might see the data get modified without its consent.",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d8f2b0_8ae7cbcb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2038,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "Use the structure as defined in the D3D headers:\n\n  D3D11_DRAW_INSTANCED_INDIRECT_ARGS* indirectData \u003d ...\n  indirectData-\u003e VertexCountPerInstance \u003d ...\n  ...",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7d8f2b0_0ad47bd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2056,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "Same comments as above for this function.",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b710f2cf_8d1cc54f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4697,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T01:40:42Z",
+      "side": 1,
+      "message": "passing 0 and not checking the return value would work too.",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
