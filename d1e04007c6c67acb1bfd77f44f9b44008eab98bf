@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "77e75a57_a20c4cb4",
+        "filename": "src/common/debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T16:43:09Z",
+      "side": 1,
+      "message": "Is ~LogMessage called at the ERR() line or at the end of the scope? How about a scope where ERR is use multiple times, are the messages going to be in order?",
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_62d244eb",
+        "filename": "src/common/debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T16:43:09Z",
+      "side": 1,
+      "message": "note: In the past I have used variadic templates with perfect forwarding and LTO to do the same thing (never checked the generated code though).",
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_6bdd112d",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
