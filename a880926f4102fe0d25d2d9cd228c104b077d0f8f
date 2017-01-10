@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_d7cb10b0",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-10T15:17:27Z",
+      "side": 1,
+      "message": "This line doesn\u0027t need. Remove it.",
+      "revId": "a880926f4102fe0d25d2d9cd228c104b077d0f8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
