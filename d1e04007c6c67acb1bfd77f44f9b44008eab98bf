@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_c3f4f265",
+        "filename": "src/common/debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T19:54:11Z",
+      "side": 1,
+      "message": "It seems like a huge regression though for this number of messages. I wonder if we can reduce that by 2x or something, by modifying the templates/classes/defines. Maybe we can ask for help from an experienced dev.",
+      "parentUuid": "77e75a57_6237e4f5",
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_6bdd112d",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
