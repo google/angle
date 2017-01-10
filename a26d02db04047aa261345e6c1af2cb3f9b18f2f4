@@ -142,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_63888642",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T20:28:15Z",
+      "side": 1,
+      "message": "I think the size_t is preferred if possible.  It is a good fit for dimension properties.",
+      "parentUuid": "77e75a57_5c91f931",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_edfea1f5",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
