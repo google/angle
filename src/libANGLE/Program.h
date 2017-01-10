@@ -159,6 +159,21 @@ struct BindingInfo
     bool valid;
 };
 
+// This small structure encapsulates binding sampler uniforms to active GL textures.
+struct SamplerBinding
+{
+    SamplerBinding(GLenum textureTypeIn, size_t elementCount)
+        : textureType(textureTypeIn), boundTextureUnits(elementCount, 0)
+    {
+    }
+
+    // Necessary for retrieving active textures from the GL state.
+    GLenum textureType;
+
+    // List of all textures bound to this sampler, of type textureType.
+    std::vector<GLuint> boundTextureUnits;
+};
+
 class ProgramState final : angle::NonCopyable
 {
   public:
@@ -193,10 +208,15 @@ class ProgramState final : angle::NonCopyable
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
     const std::vector<UniformBlock> &getUniformBlocks() const { return mUniformBlocks; }
+    const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
 
     const LinkedUniform *getUniformByName(const std::string &name) const;
     GLint getUniformLocation(const std::string &name) const;
-    GLuint getUniformIndex(const std::string &name) const;
+    GLuint getUniformIndexFromName(const std::string &name) const;
+    GLuint getUniformIndexFromLocation(GLint location) const;
+    Optional<GLuint> getSamplerIndex(GLint location) const;
+    bool isSamplerUniformIndex(GLuint index) const;
+    GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
 
   private:
     friend class Program;
@@ -227,6 +247,10 @@ class ProgramState final : angle::NonCopyable
     std::vector<LinkedUniform> mUniforms;
     std::vector<VariableLocation> mUniformLocations;
     std::vector<UniformBlock> mUniformBlocks;
+    RangeUI mSamplerUniformRange;
+
+    // An array of the samplers that are used by the program
+    std::vector<gl::SamplerBinding> mSamplerBindings;
 
     // TODO(jmadill): use unordered/hash map when available
     std::map<int, VariableLocation> mOutputVariables;
@@ -372,6 +396,11 @@ class Program final : angle::NonCopyable, public LabeledObject
         return mState.mActiveAttribLocationsMask;
     }
 
+    const std::vector<SamplerBinding> &getSamplerBindings() const
+    {
+        return mState.mSamplerBindings;
+    }
+
   private:
     class Bindings final : angle::NonCopyable
     {
@@ -488,6 +517,11 @@ class Program final : angle::NonCopyable, public LabeledObject
                                      GLsizei count,
                                      GLboolean transpose,
                                      const T *v);
+    template <typename T>
+    void updateSamplerUniform(const VariableLocation &locationInfo,
+                              const uint8_t *destPointer,
+                              GLsizei clampedCount,
+                              const T *v);
 
     template <typename DestT>
     void getUniformInternal(GLint location, DestT *dataOut) const;
@@ -516,7 +550,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     // Cache for sampler validation
     Optional<bool> mCachedValidateSamplersResult;
     std::vector<GLenum> mTextureUnitTypesCache;
-    RangeUI mSamplerUniformRange;
 };
 }  // namespace gl
 

@@ -107,6 +107,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
 
     ASSERT(!programD3D->isSamplerMappingDirty());
 
+    // TODO(jmadill): Use the Program's sampler bindings.
+
     unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {

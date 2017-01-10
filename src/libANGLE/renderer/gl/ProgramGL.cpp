@@ -265,18 +265,6 @@ void ProgramGL::setUniform1iv(GLint location, GLsizei count, const GLint *v)
         mStateManager->useProgram(mProgramID);
         mFunctions->uniform1iv(uniLoc(location), count, v);
     }
-
-    const gl::VariableLocation &locationEntry = mState.getUniformLocations()[location];
-
-    size_t samplerIndex = mUniformIndexToSamplerIndex[locationEntry.index];
-    if (samplerIndex != GL_INVALID_INDEX)
-    {
-        std::vector<GLuint> &boundTextureUnits = mSamplerBindings[samplerIndex].boundTextureUnits;
-
-        size_t copyCount =
-            std::min<size_t>(count, boundTextureUnits.size() - locationEntry.element);
-        std::copy(v, v + copyCount, boundTextureUnits.begin() + locationEntry.element);
-    }
 }
 
 void ProgramGL::setUniform2iv(GLint location, GLsizei count, const GLint *v)
@@ -519,11 +507,6 @@ GLuint ProgramGL::getProgramID() const
     return mProgramID;
 }
 
-const std::vector<SamplerBindingGL> &ProgramGL::getAppliedSamplerUniforms() const
-{
-    return mSamplerBindings;
-}
-
 bool ProgramGL::getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const
 {
     ASSERT(mProgramID != 0u);
@@ -595,8 +578,6 @@ void ProgramGL::preLink()
     // Reset the program state
     mUniformRealLocationMap.clear();
     mUniformBlockRealLocationMap.clear();
-    mSamplerBindings.clear();
-    mUniformIndexToSamplerIndex.clear();
     mPathRenderingFragmentInputs.clear();
 }
 
@@ -668,24 +649,6 @@ void ProgramGL::postLink()
 
         GLint realLocation = mFunctions->getUniformLocation(mProgramID, fullName.c_str());
         mUniformRealLocationMap[uniformLocation] = realLocation;
-    }
-
-    mUniformIndexToSamplerIndex.resize(mState.getUniforms().size(), GL_INVALID_INDEX);
-
-    for (size_t uniformId = 0; uniformId < uniforms.size(); ++uniformId)
-    {
-        const gl::LinkedUniform &linkedUniform = uniforms[uniformId];
-
-        if (!linkedUniform.isSampler() || !linkedUniform.staticUse)
-            continue;
-
-        mUniformIndexToSamplerIndex[uniformId] = mSamplerBindings.size();
-
-        // If uniform is a sampler type, insert it into the mSamplerBindings array
-        SamplerBindingGL samplerBinding;
-        samplerBinding.textureType = gl::SamplerTypeToTextureType(linkedUniform.type);
-        samplerBinding.boundTextureUnits.resize(linkedUniform.elementCount(), 0);
-        mSamplerBindings.push_back(samplerBinding);
     }
 
     // Discover CHROMIUM_path_rendering fragment inputs if enabled.
