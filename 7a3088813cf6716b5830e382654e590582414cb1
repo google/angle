@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_1df2b9b7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "These might not be needed, you should be able to pipeline the layout transition and the copy command.",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 70
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_e872b550",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "This is not used.",
+      "range": {
+        "startLine": 579,
+        "startChar": 0,
+        "endLine": 582,
+        "endChar": 24
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_e8dd95fc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "nit: waitSemaphoreAndSubmitCommand.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_95ba1da1",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "I think this also needs to be TRANSFER_DST (swapchain images are transitioned to LAYOUT_TRANSFER_DST_OPTIMAL) below.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_b51be1e6",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "The layout transition and the present should be possible to pipeline. Making these two lines unnecessary.",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 0
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_d5682534",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "The fact that there is only one semaphore makes it so at most one frame is in flight at any given time. I think most Vulkan users would instead have a semaphore per swapchain image and rotate through them. This would allow more pipelining of graphics operations. If the application wants low-latency like for VR, then it can use glFenceSync to ensure the previous frame is finished.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_6836a542",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T21:04:50Z",
+      "side": 1,
+      "message": "nit: I think this can be replaced by using WrappedObject\u003cVkSemaphore\u003e::operator\u003d in the class declaration.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
