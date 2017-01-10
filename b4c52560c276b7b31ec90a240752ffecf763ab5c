@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_b7a5acee",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 3727,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T15:24:27Z",
+      "side": 1,
+      "message": "nit:\n\n   handleError(texture-\u003esetStorageMultisample(target, samples, internalformat, size, fixedsamplelocations));",
+      "range": {
+        "startLine": 3721,
+        "startChar": 4,
+        "endLine": 3727,
+        "endChar": 5
+      },
+      "revId": "b4c52560c276b7b31ec90a240752ffecf763ab5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
