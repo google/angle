@@ -6,13 +6,14 @@
 
 // translator_fuzzer.cpp: A libfuzzer fuzzer for the shader translator.
 
-#include <stddef.h>
-#include <stdint.h>
-#include <unordered_map>
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
+#include <memory>
+#include <unordered_map>
 
-#include "compiler/translator/Compiler.h"
 #include "angle_gl.h"
+#include "compiler/translator/Compiler.h"
 
 using namespace sh;
 
@@ -42,7 +43,14 @@ struct hash<TranslatorCacheKey>
 };
 }  // namespace std
 
-static std::unordered_map<TranslatorCacheKey, TCompiler *> translators;
+struct TCompilerDeleter
+{
+    void operator()(TCompiler *compiler) const { DeleteCompiler(compiler); }
+};
+
+using UniqueTCompiler = std::unique_ptr<TCompiler, TCompilerDeleter>;
+
+static std::unordered_map<TranslatorCacheKey, UniqueTCompiler> translators;
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
@@ -117,10 +125,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     if (translators.find(key) == translators.end())
     {
-        TCompiler *translator = ConstructCompiler(type, static_cast<ShShaderSpec>(spec),
-                                                  static_cast<ShShaderOutput>(output));
+        UniqueTCompiler translator(ConstructCompiler(type, static_cast<ShShaderSpec>(spec),
+                                                     static_cast<ShShaderOutput>(output)));
 
-        if (!translator)
+        if (translator == nullptr)
         {
             return 0;
         }
@@ -146,14 +154,13 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
         if (!translator->Init(resources))
         {
-            DeleteCompiler(translator);
             return 0;
         }
 
-        translators[key] = translator;
+        translators[key] = std::move(translator);
     }
 
-    TCompiler *translator = translators[key];
+    auto &translator = translators[key];
 
     const char *shaderStrings[] = {reinterpret_cast<const char *>(data)};
     translator->compile(shaderStrings, 1, options);
