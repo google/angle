@@ -22,6 +22,52 @@
       "revId": "b4c52560c276b7b31ec90a240752ffecf763ab5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_37651cc9",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T15:39:00Z",
+      "side": 1,
+      "message": "you can replace this with just glDeleteFramebuffers / glDeleteTextures without the if check. It is defined in the spec to no-op if we delete 0.",
+      "range": {
+        "startLine": 34,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "b4c52560c276b7b31ec90a240752ffecf763ab5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_d75f90f9",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T15:39:00Z",
+      "side": 1,
+      "message": "comment before every test",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 6
+      },
+      "revId": "b4c52560c276b7b31ec90a240752ffecf763ab5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
