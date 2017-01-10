@@ -360,3 +360,24 @@ TEST_F(WEBGLMultiviewVertexShaderTest, RestrictionsLiftedMultiview2)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Correct use of GL_OVR_multiview macros.
+TEST_F(WEBGLMultiviewVertexShaderTest, ValidUseOfExtensionMacros)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#ifdef GL_OVR_multiview\n"
+        "#ifdef GL_OVR_multiview2\n"
+        "#if (GL_OVR_multiview == 1) && (GL_OVR_multiview2 == 1)\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n"
+        "}\n"
+        "#endif\n"
+        "#endif\n"
+        "#endif\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}

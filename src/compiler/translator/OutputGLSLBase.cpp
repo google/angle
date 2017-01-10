@@ -1143,7 +1143,7 @@ TString TOutputGLSLBase::hashVariableName(const TName &name)
         if (mCompileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM &&
             name.getString() == "gl_ViewID_OVR")
         {
-            TName uniformName(TString("ViewId_OVR"));
+            TName uniformName(TString("ViewID_OVR"));
             uniformName.setInternal(true);
             return hashName(uniformName);
         }
