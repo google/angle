@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_d5d7850b",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T21:43:38Z",
+      "side": 1,
+      "message": "Redid this.",
+      "parentUuid": "77e75a57_6204047f",
+      "revId": "28d7ac775df404d37fbf9edc554d79db660c48e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_16cf4842",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_b5dc812f",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T21:43:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_16cf4842",
+      "range": {
+        "startLine": 375,
+        "startChar": 9,
+        "endLine": 375,
+        "endChar": 30
+      },
+      "revId": "28d7ac775df404d37fbf9edc554d79db660c48e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_d6d4c0d7",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2017-01-09T20:05:54Z",
       "side": 1,
       "message": "We can also consider hoisting the tracking of used samplers from ProgramGL.",
+      "range": {
+        "startLine": 521,
+        "startChar": 4,
+        "endLine": 521,
+        "endChar": 42
+      },
+      "revId": "28d7ac775df404d37fbf9edc554d79db660c48e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_15f28db7",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-10T21:43:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_d6d4c0d7",
       "range": {
         "startLine": 521,
         "startChar": 4,
