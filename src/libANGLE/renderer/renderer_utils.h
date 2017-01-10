@@ -95,6 +95,13 @@ ColorWriteFunction GetColorWriteFunction(const gl::FormatType &formatType);
 ColorCopyFunction GetFastCopyFunction(const FastCopyFunctionMap &fastCopyFunctions,
                                       const gl::FormatType &formatType);
 
+using InitializeTextureDataFunction = void (*)(size_t width,
+                                               size_t height,
+                                               size_t depth,
+                                               uint8_t *output,
+                                               size_t outputRowPitch,
+                                               size_t outputDepthPitch);
+
 using LoadImageFunction = void (*)(size_t width,
                                    size_t height,
                                    size_t depth,

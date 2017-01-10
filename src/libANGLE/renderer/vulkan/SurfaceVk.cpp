@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/formatutilsvk.h"
 
 namespace rx
 {
@@ -21,10 +22,10 @@ namespace rx
 namespace
 {
 
-VkFormat GetVkFormatFromConfig(const egl::Config &config)
+const vk::Format &GetVkFormatFromConfig(const egl::Config &config)
 {
     // TODO(jmadill): Properly handle format interpretation.
-    return VK_FORMAT_B8G8R8A8_UNORM;
+    return vk::Format::Get(GL_BGRA8_EXT);
 }
 
 }  // namespace
@@ -239,7 +240,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         preTransform = surfaceCaps.currentTransform;
     }
 
-    VkFormat configSurfaceFormat = GetVkFormatFromConfig(*mState.config);
+    const vk::Format &configSurfaceFormat = GetVkFormatFromConfig(*mState.config);
 
     uint32_t surfaceFormatCount = 0;
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, mSurface, &surfaceFormatCount,
@@ -258,7 +259,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         bool foundFormat = false;
         for (const auto &surfaceFormat : surfaceFormats)
         {
-            if (surfaceFormat.format == configSurfaceFormat)
+            if (surfaceFormat.format == configSurfaceFormat.native)
             {
                 foundFormat = true;
                 break;
@@ -274,7 +275,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     swapchainInfo.flags                 = 0;
     swapchainInfo.surface               = mSurface;
     swapchainInfo.minImageCount         = minImageCount;
-    swapchainInfo.imageFormat           = configSurfaceFormat;
+    swapchainInfo.imageFormat           = configSurfaceFormat.native;
     swapchainInfo.imageColorSpace       = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
     swapchainInfo.imageExtent.width     = mWidth;
     swapchainInfo.imageExtent.height    = mHeight;
@@ -311,7 +312,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         imageViewInfo.flags                           = 0;
         imageViewInfo.image                           = swapchainImage;
         imageViewInfo.viewType                        = VK_IMAGE_VIEW_TYPE_2D;
-        imageViewInfo.format                          = configSurfaceFormat;
+        imageViewInfo.format                          = configSurfaceFormat.native;
         imageViewInfo.components.r                    = VK_COMPONENT_SWIZZLE_R;
         imageViewInfo.components.g                    = VK_COMPONENT_SWIZZLE_G;
         imageViewInfo.components.b                    = VK_COMPONENT_SWIZZLE_B;
