@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_e22014c5",
+        "filename": "src/common/debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-10T18:56:32Z",
+      "side": 1,
+      "message": "~LogMessage is called at the ERR() line. The messages should be in order when ERR() is used multiple times.",
+      "parentUuid": "77e75a57_a20c4cb4",
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_62d244eb",
         "filename": "src/common/debug.h",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_6237e4f5",
+        "filename": "src/common/debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-10T18:56:32Z",
+      "side": 1,
+      "message": "I have checked the generated code. The arguments are indeed evaluated only if ShouldCreateLogMessage(severity), at least with GCC / Linux. The only drawback is that all the code to evaluate the arguments is still there, not like (void)0 it was before this CL.",
+      "parentUuid": "77e75a57_62d244eb",
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_6bdd112d",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -47,6 +83,30 @@
       "writtenOn": "2017-01-09T19:55:49Z",
       "side": 1,
       "message": "use InfoLog.str() and get rid of the tempCharBuffer",
+      "range": {
+        "startLine": 1097,
+        "startChar": 17,
+        "endLine": 1097,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_c2a4f0ef",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-10T18:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_6bdd112d",
       "range": {
         "startLine": 1097,
         "startChar": 17,
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_22bafc06",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1144,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-10T18:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_0b10c5fe",
+      "range": {
+        "startLine": 1144,
+        "startChar": 17,
+        "endLine": 1144,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_4be2cded",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 5
@@ -93,6 +177,30 @@
       "writtenOn": "2017-01-09T19:55:49Z",
       "side": 1,
       "message": "use InfoLog.str() and get rid of the tempCharBuffer",
+      "range": {
+        "startLine": 1195,
+        "startChar": 17,
+        "endLine": 1195,
+        "endChar": 74
+      },
+      "revId": "d1e04007c6c67acb1bfd77f44f9b44008eab98bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_02b7f81e",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1195,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-10T18:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_4be2cded",
       "range": {
         "startLine": 1195,
         "startChar": 17,
