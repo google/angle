@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e75a57_c8537157",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T20:28:15Z",
+      "side": 1,
+      "message": "Instead of putting these functions here, can you move this logic into QueryTexLevelParameterBase?",
+      "range": {
+        "startLine": 824,
+        "startChar": 0,
+        "endLine": 872,
+        "endChar": 1
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_e33bf6da",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T20:28:15Z",
+      "side": 1,
+      "message": "You could handle the default GL_RGBA here.",
+      "range": {
+        "startLine": 878,
+        "startChar": 11,
+        "endLine": 878,
+        "endChar": 73
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_e37496ae",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T20:28:15Z",
+      "side": 1,
+      "message": "I think this should also be a part of the ImageDesc struct, it\u0027s a property of the level.",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_63508621",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-10T20:28:15Z",
+      "side": 1,
+      "message": "These don\u0027t need dirty bits, they are set as part of setting texture data.",
+      "range": {
+        "startLine": 363,
+        "startChar": 8,
+        "endLine": 364,
+        "endChar": 41
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
