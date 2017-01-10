@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "77e75a57_6204047f",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 990,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-10T16:51:43Z",
+      "side": 1,
+      "message": "I\u0027m worried this might become a hot spot in the validation. Ideally we\u0027ll gate this on validation dirty bits. Also it might be better to build a list of texture and ask program-\u003esamplesFromAnyTextures(list).",
+      "revId": "28d7ac775df404d37fbf9edc554d79db660c48e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_16cf4842",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
