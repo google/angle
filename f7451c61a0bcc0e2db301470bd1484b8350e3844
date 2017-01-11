@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_e251781c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1500,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T16:23:54Z",
+      "side": 1,
+      "message": "Is there a way we can still call setUniformInternal and then run this code after to remove the duplicated code?",
+      "range": {
+        "startLine": 1489,
+        "startChar": 8,
+        "endLine": 1500,
+        "endChar": 9
+      },
+      "revId": "f7451c61a0bcc0e2db301470bd1484b8350e3844",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_226f70d7",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T16:23:54Z",
+      "side": 1,
+      "message": "I think you could just call this on the program object instead and remove the getAppliedSamplerUniforms method from ProgramGL.",
+      "range": {
+        "startLine": 793,
+        "startChar": 8,
+        "endLine": 793,
+        "endChar": 17
+      },
+      "revId": "f7451c61a0bcc0e2db301470bd1484b8350e3844",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
