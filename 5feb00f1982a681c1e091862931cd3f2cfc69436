@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_881ea38f",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T18:19:03Z",
+      "side": 1,
+      "message": "It would be valid to store them per-texture at this point because multisampled 2D textures can only be 1 level as of ES 3.1.  To be future-proof I think it makes more sense to store this state per level since it\u0027s in Table 20.10 \"Textures (state per texture image)\" and queried with a level parameter.",
+      "parentUuid": "037501b9_e2fdf845",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_63508621",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 11
