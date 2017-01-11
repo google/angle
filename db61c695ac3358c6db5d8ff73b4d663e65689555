@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_95b47794",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T21:13:39Z",
+      "side": 1,
+      "message": "Removing this code will allow the values to be initialized to nativeCap limits. These limits are not compatible with WebGL and without the extension. It seemed to be more appropriate to override them here, but I could be wrong.",
+      "parentUuid": "037501b9_523d95dc",
+      "range": {
+        "startLine": 2481,
+        "startChar": 0,
+        "endLine": 2487,
+        "endChar": 5
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_d231a50d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-11T20:44:49Z",
       "side": 1,
       "message": "I think it should still be fine to run it against the D3D9 renderer.  It should not get into the extensionRequestable block.",
+      "range": {
+        "startLine": 459,
+        "startChar": 36,
+        "endLine": 459,
+        "endChar": 99
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_120cfdf0",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T21:13:39Z",
+      "side": 1,
+      "message": "I\u0027m confused. With the D3D9 renderer, it does go in that block and fail. Are you suggesting to add the check there (on line 485) or a fix-up is needed elsewhere?",
+      "parentUuid": "037501b9_d231a50d",
       "range": {
         "startLine": 459,
         "startChar": 36,
