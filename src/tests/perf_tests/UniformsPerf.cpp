@@ -71,16 +71,17 @@ std::string UniformsParams::suffix() const
 
     if (dataType == DataType::VEC4)
     {
-        strstr << "_" << numVertexUniforms << "_vertex_uniforms";
-        strstr << "_" << numFragmentUniforms << "_fragment_uniforms";
-    }
-    else if (dataMode == DataMode::REPEAT)
-    {
-        strstr << "_matrix_repeating";
+        strstr << "_" << (numVertexUniforms + numFragmentUniforms) << "_vec4";
     }
     else
     {
-        strstr << "_matrix_updating";
+        ASSERT(dataType == DataType::MAT4);
+        strstr << "_matrix";
+    }
+
+    if (dataMode == DataMode::REPEAT)
+    {
+        strstr << "_repeating";
     }
 
     return strstr.str();
@@ -98,8 +99,6 @@ class UniformsBenchmark : public ANGLERenderTest,
 
   private:
     void initShaders();
-    void initVertexBuffer();
-    void initTextures();
 
     GLuint mProgram;
     std::vector<GLuint> mUniformLocations;
@@ -307,10 +306,11 @@ void UniformsBenchmark::drawBenchmark()
 
 using namespace egl_platform;
 
-UniformsParams VectorUniforms(const EGLPlatformParameters &egl)
+UniformsParams VectorUniforms(const EGLPlatformParameters &egl, DataMode dataMode)
 {
     UniformsParams params;
     params.eglParameters = egl;
+    params.dataMode      = dataMode;
     return params;
 }
 
@@ -321,7 +321,7 @@ UniformsParams MatrixUniforms(const EGLPlatformParameters &egl, DataMode dataMod
     params.dataType      = DataType::MAT4;
     params.dataMode      = dataMode;
 
-    // Reduce the number of uniforms to fit within smaller upper limis on some configs.
+    // Reduce the number of uniforms to fit within smaller upper limits on some configs.
     params.numVertexUniforms   = 100;
     params.numFragmentUniforms = 100;
 
@@ -336,9 +336,11 @@ TEST_P(UniformsBenchmark, Run)
 }
 
 ANGLE_INSTANTIATE_TEST(UniformsBenchmark,
-                       VectorUniforms(D3D11()),
-                       VectorUniforms(D3D9()),
-                       VectorUniforms(OPENGL()),
+                       VectorUniforms(D3D9(), DataMode::UPDATE),
+                       VectorUniforms(D3D11(), DataMode::REPEAT),
+                       VectorUniforms(D3D11(), DataMode::UPDATE),
+                       VectorUniforms(OPENGL(), DataMode::REPEAT),
+                       VectorUniforms(OPENGL(), DataMode::UPDATE),
                        MatrixUniforms(D3D11(), DataMode::REPEAT),
                        MatrixUniforms(D3D11(), DataMode::UPDATE),
                        MatrixUniforms(OPENGL(), DataMode::REPEAT),
