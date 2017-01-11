@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_a7795298",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "use c++-style casts. this is one of those things in ANGLE where we haven\u0027t updated all the style of the older code, but require it in new code.",
+      "range": {
+        "startLine": 1274,
+        "startChar": 10,
+        "endLine": 1274,
+        "endChar": 19
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_df98ce57",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "nit: you can remove the explicit.",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_e7c66a9a",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "nit: Bindings to match Attributes below this",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 18,
+        "endChar": 53
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_87b8d628",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "nit: explicit isn\u0027t needed on two-element constructors.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 12
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_a7d0724e",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 29
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "use git cl format to fix the tabs and other style errors.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 5
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_df220e07",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "same comments here.",
+      "range": {
+        "startLine": 43,
+        "startChar": 1,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_7f517a76",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "geoff, do you know why we aren\u0027t using the caps size here?",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 5
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_ff2b4ae5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "this isn\u0027t what I had in mind.\n\nPlease make this function take as input an unsigned long dirtyBit and output a size_t attribIndex that can be used in the dirty bit handling for AttribEnabled, AttribPointer, or any of the new, unimplemented cases (AttribFormat, AttribBinding, BindingBuffer, BindingDivisor).\n\nYou will need to likely subtract one for the dirty bit value and mod (%) vs 16. You will also have to assert somewhere (or static_assert) that max bindings equals max attribs.",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 1
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_1f1406ba",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "remove this stray line",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 9
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
