@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_42606c42",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-11T15:38:56Z",
+      "side": 1,
+      "message": "Good suggestion. Corentin suggest me that remove all these 4 functions. I think it is good. And I removed all these 4 functions in the patch set 14.",
+      "parentUuid": "77e75a57_c8537157",
+      "range": {
+        "startLine": 824,
+        "startChar": 0,
+        "endLine": 872,
+        "endChar": 1
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_e33bf6da",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-10T20:28:15Z",
       "side": 1,
       "message": "You could handle the default GL_RGBA here.",
+      "range": {
+        "startLine": 878,
+        "startChar": 11,
+        "endLine": 878,
+        "endChar": 73
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_62380841",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-11T15:38:56Z",
+      "side": 1,
+      "message": "All these 4 functions are removed in latest patch set. Let\u0027s still handle the default GL_RGBA issue in QueryTexLevelParameterBase().",
+      "parentUuid": "77e75a57_e33bf6da",
       "range": {
         "startLine": 878,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_e2fdf845",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-11T15:38:56Z",
+      "side": 1,
+      "message": "Per my understanding, the samples and mFixedSampleLocations are per texture, not per texture level. I suppose that it is impossible that the sample of one level is a, and the sample of another level in the same texture is b(a!\u003db).\n\nSo I think maybe they should be defined in Texture, instead of ImageDesc. WDYT?",
+      "parentUuid": "77e75a57_e37496ae",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_63508621",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 11
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-10T20:28:15Z",
       "side": 1,
       "message": "These don\u0027t need dirty bits, they are set as part of setting texture data.",
+      "range": {
+        "startLine": 363,
+        "startChar": 8,
+        "endLine": 364,
+        "endChar": 41
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_c2f47c5f",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-11T15:38:56Z",
+      "side": 1,
+      "message": "Yes. Moreover, I removed Texture::setSample and Texture::setFixedSampleLocation too. They are not necessary.",
+      "parentUuid": "77e75a57_63508621",
       "range": {
         "startLine": 363,
         "startChar": 8,
