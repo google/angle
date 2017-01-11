@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_ebc335f1",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c11d844c",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 45
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_4109940b",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 28
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "I see no need for these since they aren\u0027t used as array sizes.",
+      "range": {
+        "startLine": 2469,
+        "startChar": 3,
+        "endLine": 2472,
+        "endChar": 79
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_4b636134",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "These two values will be used here. I will add them in the next patch.\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Context.cpp?q\u003dgetintegerv+file:%5Esrc/third_party/angle/\u0026sq\u003dpackage:chromium\u0026dr\u003dCSs\u0026l\u003d1399",
+      "parentUuid": "57a6d6c4_4109940b",
       "range": {
         "startLine": 2469,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_5107903c",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c103c4c0",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 52
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_2112d009",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 28
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "very small nit: use ++buffer pre-increment syntax according to the style guide. but I think for this for loop you can use a range-for:\n\n for (auto \u0026binding : mState.mVertexBufferBindings)\n {\n    if (binding.buffer.id() \u003d\u003d bufferName)\n    {\n       ...\n    }\n }",
+      "range": {
+        "startLine": 69,
+        "startChar": 61,
+        "endLine": 69,
+        "endChar": 69
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1126e8de",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_2112d009",
       "range": {
         "startLine": 69,
         "startChar": 61,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_9111f875",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_e4a4568f",
+      "range": {
+        "startLine": 108,
+        "startChar": 19,
+        "endLine": 108,
+        "endChar": 51
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_81e29cea",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "getMaxAttribBindings or getMaxBindings.",
+      "range": {
+        "startLine": 45,
+        "startChar": 11,
+        "endLine": 45,
+        "endChar": 31
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_71be5462",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_81e29cea",
       "range": {
         "startLine": 45,
         "startChar": 11,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_91bbb86e",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c1dca431",
+      "range": {
+        "startLine": 52,
+        "startChar": 44,
+        "endLine": 52,
+        "endChar": 67
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_a1d7a00c",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -174,6 +342,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "mVertexAttribBindings or mVertexBindings.",
+      "range": {
+        "startLine": 66,
+        "startChar": 37,
+        "endLine": 66,
+        "endChar": 58
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_b1c99c15",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_a1d7a00c",
       "range": {
         "startLine": 66,
         "startChar": 37,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_91d498a5",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_41c1943c",
+      "range": {
+        "startLine": 139,
+        "startChar": 28,
+        "endLine": 139,
+        "endChar": 42
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_c1ae647d",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -220,6 +436,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "\"changes to BindVertexBuffer\"",
+      "range": {
+        "startLine": 143,
+        "startChar": 28,
+        "endLine": 143,
+        "endChar": 50
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_b1727c01",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c1ae647d",
       "range": {
         "startLine": 143,
         "startChar": 28,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_d17700f1",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_a4724e4f",
+      "range": {
+        "startLine": 144,
+        "startChar": 8,
+        "endLine": 144,
+        "endChar": 41
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_e1a28890",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -266,6 +530,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "\"changes to VertexAttribBinding\"",
+      "range": {
+        "startLine": 148,
+        "startChar": 28,
+        "endLine": 148,
+        "endChar": 56
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_d1046036",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_e1a28890",
       "range": {
         "startLine": 148,
         "startChar": 28,
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_f17c04d6",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_04795a30",
+      "range": {
+        "startLine": 149,
+        "startChar": 8,
+        "endLine": 149,
+        "endChar": 40
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_448362ee",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -312,6 +624,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "DIRTY_BIT_BINDING_0_DIVISOR",
+      "range": {
+        "startLine": 154,
+        "startChar": 8,
+        "endLine": 154,
+        "endChar": 34
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_1182689e",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_448362ee",
       "range": {
         "startLine": 154,
         "startChar": 8,
@@ -347,6 +683,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_2b553d13",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_2120105e",
+      "range": {
+        "startLine": 6,
+        "startChar": 31,
+        "endLine": 6,
+        "endChar": 36
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_614bf82c",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 28
@@ -358,6 +718,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "remove this",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 68
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_4b52812b",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_614bf82c",
       "range": {
         "startLine": 7,
         "startChar": 0,
@@ -393,6 +777,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_4b5b613d",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_01130c1f",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 51
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_a12c005f",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 28
@@ -404,6 +812,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "nit: 16u.",
+      "range": {
+        "startLine": 64,
+        "startChar": 45,
+        "endLine": 64,
+        "endChar": 47
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_6b6825ce",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_a12c005f",
       "range": {
         "startLine": 64,
         "startChar": 45,
@@ -439,6 +871,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_1147c8bf",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_21e5701f",
+      "range": {
+        "startLine": 19,
+        "startChar": 21,
+        "endLine": 19,
+        "endChar": 48
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_81fc5cbe",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 28
@@ -450,6 +906,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "Looking at the ES 3.1 spec, 10.7 \"Required State\", I see the spec say:\n\nLet the number of supported generic vertex attributes (the value of MAX_VERTEX_ATTRIBS) be n. Let the number of supported generic vertex attribute bindings (the\nvalue of MAX_VERTEX_ATTRIB_BINDINGS) be k.\n\nThis means we should call this data structure VertexAttributeBinding. Please also update the comment. An alternative suggestion would be VertexBinding since the spec also uses that nomenclature.",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 26
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_cb9831c7",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done.\nYes there are both VertexAttributeBinding and VertexBufferBinding in spec. I will use VertexBinding as the name of this structure.",
+      "parentUuid": "57a6d6c4_81fc5cbe",
       "range": {
         "startLine": 21,
         "startChar": 7,
@@ -485,6 +965,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_eb8df586",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c1f664dc",
+      "range": {
+        "startLine": 23,
+        "startChar": 18,
+        "endLine": 23,
+        "endChar": 44
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_e1ea88ef",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 28
@@ -496,6 +1000,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "Looking at the spec, BindVertexBuffer only takes an intptr offset. So we should only use GLintptr offset; (drop the binding prefix)",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 6
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_4b844160",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_e1ea88ef",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -531,6 +1059,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_6b81054e",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_01e86cf5",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_41e27417",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 28
@@ -542,6 +1094,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "Generic Vertex Attributes for\n\nplease also make the comment style the same as the above struct.",
+      "range": {
+        "startLine": 35,
+        "startChar": 21,
+        "endLine": 35,
+        "endChar": 63
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_abbccd0e",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_41e27417",
       "range": {
         "startLine": 35,
         "startChar": 21,
@@ -577,6 +1153,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_ab220d6b",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c15f44fa",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 36,
+        "endChar": 22
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_01614cbb",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 28
@@ -588,6 +1188,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "This should be GLuint.",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 12
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_8b84692f",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_01614cbb",
       "range": {
         "startLine": 44,
         "startChar": 4,
@@ -623,6 +1247,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_eb2c1560",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_216e50ab",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 10
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_416b5499",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 28
@@ -634,6 +1282,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "just call this stride.",
+      "range": {
+        "startLine": 48,
+        "startChar": 11,
+        "endLine": 48,
+        "endChar": 34
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_0b3239b8",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_416b5499",
       "range": {
         "startLine": 48,
         "startChar": 11,
@@ -669,6 +1341,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_2b161d10",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_81553ce0",
+      "range": {
+        "startLine": 50,
+        "startChar": 3,
+        "endLine": 50,
+        "endChar": 49
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_a1fec08a",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 28
@@ -680,6 +1376,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "I think this should still return the attribut\u0027s pointer, and nothing to do with the binding.",
+      "range": {
+        "startLine": 646,
+        "startChar": 44,
+        "endLine": 646,
+        "endChar": 66
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57a6d6c4_713654fb",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_a1fec08a",
       "range": {
         "startLine": 646,
         "startChar": 44,
@@ -715,6 +1435,30 @@
     },
     {
       "key": {
+        "uuid": "57a6d6c4_b1419c5e",
+        "filename": "src/libANGLE/renderer/BufferImpl.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_e1f0c8b0",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 37
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_a4c40e34",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 28
@@ -726,6 +1470,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "I think it might make sense to make a helper struct, something like gl::AttributeAndBinding, which is a POD struct that stores a const \u0026 attrib and const \u0026 binding. What do you think (and other reviwers)?",
+      "range": {
+        "startLine": 39,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 60
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_47ff1eef",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "The VertexAttrib and its VertexBinding are always used together in D3D, so now I create a struct VertexAttribBinding as the pair of VertexAttrib and VertexBinding in D3D backends.",
+      "parentUuid": "57a6d6c4_a4c40e34",
       "range": {
         "startLine": 39,
         "startChar": 21,
@@ -761,6 +1529,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_835b233d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_04ab1a54",
+      "range": {
+        "startLine": 53,
+        "startChar": 19,
+        "endLine": 53,
+        "endChar": 30
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_64e306c2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 28
@@ -772,6 +1564,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "I think mAttribsToUpdate needs to be set in one of these.",
+      "range": {
+        "startLine": 65,
+        "startChar": 11,
+        "endLine": 74,
+        "endChar": 88
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_43791ba2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_64e306c2",
       "range": {
         "startLine": 65,
         "startChar": 11,
@@ -807,6 +1623,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_c3652bf7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "These constants should be used as restrictions when calling vertexAttribFormat and bindVertexBuffer. I just take the values in OpenGL ES 3.1 SPEC. (November 3, 2016; Section 10.3.1 Page 243)\n\nCould you give me some suggestions about how to initialize these constants?",
+      "parentUuid": "57a6d6c4_210c901d",
+      "range": {
+        "startLine": 1131,
+        "startChar": 4,
+        "endLine": 1132,
+        "endChar": 47
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_c4e2f2b9",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 28
@@ -830,6 +1670,30 @@
     },
     {
       "key": {
+        "uuid": "77e75a57_5e8bb002",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done.\nI will add this in the next patch.",
+      "parentUuid": "57a6d6c4_c4e2f2b9",
+      "range": {
+        "startLine": 48,
+        "startChar": 6,
+        "endLine": 48,
+        "endChar": 42
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_c14ae424",
         "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
         "patchSetId": 28
@@ -841,6 +1705,30 @@
       "writtenOn": "2017-01-05T15:16:43Z",
       "side": 1,
       "message": "can you move this code into Context::getVertexAttribfv(index, pname, params)? Same for the other queries.",
+      "range": {
+        "startLine": 1574,
+        "startChar": 0,
+        "endLine": 1580,
+        "endChar": 75
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "77e75a57_3e46acc2",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1580,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-11T13:11:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_c14ae424",
       "range": {
         "startLine": 1574,
         "startChar": 0,
