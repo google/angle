@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_d09bdd51",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T21:20:20Z",
+      "side": 1,
+      "message": "They should no longer be queryable with the fix you made to the glGetIntegerv code so it\u0027s fine to leave them as the native limits.  This way we won\u0027t have to deal with GL constants changing.",
+      "parentUuid": "037501b9_95b47794",
+      "range": {
+        "startLine": 2481,
+        "startChar": 0,
+        "endLine": 2487,
+        "endChar": 5
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_d231a50d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 6
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "I\u0027m confused. With the D3D9 renderer, it does go in that block and fail. Are you suggesting to add the check there (on line 485) or a fix-up is needed elsewhere?",
       "parentUuid": "037501b9_d231a50d",
+      "range": {
+        "startLine": 459,
+        "startChar": 36,
+        "endLine": 459,
+        "endChar": 99
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_d59aef5d",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T21:20:20Z",
+      "side": 1,
+      "message": "A fixup elsewhere is likely needed, GL_EXT_draw_buffers should not be in the list of requestable extensions if the backend is unable to support it.\n\nI just took a look and it seems the bug is in Context::initExtensionStrings.  When building mRequestableExtensionStrings, it should also check that the native extensions (mImplementation-\u003egetNativeExtensions()) are able to support the extension.  Could you fix that with this CL?",
+      "parentUuid": "037501b9_120cfdf0",
       "range": {
         "startLine": 459,
         "startChar": 36,
