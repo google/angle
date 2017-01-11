@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_f22b81e5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2482,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T20:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_b622dcb9",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_163468ee",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 5
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_1295ddce",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T20:40:09Z",
+      "side": 1,
+      "message": "I\u0027ve removed this test entirely, as I cannot check for the expected values upon enabling the extension.",
+      "parentUuid": "77e75a57_163468ee",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f77c2a2f_6ff08d1e",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 5
@@ -83,6 +119,24 @@
       "writtenOn": "2017-01-09T20:32:28Z",
       "side": 1,
       "message": "Please also add a test that creates a framebuffer and verifies that it is an error to bind things to non-zero attachment points and then enable the extension and verify that it is possible.",
+      "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_92500d44",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T20:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f77c2a2f_6ff08d1e",
       "revId": "9279ca305d6c9208be63af06128ade6db96a0a29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
