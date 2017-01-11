@@ -3221,6 +3221,18 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         }
     }
 
+    // Detect rendering feedback loops for WebGL.
+    if (context->getExtensions().webglCompatibility)
+    {
+        if (framebuffer->formsRenderingFeedbackLoopWith(state))
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION,
+                      "Rendering feedback loop formed between Framebuffer and active Texture."));
+            return false;
+        }
+    }
+
     // No-op if zero count
     return (count > 0);
 }

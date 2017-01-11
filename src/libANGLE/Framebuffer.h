@@ -92,6 +92,7 @@ class FramebufferState final : angle::NonCopyable
 
     std::vector<GLenum> mDrawBufferStates;
     GLenum mReadBufferState;
+    std::bitset<IMPLEMENTATION_MAX_DRAW_BUFFERS> mEnabledDrawBuffers;
 };
 
 class Framebuffer final : public LabeledObject, public angle::SignalReceiver
@@ -211,6 +212,8 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
 
     // angle::SignalReceiver implementation
     void signal(angle::SignalToken token) override;
+
+    bool formsRenderingFeedbackLoopWith(const State &state) const;
 
   private:
     void detachResourceById(GLenum resourceType, GLuint resourceId);

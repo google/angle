@@ -452,6 +452,82 @@ TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that a rendering feedback loop triggers a GL error under WebGL.
+// Based on WebGL test conformance/renderbuffers/feedback-loop.html.
+TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoop)
+{
+    const std::string vertexShader =
+        "attribute vec4 a_position;\n"
+        "varying vec2 v_texCoord;\n"
+        "void main() {\n"
+        "    gl_Position = a_position;\n"
+        "    v_texCoord = (a_position.xy * 0.5) + 0.5;\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "precision mediump float;\n"
+        "varying vec2 v_texCoord;\n"
+        "uniform sampler2D u_texture;\n"
+        "void main() {\n"
+        "    // Shader swizzles color channels so we can tell if the draw succeeded.\n"
+        "    gl_FragColor = texture2D(u_texture, v_texCoord).gbra;\n"
+        "}\n";
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    GLint uniformLoc = glGetUniformLocation(program.get(), "u_texture");
+    ASSERT_NE(-1, uniformLoc);
+
+    glUseProgram(program.get());
+    glUniform1i(uniformLoc, 0);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Drawing with a texture that is also bound to the current framebuffer should fail
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    drawQuad(program.get(), "a_position", 0.5f, 1.0f, true);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Ensure that the texture contents did not change after the previous render
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(program.get(), "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Drawing when texture is bound to an inactive uniform should succeed
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    drawQuad(program.get(), "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

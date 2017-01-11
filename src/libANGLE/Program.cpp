@@ -3126,4 +3126,27 @@ void Program::getUniformInternal(GLint location, DestT *dataOut) const
             UNREACHABLE();
     }
 }
+
+bool Program::samplesFromTexture(const gl::State &state, GLuint textureID) const
+{
+    // Must be called after samplers are validated.
+    ASSERT(mCachedValidateSamplersResult.valid() && mCachedValidateSamplersResult.value());
+
+    for (const auto &binding : mState.mSamplerBindings)
+    {
+        GLenum textureType = binding.textureType;
+        for (const auto &unit : binding.boundTextureUnits)
+        {
+            GLenum programTextureID = state.getSamplerTextureId(unit, textureType);
+            if (programTextureID == textureID)
+            {
+                // TODO(jmadill): Check for appropriate overlap.
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 }  // namespace gl

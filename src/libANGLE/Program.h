@@ -390,6 +390,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void validate(const Caps &caps);
     bool validateSamplers(InfoLog *infoLog, const Caps &caps);
     bool isValidated() const;
+    bool samplesFromTexture(const gl::State &state, GLuint textureID) const;
 
     const AttributesMask &getActiveAttribLocationsMask() const
     {

@@ -9,6 +9,7 @@
 
 #include "libANGLE/Framebuffer.h"
 
+#include "common/BitSetIterator.h"
 #include "common/Optional.h"
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
@@ -46,6 +47,7 @@ FramebufferState::FramebufferState()
       mReadBufferState(GL_COLOR_ATTACHMENT0_EXT)
 {
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
+    mEnabledDrawBuffers.set(0);
 }
 
 FramebufferState::FramebufferState(const Caps &caps)
@@ -419,6 +421,15 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     std::copy(buffers, buffers + count, drawStates.begin());
     std::fill(drawStates.begin() + count, drawStates.end(), GL_NONE);
     mDirtyBits.set(DIRTY_BIT_DRAW_BUFFERS);
+
+    mState.mEnabledDrawBuffers.reset();
+    for (size_t index = 0; index < count; ++index)
+    {
+        if (drawStates[index] != GL_NONE && mState.mColorAttachments[index].isAttached())
+        {
+            mState.mEnabledDrawBuffers.set(index);
+        }
+    }
 }
 
 const FramebufferAttachment *Framebuffer::getDrawBuffer(size_t drawBuffer) const
@@ -944,6 +955,9 @@ void Framebuffer::setAttachment(GLenum type,
                 mState.mColorAttachments[colorIndex].attach(type, binding, textureIndex, resource);
                 mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
                 BindResourceChannel(&mDirtyColorAttachmentBindings[colorIndex], resource);
+
+                bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
+                mState.mEnabledDrawBuffers.set(colorIndex, enabled);
             }
             break;
         }
@@ -974,6 +988,34 @@ void Framebuffer::signal(SignalToken token)
 bool Framebuffer::complete(const ContextState &state)
 {
     return (checkStatus(state) == GL_FRAMEBUFFER_COMPLETE);
+}
+
+bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
+{
+    const Program *program = state.getProgram();
+
+    // TODO(jmadill): Default framebuffer feedback loops.
+    if (mId == 0)
+    {
+        return false;
+    }
+
+    // The bitset will skip inactive draw buffers.
+    for (GLuint drawIndex : angle::IterateBitSet(mState.mEnabledDrawBuffers))
+    {
+        const FramebufferAttachment *attachment = getDrawBuffer(drawIndex);
+        if (attachment && attachment->type() == GL_TEXTURE)
+        {
+            // Validate the feedback loop.
+            if (program->samplesFromTexture(state, attachment->id()))
+            {
+                return true;
+            }
+        }
+    }
+
+    // TODO(jmadill): Validate depth-stencil feedback loop.
+    return false;
 }
 
 }  // namespace gl
