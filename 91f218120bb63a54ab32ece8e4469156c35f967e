@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_4595cccd",
+        "filename": "src/common/debug.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T23:13:09Z",
+      "side": 1,
+      "message": "yuly, I think this should be ANGLE_ASSERTS_ON",
+      "range": {
+        "startLine": 259,
+        "startChar": 44,
+        "endLine": 259,
+        "endChar": 64
+      },
+      "revId": "91f218120bb63a54ab32ece8e4469156c35f967e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
