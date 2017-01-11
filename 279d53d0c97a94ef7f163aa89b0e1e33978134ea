@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_5667d28e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-11T06:55:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_dfcb8761",
+      "range": {
+        "startLine": 2730,
+        "startChar": 12,
+        "endLine": 2730,
+        "endChar": 18
+      },
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_7feb7bc2",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 25
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_16715a49",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3722,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-11T06:55:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57a6d6c4_7feb7bc2",
+      "range": {
+        "startLine": 3721,
+        "startChar": 4,
+        "endLine": 3722,
+        "endChar": 100
+      },
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_9fe81fc6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 25
@@ -59,6 +107,30 @@
       "writtenOn": "2017-01-10T15:39:00Z",
       "side": 1,
       "message": "do we need this?",
+      "range": {
+        "startLine": 3732,
+        "startChar": 4,
+        "endLine": 3732,
+        "endChar": 21
+      },
+      "revId": "279d53d0c97a94ef7f163aa89b0e1e33978134ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_165b9a98",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3732,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-11T06:55:54Z",
+      "side": 1,
+      "message": "I think it\u0027s needed because it\u0027s querying from the driver to get the result. The texture is attached to a framebuffer after calling syncRendererState(). So without this sync driver may not know if it\u0027s a multisampled Texture as sample number is checked in mesa.",
+      "parentUuid": "57a6d6c4_9fe81fc6",
       "range": {
         "startLine": 3732,
         "startChar": 4,
