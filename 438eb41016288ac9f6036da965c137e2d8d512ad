@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_c877bbe8",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-11T18:19:03Z",
+      "side": 1,
+      "message": "nit: this can now be simplified to just:\n\n   *params \u003d ConvertFromGLenum\u003cParamType\u003e(info-\u003einternalFormat ? info-\u003einternalFormat : GL_RGBA);\n   break;",
+      "range": {
+        "startLine": 77,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 14
+      },
+      "revId": "438eb41016288ac9f6036da965c137e2d8d512ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
