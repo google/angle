@@ -378,6 +378,29 @@
     },
     {
       "key": {
+        "uuid": "037501b9_1fa64696",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "here I think the naming gets very confusing - let\u0027s try to find a good alternate name, with feedback from other reviewers.\n\nTo other reviewers: we could potentially store a vertex attribute as\n\nstruct VertexInfo\n{\n    VertexAttribute attrib;\n    VertexBinding *binding;\n    uint32_t bindingIndex;\n};\n\nAnd just use a single std::vector\u003cVertexnfo\u003e sized to be the attribute size.\n\nWDYT of that vs this approach?",
+      "range": {
+        "startLine": 82,
+        "startChar": 10,
+        "endLine": 82,
+        "endChar": 29
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_41c1943c",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -1506,6 +1529,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_3f88e207",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "I like this, but I find the naming a bit confusing, since we have VertexAttribute, VertexBinding, and VertexAttribBinding. \n\nHow about VertexAttribAndBinding? Or just AttribAndBinding? or AttribInfo? Comments from other reviewers?",
+      "parentUuid": "037501b9_47ff1eef",
+      "range": {
+        "startLine": 39,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 60
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_04ab1a54",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 28
@@ -1635,6 +1682,30 @@
       "side": 1,
       "message": "These constants should be used as restrictions when calling vertexAttribFormat and bindVertexBuffer. I just take the values in OpenGL ES 3.1 SPEC. (November 3, 2016; Section 10.3.1 Page 243)\n\nCould you give me some suggestions about how to initialize these constants?",
       "parentUuid": "57a6d6c4_210c901d",
+      "range": {
+        "startLine": 1131,
+        "startChar": 4,
+        "endLine": 1132,
+        "endChar": 47
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_bc9de058",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-11T19:39:09Z",
+      "side": 1,
+      "message": "Jiawei, please re-read the comment I posted above.\n\nI suggest you make a test in angle_end2end_tests for this particular value, that uses a variety of vertex strides and relative offsets, and experiment manually to see what maximum values D3D11 is capable of supporting. Then document your findings here. If you cannot make a funcional test for these features, leave a TODO here indicating you intend to fix this when you can.",
+      "parentUuid": "77e75a57_c3652bf7",
       "range": {
         "startLine": 1131,
         "startChar": 4,
