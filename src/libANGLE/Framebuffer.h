@@ -214,6 +214,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     void signal(angle::SignalToken token) override;
 
     bool formsRenderingFeedbackLoopWith(const State &state) const;
+    bool formsCopyingFeedbackLoopWith(GLuint copyTextureID, GLint copyTextureLevel) const;
 
   private:
     void detachResourceById(GLenum resourceType, GLuint resourceId);

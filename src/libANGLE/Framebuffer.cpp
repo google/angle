@@ -1018,4 +1018,26 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
     return false;
 }
 
+bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID, GLint copyTextureLevel) const
+{
+    if (mId == 0)
+    {
+        // It seems impossible to form a texture copying feedback loop with the default FBO.
+        return false;
+    }
+
+    const FramebufferAttachment *readAttachment = getReadColorbuffer();
+    ASSERT(readAttachment);
+
+    if (readAttachment->isTextureWithId(copyTextureID))
+    {
+        // TODO(jmadill): 3D/Array texture layers.
+        if (readAttachment->getTextureImageIndex().mipIndex == copyTextureLevel)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 }  // namespace gl
