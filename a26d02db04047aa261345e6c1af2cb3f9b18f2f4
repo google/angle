@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_823d2432",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-11T15:38:56Z",
+      "side": 1,
+      "message": "OK. I gave back the \"size_t\" in patch set 14.",
+      "parentUuid": "77e75a57_63888642",
+      "revId": "a26d02db04047aa261345e6c1af2cb3f9b18f2f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b710f2cf_edfea1f5",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 9
