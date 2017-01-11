@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_4be2c015",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-11T22:28:38Z",
+      "side": 1,
+      "message": "The GLSL \"built-in\" test does query for WebGL limits, though. It\u0027s also important they are initialized to the spec defaults as our test requires. Both fail if left with native limits.",
+      "parentUuid": "037501b9_d09bdd51",
+      "range": {
+        "startLine": 2481,
+        "startChar": 0,
+        "endLine": 2487,
+        "endChar": 5
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_d231a50d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 6
