@@ -433,6 +433,18 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     mRemoveIndexSideEffectsInSubtree = true;
                     return true;
                 }
+
+                TIntermBinary *leftBinary = node->getLeft()->getAsBinaryNode();
+                if (leftBinary != nullptr &&
+                    IntermNodePatternMatcher::IsDynamicIndexingOfVectorOrMatrix(leftBinary))
+                {
+                    // This is a case like:
+                    // mat2 m;
+                    // m[a][b]++;
+                    // Process the child node m[a] first.
+                    return true;
+                }
+
                 // TODO(oetuaho@nvidia.com): This is not optimal if the expression using the value
                 // only writes it and doesn't need the previous value. http://anglebug.com/1116
 

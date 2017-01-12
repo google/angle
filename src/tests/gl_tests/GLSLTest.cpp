@@ -2537,6 +2537,27 @@ TEST_P(GLSLTest_ES3, MultipleDeclarationInForLoopEmptyExpression)
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
 }
 
+// Test that dynamic indexing of a matrix inside a dynamic indexing of a vector in an l-value works
+// correctly.
+TEST_P(GLSLTest_ES3, NestedDynamicIndexingInLValue)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform int u_zero;\n"
+        "void main() {\n"
+        "    mat2 m = mat2(0.0, 0.0, 0.0, 0.0);\n"
+        "    m[u_zero + 1][u_zero + 1] = float(u_zero + 1);\n"
+        "    float f = m[1][1];\n"
+        "    my_FragColor = vec4(1.0 - f, f, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 class WebGLGLSLTest : public GLSLTest
 {
   protected:
