@@ -12,6 +12,8 @@
 #include "angle_gl.h"
 #include "common/angleutils.h"
 
+#include <EGL/egl.h>
+
 namespace gl
 {
 class Buffer;
@@ -84,6 +86,15 @@ void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param);
 void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params);
 void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param);
 void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params);
-}
+
+}  // namespace gl
+
+namespace egl
+{
+struct Config;
+
+void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value);
+
+}  // namespace egl
 
 #endif  // LIBANGLE_QUERYUTILS_H_

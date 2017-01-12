@@ -11,6 +11,7 @@
 #include "common/utilities.h"
 
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
@@ -870,4 +871,124 @@ void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params)
 {
     SetSamplerParameterBase(sampler, pname, params);
 }
+
+}  // namespace gl
+
+namespace egl
+{
+
+void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
+{
+    ASSERT(config != nullptr);
+    switch (attribute)
+    {
+        case EGL_BUFFER_SIZE:
+            *value = config->bufferSize;
+            break;
+        case EGL_ALPHA_SIZE:
+            *value = config->alphaSize;
+            break;
+        case EGL_BLUE_SIZE:
+            *value = config->blueSize;
+            break;
+        case EGL_GREEN_SIZE:
+            *value = config->greenSize;
+            break;
+        case EGL_RED_SIZE:
+            *value = config->redSize;
+            break;
+        case EGL_DEPTH_SIZE:
+            *value = config->depthSize;
+            break;
+        case EGL_STENCIL_SIZE:
+            *value = config->stencilSize;
+            break;
+        case EGL_CONFIG_CAVEAT:
+            *value = config->configCaveat;
+            break;
+        case EGL_CONFIG_ID:
+            *value = config->configID;
+            break;
+        case EGL_LEVEL:
+            *value = config->level;
+            break;
+        case EGL_NATIVE_RENDERABLE:
+            *value = config->nativeRenderable;
+            break;
+        case EGL_NATIVE_VISUAL_ID:
+            *value = config->nativeVisualID;
+            break;
+        case EGL_NATIVE_VISUAL_TYPE:
+            *value = config->nativeVisualType;
+            break;
+        case EGL_SAMPLES:
+            *value = config->samples;
+            break;
+        case EGL_SAMPLE_BUFFERS:
+            *value = config->sampleBuffers;
+            break;
+        case EGL_SURFACE_TYPE:
+            *value = config->surfaceType;
+            break;
+        case EGL_TRANSPARENT_TYPE:
+            *value = config->transparentType;
+            break;
+        case EGL_TRANSPARENT_BLUE_VALUE:
+            *value = config->transparentBlueValue;
+            break;
+        case EGL_TRANSPARENT_GREEN_VALUE:
+            *value = config->transparentGreenValue;
+            break;
+        case EGL_TRANSPARENT_RED_VALUE:
+            *value = config->transparentRedValue;
+            break;
+        case EGL_BIND_TO_TEXTURE_RGB:
+            *value = config->bindToTextureRGB;
+            break;
+        case EGL_BIND_TO_TEXTURE_RGBA:
+            *value = config->bindToTextureRGBA;
+            break;
+        case EGL_MIN_SWAP_INTERVAL:
+            *value = config->minSwapInterval;
+            break;
+        case EGL_MAX_SWAP_INTERVAL:
+            *value = config->maxSwapInterval;
+            break;
+        case EGL_LUMINANCE_SIZE:
+            *value = config->luminanceSize;
+            break;
+        case EGL_ALPHA_MASK_SIZE:
+            *value = config->alphaMaskSize;
+            break;
+        case EGL_COLOR_BUFFER_TYPE:
+            *value = config->colorBufferType;
+            break;
+        case EGL_RENDERABLE_TYPE:
+            *value = config->renderableType;
+            break;
+        case EGL_MATCH_NATIVE_PIXMAP:
+            *value = false;
+            UNIMPLEMENTED();
+            break;
+        case EGL_CONFORMANT:
+            *value = config->conformant;
+            break;
+        case EGL_MAX_PBUFFER_WIDTH:
+            *value = config->maxPBufferWidth;
+            break;
+        case EGL_MAX_PBUFFER_HEIGHT:
+            *value = config->maxPBufferHeight;
+            break;
+        case EGL_MAX_PBUFFER_PIXELS:
+            *value = config->maxPBufferPixels;
+            break;
+        case EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE:
+            *value = config->optimalOrientation;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
+
+}  // namespace egl

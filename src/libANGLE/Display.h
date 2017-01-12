@@ -60,7 +60,6 @@ class Display final : angle::NonCopyable
     static const std::string &getClientExtensionString();
 
     std::vector<const Config*> getConfigs(const egl::AttributeMap &attribs) const;
-    bool getConfigAttrib(const Config *configuration, EGLint attribute, EGLint *value);
 
     Error createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
                               Surface **outSurface);

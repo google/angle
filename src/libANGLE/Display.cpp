@@ -536,59 +536,6 @@ std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs)
     return mConfigSet.filter(attribs);
 }
 
-bool Display::getConfigAttrib(const Config *configuration, EGLint attribute, EGLint *value)
-{
-    switch (attribute)
-    {
-      case EGL_BUFFER_SIZE:               *value = configuration->bufferSize;             break;
-      case EGL_ALPHA_SIZE:                *value = configuration->alphaSize;              break;
-      case EGL_BLUE_SIZE:                 *value = configuration->blueSize;               break;
-      case EGL_GREEN_SIZE:                *value = configuration->greenSize;              break;
-      case EGL_RED_SIZE:                  *value = configuration->redSize;                break;
-      case EGL_DEPTH_SIZE:                *value = configuration->depthSize;              break;
-      case EGL_STENCIL_SIZE:              *value = configuration->stencilSize;            break;
-      case EGL_CONFIG_CAVEAT:             *value = configuration->configCaveat;           break;
-      case EGL_CONFIG_ID:                 *value = configuration->configID;               break;
-      case EGL_LEVEL:                     *value = configuration->level;                  break;
-      case EGL_NATIVE_RENDERABLE:         *value = configuration->nativeRenderable;       break;
-      case EGL_NATIVE_VISUAL_ID:          *value = configuration->nativeVisualID;         break;
-      case EGL_NATIVE_VISUAL_TYPE:        *value = configuration->nativeVisualType;       break;
-      case EGL_SAMPLES:                   *value = configuration->samples;                break;
-      case EGL_SAMPLE_BUFFERS:            *value = configuration->sampleBuffers;          break;
-      case EGL_SURFACE_TYPE:              *value = configuration->surfaceType;            break;
-      case EGL_TRANSPARENT_TYPE:          *value = configuration->transparentType;        break;
-      case EGL_TRANSPARENT_BLUE_VALUE:    *value = configuration->transparentBlueValue;   break;
-      case EGL_TRANSPARENT_GREEN_VALUE:   *value = configuration->transparentGreenValue;  break;
-      case EGL_TRANSPARENT_RED_VALUE:     *value = configuration->transparentRedValue;    break;
-      case EGL_BIND_TO_TEXTURE_RGB:       *value = configuration->bindToTextureRGB;       break;
-      case EGL_BIND_TO_TEXTURE_RGBA:      *value = configuration->bindToTextureRGBA;      break;
-      case EGL_MIN_SWAP_INTERVAL:         *value = configuration->minSwapInterval;        break;
-      case EGL_MAX_SWAP_INTERVAL:         *value = configuration->maxSwapInterval;        break;
-      case EGL_LUMINANCE_SIZE:            *value = configuration->luminanceSize;          break;
-      case EGL_ALPHA_MASK_SIZE:           *value = configuration->alphaMaskSize;          break;
-      case EGL_COLOR_BUFFER_TYPE:         *value = configuration->colorBufferType;        break;
-      case EGL_RENDERABLE_TYPE:           *value = configuration->renderableType;         break;
-      case EGL_MATCH_NATIVE_PIXMAP:       *value = false; UNIMPLEMENTED();                break;
-      case EGL_CONFORMANT:                *value = configuration->conformant;             break;
-      case EGL_MAX_PBUFFER_WIDTH:         *value = configuration->maxPBufferWidth;        break;
-      case EGL_MAX_PBUFFER_HEIGHT:        *value = configuration->maxPBufferHeight;       break;
-      case EGL_MAX_PBUFFER_PIXELS:        *value = configuration->maxPBufferPixels;       break;
-
-      case EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE:
-          if (!getExtensions().surfaceOrientation)
-          {
-              return false;
-          }
-          *value = configuration->optimalOrientation;
-          break;
-
-      default:
-        return false;
-    }
-
-    return true;
-}
-
 Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
                                    Surface **outSurface)
 {

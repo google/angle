@@ -152,6 +152,71 @@ egl::Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error ValidateConfigAttribute(const egl::Display *display, EGLAttrib attribute)
+{
+    switch (attribute)
+    {
+        case EGL_BUFFER_SIZE:
+        case EGL_ALPHA_SIZE:
+        case EGL_BLUE_SIZE:
+        case EGL_GREEN_SIZE:
+        case EGL_RED_SIZE:
+        case EGL_DEPTH_SIZE:
+        case EGL_STENCIL_SIZE:
+        case EGL_CONFIG_CAVEAT:
+        case EGL_CONFIG_ID:
+        case EGL_LEVEL:
+        case EGL_NATIVE_RENDERABLE:
+        case EGL_NATIVE_VISUAL_ID:
+        case EGL_NATIVE_VISUAL_TYPE:
+        case EGL_SAMPLES:
+        case EGL_SAMPLE_BUFFERS:
+        case EGL_SURFACE_TYPE:
+        case EGL_TRANSPARENT_TYPE:
+        case EGL_TRANSPARENT_BLUE_VALUE:
+        case EGL_TRANSPARENT_GREEN_VALUE:
+        case EGL_TRANSPARENT_RED_VALUE:
+        case EGL_BIND_TO_TEXTURE_RGB:
+        case EGL_BIND_TO_TEXTURE_RGBA:
+        case EGL_MIN_SWAP_INTERVAL:
+        case EGL_MAX_SWAP_INTERVAL:
+        case EGL_LUMINANCE_SIZE:
+        case EGL_ALPHA_MASK_SIZE:
+        case EGL_COLOR_BUFFER_TYPE:
+        case EGL_RENDERABLE_TYPE:
+        case EGL_MATCH_NATIVE_PIXMAP:
+        case EGL_CONFORMANT:
+        case EGL_MAX_PBUFFER_WIDTH:
+        case EGL_MAX_PBUFFER_HEIGHT:
+        case EGL_MAX_PBUFFER_PIXELS:
+            break;
+
+        case EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE:
+            if (!display->getExtensions().surfaceOrientation)
+            {
+                return egl::Error(EGL_BAD_ATTRIBUTE,
+                                  "EGL_ANGLE_surface_orientation is not enabled.");
+            }
+            break;
+
+        default:
+            return egl::Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
+    }
+
+    return egl::NoError();
+}
+
+egl::Error ValidateConfigAttributes(const egl::Display *display,
+                                    const egl::AttributeMap &attributes)
+{
+    for (const auto &attrib : attributes)
+    {
+        ANGLE_TRY(ValidateConfigAttribute(display, attrib.first));
+    }
+
+    return egl::NoError();
+}
+
 }  // namespace
 
 namespace egl
@@ -1611,6 +1676,41 @@ Error ValidateSwapBuffersWithDamageEXT(const Display *display,
     }
 
     return Error(EGL_SUCCESS);
+}
+
+Error ValidateGetConfigAttrib(const Display *display, const Config *config, EGLint attribute)
+{
+    ANGLE_TRY(ValidateConfig(display, config));
+    ANGLE_TRY(ValidateConfigAttribute(display, static_cast<EGLAttrib>(attribute)));
+    return NoError();
+}
+
+Error ValidateChooseConfig(const Display *display,
+                           const AttributeMap &attribs,
+                           EGLint configSize,
+                           EGLint *numConfig)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateConfigAttributes(display, attribs));
+
+    if (numConfig == nullptr)
+    {
+        return Error(EGL_BAD_PARAMETER, "num_config cannot be null.");
+    }
+
+    return NoError();
+}
+
+Error ValidateGetConfigs(const Display *display, EGLint configSize, EGLint *numConfig)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (numConfig == nullptr)
+    {
+        return Error(EGL_BAD_PARAMETER, "num_config cannot be null.");
+    }
+
+    return NoError();
 }
 
 Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLint platformType)

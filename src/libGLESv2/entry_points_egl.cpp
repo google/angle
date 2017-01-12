@@ -20,6 +20,7 @@
 #include "libANGLE/Thread.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/validationEGL.h"
+#include "libANGLE/queryutils.h"
 
 #include "common/debug.h"
 #include "common/version.h"
@@ -30,6 +31,28 @@
 
 namespace egl
 {
+
+namespace
+{
+
+void ClipConfigs(const std::vector<const Config *> &filteredConfigs,
+                 EGLConfig *output_configs,
+                 EGLint config_size,
+                 EGLint *num_config)
+{
+    EGLint result_size = static_cast<EGLint>(filteredConfigs.size());
+    if (output_configs)
+    {
+        result_size = std::max(std::min(result_size, config_size), 0);
+        for (EGLint i = 0; i < result_size; i++)
+        {
+            output_configs[i] = const_cast<Config *>(filteredConfigs[i]);
+        }
+    }
+    *num_config = result_size;
+}
+
+}  // anonymous namespace
 
 // EGL 1.0
 EGLint EGLAPIENTRY GetError(void)
@@ -156,29 +179,14 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint con
 
     Display *display = static_cast<Display*>(dpy);
 
-    Error error = ValidateDisplay(display);
+    Error error = ValidateGetConfigs(display, config_size, num_config);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    if (!num_config)
-    {
-        thread->setError(Error(EGL_BAD_PARAMETER));
-        return EGL_FALSE;
-    }
-
-    std::vector<const Config*> filteredConfigs = display->getConfigs(AttributeMap());
-    if (configs)
-    {
-        filteredConfigs.resize(std::min<size_t>(filteredConfigs.size(), config_size));
-        for (size_t i = 0; i < filteredConfigs.size(); i++)
-        {
-            configs[i] = const_cast<Config*>(filteredConfigs[i]);
-        }
-    }
-    *num_config = static_cast<EGLint>(filteredConfigs.size());
+    ClipConfigs(display->getConfigs(AttributeMap()), configs, config_size, num_config);
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -193,31 +201,16 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     Thread *thread = GetCurrentThread();
 
     Display *display = static_cast<Display*>(dpy);
+    AttributeMap attribMap = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateDisplay(display);
+    Error error = ValidateChooseConfig(display, attribMap, config_size, num_config);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    if (!num_config)
-    {
-        thread->setError(Error(EGL_BAD_PARAMETER));
-        return EGL_FALSE;
-    }
-
-    std::vector<const Config *> filteredConfigs =
-        display->getConfigs(AttributeMap::CreateFromIntArray(attrib_list));
-    if (configs)
-    {
-        filteredConfigs.resize(std::min<size_t>(filteredConfigs.size(), config_size));
-        for (size_t i = 0; i < filteredConfigs.size(); i++)
-        {
-            configs[i] = const_cast<Config*>(filteredConfigs[i]);
-        }
-    }
-    *num_config = static_cast<EGLint>(filteredConfigs.size());
+    ClipConfigs(display->getConfigs(attribMap), configs, config_size, num_config);
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -234,18 +227,14 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint 
     Display *display = static_cast<Display*>(dpy);
     Config *configuration = static_cast<Config*>(config);
 
-    Error error = ValidateConfig(display, configuration);
+    Error error = ValidateGetConfigAttrib(display, configuration, attribute);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    if (!display->getConfigAttrib(configuration, attribute, value))
-    {
-        thread->setError(Error(EGL_BAD_ATTRIBUTE));
-        return EGL_FALSE;
-    }
+    QueryConfigAttrib(configuration, attribute, value);
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
