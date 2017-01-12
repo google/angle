@@ -46,7 +46,7 @@ EGLDisplay EGLAPIENTRY GetDisplay(EGLNativeDisplayType display_id)
 {
     EVENT("(EGLNativeDisplayType display_id = 0x%0.8p)", display_id);
 
-    return Display::GetDisplayFromAttribs(reinterpret_cast<void *>(display_id), AttributeMap());
+    return Display::GetDisplayFromNativeDisplay(display_id, AttributeMap());
 }
 
 EGLBoolean EGLAPIENTRY Initialize(EGLDisplay dpy, EGLint *major, EGLint *minor)

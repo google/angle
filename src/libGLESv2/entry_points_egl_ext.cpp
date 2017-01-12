@@ -349,8 +349,9 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
         }
 
         thread->setError(Error(EGL_SUCCESS));
-        return Display::GetDisplayFromAttribs(native_display,
-                                              AttributeMap::CreateFromIntArray(attrib_list));
+        return Display::GetDisplayFromNativeDisplay(
+            gl::bitCast<EGLNativeDisplayType>(native_display),
+            AttributeMap::CreateFromIntArray(attrib_list));
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
@@ -364,7 +365,7 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplayEXT(EGLenum platform, void *native_disp
         }
 
         thread->setError(Error(EGL_SUCCESS));
-        return Display::GetDisplayFromDevice(native_display);
+        return Display::GetDisplayFromDevice(eglDevice);
     }
     else
     {

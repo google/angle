@@ -273,17 +273,16 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
 
 }  // anonymous namespace
 
-Display *Display::GetDisplayFromAttribs(void *native_display, const AttributeMap &attribMap)
+Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
+                                              const AttributeMap &attribMap)
 {
     // Initialize the global platform if not already
     InitDefaultPlatformImpl();
 
     Display *display = nullptr;
 
-    EGLNativeDisplayType displayId = reinterpret_cast<EGLNativeDisplayType>(native_display);
-
     ANGLEPlatformDisplayMap *displays            = GetANGLEPlatformDisplayMap();
-    ANGLEPlatformDisplayMap::const_iterator iter = displays->find(displayId);
+    ANGLEPlatformDisplayMap::const_iterator iter = displays->find(nativeDisplay);
     if (iter != displays->end())
     {
         display = iter->second;
@@ -292,13 +291,13 @@ Display *Display::GetDisplayFromAttribs(void *native_display, const AttributeMap
     if (display == nullptr)
     {
         // Validate the native display
-        if (!Display::isValidNativeDisplay(displayId))
+        if (!Display::isValidNativeDisplay(nativeDisplay))
         {
             return NULL;
         }
 
-        display = new Display(EGL_PLATFORM_ANGLE_ANGLE, displayId, nullptr);
-        displays->insert(std::make_pair(displayId, display));
+        display = new Display(EGL_PLATFORM_ANGLE_ANGLE, nativeDisplay, nullptr);
+        displays->insert(std::make_pair(nativeDisplay, display));
     }
 
     // Apply new attributes if the display is not initialized yet.
@@ -317,15 +316,14 @@ Display *Display::GetDisplayFromAttribs(void *native_display, const AttributeMap
     return display;
 }
 
-Display *Display::GetDisplayFromDevice(void *native_display)
+Display *Display::GetDisplayFromDevice(Device *device)
 {
     // Initialize the global platform if not already
     InitDefaultPlatformImpl();
 
     Display *display = nullptr;
 
-    Device *eglDevice = reinterpret_cast<Device *>(native_display);
-    ASSERT(Device::IsValidDevice(eglDevice));
+    ASSERT(Device::IsValidDevice(device));
 
     ANGLEPlatformDisplayMap *anglePlatformDisplays   = GetANGLEPlatformDisplayMap();
     DevicePlatformDisplayMap *devicePlatformDisplays = GetDevicePlatformDisplayMap();
@@ -334,7 +332,7 @@ Display *Display::GetDisplayFromDevice(void *native_display)
     for (auto &displayMapEntry : *anglePlatformDisplays)
     {
         egl::Display *iterDisplay = displayMapEntry.second;
-        if (iterDisplay->getDevice() == eglDevice)
+        if (iterDisplay->getDevice() == device)
         {
             display = iterDisplay;
         }
@@ -343,7 +341,7 @@ Display *Display::GetDisplayFromDevice(void *native_display)
     if (display == nullptr)
     {
         // See if the eglDevice is in use by a Display created using the DEVICE platform
-        DevicePlatformDisplayMap::const_iterator iter = devicePlatformDisplays->find(eglDevice);
+        DevicePlatformDisplayMap::const_iterator iter = devicePlatformDisplays->find(device);
         if (iter != devicePlatformDisplays->end())
         {
             display = iter->second;
@@ -353,14 +351,14 @@ Display *Display::GetDisplayFromDevice(void *native_display)
     if (display == nullptr)
     {
         // Otherwise create a new Display
-        display = new Display(EGL_PLATFORM_DEVICE_EXT, 0, eglDevice);
-        devicePlatformDisplays->insert(std::make_pair(eglDevice, display));
+        display = new Display(EGL_PLATFORM_DEVICE_EXT, 0, device);
+        devicePlatformDisplays->insert(std::make_pair(device, display));
     }
 
     // Apply new attributes if the display is not initialized yet.
     if (!display->isInitialized())
     {
-        rx::DisplayImpl *impl = CreateDisplayFromDevice(eglDevice, display->getState());
+        rx::DisplayImpl *impl = CreateDisplayFromDevice(device, display->getState());
         display->setAttributes(impl, egl::AttributeMap());
     }
 

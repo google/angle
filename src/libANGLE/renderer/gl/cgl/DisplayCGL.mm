@@ -226,8 +226,8 @@ egl::Error DisplayCGL::restoreLostDevice()
 
 bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    // TODO(cwallez) investigate implementing this
-    return true;
+    NSObject *layer = reinterpret_cast<NSObject *>(window);
+    return [layer isKindOfClass:[CALayer class]];
 }
 
 std::string DisplayCGL::getVendorString() const

@@ -144,13 +144,13 @@
 
     WindowSurfaceCGL::WindowSurfaceCGL(const egl::SurfaceState &state,
                                        RendererGL *renderer,
-                                       CALayer *layer,
+                                       EGLNativeWindowType layer,
                                        const FunctionsGL *functions,
                                        CGLContextObj context)
         : SurfaceGL(state, renderer),
           mSwapLayer(nil),
           mCurrentSwapId(0),
-          mLayer(layer),
+          mLayer(reinterpret_cast<CALayer *>(layer)),
           mContext(context),
           mFunctions(functions),
           mStateManager(renderer->getStateManager()),
