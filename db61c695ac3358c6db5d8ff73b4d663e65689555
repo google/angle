@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_a7993bbf",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-12T15:19:54Z",
+      "side": 1,
+      "message": "Right, the gl_MaxDrawBuffers constant is part of the ESSL 1 core spec.\n\nThe solution is not as simple as clamping the limits here though.  If you modify your test to only use one framebuffer, trying to bind to a non-zero attachment when the framebuffer was created before the extension was enabled, it will crash.\n\nI think it is less bug-prone if the caps were kept as is and we artificially limit gl_MaxDrawBuffers in Compiler::Compiler when we\u0027re in ES2 and don\u0027t have EXT_draw_buffers available.  I\u0027d rather not update the internal state of all framebuffers at runtime.\n\nThis brings up another issue, we need to make sure the compiler is re-created after an extension is enabled so that it has updated extensions.  This should be as simple as deleting the old mCompiler and creating a new one in Context::requestExtension.",
+      "parentUuid": "037501b9_4be2c015",
+      "range": {
+        "startLine": 2481,
+        "startChar": 0,
+        "endLine": 2487,
+        "endChar": 5
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_d231a50d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 6
