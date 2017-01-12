@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_9f5489c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7d8f2b0_2aae9f64",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7d8f2b0_cae1c3b7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-10T01:40:42Z",
       "side": 1,
       "message": "This step would cause a GPU -\u003e CPU synchronization. Ideally we would like to stay 100% on the GPU, would there be a way to do this using compute shaders to transform the format of the indirect structure from D3D to GL?",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_9c16e971",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "I need the data in buffer. The \u0027count\u0027, \u0027instances\u0027 and \u0027first\u0027 are also used in applyVertexBuffer.",
+      "parentUuid": "b7d8f2b0_cae1c3b7",
       "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_3c28f5b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7d8f2b0_6ab897a4",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7d8f2b0_eadc8701",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_7c1e6d92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "Agree. We shouldn\u0027t modify the original indirect buffer. I created another buffer to storage the D3D indirect args.",
+      "parentUuid": "b7d8f2b0_eadc8701",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7d8f2b0_8ae7cbcb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -81,6 +153,24 @@
       "writtenOn": "2017-01-10T01:40:42Z",
       "side": 1,
       "message": "Use the structure as defined in the D3D headers:\n\n  D3D11_DRAW_INSTANCED_INDIRECT_ARGS* indirectData \u003d ...\n  indirectData-\u003e VertexCountPerInstance \u003d ...\n  ...",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_fc94bdd4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2038,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "D3D11_DRAW_INSTANCED_INDIRECT_ARGS is added in Windows 10 SDK. In lower SDK version, this type is not supported. So I defined this type in this file manually.",
+      "parentUuid": "b7d8f2b0_8ae7cbcb",
       "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -115,6 +205,24 @@
       "writtenOn": "2017-01-10T01:40:42Z",
       "side": 1,
       "message": "passing 0 and not checking the return value would work too.",
+      "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_79375f20",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4697,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-12T01:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b710f2cf_8d1cc54f",
       "revId": "9b0fe38f5a4bfcb4409083def8249f2d0d4f303e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
