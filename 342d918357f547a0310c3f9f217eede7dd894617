@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_dd50c444",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-12T16:17:42Z",
+      "side": 1,
+      "message": "nit: replace (IsNVIDIA() \u0026\u0026 IsLinux()) || (IsAMD() \u0026\u0026 IsLinux()) with ((IsNVIDIA() || IsAMD()) \u0026\u0026 IsLinux())",
+      "revId": "342d918357f547a0310c3f9f217eede7dd894617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
