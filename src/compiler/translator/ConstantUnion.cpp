@@ -58,6 +58,12 @@ float CheckedMul(float lhs, float rhs, TDiagnostics *diag, const TSourceLoc &lin
     return result;
 }
 
+bool IsValidShiftOffset(const TConstantUnion &rhs)
+{
+    return (rhs.getType() == EbtInt && (rhs.getIConst() >= 0 && rhs.getIConst() <= 31)) ||
+           (rhs.getType() == EbtUInt && rhs.getUConst() <= 31u);
+}
+
 }  // anonymous namespace
 
 TConstantUnion::TConstantUnion()
@@ -377,10 +383,9 @@ TConstantUnion TConstantUnion::rshift(const TConstantUnion &lhs,
     TConstantUnion returnValue;
     ASSERT(lhs.type == EbtInt || lhs.type == EbtUInt);
     ASSERT(rhs.type == EbtInt || rhs.type == EbtUInt);
-    if ((rhs.type == EbtInt && (rhs.iConst < 0 || rhs.iConst > 31)) ||
-        (rhs.type == EbtUInt && rhs.uConst > 31u))
+    if (!IsValidShiftOffset(rhs))
     {
-        diag->error(line, "Undefined shift (operand out of range)", ">>");
+        diag->warning(line, "Undefined shift (operand out of range)", ">>");
         switch (lhs.type)
         {
             case EbtInt:
@@ -484,10 +489,9 @@ TConstantUnion TConstantUnion::lshift(const TConstantUnion &lhs,
     TConstantUnion returnValue;
     ASSERT(lhs.type == EbtInt || lhs.type == EbtUInt);
     ASSERT(rhs.type == EbtInt || rhs.type == EbtUInt);
-    if ((rhs.type == EbtInt && (rhs.iConst < 0 || rhs.iConst > 31)) ||
-        (rhs.type == EbtUInt && rhs.uConst > 31u))
+    if (!IsValidShiftOffset(rhs))
     {
-        diag->error(line, "Undefined shift (operand out of range)", "<<");
+        diag->warning(line, "Undefined shift (operand out of range)", "<<");
         switch (lhs.type)
         {
             case EbtInt:
