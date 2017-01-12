@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_7953cdd5",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-12T00:31:59Z",
+      "side": 1,
+      "message": "Good point! Let\u0027s revisit this later when necessary.",
+      "parentUuid": "037501b9_881ea38f",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_63508621",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 11
