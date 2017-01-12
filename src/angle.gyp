@@ -30,7 +30,8 @@
                 'angle_enable_d3d9%': 1,
                 'angle_enable_d3d11%': 1,
                 'angle_enable_hlsl%': 1,
-                'angle_enable_vulkan%': 1,
+                # TODO(jmadill): Re-enable Vulkan after roll.
+                'angle_enable_vulkan%': 0,
             }],
             ['OS=="linux" and use_x11==1 and chromeos==0',
             {
