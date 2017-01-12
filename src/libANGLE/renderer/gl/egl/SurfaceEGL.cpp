@@ -94,7 +94,7 @@ void SurfaceEGL::setSwapInterval(EGLint interval)
     EGLBoolean success = mEGL->swapInterval(interval);
     if (success == EGL_FALSE)
     {
-        ERR() << "eglSwapInterval error " << egl::Error(mEGL->getError());
+        ERR("eglSwapInterval error 0x%04x", mEGL->getError());
         ASSERT(false);
     }
 }

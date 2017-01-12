@@ -1091,8 +1091,9 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     }
     else if (!infoLog)
     {
-        ERR() << "Error compiling dynamic pixel executable:" << std::endl
-              << tempInfoLog.str() << std::endl;
+        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
+        ERR("Error compiling dynamic pixel executable:\n%s\n", &tempCharBuffer[0]);
     }
 
     *outExectuable = pixelExecutable;
@@ -1136,8 +1137,9 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     }
     else if (!infoLog)
     {
-        ERR() << "Error compiling dynamic vertex executable:" << std::endl
-              << tempInfoLog.str() << std::endl;
+        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
+        ERR("Error compiling dynamic vertex executable:\n%s\n", &tempCharBuffer[0]);
     }
 
     *outExectuable = vertexExecutable;
@@ -1185,8 +1187,9 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
 
     if (!infoLog && error.isError())
     {
-        ERR() << "Error compiling dynamic geometry executable:" << std::endl
-              << tempInfoLog.str() << std::endl;
+        std::vector<char> tempCharBuffer(tempInfoLog.getLength() + 3);
+        tempInfoLog.getLog(static_cast<GLsizei>(tempInfoLog.getLength()), NULL, &tempCharBuffer[0]);
+        ERR("Error compiling dynamic geometry executable:\n%s\n", &tempCharBuffer[0]);
     }
 
     if (outExecutable)

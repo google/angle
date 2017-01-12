@@ -750,7 +750,7 @@ void StateManager9::setSampleAlphaToCoverage(bool enabled)
 {
     if (enabled)
     {
-        UNREACHABLE();
+        FIXME("Sample alpha to coverage is unimplemented.");
     }
 }
 

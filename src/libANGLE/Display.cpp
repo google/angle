@@ -80,18 +80,19 @@ std::unique_ptr<DefaultPlatform> g_defaultPlatform = nullptr;
 
 void DefaultPlatform::logError(const char *errorMessage)
 {
-    ERR() << errorMessage;
+    ERR("%s", errorMessage);
 }
 
 void DefaultPlatform::logWarning(const char *warningMessage)
 {
-    WARN() << warningMessage;
+    // TODO(jmadill): Fix this
+    ERR("%s", warningMessage);
 }
 
 void DefaultPlatform::logInfo(const char *infoMessage)
 {
     // Uncomment this if you want Vulkan spam.
-    // WARN() << infoMessage;
+    // ERR("%s", infoMessage);
 }
 
 }  // namespace angle

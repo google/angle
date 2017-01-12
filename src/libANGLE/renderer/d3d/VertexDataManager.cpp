@@ -85,7 +85,7 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib)
         auto errorOrElementSize = factory->getVertexSpaceRequired(attrib, 1, 0);
         if (errorOrElementSize.isError())
         {
-            ERR() << "Unlogged error in DirectStoragePossible.";
+            ERR("Unlogged error in DirectStoragePossible.");
             return false;
         }
 
@@ -194,7 +194,7 @@ VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
 
     if (!mStreamingBuffer)
     {
-        ERR() << "Failed to allocate the streaming vertex buffer.";
+        ERR("Failed to allocate the streaming vertex buffer.");
     }
 }
 

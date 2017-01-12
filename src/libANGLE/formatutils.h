@@ -10,7 +10,6 @@
 #define LIBANGLE_FORMATUTILS_H_
 
 #include <cstddef>
-#include <ostream>
 #include <stdint.h>
 
 #include "angle_gl.h"
@@ -137,8 +136,6 @@ struct Format
 
     static Format Invalid();
     static bool SameSized(const Format &a, const Format &b);
-
-    friend std::ostream &operator<<(std::ostream &os, const Format &fmt);
 
     // This is the sized info.
     const InternalFormat *info;

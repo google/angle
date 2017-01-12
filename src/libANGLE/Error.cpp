@@ -10,7 +10,6 @@
 #include "libANGLE/Error.h"
 
 #include "common/angleutils.h"
-#include "common/debug.h"
 
 #include <cstdarg>
 
@@ -69,11 +68,6 @@ bool Error::operator==(const Error &other) const
 bool Error::operator!=(const Error &other) const
 {
     return !(*this == other);
-}
-
-std::ostream &operator<<(std::ostream &os, const Error &err)
-{
-    return gl::FmtHexShort(os, err.getCode());
 }
 
 namespace priv
@@ -136,8 +130,4 @@ const std::string &Error::getMessage() const
     return *mMessage;
 }
 
-std::ostream &operator<<(std::ostream &os, const Error &err)
-{
-    return gl::FmtHexShort(os, err.getCode());
-}
 }

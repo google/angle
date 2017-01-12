@@ -7,12 +7,11 @@
 // SwapChain9.cpp: Implements a back-end specific class for the D3D9 swap chain.
 
 #include "libANGLE/renderer/d3d/d3d9/SwapChain9.h"
-
-#include "libANGLE/features.h"
+#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/NativeWindow9.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
-#include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
+#include "libANGLE/features.h"
 
 namespace rx
 {
@@ -127,7 +126,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
                                        &mOffscreenTexture, pShareHandle);
         if (FAILED(result))
         {
-            ERR() << "Could not create offscreen texture, " << gl::FmtHR(result);
+            ERR("Could not create offscreen texture: %08lX", result);
             release();
 
             if (d3d9::isDeviceLostError(result))
@@ -213,8 +212,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_INVALIDCALL || result == D3DERR_DEVICELOST);
 
-            ERR() << "Could not create additional swap chains or offscreen surfaces, "
-                  << gl::FmtHR(result);
+            ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
             release();
 
             if (d3d9::isDeviceLostError(result))
@@ -242,8 +240,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_INVALIDCALL);
 
-            ERR() << "Could not create depthstencil surface for new swap chain, "
-                  << gl::FmtHR(result);
+            ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
             release();
 
             if (d3d9::isDeviceLostError(result))

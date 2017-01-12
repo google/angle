@@ -128,11 +128,11 @@ bool ShaderGL::postTranslateCompile(gl::Compiler *compiler, std::string *infoLog
             mShaderID = 0;
 
             *infoLog = &buf[0];
-            WARN() << std::endl << *infoLog;
+            TRACE("\n%s", infoLog->c_str());
         }
         else
         {
-            WARN() << std::endl << "Shader compilation failed with no info log.";
+            TRACE("\nShader compilation failed with no info log.");
         }
         return false;
     }

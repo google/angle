@@ -184,7 +184,7 @@ bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
         {
             // This is stictly speaking not an error, but developers should be
             // notified of risking undefined behavior.
-            ERR() << "Point rendering without writing to gl_PointSize.";
+            ERR("Point rendering without writing to gl_PointSize.");
 
             return true;
         }

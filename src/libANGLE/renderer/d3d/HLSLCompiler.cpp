@@ -136,7 +136,7 @@ gl::Error HLSLCompiler::ensureInitialized()
 
     if (!mD3DCompilerModule)
     {
-        ERR() << "D3D compiler module not found.";
+        ERR("D3D compiler module not found.");
         return gl::Error(GL_OUT_OF_MEMORY, "D3D compiler module not found.");
     }
 
@@ -217,8 +217,8 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             SafeRelease(errorMessage);
 
             infoLog.appendSanitized(message.c_str());
-            WARN() << std::endl << hlsl;
-            WARN() << std::endl << message;
+            TRACE("\n%s", hlsl.c_str());
+            TRACE("\n%s", message.c_str());
 
             if ((message.find("error X3531:") != std::string::npos ||  // "can't unroll loops marked with loop attribute"
                  message.find("error X4014:") != std::string::npos) && // "cannot have gradient operations inside loops with divergent flow control",

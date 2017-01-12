@@ -612,7 +612,7 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
             warning = "Program link failed unexpectedly with no info log.";
         }
         ANGLEPlatformCurrent()->logWarning(warning.c_str());
-        WARN() << std::endl << warning;
+        TRACE("\n%s", warning.c_str());
 
         // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case
         return false;

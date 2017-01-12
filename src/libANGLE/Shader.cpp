@@ -281,7 +281,7 @@ void Shader::compile(const Context *context)
     if (!result)
     {
         mInfoLog = sh::GetInfoLog(compilerHandle);
-        WARN() << std::endl << mInfoLog;
+        TRACE("\n%s", mInfoLog.c_str());
         mCompiled = false;
         return;
     }

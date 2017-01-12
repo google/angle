@@ -513,8 +513,8 @@ gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
                                         &inputLayout));
             if (mLayoutMap.size() >= mCacheSize)
             {
-                WARN() << "Overflowed the limit of " << mCacheSize
-                       << " input layouts, purging half the cache.";
+                TRACE("Overflowed the limit of %u input layouts, purging half the cache.",
+                      mCacheSize);
 
                 // Randomly release every second element
                 auto it = mLayoutMap.begin();
