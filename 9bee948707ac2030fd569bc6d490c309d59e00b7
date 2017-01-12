@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_0feef402",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-12T23:39:24Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "9bee948707ac2030fd569bc6d490c309d59e00b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_cfe79c22",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-12T23:39:24Z",
+      "side": 1,
+      "message": "nit: sucks -\u003e doesn\u0027t support advanced control-flow\n\n;-)",
+      "revId": "9bee948707ac2030fd569bc6d490c309d59e00b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
