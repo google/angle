@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "037501b9_2778cbd8",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-12T14:11:05Z",
+      "side": 1,
+      "message": "remove these- these values shouldn\u0027t be externally mutable.",
+      "range": {
+        "startLine": 812,
+        "startChar": 0,
+        "endLine": 820,
+        "endChar": 1
+      },
+      "revId": "4c1b9eb879672097f606a0d44db37287bf6c9890",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
