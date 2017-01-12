@@ -335,69 +335,6 @@ TEST_P(ProgramBinaryES3Test, UniformBlockBindingNoDraw)
 
 ANGLE_INSTANTIATE_TEST(ProgramBinaryES3Test, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
-class ProgramBinaryES31Test : public ANGLETest
-{
-  protected:
-    ProgramBinaryES31Test()
-    {
-        setWindowWidth(128);
-        setWindowHeight(128);
-        setConfigRedBits(8);
-        setConfigGreenBits(8);
-        setConfigBlueBits(8);
-        setConfigAlphaBits(8);
-    }
-};
-
-// Tests that saving and loading a program attached with computer shader.
-TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
-{
-    // We can't run the test if no program binary formats are supported.
-    GLint binaryFormatCount = 0;
-    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
-    if (binaryFormatCount == 0)
-    {
-        std::cout << "Test skipped because no program binary formats available." << std::endl;
-        return;
-    }
-
-    const std::string &computeShader =
-        "#version 310 es\n"
-        "layout(local_size_x=4, local_size_y=3, local_size_z=1) in;\n"
-        "uniform block {\n"
-        "    vec2 f;\n"
-        "};\n"
-        "uniform vec2 g;\n"
-        "uniform highp sampler2D tex;\n"
-        "void main() {\n"
-        "    vec4 color = texture(tex, f + g);\n"
-        "}";
-
-    ANGLE_GL_COMPUTE_PROGRAM(program, computeShader);
-
-    // Read back the binary.
-    GLint programLength = 0;
-    glGetProgramiv(program.get(), GL_PROGRAM_BINARY_LENGTH, &programLength);
-    ASSERT_GL_NO_ERROR();
-
-    GLsizei readLength  = 0;
-    GLenum binaryFormat = GL_NONE;
-    std::vector<uint8_t> binary(programLength);
-    glGetProgramBinary(program.get(), programLength, &readLength, &binaryFormat, binary.data());
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
-
-    // Load a new program with the binary.
-    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
-
-    // TODO(Xinghua): add dispatch support when available.
-
-    ASSERT_GL_NO_ERROR();
-}
-
-ANGLE_INSTANTIATE_TEST(ProgramBinaryES31Test, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
-
 class ProgramBinaryTransformFeedbackTest : public ANGLETest
 {
   protected:

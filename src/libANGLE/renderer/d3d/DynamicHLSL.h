@@ -115,7 +115,6 @@ class DynamicHLSL : angle::NonCopyable
                                 const BuiltinVaryingsD3D &builtinsD3D,
                                 std::string *pixelHLSL,
                                 std::string *vertexHLSL) const;
-    std::string generateComputeShaderLinkHLSL(const gl::ProgramState &programData) const;
 
     std::string generateGeometryShaderPreamble(const gl::VaryingPacking &varyingPacking,
                                                const BuiltinVaryingsD3D &builtinsD3D) const;
