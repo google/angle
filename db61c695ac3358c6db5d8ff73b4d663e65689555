@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_13606ddd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2487,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-12T18:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_a7993bbf",
+      "range": {
+        "startLine": 2481,
+        "startChar": 0,
+        "endLine": 2487,
+        "endChar": 5
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_d231a50d",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 6
@@ -180,6 +204,30 @@
       "side": 1,
       "message": "A fixup elsewhere is likely needed, GL_EXT_draw_buffers should not be in the list of requestable extensions if the backend is unable to support it.\n\nI just took a look and it seems the bug is in Context::initExtensionStrings.  When building mRequestableExtensionStrings, it should also check that the native extensions (mImplementation-\u003egetNativeExtensions()) are able to support the extension.  Could you fix that with this CL?",
       "parentUuid": "037501b9_120cfdf0",
+      "range": {
+        "startLine": 459,
+        "startChar": 36,
+        "endLine": 459,
+        "endChar": 99
+      },
+      "revId": "db61c695ac3358c6db5d8ff73b4d663e65689555",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_b38c1990",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-01-12T18:49:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_d59aef5d",
       "range": {
         "startLine": 459,
         "startChar": 36,
