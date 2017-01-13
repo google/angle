@@ -1812,7 +1812,7 @@ void GL_APIENTRY LinkProgram(GLuint program)
             return;
         }
 
-        Error error = programObject->link(context->getContextState());
+        Error error = programObject->link(context);
         if (error.isError())
         {
             context->handleError(error);

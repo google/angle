@@ -290,6 +290,18 @@ class Buffer final : public WrappedObject<VkBuffer>
     DeviceMemory mMemory;
 };
 
+class ShaderModule final : public WrappedObject<VkShaderModule>
+{
+  public:
+    ShaderModule();
+    ShaderModule(VkDevice device);
+    ShaderModule(ShaderModule &&other);
+    ~ShaderModule() override;
+    ShaderModule &operator=(ShaderModule &&other);
+
+    Error init(const VkShaderModuleCreateInfo &createInfo);
+};
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,

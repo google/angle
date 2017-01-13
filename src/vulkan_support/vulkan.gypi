@@ -51,6 +51,115 @@
             '/wd4706', # Assignment within conditional expression
             '/wd4996', # Unsafe stdlib function
         ],
+        'glslang_sources':
+        [
+            '<(glslang_path)/glslang/GenericCodeGen/CodeGen.cpp',
+            '<(glslang_path)/glslang/GenericCodeGen/Link.cpp',
+            '<(glslang_path)/glslang/Include/arrays.h',
+            '<(glslang_path)/glslang/Include/BaseTypes.h',
+            '<(glslang_path)/glslang/Include/Common.h',
+            '<(glslang_path)/glslang/Include/ConstantUnion.h',
+            '<(glslang_path)/glslang/Include/InfoSink.h',
+            '<(glslang_path)/glslang/Include/InitializeGlobals.h',
+            '<(glslang_path)/glslang/Include/intermediate.h',
+            '<(glslang_path)/glslang/Include/PoolAlloc.h',
+            '<(glslang_path)/glslang/Include/ResourceLimits.h',
+            '<(glslang_path)/glslang/Include/revision.h',
+            '<(glslang_path)/glslang/Include/ShHandle.h',
+            '<(glslang_path)/glslang/Include/Types.h',
+            '<(glslang_path)/glslang/MachineIndependent/Constant.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/gl_types.h',
+            '<(glslang_path)/glslang/MachineIndependent/glslang.y',
+            '<(glslang_path)/glslang/MachineIndependent/glslang_tab.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/glslang_tab.cpp.h',
+            '<(glslang_path)/glslang/MachineIndependent/InfoSink.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/Initialize.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/Initialize.h',
+            '<(glslang_path)/glslang/MachineIndependent/Intermediate.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/intermOut.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/IntermTraverse.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/iomapper.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/iomapper.h',
+            '<(glslang_path)/glslang/MachineIndependent/limits.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/linkValidate.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/LiveTraverser.h',
+            '<(glslang_path)/glslang/MachineIndependent/localintermediate.h',
+            '<(glslang_path)/glslang/MachineIndependent/parseConst.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/ParseContextBase.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/ParseHelper.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/ParseHelper.h',
+            '<(glslang_path)/glslang/MachineIndependent/parseVersions.h',
+            '<(glslang_path)/glslang/MachineIndependent/PoolAlloc.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/Pp.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpAtom.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpContext.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpContext.h',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpMemory.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpScanner.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpSymbols.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpTokens.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/preprocessor/PpTokens.h',
+            '<(glslang_path)/glslang/MachineIndependent/propagateNoContraction.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/propagateNoContraction.h',
+            '<(glslang_path)/glslang/MachineIndependent/reflection.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/reflection.h',
+            '<(glslang_path)/glslang/MachineIndependent/RemoveTree.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/RemoveTree.h',
+            '<(glslang_path)/glslang/MachineIndependent/Scan.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/Scan.h',
+            '<(glslang_path)/glslang/MachineIndependent/ScanContext.h',
+            '<(glslang_path)/glslang/MachineIndependent/ShaderLang.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/SymbolTable.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/SymbolTable.h',
+            '<(glslang_path)/glslang/MachineIndependent/Versions.cpp',
+            '<(glslang_path)/glslang/MachineIndependent/Versions.h',
+            '<(glslang_path)/glslang/OSDependent/osinclude.h',
+            '<(glslang_path)/glslang/Public/ShaderLang.h',
+            '<(glslang_path)/hlsl/hlslAttributes.cpp',
+            '<(glslang_path)/hlsl/hlslAttributes.h',
+            '<(glslang_path)/hlsl/hlslGrammar.cpp',
+            '<(glslang_path)/hlsl/hlslGrammar.h',
+            '<(glslang_path)/hlsl/hlslOpMap.cpp',
+            '<(glslang_path)/hlsl/hlslOpMap.h',
+            '<(glslang_path)/hlsl/hlslParseables.cpp',
+            '<(glslang_path)/hlsl/hlslParseables.h',
+            '<(glslang_path)/hlsl/hlslParseHelper.cpp',
+            '<(glslang_path)/hlsl/hlslParseHelper.h',
+            '<(glslang_path)/hlsl/hlslScanContext.cpp',
+            '<(glslang_path)/hlsl/hlslScanContext.h',
+            '<(glslang_path)/hlsl/hlslTokens.h',
+            '<(glslang_path)/hlsl/hlslTokenStream.cpp',
+            '<(glslang_path)/hlsl/hlslTokenStream.h',
+            '<(glslang_path)/OGLCompilersDLL/InitializeDll.cpp',
+            '<(glslang_path)/OGLCompilersDLL/InitializeDll.h',
+            '<(glslang_path)/SPIRV/bitutils.h',
+            '<(glslang_path)/SPIRV/disassemble.cpp',
+            '<(glslang_path)/SPIRV/disassemble.h',
+            '<(glslang_path)/SPIRV/doc.cpp',
+            '<(glslang_path)/SPIRV/doc.h',
+            '<(glslang_path)/SPIRV/GLSL.ext.KHR.h',
+            '<(glslang_path)/SPIRV/GLSL.std.450.h',
+            '<(glslang_path)/SPIRV/GlslangToSpv.cpp',
+            '<(glslang_path)/SPIRV/GlslangToSpv.h',
+            '<(glslang_path)/SPIRV/hex_float.h',
+            '<(glslang_path)/SPIRV/InReadableOrder.cpp',
+            '<(glslang_path)/SPIRV/Logger.cpp',
+            '<(glslang_path)/SPIRV/Logger.h',
+            '<(glslang_path)/SPIRV/spirv.hpp',
+            '<(glslang_path)/SPIRV/SpvBuilder.cpp',
+            '<(glslang_path)/SPIRV/SpvBuilder.h',
+            '<(glslang_path)/SPIRV/spvIR.h',
+            '<(glslang_path)/StandAlone/ResourceLimits.cpp',
+            '<(glslang_path)/StandAlone/ResourceLimits.h',
+        ],
+        'glslang_win_sources':
+        [
+            '<(glslang_path)/glslang/OSDependent/Windows/ossource.cpp',
+        ],
+        'glslang_unix_sources':
+        [
+            '<(glslang_path)/glslang/OSDependent/Unix/ossource.cpp',
+        ],
         'spirv_tools_sources':
         [
             '<(angle_gen_path)/vulkan/core.insts-1.0.inc',
@@ -306,6 +415,56 @@
                                 '<(angle_gen_path)/vulkan/angle_loader.h', '<(PRODUCT_DIR)',
                             ],
                         },
+                    ],
+                },
+
+                {
+                    'target_name': 'glslang',
+                    'type': 'static_library',
+                    'sources':
+                    [
+                        '<@(glslang_sources)',
+                    ],
+                    'include_dirs':
+                    [
+                        '<(glslang_path)',
+                    ],
+                    'msvs_settings':
+                    {
+                        'VCCLCompilerTool':
+                        {
+                            'PreprocessorDefinitions':
+                            [
+                                '_HAS_EXCEPTIONS=0',
+                            ],
+                            'AdditionalOptions':
+                            [
+                                '/wd4100', # Unreferenced formal parameter
+                                '/wd4456', # Declaration hides previous local declaration
+                                '/wd4457', # Declaration hides function parameter
+                                '/wd4458', # Declaration hides class member
+                                '/wd4702', # Unreachable code (from glslang_tab.cpp)
+                                '/wd4718', # Recursive call has no side effects (from PpContext.cpp)
+                            ],
+                        },
+                    },
+                    'direct_dependent_settings':
+                    {
+                        'include_dirs':
+                        [
+                            '<(glslang_path)/glslang/Public',
+                            '<(glslang_path)',
+                        ],
+                    },
+                    'conditions':
+                    [
+                        ['OS=="win"',
+                        {
+                            'sources':
+                            [
+                                '<@(glslang_win_sources)',
+                            ],
+                        }],
                     ],
                 },
 
@@ -953,6 +1112,7 @@
                     'type': 'none',
                     'dependencies':
                     [
+                        'glslang',
                         'VkLayer_core_validation',
                         'VkLayer_image',
                         'VkLayer_object_tracker',
@@ -964,6 +1124,7 @@
                     ],
                     'export_dependent_settings':
                     [
+                        'glslang',
                         'vulkan_loader',
                     ],
                 }

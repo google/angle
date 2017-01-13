@@ -10,6 +10,9 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/GlslangWrapper.h"
+#include "libANGLE/renderer/vulkan/RendererVk.h"
 
 namespace rx
 {
@@ -41,12 +44,56 @@ void ProgramVk::setBinaryRetrievableHint(bool retrievable)
     UNIMPLEMENTED();
 }
 
-LinkResult ProgramVk::link(const gl::ContextState &data,
+LinkResult ProgramVk::link(ContextImpl *contextImpl,
                            const gl::VaryingPacking &packing,
                            gl::InfoLog &infoLog)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    ContextVk *context             = GetAs<ContextVk>(contextImpl);
+    RendererVk *renderer           = context->getRenderer();
+    GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
+
+    const std::string &vertexSource   = mState.getAttachedVertexShader()->getTranslatedSource();
+    const std::string &fragmentSource = mState.getAttachedFragmentShader()->getTranslatedSource();
+
+    std::vector<uint32_t> vertexCode;
+    std::vector<uint32_t> fragmentCode;
+    bool linkSuccess = false;
+    ANGLE_TRY_RESULT(
+        glslangWrapper->linkProgram(vertexSource, fragmentSource, &vertexCode, &fragmentCode),
+        linkSuccess);
+    if (!linkSuccess)
+    {
+        return false;
+    }
+
+    vk::ShaderModule vertexModule(renderer->getDevice());
+    vk::ShaderModule fragmentModule(renderer->getDevice());
+
+    {
+        VkShaderModuleCreateInfo vertexShaderInfo;
+        vertexShaderInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        vertexShaderInfo.pNext    = nullptr;
+        vertexShaderInfo.flags    = 0;
+        vertexShaderInfo.codeSize = vertexCode.size() * sizeof(uint32_t);
+        vertexShaderInfo.pCode    = vertexCode.data();
+        ANGLE_TRY(vertexModule.init(vertexShaderInfo));
+    }
+
+    {
+        VkShaderModuleCreateInfo fragmentShaderInfo;
+        fragmentShaderInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        fragmentShaderInfo.pNext    = nullptr;
+        fragmentShaderInfo.flags    = 0;
+        fragmentShaderInfo.codeSize = fragmentCode.size() * sizeof(uint32_t);
+        fragmentShaderInfo.pCode    = fragmentCode.data();
+
+        ANGLE_TRY(fragmentModule.init(fragmentShaderInfo));
+    }
+
+    mLinkedVertexModule   = std::move(vertexModule);
+    mLinkedFragmentModule = std::move(fragmentModule);
+
+    return true;
 }
 
 GLboolean ProgramVk::validate(const gl::Caps &caps, gl::InfoLog *infoLog)
@@ -211,6 +258,18 @@ void ProgramVk::setPathFragmentInputGen(const std::string &inputName,
                                         const GLfloat *coeffs)
 {
     UNIMPLEMENTED();
+}
+
+const vk::ShaderModule &ProgramVk::getLinkedVertexModule() const
+{
+    ASSERT(mLinkedVertexModule.getHandle() != VK_NULL_HANDLE);
+    return mLinkedVertexModule;
+}
+
+const vk::ShaderModule &ProgramVk::getLinkedFragmentModule() const
+{
+    ASSERT(mLinkedFragmentModule.getHandle() != VK_NULL_HANDLE);
+    return mLinkedFragmentModule;
 }
 
 }  // namespace rx

@@ -180,7 +180,7 @@ class ProgramD3D : public ProgramImpl
                                    ShaderExecutableD3D **outExecutable,
                                    gl::InfoLog *infoLog);
 
-    LinkResult link(const gl::ContextState &data,
+    LinkResult link(ContextImpl *contextImpl,
                     const gl::VaryingPacking &packing,
                     gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;

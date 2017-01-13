@@ -27,7 +27,7 @@ class ProgramNULL : public ProgramImpl
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
 
-    LinkResult link(const gl::ContextState &data,
+    LinkResult link(ContextImpl *contextImpl,
                     const gl::VaryingPacking &packing,
                     gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;

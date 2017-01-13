@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_PROGRAMVK_H_
 
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
@@ -27,7 +28,7 @@ class ProgramVk : public ProgramImpl
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
 
-    LinkResult link(const gl::ContextState &data,
+    LinkResult link(ContextImpl *contextImpl,
                     const gl::VaryingPacking &packing,
                     gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
@@ -97,6 +98,13 @@ class ProgramVk : public ProgramImpl
                                  GLenum genMode,
                                  GLint components,
                                  const GLfloat *coeffs) override;
+
+    const vk::ShaderModule &getLinkedVertexModule() const;
+    const vk::ShaderModule &getLinkedFragmentModule() const;
+
+  private:
+    vk::ShaderModule mLinkedVertexModule;
+    vk::ShaderModule mLinkedFragmentModule;
 };
 
 }  // namespace rx

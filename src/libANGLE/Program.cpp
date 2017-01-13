@@ -582,8 +582,10 @@ void Program::pathFragmentInputGen(GLint index,
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
-Error Program::link(const ContextState &data)
+Error Program::link(const gl::Context *context)
 {
+    const auto &data = context->getContextState();
+
     unlink(false);
 
     mInfoLog.reset();
@@ -635,8 +637,9 @@ Error Program::link(const ContextState &data)
             return NoError();
         }
 
-        gl::VaryingPacking noVaryingPacking(0, PackMode::ANGLE_RELAXED);
-        ANGLE_TRY_RESULT(mProgram->link(data, noVaryingPacking, mInfoLog), mLinked);
+        gl::VaryingPacking noPacking(0, PackMode::ANGLE_RELAXED);
+        ANGLE_TRY_RESULT(mProgram->link(context->getImplementation(), noPacking, mInfoLog),
+                         mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -705,7 +708,8 @@ Error Program::link(const ContextState &data)
             return NoError();
         }
 
-        ANGLE_TRY_RESULT(mProgram->link(data, varyingPacking, mInfoLog), mLinked);
+        ANGLE_TRY_RESULT(mProgram->link(context->getImplementation(), varyingPacking, mInfoLog),
+                         mLinked);
         if (!mLinked)
         {
             return NoError();

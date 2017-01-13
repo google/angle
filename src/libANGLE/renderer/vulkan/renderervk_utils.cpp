@@ -807,6 +807,41 @@ Error Buffer::bindMemory()
     return NoError();
 }
 
+// ShaderModule implementation.
+ShaderModule::ShaderModule()
+{
+}
+
+ShaderModule::ShaderModule(VkDevice device) : WrappedObject(device)
+{
+}
+
+ShaderModule::ShaderModule(ShaderModule &&other) : WrappedObject(std::move(other))
+{
+}
+
+ShaderModule::~ShaderModule()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyShaderModule(mDevice, mHandle, nullptr);
+    }
+}
+
+ShaderModule &ShaderModule::operator=(ShaderModule &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error ShaderModule::init(const VkShaderModuleCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkCreateShaderModule(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,

@@ -17,6 +17,7 @@
 #include "libANGLE/VaryingPacking.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/features.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/d3d/DynamicHLSL.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
@@ -1464,10 +1465,12 @@ LinkResult ProgramD3D::compileComputeExecutable(gl::InfoLog &infoLog)
     return mComputeExecutable.get() != nullptr;
 }
 
-LinkResult ProgramD3D::link(const gl::ContextState &data,
+LinkResult ProgramD3D::link(ContextImpl *contextImpl,
                             const gl::VaryingPacking &packing,
                             gl::InfoLog &infoLog)
 {
+    const auto &data = contextImpl->getContextState();
+
     reset();
 
     const gl::Shader *computeShader = mState.getAttachedComputeShader();

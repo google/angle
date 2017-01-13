@@ -16,6 +16,7 @@ vulkan_gypi =
                 [
                   rebase_path("vulkan.gypi"),
                   "--replace=<(angle_gen_path)=$target_gen_dir/angle",
+                  "--replace=<(glslang_path)=../$glslang_dir",
                   "--replace=<(spirv_headers_path)=../$spirv_headers_dir",
                   "--replace=<(spirv_tools_path)=../$spirv_tools_dir",
                   "--replace=<(vulkan_layers_path)=../$vulkan_layers_dir",
@@ -308,6 +309,44 @@ static_library("spirv_tools") {
   public_configs = [ ":spirv_tools_config" ]
 }
 
+# glslang
+# -------
+
+config("glslang_config") {
+  include_dirs = [
+    glslang_dir,
+    "$glslang_dir/glslang/Public",
+  ]
+}
+
+config("glslang_internal_config") {
+  if (is_clang || !is_win) {
+    cflags = [
+      "-Wno-reorder",
+      "-Wno-ignored-qualifiers",
+    ]
+  }
+}
+
+static_library("glslang") {
+  sources = rebase_path(vulkan_gypi.glslang_sources, ".", "src")
+  public_configs = [ ":glslang_config" ]
+  configs += [ ":glslang_internal_config" ]
+
+  if (is_win) {
+    cflags = [
+      "/wd4100",  # Unreferenced formal parameter
+      "/wd4456",  # Declaration hides previous local declaration
+      "/wd4457",  # Declaration hides function parameter
+      "/wd4458",  # Declaration hides class member
+      "/wd4702",  # Unreachable code (from glslang_tab.cpp)
+      "/wd4718",  # Recursive call has no side effects (from PpContext.cpp)
+    ]
+
+    sources += rebase_path(vulkan_gypi.glslang_win_sources, ".", "src")
+  }
+}
+
 # The validation layers
 # ---------------------
 
@@ -370,6 +409,7 @@ foreach(index, layer_indexes) {
 # Use this target to include everything ANGLE needs for Vulkan.
 group("angle_vulkan") {
   deps = [
+    ":glslang",
     ":vulkan_loader",
   ]
   data_deps = [
@@ -378,5 +418,8 @@ group("angle_vulkan") {
   foreach(layer, layer_names) {
     data_deps += [ ":VkLayer_$layer" ]
   }
-  public_configs = [ ":vulkan_loader_config" ]
+  public_configs = [
+    ":vulkan_loader_config",
+    ":glslang_config",
+  ]
 }

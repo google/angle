@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 #include "libANGLE/renderer/vulkan/formatutilsvk.h"
@@ -92,12 +93,19 @@ RendererVk::RendererVk()
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mDevice(VK_NULL_HANDLE),
       mCommandPool(VK_NULL_HANDLE),
-      mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max())
+      mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max()),
+      mGlslangWrapper(nullptr)
 {
 }
 
 RendererVk::~RendererVk()
 {
+    if (mGlslangWrapper)
+    {
+        GlslangWrapper::ReleaseReference();
+        mGlslangWrapper = nullptr;
+    }
+
     mCommandBuffer.reset(nullptr);
 
     if (mCommandPool)
@@ -332,6 +340,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
     ANGLE_VK_CHECK(mHostVisibleMemoryIndex < std::numeric_limits<uint32_t>::max(),
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    mGlslangWrapper = GlslangWrapper::GetReference();
+
     return vk::NoError();
 }
 
@@ -507,12 +517,14 @@ void RendererVk::ensureCapsInitialized() const
     }
 }
 
-void RendererVk::generateCaps(gl::Caps * /*outCaps*/,
+void RendererVk::generateCaps(gl::Caps *outCaps,
                               gl::TextureCapsMap * /*outTextureCaps*/,
                               gl::Extensions *outExtensions,
                               gl::Limitations * /* outLimitations */) const
 {
     // TODO(jmadill): Caps.
+    outCaps->maxDrawBuffers      = 1;
+    outCaps->maxVertexAttributes = 1;
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
@@ -616,6 +628,11 @@ vk::ErrorOrResult<vk::StagingImage> RendererVk::createStagingImage(TextureDimens
                                 format.native, extent));
 
     return std::move(stagingImage);
+}
+
+GlslangWrapper *RendererVk::getGlslangWrapper()
+{
+    return mGlslangWrapper;
 }
 
 }  // namespace rx

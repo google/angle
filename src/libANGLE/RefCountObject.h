@@ -18,10 +18,10 @@
 
 #include <cstddef>
 
-class RefCountObject : angle::NonCopyable
+class RefCountObjectNoID : angle::NonCopyable
 {
   public:
-    explicit RefCountObject(GLuint id) : mId(id), mRefCount(0) {}
+    RefCountObjectNoID() : mRefCount(0) {}
 
     void addRef() const { ++mRefCount; }
 
@@ -35,17 +35,27 @@ class RefCountObject : angle::NonCopyable
         }
     }
 
-    GLuint id() const { return mId; }
-
     size_t getRefCount() const { return mRefCount; }
 
   protected:
-    virtual ~RefCountObject() { ASSERT(mRefCount == 0); }
+    virtual ~RefCountObjectNoID() { ASSERT(mRefCount == 0); }
+
+  private:
+    mutable std::size_t mRefCount;
+};
+
+class RefCountObject : public RefCountObjectNoID
+{
+  public:
+    explicit RefCountObject(GLuint id) : mId(id) {}
+
+    GLuint id() const { return mId; }
+
+  protected:
+    ~RefCountObject() override {}
 
   private:
     GLuint mId;
-
-    mutable std::size_t mRefCount;
 };
 
 template <class ObjectType>
