@@ -215,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "43c7f965_950e84ea",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-13T16:32:44Z",
+      "side": 1,
+      "message": "I checked the GLES 3.2 spec about this feature (samples will not vary for different texture level in the same texture), so I misunderstood you, Sorry. OK, move \u0027samples\u0027 to ImageDesc to be feature-proof.",
+      "parentUuid": "43c7f965_55fa2c00",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 36
+      },
+      "revId": "5feb00f1982a681c1e091862931cd3f2cfc69436",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_63508621",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 11
