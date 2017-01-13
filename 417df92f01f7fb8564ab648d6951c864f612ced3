@@ -22,6 +22,30 @@
       "revId": "417df92f01f7fb8564ab648d6951c864f612ced3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c365a9f6_4fa9a120",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2403,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-13T16:14:25Z",
+      "side": 0,
+      "message": "The compiler unittest covers shift by 32. It hits pretty much the same code as shifting by a negative number, but I suppose a shift by negative test can still be there for completeness\u0027 sake. Added that in the latest patch set.",
+      "parentUuid": "43c7f965_559eacf8",
+      "range": {
+        "startLine": 2369,
+        "startChar": 0,
+        "endLine": 2403,
+        "endChar": 1
+      },
+      "revId": "417df92f01f7fb8564ab648d6951c864f612ced3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
