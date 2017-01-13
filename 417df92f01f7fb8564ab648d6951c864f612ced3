@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_559eacf8",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2403,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:18:23Z",
+      "side": 0,
+      "message": "are there compiler tests that verify this?",
+      "range": {
+        "startLine": 2369,
+        "startChar": 0,
+        "endLine": 2403,
+        "endChar": 1
+      },
+      "revId": "417df92f01f7fb8564ab648d6951c864f612ced3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
