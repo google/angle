@@ -480,7 +480,28 @@ DXGI_FORMAT SwapChain11::getSwapChainNativeFormat() const
 {
     // Return a render target format for offscreen rendering is supported by IDXGISwapChain.
     // MSDN https://msdn.microsoft.com/en-us/library/windows/desktop/bb173064(v=vs.85).aspx
-    return (mOffscreenRenderTargetFormat == GL_BGRA8_EXT) ? DXGI_FORMAT_B8G8R8A8_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM;
+    switch (mOffscreenRenderTargetFormat)
+    {
+        case GL_RGBA8:
+        case GL_RGBA4:
+        case GL_RGB5_A1:
+        case GL_RGB8:
+        case GL_RGB565:
+            return DXGI_FORMAT_R8G8B8A8_UNORM;
+
+        case GL_BGRA8_EXT:
+            return DXGI_FORMAT_B8G8R8A8_UNORM;
+
+        case GL_RGB10_A2:
+            return DXGI_FORMAT_R10G10B10A2_UNORM;
+
+        case GL_RGBA16F:
+            return DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+        default:
+            UNREACHABLE();
+            return DXGI_FORMAT_UNKNOWN;
+    }
 }
 
 EGLint SwapChain11::reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval)

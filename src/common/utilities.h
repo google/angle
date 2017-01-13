@@ -160,6 +160,11 @@ GLenum EGLImageTargetToGLTextureTarget(EGLenum eglTarget);
 GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer);
 }
 
+namespace gl_egl
+{
+EGLenum GLComponentTypeToEGLColorComponentType(GLenum glComponentType);
+}  // namespace gl_egl
+
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 std::string getTempPath();
 void writeFile(const char* path, const void* data, size_t size);

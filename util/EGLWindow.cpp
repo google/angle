@@ -107,6 +107,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mAlphaBits(-1),
       mDepthBits(-1),
       mStencilBits(-1),
+      mComponentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT),
       mMultisample(false),
       mDebug(false),
       mNoError(false),
@@ -240,20 +241,35 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
 
-    const EGLint configAttributes[] =
-    {
-        EGL_RED_SIZE,       (mRedBits >= 0)     ? mRedBits     : EGL_DONT_CARE,
-        EGL_GREEN_SIZE,     (mGreenBits >= 0)   ? mGreenBits   : EGL_DONT_CARE,
-        EGL_BLUE_SIZE,      (mBlueBits >= 0)    ? mBlueBits    : EGL_DONT_CARE,
-        EGL_ALPHA_SIZE,     (mAlphaBits >= 0)   ? mAlphaBits   : EGL_DONT_CARE,
-        EGL_DEPTH_SIZE,     (mDepthBits >= 0)   ? mDepthBits   : EGL_DONT_CARE,
+    std::vector<EGLint> configAttributes = {
+        EGL_RED_SIZE,       (mRedBits >= 0) ? mRedBits : EGL_DONT_CARE,
+        EGL_GREEN_SIZE,     (mGreenBits >= 0) ? mGreenBits : EGL_DONT_CARE,
+        EGL_BLUE_SIZE,      (mBlueBits >= 0) ? mBlueBits : EGL_DONT_CARE,
+        EGL_ALPHA_SIZE,     (mAlphaBits >= 0) ? mAlphaBits : EGL_DONT_CARE,
+        EGL_DEPTH_SIZE,     (mDepthBits >= 0) ? mDepthBits : EGL_DONT_CARE,
         EGL_STENCIL_SIZE,   (mStencilBits >= 0) ? mStencilBits : EGL_DONT_CARE,
         EGL_SAMPLE_BUFFERS, mMultisample ? 1 : 0,
-        EGL_NONE
     };
 
+    // Add dynamic attributes
+    bool hasPixelFormatFloat = strstr(displayExtensions, "EGL_EXT_pixel_format_float") != nullptr;
+    if (!hasPixelFormatFloat && mComponentType != EGL_COLOR_COMPONENT_TYPE_FIXED_EXT)
+    {
+        destroyGL();
+        return false;
+    }
+    if (hasPixelFormatFloat)
+    {
+        configAttributes.push_back(EGL_COLOR_COMPONENT_TYPE_EXT);
+        configAttributes.push_back(mComponentType);
+    }
+
+    // Finish the attribute list
+    configAttributes.push_back(EGL_NONE);
+
     EGLint configCount;
-    if (!eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
+    if (!eglChooseConfig(mDisplay, configAttributes.data(), &mConfig, 1, &configCount) ||
+        (configCount != 1))
     {
         destroyGL();
         return false;

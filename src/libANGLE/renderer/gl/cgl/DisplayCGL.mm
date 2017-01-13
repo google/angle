@@ -208,6 +208,8 @@ egl::ConfigSet DisplayCGL::generateConfigs()
 
     config.matchNativePixmap = EGL_NONE;
 
+    config.colorComponentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+
     configs.add(config);
     return configs;
 }

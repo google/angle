@@ -810,6 +810,25 @@ GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer)
 }
 }  // namespace egl_gl
 
+namespace gl_egl
+{
+EGLenum GLComponentTypeToEGLColorComponentType(GLenum glComponentType)
+{
+    switch (glComponentType)
+    {
+        case GL_FLOAT:
+            return EGL_COLOR_COMPONENT_TYPE_FLOAT_EXT;
+
+        case GL_UNSIGNED_NORMALIZED:
+            return EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+
+        default:
+            UNREACHABLE();
+            return EGL_NONE;
+    }
+}
+}  // namespace gl_egl
+
 #if !defined(ANGLE_ENABLE_WINDOWS_STORE)
 std::string getTempPath()
 {

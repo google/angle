@@ -74,8 +74,18 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
         EGL_CONFIG_CAVEAT, EGL_NONE,
         EGL_CONFORMANT, esBit,
         EGL_RENDERABLE_TYPE, esBit,
-        EGL_NONE
     };
+
+    if (mEGL->hasExtension("EGL_EXT_pixel_format_float"))
+    {
+        // Don't request floating point configs
+        mConfigAttribList.push_back(EGL_COLOR_COMPONENT_TYPE_EXT);
+        mConfigAttribList.push_back(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
+    }
+
+    // Complete the attrib list
+    mConfigAttribList.push_back(EGL_NONE);
+
     // clang-format on
     EGLint numConfig;
 
@@ -213,6 +223,23 @@ void DisplayAndroid::getConfigAttrib(EGLConfig config, EGLint attribute, T *valu
     *value = tmp;
 }
 
+template <typename T, typename U>
+void DisplayAndroid::getConfigAttribIfExtension(EGLConfig config,
+                                                EGLint attribute,
+                                                T *value,
+                                                const char *extension,
+                                                const U &defaultValue) const
+{
+    if (mEGL->hasExtension(extension))
+    {
+        getConfigAttrib(config, attribute, value);
+    }
+    else
+    {
+        *value = static_cast<T>(defaultValue);
+    }
+}
+
 egl::ConfigSet DisplayAndroid::generateConfigs()
 {
     egl::ConfigSet configSet;
@@ -264,9 +291,13 @@ egl::ConfigSet DisplayAndroid::generateConfigs()
         getConfigAttrib(configs[i], EGL_TRANSPARENT_RED_VALUE, &config.transparentRedValue);
         getConfigAttrib(configs[i], EGL_TRANSPARENT_GREEN_VALUE, &config.transparentGreenValue);
         getConfigAttrib(configs[i], EGL_TRANSPARENT_BLUE_VALUE, &config.transparentBlueValue);
+        getConfigAttribIfExtension(configs[i], EGL_COLOR_COMPONENT_TYPE_EXT,
+                                   &config.colorComponentType, "EGL_EXT_pixel_format_float",
+                                   EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
 
         if (config.colorBufferType == EGL_RGB_BUFFER)
         {
+            ASSERT(config.colorComponentType == EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
             if (config.redSize == 8 && config.greenSize == 8 && config.blueSize == 8 &&
                 config.alphaSize == 8)
             {

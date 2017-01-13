@@ -549,6 +549,7 @@ egl::ConfigSet DisplayWGL::generateConfigs()
         ((getAttrib(WGL_SWAP_METHOD_ARB) == WGL_SWAP_COPY_ARB) ? EGL_SWAP_BEHAVIOR_PRESERVED_BIT
                                                                : 0);
     config.optimalOrientation = optimalSurfaceOrientation;
+    config.colorComponentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
 
     config.transparentType = EGL_NONE;
     config.transparentRedValue = 0;

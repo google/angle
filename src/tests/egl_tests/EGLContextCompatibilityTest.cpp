@@ -99,10 +99,19 @@ class EGLContextCompatibilityTest : public ANGLETest
         eglGetConfigAttrib(mDisplay, c1, EGL_SURFACE_TYPE, &surfaceType1);
         eglGetConfigAttrib(mDisplay, c2, EGL_SURFACE_TYPE, &surfaceType2);
 
-        return colorBufferType1 == colorBufferType2 &&
-               red1 == red2 && green1 == green2 && blue1 == blue2 && alpha1 == alpha2 &&
-               depth1 == depth2 && stencil1 == stencil2 &&
-               (surfaceType1 & surfaceBit) != 0 &&
+        EGLint colorComponentType1 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+        EGLint colorComponentType2 = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+        if (eglDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        {
+            eglGetConfigAttrib(mDisplay, c1, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType1);
+            eglGetConfigAttrib(mDisplay, c2, EGL_COLOR_COMPONENT_TYPE_EXT, &colorComponentType2);
+        }
+
+        EXPECT_EGL_SUCCESS();
+
+        return colorBufferType1 == colorBufferType2 && red1 == red2 && green1 == green2 &&
+               blue1 == blue2 && alpha1 == alpha2 && colorComponentType1 == colorComponentType2 &&
+               depth1 == depth2 && stencil1 == stencil2 && (surfaceType1 & surfaceBit) != 0 &&
                (surfaceType2 & surfaceBit) != 0;
     }
 
@@ -121,7 +130,7 @@ class EGLContextCompatibilityTest : public ANGLETest
 
         if (compatible)
         {
-            testClearSurface(window, context);
+            testClearSurface(window, windowConfig, context);
         }
         else
         {
@@ -153,7 +162,7 @@ class EGLContextCompatibilityTest : public ANGLETest
 
         if (compatible)
         {
-            testClearSurface(pbuffer, context);
+            testClearSurface(pbuffer, pbufferConfig, context);
         }
         else
         {
@@ -171,7 +180,7 @@ class EGLContextCompatibilityTest : public ANGLETest
     EGLDisplay mDisplay;
 
   private:
-    void testClearSurface(EGLSurface surface, EGLContext context) const
+    void testClearSurface(EGLSurface surface, EGLConfig surfaceConfig, EGLContext context) const
     {
         eglMakeCurrent(mDisplay, surface, surface, context);
         ASSERT_EGL_SUCCESS();
@@ -180,7 +189,22 @@ class EGLContextCompatibilityTest : public ANGLETest
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         ASSERT_GL_NO_ERROR();
-        EXPECT_PIXEL_EQ(250, 250, 0, 0, 255, 255);
+
+        EGLint surfaceCompontentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+        if (eglDisplayExtensionEnabled(mDisplay, "EGL_EXT_pixel_format_float"))
+        {
+            eglGetConfigAttrib(mDisplay, surfaceConfig, EGL_COLOR_COMPONENT_TYPE_EXT,
+                               &surfaceCompontentType);
+        }
+
+        if (surfaceCompontentType == EGL_COLOR_COMPONENT_TYPE_FIXED_EXT)
+        {
+            EXPECT_PIXEL_EQ(250, 250, 0, 0, 255, 255);
+        }
+        else
+        {
+            EXPECT_PIXEL_32F_EQ(250, 250, 0, 0, 1.0f, 1.0f);
+        }
 
         eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         ASSERT_EGL_SUCCESS();

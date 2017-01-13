@@ -28,6 +28,34 @@
 1340 WIN MAC LINUX : dEQP-EGL.functional.multithread.* = SKIP
 1340 WIN MAC LINUX : dEQP-EGL.functional.render.multi_thread.* = SKIP
 
+// dEQP doesn't handle configs created for extensions
+1662 WIN : dEQP-EGL.functional.color_clears.single_context.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.color_clears.single_context.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.color_clears.multi_context.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.color_clears.multi_context.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.color_clears.multi_thread.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.color_clears.multi_thread.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.single_context.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.single_context.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.multi_context.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.multi_context.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.multi_context.gles2_gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.multi_thread.gles2.other = FAIL
+1662 WIN : dEQP-EGL.functional.render.multi_thread.gles3.other = FAIL
+1662 WIN : dEQP-EGL.functional.swap_buffers.other = FAIL
+1662 WIN : dEQP-EGL.functional.native_coord_mapping.native_window.other_clear = FAIL
+1662 WIN : dEQP-EGL.functional.native_coord_mapping.native_window.other_render = FAIL
+1662 WIN : dEQP-EGL.functional.query_context.get_current_context.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_context.get_current_surface.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_context.get_current_display.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_context.query_context.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_surface.simple.window.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_surface.set_attribute.window.other = FAIL
+1662 WIN : dEQP-EGL.functional.query_surface.set_attribute.pbuffer.other = FAIL
+1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_clear = FAIL
+1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_render = FAIL
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  Temprory entries: they should be removed once the bugs are fixed.

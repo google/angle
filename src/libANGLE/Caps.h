@@ -637,6 +637,9 @@ struct DisplayExtensions
 
     // EGL_EXT_swap_buffers_with_damage
     bool swapBuffersWithDamage;
+
+    // EGL_EXT_pixel_format_float
+    bool pixelFormatFloat;
 };
 
 struct DeviceExtensions

@@ -84,6 +84,7 @@ egl::ConfigSet DisplayVk::generateConfigs()
     singleton.transparentRedValue   = 0;
     singleton.transparentGreenValue = 0;
     singleton.transparentBlueValue  = 0;
+    singleton.colorComponentType    = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
 
     egl::ConfigSet configSet;
     configSet.add(singleton);

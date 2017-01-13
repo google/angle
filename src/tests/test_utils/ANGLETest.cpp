@@ -160,6 +160,14 @@ angle::Vector4 GLColor::toNormalizedVector() const
     return angle::Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
 }
 
+GLColor32F::GLColor32F() : GLColor32F(0.0f, 0.0f, 0.0f, 0.0f)
+{
+}
+
+GLColor32F::GLColor32F(GLfloat r, GLfloat g, GLfloat b, GLfloat a) : R(r), G(g), B(b), A(a)
+{
+}
+
 GLColor ReadColor(GLint x, GLint y)
 {
     GLColor actual;
@@ -179,6 +187,25 @@ std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
             << static_cast<unsigned int>(color.G) << ", " << static_cast<unsigned int>(color.B)
             << ", " << static_cast<unsigned int>(color.A) << ")";
     return ostream;
+}
+
+bool operator==(const GLColor32F &a, const GLColor32F &b)
+{
+    return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
+}
+
+std::ostream &operator<<(std::ostream &ostream, const GLColor32F &color)
+{
+    ostream << "(" << color.R << ", " << color.G << ", " << color.B << ", " << color.A << ")";
+    return ostream;
+}
+
+GLColor32F ReadColor32F(GLint x, GLint y)
+{
+    GLColor32F actual;
+    glReadPixels((x), (y), 1, 1, GL_RGBA, GL_FLOAT, &actual.R);
+    EXPECT_GL_NO_ERROR();
+    return actual;
 }
 
 }  // namespace angle
@@ -635,6 +662,11 @@ void ANGLETest::setConfigDepthBits(int bits)
 void ANGLETest::setConfigStencilBits(int bits)
 {
     mEGLWindow->setConfigStencilBits(bits);
+}
+
+void ANGLETest::setConfigComponentType(EGLenum componentType)
+{
+    mEGLWindow->setConfigComponentType(componentType);
 }
 
 void ANGLETest::setMultisampleEnabled(bool enabled)

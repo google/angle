@@ -716,6 +716,8 @@ egl::ConfigSet DisplayGLX::generateConfigs()
         // TODO(cwallez) I have no idea what this is
         config.matchNativePixmap = EGL_NONE;
 
+        config.colorComponentType = EGL_COLOR_COMPONENT_TYPE_FIXED_EXT;
+
         int id = configs.add(config);
         configIdToGLXConfig[id] = glxConfig;
     }

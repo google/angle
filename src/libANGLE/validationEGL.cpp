@@ -199,6 +199,13 @@ egl::Error ValidateConfigAttribute(const egl::Display *display, EGLAttrib attrib
             }
             break;
 
+        case EGL_COLOR_COMPONENT_TYPE_EXT:
+            if (!display->getExtensions().pixelFormatFloat)
+            {
+                return egl::Error(EGL_BAD_ATTRIBUTE, "EGL_EXT_pixel_format_float is not enabled.");
+            }
+            break;
+
         default:
             return egl::Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
     }
@@ -845,6 +852,12 @@ Error ValidateCompatibleConfigs(const Display *display,
         if (!colorCompat)
         {
             return Error(EGL_BAD_MATCH, "Color buffer sizes are not compatible.");
+        }
+
+        bool componentTypeCompat = config1->colorComponentType == config2->colorComponentType;
+        if (!componentTypeCompat)
+        {
+            return Error(EGL_BAD_MATCH, "Color buffer component types are not compatible.");
         }
 
         bool dsCompat = config1->depthSize == config2->depthSize &&

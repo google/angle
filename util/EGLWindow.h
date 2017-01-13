@@ -66,6 +66,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void setConfigAlphaBits(int bits) { mAlphaBits = bits; }
     void setConfigDepthBits(int bits) { mDepthBits = bits; }
     void setConfigStencilBits(int bits) { mStencilBits = bits; }
+    void setConfigComponentType(EGLenum componentType) { mComponentType = componentType; }
     void setMultisample(bool multisample) { mMultisample = multisample; }
     void setDebugEnabled(bool debug) { mDebug = debug; }
     void setNoErrorEnabled(bool noError) { mNoError = noError; }
@@ -120,6 +121,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     int mAlphaBits;
     int mDepthBits;
     int mStencilBits;
+    EGLenum mComponentType;
     bool mMultisample;
     bool mDebug;
     bool mNoError;

@@ -505,6 +505,8 @@ egl::ConfigSet Renderer9::generateConfigs()
                     config.transparentRedValue = 0;
                     config.transparentGreenValue = 0;
                     config.transparentBlueValue = 0;
+                    config.colorComponentType    = gl_egl::GLComponentTypeToEGLColorComponentType(
+                        colorBufferFormatInfo.componentType);
 
                     configs.add(config);
                 }
