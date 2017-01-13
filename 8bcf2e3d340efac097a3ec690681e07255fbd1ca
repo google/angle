@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_b59e2043",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "as discussed we don\u0027t need to use a workaround for this - it\u0027s really determined by the feature level, and the texture caps for this feature level.",
+      "range": {
+        "startLine": 113,
+        "startChar": 9,
+        "endLine": 113,
+        "endChar": 31
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_15b514c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "A short one line comment before each of these methods describing when they\u0027re used would be helpful.",
+      "range": {
+        "startLine": 37,
+        "startChar": 5,
+        "endLine": 37,
+        "endChar": 27
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_f5989857",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "let\u0027s make this vertex type local to this file if possible, just because it\u0027s very specialized. PositionDepthColor is more generally useful.",
+      "range": {
+        "startLine": 40,
+        "startChar": 11,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_55bf8c9f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "just use nullptr here, and either check for nullptr when you apply the input layout (before you resolve it) or make a helper method like SafeResolveInputLayout that does the same. it will save a few bytes of memory, and allow you to skip doing the null check in the Lazy class.",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 78
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_95a84464",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "can remove this.",
+      "range": {
+        "startLine": 183,
+        "startChar": 8,
+        "endLine": 183,
+        "endChar": 63
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_15dc34f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "for the SV_VertexID stuff, I think I\u0027ve come up with a plan - can you separate the change that uses SV_VertexID out from this CL and maybe consider doing it in a follow-up? The optimization is somewhat unrelated in any case, and would make landing the blend state changes easier. Sorry if this is annoying to refactor out. Instead of using SV_VertexID or position, use a vertex buffer that emulates SV_VertexID by using a small set of uints. Does that make sense?",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 91
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_952be4e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "again going to the idea of using a 6-element vb emulating SV_VertexID, I think it wouldn\u0027t be any less efficient than using the triangle strip. So this would let us keep the constant TRIANGLELIST PT.",
+      "range": {
+        "startLine": 197,
+        "startChar": 48,
+        "endLine": 197,
+        "endChar": 84
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_55e4ecaf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "maybe let\u0027s use \u0027force\u0027 or \u0027override\u0027 consistently for the alpha thing. I think it\u0027s reasonable to specialize the override for alpha only - although I\u0027m a bit foggy on when we actually need the override",
+      "range": {
+        "startLine": 347,
+        "startChar": 15,
+        "endLine": 347,
+        "endChar": 37
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_45e70c92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "is this your discovery? Do you know which drivers this might be?",
+      "range": {
+        "startLine": 406,
+        "startChar": 24,
+        "endLine": 409,
+        "endChar": 44
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_15d6f4a8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "is there actually a big win for separating out the multi clear from the simple all color clear method? Sorry if I\u0027m missing something, but the shaders look like they would probably take the same time to execute. I guess updating the uniform buffer would be a bit smaller. Maybe we only need to update the max number of RTs present in rendering state.",
+      "range": {
+        "startLine": 606,
+        "startChar": 11,
+        "endLine": 606,
+        "endChar": 45
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_55b94c89",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "I guess you already check for mVertexBuffer here, so maybe it\u0027s fine to have a null LazyInputLayout? If there\u0027s an ASSERT or something that fires, can always amend it.",
+      "range": {
+        "startLine": 686,
+        "startChar": 40,
+        "endLine": 686,
+        "endChar": 47
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_15afd440",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "see note above.",
+      "range": {
+        "startLine": 689,
+        "startChar": 42,
+        "endLine": 689,
+        "endChar": 66
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_d59b9c51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "can you add a one line comment to the fields here?",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 25
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_951684c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "you can use angle::ComPtr for these if you feel like skipping the SafeRelease stuff. We haven\u0027t updated this for the entire codebase because it\u0027s a bit tricky to use correctly, but for simple usage should be OK.",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 16
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_019a6991",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1901,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "I think this popped in from a merge- it\u0027s already defined above.",
+      "range": {
+        "startLine": 1901,
+        "startChar": 4,
+        "endLine": 1901,
+        "endChar": 82
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_b541c0a2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:06:04Z",
+      "side": 1,
+      "message": "what\u0027s the \"Cb\" stand for here? Maybe can name these like \"clearColor_float\", \"clearDepth_float\", \"clearAlpha1_float\", \"clearColor_sint\" etc or similar. Doesn\u0027t really matter too much.",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
