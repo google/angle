@@ -33,6 +33,24 @@
       "revId": "9bee948707ac2030fd569bc6d490c309d59e00b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_b577003b",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 2
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T14:34:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_cfe79c22",
+      "revId": "9bee948707ac2030fd569bc6d490c309d59e00b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
