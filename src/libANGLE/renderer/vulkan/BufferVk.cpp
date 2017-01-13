@@ -163,4 +163,9 @@ vk::Error BufferVk::setDataImpl(const uint8_t *data, size_t size, size_t offset)
     return vk::NoError();
 }
 
+const vk::Buffer &BufferVk::getVkBuffer() const
+{
+    return mBuffer;
+}
+
 }  // namespace rx

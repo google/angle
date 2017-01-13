@@ -46,6 +46,8 @@ class BufferVk : public BufferImpl
                             bool primitiveRestartEnabled,
                             gl::IndexRange *outRange) override;
 
+    const vk::Buffer &getVkBuffer() const;
+
   private:
     vk::Error setDataImpl(const uint8_t *data, size_t size, size_t offset);
 

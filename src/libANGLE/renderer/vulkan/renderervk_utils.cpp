@@ -366,6 +366,31 @@ void CommandBuffer::endRenderPass()
     vkCmdEndRenderPass(mHandle);
 }
 
+void CommandBuffer::draw(uint32_t vertexCount,
+                         uint32_t instanceCount,
+                         uint32_t firstVertex,
+                         uint32_t firstInstance)
+{
+    ASSERT(valid());
+    vkCmdDraw(mHandle, vertexCount, instanceCount, firstVertex, firstInstance);
+}
+
+void CommandBuffer::bindPipeline(VkPipelineBindPoint pipelineBindPoint,
+                                 const vk::Pipeline &pipeline)
+{
+    ASSERT(valid() && pipeline.valid());
+    vkCmdBindPipeline(mHandle, pipelineBindPoint, pipeline.getHandle());
+}
+
+void CommandBuffer::bindVertexBuffers(uint32_t firstBinding,
+                                      const std::vector<VkBuffer> &buffers,
+                                      const std::vector<VkDeviceSize> &offsets)
+{
+    ASSERT(valid() && buffers.size() == offsets.size());
+    vkCmdBindVertexBuffers(mHandle, firstBinding, static_cast<uint32_t>(buffers.size()),
+                           buffers.data(), offsets.data());
+}
+
 // Image implementation.
 Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
@@ -412,6 +437,12 @@ void Image::changeLayoutTop(VkImageAspectFlags aspectMask,
                             VkImageLayout newLayout,
                             CommandBuffer *commandBuffer)
 {
+    if (newLayout == mCurrentLayout)
+    {
+        // No-op.
+        return;
+    }
+
     changeLayoutWithStages(aspectMask, newLayout, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
                            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, commandBuffer);
 }
@@ -422,12 +453,6 @@ void Image::changeLayoutWithStages(VkImageAspectFlags aspectMask,
                                    VkPipelineStageFlags dstStageMask,
                                    CommandBuffer *commandBuffer)
 {
-    if (newLayout == mCurrentLayout)
-    {
-        // No-op.
-        return;
-    }
-
     VkImageMemoryBarrier imageMemoryBarrier;
     imageMemoryBarrier.sType               = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     imageMemoryBarrier.pNext               = nullptr;
@@ -842,6 +867,78 @@ Error ShaderModule::init(const VkShaderModuleCreateInfo &createInfo)
     return NoError();
 }
 
+// Pipeline implementation.
+Pipeline::Pipeline()
+{
+}
+
+Pipeline::Pipeline(VkDevice device) : WrappedObject(device)
+{
+}
+
+Pipeline::Pipeline(Pipeline &&other) : WrappedObject(std::move(other))
+{
+}
+
+Pipeline::~Pipeline()
+{
+    if (mHandle)
+    {
+        ASSERT(validDevice());
+        vkDestroyPipeline(mDevice, mHandle, nullptr);
+    }
+}
+
+Pipeline &Pipeline::operator=(Pipeline &&other)
+{
+    std::swap(mDevice, other.mDevice);
+    std::swap(mHandle, other.mHandle);
+    return *this;
+}
+
+Error Pipeline::initGraphics(const VkGraphicsPipelineCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(
+        vkCreateGraphicsPipelines(mDevice, VK_NULL_HANDLE, 1, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+// PipelineLayout implementation.
+PipelineLayout::PipelineLayout()
+{
+}
+
+PipelineLayout::PipelineLayout(VkDevice device) : WrappedObject(device)
+{
+}
+
+PipelineLayout::PipelineLayout(PipelineLayout &&other) : WrappedObject(std::move(other))
+{
+}
+
+PipelineLayout::~PipelineLayout()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyPipelineLayout(mDevice, mHandle, nullptr);
+    }
+}
+
+PipelineLayout &PipelineLayout::operator=(PipelineLayout &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error PipelineLayout::init(const VkPipelineLayoutCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkCreatePipelineLayout(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
@@ -860,5 +957,70 @@ Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memory
 
     return Optional<uint32_t>::Invalid();
 }
+
+namespace gl_vk
+{
+VkPrimitiveTopology GetPrimitiveTopology(GLenum mode)
+{
+    switch (mode)
+    {
+        case GL_TRIANGLES:
+            return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+        case GL_POINTS:
+            return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+        case GL_LINES:
+            return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+        case GL_LINE_STRIP:
+            return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+        case GL_TRIANGLE_FAN:
+            return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+        case GL_TRIANGLE_STRIP:
+            return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+        case GL_LINE_LOOP:
+            // TODO(jmadill): Implement line loop support.
+            UNIMPLEMENTED();
+            return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+        default:
+            UNREACHABLE();
+            return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+    }
+}
+
+VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState)
+{
+    if (!rasterState.cullFace)
+    {
+        return VK_CULL_MODE_NONE;
+    }
+
+    switch (rasterState.cullMode)
+    {
+        case GL_FRONT:
+            return VK_CULL_MODE_FRONT_BIT;
+        case GL_BACK:
+            return VK_CULL_MODE_BACK_BIT;
+        case GL_FRONT_AND_BACK:
+            return VK_CULL_MODE_FRONT_AND_BACK;
+        default:
+            UNREACHABLE();
+            return VK_CULL_MODE_NONE;
+    }
+}
+
+VkFrontFace GetFrontFace(GLenum frontFace)
+{
+    switch (frontFace)
+    {
+        case GL_CW:
+            return VK_FRONT_FACE_CLOCKWISE;
+        case GL_CCW:
+            return VK_FRONT_FACE_COUNTER_CLOCKWISE;
+        default:
+            UNREACHABLE();
+            return VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    }
+}
+
+}  // namespace gl_vk
 
 }  // namespace rx

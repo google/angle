@@ -49,6 +49,9 @@ constexpr Format::Format(GLenum internalFormat,
 {
 }
 
+// TODO(jmadill): This is temporary. Figure out how to handle format conversions.
+VkFormat GetNativeVertexFormat(gl::VertexFormatType vertexFormat);
+
 }  // namespace vk
 
 }  // namespace rx

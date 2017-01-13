@@ -236,6 +236,54 @@ TEST_P(SimpleOperationTest, BufferSubData)
     EXPECT_GL_NO_ERROR();
 }
 
+// Simple quad test.
+TEST_P(SimpleOperationTest, DrawQuad)
+{
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "}";
+    const std::string &fragmentShader =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Simple repeatd draw and swap test.
+TEST_P(SimpleOperationTest, DrawQuadAndSwap)
+{
+    const std::string &vertexShader =
+        "attribute vec3 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 1);\n"
+        "}";
+    const std::string &fragmentShader =
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "}";
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        drawQuad(program.get(), "position", 0.5f, 1.0f, true);
+        EXPECT_GL_NO_ERROR();
+        swapBuffers();
+    }
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_D3D9(),

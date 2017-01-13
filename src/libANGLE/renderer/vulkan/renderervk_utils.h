@@ -19,6 +19,7 @@ namespace gl
 {
 struct Box;
 struct Extents;
+struct RasterizerState;
 struct Rectangle;
 }
 
@@ -42,6 +43,7 @@ namespace vk
 class DeviceMemory;
 class Framebuffer;
 class Image;
+class Pipeline;
 class RenderPass;
 
 class Error final
@@ -140,6 +142,16 @@ class CommandBuffer final : public WrappedObject<VkCommandBuffer>
                          const gl::Rectangle &renderArea,
                          const std::vector<VkClearValue> &clearValues);
     void endRenderPass();
+
+    void draw(uint32_t vertexCount,
+              uint32_t instanceCount,
+              uint32_t firstVertex,
+              uint32_t firstInstance);
+
+    void bindPipeline(VkPipelineBindPoint pipelineBindPoint, const vk::Pipeline &pipeline);
+    void bindVertexBuffers(uint32_t firstBinding,
+                           const std::vector<VkBuffer> &buffers,
+                           const std::vector<VkDeviceSize> &offsets);
 
   private:
     VkCommandPool mCommandPool;
@@ -302,11 +314,42 @@ class ShaderModule final : public WrappedObject<VkShaderModule>
     Error init(const VkShaderModuleCreateInfo &createInfo);
 };
 
+class Pipeline final : public WrappedObject<VkPipeline>
+{
+  public:
+    Pipeline();
+    Pipeline(VkDevice device);
+    Pipeline(Pipeline &&other);
+    ~Pipeline();
+    Pipeline &operator=(Pipeline &&other);
+
+    Error initGraphics(const VkGraphicsPipelineCreateInfo &createInfo);
+};
+
+class PipelineLayout final : public WrappedObject<VkPipelineLayout>
+{
+  public:
+    PipelineLayout();
+    PipelineLayout(VkDevice device);
+    PipelineLayout(PipelineLayout &&other);
+    ~PipelineLayout();
+    PipelineLayout &operator=(PipelineLayout &&other);
+
+    Error init(const VkPipelineLayoutCreateInfo &createInfo);
+};
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
                                   const VkMemoryRequirements &requirements,
                                   uint32_t propertyFlagMask);
+
+namespace gl_vk
+{
+VkPrimitiveTopology GetPrimitiveTopology(GLenum mode);
+VkCullModeFlags GetCullMode(const gl::RasterizerState &rasterState);
+VkFrontFace GetFrontFace(GLenum frontFace);
+}  // namespace gl_vk
 
 }  // namespace rx
 

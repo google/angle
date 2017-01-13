@@ -125,6 +125,6 @@ class VertexArray final : public LabeledObject
     rx::VertexArrayImpl *mVertexArray;
 };
 
-}
+}  // namespace gl
 
 #endif // LIBANGLE_VERTEXARRAY_H_

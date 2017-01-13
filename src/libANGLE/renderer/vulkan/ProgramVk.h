@@ -101,10 +101,12 @@ class ProgramVk : public ProgramImpl
 
     const vk::ShaderModule &getLinkedVertexModule() const;
     const vk::ShaderModule &getLinkedFragmentModule() const;
+    gl::ErrorOrResult<vk::PipelineLayout *> getPipelineLayout(VkDevice device);
 
   private:
     vk::ShaderModule mLinkedVertexModule;
     vk::ShaderModule mLinkedFragmentModule;
+    vk::PipelineLayout mPipelineLayout;
 };
 
 }  // namespace rx

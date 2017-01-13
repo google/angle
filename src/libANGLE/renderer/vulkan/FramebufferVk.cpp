@@ -363,10 +363,12 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device
             colorDesc.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             colorDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
             colorDesc.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
-            colorDesc.finalLayout    = VK_IMAGE_LAYOUT_GENERAL;
+
+            // We might want to transition directly to PRESENT_SRC for Surface attachments.
+            colorDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
             colorRef.attachment = static_cast<uint32_t>(colorAttachments.size()) - 1u;
-            colorRef.layout     = VK_IMAGE_LAYOUT_GENERAL;
+            colorRef.layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
             attachmentDescs.push_back(colorDesc);
             colorAttachmentRefs.push_back(colorRef);
@@ -497,7 +499,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice devi
     framebufferInfo.layers          = 1;
 
     vk::Framebuffer framebuffer(device);
-    ANGLE_TRY(framebuffer.init(framebufferInfo));
+    ANGLE_TRY(static_cast<gl::Error>(framebuffer.init(framebufferInfo)));
 
     mFramebuffer = std::move(framebuffer);
 
@@ -508,6 +510,43 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "getSamplePosition is unimplemented.";
+}
+
+gl::Error FramebufferVk::beginRenderPass(VkDevice device,
+                                         vk::CommandBuffer *commandBuffer,
+                                         const gl::State &glState)
+{
+    vk::Framebuffer *framebuffer = nullptr;
+    ANGLE_TRY_RESULT(getFramebuffer(device), framebuffer);
+    ASSERT(framebuffer && framebuffer->valid());
+
+    vk::RenderPass *renderPass = nullptr;
+    ANGLE_TRY_RESULT(getRenderPass(device), renderPass);
+    ASSERT(renderPass && renderPass->valid());
+
+    // TODO(jmadill): Proper clear value implementation.
+    VkClearColorValue colorClear;
+    memset(&colorClear, 0, sizeof(VkClearColorValue));
+    colorClear.float32[0] = glState.getColorClearValue().red;
+    colorClear.float32[1] = glState.getColorClearValue().green;
+    colorClear.float32[2] = glState.getColorClearValue().blue;
+    colorClear.float32[3] = glState.getColorClearValue().alpha;
+
+    std::vector<VkClearValue> attachmentClearValues;
+    attachmentClearValues.push_back({colorClear});
+
+    // Updated the cached image layout of the attachments in this FBO.
+    // For a default FBO, we need to call through to the WindowSurfaceVk
+    // TODO(jmadill): Iterate over all attachments.
+    ASSERT(mBackbuffer);
+    RenderTargetVk *renderTarget = nullptr;
+    ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(&renderTarget));
+    renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
+    ANGLE_TRY(commandBuffer->begin());
+    commandBuffer->beginRenderPass(*renderPass, *framebuffer, glState.getViewport(),
+                                   attachmentClearValues);
+    return gl::NoError();
 }
 
 }  // namespace rx
