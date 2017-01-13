@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_8abe5771",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-13T19:22:26Z",
+      "side": 1,
+      "message": "Maybe add an assert for this assumption.",
+      "revId": "618b50f8b781512e696ec84697863c15634b0133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
