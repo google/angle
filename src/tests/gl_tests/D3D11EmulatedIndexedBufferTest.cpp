@@ -166,7 +166,7 @@ TEST_P(D3D11EmulatedIndexedBufferTest, TestSourceBufferRemainsUntouchedAfterExpa
     // Copy the original source buffer before any expand calls have been made
     gl::BufferState cleanSourceState;
     rx::Buffer11 *cleanSourceBuffer = new rx::Buffer11(cleanSourceState, mRenderer);
-    cleanSourceBuffer->copySubData(mSourceBuffer, 0, 0, mSourceBuffer->getSize());
+    cleanSourceBuffer->copySubData(nullptr, mSourceBuffer, 0, 0, mSourceBuffer->getSize());
 
     // Do a basic exanded and compare test.
     rx::SourceIndexData srcData = {nullptr, muintIndices.data(),

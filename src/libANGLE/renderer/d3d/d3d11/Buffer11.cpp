@@ -388,7 +388,8 @@ gl::Error Buffer11::setSubData(ContextImpl * /*context*/,
     return gl::NoError();
 }
 
-gl::Error Buffer11::copySubData(BufferImpl *source,
+gl::Error Buffer11::copySubData(ContextImpl *context,
+                                BufferImpl *source,
                                 GLintptr sourceOffset,
                                 GLintptr destOffset,
                                 GLsizeiptr size)
@@ -451,15 +452,19 @@ gl::Error Buffer11::copySubData(BufferImpl *source,
     return gl::NoError();
 }
 
-gl::Error Buffer11::map(GLenum access, GLvoid **mapPtr)
+gl::Error Buffer11::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
 {
     // GL_OES_mapbuffer uses an enum instead of a bitfield for it's access, convert to a bitfield
     // and call mapRange.
     ASSERT(access == GL_WRITE_ONLY_OES);
-    return mapRange(0, mSize, GL_MAP_WRITE_BIT, mapPtr);
+    return mapRange(context, 0, mSize, GL_MAP_WRITE_BIT, mapPtr);
 }
 
-gl::Error Buffer11::mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+gl::Error Buffer11::mapRange(ContextImpl *context,
+                             size_t offset,
+                             size_t length,
+                             GLbitfield access,
+                             GLvoid **mapPtr)
 {
     ASSERT(!mMappedStorage);
 
@@ -499,7 +504,7 @@ gl::Error Buffer11::mapRange(size_t offset, size_t length, GLbitfield access, GL
     return gl::NoError();
 }
 
-gl::Error Buffer11::unmap(GLboolean *result)
+gl::Error Buffer11::unmap(ContextImpl *context, GLboolean *result)
 {
     ASSERT(mMappedStorage);
     mMappedStorage->unmap();

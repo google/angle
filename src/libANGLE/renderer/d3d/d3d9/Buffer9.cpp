@@ -79,7 +79,11 @@ gl::Error Buffer9::setSubData(ContextImpl * /*context*/,
     return gl::NoError();
 }
 
-gl::Error Buffer9::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
+gl::Error Buffer9::copySubData(ContextImpl *context,
+                               BufferImpl *source,
+                               GLintptr sourceOffset,
+                               GLintptr destOffset,
+                               GLsizeiptr size)
 {
     // Note: this method is currently unreachable
     Buffer9* sourceBuffer = GetAs<Buffer9>(source);
@@ -93,19 +97,23 @@ gl::Error Buffer9::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintp
 }
 
 // We do not support buffer mapping in D3D9
-gl::Error Buffer9::map(GLenum access, GLvoid **mapPtr)
+gl::Error Buffer9::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error Buffer9::mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+gl::Error Buffer9::mapRange(ContextImpl *context,
+                            size_t offset,
+                            size_t length,
+                            GLbitfield access,
+                            GLvoid **mapPtr)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error Buffer9::unmap(GLboolean *result)
+gl::Error Buffer9::unmap(ContextImpl *context, GLboolean *result)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION);

@@ -32,13 +32,18 @@ class BufferVk : public BufferImpl
                          const void *data,
                          size_t size,
                          size_t offset) override;
-    gl::Error copySubData(BufferImpl *source,
+    gl::Error copySubData(ContextImpl *contextImpl,
+                          BufferImpl *source,
                           GLintptr sourceOffset,
                           GLintptr destOffset,
                           GLsizeiptr size) override;
-    gl::Error map(GLenum access, GLvoid **mapPtr) override;
-    gl::Error mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr) override;
-    gl::Error unmap(GLboolean *result) override;
+    gl::Error map(ContextImpl *contextImpl, GLenum access, GLvoid **mapPtr) override;
+    gl::Error mapRange(ContextImpl *contextImpl,
+                       size_t offset,
+                       size_t length,
+                       GLbitfield access,
+                       GLvoid **mapPtr) override;
+    gl::Error unmap(ContextImpl *contextImpl, GLboolean *result) override;
 
     gl::Error getIndexRange(GLenum type,
                             size_t offset,

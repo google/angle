@@ -99,7 +99,11 @@ gl::Error BufferGL::setSubData(ContextImpl * /*context*/,
     return gl::NoError();
 }
 
-gl::Error BufferGL::copySubData(BufferImpl* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
+gl::Error BufferGL::copySubData(ContextImpl *context,
+                                BufferImpl *source,
+                                GLintptr sourceOffset,
+                                GLintptr destOffset,
+                                GLsizeiptr size)
 {
     BufferGL *sourceGL = GetAs<BufferGL>(source);
 
@@ -117,7 +121,7 @@ gl::Error BufferGL::copySubData(BufferImpl* source, GLintptr sourceOffset, GLint
     return gl::NoError();
 }
 
-gl::Error BufferGL::map(GLenum access, GLvoid **mapPtr)
+gl::Error BufferGL::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
 {
     if (mShadowBufferData)
     {
@@ -143,7 +147,11 @@ gl::Error BufferGL::map(GLenum access, GLvoid **mapPtr)
     return gl::NoError();
 }
 
-gl::Error BufferGL::mapRange(size_t offset, size_t length, GLbitfield access, GLvoid **mapPtr)
+gl::Error BufferGL::mapRange(ContextImpl *context,
+                             size_t offset,
+                             size_t length,
+                             GLbitfield access,
+                             GLvoid **mapPtr)
 {
     if (mShadowBufferData)
     {
@@ -162,7 +170,7 @@ gl::Error BufferGL::mapRange(size_t offset, size_t length, GLbitfield access, GL
     return gl::NoError();
 }
 
-gl::Error BufferGL::unmap(GLboolean *result)
+gl::Error BufferGL::unmap(ContextImpl *context, GLboolean *result)
 {
     ASSERT(result);
     ASSERT(mIsMapped);
