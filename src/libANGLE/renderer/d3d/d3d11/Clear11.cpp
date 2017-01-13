@@ -286,11 +286,11 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                   formatInfo.componentType == GL_UNSIGNED_NORMALIZED ||
                   formatInfo.componentType == GL_SIGNED_NORMALIZED))
             {
-                ERR("It is undefined behaviour to clear a render buffer which is not normalized "
-                    "fixed point or floating-"
-                    "point to floating point values (color attachment %u has internal format "
-                    "0x%X).",
-                    colorAttachmentIndex, attachment.getFormat().asSized());
+                ERR() << "It is undefined behaviour to clear a render buffer which is not "
+                         "normalized fixed point or floating-point to floating point values (color "
+                         "attachment "
+                      << colorAttachmentIndex << " has internal format " << attachment.getFormat()
+                      << ").";
             }
 
             if ((formatInfo.redBits == 0 || !clearParams.colorMaskRed) &&
@@ -618,7 +618,7 @@ ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget> &
         HRESULT result               = device->CreateBlendState(&blendDesc, &blendState);
         if (FAILED(result) || !blendState)
         {
-            ERR("Unable to create a ID3D11BlendState, HRESULT: 0x%X.", result);
+            ERR() << "Unable to create a ID3D11BlendState, " << gl::FmtHR(result) << ".";
             return nullptr;
         }
 
@@ -664,7 +664,7 @@ ID3D11DepthStencilState *Clear11::getDepthStencilState(const ClearParameters &cl
         HRESULT result                   = device->CreateDepthStencilState(&dsDesc, &dsState);
         if (FAILED(result) || !dsState)
         {
-            ERR("Unable to create a ID3D11DepthStencilState, HRESULT: 0x%X.", result);
+            ERR() << "Unable to create a ID3D11DepthStencilState, " << gl::FmtHR(result) << ".";
             return nullptr;
         }
 

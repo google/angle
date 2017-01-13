@@ -115,7 +115,7 @@ void DisplayAndroid::terminate()
     EGLBoolean success = mEGL->makeCurrent(EGL_NO_SURFACE, EGL_NO_CONTEXT);
     if (success == EGL_FALSE)
     {
-        ERR("eglMakeCurrent error 0x%04x", mEGL->getError());
+        ERR() << "eglMakeCurrent error " << egl::Error(mEGL->getError());
     }
 
     if (mDummyPbuffer != EGL_NO_SURFACE)
@@ -124,7 +124,7 @@ void DisplayAndroid::terminate()
         mDummyPbuffer = EGL_NO_SURFACE;
         if (success == EGL_FALSE)
         {
-            ERR("eglDestroySurface error 0x%04x", mEGL->getError());
+            ERR() << "eglDestroySurface error " << egl::Error(mEGL->getError());
         }
     }
 
@@ -134,14 +134,14 @@ void DisplayAndroid::terminate()
         mContext = EGL_NO_CONTEXT;
         if (success == EGL_FALSE)
         {
-            ERR("eglDestroyContext error 0x%04x", mEGL->getError());
+            ERR() << "eglDestroyContext error " << egl::Error(mEGL->getError());
         }
     }
 
     egl::Error result = mEGL->terminate();
     if (result.isError())
     {
-        ERR("eglTerminate error 0x%04x", result.getCode());
+        ERR() << "eglTerminate error " << result;
     }
 
     SafeDelete(mEGL);

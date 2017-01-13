@@ -217,7 +217,7 @@ GLenum FramebufferVk::getImplementationColorReadFormat() const
     // TODO(jmadill): Handle getRenderTarget error.
     if (errOrResult.isError())
     {
-        ERR("Internal error in FramebufferVk::getImplementationColorReadFormat.");
+        ERR() << "Internal error in FramebufferVk::getImplementationColorReadFormat.";
         return GL_NONE;
     }
 
@@ -231,7 +231,7 @@ GLenum FramebufferVk::getImplementationColorReadType() const
     // TODO(jmadill): Handle getRenderTarget error.
     if (errOrResult.isError())
     {
-        ERR("Internal error in FramebufferVk::getImplementationColorReadFormat.");
+        ERR() << "Internal error in FramebufferVk::getImplementationColorReadFormat.";
         return GL_NONE;
     }
 

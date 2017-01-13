@@ -132,8 +132,8 @@ gl::Error RenderStateCache::getBlendState(const gl::Framebuffer *framebuffer, co
     {
         if (mBlendStateCache.size() >= kMaxBlendStates)
         {
-            TRACE("Overflowed the limit of %u blend states, removing the least recently used "
-                  "to make room.", kMaxBlendStates);
+            WARN() << "Overflowed the limit of " << kMaxBlendStates
+                   << " blend states, removing the least recently used to make room.";
 
             BlendStateMap::iterator leastRecentlyUsed = mBlendStateCache.begin();
             for (BlendStateMap::iterator i = mBlendStateCache.begin(); i != mBlendStateCache.end(); i++)
@@ -226,8 +226,8 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
     {
         if (mRasterizerStateCache.size() >= kMaxRasterizerStates)
         {
-            TRACE("Overflowed the limit of %u rasterizer states, removing the least recently used "
-                  "to make room.", kMaxRasterizerStates);
+            WARN() << "Overflowed the limit of " << kMaxRasterizerStates
+                   << " rasterizer states, removing the least recently used to make room.";
 
             RasterizerStateMap::iterator leastRecentlyUsed = mRasterizerStateCache.begin();
             for (RasterizerStateMap::iterator i = mRasterizerStateCache.begin(); i != mRasterizerStateCache.end(); i++)
@@ -333,10 +333,8 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &or
 
     if (mDepthStencilStateCache.size() >= kMaxDepthStencilStates)
     {
-        TRACE(
-            "Overflowed the limit of %u depth stencil states, removing the least recently used "
-            "to make room.",
-            kMaxDepthStencilStates);
+        WARN() << "Overflowed the limit of " << kMaxDepthStencilStates
+               << " depth stencil states, removing the least recently used to make room.";
 
         auto leastRecentlyUsed = mDepthStencilStateCache.begin();
         for (auto i = mDepthStencilStateCache.begin(); i != mDepthStencilStateCache.end(); i++)
@@ -414,8 +412,8 @@ gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState
     {
         if (mSamplerStateCache.size() >= kMaxSamplerStates)
         {
-            TRACE("Overflowed the limit of %u sampler states, removing the least recently used "
-                  "to make room.", kMaxSamplerStates);
+            WARN() << "Overflowed the limit of " << kMaxSamplerStates
+                   << " sampler states, removing the least recently used to make room.";
 
             SamplerStateMap::iterator leastRecentlyUsed = mSamplerStateCache.begin();
             for (SamplerStateMap::iterator i = mSamplerStateCache.begin(); i != mSamplerStateCache.end(); i++)

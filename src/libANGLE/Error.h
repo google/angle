@@ -13,8 +13,9 @@
 #include "common/angleutils.h"
 #include <EGL/egl.h>
 
-#include <string>
 #include <memory>
+#include <ostream>
+#include <string>
 
 namespace angle
 {
@@ -69,6 +70,8 @@ class Error final
 
   private:
     void createMessageString() const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Error &err);
 
     GLenum mCode;
     GLuint mID;
@@ -166,6 +169,8 @@ class Error final
 
   private:
     void createMessageString() const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Error &err);
 
     EGLint mCode;
     EGLint mID;

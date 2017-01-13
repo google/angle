@@ -6,8 +6,9 @@
 
 // formatutils.cpp: Queries for GL image formats.
 
-#include "common/mathutil.h"
 #include "libANGLE/formatutils.h"
+
+#include "common/mathutil.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 
@@ -284,6 +285,12 @@ Format Format::Invalid()
 {
     static Format invalid(GL_NONE, GL_NONE, GL_NONE);
     return invalid;
+}
+
+std::ostream &operator<<(std::ostream &os, const Format &fmt)
+{
+    // TODO(ynovikov): return string representation when available
+    return FmtHexShort(os, fmt.asSized());
 }
 
 bool InternalFormat::operator==(const InternalFormat &other) const
