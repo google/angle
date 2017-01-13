@@ -16,6 +16,10 @@
 #include "compiler/translator/TranslatorHLSL.h"
 #endif  // ANGLE_ENABLE_HLSL
 
+#ifdef ANGLE_ENABLE_VULKAN
+#include "compiler/translator/TranslatorVulkan.h"
+#endif  // ANGLE_ENABLE_VULKAN
+
 namespace sh
 {
 
@@ -68,9 +72,13 @@ TCompiler *ConstructCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput 
 #endif  // ANGLE_ENABLE_HLSL
 
         case SH_GLSL_VULKAN_OUTPUT:
-            UNIMPLEMENTED();
-            // TODO(jmadill): Vulkan GLSL
+#ifdef ANGLE_ENABLE_VULKAN
+            return new TranslatorVulkan(type, spec);
+#else
+            // This compiler is not supported in this configuration. Return NULL per the
+            // ShConstructCompiler API.
             return nullptr;
+#endif  // ANGLE_ENABLE_VULKAN
 
         default:
             // Unknown format. Return NULL per the sh::ConstructCompiler API.

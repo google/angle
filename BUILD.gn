@@ -201,6 +201,14 @@ static_library("translator") {
         rebase_path(compiler_gypi.angle_translator_hlsl_sources, ".", "src")
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
+
+  if (angle_enable_vulkan || use_libfuzzer) {
+    sources += rebase_path(compiler_gypi.angle_translator_lib_vulkan_sources,
+                           ".",
+                           "src")
+    defines += [ "ANGLE_ENABLE_VULKAN" ]
+  }
+
   configs -= angle_undefine_configs
   configs += [ ":internal_config" ]
   public_configs = [ ":external_config" ]

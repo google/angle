@@ -185,6 +185,7 @@ ShHandle Compiler::getCompilerHandle(GLenum type)
         }
 
         *compiler = sh::ConstructCompiler(type, mSpec, mOutputType, &mResources);
+        ASSERT(*compiler);
         activeCompilerHandles++;
     }
 
