@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_0fc4193e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-13T19:05:52Z",
+      "side": 1,
+      "message": "ouch",
+      "range": {
+        "startLine": 1979,
+        "startChar": 3,
+        "endLine": 1980,
+        "endChar": 42
+      },
+      "revId": "3b347b19c2d902a39c19fb1c62e9cc76d2f3f3c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43c7f965_efc6fd47",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-13T19:05:52Z",
+      "side": 1,
+      "message": "I found some of the drivers return unsupported in this case, attaching to non-zero mips of textures that arn\u0027t mip complete.",
+      "range": {
+        "startLine": 914,
+        "startChar": 4,
+        "endLine": 915,
+        "endChar": 90
+      },
+      "revId": "3b347b19c2d902a39c19fb1c62e9cc76d2f3f3c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
