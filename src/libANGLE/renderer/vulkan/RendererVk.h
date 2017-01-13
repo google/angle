@@ -25,6 +25,11 @@ class AttributeMap;
 namespace rx
 {
 
+namespace vk
+{
+struct Format;
+}
+
 class RendererVk : angle::NonCopyable
 {
   public:
@@ -38,6 +43,7 @@ class RendererVk : angle::NonCopyable
 
     VkInstance getInstance() const { return mInstance; }
     VkPhysicalDevice getPhysicalDevice() const { return mPhysicalDevice; }
+    VkQueue getQueue() const { return mQueue; }
     VkDevice getDevice() const { return mDevice; }
 
     vk::ErrorOrResult<uint32_t> selectPresentQueueForSurface(VkSurfaceKHR surface);
@@ -45,11 +51,17 @@ class RendererVk : angle::NonCopyable
     // TODO(jmadill): Use ContextImpl for command buffers to enable threaded contexts.
     vk::CommandBuffer *getCommandBuffer();
     vk::Error submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer);
+    vk::Error waitThenFinishCommandBuffer(const vk::CommandBuffer &commandBuffer,
+                                          const vk::Semaphore &waitSemaphore);
 
     const gl::Caps &getNativeCaps() const;
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
+
+    vk::ErrorOrResult<vk::StagingImage> createStagingImage(TextureDimension dimension,
+                                                           const vk::Format &format,
+                                                           const gl::Extents &extent);
 
   private:
     void ensureCapsInitialized() const;
@@ -77,6 +89,7 @@ class RendererVk : angle::NonCopyable
     VkDevice mDevice;
     VkCommandPool mCommandPool;
     std::unique_ptr<vk::CommandBuffer> mCommandBuffer;
+    uint32_t mHostVisibleMemoryIndex;
 };
 
 }  // namespace rx

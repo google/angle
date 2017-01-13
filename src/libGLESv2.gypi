@@ -631,6 +631,8 @@
             'libANGLE/renderer/vulkan/RenderbufferVk.h',
             'libANGLE/renderer/vulkan/RendererVk.cpp',
             'libANGLE/renderer/vulkan/RendererVk.h',
+            'libANGLE/renderer/vulkan/RenderTargetVk.cpp',
+            'libANGLE/renderer/vulkan/RenderTargetVk.h',
             'libANGLE/renderer/vulkan/SamplerVk.cpp',
             'libANGLE/renderer/vulkan/SamplerVk.h',
             'libANGLE/renderer/vulkan/ShaderVk.cpp',

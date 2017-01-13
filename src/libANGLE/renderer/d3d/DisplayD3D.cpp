@@ -113,11 +113,10 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         UNIMPLEMENTED();
     }
 
-    egl::Error result(EGL_NOT_INITIALIZED, "No available renderers.");
     for (size_t i = 0; i < rendererCreationFunctions.size(); i++)
     {
         RendererD3D *renderer = rendererCreationFunctions[i](display);
-        result = renderer->initialize();
+        egl::Error result     = renderer->initialize();
 
 #       if defined(ANGLE_ENABLE_D3D11)
             if (renderer->getRendererClass() == RENDERER_D3D11)
@@ -142,16 +141,14 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         if (!result.isError())
         {
             *outRenderer = renderer;
-            break;
+            return result;
         }
-        else
-        {
-            // Failed to create the renderer, try the next
-            SafeDelete(renderer);
-        }
+
+        // Failed to create the renderer, try the next
+        SafeDelete(renderer);
     }
 
-    return result;
+    return egl::Error(EGL_NOT_INITIALIZED, "No available renderers.");
 }
 
 DisplayD3D::DisplayD3D(const egl::DisplayState &state) : DisplayImpl(state), mRenderer(nullptr)

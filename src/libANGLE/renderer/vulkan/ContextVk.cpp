@@ -101,8 +101,24 @@ gl::Error ContextVk::drawRangeElements(GLenum mode,
                                        const GLvoid *indices,
                                        const gl::IndexRange &indexRange)
 {
-    UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::NoError();
+}
+
+VkDevice ContextVk::getDevice() const
+{
+    return mRenderer->getDevice();
+}
+
+vk::CommandBuffer *ContextVk::getCommandBuffer()
+{
+    return mRenderer->getCommandBuffer();
+}
+
+vk::Error ContextVk::submitCommands(const vk::CommandBuffer &commandBuffer)
+{
+    // TODO(jmadill): Command queuing.
+    ANGLE_TRY(mRenderer->submitAndFinishCommandBuffer(commandBuffer));
+    return vk::NoError();
 }
 
 gl::Error ContextVk::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
@@ -150,9 +166,9 @@ void ContextVk::popGroupMarker()
     UNIMPLEMENTED();
 }
 
-void ContextVk::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
+void ContextVk::syncState(const gl::State & /*state*/, const gl::State::DirtyBits & /*dirtyBits*/)
 {
-    UNIMPLEMENTED();
+    // TODO(jmadill): Vulkan dirty bits.
 }
 
 GLint ContextVk::getGPUDisjoint()
@@ -208,7 +224,7 @@ ProgramImpl *ContextVk::createProgram(const gl::ProgramState &state)
 
 FramebufferImpl *ContextVk::createFramebuffer(const gl::FramebufferState &state)
 {
-    return new FramebufferVk(state);
+    return FramebufferVk::CreateUserFBO(state);
 }
 
 TextureImpl *ContextVk::createTexture(const gl::TextureState &state)

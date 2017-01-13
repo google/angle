@@ -10,7 +10,10 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CONTEXTVK_H_
 
+#include <vulkan/vulkan.h>
+
 #include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
@@ -118,6 +121,12 @@ class ContextVk : public ContextImpl
 
     // Path object creation
     std::vector<PathImpl *> createPaths(GLsizei) override;
+
+    VkDevice getDevice() const;
+    vk::CommandBuffer *getCommandBuffer();
+    vk::Error submitCommands(const vk::CommandBuffer &commandBuffer);
+
+    RendererVk *getRenderer() { return mRenderer; }
 
   private:
     RendererVk *mRenderer;

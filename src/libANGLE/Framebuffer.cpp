@@ -108,6 +108,16 @@ const FramebufferAttachment *FramebufferState::getReadAttachment() const
     return mColorAttachments[readIndex].isAttached() ? &mColorAttachments[readIndex] : nullptr;
 }
 
+const FramebufferAttachment *FramebufferState::getFirstNonNullAttachment() const
+{
+    auto *colorAttachment = getFirstColorAttachment();
+    if (colorAttachment)
+    {
+        return colorAttachment;
+    }
+    return getDepthOrStencilAttachment();
+}
+
 const FramebufferAttachment *FramebufferState::getFirstColorAttachment() const
 {
     for (const FramebufferAttachment &colorAttachment : mColorAttachments)

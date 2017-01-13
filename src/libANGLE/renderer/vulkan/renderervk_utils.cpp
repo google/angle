@@ -62,6 +62,7 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
         case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
             return VK_ACCESS_TRANSFER_READ_BIT;
         case VK_IMAGE_LAYOUT_UNDEFINED:
+        case VK_IMAGE_LAYOUT_GENERAL:
             return 0;
         default:
             // TODO(jmadill): Investigate other flags.
@@ -134,6 +135,19 @@ const char *VulkanResultString(VkResult result)
         default:
             return "Unknown vulkan error code.";
     }
+}
+
+bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+{
+    for (const auto &layerProp : layerProps)
+    {
+        if (std::string(layerProp.layerName) == g_VkStdValidationLayerName)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 namespace vk
@@ -273,8 +287,62 @@ CommandBuffer::~CommandBuffer()
     }
 }
 
+void CommandBuffer::clearSingleColorImage(const vk::Image &image, const VkClearColorValue &color)
+{
+    ASSERT(valid());
+    ASSERT(image.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL ||
+           image.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+    VkImageSubresourceRange range;
+    range.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    range.baseMipLevel   = 0;
+    range.levelCount     = 1;
+    range.baseArrayLayer = 0;
+    range.layerCount     = 1;
+
+    vkCmdClearColorImage(mHandle, image.getHandle(), image.getCurrentLayout(), &color, 1, &range);
+}
+
+void CommandBuffer::copySingleImage(const vk::Image &srcImage,
+                                    const vk::Image &destImage,
+                                    const gl::Box &copyRegion,
+                                    VkImageAspectFlags aspectMask)
+{
+    ASSERT(valid());
+    ASSERT(srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
+           srcImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
+    ASSERT(destImage.getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ||
+           destImage.getCurrentLayout() == VK_IMAGE_LAYOUT_GENERAL);
+
+    VkImageCopy region;
+    region.srcSubresource.aspectMask     = aspectMask;
+    region.srcSubresource.mipLevel       = 0;
+    region.srcSubresource.baseArrayLayer = 0;
+    region.srcSubresource.layerCount     = 1;
+    region.srcOffset.x                   = copyRegion.x;
+    region.srcOffset.y                   = copyRegion.y;
+    region.srcOffset.z                   = copyRegion.z;
+    region.dstSubresource.aspectMask     = aspectMask;
+    region.dstSubresource.mipLevel       = 0;
+    region.dstSubresource.baseArrayLayer = 0;
+    region.dstSubresource.layerCount     = 1;
+    region.dstOffset.x                   = copyRegion.x;
+    region.dstOffset.y                   = copyRegion.y;
+    region.dstOffset.z                   = copyRegion.z;
+    region.extent.width                  = copyRegion.width;
+    region.extent.height                 = copyRegion.height;
+    region.extent.depth                  = copyRegion.depth;
+
+    vkCmdCopyImage(mHandle, srcImage.getHandle(), srcImage.getCurrentLayout(),
+                   destImage.getHandle(), destImage.getCurrentLayout(), 1, &region);
+}
+
 // Image implementation.
 Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+{
+}
+
+Image::Image(VkDevice device) : WrappedObject(device), mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
 }
 
@@ -304,9 +372,26 @@ Image::~Image()
     }
 }
 
-void Image::changeLayout(VkImageAspectFlags aspectMask,
-                         VkImageLayout newLayout,
-                         CommandBuffer *commandBuffer)
+Error Image::init(const VkImageCreateInfo &createInfo)
+{
+    ASSERT(mHandle == VK_NULL_HANDLE && validDevice());
+    ANGLE_VK_TRY(vkCreateImage(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+void Image::changeLayoutTop(VkImageAspectFlags aspectMask,
+                            VkImageLayout newLayout,
+                            CommandBuffer *commandBuffer)
+{
+    changeLayoutWithStages(aspectMask, newLayout, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                           VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, commandBuffer);
+}
+
+void Image::changeLayoutWithStages(VkImageAspectFlags aspectMask,
+                                   VkImageLayout newLayout,
+                                   VkPipelineStageFlags srcStageMask,
+                                   VkPipelineStageFlags dstStageMask,
+                                   CommandBuffer *commandBuffer)
 {
     if (newLayout == mCurrentLayout)
     {
@@ -354,10 +439,22 @@ void Image::changeLayout(VkImageAspectFlags aspectMask,
         imageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     }
 
-    commandBuffer->singleImageBarrier(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                      VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, imageMemoryBarrier);
+    commandBuffer->singleImageBarrier(srcStageMask, dstStageMask, 0, imageMemoryBarrier);
 
     mCurrentLayout = newLayout;
+}
+
+void Image::getMemoryRequirements(VkMemoryRequirements *requirementsOut) const
+{
+    ASSERT(valid());
+    vkGetImageMemoryRequirements(mDevice, mHandle, requirementsOut);
+}
+
+Error Image::bindMemory(const vk::DeviceMemory &deviceMemory)
+{
+    ASSERT(valid() && deviceMemory.valid());
+    ANGLE_VK_TRY(vkBindImageMemory(mDevice, mHandle, deviceMemory.getHandle(), 0));
+    return NoError();
 }
 
 // ImageView implementation.
@@ -395,19 +492,213 @@ Error ImageView::init(const VkImageViewCreateInfo &createInfo)
     return NoError();
 }
 
-}  // namespace vk
-
-bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps)
+// Semaphore implementation.
+Semaphore::Semaphore()
 {
-    for (const auto &layerProp : layerProps)
-    {
-        if (std::string(layerProp.layerName) == g_VkStdValidationLayerName)
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
+
+Semaphore::Semaphore(VkDevice device) : WrappedObject(device)
+{
+}
+
+Semaphore::Semaphore(Semaphore &&other) : WrappedObject(std::move(other))
+{
+}
+
+Semaphore::~Semaphore()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroySemaphore(mDevice, mHandle, nullptr);
+    }
+}
+
+Semaphore &Semaphore::operator=(Semaphore &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error Semaphore::init()
+{
+    ASSERT(validDevice() && !valid());
+
+    VkSemaphoreCreateInfo semaphoreInfo;
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    semaphoreInfo.pNext = nullptr;
+    semaphoreInfo.flags = 0;
+
+    ANGLE_VK_TRY(vkCreateSemaphore(mDevice, &semaphoreInfo, nullptr, &mHandle));
+
+    return NoError();
+}
+
+// Framebuffer implementation.
+Framebuffer::Framebuffer()
+{
+}
+
+Framebuffer::Framebuffer(VkDevice device) : WrappedObject(device)
+{
+}
+
+Framebuffer::Framebuffer(Framebuffer &&other) : WrappedObject(std::move(other))
+{
+}
+
+Framebuffer::~Framebuffer()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyFramebuffer(mDevice, mHandle, nullptr);
+    }
+}
+
+Framebuffer &Framebuffer::operator=(Framebuffer &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error Framebuffer::init(const VkFramebufferCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkCreateFramebuffer(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+// DeviceMemory implementation.
+DeviceMemory::DeviceMemory()
+{
+}
+
+DeviceMemory::DeviceMemory(VkDevice device) : WrappedObject(device)
+{
+}
+
+DeviceMemory::DeviceMemory(DeviceMemory &&other) : WrappedObject(std::move(other))
+{
+}
+
+DeviceMemory::~DeviceMemory()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkFreeMemory(mDevice, mHandle, nullptr);
+    }
+}
+
+DeviceMemory &DeviceMemory::operator=(DeviceMemory &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error DeviceMemory::allocate(const VkMemoryAllocateInfo &allocInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkAllocateMemory(mDevice, &allocInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+Error DeviceMemory::map(VkDeviceSize offset,
+                        VkDeviceSize size,
+                        VkMemoryMapFlags flags,
+                        uint8_t **mapPointer)
+{
+    ASSERT(valid());
+    ANGLE_VK_TRY(
+        vkMapMemory(mDevice, mHandle, offset, size, flags, reinterpret_cast<void **>(mapPointer)));
+    return NoError();
+}
+
+void DeviceMemory::unmap()
+{
+    ASSERT(valid());
+    vkUnmapMemory(mDevice, mHandle);
+}
+
+// StagingImage implementation.
+StagingImage::StagingImage() : mSize(0)
+{
+}
+
+StagingImage::StagingImage(VkDevice device) : mImage(device), mDeviceMemory(device), mSize(0)
+{
+}
+
+StagingImage::StagingImage(StagingImage &&other)
+    : mImage(std::move(other.mImage)),
+      mDeviceMemory(std::move(other.mDeviceMemory)),
+      mSize(other.mSize)
+{
+    other.mSize = 0;
+}
+
+StagingImage::~StagingImage()
+{
+}
+
+StagingImage &StagingImage::operator=(StagingImage &&other)
+{
+    std::swap(mImage, other.mImage);
+    std::swap(mDeviceMemory, other.mDeviceMemory);
+    std::swap(mSize, other.mSize);
+    return *this;
+}
+
+Error StagingImage::init(uint32_t queueFamilyIndex,
+                         uint32_t hostVisibleMemoryIndex,
+                         TextureDimension dimension,
+                         VkFormat format,
+                         const gl::Extents &extent)
+{
+    VkImageCreateInfo createInfo;
+
+    createInfo.sType         = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    createInfo.pNext         = nullptr;
+    createInfo.flags         = 0;
+    createInfo.imageType     = VK_IMAGE_TYPE_2D;
+    createInfo.format        = format;
+    createInfo.extent.width  = static_cast<uint32_t>(extent.width);
+    createInfo.extent.height = static_cast<uint32_t>(extent.height);
+    createInfo.extent.depth  = static_cast<uint32_t>(extent.depth);
+    createInfo.mipLevels     = 1;
+    createInfo.arrayLayers   = 1;
+    createInfo.samples       = VK_SAMPLE_COUNT_1_BIT;
+    createInfo.tiling        = VK_IMAGE_TILING_LINEAR;
+    createInfo.usage         = (VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+    createInfo.sharingMode   = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 1;
+    createInfo.pQueueFamilyIndices   = &queueFamilyIndex;
+    createInfo.initialLayout         = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    ANGLE_TRY(mImage.init(createInfo));
+
+    VkMemoryRequirements memoryRequirements;
+    mImage.getMemoryRequirements(&memoryRequirements);
+
+    // Ensure we can read this memory.
+    ANGLE_VK_CHECK((memoryRequirements.memoryTypeBits & (1 << hostVisibleMemoryIndex)) != 0,
+                   VK_ERROR_VALIDATION_FAILED_EXT);
+
+    VkMemoryAllocateInfo allocateInfo;
+    allocateInfo.sType           = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocateInfo.pNext           = nullptr;
+    allocateInfo.allocationSize  = memoryRequirements.size;
+    allocateInfo.memoryTypeIndex = hostVisibleMemoryIndex;
+
+    ANGLE_TRY(mDeviceMemory.allocate(allocateInfo));
+    ANGLE_TRY(mImage.bindMemory(mDeviceMemory));
+
+    mSize = memoryRequirements.size;
+
+    return NoError();
+}
+
+}  // namespace vk
 
 }  // namespace rx

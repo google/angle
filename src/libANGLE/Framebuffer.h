@@ -60,6 +60,7 @@ class FramebufferState final : angle::NonCopyable
 
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
     const FramebufferAttachment *getReadAttachment() const;
+    const FramebufferAttachment *getFirstNonNullAttachment() const;
     const FramebufferAttachment *getFirstColorAttachment() const;
     const FramebufferAttachment *getDepthOrStencilAttachment() const;
     const FramebufferAttachment *getStencilOrDepthStencilAttachment() const;
