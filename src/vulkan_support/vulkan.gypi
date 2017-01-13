@@ -532,11 +532,133 @@
                     'target_name': 'vulkan_generate_layer_helpers',
                     'type': 'none',
                     'msvs_cygwin_shell': 0,
+
                     'actions':
                     [
+                        # Duplicate everything because of GYP limitations.
+                        {
+                            'action_name': 'vulkan_run_vk_xml_generate_vk_enum_string_helper_h',
+                            'message': 'generating vk_enum_string_helper.h',
+                            'inputs':
+                            [
+                                '<(vulkan_layers_path)/scripts/generator.py',
+                                '<(vulkan_layers_path)/scripts/helper_file_generator.py',
+                                '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                '<(vulkan_layers_path)/scripts/reg.py',
+                                '<(vulkan_layers_path)/scripts/vk.xml',
+                            ],
+                            'outputs':
+                            [
+                                '<(angle_gen_path)/vulkan/vk_enum_string_helper.h'
+                            ],
+                            'action':
+                            [
+                                'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                 '-o', '<(angle_gen_path)/vulkan',
+                                '-registry', '<(vulkan_layers_path)/scripts/vk.xml',
+                                'vk_enum_string_helper.h', '-quiet',
+                            ],
+                        },
+
+                        {
+                            'action_name': 'vulkan_run_vk_xml_generate_vk_struct_size_helper_h',
+                            'message': 'generating vk_struct_size_helper.h',
+                            'inputs':
+                            [
+                                '<(vulkan_layers_path)/scripts/generator.py',
+                                '<(vulkan_layers_path)/scripts/helper_file_generator.py',
+                                '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                '<(vulkan_layers_path)/scripts/reg.py',
+                                '<(vulkan_layers_path)/scripts/vk.xml',
+                            ],
+                            'outputs':
+                            [
+                                '<(angle_gen_path)/vulkan/vk_struct_size_helper.h'
+                            ],
+                            'action':
+                            [
+                                'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                 '-o', '<(angle_gen_path)/vulkan',
+                                '-registry', '<(vulkan_layers_path)/scripts/vk.xml',
+                                'vk_struct_size_helper.h', '-quiet',
+                            ],
+                        },
+
+                        {
+                            'action_name': 'vulkan_run_vk_xml_generate_vk_struct_size_helper_c',
+                            'message': 'generating vk_struct_size_helper.c',
+                            'inputs':
+                            [
+                                '<(vulkan_layers_path)/scripts/generator.py',
+                                '<(vulkan_layers_path)/scripts/helper_file_generator.py',
+                                '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                '<(vulkan_layers_path)/scripts/reg.py',
+                                '<(vulkan_layers_path)/scripts/vk.xml',
+                            ],
+                            'outputs':
+                            [
+                                '<(angle_gen_path)/vulkan/vk_struct_size_helper.c'
+                            ],
+                            'action':
+                            [
+                                'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                 '-o', '<(angle_gen_path)/vulkan',
+                                '-registry', '<(vulkan_layers_path)/scripts/vk.xml',
+                                'vk_struct_size_helper.c', '-quiet',
+                            ],
+                        },
+
+                        {
+                            'action_name': 'vulkan_run_vk_xml_generate_vk_safe_struct_h',
+                            'message': 'generating vk_safe_struct.h',
+                            'inputs':
+                            [
+                                '<(vulkan_layers_path)/scripts/generator.py',
+                                '<(vulkan_layers_path)/scripts/helper_file_generator.py',
+                                '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                '<(vulkan_layers_path)/scripts/reg.py',
+                                '<(vulkan_layers_path)/scripts/vk.xml',
+                            ],
+                            'outputs':
+                            [
+                                '<(angle_gen_path)/vulkan/vk_safe_struct.h'
+                            ],
+                            'action':
+                            [
+                                'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                 '-o', '<(angle_gen_path)/vulkan',
+                                '-registry', '<(vulkan_layers_path)/scripts/vk.xml',
+                                'vk_safe_struct.h', '-quiet',
+                            ],
+                        },
+
+                        {
+                            'action_name': 'vulkan_run_vk_xml_generate_vk_safe_struct_cpp',
+                            'message': 'generating vk_safe_struct.cpp',
+                            'inputs':
+                            [
+                                '<(vulkan_layers_path)/scripts/generator.py',
+                                '<(vulkan_layers_path)/scripts/helper_file_generator.py',
+                                '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                '<(vulkan_layers_path)/scripts/reg.py',
+                                '<(vulkan_layers_path)/scripts/vk.xml',
+                            ],
+                            'outputs':
+                            [
+                                '<(angle_gen_path)/vulkan/vk_safe_struct.cpp'
+                            ],
+                            'action':
+                            [
+                                'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py',
+                                 '-o', '<(angle_gen_path)/vulkan',
+                                '-registry', '<(vulkan_layers_path)/scripts/vk.xml',
+                                'vk_safe_struct.cpp', '-quiet',
+                            ],
+                        },
+
                         {
                             'action_name': 'vulkan_generate_dispatch_table_helper',
-                            'message': 'generating Vulkan dispatch table helpers',
+                            'message': 'generating vk_dispatch_table_helper.h',
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/dispatch_table_generator.py',
@@ -553,53 +675,6 @@
                             [
                                 'python', '<(vulkan_layers_path)/scripts/lvl_genvk.py', '-o', '<(angle_gen_path)/vulkan',
                                 '-registry', '<(vulkan_layers_path)/scripts/vk.xml', 'vk_dispatch_table_helper.h', '-quiet',
-                            ],
-                        },
-                        {
-                            'action_name': 'vulkan_generate_enum_string_helper',
-                            'message': 'generating Vulkan enum string helper',
-                            'inputs':
-                            [
-                                '<(vulkan_layers_path)/scripts/vk_helper.py',
-                                '<(vulkan_layers_path)/include/vulkan/vulkan.h'
-                            ],
-                            'outputs':
-                            [
-                                '<(angle_gen_path)/vulkan/vk_enum_string_helper.h',
-                            ],
-                            'action':
-                            [
-                                'python',
-                                '<(vulkan_layers_path)/scripts/vk_helper.py',
-                                '--gen_enum_string_helper',
-                                '<(vulkan_layers_path)/include/vulkan/vulkan.h',
-                                '--abs_out_dir',
-                                '<(angle_gen_path)/vulkan',
-                                '--quiet',
-                            ],
-                        },
-
-                        {
-                            'action_name': 'vulkan_generate_struct_wrappers',
-                            'message': 'generating Vulkan struct wrappers',
-                            'inputs':
-                            [
-                                '<(vulkan_layers_path)/scripts/vk_helper.py',
-                                '<(vulkan_layers_path)/include/vulkan/vulkan.h'
-                            ],
-                            'outputs':
-                            [
-                                '<@(vulkan_struct_wrappers_outputs)',
-                            ],
-                            'action':
-                            [
-                                'python',
-                                '<(vulkan_layers_path)/scripts/vk_helper.py',
-                                '--gen_struct_wrappers',
-                                '<(vulkan_layers_path)/include/vulkan/vulkan.h',
-                                '--abs_out_dir',
-                                '<(angle_gen_path)/vulkan',
-                                '--quiet',
                             ],
                         },
 
