@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_4a06ff06",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-13T19:44:17Z",
+      "side": 1,
+      "message": "ES3 requires at least 4 for this cap, you could probably just assert instead.",
+      "range": {
+        "startLine": 746,
+        "startChar": 4,
+        "endLine": 750,
+        "endChar": 5
+      },
+      "revId": "d1f92c65a05db033cd363ace6acd1cab84c12046",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
