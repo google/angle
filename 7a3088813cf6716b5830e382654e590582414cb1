@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_472b879f",
+        "filename": "src/libANGLE/renderer/d3d/DisplayD3D.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_304fb178",
+      "range": {
+        "startLine": 152,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 5
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_1df2b9b7",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 44
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-10T21:04:50Z",
       "side": 1,
       "message": "These might not be needed, you should be able to pipeline the layout transition and the copy command.",
+      "range": {
+        "startLine": 237,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 70
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_e71c138a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_1df2b9b7",
       "range": {
         "startLine": 237,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_672803a2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77e75a57_e872b550",
+      "range": {
+        "startLine": 579,
+        "startChar": 0,
+        "endLine": 582,
+        "endChar": 24
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_e8dd95fc",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 44
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_27320b12",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "function was unused, removed it.",
+      "parentUuid": "77e75a57_e8dd95fc",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_95ba1da1",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 44
@@ -99,6 +189,24 @@
       "writtenOn": "2017-01-10T21:04:50Z",
       "side": 1,
       "message": "I think this also needs to be TRANSFER_DST (swapchain images are transitioned to LAYOUT_TRANSFER_DST_OPTIMAL) below.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_674fa377",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "Done. It\u0027s interesting/strange that this doesn\u0027t seem to be validated.",
+      "parentUuid": "77e75a57_95ba1da1",
       "revId": "7a3088813cf6716b5830e382654e590582414cb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "037501b9_074caf7f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "I think that would require use of semaphores, which is too advanced for this CL. :)",
+      "parentUuid": "77e75a57_b51be1e6",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 0
+      },
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_d5682534",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 44
@@ -145,6 +277,24 @@
     },
     {
       "key": {
+        "uuid": "037501b9_e743b353",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "Yeah, this is mostly intentional. The current implementation is a dirty prototype to get something on screen. I\u0027ll revisit this in upcoming patches and get the perf test as smooth as possible.",
+      "parentUuid": "77e75a57_d5682534",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e75a57_6836a542",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
         "patchSetId": 44
@@ -156,6 +306,24 @@
       "writtenOn": "2017-01-10T21:04:50Z",
       "side": 1,
       "message": "nit: I think this can be replaced by using WrappedObject\u003cVkSemaphore\u003e::operator\u003d in the class declaration.",
+      "revId": "7a3088813cf6716b5830e382654e590582414cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "037501b9_e76ad3c5",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T16:03:51Z",
+      "side": 1,
+      "message": "These are all getting redesigned in a later patch, where I remove the Device handles. If that\u0027s OK I\u0027ll leave it as is here and remove it later.",
+      "parentUuid": "77e75a57_6836a542",
       "revId": "7a3088813cf6716b5830e382654e590582414cb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
