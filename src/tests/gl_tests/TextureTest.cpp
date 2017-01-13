@@ -3538,10 +3538,12 @@ T UNorm(double value)
 // Test rendering a depth texture with mipmaps.
 TEST_P(Texture2DTestES3, DepthTexturesWithMipmaps)
 {
-    //TODO(cwallez) this is failing on Intel Win7 OpenGL
-    if (IsIntel() && IsWindows() && IsOpenGL())
+    // TODO(cwallez) this is failing on Intel Win7 OpenGL.
+    // TODO(zmo) this is faling on Win Intel HD 530 Debug.
+    // http://anglebugs.com/1706
+    if (IsIntel() && IsWindows())
     {
-        std::cout << "Test skipped on Intel OpenGL." << std::endl;
+        std::cout << "Test skipped on Win Intel." << std::endl;
         return;
     }
 
