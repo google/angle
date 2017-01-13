@@ -117,7 +117,7 @@ size_t LinkedUniform::getElementComponents() const
 uint8_t *LinkedUniform::getDataPtrToElement(size_t elementIndex)
 {
     ASSERT((!isArray() && elementIndex == 0) || (isArray() && elementIndex < arraySize));
-    return data() + getElementSize() * elementIndex;
+    return data() + (elementIndex > 0 ? (getElementSize() * elementIndex) : 0u);
 }
 
 const uint8_t *LinkedUniform::getDataPtrToElement(size_t elementIndex) const

@@ -2700,19 +2700,34 @@ static bool ValidateUniformCommonBase(gl::Context *context,
         return false;
     }
 
-    if (program->isIgnoredUniformLocation(location))
+    if (location == -1)
     {
         // Silently ignore the uniform command
         return false;
     }
 
-    if (!program->isValidUniformLocation(location))
+    const auto &uniformLocations = program->getUniformLocations();
+    size_t castedLocation = static_cast<size_t>(location);
+    if (castedLocation >= uniformLocations.size())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Invalid uniform location"));
+        return false;
+    }
+
+    const auto &uniformLocation = uniformLocations[castedLocation];
+    if (uniformLocation.ignored)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    if (!uniformLocation.used)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
     }
 
-    const LinkedUniform &uniform = program->getUniformByLocation(location);
+    const auto &uniform = program->getUniformByIndex(uniformLocation.index);
 
     // attempting to write an array to a non-array uniform is an INVALID_OPERATION
     if (!uniform.isArray() && count > 1)

@@ -1405,19 +1405,27 @@ bool Program::isValidUniformLocation(GLint location) const
             mState.mUniformLocations[static_cast<size_t>(location)].used);
 }
 
-bool Program::isIgnoredUniformLocation(GLint location) const
-{
-    // Location is ignored if it is -1 or it was bound but non-existant in the shader or optimized
-    // out
-    return location == -1 ||
-           (location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size() &&
-            mState.mUniformLocations[static_cast<size_t>(location)].ignored);
-}
-
 const LinkedUniform &Program::getUniformByLocation(GLint location) const
 {
     ASSERT(location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size());
     return mState.mUniforms[mState.getUniformIndexFromLocation(location)];
+}
+
+const VariableLocation &Program::getUniformLocation(GLint location) const
+{
+    ASSERT(location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size());
+    return mState.mUniformLocations[location];
+}
+
+const std::vector<VariableLocation> &Program::getUniformLocations() const
+{
+    return mState.mUniformLocations;
+}
+
+const LinkedUniform &Program::getUniformByIndex(GLuint index) const
+{
+    ASSERT(index < static_cast<size_t>(mState.mUniforms.size()));
+    return mState.mUniforms[index];
 }
 
 GLint Program::getUniformLocation(const std::string &name) const
