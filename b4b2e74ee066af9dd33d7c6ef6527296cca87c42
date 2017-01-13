@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c7f965_b5e62094",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-13T15:08:03Z",
+      "side": 1,
+      "message": "these are still in the header.",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 37
+      },
+      "revId": "b4b2e74ee066af9dd33d7c6ef6527296cca87c42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
