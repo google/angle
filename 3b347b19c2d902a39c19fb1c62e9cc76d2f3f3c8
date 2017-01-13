@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "43c7f965_ea3fcbf1",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-13T19:31:45Z",
+      "side": 1,
+      "message": "Ew :/",
+      "parentUuid": "43c7f965_0fc4193e",
+      "revId": "3b347b19c2d902a39c19fb1c62e9cc76d2f3f3c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43c7f965_efc6fd47",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 12
