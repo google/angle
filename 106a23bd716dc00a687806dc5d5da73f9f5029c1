@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63adddb0_9e099de6",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-15T03:48:28Z",
+      "side": 1,
+      "message": "note to Geoff, I think we should merge this with the big switch for perf reasons.",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 368,
+        "endChar": 5
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_5e0c35f1",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-15T03:48:28Z",
+      "side": 1,
+      "message": "question: shouldn\u0027t extensionRequstable return false for ES3?",
+      "range": {
+        "startLine": 595,
+        "startChar": 7,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_7e0ff1e7",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-15T03:48:28Z",
+      "side": 1,
+      "message": "use gl_raii.h for GLFramebuffer and GLTexture",
+      "range": {
+        "startLine": 601,
+        "startChar": 4,
+        "endLine": 601,
+        "endChar": 18
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
