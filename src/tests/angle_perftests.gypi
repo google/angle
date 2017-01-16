@@ -17,6 +17,7 @@
         [
             '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.cpp',
             '<(angle_path)/src/tests/perf_tests/ANGLEPerfTest.h',
+            '<(angle_path)/src/tests/perf_tests/BindingPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/BufferSubData.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.cpp',
