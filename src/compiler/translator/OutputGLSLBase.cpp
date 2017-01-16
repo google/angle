@@ -871,30 +871,31 @@ bool TOutputGLSLBase::visitInvariantDeclaration(Visit visit, TIntermInvariantDec
     return false;
 }
 
+bool TOutputGLSLBase::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+{
+    TInfoSinkBase &out = objSink();
+    ASSERT(visit == PreVisit);
+
+    const TType &type = node->getType();
+    writeVariableType(type);
+    if (type.isArray())
+        out << arrayBrackets(type);
+
+    out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+
+    out << "(";
+    writeFunctionParameters(*(node->getSequence()));
+    out << ")";
+
+    return false;
+}
+
 bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren       = true;
     TInfoSinkBase &out       = objSink();
     switch (node->getOp())
     {
-        case EOpPrototype:
-            // Function declaration.
-            ASSERT(visit == PreVisit);
-            {
-                const TType &type = node->getType();
-                writeVariableType(type);
-                if (type.isArray())
-                    out << arrayBrackets(type);
-            }
-
-            out << " " << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
-
-            out << "(";
-            writeFunctionParameters(*(node->getSequence()));
-            out << ")";
-
-            visitChildren = false;
-            break;
         case EOpFunctionCall:
             // Function call.
             if (visit == PreVisit)

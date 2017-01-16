@@ -1601,60 +1601,57 @@ bool OutputHLSL::visitInvariantDeclaration(Visit visit, TIntermInvariantDeclarat
     return false;
 }
 
+bool OutputHLSL::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+{
+    TInfoSinkBase &out = getInfoSink();
+
+    ASSERT(visit == PreVisit);
+    size_t index = mCallDag.findIndex(node->getFunctionSymbolInfo());
+    // Skip the prototype if it is not implemented (and thus not used)
+    if (index == CallDAG::InvalidIndex)
+    {
+        return false;
+    }
+
+    TIntermSequence *arguments = node->getSequence();
+
+    TString name = DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+    out << TypeString(node->getType()) << " " << name << DisambiguateFunctionName(arguments)
+        << (mOutputLod0Function ? "Lod0(" : "(");
+
+    for (unsigned int i = 0; i < arguments->size(); i++)
+    {
+        TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
+        ASSERT(symbol != nullptr);
+
+        out << argumentString(symbol);
+
+        if (i < arguments->size() - 1)
+        {
+            out << ", ";
+        }
+    }
+
+    out << ");\n";
+
+    // Also prototype the Lod0 variant if needed
+    bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
+    if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
+    {
+        mOutputLod0Function = true;
+        node->traverse(this);
+        mOutputLod0Function = false;
+    }
+
+    return false;
+}
+
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = getInfoSink();
 
     switch (node->getOp())
     {
-        case EOpPrototype:
-            if (visit == PreVisit)
-            {
-                size_t index = mCallDag.findIndex(node->getFunctionSymbolInfo());
-                // Skip the prototype if it is not implemented (and thus not used)
-                if (index == CallDAG::InvalidIndex)
-                {
-                    return false;
-                }
-
-                TIntermSequence *arguments = node->getSequence();
-
-                TString name =
-                    DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
-                out << TypeString(node->getType()) << " " << name
-                    << DisambiguateFunctionName(arguments) << (mOutputLod0Function ? "Lod0(" : "(");
-
-                for (unsigned int i = 0; i < arguments->size(); i++)
-                {
-                    TIntermSymbol *symbol = (*arguments)[i]->getAsSymbolNode();
-
-                    if (symbol)
-                    {
-                        out << argumentString(symbol);
-
-                        if (i < arguments->size() - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                    else
-                        UNREACHABLE();
-                }
-
-                out << ");\n";
-
-                // Also prototype the Lod0 variant if needed
-                bool needsLod0 = mASTMetadataList[index].mNeedsLod0;
-                if (needsLod0 && !mOutputLod0Function && mShaderType == GL_FRAGMENT_SHADER)
-                {
-                    mOutputLod0Function = true;
-                    node->traverse(this);
-                    mOutputLod0Function = false;
-                }
-
-                return false;
-            }
-            break;
         case EOpFunctionCall:
         {
             TIntermSequence *arguments = node->getSequence();

@@ -10,7 +10,7 @@ const char *GetOperatorString(TOperator op)
 {
     switch (op)
     {
-        // Note: ops from EOpNull to EOpPrototype can't be handled here.
+        // Note: ops from EOpNull to EOpParameters can't be handled here.
 
         case EOpNegative:
             return "-";

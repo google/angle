@@ -2395,8 +2395,9 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
     }
 }
 
-TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
-                                                                 const TSourceLoc &location)
+TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
+    const TFunction &parsedFunction,
+    const TSourceLoc &location)
 {
     // Note: function found from the symbol table could be the same as parsedFunction if this is the
     // first declaration. Either way the instance in the symbol table is used to track whether the
@@ -2411,11 +2412,11 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
     }
     function->setHasPrototypeDeclaration();
 
-    TIntermAggregate *prototype = new TIntermAggregate;
+    TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(function->getReturnType());
     // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
     // point to the data that already exists in the symbol table.
-    prototype->setType(function->getReturnType());
     prototype->getFunctionSymbolInfo()->setFromFunction(*function);
+    prototype->setLine(location);
 
     for (size_t i = 0; i < function->getParamCount(); i++)
     {
@@ -2426,16 +2427,14 @@ TIntermAggregate *TParseContext::addFunctionPrototypeDeclaration(const TFunction
 
             TIntermSymbol *paramSymbol = intermediate.addSymbol(
                 variable.getUniqueId(), variable.getName(), variable.getType(), location);
-            prototype = intermediate.growAggregate(prototype, paramSymbol, location);
+            prototype->appendParameter(paramSymbol);
         }
         else
         {
             TIntermSymbol *paramSymbol = intermediate.addSymbol(0, "", *param.type, location);
-            prototype = intermediate.growAggregate(prototype, paramSymbol, location);
+            prototype->appendParameter(paramSymbol);
         }
     }
-
-    prototype->setOp(EOpPrototype);
 
     symbolTable.pop();
 

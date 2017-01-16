@@ -37,6 +37,7 @@ class TIntermAggregate;
 class TIntermBlock;
 class TIntermInvariantDeclaration;
 class TIntermDeclaration;
+class TIntermFunctionPrototype;
 class TIntermFunctionDefinition;
 class TIntermSwizzle;
 class TIntermBinary;
@@ -103,6 +104,7 @@ class TIntermNode : angle::NonCopyable
     virtual TIntermFunctionDefinition *getAsFunctionDefinition() { return nullptr; }
     virtual TIntermAggregate *getAsAggregate() { return 0; }
     virtual TIntermBlock *getAsBlock() { return nullptr; }
+    virtual TIntermFunctionPrototype *getAsFunctionPrototypeNode() { return nullptr; }
     virtual TIntermDeclaration *getAsDeclarationNode() { return nullptr; }
     virtual TIntermSwizzle *getAsSwizzleNode() { return nullptr; }
     virtual TIntermBinary *getAsBinaryNode() { return 0; }
@@ -704,6 +706,43 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
     TIntermSequence mStatements;
 };
 
+// Function prototype declaration. The type of the node is the function return type.
+class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBase
+{
+  public:
+    TIntermFunctionPrototype(const TType &type) : TIntermTyped(type) {}
+    ~TIntermFunctionPrototype() {}
+
+    TIntermFunctionPrototype *getAsFunctionPrototypeNode() override { return this; }
+    void traverse(TIntermTraverser *it) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+
+    TIntermTyped *deepCopy() const override
+    {
+        UNREACHABLE();
+        return nullptr;
+    }
+    bool hasSideEffects() const override
+    {
+        UNREACHABLE();
+        return true;
+    }
+
+    // Only intended for initially building the declaration.
+    void appendParameter(TIntermSymbol *parameter);
+
+    TIntermSequence *getSequence() override { return &mParameters; }
+    const TIntermSequence *getSequence() const override { return &mParameters; }
+
+    TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
+    const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
+
+  protected:
+    TIntermSequence mParameters;
+
+    TFunctionSymbolInfo mFunctionInfo;
+};
+
 // Struct, interface block or variable declaration. Can contain multiple variable declarators.
 class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
 {
@@ -877,6 +916,10 @@ class TIntermTraverser : angle::NonCopyable
     virtual bool visitIfElse(Visit visit, TIntermIfElse *node) { return true; }
     virtual bool visitSwitch(Visit visit, TIntermSwitch *node) { return true; }
     virtual bool visitCase(Visit visit, TIntermCase *node) { return true; }
+    virtual bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+    {
+        return true;
+    }
     virtual bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
     {
         return true;
@@ -904,6 +947,7 @@ class TIntermTraverser : angle::NonCopyable
     virtual void traverseIfElse(TIntermIfElse *node);
     virtual void traverseSwitch(TIntermSwitch *node);
     virtual void traverseCase(TIntermCase *node);
+    virtual void traverseFunctionPrototype(TIntermFunctionPrototype *node);
     virtual void traverseFunctionDefinition(TIntermFunctionDefinition *node);
     virtual void traverseAggregate(TIntermAggregate *node);
     virtual void traverseBlock(TIntermBlock *node);
@@ -1123,6 +1167,7 @@ class TLValueTrackingTraverser : public TIntermTraverser
 
     void traverseBinary(TIntermBinary *node) final;
     void traverseUnary(TIntermUnary *node) final;
+    void traverseFunctionPrototype(TIntermFunctionPrototype *node) final;
     void traverseFunctionDefinition(TIntermFunctionDefinition *node) final;
     void traverseAggregate(TIntermAggregate *node) final;
 

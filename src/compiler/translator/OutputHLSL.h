@@ -76,6 +76,7 @@ class OutputHLSL : public TIntermTraverser
     bool visitIfElse(Visit visit, TIntermIfElse *);
     bool visitSwitch(Visit visit, TIntermSwitch *);
     bool visitCase(Visit visit, TIntermCase *);
+    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *);
     bool visitBlock(Visit visit, TIntermBlock *node);

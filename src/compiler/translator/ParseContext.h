@@ -240,8 +240,8 @@ class TParseContext : angle::NonCopyable
                                   TIntermDeclaration *declarationOut);
 
     void parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder);
-    TIntermAggregate *addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
-                                                      const TSourceLoc &location);
+    TIntermFunctionPrototype *addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
+                                                              const TSourceLoc &location);
     TIntermFunctionDefinition *addFunctionDefinition(const TFunction &function,
                                                      TIntermAggregate *functionParameters,
                                                      TIntermBlock *functionBody,

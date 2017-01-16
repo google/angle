@@ -16,8 +16,6 @@ enum TOperator
     EOpFunctionCall,
     EOpParameters,  // an aggregate listing the parameters to a function
 
-    EOpPrototype,
-
     //
     // Unary operators
     //

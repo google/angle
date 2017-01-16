@@ -628,15 +628,17 @@ bool EmulatePrecision::visitInvariantDeclaration(Visit visit, TIntermInvariantDe
     return false;
 }
 
+bool EmulatePrecision::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+{
+    return false;
+}
+
 bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     bool visitChildren = true;
     switch (node->getOp())
     {
         case EOpConstructStruct:
-            break;
-        case EOpPrototype:
-            visitChildren = false;
             break;
         case EOpParameters:
             visitChildren = false;

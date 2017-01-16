@@ -81,6 +81,11 @@ void TIntermDeclaration::traverse(TIntermTraverser *it)
     it->traverseDeclaration(this);
 }
 
+void TIntermFunctionPrototype::traverse(TIntermTraverser *it)
+{
+    it->traverseFunctionPrototype(this);
+}
+
 void TIntermAggregate::traverse(TIntermTraverser *it)
 {
     it->traverseAggregate(this);
@@ -559,6 +564,36 @@ void TIntermTraverser::traverseDeclaration(TIntermDeclaration *node)
         visitDeclaration(PostVisit, node);
 }
 
+void TIntermTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
+{
+    bool visit = true;
+
+    TIntermSequence *sequence = node->getSequence();
+
+    if (preVisit)
+        visit = visitFunctionPrototype(PreVisit, node);
+
+    if (visit)
+    {
+        incrementDepth(node);
+
+        for (auto *child : *sequence)
+        {
+            child->traverse(this);
+            if (visit && inVisit)
+            {
+                if (child != sequence->back())
+                    visit = visitFunctionPrototype(InVisit, node);
+            }
+        }
+
+        decrementDepth();
+    }
+
+    if (visit && postVisit)
+        visitFunctionPrototype(PostVisit, node);
+}
+
 // Traverse an aggregate node.  Same comments in binary node apply here.
 void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 {
@@ -600,15 +635,19 @@ void TLValueTrackingTraverser::traverseFunctionDefinition(TIntermFunctionDefinit
     TIntermTraverser::traverseFunctionDefinition(node);
 }
 
+void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
+{
+    TIntermSequence *sequence = node->getSequence();
+    addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), sequence);
+
+    TIntermTraverser::traverseFunctionPrototype(node);
+}
+
 void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
 {
     bool visit = true;
 
     TIntermSequence *sequence = node->getSequence();
-    if (node->getOp() == EOpPrototype)
-    {
-        addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), sequence);
-    }
 
     if (preVisit)
         visit = visitAggregate(PreVisit, node);

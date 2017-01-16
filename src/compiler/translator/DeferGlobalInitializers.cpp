@@ -30,13 +30,12 @@ void SetInternalFunctionName(TFunctionSymbolInfo *functionInfo, const char *name
     functionInfo->setNameObj(nameObj);
 }
 
-TIntermAggregate *CreateFunctionPrototypeNode(const char *name, const int functionId)
+TIntermFunctionPrototype *CreateFunctionPrototypeNode(const char *name, const int functionId)
 {
-    TIntermAggregate *functionNode = new TIntermAggregate(EOpPrototype);
+    TType returnType(EbtVoid);
+    TIntermFunctionPrototype *functionNode = new TIntermFunctionPrototype(returnType);
 
     SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
-    TType returnType(EbtVoid);
-    functionNode->setType(returnType);
     functionNode->getFunctionSymbolInfo()->setId(functionId);
     return functionNode;
 }
@@ -146,7 +145,7 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     const char *functionName = "initializeDeferredGlobals";
 
     // Add function prototype to the beginning of the shader
-    TIntermAggregate *functionPrototypeNode =
+    TIntermFunctionPrototype *functionPrototypeNode =
         CreateFunctionPrototypeNode(functionName, initFunctionId);
     root->getSequence()->insert(root->getSequence()->begin(), functionPrototypeNode);
 

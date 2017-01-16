@@ -122,19 +122,22 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
         return true;
     }
 
+    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override
+    {
+        ASSERT(visit == PreVisit);
+        // Function declaration, create an empty record.
+        auto &record = mFunctions[node->getFunctionSymbolInfo()->getName()];
+        record.name  = node->getFunctionSymbolInfo()->getName();
+
+        // No need to traverse the parameters.
+        return false;
+    }
+
     // Aggregates the AST node for each function as well as the name of the functions called by it
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
         switch (node->getOp())
         {
-            case EOpPrototype:
-                if (visit == PreVisit)
-                {
-                    // Function declaration, create an empty record.
-                    auto &record = mFunctions[node->getFunctionSymbolInfo()->getName()];
-                    record.name  = node->getFunctionSymbolInfo()->getName();
-                }
-                break;
             case EOpFunctionCall:
             {
                 // Function call, add the callees

@@ -49,6 +49,7 @@ class TOutputTraverser : public TIntermTraverser
     bool visitIfElse(Visit visit, TIntermIfElse *node) override;
     bool visitSwitch(Visit visit, TIntermSwitch *node) override;
     bool visitCase(Visit visit, TIntermCase *node) override;
+    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *) override;
     bool visitBlock(Visit visit, TIntermBlock *) override;
@@ -506,6 +507,18 @@ bool TOutputTraverser::visitInvariantDeclaration(Visit visit, TIntermInvariantDe
     return true;
 }
 
+bool TOutputTraverser::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node)
+{
+    TInfoSinkBase &out = sink;
+
+    OutputTreeText(out, node, mDepth);
+    OutputFunction(out, "Function Prototype", node->getFunctionSymbolInfo());
+    out << " (" << node->getCompleteString() << ")";
+    out << "\n";
+
+    return true;
+}
+
 bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
     TInfoSinkBase &out = sink;
@@ -526,9 +539,6 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
         case EOpParameters:
             out << "Function Parameters: ";
-            break;
-        case EOpPrototype:
-            OutputFunction(out, "Function Prototype", node->getFunctionSymbolInfo());
             break;
 
         case EOpConstructFloat:

@@ -32,6 +32,7 @@ class EmulatePrecision : public TLValueTrackingTraverser
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitInvariantDeclaration(Visit visit, TIntermInvariantDeclaration *node) override;
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
+    bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
 
     void writeEmulationHelpers(TInfoSinkBase &sink,
                                const int shaderVersion,
