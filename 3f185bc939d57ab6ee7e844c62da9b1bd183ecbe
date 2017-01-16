@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3ed1509_d38a6642",
+        "filename": "src/tests/perf_tests/BindingPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-16T21:17:10Z",
+      "side": 1,
+      "message": "nit: add the current iteration somewhere in here.",
+      "revId": "3f185bc939d57ab6ee7e844c62da9b1bd183ecbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
