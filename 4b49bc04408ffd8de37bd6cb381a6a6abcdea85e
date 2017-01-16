@@ -401,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_7045f0ac",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "I agree with you. Many places uses the pair of VertexAttribute and its VertexBinding, so it will be more convenient to store a VertexInfo struct directly.\nA VertexAttribute contains a bindingIndex so I omitted it in this patch.",
+      "parentUuid": "037501b9_1fa64696",
+      "range": {
+        "startLine": 82,
+        "startChar": 10,
+        "endLine": 82,
+        "endChar": 29
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_41c1943c",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 28
@@ -1553,6 +1577,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_50fb0c51",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Now I use VertexInfo to represent this pair, in which there is a VertexAttribute and a pointer to VertexBinding. \nHow do you think of this name and the structure?",
+      "parentUuid": "037501b9_3f88e207",
+      "range": {
+        "startLine": 39,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 60
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57a6d6c4_04ab1a54",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 28
@@ -1706,6 +1754,30 @@
       "side": 1,
       "message": "Jiawei, please re-read the comment I posted above.\n\nI suggest you make a test in angle_end2end_tests for this particular value, that uses a variety of vertex strides and relative offsets, and experiment manually to see what maximum values D3D11 is capable of supporting. Then document your findings here. If you cannot make a funcional test for these features, leave a TODO here indicating you intend to fix this when you can.",
       "parentUuid": "77e75a57_c3652bf7",
+      "range": {
+        "startLine": 1131,
+        "startChar": 4,
+        "endLine": 1132,
+        "endChar": 47
+      },
+      "revId": "4b49bc04408ffd8de37bd6cb381a6a6abcdea85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_30f88852",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1132,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Thanks to point out this.\nSince these values are not used in this patch, now I just leave a TODO for myself. I plan to add a test to angle_end2end_tests to solve this issue in the next patch.",
+      "parentUuid": "037501b9_bc9de058",
       "range": {
         "startLine": 1131,
         "startChar": 4,
