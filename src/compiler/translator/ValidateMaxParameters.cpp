@@ -15,14 +15,14 @@ ValidateMaxParameters::ValidateMaxParameters(unsigned int maxParameters)
 {
 }
 
-bool ValidateMaxParameters::visitAggregate(Visit visit, TIntermAggregate *node)
+bool ValidateMaxParameters::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
     if (!mValid)
     {
         return false;
     }
 
-    if (node->getOp() == EOpParameters && node->getSequence()->size() > mMaxParameters)
+    if (node->getFunctionPrototype()->getSequence()->size() > mMaxParameters)
     {
         mValid = false;
     }

@@ -242,13 +242,12 @@ class TParseContext : angle::NonCopyable
     void parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder);
     TIntermFunctionPrototype *addFunctionPrototypeDeclaration(const TFunction &parsedFunction,
                                                               const TSourceLoc &location);
-    TIntermFunctionDefinition *addFunctionDefinition(const TFunction &function,
-                                                     TIntermAggregate *functionParameters,
+    TIntermFunctionDefinition *addFunctionDefinition(TIntermFunctionPrototype *functionPrototype,
                                                      TIntermBlock *functionBody,
                                                      const TSourceLoc &location);
     void parseFunctionDefinitionHeader(const TSourceLoc &location,
                                        TFunction **function,
-                                       TIntermAggregate **aggregateOut);
+                                       TIntermFunctionPrototype **prototypeOut);
     TFunction *parseFunctionDeclarator(const TSourceLoc &location, TFunction *function);
     TFunction *parseFunctionHeader(const TPublicType &type,
                                    const TString *name,
@@ -418,6 +417,10 @@ class TParseContext : angle::NonCopyable
                              TIntermTyped *left,
                              TIntermTyped *right,
                              const TSourceLoc &loc);
+
+    TIntermFunctionPrototype *createPrototypeNodeFromFunction(const TFunction &function,
+                                                              const TSourceLoc &location,
+                                                              bool insertParametersToSymbolTable);
 
     // Set to true when the last/current declarator list was started with an empty declaration.
     bool mDeferredSingleDeclarationErrorCheck;

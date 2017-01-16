@@ -14,7 +14,6 @@ enum TOperator
 {
     EOpNull,  // if in a node, should only mean a node is still being built
     EOpFunctionCall,
-    EOpParameters,  // an aggregate listing the parameters to a function
 
     //
     // Unary operators

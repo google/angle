@@ -2395,6 +2395,46 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
     }
 }
 
+TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
+    const TFunction &function,
+    const TSourceLoc &location,
+    bool insertParametersToSymbolTable)
+{
+    TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(function.getReturnType());
+    // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
+    // point to the data that already exists in the symbol table.
+    prototype->getFunctionSymbolInfo()->setFromFunction(function);
+    prototype->setLine(location);
+
+    for (size_t i = 0; i < function.getParamCount(); i++)
+    {
+        const TConstParameter &param = function.getParam(i);
+
+        // If the parameter has no name, it's not an error, just don't add it to symbol table (could
+        // be used for unused args).
+        if (param.name != nullptr)
+        {
+            TVariable *variable = new TVariable(param.name, *param.type);
+
+            // Insert the parameter in the symbol table.
+            if (insertParametersToSymbolTable && !symbolTable.declare(variable))
+            {
+                error(location, "redefinition", variable->getName().c_str());
+                prototype->appendParameter(intermediate.addSymbol(0, "", *param.type, location));
+                continue;
+            }
+            TIntermSymbol *symbol = intermediate.addSymbol(
+                variable->getUniqueId(), variable->getName(), variable->getType(), location);
+            prototype->appendParameter(symbol);
+        }
+        else
+        {
+            prototype->appendParameter(intermediate.addSymbol(0, "", *param.type, location));
+        }
+    }
+    return prototype;
+}
+
 TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
     const TFunction &parsedFunction,
     const TSourceLoc &location)
@@ -2412,29 +2452,8 @@ TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
     }
     function->setHasPrototypeDeclaration();
 
-    TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(function->getReturnType());
-    // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
-    // point to the data that already exists in the symbol table.
-    prototype->getFunctionSymbolInfo()->setFromFunction(*function);
-    prototype->setLine(location);
-
-    for (size_t i = 0; i < function->getParamCount(); i++)
-    {
-        const TConstParameter &param = function->getParam(i);
-        if (param.name != 0)
-        {
-            TVariable variable(param.name, *param.type);
-
-            TIntermSymbol *paramSymbol = intermediate.addSymbol(
-                variable.getUniqueId(), variable.getName(), variable.getType(), location);
-            prototype->appendParameter(paramSymbol);
-        }
-        else
-        {
-            TIntermSymbol *paramSymbol = intermediate.addSymbol(0, "", *param.type, location);
-            prototype->appendParameter(paramSymbol);
-        }
-    }
+    TIntermFunctionPrototype *prototype =
+        createPrototypeNodeFromFunction(*function, location, false);
 
     symbolTable.pop();
 
@@ -2448,15 +2467,15 @@ TIntermFunctionPrototype *TParseContext::addFunctionPrototypeDeclaration(
 }
 
 TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
-    const TFunction &function,
-    TIntermAggregate *functionParameters,
+    TIntermFunctionPrototype *functionPrototype,
     TIntermBlock *functionBody,
     const TSourceLoc &location)
 {
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
-        error(location, "function does not return a value:", function.getName().c_str());
+        error(location, "function does not return a value:",
+              functionPrototype->getFunctionSymbolInfo()->getName().c_str());
     }
 
     if (functionBody == nullptr)
@@ -2465,10 +2484,8 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
         functionBody->setLine(location);
     }
     TIntermFunctionDefinition *functionNode =
-        new TIntermFunctionDefinition(function.getReturnType(), functionParameters, functionBody);
+        new TIntermFunctionDefinition(functionPrototype, functionBody);
     functionNode->setLine(location);
-
-    functionNode->getFunctionSymbolInfo()->setFromFunction(function);
 
     symbolTable.pop();
     return functionNode;
@@ -2476,7 +2493,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
 
 void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
                                                   TFunction **function,
-                                                  TIntermAggregate **aggregateOut)
+                                                  TIntermFunctionPrototype **prototypeOut)
 {
     ASSERT(function);
     ASSERT(*function);
@@ -2528,54 +2545,11 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
         }
     }
 
-    //
-    // Remember the return type for later checking for RETURN statements.
-    //
+    // Remember the return type for later checking for return statements.
     mCurrentFunctionType  = &((*function)->getReturnType());
     mFunctionReturnsValue = false;
 
-    //
-    // Insert parameters into the symbol table.
-    // If the parameter has no name, it's not an error, just don't insert it
-    // (could be used for unused args).
-    //
-    // Also, accumulate the list of parameters into the HIL, so lower level code
-    // knows where to find parameters.
-    //
-    TIntermAggregate *paramNodes = new TIntermAggregate;
-    for (size_t i = 0; i < (*function)->getParamCount(); i++)
-    {
-        const TConstParameter &param = (*function)->getParam(i);
-        if (param.name != 0)
-        {
-            TVariable *variable = new TVariable(param.name, *param.type);
-            //
-            // Insert the parameters with name in the symbol table.
-            //
-            if (!symbolTable.declare(variable))
-            {
-                error(location, "redefinition", variable->getName().c_str());
-                paramNodes = intermediate.growAggregate(
-                    paramNodes, intermediate.addSymbol(0, "", *param.type, location), location);
-                continue;
-            }
-
-            //
-            // Add the parameter to the HIL
-            //
-            TIntermSymbol *symbol = intermediate.addSymbol(
-                variable->getUniqueId(), variable->getName(), variable->getType(), location);
-
-            paramNodes = intermediate.growAggregate(paramNodes, symbol, location);
-        }
-        else
-        {
-            paramNodes = intermediate.growAggregate(
-                paramNodes, intermediate.addSymbol(0, "", *param.type, location), location);
-        }
-    }
-    intermediate.setAggregateOperator(paramNodes, EOpParameters, location);
-    *aggregateOut = paramNodes;
+    *prototypeOut = createPrototypeNodeFromFunction(**function, location, true);
     setLoopNestingLevel(0);
 }
 

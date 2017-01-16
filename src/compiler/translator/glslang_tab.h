@@ -224,6 +224,7 @@ union YYSTYPE {
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
             TIntermDeclaration *intermDeclaration;
+            TIntermFunctionPrototype *intermFunctionPrototype;
             TIntermSwitch *intermSwitch;
             TIntermCase *intermCase;
         };

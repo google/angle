@@ -41,7 +41,7 @@ ElseBlockRewriter::ElseBlockRewriter() : TIntermTraverser(true, false, true), mF
 bool ElseBlockRewriter::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
     // Store the current function context (see comment below)
-    mFunctionType = ((visit == PreVisit) ? &node->getType() : nullptr);
+    mFunctionType = ((visit == PreVisit) ? &node->getFunctionPrototype()->getType() : nullptr);
     return true;
 }
 

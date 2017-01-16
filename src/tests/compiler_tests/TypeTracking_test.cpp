@@ -91,7 +91,6 @@ TEST_F(TypeTrackingTest, FunctionPrototypeMangling)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("Function Prototype: fun(f1;"));
-    ASSERT_TRUE(foundInIntermediateTree("Function Definition: fun(f1;"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)

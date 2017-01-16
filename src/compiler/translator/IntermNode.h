@@ -552,47 +552,6 @@ class TFunctionSymbolInfo
     int mId;
 };
 
-// Node for function definitions.
-class TIntermFunctionDefinition : public TIntermTyped
-{
-  public:
-    // TODO(oetuaho@nvidia.com): See if TFunctionSymbolInfo could be added to constructor
-    // parameters.
-    TIntermFunctionDefinition(const TType &type, TIntermAggregate *parameters, TIntermBlock *body)
-        : TIntermTyped(type), mParameters(parameters), mBody(body)
-    {
-        ASSERT(parameters != nullptr);
-        ASSERT(body != nullptr);
-    }
-
-    TIntermFunctionDefinition *getAsFunctionDefinition() override { return this; }
-    void traverse(TIntermTraverser *it) override;
-    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
-
-    TIntermTyped *deepCopy() const override
-    {
-        UNREACHABLE();
-        return nullptr;
-    }
-    bool hasSideEffects() const override
-    {
-        UNREACHABLE();
-        return true;
-    }
-
-    TIntermAggregate *getFunctionParameters() const { return mParameters; }
-    TIntermBlock *getBody() const { return mBody; }
-
-    TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
-    const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
-
-  private:
-    TIntermAggregate *mParameters;
-    TIntermBlock *mBody;
-
-    TFunctionSymbolInfo mFunctionInfo;
-};
-
 typedef TVector<TIntermNode *> TIntermSequence;
 typedef TVector<int> TQualifierList;
 
@@ -706,10 +665,13 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
     TIntermSequence mStatements;
 };
 
-// Function prototype declaration. The type of the node is the function return type.
+// Function prototype. May be in the AST either as a function prototype declaration or as a part of
+// a function definition. The type of the node is the function return type.
 class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBase
 {
   public:
+    // TODO(oetuaho@nvidia.com): See if TFunctionSymbolInfo could be added to constructor
+    // parameters.
     TIntermFunctionPrototype(const TType &type) : TIntermTyped(type) {}
     ~TIntermFunctionPrototype() {}
 
@@ -741,6 +703,35 @@ class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBas
     TIntermSequence mParameters;
 
     TFunctionSymbolInfo mFunctionInfo;
+};
+
+// Node for function definitions. The prototype child node stores the function header including
+// parameters, and the body child node stores the function body.
+class TIntermFunctionDefinition : public TIntermNode
+{
+  public:
+    TIntermFunctionDefinition(TIntermFunctionPrototype *prototype, TIntermBlock *body)
+        : TIntermNode(), mPrototype(prototype), mBody(body)
+    {
+        ASSERT(prototype != nullptr);
+        ASSERT(body != nullptr);
+    }
+
+    TIntermFunctionDefinition *getAsFunctionDefinition() override { return this; }
+    void traverse(TIntermTraverser *it) override;
+    bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+
+    TIntermFunctionPrototype *getFunctionPrototype() const { return mPrototype; }
+    TIntermBlock *getBody() const { return mBody; }
+
+    const TFunctionSymbolInfo *getFunctionSymbolInfo() const
+    {
+        return mPrototype->getFunctionSymbolInfo();
+    }
+
+  private:
+    TIntermFunctionPrototype *mPrototype;
+    TIntermBlock *mBody;
 };
 
 // Struct, interface block or variable declaration. Can contain multiple variable declarators.
@@ -1168,7 +1159,6 @@ class TLValueTrackingTraverser : public TIntermTraverser
     void traverseBinary(TIntermBinary *node) final;
     void traverseUnary(TIntermUnary *node) final;
     void traverseFunctionPrototype(TIntermFunctionPrototype *node) final;
-    void traverseFunctionDefinition(TIntermFunctionDefinition *node) final;
     void traverseAggregate(TIntermAggregate *node) final;
 
   protected:

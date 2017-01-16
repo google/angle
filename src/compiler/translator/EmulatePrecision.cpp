@@ -640,9 +640,6 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
     {
         case EOpConstructStruct:
             break;
-        case EOpParameters:
-            visitChildren = false;
-            break;
         case EOpFunctionCall:
         {
             // Function call.

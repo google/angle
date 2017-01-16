@@ -1473,9 +1473,9 @@ bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition 
     ASSERT(index != CallDAG::InvalidIndex);
     mCurrentFunctionMetadata = &mASTMetadataList[index];
 
-    out << TypeString(node->getType()) << " ";
+    out << TypeString(node->getFunctionPrototype()->getType()) << " ";
 
-    TIntermSequence *parameters = node->getFunctionParameters()->getSequence();
+    TIntermSequence *parameters = node->getFunctionPrototype()->getSequence();
 
     if (node->getFunctionSymbolInfo()->isMain())
     {
@@ -1733,9 +1733,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             return false;
         }
-        case EOpParameters:
-            outputTriplet(out, visit, "(", ", ", ")\n{\n");
-            break;
         case EOpConstructFloat:
             outputConstructor(out, visit, node->getType(), "vec1", node->getSequence());
             break;

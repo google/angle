@@ -466,7 +466,7 @@ void TIntermTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *nod
         incrementDepth(node);
         mInGlobalScope = false;
 
-        node->getFunctionParameters()->traverse(this);
+        node->getFunctionPrototype()->traverse(this);
         if (inVisit)
             visit = visitFunctionDefinition(InVisit, node);
         node->getBody()->traverse(this);
@@ -623,16 +623,6 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 
     if (visit && postVisit)
         visitAggregate(PostVisit, node);
-}
-
-void TLValueTrackingTraverser::traverseFunctionDefinition(TIntermFunctionDefinition *node)
-{
-    TIntermAggregate *params = node->getFunctionParameters();
-    ASSERT(params != nullptr);
-    ASSERT(params->getOp() == EOpParameters);
-    addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), params->getSequence());
-
-    TIntermTraverser::traverseFunctionDefinition(node);
 }
 
 void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)

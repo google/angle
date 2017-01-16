@@ -80,6 +80,7 @@ using namespace sh;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
             TIntermDeclaration *intermDeclaration;
+            TIntermFunctionPrototype *intermFunctionPrototype;
             TIntermSwitch *intermSwitch;
             TIntermCase *intermCase;
         };
@@ -1528,10 +1529,10 @@ external_declaration
 
 function_definition
     : function_prototype {
-        context->parseFunctionDefinitionHeader(@1, &($1.function), &$1.intermAggregate);
+        context->parseFunctionDefinitionHeader(@1, &($1.function), &($1.intermFunctionPrototype));
     }
     compound_statement_no_new_scope {
-        $$ = context->addFunctionDefinition(*($1.function), $1.intermAggregate, $3, @1);
+        $$ = context->addFunctionDefinition($1.intermFunctionPrototype, $3, @1);
     }
     ;
 

@@ -20,7 +20,7 @@ class ValidateMaxParameters : public TIntermTraverser
     static bool validate(TIntermNode *root, unsigned int maxParameters);
 
   protected:
-    bool visitAggregate(Visit visit, TIntermAggregate *node) override;
+    bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
 
   private:
     ValidateMaxParameters(unsigned int maxParameters);

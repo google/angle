@@ -98,33 +98,30 @@ bool TVersionGLSL::visitInvariantDeclaration(Visit, TIntermInvariantDeclaration 
     return true;
 }
 
+bool TVersionGLSL::visitFunctionPrototype(Visit, TIntermFunctionPrototype *node)
+{
+    const TIntermSequence &params = *(node->getSequence());
+    for (TIntermSequence::const_iterator iter = params.begin(); iter != params.end(); ++iter)
+    {
+        const TIntermTyped *param = (*iter)->getAsTyped();
+        if (param->isArray())
+        {
+            TQualifier qualifier = param->getQualifier();
+            if ((qualifier == EvqOut) || (qualifier == EvqInOut))
+            {
+                ensureVersionIsAtLeast(GLSL_VERSION_120);
+                break;
+            }
+        }
+    }
+    // Fully processed. No need to visit children.
+    return false;
+}
+
 bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
 {
-    bool visitChildren = true;
-
     switch (node->getOp())
     {
-        case EOpParameters:
-        {
-            const TIntermSequence &params = *(node->getSequence());
-            for (TIntermSequence::const_iterator iter = params.begin(); iter != params.end();
-                 ++iter)
-            {
-                const TIntermTyped *param = (*iter)->getAsTyped();
-                if (param->isArray())
-                {
-                    TQualifier qualifier = param->getQualifier();
-                    if ((qualifier == EvqOut) || (qualifier == EvqInOut))
-                    {
-                        ensureVersionIsAtLeast(GLSL_VERSION_120);
-                        break;
-                    }
-                }
-            }
-            // Fully processed. No need to visit children.
-            visitChildren = false;
-            break;
-        }
         case EOpConstructMat2:
         case EOpConstructMat2x3:
         case EOpConstructMat2x4:
@@ -149,8 +146,7 @@ bool TVersionGLSL::visitAggregate(Visit, TIntermAggregate *node)
         default:
             break;
     }
-
-    return visitChildren;
+    return true;
 }
 
 void TVersionGLSL::ensureVersionIsAtLeast(int version)

@@ -44,14 +44,8 @@ TIntermFunctionDefinition *CreateFunctionDefinitionNode(const char *name,
                                                         TIntermBlock *functionBody,
                                                         const int functionId)
 {
-    TType returnType(EbtVoid);
-    TIntermAggregate *paramsNode = new TIntermAggregate(EOpParameters);
-    TIntermFunctionDefinition *functionNode =
-        new TIntermFunctionDefinition(returnType, paramsNode, functionBody);
-
-    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
-    functionNode->getFunctionSymbolInfo()->setId(functionId);
-    return functionNode;
+    TIntermFunctionPrototype *prototypeNode = CreateFunctionPrototypeNode(name, functionId);
+    return new TIntermFunctionDefinition(prototypeNode, functionBody);
 }
 
 TIntermAggregate *CreateFunctionCallNode(const char *name, const int functionId)

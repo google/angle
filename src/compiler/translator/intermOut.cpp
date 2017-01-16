@@ -494,7 +494,7 @@ bool TOutputTraverser::visitFunctionDefinition(Visit visit, TIntermFunctionDefin
 {
     TInfoSinkBase &out = sink;
     OutputTreeText(out, node, mDepth);
-    OutputFunction(out, "Function Definition", node->getFunctionSymbolInfo());
+    out << "Function Definition:\n";
     out << "\n";
     return true;
 }
@@ -537,10 +537,6 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpFunctionCall:
             OutputFunction(out, "Function Call", node->getFunctionSymbolInfo());
             break;
-        case EOpParameters:
-            out << "Function Parameters: ";
-            break;
-
         case EOpConstructFloat:
             out << "Construct float";
             break;
@@ -703,8 +699,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
             out << "Bad aggregation op";
     }
 
-    if (node->getOp() != EOpParameters)
-        out << " (" << node->getCompleteString() << ")";
+    out << " (" << node->getCompleteString() << ")";
 
     out << "\n";
 

@@ -211,7 +211,7 @@ bool TIntermInvariantDeclaration::replaceChildNode(TIntermNode *original, TInter
 
 bool TIntermFunctionDefinition::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
-    REPLACE_IF_IS(mParameters, TIntermAggregate, original, replacement);
+    REPLACE_IF_IS(mPrototype, TIntermFunctionPrototype, original, replacement);
     REPLACE_IF_IS(mBody, TIntermBlock, original, replacement);
     return false;
 }
