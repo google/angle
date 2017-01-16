@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3ed1509_f0b20048",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-16T11:38:00Z",
+      "side": 1,
+      "message": "Per my understanding, compute shader is required in OpenGL 4.3 and GLES 3.1. For OpenGL \u003c 4.3 (or GLES \u003c 3.1), compute shader can be supported through extension like GL_ARB_compute_shader.\n\nBut for GLES \u003c 3.1, seems that we have no extension to support compute shader. \n\nAnd the extension GL_ARB_compute_shader explicitly says that the min OpenGL version should be 4.2.\n\nSo I think the code is correct.",
+      "revId": "c0061741a7dfba780389c175fa9cbbd91d792709",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
