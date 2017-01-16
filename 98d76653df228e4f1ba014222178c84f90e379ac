@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_d31dc694",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T21:11:53Z",
+      "side": 1,
+      "message": "Yea, pretty cool.  My first time doing it with \u0027using\u0027 so it can template on the member type.",
+      "parentUuid": "37b082be_7ba09c87",
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_763e71eb",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2016-12-23T21:24:00Z",
       "side": 1,
       "message": "nit: comment",
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_b32242d3",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T21:11:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_763e71eb",
       "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_93273ee3",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T21:11:53Z",
+      "side": 1,
+      "message": "derp, done.",
+      "parentUuid": "37b082be_d6ff25f1",
+      "range": {
+        "startLine": 29,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 26
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37b082be_f604a135",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 1
@@ -70,6 +130,30 @@
       "writtenOn": "2016-12-23T21:24:00Z",
       "side": 1,
       "message": "dit, and so on",
+      "range": {
+        "startLine": 37,
+        "startChar": 7,
+        "endLine": 37,
+        "endChar": 19
+      },
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_730dfa5d",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T21:11:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b082be_f604a135",
       "range": {
         "startLine": 37,
         "startChar": 7,
@@ -140,6 +224,24 @@
       "side": 1,
       "message": "Can we replicate that benchmark in a perftests? I\u0027m pretty sure everything will get inlined (because it is used only once) and a benchmark could confirm / disprove that.",
       "parentUuid": "37b082be_b62709ca",
+      "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_53d9d662",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T21:11:53Z",
+      "side": 1,
+      "message": "I added a perf test, found that there was a slight regression with this CL (1-2%).  Changed the lambdas to functors, now a slight improvement (1-2%).",
+      "parentUuid": "b710f2cf_cd9f5dec",
       "revId": "98d76653df228e4f1ba014222178c84f90e379ac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
