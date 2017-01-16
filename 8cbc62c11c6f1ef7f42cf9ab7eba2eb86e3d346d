@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_3021a81c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_a7795298",
+      "range": {
+        "startLine": 1274,
+        "startChar": 10,
+        "endLine": 1274,
+        "endChar": 19
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_df98ce57",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 29
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-11T19:39:09Z",
       "side": 1,
       "message": "nit: you can remove the explicit.",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_101ea4da",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_df98ce57",
       "range": {
         "startLine": 37,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_d0eedc91",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_e7c66a9a",
+      "range": {
+        "startLine": 18,
+        "startChar": 46,
+        "endLine": 18,
+        "endChar": 53
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_87b8d628",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 29
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-11T19:39:09Z",
       "side": 1,
       "message": "nit: explicit isn\u0027t needed on two-element constructors.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 12
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_5042eca6",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 29
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_87b8d628",
       "range": {
         "startLine": 51,
         "startChar": 4,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_b0e358a8",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 29
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done\nSorry I forgot .inl file cannot be modified by git cl format.",
+      "parentUuid": "037501b9_a7d0724e",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 5
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_df220e07",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 29
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-11T19:39:09Z",
       "side": 1,
       "message": "same comments here.",
+      "range": {
+        "startLine": 43,
+        "startChar": 1,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_70fe1043",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_df220e07",
       "range": {
         "startLine": 43,
         "startChar": 1,
@@ -186,6 +330,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_10f58458",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_ff2b4ae5",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 1
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_1f1406ba",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 29
@@ -197,6 +365,30 @@
       "writtenOn": "2017-01-11T19:39:09Z",
       "side": 1,
       "message": "remove this stray line",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 9
+      },
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_f050c075",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-16T05:12:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037501b9_1f1406ba",
       "range": {
         "startLine": 126,
         "startChar": 8,
