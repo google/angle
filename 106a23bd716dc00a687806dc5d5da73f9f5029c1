@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_f337aa4e",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T17:12:45Z",
+      "side": 1,
+      "message": "Seems reasonable",
+      "parentUuid": "63adddb0_9e099de6",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 368,
+        "endChar": 5
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63adddb0_5e0c35f1",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-15T03:48:28Z",
       "side": 1,
       "message": "question: shouldn\u0027t extensionRequstable return false for ES3?",
+      "range": {
+        "startLine": 595,
+        "startChar": 7,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_b331225c",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-16T17:12:45Z",
+      "side": 1,
+      "message": "I think it should still work in ES3, it\u0027s still possible to request a WebGL1 extension in WebGL2.  I think we should run this against both API versions.",
+      "parentUuid": "63adddb0_5e0c35f1",
       "range": {
         "startLine": 595,
         "startChar": 7,
