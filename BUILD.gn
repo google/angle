@@ -432,6 +432,10 @@ config("angle_static") {
 shared_library("libGLESv2") {
   sources = rebase_path(gles_gypi.libglesv2_sources, ".", "src")
 
+  if (is_android) {
+    configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+  }
+
   if (is_win) {
     ldflags =
         [ "/DEF:" + rebase_path("src/libGLESv2/libGLESv2.def", root_build_dir) ]
@@ -486,6 +490,9 @@ static_library("libGLESv2_static") {
 shared_library("libEGL") {
   sources = rebase_path(gles_gypi.libegl_sources, ".", "src")
 
+  if (is_android) {
+    configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+  }
   configs -= angle_undefine_configs
   configs += [
     ":commit_id_config",
@@ -593,6 +600,9 @@ foreach(is_shared_library,
     }
 
     if (is_android) {
+      if (is_shared_library) {
+        configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+      }
       # To prevent linux sources filtering on android
       set_sources_assignment_filter([])
       sources += rebase_path(util_gypi.util_linux_sources, ".", "util")
