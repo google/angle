@@ -661,8 +661,12 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
         LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
     }
 
+    // OpenGL 4.2 is required for GL_ARB_compute_shader, some platform drivers have the extension,
+    // but their maximum supported GL versions are less than 4.2. Explicitly limit the minimum
+    // GL version to 4.2.
     if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
-        functions->hasGLExtension("GL_ARB_compute_shader"))
+        (functions->isAtLeastGL(gl::Version(4, 2)) &&
+         functions->hasGLExtension("GL_ARB_compute_shader")))
     {
         for (GLuint index = 0u; index < 3u; ++index)
         {
