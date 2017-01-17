@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3ed1509_1f322f12",
+        "filename": "src/compiler/preprocessor/DirectiveParser.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T16:49:16Z",
+      "side": 1,
+      "message": "nit: make_shared\u003cMacro\u003e()",
+      "range": {
+        "startLine": 361,
+        "startChar": 32,
+        "endLine": 361,
+        "endChar": 46
+      },
+      "revId": "d759d3aac8f54ea238510198ae3ffbd1b05d5971",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
