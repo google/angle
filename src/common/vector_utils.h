@@ -85,7 +85,7 @@ class VectorBase
     // Other arithmetic operations
     Type length() const;
     Type lengthSquared() const;
-    Type dot(const VectorN &other) const;
+    Type dot(const VectorBase<Dimension, Type> &other) const;
     VectorN normalized() const;
 
   protected:
@@ -446,7 +446,7 @@ Type VectorBase<Dimension, Type>::lengthSquared() const
 }
 
 template <size_t Dimension, typename Type>
-Type VectorBase<Dimension, Type>::dot(const Vector<Dimension, Type> &other) const
+Type VectorBase<Dimension, Type>::dot(const VectorBase<Dimension, Type> &other) const
 {
     Type sum = Type();
     for (size_t i = 0; i < Dimension; ++i)
