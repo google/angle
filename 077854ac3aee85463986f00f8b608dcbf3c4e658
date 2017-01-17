@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3ed1509_3f7df35a",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-17T17:12:36Z",
+      "side": 1,
+      "message": "The TIntermTraverser is created with TIntermTraverser(true, false, true), isn\u0027t PostVisit possible here too in which case an if is needed?",
+      "revId": "077854ac3aee85463986f00f8b608dcbf3c4e658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3ed1509_1f910f71",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-17T17:12:36Z",
+      "side": 1,
+      "message": "Only two to go? :D",
+      "revId": "077854ac3aee85463986f00f8b608dcbf3c4e658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
