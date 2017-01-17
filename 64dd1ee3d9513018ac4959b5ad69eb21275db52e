@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63adddb0_81481c20",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "remove these defs - we require the win10 sdk.",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 49
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_61451004",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "can you make this change a small, separate CL. I think it\u0027s a good change, so we should land it.",
+      "range": {
+        "startLine": 1895,
+        "startChar": 59,
+        "endLine": 1895,
+        "endChar": 60
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_e1ffe086",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2027,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "you don\u0027t even use this result anywhere.",
+      "range": {
+        "startLine": 2027,
+        "startChar": 4,
+        "endLine": 2027,
+        "endChar": 72
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_414214fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "we\u0027ll need to change this to use a compute shader for non-line-loop non-triangle-fan draw mods. please do this in a follow-up CL, leave a TODO here to fix this.",
+      "range": {
+        "startLine": 2029,
+        "startChar": 4,
+        "endLine": 2037,
+        "endChar": 37
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_213f0884",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "can\u0027t this be the first thing we check, before anything else?",
+      "range": {
+        "startLine": 2041,
+        "startChar": 0,
+        "endLine": 2044,
+        "endChar": 5
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_01fbec9e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "use angle::ComPtr",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 16
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_c104e4cd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "I don\u0027t like how you have chosen to implement this here.\n\nYou have a class Buffer11, where you create a D3D11 buffer of the correct type, but never use it. And then you read back the data from the Buffer11 and create a temporary object here. Line loops and fans don\u0027t even need the draw indirect buffer since they are emulated.\n\nHow about we first treat line loops and fans specially, and we just call getData on the buffer, and then call the emulation functions.\n\nFor the rest, we should move the code here that creates the D3D11 args buffer into Buffer11 - this will internally read back the buffer data, and return a native D3D11 draw args buffer. Add a TODO to use a compute shader.\n\nNote: Since the emulation will require rewriting the buffer data, you\u0027ll need to make special accessor methods, like for getEmulatedIndexBuffer.",
+      "range": {
+        "startLine": 2020,
+        "startChar": 4,
+        "endLine": 2079,
+        "endChar": 25
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_810ffce6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2118,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "same comments for drawElements.",
+      "range": {
+        "startLine": 2110,
+        "startChar": 5,
+        "endLine": 2118,
+        "endChar": 9
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_610cf0f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4726,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T15:09:29Z",
+      "side": 1,
+      "message": "I\u0027m not crazy about this, especially as you do some of the extra work for drawElements in drawElementsIndirectImpl. we need to clean this up.",
+      "range": {
+        "startLine": 4726,
+        "startChar": 22,
+        "endLine": 4726,
+        "endChar": 41
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
