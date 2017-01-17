@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63adddb0_21914871",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:28:46Z",
+      "side": 1,
+      "message": "hah, once this reaches the end, it explodes?",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 71
+      },
+      "revId": "0a1faf91369ae59c2488f0fdcf5e191f55069349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_e13120c4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:28:46Z",
+      "side": 1,
+      "message": "Was thinking about this... maybe let\u0027s do the large memcpy method for now. You can still call the store method in the loop, but at some point we can preprocess the ranges to avoid overlapping copies. It can still copy some unused data but that might be preferable to the mini memcpys. It also extends better to work with other types of data like Uniforms (hopefully). I\u0027ll write this up in the design doc.",
+      "range": {
+        "startLine": 191,
+        "startChar": 16,
+        "endLine": 192,
+        "endChar": 15
+      },
+      "revId": "0a1faf91369ae59c2488f0fdcf5e191f55069349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_41945461",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:28:46Z",
+      "side": 1,
+      "message": "maybe StreamingRingBuffer? We can use this for stuff other than client data.",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 18
+      },
+      "revId": "0a1faf91369ae59c2488f0fdcf5e191f55069349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_012d2c66",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:28:46Z",
+      "side": 1,
+      "message": "the api should be something like\n\nstore(context, memory, size): returns buffer, offset. \n\nthat\u0027s maybe it. init can be done implicitly, and it\u0027ll potentially return a different buffer if space in the current runs out. it can hand off to-be-destroyed buffers to the context/renderer, but that functionality hasn\u0027t landed yet. will try to get those patches ready.",
+      "range": {
+        "startLine": 27,
+        "startChar": 3,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "0a1faf91369ae59c2488f0fdcf5e191f55069349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_61975068",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:28:46Z",
+      "side": 1,
+      "message": "Using the lower half of a gl::Buffer is not something that will make us happy down the line. Instead of using this, we\u0027ll want to use a vk::Buffer, or abstract the common functionality into a helper class.",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 12
+      },
+      "revId": "0a1faf91369ae59c2488f0fdcf5e191f55069349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
