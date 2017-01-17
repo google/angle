@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_bfd563cb",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T15:39:49Z",
+      "side": 1,
+      "message": "Ah, interesting.  I had thought the weirdness was because it was still possible to request it in ES3.\n\nMaybe we should encode minimum and maximum versions for extensions in the ExtensionInfo struct.  I think it would be a good fit because we already enable/disable a few other extensions based on context version.",
+      "parentUuid": "63adddb0_611e302e",
+      "range": {
+        "startLine": 595,
+        "startChar": 7,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63adddb0_7e0ff1e7",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 9
