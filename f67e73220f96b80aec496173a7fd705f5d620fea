@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63495d01_9e865db3",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "nit: remove gl::",
+      "range": {
+        "startLine": 97,
+        "startChar": 35,
+        "endLine": 97,
+        "endChar": 39
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63495d01_5e521522",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "Just cast to GLintptr",
+      "range": {
+        "startLine": 190,
+        "startChar": 34,
+        "endLine": 190,
+        "endChar": 46
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63495d01_9e373dfe",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "This is not neccessary.",
+      "range": {
+        "startLine": 190,
+        "startChar": 56,
+        "endLine": 190,
+        "endChar": 93
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63495d01_3e494970",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "The style guide says this should be a pointer, can you update it to be like the others.",
+      "range": {
+        "startLine": 195,
+        "startChar": 20,
+        "endLine": 195,
+        "endChar": 21
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e399cd94_b636c04f",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 34
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "I still have the preference to not store this directly in VertexArray but I agree that it lowers the amount of arguments that need to be passed to a lot of functions.  What do others think?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 2
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c39e897c_ca0ab709",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "This is very fragile code, it depends on mData.getMaxAttribs being equal to gl::MAX_VERTEX_ATTRIBS and and a magic constant (-1u).",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 59
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43753906_0e3eefdd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T22:28:12Z",
+      "side": 1,
+      "message": "Just use dirtyBit - gl::VertexArray::DIRTY_BIT_ATTRIB_0_ENABLED",
+      "range": {
+        "startLine": 64,
+        "startChar": 33,
+        "endLine": 64,
+        "endChar": 57
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
