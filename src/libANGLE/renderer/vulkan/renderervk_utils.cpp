@@ -337,6 +337,35 @@ void CommandBuffer::copySingleImage(const vk::Image &srcImage,
                    destImage.getHandle(), destImage.getCurrentLayout(), 1, &region);
 }
 
+void CommandBuffer::beginRenderPass(const RenderPass &renderPass,
+                                    const Framebuffer &framebuffer,
+                                    const gl::Rectangle &renderArea,
+                                    const std::vector<VkClearValue> &clearValues)
+{
+    ASSERT(!clearValues.empty());
+    ASSERT(mHandle != VK_NULL_HANDLE);
+
+    VkRenderPassBeginInfo beginInfo;
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    beginInfo.pNext                    = nullptr;
+    beginInfo.renderPass               = renderPass.getHandle();
+    beginInfo.framebuffer              = framebuffer.getHandle();
+    beginInfo.renderArea.offset.x      = static_cast<uint32_t>(renderArea.x);
+    beginInfo.renderArea.offset.y      = static_cast<uint32_t>(renderArea.y);
+    beginInfo.renderArea.extent.width  = static_cast<uint32_t>(renderArea.width);
+    beginInfo.renderArea.extent.height = static_cast<uint32_t>(renderArea.height);
+    beginInfo.clearValueCount          = static_cast<uint32_t>(clearValues.size());
+    beginInfo.pClearValues             = clearValues.data();
+
+    vkCmdBeginRenderPass(mHandle, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void CommandBuffer::endRenderPass()
+{
+    ASSERT(mHandle != VK_NULL_HANDLE);
+    vkCmdEndRenderPass(mHandle);
+}
+
 // Image implementation.
 Image::Image() : mCurrentLayout(VK_IMAGE_LAYOUT_UNDEFINED)
 {
@@ -619,6 +648,41 @@ void DeviceMemory::unmap()
 {
     ASSERT(valid());
     vkUnmapMemory(mDevice, mHandle);
+}
+
+// RenderPass implementation.
+RenderPass::RenderPass()
+{
+}
+
+RenderPass::RenderPass(VkDevice device) : WrappedObject(device)
+{
+}
+
+RenderPass::RenderPass(RenderPass &&other) : WrappedObject(std::move(other))
+{
+}
+
+RenderPass::~RenderPass()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyRenderPass(mDevice, mHandle, nullptr);
+    }
+}
+
+RenderPass &RenderPass::operator=(RenderPass &&other)
+{
+    assignOpBase(std::move(other));
+    return *this;
+}
+
+Error RenderPass::init(const VkRenderPassCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkCreateRenderPass(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
 }
 
 // StagingImage implementation.

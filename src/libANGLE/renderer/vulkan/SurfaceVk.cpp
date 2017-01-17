@@ -480,4 +480,43 @@ gl::Error WindowSurfaceVk::getAttachmentRenderTarget(
     return gl::NoError();
 }
 
+gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
+    VkDevice device,
+    const vk::RenderPass &compatibleRenderPass)
+{
+    if (!mSwapchainFramebuffers.empty())
+    {
+        // Validation layers should detect if the render pass is really compatible.
+        return &mSwapchainFramebuffers[mCurrentSwapchainImageIndex];
+    }
+
+    VkFramebufferCreateInfo framebufferInfo;
+
+    // TODO(jmadill): Depth/Stencil attachments.
+    framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.pNext           = nullptr;
+    framebufferInfo.flags           = 0;
+    framebufferInfo.renderPass      = compatibleRenderPass.getHandle();
+    framebufferInfo.attachmentCount = 1u;
+    framebufferInfo.pAttachments    = nullptr;
+    framebufferInfo.width           = static_cast<uint32_t>(mRenderTarget.extents.width);
+    framebufferInfo.height          = static_cast<uint32_t>(mRenderTarget.extents.height);
+    framebufferInfo.layers          = 1;
+
+    for (const auto &imageView : mSwapchainImageViews)
+    {
+        VkImageView imageViewHandle  = imageView.getHandle();
+        framebufferInfo.pAttachments = &imageViewHandle;
+
+        vk::Framebuffer framebuffer(device);
+        ANGLE_TRY(framebuffer.init(framebufferInfo));
+
+        mSwapchainFramebuffers.push_back(std::move(framebuffer));
+    }
+
+    // We should only initialize framebuffers on the first swap.
+    ASSERT(mCurrentSwapchainImageIndex == 0u);
+    return &mSwapchainFramebuffers[mCurrentSwapchainImageIndex];
+}
+
 }  // namespace rx

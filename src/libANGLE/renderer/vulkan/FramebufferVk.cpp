@@ -38,6 +38,29 @@ gl::ErrorOrResult<const gl::InternalFormat *> GetReadAttachmentInfo(
     return &gl::GetInternalFormatInfo(implFormat);
 }
 
+VkSampleCountFlagBits ConvertSamples(GLint sampleCount)
+{
+    switch (sampleCount)
+    {
+        case 0:
+        case 1:
+            return VK_SAMPLE_COUNT_1_BIT;
+        case 2:
+            return VK_SAMPLE_COUNT_2_BIT;
+        case 4:
+            return VK_SAMPLE_COUNT_4_BIT;
+        case 8:
+            return VK_SAMPLE_COUNT_8_BIT;
+        case 16:
+            return VK_SAMPLE_COUNT_16_BIT;
+        case 32:
+            return VK_SAMPLE_COUNT_32_BIT;
+        default:
+            UNREACHABLE();
+            return VK_SAMPLE_COUNT_FLAG_BITS_MAX_ENUM;
+    }
+}
+
 }  // anonymous namespace
 
 // static
@@ -53,12 +76,19 @@ FramebufferVk *FramebufferVk::CreateDefaultFBO(const gl::FramebufferState &state
     return new FramebufferVk(state, backbuffer);
 }
 
-FramebufferVk::FramebufferVk(const gl::FramebufferState &state) : FramebufferImpl(state)
+FramebufferVk::FramebufferVk(const gl::FramebufferState &state)
+    : FramebufferImpl(state),
+      mBackbuffer(nullptr),
+      mRenderPass(VK_NULL_HANDLE),
+      mFramebuffer(VK_NULL_HANDLE)
 {
 }
 
 FramebufferVk::FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer)
-    : FramebufferImpl(state)
+    : FramebufferImpl(state),
+      mBackbuffer(backbuffer),
+      mRenderPass(VK_NULL_HANDLE),
+      mFramebuffer(VK_NULL_HANDLE)
 {
 }
 
@@ -294,6 +324,184 @@ bool FramebufferVk::checkStatus() const
 void FramebufferVk::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     // TODO(jmadill): Smarter update.
+    mRenderPass  = vk::RenderPass();
+    mFramebuffer = vk::Framebuffer();
+}
+
+gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device)
+{
+    if (mRenderPass.valid())
+    {
+        return &mRenderPass;
+    }
+
+    // TODO(jmadill): Can we use stack-only memory?
+    std::vector<VkAttachmentDescription> attachmentDescs;
+    std::vector<VkAttachmentReference> colorAttachmentRefs;
+
+    const auto &colorAttachments = mState.getColorAttachments();
+    for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
+    {
+        const auto &colorAttachment = colorAttachments[attachmentIndex];
+        if (colorAttachment.isAttached())
+        {
+            VkAttachmentDescription colorDesc;
+            VkAttachmentReference colorRef;
+
+            RenderTargetVk *renderTarget = nullptr;
+            ANGLE_TRY(colorAttachment.getRenderTarget(&renderTarget));
+
+            // TODO(jmadill): We would only need this flag for duplicated attachments.
+            colorDesc.flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+            colorDesc.format  = renderTarget->format->native;
+            colorDesc.samples = ConvertSamples(colorAttachment.getSamples());
+
+            // The load op controls the prior existing depth/color attachment data.
+            // TODO(jmadill): Proper load ops. Should not be hard coded to clear.
+            colorDesc.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+            colorDesc.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+            colorDesc.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            colorDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            colorDesc.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
+            colorDesc.finalLayout    = VK_IMAGE_LAYOUT_GENERAL;
+
+            colorRef.attachment = static_cast<uint32_t>(colorAttachments.size()) - 1u;
+            colorRef.layout     = VK_IMAGE_LAYOUT_GENERAL;
+
+            attachmentDescs.push_back(colorDesc);
+            colorAttachmentRefs.push_back(colorRef);
+        }
+    }
+
+    const auto *depthStencilAttachment = mState.getDepthStencilAttachment();
+    VkAttachmentReference depthStencilAttachmentRef;
+    bool useDepth = depthStencilAttachment && depthStencilAttachment->isAttached();
+
+    if (useDepth)
+    {
+        VkAttachmentDescription depthStencilDesc;
+
+        RenderTargetVk *renderTarget = nullptr;
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget(&renderTarget));
+
+        depthStencilDesc.flags          = 0;
+        depthStencilDesc.format         = renderTarget->format->native;
+        depthStencilDesc.samples        = ConvertSamples(depthStencilAttachment->getSamples());
+        depthStencilDesc.loadOp         = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        depthStencilDesc.storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
+        depthStencilDesc.stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        depthStencilDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        depthStencilDesc.initialLayout  = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        depthStencilDesc.finalLayout    = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+        depthStencilAttachmentRef.attachment = static_cast<uint32_t>(attachmentDescs.size());
+        depthStencilAttachmentRef.layout     = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+        attachmentDescs.push_back(depthStencilDesc);
+    }
+
+    ASSERT(!attachmentDescs.empty());
+
+    VkSubpassDescription subpassDesc;
+
+    subpassDesc.flags                   = 0;
+    subpassDesc.pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDesc.inputAttachmentCount    = 0;
+    subpassDesc.pInputAttachments       = nullptr;
+    subpassDesc.colorAttachmentCount    = static_cast<uint32_t>(colorAttachmentRefs.size());
+    subpassDesc.pColorAttachments       = colorAttachmentRefs.data();
+    subpassDesc.pResolveAttachments     = nullptr;
+    subpassDesc.pDepthStencilAttachment = (useDepth ? &depthStencilAttachmentRef : nullptr);
+    subpassDesc.preserveAttachmentCount = 0;
+    subpassDesc.pPreserveAttachments    = nullptr;
+
+    VkRenderPassCreateInfo renderPassInfo;
+
+    renderPassInfo.sType           = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+    renderPassInfo.pNext           = nullptr;
+    renderPassInfo.flags           = 0;
+    renderPassInfo.attachmentCount = static_cast<uint32_t>(attachmentDescs.size());
+    renderPassInfo.pAttachments    = attachmentDescs.data();
+    renderPassInfo.subpassCount    = 1;
+    renderPassInfo.pSubpasses      = &subpassDesc;
+    renderPassInfo.dependencyCount = 0;
+    renderPassInfo.pDependencies   = nullptr;
+
+    vk::RenderPass renderPass(device);
+    ANGLE_TRY(renderPass.init(renderPassInfo));
+
+    mRenderPass = std::move(renderPass);
+
+    return &mRenderPass;
+}
+
+gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice device)
+{
+    // If we've already created our cached Framebuffer, return it.
+    if (mFramebuffer.valid())
+    {
+        return &mFramebuffer;
+    }
+
+    vk::RenderPass *renderPass = nullptr;
+    ANGLE_TRY_RESULT(getRenderPass(device), renderPass);
+
+    // If we've a Framebuffer provided by a Surface (default FBO/backbuffer), query it.
+    if (mBackbuffer)
+    {
+        return mBackbuffer->getCurrentFramebuffer(device, *renderPass);
+    }
+
+    // Gather VkImageViews over all FBO attachments, also size of attached region.
+    std::vector<VkImageView> attachments;
+    gl::Extents attachmentsSize;
+
+    const auto &colorAttachments = mState.getColorAttachments();
+    for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
+    {
+        const auto &colorAttachment = colorAttachments[attachmentIndex];
+        if (colorAttachment.isAttached())
+        {
+            RenderTargetVk *renderTarget = nullptr;
+            ANGLE_TRY(colorAttachment.getRenderTarget<RenderTargetVk>(&renderTarget));
+            attachments.push_back(renderTarget->imageView->getHandle());
+
+            ASSERT(attachmentsSize.empty() || attachmentsSize == colorAttachment.getSize());
+            attachmentsSize = colorAttachment.getSize();
+        }
+    }
+
+    const auto *depthStencilAttachment = mState.getDepthStencilAttachment();
+    if (depthStencilAttachment && depthStencilAttachment->isAttached())
+    {
+        RenderTargetVk *renderTarget = nullptr;
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget<RenderTargetVk>(&renderTarget));
+        attachments.push_back(renderTarget->imageView->getHandle());
+
+        ASSERT(attachmentsSize.empty() || attachmentsSize == depthStencilAttachment->getSize());
+        attachmentsSize = depthStencilAttachment->getSize();
+    }
+
+    ASSERT(!attachments.empty());
+
+    VkFramebufferCreateInfo framebufferInfo;
+
+    framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.pNext           = nullptr;
+    framebufferInfo.flags           = 0;
+    framebufferInfo.renderPass      = mRenderPass.getHandle();
+    framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+    framebufferInfo.pAttachments    = attachments.data();
+    framebufferInfo.width           = static_cast<uint32_t>(attachmentsSize.width);
+    framebufferInfo.height          = static_cast<uint32_t>(attachmentsSize.height);
+    framebufferInfo.layers          = 1;
+
+    vk::Framebuffer framebuffer(device);
+    ANGLE_TRY(framebuffer.init(framebufferInfo));
+
+    mFramebuffer = std::move(framebuffer);
+
+    return &mFramebuffer;
 }
 
 gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
