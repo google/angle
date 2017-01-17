@@ -163,6 +163,30 @@
     },
     {
       "key": {
+        "uuid": "a3ed1509_1f1eafda",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2079,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-17T17:15:19Z",
+      "side": 1,
+      "message": "I was thinking about this too, I think we should try to make a setup similar to the streaming buffers used in BufferD3D.\n\nThat would mean having:\n- A scratch D3D11 buffer in Buffer11 that stores transformed ranges of D3D draw indirect commands and tracks:\n - The buffer data revision\n - The offset and size\n - instanced/non-instanced\n- A compute shader to convert the data from the BUFFER_USAGE_INDIRECT buffer to the scratch buffer when the source data is on the GPU\n- A CPU function to convert the data when the source data is on the CPU\n\n\nThis is all complicated further when it comes to binding vertex buffers that are also sometimes streamed based on known index ranges and these would not be available without reading back the indirect command data.\n\nI think a good first step would be like Jamie says, have a scratch buffer in Buffer11 to hold translated indirect commands but just update it with a CPU algorithm like in this patch.  We eventually need the compute shader, doing a CPU readback per draw call would be disastrous, especially when glDrawIndirect is meant to avoid that cost.",
+      "parentUuid": "63adddb0_c104e4cd",
+      "range": {
+        "startLine": 2020,
+        "startChar": 4,
+        "endLine": 2079,
+        "endChar": 25
+      },
+      "revId": "64dd1ee3d9513018ac4959b5ad69eb21275db52e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63adddb0_810ffce6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 7
