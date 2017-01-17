@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "233125ed_55001eb8",
+        "filename": "src/compiler/translator/CallDAG.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-17T17:25:00Z",
+      "side": 1,
+      "message": "The visit function always returns false, that will skip the PostVisit.",
+      "parentUuid": "a3ed1509_3f7df35a",
+      "revId": "077854ac3aee85463986f00f8b608dcbf3c4e658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3ed1509_1f910f71",
         "filename": "src/compiler/translator/Operator.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-01-17T17:12:36Z",
       "side": 1,
       "message": "Only two to go? :D",
+      "revId": "077854ac3aee85463986f00f8b608dcbf3c4e658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "233125ed_350592c8",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-17T17:25:00Z",
+      "side": 1,
+      "message": "EOpParameters is removed in the follow-up patch. Don\u0027t have plans for EOpFunctionCall yet, that one might stay, or be split into two: EOpBuiltInFunctionCall and EOpUserDefinedFunctionCall. :)",
+      "parentUuid": "a3ed1509_1f910f71",
       "revId": "077854ac3aee85463986f00f8b608dcbf3c4e658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
