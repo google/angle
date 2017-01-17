@@ -70,8 +70,11 @@ MacroExpander::ScopedMacroReenabler::ScopedMacroReenabler(MacroExpander *expande
 MacroExpander::ScopedMacroReenabler::~ScopedMacroReenabler()
 {
     mExpander->mDeferReenablingMacros = false;
-    for (auto *macro : mExpander->mMacrosToReenable)
+    for (auto macro : mExpander->mMacrosToReenable)
     {
+        // Copying the string here by using substr is a check for use-after-free. It detects
+        // use-after-free more reliably than just toggling the disabled flag.
+        ASSERT(macro->name.substr() != "");
         macro->disabled = false;
     }
     mExpander->mMacrosToReenable.clear();
@@ -115,8 +118,8 @@ void MacroExpander::lex(Token *token)
         if (iter == mMacroSet->end())
             break;
 
-        const Macro &macro = iter->second;
-        if (macro.disabled)
+        std::shared_ptr<Macro> macro = iter->second;
+        if (macro->disabled)
         {
             // If a particular token is not expanded, it is never expanded.
             token->setExpansionDisabled(true);
@@ -125,12 +128,12 @@ void MacroExpander::lex(Token *token)
 
         // Bump the expansion count before peeking if the next token is a '('
         // otherwise there could be a #undef of the macro before the next token.
-        macro.expansionCount++;
-        if ((macro.type == Macro::kTypeFunc) && !isNextTokenLeftParen())
+        macro->expansionCount++;
+        if ((macro->type == Macro::kTypeFunc) && !isNextTokenLeftParen())
         {
             // If the token immediately after the macro name is not a '(',
             // this macro should not be expanded.
-            macro.expansionCount--;
+            macro->expansionCount--;
             break;
         }
 
@@ -190,22 +193,22 @@ bool MacroExpander::isNextTokenLeftParen()
     return lparen;
 }
 
-bool MacroExpander::pushMacro(const Macro &macro, const Token &identifier)
+bool MacroExpander::pushMacro(std::shared_ptr<Macro> macro, const Token &identifier)
 {
-    ASSERT(!macro.disabled);
+    ASSERT(!macro->disabled);
     ASSERT(!identifier.expansionDisabled());
     ASSERT(identifier.type == Token::IDENTIFIER);
-    ASSERT(identifier.text == macro.name);
+    ASSERT(identifier.text == macro->name);
 
     std::vector<Token> replacements;
-    if (!expandMacro(macro, identifier, &replacements))
+    if (!expandMacro(*macro, identifier, &replacements))
         return false;
 
     // Macro is disabled for expansion until it is popped off the stack.
-    macro.disabled = true;
+    macro->disabled = true;
 
     MacroContext *context = new MacroContext;
-    context->macro        = &macro;
+    context->macro        = macro;
     context->replacements.swap(replacements);
     mContextStack.push_back(context);
     mTotalTokensInContexts += context->replacements.size();

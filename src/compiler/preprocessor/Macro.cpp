@@ -24,11 +24,11 @@ void PredefineMacro(MacroSet *macroSet, const char *name, int value)
     token.type = Token::CONST_INT;
     token.text = ToString(value);
 
-    Macro macro;
-    macro.predefined = true;
-    macro.type       = Macro::kTypeObj;
-    macro.name       = name;
-    macro.replacements.push_back(token);
+    std::shared_ptr<Macro> macro = std::make_shared<Macro>();
+    macro->predefined            = true;
+    macro->type                  = Macro::kTypeObj;
+    macro->name                  = name;
+    macro->replacements.push_back(token);
 
     (*macroSet)[name] = macro;
 }

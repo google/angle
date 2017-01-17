@@ -131,7 +131,7 @@ bool hasDoubleUnderscores(const std::string &name)
 bool isMacroPredefined(const std::string &name, const pp::MacroSet &macroSet)
 {
     pp::MacroSet::const_iterator iter = macroSet.find(name);
-    return iter != macroSet.end() ? iter->second.predefined : false;
+    return iter != macroSet.end() ? iter->second->predefined : false;
 }
 
 }  // namespace anonymous
@@ -358,30 +358,30 @@ void DirectiveParser::parseDefine(Token *token)
                              token->text);
     }
 
-    Macro macro;
-    macro.type = Macro::kTypeObj;
-    macro.name = token->text;
+    std::shared_ptr<Macro> macro = std::make_shared<Macro>();
+    macro->type                  = Macro::kTypeObj;
+    macro->name                  = token->text;
 
     mTokenizer->lex(token);
     if (token->type == '(' && !token->hasLeadingSpace())
     {
         // Function-like macro. Collect arguments.
-        macro.type = Macro::kTypeFunc;
+        macro->type = Macro::kTypeFunc;
         do
         {
             mTokenizer->lex(token);
             if (token->type != Token::IDENTIFIER)
                 break;
 
-            if (std::find(macro.parameters.begin(), macro.parameters.end(), token->text) !=
-                macro.parameters.end())
+            if (std::find(macro->parameters.begin(), macro->parameters.end(), token->text) !=
+                macro->parameters.end())
             {
                 mDiagnostics->report(Diagnostics::PP_MACRO_DUPLICATE_PARAMETER_NAMES,
                                      token->location, token->text);
                 return;
             }
 
-            macro.parameters.push_back(token->text);
+            macro->parameters.push_back(token->text);
 
             mTokenizer->lex(token);  // Get ','.
         } while (token->type == ',');
@@ -400,24 +400,24 @@ void DirectiveParser::parseDefine(Token *token)
         // list. Resetting it also allows us to reuse Token::equals() to
         // compare macros.
         token->location = SourceLocation();
-        macro.replacements.push_back(*token);
+        macro->replacements.push_back(*token);
         mTokenizer->lex(token);
     }
-    if (!macro.replacements.empty())
+    if (!macro->replacements.empty())
     {
         // Whitespace preceding the replacement list is not considered part of
         // the replacement list for either form of macro.
-        macro.replacements.front().setHasLeadingSpace(false);
+        macro->replacements.front().setHasLeadingSpace(false);
     }
 
     // Check for macro redefinition.
-    MacroSet::const_iterator iter = mMacroSet->find(macro.name);
-    if (iter != mMacroSet->end() && !macro.equals(iter->second))
+    MacroSet::const_iterator iter = mMacroSet->find(macro->name);
+    if (iter != mMacroSet->end() && !macro->equals(*iter->second))
     {
-        mDiagnostics->report(Diagnostics::PP_MACRO_REDEFINED, token->location, macro.name);
+        mDiagnostics->report(Diagnostics::PP_MACRO_REDEFINED, token->location, macro->name);
         return;
     }
-    mMacroSet->insert(std::make_pair(macro.name, macro));
+    mMacroSet->insert(std::make_pair(macro->name, macro));
 }
 
 void DirectiveParser::parseUndef(Token *token)
@@ -434,13 +434,13 @@ void DirectiveParser::parseUndef(Token *token)
     MacroSet::iterator iter = mMacroSet->find(token->text);
     if (iter != mMacroSet->end())
     {
-        if (iter->second.predefined)
+        if (iter->second->predefined)
         {
             mDiagnostics->report(Diagnostics::PP_MACRO_PREDEFINED_UNDEFINED, token->location,
                                  token->text);
             return;
         }
-        else if (iter->second.expansionCount > 0)
+        else if (iter->second->expansionCount > 0)
         {
             mDiagnostics->report(Diagnostics::PP_MACRO_UNDEFINED_WHILE_INVOKED, token->location,
                                  token->text);
