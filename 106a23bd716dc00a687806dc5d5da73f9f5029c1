@@ -144,6 +144,30 @@
     },
     {
       "key": {
+        "uuid": "63adddb0_04677a8f",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T16:08:54Z",
+      "side": 1,
+      "message": "That would work for me. Should we do it in this CL or as a follow-up?",
+      "parentUuid": "a3ed1509_bfd563cb",
+      "range": {
+        "startLine": 595,
+        "startChar": 7,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "106a23bd716dc00a687806dc5d5da73f9f5029c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63adddb0_7e0ff1e7",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 9
