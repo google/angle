@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "63adddb0_01540cbe",
+        "filename": "src/tests/perf_tests/BindingPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:45:13Z",
+      "side": 1,
+      "message": "nit: BufferBindings, or somewhere leave a TODO that this class is intended for all types of objects.",
+      "range": {
+        "startLine": 81,
+        "startChar": 58,
+        "endLine": 81,
+        "endChar": 66
+      },
+      "revId": "3f185bc939d57ab6ee7e844c62da9b1bd183ecbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3ed1509_d38a6642",
         "filename": "src/tests/perf_tests/BindingPerf.cpp",
         "patchSetId": 2
@@ -13,6 +36,29 @@
       "writtenOn": "2017-01-16T21:17:10Z",
       "side": 1,
       "message": "nit: add the current iteration somewhere in here.",
+      "revId": "3f185bc939d57ab6ee7e844c62da9b1bd183ecbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63adddb0_2128284f",
+        "filename": "src/tests/perf_tests/BindingPerf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T14:45:13Z",
+      "side": 1,
+      "message": "instead of using bool preallocated, can you use something like \"enum Allocation { EVERY_FRAME, ONCE_PER_RUN } or something like that.",
+      "range": {
+        "startLine": 158,
+        "startChar": 27,
+        "endLine": 158,
+        "endChar": 44
+      },
       "revId": "3f185bc939d57ab6ee7e844c62da9b1bd183ecbe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
