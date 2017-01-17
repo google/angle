@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63adddb0_8445caaf",
+        "filename": "src/compiler/preprocessor/MacroExpander.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-17T18:45:52Z",
+      "side": 1,
+      "message": "can you make this const \u0026 to avoid the copy as an argument?",
+      "range": {
+        "startLine": 196,
+        "startChar": 30,
+        "endLine": 196,
+        "endChar": 53
+      },
+      "revId": "feea423f00cf152dc41578971f465a0f82585a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
