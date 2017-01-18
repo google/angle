@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e3e70d23_cc7f634e",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-18T02:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63495d01_9e865db3",
+      "range": {
+        "startLine": 97,
+        "startChar": 35,
+        "endLine": 97,
+        "endChar": 39
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63495d01_5e521522",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 34
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "43aa999c_d254b237",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-18T02:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63495d01_9e373dfe",
+      "range": {
+        "startLine": 190,
+        "startChar": 56,
+        "endLine": 190,
+        "endChar": 93
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63495d01_3e494970",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 34
@@ -82,6 +130,30 @@
       "writtenOn": "2017-01-17T22:28:12Z",
       "side": 1,
       "message": "The style guide says this should be a pointer, can you update it to be like the others.",
+      "range": {
+        "startLine": 195,
+        "startChar": 20,
+        "endLine": 195,
+        "endChar": 21
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "036b4132_e279a397",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-18T02:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63495d01_3e494970",
       "range": {
         "startLine": 195,
         "startChar": 20,
@@ -140,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "e30aadd1_9a556d65",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-18T02:37:00Z",
+      "side": 1,
+      "message": "Thanks to point out this. I will change my design to avoid this.",
+      "parentUuid": "c39e897c_ca0ab709",
+      "range": {
+        "startLine": 45,
+        "startChar": 19,
+        "endLine": 45,
+        "endChar": 59
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43753906_0e3eefdd",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 34
@@ -151,6 +247,30 @@
       "writtenOn": "2017-01-17T22:28:12Z",
       "side": 1,
       "message": "Just use dirtyBit - gl::VertexArray::DIRTY_BIT_ATTRIB_0_ENABLED",
+      "range": {
+        "startLine": 64,
+        "startChar": 33,
+        "endLine": 64,
+        "endChar": 57
+      },
+      "revId": "f67e73220f96b80aec496173a7fd705f5d620fea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e30aadd1_3a1701c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-18T02:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43753906_0e3eefdd",
       "range": {
         "startLine": 64,
         "startChar": 33,
