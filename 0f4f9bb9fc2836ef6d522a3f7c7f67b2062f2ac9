@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "239765c6_9ca38542",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-18T07:42:46Z",
+      "side": 1,
+      "message": "You query all attachments one by one, get the the max value (width, or height, or samples), compare it with the default value of width/height/samples, and return the bigger one. But I didn\u0027t found it in the spec that this way you get the default values is correct. Why not return the designated default value directly?",
+      "range": {
+        "startLine": 845,
+        "startChar": 2,
+        "endLine": 956,
+        "endChar": 18
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
