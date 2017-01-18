@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "239765c6_d0924c3b",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-18T18:12:10Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the depth be incremented before visiting the prototype?",
+      "revId": "4ed41751098f9a58091fba7560680eb0dbb91036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
