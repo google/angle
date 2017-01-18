@@ -2530,21 +2530,6 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
         (*function)->setDefined();
     }
 
-    // Raise error message if main function takes any parameters or return anything other than void
-    if ((*function)->getName() == "main")
-    {
-        if ((*function)->getParamCount() > 0)
-        {
-            error(location, "function cannot take any parameter(s)",
-                  (*function)->getName().c_str());
-        }
-        if ((*function)->getReturnType().getBasicType() != EbtVoid)
-        {
-            error(location, "main function cannot return a value",
-                  (*function)->getReturnType().getBasicString());
-        }
-    }
-
     // Remember the return type for later checking for return statements.
     mCurrentFunctionType  = &((*function)->getReturnType());
     mFunctionReturnsValue = false;
@@ -2614,6 +2599,20 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     // We're at the inner scope level of the function's arguments and body statement.
     // Add the function prototype to the surrounding scope instead.
     symbolTable.getOuterLevel()->insert(function);
+
+    // Raise error message if main function takes any parameters or return anything other than void
+    if (function->getName() == "main")
+    {
+        if (function->getParamCount() > 0)
+        {
+            error(location, "function cannot take any parameter(s)", "main");
+        }
+        if (function->getReturnType().getBasicType() != EbtVoid)
+        {
+            error(location, "main function cannot return a value",
+                  function->getReturnType().getBasicString());
+        }
+    }
 
     //
     // If this is a redeclaration, it could also be a definition, in which case, we want to use the

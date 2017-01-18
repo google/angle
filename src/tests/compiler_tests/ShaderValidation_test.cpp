@@ -3401,6 +3401,21 @@ TEST_F(FragmentShaderValidationTest, Sampler2DMSInESSL300Shader)
 
     if (compile(shaderString))
     {
-        FAIL() << "Shader compilation succeed, expecting failure " << mInfoLog;
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Declare main() with incorrect parameters.
+// ESSL 3.00.6 section 6.1 Function Definitions.
+TEST_F(FragmentShaderValidationTest, InvalidMainPrototypeParameters)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "void main(int a);\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
