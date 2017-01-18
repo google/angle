@@ -45,6 +45,40 @@
       "revId": "2c0be2825259c47ff50a9133eea797c40555968f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_a2ae5a41",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-18T15:48:38Z",
+      "side": 1,
+      "message": "note: We could ask multiple vendors what usage bits \"work well together\" so that we minimize the number of backing buffers.",
+      "revId": "2c0be2825259c47ff50a9133eea797c40555968f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_02be2e72",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-18T15:48:38Z",
+      "side": 1,
+      "message": "nit: Ideally at some point we start doing suballocations. Creating a memory allocation is very very expensive.",
+      "revId": "2c0be2825259c47ff50a9133eea797c40555968f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
