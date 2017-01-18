@@ -2506,8 +2506,11 @@ void Context::updateCaps()
         formatCaps.filterable =
             formatCaps.filterable && formatInfo.filterSupport(getClientVersion(), mExtensions);
 
-        // OpenGL ES does not support multisampling with integer formats
-        if (!formatInfo.renderSupport || formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)
+        // OpenGL ES does not support multisampling with non-rendererable formats
+        // OpenGL ES 3.0 or prior does not support multisampling with integer formats
+        if (!formatInfo.renderSupport ||
+            (getClientVersion() < ES_3_1 &&
+             (formatInfo.componentType == GL_INT || formatInfo.componentType == GL_UNSIGNED_INT)))
         {
             formatCaps.sampleCounts.clear();
         }
