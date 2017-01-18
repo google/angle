@@ -2,6 +2,69 @@
   "comments": [
     {
       "key": {
+        "uuid": "239765c6_fcfe49f1",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "You should also change this function for ES31 according default framebuffer parameter. If dEQP doesn\u0027t cover this, please add end2end_tests in src/tests/gl_tests/FramebufferTest.cpp.",
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_fc8ba9ba",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "Here and other places: Capitalize words since the second.",
+      "range": {
+        "startLine": 89,
+        "startChar": 31,
+        "endLine": 89,
+        "endChar": 43
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_3c6ef116",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 847,
+        "startChar": 18,
+        "endLine": 847,
+        "endChar": 26
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_9ca38542",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 5
@@ -18,6 +81,122 @@
         "startChar": 2,
         "endLine": 956,
         "endChar": 18
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_1c469582",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "Agreed.",
+      "parentUuid": "239765c6_9ca38542",
+      "range": {
+        "startLine": 845,
+        "startChar": 2,
+        "endLine": 956,
+        "endChar": 18
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_3c5c315b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "defaultWidth -\u003e maxWidth, similar in other place",
+      "range": {
+        "startLine": 417,
+        "startChar": 14,
+        "endLine": 417,
+        "endChar": 26
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_7c66b92c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "Why do you need this?",
+      "range": {
+        "startLine": 440,
+        "startChar": 8,
+        "endLine": 440,
+        "endChar": 32
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_1c5f7552",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "Missing error message and other places.",
+      "range": {
+        "startLine": 456,
+        "startChar": 8,
+        "endLine": 456,
+        "endChar": 57
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "239765c6_bc368121",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-18T08:44:30Z",
+      "side": 1,
+      "message": "Error(GL_INVALID_ENUM, \"Invalid pname: 0x%X\", pname) and other similar places.",
+      "range": {
+        "startLine": 483,
+        "startChar": 29,
+        "endLine": 483,
+        "endChar": 80
       },
       "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
