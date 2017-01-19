@@ -1873,7 +1873,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, GL_NONE, nullptr, nullptr, instances);
+        return drawLineLoop(data, count, GL_NONE, nullptr, 0, instances);
     }
 
     if (mode == GL_TRIANGLE_FAN)
@@ -1932,16 +1932,17 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
                                        const GLvoid *indices,
                                        GLsizei instances)
 {
-    int minIndex = static_cast<int>(indexInfo.indexRange.start);
+    int startVertex = static_cast<int>(indexInfo.indexRange.start);
+    int baseVertex  = -startVertex;
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, type, indices, &indexInfo, instances);
+        return drawLineLoop(data, count, type, indices, baseVertex, instances);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(data, count, type, indices, minIndex, instances);
+        return drawTriangleFan(data, count, type, indices, baseVertex, instances);
     }
 
     const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
@@ -1961,13 +1962,13 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
             for (GLsizei i = 0; i < instances; i++)
             {
                 ANGLE_TRY(
-                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(minIndex, i));
+                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
                 mDeviceContext->DrawIndexedInstanced(6, elementsToRender, 0, 0, 0);
             }
         }
         else
         {
-            mDeviceContext->DrawIndexedInstanced(count, instances, 0, -minIndex, 0);
+            mDeviceContext->DrawIndexedInstanced(count, instances, 0, baseVertex, 0);
         }
         return gl::NoError();
     }
@@ -1989,7 +1990,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
     }
     else
     {
-        mDeviceContext->DrawIndexed(count, 0, -minIndex);
+        mDeviceContext->DrawIndexed(count, 0, baseVertex);
     }
     return gl::NoError();
 }
@@ -1998,7 +1999,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
                                    GLsizei count,
                                    GLenum type,
                                    const GLvoid *indexPointer,
-                                   const TranslatedIndexData *indexInfo,
+                                   int baseVertex,
                                    int instances)
 {
     const auto &glState            = data.getState();
@@ -2072,16 +2073,15 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
         mAppliedIBOffset = offset;
     }
 
-    INT baseVertexLocation = (indexInfo ? -static_cast<int>(indexInfo->indexRange.start) : 0);
     UINT indexCount        = static_cast<UINT>(mScratchIndexDataBuffer.size());
 
     if (instances > 0)
     {
-        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertexLocation, 0);
+        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertex, 0);
     }
     else
     {
-        mDeviceContext->DrawIndexed(indexCount, 0, baseVertexLocation);
+        mDeviceContext->DrawIndexed(indexCount, 0, baseVertex);
     }
 
     return gl::NoError();
@@ -2091,7 +2091,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
                                       GLsizei count,
                                       GLenum type,
                                       const GLvoid *indices,
-                                      int minIndex,
+                                      int baseVertex,
                                       int instances)
 {
     gl::VertexArray *vao           = data.getState().getVertexArray();
@@ -2167,11 +2167,11 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
 
     if (instances > 0)
     {
-        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, -minIndex, 0);
+        mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertex, 0);
     }
     else
     {
-        mDeviceContext->DrawIndexed(indexCount, 0, -minIndex);
+        mDeviceContext->DrawIndexed(indexCount, 0, baseVertex);
     }
 
     return gl::NoError();
