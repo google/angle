@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_5d8ef114",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-19T19:31:44Z",
+      "side": 1,
+      "message": "I talked to Mo and Ken about this - apparently this is something that isn\u0027t specified in GLES2, but the GLES3 spec makes this an error. Can you check the GLES3 spec to confirm this? According to Ken:\n\nOpenGL ES 3.0.5 spec, section 2.12.7 \"Samplers\" p. 72:\n\n\"Loading samplers with values out- side of the range from zero to the implementation-dependent maximum supported number of texture image units minus one will result in an INVALID_VALUE error.\"\n\nIn this case we should make it apply across the board, update the ANGLE tracker issue, and make a test for it. Although it\u0027s not in the GLES2 spec it\u0027s pretty clear in ES3 and WebGL - let\u0027s just apply this check always.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 5
+      },
+      "revId": "9e7a4d5e6aa76f4fe24ef2e8b30f0571540a1f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_7a68939b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2842,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-19T19:31:44Z",
+      "side": 1,
+      "message": "make a new validation entry point:\n\nValidateUniform1i\n\nMake it match the signature of the GLES entry point save for the ValidationContext *context argument. Do the additional validation after internally calling ValidateUniform.",
+      "range": {
+        "startLine": 2842,
+        "startChar": 4,
+        "endLine": 2842,
+        "endChar": 75
+      },
+      "revId": "9e7a4d5e6aa76f4fe24ef2e8b30f0571540a1f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_1af19fe7",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-19T19:31:44Z",
+      "side": 1,
+      "message": "nit: never use default arguments for Chromium/ANGLE code",
+      "range": {
+        "startLine": 210,
+        "startChar": 38,
+        "endLine": 210,
+        "endChar": 45
+      },
+      "revId": "9e7a4d5e6aa76f4fe24ef2e8b30f0571540a1f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_da78a76a",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2355,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-19T19:31:44Z",
+      "side": 1,
+      "message": "actually, call it ValidateUniform1iv(context, location, count, v)",
+      "range": {
+        "startLine": 2355,
+        "startChar": 13,
+        "endLine": 2355,
+        "endChar": 28
+      },
+      "revId": "9e7a4d5e6aa76f4fe24ef2e8b30f0571540a1f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
