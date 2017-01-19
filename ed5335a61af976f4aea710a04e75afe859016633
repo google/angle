@@ -67,6 +67,24 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_b4dd02f6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-19T16:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_5268219b",
+      "revId": "ed5335a61af976f4aea710a04e75afe859016633",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_72aafd16",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -78,6 +96,30 @@
       "writtenOn": "2017-01-19T14:49:05Z",
       "side": 1,
       "message": "This is the only part that changed from:\n-        ERR() \u003c\u003c \"Error compiling dynamic compute executable:\" \u003c\u003c std::endl\n-              \u003c\u003c infoLog.str() \u003c\u003c std::endl;\n\nHow about ERR(\"Error ...:\\n%s\\n\", infoLog.str().c_str());",
+      "range": {
+        "startLine": 1457,
+        "startChar": 0,
+        "endLine": 1460,
+        "endChar": 0
+      },
+      "revId": "ed5335a61af976f4aea710a04e75afe859016633",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_14a5f689",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-01-19T16:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_72aafd16",
       "range": {
         "startLine": 1457,
         "startChar": 0,
