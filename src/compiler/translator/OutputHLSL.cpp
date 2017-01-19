@@ -919,11 +919,9 @@ void OutputHLSL::outputEqual(Visit visit, const TType &type, TOperator op, TInfo
     }
 }
 
-bool OutputHLSL::ancestorEvaluatesToSamplerInStruct(Visit visit)
+bool OutputHLSL::ancestorEvaluatesToSamplerInStruct()
 {
-    // Inside InVisit the current node is already in the path.
-    const unsigned int initialN = visit == InVisit ? 1u : 0u;
-    for (unsigned int n = initialN; getAncestorNode(n) != nullptr; ++n)
+    for (unsigned int n = 0u; getAncestorNode(n) != nullptr; ++n)
     {
         TIntermNode *ancestor               = getAncestorNode(n);
         const TIntermBinary *ancestorBinary = ancestor->getAsBinaryNode();
@@ -1126,7 +1124,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                     return false;
                 }
             }
-            else if (ancestorEvaluatesToSamplerInStruct(visit))
+            else if (ancestorEvaluatesToSamplerInStruct())
             {
                 // All parts of an expression that access a sampler in a struct need to use _ as
                 // separator to access the sampler variable that has been moved out of the struct.
@@ -1163,7 +1161,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             {
                 // All parts of an expression that access a sampler in a struct need to use _ as
                 // separator to access the sampler variable that has been moved out of the struct.
-                indexingReturnsSampler = ancestorEvaluatesToSamplerInStruct(visit);
+                indexingReturnsSampler = ancestorEvaluatesToSamplerInStruct();
             }
             if (visit == InVisit)
             {

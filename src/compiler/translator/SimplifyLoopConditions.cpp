@@ -135,9 +135,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
     // Mark that we're inside a loop condition or expression, and transform the loop if needed.
 
-    incrementDepth(node);
-
-    // Note: No need to traverse the loop init node.
+    ScopedNodeInTraversalPath addToPath(this, node);
 
     mInsideLoopInitConditionOrExpression = true;
     TLoopType loopType                   = node->getType();
@@ -274,8 +272,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
                 ELoopWhile, nullptr, createTempSymbol(conditionInitializer->getType()), nullptr,
                 whileLoopBody);
             loopScope->getSequence()->push_back(whileLoop);
-            queueReplacementWithParent(getAncestorNode(1), node, loopScope,
-                                       OriginalNode::IS_DROPPED);
+            queueReplacement(node, loopScope, OriginalNode::IS_DROPPED);
         }
     }
 
@@ -283,8 +280,6 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
     if (!mFoundLoopToChange && node->getBody())
         node->getBody()->traverse(this);
-
-    decrementDepth();
 }
 
 }  // namespace

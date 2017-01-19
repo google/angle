@@ -761,7 +761,6 @@ bool TOutputGLSLBase::visitIfElse(Visit visit, TIntermIfElse *node)
     node->getCondition()->traverse(this);
     out << ")\n";
 
-    incrementDepth(node);
     visitCodeBlock(node->getTrueBlock());
 
     if (node->getFalseBlock())
@@ -769,7 +768,6 @@ bool TOutputGLSLBase::visitIfElse(Visit visit, TIntermIfElse *node)
         out << "else\n";
         visitCodeBlock(node->getFalseBlock());
     }
-    decrementDepth();
     return false;
 }
 
@@ -812,7 +810,6 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
         out << "{\n";
     }
 
-    incrementDepth(node);
     for (TIntermSequence::const_iterator iter = node->getSequence()->begin();
          iter != node->getSequence()->end(); ++iter)
     {
@@ -823,7 +820,6 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
         if (isSingleStatement(curNode))
             out << ";\n";
     }
-    decrementDepth();
 
     // Scope the blocks except when at the global scope.
     if (mDepth > 0)
@@ -835,11 +831,9 @@ bool TOutputGLSLBase::visitBlock(Visit visit, TIntermBlock *node)
 
 bool TOutputGLSLBase::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
-    incrementDepth(node);
     TIntermFunctionPrototype *prototype = node->getFunctionPrototype();
     prototype->traverse(this);
     visitCodeBlock(node->getBody());
-    decrementDepth();
 
     // Fully processed; no need to visit children.
     return false;
@@ -986,8 +980,6 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
 {
     TInfoSinkBase &out = objSink();
 
-    incrementDepth(node);
-
     TLoopType loopType = node->getType();
 
     if (loopType == ELoopFor)  // for loop
@@ -1028,8 +1020,6 @@ bool TOutputGLSLBase::visitLoop(Visit visit, TIntermLoop *node)
         node->getCondition()->traverse(this);
         out << ");\n";
     }
-
-    decrementDepth();
 
     // No need to visit children. They have been already processed in
     // this function.

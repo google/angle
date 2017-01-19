@@ -381,3 +381,19 @@ TEST_F(WEBGLMultiviewVertexShaderTest, ValidUseOfExtensionMacros)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that the parent node is tracked correctly when validating assignment to gl_Position.
+TEST_F(WEBGLMultiviewVertexShaderTest, AssignmentWithViewIDInsideAssignment)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position.y = (gl_Position.x = (gl_ViewID_OVR == 0u) ? 1.0 : 0.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

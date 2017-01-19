@@ -239,7 +239,7 @@ class OutputHLSL : public TIntermTraverser
 
   private:
     TString samplerNamePrefixFromStruct(TIntermTyped *node);
-    bool ancestorEvaluatesToSamplerInStruct(Visit visit);
+    bool ancestorEvaluatesToSamplerInStruct();
 };
 }
 
