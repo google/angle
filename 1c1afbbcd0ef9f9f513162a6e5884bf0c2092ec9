@@ -16,6 +16,24 @@
       "revId": "1c1afbbcd0ef9f9f513162a6e5884bf0c2092ec9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "089c3e29_3b8c778a",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-19T15:58:00Z",
+      "side": 1,
+      "message": "A few classes like TIntermLValueTrackingTraverser override the traverse() functions. The RAII wrapper might be nice though, I could work on it.",
+      "parentUuid": "6854da0e_12818952",
+      "revId": "1c1afbbcd0ef9f9f513162a6e5884bf0c2092ec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
