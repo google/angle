@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_fc08064e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-19T07:43:19Z",
+      "side": 1,
+      "message": "You may attach an ANGLE bug here.",
+      "revId": "5a0b0ca7e535c7e06d68dacf1e47531ba95fb792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_7c1bf68f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1935,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-19T07:43:19Z",
+      "side": 1,
+      "message": "Use baseVertex \u003d -static_cast\u003cint\u003e(indexInfo.indexRange.start);",
+      "range": {
+        "startLine": 1935,
+        "startChar": 4,
+        "endLine": 1935,
+        "endChar": 64
+      },
+      "revId": "5a0b0ca7e535c7e06d68dacf1e47531ba95fb792",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
