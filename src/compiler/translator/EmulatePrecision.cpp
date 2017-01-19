@@ -429,8 +429,7 @@ bool canRoundFloat(const TType &type)
 
 TIntermAggregate *createInternalFunctionCallNode(TString name, TIntermNode *child)
 {
-    TIntermAggregate *callNode = new TIntermAggregate();
-    callNode->setOp(EOpFunctionCall);
+    TIntermAggregate *callNode = new TIntermAggregate(EOpFunctionCall);
     TName nameObj(TFunction::mangleName(name));
     nameObj.setInternal(true);
     callNode->getFunctionSymbolInfo()->setNameObj(nameObj);

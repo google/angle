@@ -33,14 +33,7 @@ class TIntermediate
                            TIntermTyped *index,
                            const TSourceLoc &line,
                            TDiagnostics *diagnostics);
-    TIntermTyped *addUnaryMath(TOperator op,
-                               TIntermTyped *child,
-                               const TSourceLoc &line,
-                               const TType *funcReturnType);
-    TIntermAggregate *growAggregate(TIntermNode *left, TIntermNode *right, const TSourceLoc &);
-    static TIntermAggregate *MakeAggregate(TIntermNode *node, const TSourceLoc &line);
     static TIntermBlock *EnsureBlock(TIntermNode *node);
-    TIntermAggregate *setAggregateOperator(TIntermNode *, TOperator, const TSourceLoc &);
     TIntermNode *addIfElse(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &line);
     static TIntermTyped *AddTernarySelection(TIntermTyped *cond,
                                              TIntermTyped *trueExpression,

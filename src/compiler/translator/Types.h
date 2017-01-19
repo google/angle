@@ -484,7 +484,6 @@ class TType
   private:
     void invalidateMangledName() { mangled = ""; }
     TString buildMangledName() const;
-    size_t getStructSize() const;
 
     TBasicType type;
     TPrecision precision;

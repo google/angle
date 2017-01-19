@@ -112,8 +112,7 @@ class TParseContext : angle::NonCopyable
     void checkIsScalarInteger(TIntermTyped *node, const char *token);
     bool checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
     bool checkConstructorArguments(const TSourceLoc &line,
-                                   TIntermNode *argumentsNode,
-                                   const TFunction &function,
+                                   const TIntermAggregate *argumentsNode,
                                    TOperator op,
                                    const TType &type);
 
@@ -253,9 +252,9 @@ class TParseContext : angle::NonCopyable
                                    const TString *name,
                                    const TSourceLoc &location);
     TFunction *addConstructorFunc(const TPublicType &publicType);
-    TIntermTyped *addConstructor(TIntermNode *arguments,
+    TIntermTyped *addConstructor(TIntermAggregate *arguments,
                                  TOperator op,
-                                 TFunction *fnCall,
+                                 TType type,
                                  const TSourceLoc &line);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
@@ -346,11 +345,14 @@ class TParseContext : angle::NonCopyable
     void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
     void checkImageMemoryAccessForUserDefinedFunctions(const TFunction *functionDefinition,
                                                        const TIntermAggregate *functionCall);
+    TIntermAggregate *createEmptyArgumentsNode(const TSourceLoc &loc);
+
+    // fnCall is only storing the built-in op, and function name or constructor type. argumentsNode
+    // has the arguments.
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall,
-                                          TIntermNode *paramNode,
+                                          TIntermAggregate *argumentsNode,
                                           TIntermNode *thisNode,
-                                          const TSourceLoc &loc,
-                                          bool *fatalError);
+                                          const TSourceLoc &loc);
 
     TIntermTyped *addTernarySelection(TIntermTyped *cond,
                                       TIntermTyped *trueExpression,

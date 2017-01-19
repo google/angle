@@ -76,6 +76,7 @@ using namespace sh;
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
+            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
@@ -314,24 +315,19 @@ integer_expression
 
 function_call
     : function_call_or_method {
-        bool fatalError = false;
-        $$ = context->addFunctionCallOrMethod($1.function, $1.nodePair.node1, $1.nodePair.node2, @1, &fatalError);
-        if (fatalError)
-        {
-            YYERROR;
-        }
+        $$ = context->addFunctionCallOrMethod($1.function, $1.callOrMethodPair.argumentsNode, $1.callOrMethodPair.thisNode, @1);
     }
     ;
 
 function_call_or_method
     : function_call_generic {
         $$ = $1;
-        $$.nodePair.node2 = nullptr;
+        $$.callOrMethodPair.thisNode = nullptr;
     }
     | postfix_expression DOT function_call_generic {
         ES3_OR_NEWER("", @3, "methods");
         $$ = $3;
-        $$.nodePair.node2 = $1;
+        $$.callOrMethodPair.thisNode = $1;
     }
     ;
 
@@ -347,26 +343,23 @@ function_call_generic
 function_call_header_no_parameters
     : function_call_header VOID_TYPE {
         $$.function = $1;
-        $$.nodePair.node1 = nullptr;
+        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
     }
     | function_call_header {
         $$.function = $1;
-        $$.nodePair.node1 = nullptr;
+        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
     }
     ;
 
 function_call_header_with_parameters
     : function_call_header assignment_expression {
-        const TType *type = new TType($2->getType());
-        $1->addParameter(TConstParameter(type));
+        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
         $$.function = $1;
-        $$.nodePair.node1 = TIntermediate::MakeAggregate($2, @2);
+        $$.callOrMethodPair.argumentsNode->getSequence()->push_back($2);
     }
     | function_call_header_with_parameters COMMA assignment_expression {
-        const TType *type = new TType($3->getType());
-        $1.function->addParameter(TConstParameter(type));
         $$.function = $1.function;
-        $$.nodePair.node1 = context->intermediate.growAggregate($1.intermNode, $3, @2);
+        $$.callOrMethodPair.argumentsNode->getSequence()->push_back($3);
     }
     ;
 

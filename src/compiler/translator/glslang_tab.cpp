@@ -308,6 +308,7 @@ union YYSTYPE
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
+            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;
@@ -737,36 +738,36 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   245,   245,   246,   249,   259,   262,   267,   272,   277,
-     282,   288,   291,   294,   297,   300,   303,   309,   316,   327,
-     331,   339,   342,   348,   352,   359,   365,   374,   382,   388,
-     394,   403,   406,   409,   412,   422,   423,   424,   425,   433,
-     434,   437,   440,   447,   448,   451,   457,   458,   462,   469,
-     470,   473,   476,   479,   485,   486,   489,   495,   496,   503,
-     504,   511,   512,   519,   520,   526,   527,   533,   534,   540,
-     541,   547,   548,   555,   556,   557,   558,   562,   563,   564,
-     568,   572,   576,   580,   587,   590,   596,   603,   610,   613,
-     616,   625,   629,   633,   637,   641,   648,   655,   658,   665,
-     673,   693,   703,   711,   736,   740,   744,   748,   755,   762,
-     765,   769,   773,   778,   783,   790,   794,   798,   802,   807,
-     812,   819,   823,   829,   832,   838,   842,   849,   855,   859,
-     863,   866,   869,   878,   884,   892,   895,   915,   934,   941,
-     945,   949,   952,   955,   958,   961,   964,   972,   979,   982,
-     985,   991,   998,  1001,  1007,  1010,  1013,  1016,  1022,  1025,
-    1030,  1041,  1044,  1047,  1050,  1053,  1056,  1060,  1064,  1068,
-    1072,  1076,  1080,  1084,  1088,  1092,  1096,  1100,  1104,  1108,
-    1112,  1116,  1120,  1124,  1128,  1132,  1136,  1140,  1143,  1146,
-    1149,  1152,  1155,  1158,  1161,  1164,  1167,  1170,  1173,  1176,
-    1179,  1182,  1185,  1188,  1191,  1194,  1201,  1207,  1210,  1213,
-    1216,  1219,  1222,  1225,  1228,  1231,  1234,  1237,  1240,  1243,
-    1246,  1258,  1258,  1261,  1261,  1267,  1270,  1276,  1279,  1286,
-    1290,  1296,  1302,  1314,  1318,  1322,  1323,  1329,  1330,  1331,
-    1332,  1333,  1334,  1335,  1339,  1340,  1340,  1340,  1349,  1350,
-    1354,  1354,  1355,  1355,  1360,  1363,  1372,  1377,  1384,  1385,
-    1389,  1396,  1400,  1407,  1407,  1414,  1417,  1424,  1428,  1441,
-    1441,  1446,  1446,  1452,  1452,  1460,  1463,  1469,  1472,  1478,
-    1482,  1489,  1492,  1495,  1498,  1501,  1510,  1516,  1522,  1525,
-    1531,  1531
+       0,   246,   246,   247,   250,   260,   263,   268,   273,   278,
+     283,   289,   292,   295,   298,   301,   304,   310,   317,   323,
+     327,   335,   338,   344,   348,   355,   360,   367,   375,   381,
+     387,   396,   399,   402,   405,   415,   416,   417,   418,   426,
+     427,   430,   433,   440,   441,   444,   450,   451,   455,   462,
+     463,   466,   469,   472,   478,   479,   482,   488,   489,   496,
+     497,   504,   505,   512,   513,   519,   520,   526,   527,   533,
+     534,   540,   541,   548,   549,   550,   551,   555,   556,   557,
+     561,   565,   569,   573,   580,   583,   589,   596,   603,   606,
+     609,   618,   622,   626,   630,   634,   641,   648,   651,   658,
+     666,   686,   696,   704,   729,   733,   737,   741,   748,   755,
+     758,   762,   766,   771,   776,   783,   787,   791,   795,   800,
+     805,   812,   816,   822,   825,   831,   835,   842,   848,   852,
+     856,   859,   862,   871,   877,   885,   888,   908,   927,   934,
+     938,   942,   945,   948,   951,   954,   957,   965,   972,   975,
+     978,   984,   991,   994,  1000,  1003,  1006,  1009,  1015,  1018,
+    1023,  1034,  1037,  1040,  1043,  1046,  1049,  1053,  1057,  1061,
+    1065,  1069,  1073,  1077,  1081,  1085,  1089,  1093,  1097,  1101,
+    1105,  1109,  1113,  1117,  1121,  1125,  1129,  1133,  1136,  1139,
+    1142,  1145,  1148,  1151,  1154,  1157,  1160,  1163,  1166,  1169,
+    1172,  1175,  1178,  1181,  1184,  1187,  1194,  1200,  1203,  1206,
+    1209,  1212,  1215,  1218,  1221,  1224,  1227,  1230,  1233,  1236,
+    1239,  1251,  1251,  1254,  1254,  1260,  1263,  1269,  1272,  1279,
+    1283,  1289,  1295,  1307,  1311,  1315,  1316,  1322,  1323,  1324,
+    1325,  1326,  1327,  1328,  1332,  1333,  1333,  1333,  1342,  1343,
+    1347,  1347,  1348,  1348,  1353,  1356,  1365,  1370,  1377,  1378,
+    1382,  1389,  1393,  1400,  1400,  1407,  1410,  1417,  1421,  1434,
+    1434,  1439,  1439,  1445,  1445,  1453,  1456,  1462,  1465,  1471,
+    1475,  1482,  1485,  1488,  1491,  1494,  1503,  1509,  1515,  1518,
+    1524,  1524
 };
 #endif
 
@@ -2618,12 +2619,7 @@ yyreduce:
   case 18:
 
     {
-        bool fatalError = false;
-        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).nodePair.node1, (yyvsp[0].interm).nodePair.node2, (yylsp[0]), &fatalError);
-        if (fatalError)
-        {
-            YYERROR;
-        }
+        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).callOrMethodPair.argumentsNode, (yyvsp[0].interm).callOrMethodPair.thisNode, (yylsp[0]));
     }
 
     break;
@@ -2632,7 +2628,7 @@ yyreduce:
 
     {
         (yyval.interm) = (yyvsp[0].interm);
-        (yyval.interm).nodePair.node2 = nullptr;
+        (yyval.interm).callOrMethodPair.thisNode = nullptr;
     }
 
     break;
@@ -2642,7 +2638,7 @@ yyreduce:
     {
         ES3_OR_NEWER("", (yylsp[0]), "methods");
         (yyval.interm) = (yyvsp[0].interm);
-        (yyval.interm).nodePair.node2 = (yyvsp[-2].interm.intermTypedNode);
+        (yyval.interm).callOrMethodPair.thisNode = (yyvsp[-2].interm.intermTypedNode);
     }
 
     break;
@@ -2667,7 +2663,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).nodePair.node1 = nullptr;
+        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[-1]));
     }
 
     break;
@@ -2676,7 +2672,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[0].interm.function);
-        (yyval.interm).nodePair.node1 = nullptr;
+        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[0]));
     }
 
     break;
@@ -2684,10 +2680,9 @@ yyreduce:
   case 25:
 
     {
-        const TType *type = new TType((yyvsp[0].interm.intermTypedNode)->getType());
-        (yyvsp[-1].interm.function)->addParameter(TConstParameter(type));
+        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[-1]));
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).nodePair.node1 = TIntermediate::MakeAggregate((yyvsp[0].interm.intermTypedNode), (yylsp[0]));
+        (yyval.interm).callOrMethodPair.argumentsNode->getSequence()->push_back((yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -2695,10 +2690,8 @@ yyreduce:
   case 26:
 
     {
-        const TType *type = new TType((yyvsp[0].interm.intermTypedNode)->getType());
-        (yyvsp[-2].interm).function->addParameter(TConstParameter(type));
         (yyval.interm).function = (yyvsp[-2].interm).function;
-        (yyval.interm).nodePair.node1 = context->intermediate.growAggregate((yyvsp[-2].interm).intermNode, (yyvsp[0].interm.intermTypedNode), (yylsp[-1]));
+        (yyval.interm).callOrMethodPair.argumentsNode->getSequence()->push_back((yyvsp[0].interm.intermTypedNode));
     }
 
     break;

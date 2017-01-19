@@ -220,6 +220,7 @@ union YYSTYPE {
         union {
             TIntermNode *intermNode;
             TIntermNodePair nodePair;
+            TIntermFunctionCallOrMethod callOrMethodPair;
             TIntermTyped *intermTypedNode;
             TIntermAggregate *intermAggregate;
             TIntermBlock *intermBlock;

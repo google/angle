@@ -136,6 +136,15 @@ struct TIntermNodePair
 };
 
 //
+// This is just to help yacc.
+//
+struct TIntermFunctionCallOrMethod
+{
+    TIntermAggregate *argumentsNode;
+    TIntermNode *thisNode;
+};
+
+//
 // Intermediate class for nodes that have a type.
 //
 class TIntermTyped : public TIntermNode
@@ -579,13 +588,6 @@ class TIntermAggregateBase
 class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 {
   public:
-    TIntermAggregate()
-        : TIntermOperator(EOpNull),
-          mUserDefined(false),
-          mUseEmulatedFunction(false),
-          mGotPrecisionFromChildren(false)
-    {
-    }
     TIntermAggregate(TOperator op)
         : TIntermOperator(op),
           mUserDefined(false),
