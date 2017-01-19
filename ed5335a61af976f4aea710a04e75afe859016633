@@ -49,6 +49,24 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_5268219b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-19T16:20:05Z",
+      "side": 1,
+      "message": "Usually we would use a commit hash here.",
+      "parentUuid": "6854da0e_d2a891c9",
+      "revId": "ed5335a61af976f4aea710a04e75afe859016633",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_72aafd16",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
