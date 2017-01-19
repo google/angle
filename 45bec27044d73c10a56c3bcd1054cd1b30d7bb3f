@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_52bca119",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 40
+      },
+      "lineNbr": 3529,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-19T16:17:24Z",
+      "side": 1,
+      "message": "Missing \u0026 on const VertexInfo \u0026vertexInfo",
+      "revId": "45bec27044d73c10a56c3bcd1054cd1b30d7bb3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
