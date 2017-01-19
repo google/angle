@@ -34,6 +34,24 @@
       "revId": "1c1afbbcd0ef9f9f513162a6e5884bf0c2092ec9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68993a37_5e2cd569",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-19T17:38:13Z",
+      "side": 1,
+      "message": "Added the RAII wrapper in patch set #4.",
+      "parentUuid": "089c3e29_3b8c778a",
+      "revId": "1c1afbbcd0ef9f9f513162a6e5884bf0c2092ec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
