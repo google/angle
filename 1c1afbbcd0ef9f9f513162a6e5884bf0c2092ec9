@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_12818952",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-19T15:54:48Z",
+      "side": 1,
+      "message": "These functions are in this class, so incrementDepth and decrementDepth could be made private. Also having a small RAII wrapper for them might help making sure decrementDepth is not done too early.",
+      "revId": "1c1afbbcd0ef9f9f513162a6e5884bf0c2092ec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
