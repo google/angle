@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_d15ab7ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-20T10:16:29Z",
+      "side": 1,
+      "message": "May be: ES31: Support multisampling for integer texture internalformat",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 59
+      },
+      "revId": "d7b3d571d20ea7b88d36a182940b2b5aae9fa120",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
