@@ -256,6 +256,9 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     GLuint mQuadVertexBuffer;
 
     static OSWindow *mOSWindow;
+
+    // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
+    static Optional<EGLint> mLastRendererType;
 };
 
 class ANGLETestEnvironment : public testing::Environment

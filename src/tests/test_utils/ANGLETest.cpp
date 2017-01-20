@@ -232,12 +232,6 @@ ANGLETest::ANGLETest()
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
-
-    // Default vulkan layers to enabled.
-    if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
-    {
-        mEGLWindow->setVulkanLayersEnabled(true);
-    }
 }
 
 ANGLETest::~ANGLETest()
@@ -253,6 +247,28 @@ void ANGLETest::SetUp()
 {
     angle::g_testPlatformInstance.enableMessages();
     angle::g_testPlatformInstance.setCurrentTest(this);
+
+    // Default vulkan layers to enabled.
+    EGLint renderer = GetParam().getRenderer();
+    if (renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+    {
+        mEGLWindow->setVulkanLayersEnabled(true);
+    }
+
+    // Workaround for NVIDIA not being able to share OpenGL and Vulkan contexts.
+    bool needsWindowSwap = mLastRendererType.valid() &&
+                           ((renderer != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE) !=
+                            (mLastRendererType.value() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE));
+
+    if (needsWindowSwap)
+    {
+        DestroyTestWindow();
+        if (!InitTestWindow())
+        {
+            FAIL() << "Failed to create ANGLE test window.";
+        }
+    }
+    mLastRendererType = renderer;
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
@@ -909,7 +925,8 @@ void ANGLETest::ignoreD3D11SDKLayersWarnings()
     mIgnoreD3D11SDKLayersWarnings = true;
 }
 
-OSWindow *ANGLETest::mOSWindow = NULL;
+OSWindow *ANGLETest::mOSWindow = nullptr;
+Optional<EGLint> ANGLETest::mLastRendererType;
 
 void ANGLETestEnvironment::SetUp()
 {
