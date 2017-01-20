@@ -104,7 +104,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("sine (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("sin (mediump float)"));
 }
 
 TEST_F(TypeTrackingTest, BinaryMathResultPrecision)
@@ -135,7 +135,7 @@ TEST_F(TypeTrackingTest, BuiltInVecFunctionResultTypeAndPrecision)
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("length (mediump float)"));
-    ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("dot product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
 }
 
@@ -178,7 +178,7 @@ TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("dot-product (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("dot product (mediump float)"));
     ASSERT_TRUE(foundInIntermediateTree("distance (mediump float)"));
 }
 
@@ -328,9 +328,9 @@ TEST_F(TypeTrackingTest, PackResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("pack Snorm 2x16 (highp uint)"));
-    ASSERT_TRUE(foundInIntermediateTree("pack Unorm 2x16 (highp uint)"));
-    ASSERT_TRUE(foundInIntermediateTree("pack half 2x16 (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("packSnorm2x16 (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("packUnorm2x16 (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("packHalf2x16 (highp uint)"));
 }
 
 TEST_F(TypeTrackingTest, UnpackNormResultTypeAndPrecision)
@@ -353,8 +353,8 @@ TEST_F(TypeTrackingTest, UnpackNormResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("unpack Snorm 2x16 (highp 2-component vector of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("unpack Unorm 2x16 (highp 2-component vector of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("unpackSnorm2x16 (highp 2-component vector of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("unpackUnorm2x16 (highp 2-component vector of float)"));
 }
 
 TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
@@ -376,7 +376,7 @@ TEST_F(TypeTrackingTest, UnpackHalfResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("unpack half 2x16 (mediump 2-component vector of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("unpackHalf2x16 (mediump 2-component vector of float)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
@@ -391,8 +391,8 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionFloatResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Sign (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("abs (mediump float)"));
+    ASSERT_TRUE(foundInIntermediateTree("sign (mediump float)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
@@ -410,8 +410,8 @@ TEST_F(TypeTrackingTest, BuiltInAbsSignFunctionIntResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Absolute value (mediump int)"));
-    ASSERT_TRUE(foundInIntermediateTree("Sign (mediump int)"));
+    ASSERT_TRUE(foundInIntermediateTree("abs (mediump int)"));
+    ASSERT_TRUE(foundInIntermediateTree("sign (mediump int)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInFloatBitsToIntResultTypeAndPrecision)
@@ -430,8 +430,8 @@ TEST_F(TypeTrackingTest, BuiltInFloatBitsToIntResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("float bits to int (highp int)"));
-    ASSERT_TRUE(foundInIntermediateTree("float bits to uint (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("floatBitsToInt (highp int)"));
+    ASSERT_TRUE(foundInIntermediateTree("floatBitsToUint (highp uint)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInIntBitsToFloatResultTypeAndPrecision)
@@ -451,6 +451,6 @@ TEST_F(TypeTrackingTest, BuiltInIntBitsToFloatResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("int bits to float (highp float)"));
-    ASSERT_TRUE(foundInIntermediateTree("uint bits to float (highp float)"));
+    ASSERT_TRUE(foundInIntermediateTree("intBitsToFloat (highp float)"));
+    ASSERT_TRUE(foundInIntermediateTree("uintBitsToFloat (highp float)"));
 }

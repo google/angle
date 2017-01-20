@@ -95,7 +95,12 @@ bool TOutputTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
 {
     TInfoSinkBase &out = sink;
     OutputTreeText(out, node, mDepth);
-    out << "vector swizzle";
+    out << "vector swizzle (";
+    node->writeOffsetsAsXYZW(&out);
+    out << ")";
+
+    out << " (" << node->getCompleteString() << ")";
+    out << "\n";
     return true;
 }
 
@@ -295,6 +300,8 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
 
     switch (node->getOp())
     {
+        // Give verbose names for ops that have special syntax and some built-in functions that are
+        // easy to confuse with others, but mostly use GLSL names for functions.
         case EOpNegative:
             out << "Negate value";
             break;
@@ -321,166 +328,13 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
             out << "Pre-Decrement";
             break;
 
-        case EOpRadians:
-            out << "radians";
-            break;
-        case EOpDegrees:
-            out << "degrees";
-            break;
-        case EOpSin:
-            out << "sine";
-            break;
-        case EOpCos:
-            out << "cosine";
-            break;
-        case EOpTan:
-            out << "tangent";
-            break;
-        case EOpAsin:
-            out << "arc sine";
-            break;
-        case EOpAcos:
-            out << "arc cosine";
-            break;
-        case EOpAtan:
-            out << "arc tangent";
-            break;
-
-        case EOpSinh:
-            out << "hyperbolic sine";
-            break;
-        case EOpCosh:
-            out << "hyperbolic cosine";
-            break;
-        case EOpTanh:
-            out << "hyperbolic tangent";
-            break;
-        case EOpAsinh:
-            out << "arc hyperbolic sine";
-            break;
-        case EOpAcosh:
-            out << "arc hyperbolic cosine";
-            break;
-        case EOpAtanh:
-            out << "arc hyperbolic tangent";
-            break;
-
-        case EOpExp:
-            out << "exp";
-            break;
-        case EOpLog:
-            out << "log";
-            break;
-        case EOpExp2:
-            out << "exp2";
-            break;
-        case EOpLog2:
-            out << "log2";
-            break;
-        case EOpSqrt:
-            out << "sqrt";
-            break;
-        case EOpInverseSqrt:
-            out << "inverse sqrt";
-            break;
-
-        case EOpAbs:
-            out << "Absolute value";
-            break;
-        case EOpSign:
-            out << "Sign";
-            break;
-        case EOpFloor:
-            out << "Floor";
-            break;
-        case EOpTrunc:
-            out << "Truncate";
-            break;
-        case EOpRound:
-            out << "Round";
-            break;
-        case EOpRoundEven:
-            out << "Round half even";
-            break;
-        case EOpCeil:
-            out << "Ceiling";
-            break;
-        case EOpFract:
-            out << "Fraction";
-            break;
-        case EOpIsNan:
-            out << "Is not a number";
-            break;
-        case EOpIsInf:
-            out << "Is infinity";
-            break;
-
-        case EOpFloatBitsToInt:
-            out << "float bits to int";
-            break;
-        case EOpFloatBitsToUint:
-            out << "float bits to uint";
-            break;
-        case EOpIntBitsToFloat:
-            out << "int bits to float";
-            break;
-        case EOpUintBitsToFloat:
-            out << "uint bits to float";
-            break;
-
-        case EOpPackSnorm2x16:
-            out << "pack Snorm 2x16";
-            break;
-        case EOpPackUnorm2x16:
-            out << "pack Unorm 2x16";
-            break;
-        case EOpPackHalf2x16:
-            out << "pack half 2x16";
-            break;
-
-        case EOpUnpackSnorm2x16:
-            out << "unpack Snorm 2x16";
-            break;
-        case EOpUnpackUnorm2x16:
-            out << "unpack Unorm 2x16";
-            break;
-        case EOpUnpackHalf2x16:
-            out << "unpack half 2x16";
-            break;
-
-        case EOpLength:
-            out << "length";
-            break;
-        case EOpNormalize:
-            out << "normalize";
-            break;
-        // case EOpDPdx:           out << "dPdx";                 break;
-        // case EOpDPdy:           out << "dPdy";                 break;
-        // case EOpFwidth:         out << "fwidth";               break;
-
-        case EOpDeterminant:
-            out << "determinant";
-            break;
-        case EOpTranspose:
-            out << "transpose";
-            break;
-        case EOpInverse:
-            out << "inverse";
-            break;
-
-        case EOpAny:
-            out << "any";
-            break;
-        case EOpAll:
-            out << "all";
-            break;
         case EOpLogicalNotComponentWise:
             out << "component-wise not";
             break;
 
         default:
-            out.prefix(SH_ERROR);
-            out << "Bad unary op";
+            out << GetOperatorString(node->getOp());
+            break;
     }
 
     out << " (" << node->getCompleteString() << ")";
@@ -532,171 +386,60 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         return true;
     }
 
-    switch (node->getOp())
+    if (node->isConstructor())
     {
-        case EOpFunctionCall:
-            OutputFunction(out, "Function Call", node->getFunctionSymbolInfo());
-            break;
-        case EOpConstructFloat:
-            out << "Construct float";
-            break;
-        case EOpConstructVec2:
-            out << "Construct vec2";
-            break;
-        case EOpConstructVec3:
-            out << "Construct vec3";
-            break;
-        case EOpConstructVec4:
-            out << "Construct vec4";
-            break;
-        case EOpConstructBool:
-            out << "Construct bool";
-            break;
-        case EOpConstructBVec2:
-            out << "Construct bvec2";
-            break;
-        case EOpConstructBVec3:
-            out << "Construct bvec3";
-            break;
-        case EOpConstructBVec4:
-            out << "Construct bvec4";
-            break;
-        case EOpConstructInt:
-            out << "Construct int";
-            break;
-        case EOpConstructIVec2:
-            out << "Construct ivec2";
-            break;
-        case EOpConstructIVec3:
-            out << "Construct ivec3";
-            break;
-        case EOpConstructIVec4:
-            out << "Construct ivec4";
-            break;
-        case EOpConstructUInt:
-            out << "Construct uint";
-            break;
-        case EOpConstructUVec2:
-            out << "Construct uvec2";
-            break;
-        case EOpConstructUVec3:
-            out << "Construct uvec3";
-            break;
-        case EOpConstructUVec4:
-            out << "Construct uvec4";
-            break;
-        case EOpConstructMat2:
-            out << "Construct mat2";
-            break;
-        case EOpConstructMat2x3:
-            out << "Construct mat2x3";
-            break;
-        case EOpConstructMat2x4:
-            out << "Construct mat2x4";
-            break;
-        case EOpConstructMat3x2:
-            out << "Construct mat3x2";
-            break;
-        case EOpConstructMat3:
-            out << "Construct mat3";
-            break;
-        case EOpConstructMat3x4:
-            out << "Construct mat3x4";
-            break;
-        case EOpConstructMat4x2:
-            out << "Construct mat4x2";
-            break;
-        case EOpConstructMat4x3:
-            out << "Construct mat4x3";
-            break;
-        case EOpConstructMat4:
-            out << "Construct mat4";
-            break;
-        case EOpConstructStruct:
+        if (node->getOp() == EOpConstructStruct)
+        {
             out << "Construct structure";
-            break;
+        }
+        else
+        {
+            out << "Construct " << GetOperatorString(node->getOp());
+        }
+    }
+    else
+    {
+        // Give verbose names for some built-in functions that are easy to confuse with others, but
+        // mostly use GLSL names for functions.
+        switch (node->getOp())
+        {
+            case EOpFunctionCall:
+                OutputFunction(out, "Function Call", node->getFunctionSymbolInfo());
+                break;
 
-        case EOpEqualComponentWise:
-            out << "component-wise equal";
-            break;
-        case EOpNotEqualComponentWise:
-            out << "component-wise not equal";
-            break;
-        case EOpLessThanComponentWise:
-            out << "component-wise less than";
-            break;
-        case EOpGreaterThanComponentWise:
-            out << "component-wise greater than";
-            break;
-        case EOpLessThanEqualComponentWise:
-            out << "component-wise less than or equal";
-            break;
-        case EOpGreaterThanEqualComponentWise:
-            out << "component-wise greater than or equal";
-            break;
+            case EOpEqualComponentWise:
+                out << "component-wise equal";
+                break;
+            case EOpNotEqualComponentWise:
+                out << "component-wise not equal";
+                break;
+            case EOpLessThanComponentWise:
+                out << "component-wise less than";
+                break;
+            case EOpGreaterThanComponentWise:
+                out << "component-wise greater than";
+                break;
+            case EOpLessThanEqualComponentWise:
+                out << "component-wise less than or equal";
+                break;
+            case EOpGreaterThanEqualComponentWise:
+                out << "component-wise greater than or equal";
+                break;
 
-        case EOpMod:
-            out << "mod";
-            break;
-        case EOpModf:
-            out << "modf";
-            break;
-        case EOpPow:
-            out << "pow";
-            break;
+            case EOpDot:
+                out << "dot product";
+                break;
+            case EOpCross:
+                out << "cross product";
+                break;
+            case EOpMulMatrixComponentWise:
+                out << "component-wise multiply";
+                break;
 
-        case EOpAtan:
-            out << "arc tangent";
-            break;
-
-        case EOpMin:
-            out << "min";
-            break;
-        case EOpMax:
-            out << "max";
-            break;
-        case EOpClamp:
-            out << "clamp";
-            break;
-        case EOpMix:
-            out << "mix";
-            break;
-        case EOpStep:
-            out << "step";
-            break;
-        case EOpSmoothStep:
-            out << "smoothstep";
-            break;
-
-        case EOpDistance:
-            out << "distance";
-            break;
-        case EOpDot:
-            out << "dot-product";
-            break;
-        case EOpCross:
-            out << "cross-product";
-            break;
-        case EOpFaceForward:
-            out << "face-forward";
-            break;
-        case EOpReflect:
-            out << "reflect";
-            break;
-        case EOpRefract:
-            out << "refract";
-            break;
-        case EOpMulMatrixComponentWise:
-            out << "component-wise multiply";
-            break;
-
-        case EOpOuterProduct:
-            out << "outer product";
-            break;
-
-        default:
-            out.prefix(SH_ERROR);
-            out << "Bad aggregation op";
+            default:
+                out << GetOperatorString(node->getOp());
+                break;
+        }
     }
 
     out << " (" << node->getCompleteString() << ")";
