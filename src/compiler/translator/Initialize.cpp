@@ -42,120 +42,110 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Angle and Trigonometric Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpRadians, genType, "radians", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpDegrees, genType, "degrees", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSin, genType, "sin", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpCos, genType, "cos", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpTan, genType, "tan", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAsin, genType, "asin", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAcos, genType, "acos", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAtan, genType, "atan", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAtan, genType, "atan", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpSinh, genType, "sinh", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpCosh, genType, "cosh", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTanh, genType, "tanh", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpAsinh, genType, "asinh", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpAcosh, genType, "acosh", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpAtanh, genType, "atanh", genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpRadians, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpDegrees, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSin, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpCos, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpTan, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAsin, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAcos, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAtan, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAtan, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpSinh, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpCosh, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTanh, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpAsinh, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpAcosh, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpAtanh, genType, genType);
 
     //
     // Exponential Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpPow, genType, "pow", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpExp, genType, "exp", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLog, genType, "log", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpExp2, genType, "exp2", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLog2, genType, "log2", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSqrt, genType, "sqrt", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpInverseSqrt, genType, "inversesqrt", genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpPow, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpExp, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLog, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpExp2, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLog2, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSqrt, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpInverseSqrt, genType, genType);
 
     //
     // Common Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAbs, genType, "abs", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpAbs, genIType, "abs", genIType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSign, genType, "sign", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpSign, genIType, "sign", genIType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpFloor, genType, "floor", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTrunc, genType, "trunc", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpRound, genType, "round", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpRoundEven, genType, "roundEven", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpCeil, genType, "ceil", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpFract, genType, "fract", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMod, genType, "mod", genType, float1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMod, genType, "mod", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMin, genType, "min", genType, float1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMin, genType, "min", genType, genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMin, genIType, "min", genIType, genIType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMin, genIType, "min", genIType, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMin, genUType, "min", genUType, genUType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMin, genUType, "min", genUType, uint1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMax, genType, "max", genType, float1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMax, genType, "max", genType, genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMax, genIType, "max", genIType, genIType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMax, genIType, "max", genIType, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMax, genUType, "max", genUType, genUType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMax, genUType, "max", genUType, uint1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpClamp, genType, "clamp", genType, float1, float1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpClamp, genType, "clamp", genType, genType,
-                              genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpClamp, genIType, "clamp", genIType, int1, int1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpClamp, genIType, "clamp", genIType, genIType,
-                              genIType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpClamp, genUType, "clamp", genUType, uint1, uint1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpClamp, genUType, "clamp", genUType, genUType,
-                              genUType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMix, genType, "mix", genType, genType, float1);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMix, genType, "mix", genType, genType, genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMix, genType, "mix", genType, genType, genBType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpStep, genType, "step", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpStep, genType, "step", float1, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSmoothStep, genType, "smoothstep", genType,
-                              genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpSmoothStep, genType, "smoothstep", float1, float1,
-                              genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAbs, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpAbs, genIType, genIType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSign, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpSign, genIType, genIType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpFloor, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTrunc, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpRound, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpRoundEven, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpCeil, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpFract, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMod, genType, genType, float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMod, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMin, genType, genType, float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMin, genType, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMin, genIType, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMin, genIType, genIType, int1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMin, genUType, genUType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMin, genUType, genUType, uint1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMax, genType, genType, float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMax, genType, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMax, genIType, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMax, genIType, genIType, int1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMax, genUType, genUType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMax, genUType, genUType, uint1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpClamp, genType, genType, float1, float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpClamp, genType, genType, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpClamp, genIType, genIType, int1, int1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpClamp, genIType, genIType, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpClamp, genUType, genUType, uint1, uint1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpClamp, genUType, genUType, genUType, genUType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMix, genType, genType, genType, float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMix, genType, genType, genType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMix, genType, genType, genType, genBType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpStep, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpStep, genType, float1, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, float1, float1, genType);
 
     const TType *outFloat1 = TCache::getType(EbtFloat, EvqOut);
     const TType *outFloat2 = TCache::getType(EbtFloat, EvqOut, 2);
     const TType *outFloat3 = TCache::getType(EbtFloat, EvqOut, 3);
     const TType *outFloat4 = TCache::getType(EbtFloat, EvqOut, 4);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float1, "modf", float1, outFloat1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float2, "modf", float2, outFloat2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float3, "modf", float3, outFloat3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpModf, float4, "modf", float4, outFloat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float1, float1, outFloat1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float2, float2, outFloat2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float3, float3, outFloat3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float4, float4, outFloat4);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpIsNan, genBType, "isnan", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpIsInf, genBType, "isinf", genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFloatBitsToInt, genIType, "floatBitsToInt",
-                              genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFloatBitsToUint, genUType, "floatBitsToUint",
-                              genType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpIntBitsToFloat, genType, "intBitsToFloat",
-                              genIType);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpUintBitsToFloat, genType, "uintBitsToFloat",
-                              genUType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpIsNan, genBType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpIsInf, genBType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpFloatBitsToInt, genIType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpFloatBitsToUint, genUType, genType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpIntBitsToFloat, genType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUintBitsToFloat, genType, genUType);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpPackSnorm2x16, uint1, "packSnorm2x16", float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpPackUnorm2x16, uint1, "packUnorm2x16", float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpPackHalf2x16, uint1, "packHalf2x16", float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpUnpackSnorm2x16, float2, "unpackSnorm2x16", uint1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpUnpackUnorm2x16, float2, "unpackUnorm2x16", uint1);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpUnpackHalf2x16, float2, "unpackHalf2x16", uint1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpPackSnorm2x16, uint1, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpPackUnorm2x16, uint1, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpPackHalf2x16, uint1, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUnpackSnorm2x16, float2, uint1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUnpackUnorm2x16, float2, uint1);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUnpackHalf2x16, float2, uint1);
 
     //
     // Geometric Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLength, float1, "length", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpDistance, float1, "distance", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpDot, float1, "dot", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpCross, float3, "cross", float3, float3);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNormalize, genType, "normalize", genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpFaceForward, genType, "faceforward", genType,
-                              genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpReflect, genType, "reflect", genType, genType);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpRefract, genType, "refract", genType, genType,
-                              float1);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLength, float1, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpDistance, float1, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpDot, float1, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpCross, float3, float3, float3);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpNormalize, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpFaceForward, genType, genType, genType,
+                                genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpReflect, genType, genType, genType);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpRefract, genType, genType, genType, float1);
 
     const TType *mat2   = TCache::getType(EbtFloat, 2, 2);
     const TType *mat3   = TCache::getType(EbtFloat, 3, 3);
@@ -170,61 +160,43 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Matrix Functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat2, "matrixCompMult",
-                              mat2, mat2);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat3, "matrixCompMult",
-                              mat3, mat3);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat4, "matrixCompMult",
-                              mat4, mat4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x3, "matrixCompMult",
-                              mat2x3, mat2x3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x2, "matrixCompMult",
-                              mat3x2, mat3x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x4, "matrixCompMult",
-                              mat2x4, mat2x4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x2, "matrixCompMult",
-                              mat4x2, mat4x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x4, "matrixCompMult",
-                              mat3x4, mat3x4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x3, "matrixCompMult",
-                              mat4x3, mat4x3);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat2, mat2, mat2);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat3, mat3, mat3);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpMulMatrixComponentWise, mat4, mat4, mat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x3, mat2x3, mat2x3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x2, mat3x2, mat3x2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat2x4, mat2x4, mat2x4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x2, mat4x2, mat4x2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat3x4, mat3x4, mat3x4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpMulMatrixComponentWise, mat4x3, mat4x3, mat4x3);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat2, "outerProduct", float2,
-                              float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat3, "outerProduct", float3,
-                              float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat4, "outerProduct", float4,
-                              float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat2x3, "outerProduct", float3,
-                              float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat3x2, "outerProduct", float2,
-                              float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat2x4, "outerProduct", float4,
-                              float2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat4x2, "outerProduct", float2,
-                              float4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat3x4, "outerProduct", float4,
-                              float3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpOuterProduct, mat4x3, "outerProduct", float3,
-                              float4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat2, float2, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat3, float3, float3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat4, float4, float4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat2x3, float3, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat3x2, float2, float3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat2x4, float4, float2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat4x2, float2, float4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat3x4, float4, float3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpOuterProduct, mat4x3, float3, float4);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat2, "transpose", mat2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat3, "transpose", mat3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat4, "transpose", mat4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat2x3, "transpose", mat3x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat3x2, "transpose", mat2x3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat2x4, "transpose", mat4x2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat4x2, "transpose", mat2x4);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat3x4, "transpose", mat4x3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpTranspose, mat4x3, "transpose", mat3x4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat2, mat2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat3, mat3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat4, mat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat2x3, mat3x2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat3x2, mat2x3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat2x4, mat4x2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat4x2, mat2x4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat3x4, mat4x3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpTranspose, mat4x3, mat3x4);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDeterminant, float1, "determinant", mat2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDeterminant, float1, "determinant", mat3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDeterminant, float1, "determinant", mat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpDeterminant, float1, mat2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpDeterminant, float1, mat3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpDeterminant, float1, mat4);
 
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpInverse, mat2, "inverse", mat2);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpInverse, mat3, "inverse", mat3);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpInverse, mat4, "inverse", mat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpInverse, mat2, mat2);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpInverse, mat3, mat3);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpInverse, mat4, mat4);
 
     const TType *vec  = TCache::getType(EbtVec);
     const TType *ivec = TCache::getType(EbtIVec);
@@ -234,45 +206,30 @@ void InsertBuiltInFunctions(sh::GLenum type,
     //
     // Vector relational functions.
     //
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", vec,
-                              vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", ivec,
-                              ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThanComponentWise, bvec, "lessThan", uvec,
-                              uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
-                              vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
-                              ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpLessThanEqualComponentWise, bvec, "lessThanEqual",
-                              uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
-                              vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
-                              ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThanComponentWise, bvec, "greaterThan",
-                              uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
-                              "greaterThanEqual", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
-                              "greaterThanEqual", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpGreaterThanEqualComponentWise, bvec,
-                              "greaterThanEqual", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", vec, vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", ivec, ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpEqualComponentWise, bvec, "equal", uvec, uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpEqualComponentWise, bvec, "equal", bvec, bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", vec,
-                              vec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", ivec,
-                              ivec);
-    symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", uvec,
-                              uvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, "notEqual", bvec,
-                              bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAny, bool1, "any", bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpAll, bool1, "all", bvec);
-    symbolTable.insertBuiltIn(COMMON_BUILTINS, EOpLogicalNotComponentWise, bvec, "not", bvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLessThanComponentWise, bvec, ivec, ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpLessThanComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLessThanEqualComponentWise, bvec, ivec, ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpLessThanEqualComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpGreaterThanComponentWise, bvec, ivec, ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpGreaterThanComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpGreaterThanEqualComponentWise, bvec, ivec,
+                                ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpGreaterThanEqualComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpEqualComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpEqualComponentWise, bvec, ivec, ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpEqualComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpEqualComponentWise, bvec, bvec, bvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, vec, vec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, ivec, ivec);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpNotEqualComponentWise, bvec, uvec, uvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpNotEqualComponentWise, bvec, bvec, bvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAny, bool1, bvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAll, bool1, bvec);
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLogicalNotComponentWise, bvec, bvec);
 
     const TType *sampler2D   = TCache::getType(EbtSampler2D);
     const TType *samplerCube = TCache::getType(EbtSamplerCube);
@@ -334,12 +291,12 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
         if (resources.OES_standard_derivatives)
         {
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives",
-                                      genType, "dFdx", genType);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives",
-                                      genType, "dFdy", genType);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives",
-                                      genType, "fwidth", genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives",
+                                        genType, genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives",
+                                        genType, genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives",
+                                        genType, genType);
         }
 
         if (resources.EXT_shader_texture_lod)
@@ -464,9 +421,9 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
     if (type == GL_FRAGMENT_SHADER)
     {
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdx, genType, "dFdx", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpDFdy, genType, "dFdy", genType);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, EOpFwidth, genType, "fwidth", genType);
+        symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpDFdx, genType, genType);
+        symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpDFdy, genType, genType);
+        symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpFwidth, genType, genType);
     }
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, gvec4, "textureOffset", gsampler2D, float2, int2);
