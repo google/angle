@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_2e0f4fe8",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T01:11:23Z",
+      "side": 1,
+      "message": "how about AllocateOrShareResourceManager",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 27
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_aefb3f9b",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T01:11:23Z",
+      "side": 1,
+      "message": "surprised this doesn\u0027t need a typename qualifier.",
+      "range": {
+        "startLine": 24,
+        "startChar": 67,
+        "endLine": 24,
+        "endChar": 85
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_ee9ff74c",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T01:11:23Z",
+      "side": 1,
+      "message": "originally I was confused as to why you didn\u0027t just make these methods template members of TypedResourceManager. Thinking about it, I\u0027m guessing you are trying to avoid extra code generation for cases where you aren\u0027t using certain template members, like InsertObject or AllocateEmptyObject. This seems reasonable, can you document this in a comment or in the CL description?\n\nAlso FYI, I read into this, and apparently the spec mandates that unused template methods are not instantiated, but people have claimed older compilers (VC6!) don\u0027t always respect this. \n\nhttp://stackoverflow.com/questions/183108/is-object-code-generated-for-unused-template-class-methods",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_718aca01",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T01:11:23Z",
+      "side": 1,
+      "message": "this particular guy (DeletObject) can be simplified as a template class member that calls release, as every instantiation calls this member, it\u0027s used in every template, and it\u0027s the only place you use a lambda. I tested this locally. I know it gives up on some future flexiblity for object types that don\u0027t use a release() method but I would appreciate the code simplification. You could even make it a header template and change all the deleteBuffer()/deleteTexture()/deleteRenderbuffer() etc to just deleteObject.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 10
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
