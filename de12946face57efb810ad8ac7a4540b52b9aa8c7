@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_317b322a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_29018cee",
+      "range": {
+        "startLine": 397,
+        "startChar": 24,
+        "endLine": 402,
+        "endChar": 87
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_c97318c1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-21T00:07:36Z",
       "side": 1,
       "message": "question: is it necessary to split this off outside the class? sorry if I didn\u0027t check this myself.",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 25
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_44a6edfd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "It isn\u0027t, just a stylistic preference. I\u0027ll move it back to the original position.",
+      "parentUuid": "6854da0e_c97318c1",
       "range": {
         "startLine": 26,
         "startChar": 7,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_ce49dbc7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_a9dd7c51",
+      "range": {
+        "startLine": 8,
+        "startChar": 74,
+        "endLine": 8,
+        "endChar": 75
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_c9b0b8e7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
         "patchSetId": 10
@@ -105,6 +177,30 @@
       "writtenOn": "2017-01-21T00:07:36Z",
       "side": 1,
       "message": "trailing whitespace",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 40
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_2e2e2ff7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_c9b0b8e7",
       "range": {
         "startLine": 31,
         "startChar": 0,
