@@ -207,4 +207,57 @@ TEST(MathUtilTest, CheckedRoundUpInvalid)
     ASSERT_FALSE(checkedLimit.IsValid());
 }
 
+// Test BitfieldReverse which reverses the order of the bits in an integer.
+TEST(MathUtilTest, BitfieldReverse)
+{
+    EXPECT_EQ(0u, gl::BitfieldReverse(0u));
+    EXPECT_EQ(0x80000000u, gl::BitfieldReverse(1u));
+    EXPECT_EQ(0x1u, gl::BitfieldReverse(0x80000000u));
+    uint32_t bits     = (1u << 4u) | (1u << 7u);
+    uint32_t reversed = (1u << (31u - 4u)) | (1u << (31u - 7u));
+    EXPECT_EQ(reversed, gl::BitfieldReverse(bits));
+}
+
+// Test BitCount, which counts 1 bits in an integer.
+TEST(MathUtilTest, BitCount)
+{
+    EXPECT_EQ(0, gl::BitCount(0u));
+    EXPECT_EQ(32, gl::BitCount(0xFFFFFFFFu));
+    EXPECT_EQ(10, gl::BitCount(0x17103121u));
+}
+
+// Test ScanForward, which scans for the least significant 1 bit from a non-zero integer.
+TEST(MathUtilTest, ScanForward)
+{
+    EXPECT_EQ(0ul, gl::ScanForward(1ul));
+    EXPECT_EQ(16ul, gl::ScanForward(0x80010000ul));
+    EXPECT_EQ(31ul, gl::ScanForward(0x80000000ul));
+}
+
+// Test ScanReverse, which scans for the most significant 1 bit from a non-zero integer.
+TEST(MathUtilTest, ScanReverse)
+{
+    EXPECT_EQ(0ul, gl::ScanReverse(1ul));
+    EXPECT_EQ(16ul, gl::ScanReverse(0x00010030ul));
+    EXPECT_EQ(31ul, gl::ScanReverse(0x80000000ul));
+}
+
+// Test FindLSB, which finds the least significant 1 bit.
+TEST(MathUtilTest, FindLSB)
+{
+    EXPECT_EQ(-1, gl::FindLSB(0u));
+    EXPECT_EQ(0, gl::FindLSB(1u));
+    EXPECT_EQ(16, gl::FindLSB(0x80010000u));
+    EXPECT_EQ(31, gl::FindLSB(0x80000000u));
+}
+
+// Test FindMSB, which finds the most significant 1 bit.
+TEST(MathUtilTest, FindMSB)
+{
+    EXPECT_EQ(-1, gl::FindMSB(0u));
+    EXPECT_EQ(0, gl::FindMSB(1u));
+    EXPECT_EQ(16, gl::FindMSB(0x00010030u));
+    EXPECT_EQ(31, gl::FindMSB(0x80000000u));
+}
+
 }  // anonymous namespace

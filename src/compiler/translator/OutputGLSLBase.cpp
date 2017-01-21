@@ -725,6 +725,10 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         case EOpAny:
         case EOpAll:
         case EOpLogicalNotComponentWise:
+        case EOpBitfieldReverse:
+        case EOpBitCount:
+        case EOpFindLSB:
+        case EOpFindMSB:
             writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
             return true;
         default:
@@ -935,6 +939,12 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpRefract:
         case EOpMulMatrixComponentWise:
         case EOpOuterProduct:
+        case EOpBitfieldExtract:
+        case EOpBitfieldInsert:
+        case EOpUaddCarry:
+        case EOpUsubBorrow:
+        case EOpUmulExtended:
+        case EOpImulExtended:
         case EOpBarrier:
         case EOpMemoryBarrier:
         case EOpMemoryBarrierAtomicCounter:

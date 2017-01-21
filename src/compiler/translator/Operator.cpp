@@ -252,6 +252,27 @@ const char *GetOperatorString(TOperator op)
         case EOpLogicalNotComponentWise:
             return "not";
 
+        case EOpBitfieldExtract:
+            return "bitfieldExtract";
+        case EOpBitfieldInsert:
+            return "bitfieldInsert";
+        case EOpBitfieldReverse:
+            return "bitfieldReverse";
+        case EOpBitCount:
+            return "bitCount";
+        case EOpFindLSB:
+            return "findLSB";
+        case EOpFindMSB:
+            return "findMSB";
+        case EOpUaddCarry:
+            return "uaddCarry";
+        case EOpUsubBorrow:
+            return "usubBorrow";
+        case EOpUmulExtended:
+            return "umulExtended";
+        case EOpImulExtended:
+            return "imulExtended";
+
         case EOpKill:
             return "kill";
         case EOpReturn:

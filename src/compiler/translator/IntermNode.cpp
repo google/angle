@@ -306,10 +306,41 @@ void TIntermAggregate::setPrecisionFromChildren()
     mType.setPrecision(precision);
 }
 
+void TIntermAggregate::setPrecisionForBuiltInOp()
+{
+    ASSERT(!isConstructor());
+    ASSERT(mOp != EOpFunctionCall);
+    if (!setPrecisionForSpecialBuiltInOp())
+    {
+        setPrecisionFromChildren();
+    }
+}
+
+bool TIntermAggregate::setPrecisionForSpecialBuiltInOp()
+{
+    switch (mOp)
+    {
+        case EOpBitfieldExtract:
+            mType.setPrecision(mSequence[0]->getAsTyped()->getPrecision());
+            return true;
+        case EOpBitfieldInsert:
+            mType.setPrecision(GetHigherPrecision(mSequence[0]->getAsTyped()->getPrecision(),
+                                                  mSequence[1]->getAsTyped()->getPrecision()));
+            return true;
+        case EOpUaddCarry:
+        case EOpUsubBorrow:
+            mType.setPrecision(EbpHigh);
+            return true;
+        default:
+            return false;
+    }
+}
+
 void TIntermAggregate::setBuiltInFunctionPrecision()
 {
     // All built-ins returning bool should be handled as ops, not functions.
     ASSERT(getBasicType() != EbtBool);
+    ASSERT(getOp() == EOpFunctionCall);
 
     TPrecision precision                = EbpUndefined;
     TIntermSequence::iterator childIter = mSequence.begin();
@@ -763,6 +794,18 @@ void TIntermUnary::promote()
         case EOpIsInf:
         case EOpIsNan:
             setType(TType(EbtBool, EbpUndefined, resultQualifier, operandPrimarySize));
+            break;
+        case EOpBitfieldReverse:
+            setType(TType(mOperand->getBasicType(), EbpHigh, resultQualifier, operandPrimarySize));
+            break;
+        case EOpBitCount:
+            setType(TType(EbtInt, EbpLow, resultQualifier, operandPrimarySize));
+            break;
+        case EOpFindLSB:
+            setType(TType(EbtInt, EbpLow, resultQualifier, operandPrimarySize));
+            break;
+        case EOpFindMSB:
+            setType(TType(EbtInt, EbpLow, resultQualifier, operandPrimarySize));
             break;
         default:
             setType(mOperand->getType());
@@ -2151,7 +2194,82 @@ TConstantUnion *TIntermConstantUnion::foldUnaryComponentWise(TOperator op,
                                                   diagnostics, &resultArray[i]);
                 break;
             }
-
+            case EOpBitfieldReverse:
+            {
+                uint32_t value;
+                if (getType().getBasicType() == EbtInt)
+                {
+                    value = static_cast<uint32_t>(operandArray[i].getIConst());
+                }
+                else
+                {
+                    ASSERT(getType().getBasicType() == EbtUInt);
+                    value = operandArray[i].getUConst();
+                }
+                uint32_t result = gl::BitfieldReverse(value);
+                if (getType().getBasicType() == EbtInt)
+                {
+                    resultArray[i].setIConst(static_cast<int32_t>(result));
+                }
+                else
+                {
+                    resultArray[i].setUConst(result);
+                }
+                break;
+            }
+            case EOpBitCount:
+            {
+                uint32_t value;
+                if (getType().getBasicType() == EbtInt)
+                {
+                    value = static_cast<uint32_t>(operandArray[i].getIConst());
+                }
+                else
+                {
+                    ASSERT(getType().getBasicType() == EbtUInt);
+                    value = operandArray[i].getUConst();
+                }
+                int result = gl::BitCount(value);
+                resultArray[i].setIConst(result);
+                break;
+            }
+            case EOpFindLSB:
+            {
+                uint32_t value;
+                if (getType().getBasicType() == EbtInt)
+                {
+                    value = static_cast<uint32_t>(operandArray[i].getIConst());
+                }
+                else
+                {
+                    ASSERT(getType().getBasicType() == EbtUInt);
+                    value = operandArray[i].getUConst();
+                }
+                resultArray[i].setIConst(gl::FindLSB(value));
+                break;
+            }
+            case EOpFindMSB:
+            {
+                uint32_t value;
+                if (getType().getBasicType() == EbtInt)
+                {
+                    int intValue = operandArray[i].getIConst();
+                    value        = static_cast<uint32_t>(intValue);
+                    if (intValue < 0)
+                    {
+                        // Look for zero instead of one in value. This also handles the intValue ==
+                        // -1 special case, where the return value needs to be -1.
+                        value = ~value;
+                    }
+                }
+                else
+                {
+                    ASSERT(getType().getBasicType() == EbtUInt);
+                    value = operandArray[i].getUConst();
+                }
+                resultArray[i].setIConst(gl::FindMSB(value));
+                break;
+            }
             case EOpDFdx:
             case EOpDFdy:
             case EOpFwidth:
@@ -2831,6 +2949,110 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
                     resultArray[i].setFConst(eta * unionArrays[0][i].getFConst() -
                                              (eta * dotProduct + sqrtf(k)) *
                                                  unionArrays[1][i].getFConst());
+            }
+            break;
+        }
+        case EOpBitfieldExtract:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; ++i)
+            {
+                int offset = unionArrays[1][0].getIConst();
+                int bits   = unionArrays[2][0].getIConst();
+                if (bits == 0)
+                {
+                    if (aggregate->getBasicType() == EbtInt)
+                    {
+                        resultArray[i].setIConst(0);
+                    }
+                    else
+                    {
+                        ASSERT(aggregate->getBasicType() == EbtUInt);
+                        resultArray[i].setUConst(0);
+                    }
+                }
+                else if (offset < 0 || bits < 0 || offset >= 32 || bits > 32 || offset + bits > 32)
+                {
+                    UndefinedConstantFoldingError(loc, op, aggregate->getBasicType(), diagnostics,
+                                                  &resultArray[i]);
+                }
+                else
+                {
+                    // bits can be 32 here, so we need to avoid bit shift overflow.
+                    uint32_t maskMsb = 1u << (bits - 1);
+                    uint32_t mask    = ((maskMsb - 1u) | maskMsb) << offset;
+                    if (aggregate->getBasicType() == EbtInt)
+                    {
+                        uint32_t value = static_cast<uint32_t>(unionArrays[0][i].getIConst());
+                        uint32_t resultUnsigned = (value & mask) >> offset;
+                        if ((resultUnsigned & maskMsb) != 0)
+                        {
+                            // The most significant bits (from bits+1 to the most significant bit)
+                            // should be set to 1.
+                            uint32_t higherBitsMask = ((1u << (32 - bits)) - 1u) << bits;
+                            resultUnsigned |= higherBitsMask;
+                        }
+                        resultArray[i].setIConst(static_cast<int32_t>(resultUnsigned));
+                    }
+                    else
+                    {
+                        ASSERT(aggregate->getBasicType() == EbtUInt);
+                        uint32_t value = unionArrays[0][i].getUConst();
+                        resultArray[i].setUConst((value & mask) >> offset);
+                    }
+                }
+            }
+            break;
+        }
+        case EOpBitfieldInsert:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; ++i)
+            {
+                int offset = unionArrays[2][0].getIConst();
+                int bits   = unionArrays[3][0].getIConst();
+                if (bits == 0)
+                {
+                    if (aggregate->getBasicType() == EbtInt)
+                    {
+                        int32_t base = unionArrays[0][i].getIConst();
+                        resultArray[i].setIConst(base);
+                    }
+                    else
+                    {
+                        ASSERT(aggregate->getBasicType() == EbtUInt);
+                        uint32_t base = unionArrays[0][i].getUConst();
+                        resultArray[i].setUConst(base);
+                    }
+                }
+                else if (offset < 0 || bits < 0 || offset >= 32 || bits > 32 || offset + bits > 32)
+                {
+                    UndefinedConstantFoldingError(loc, op, aggregate->getBasicType(), diagnostics,
+                                                  &resultArray[i]);
+                }
+                else
+                {
+                    // bits can be 32 here, so we need to avoid bit shift overflow.
+                    uint32_t maskMsb    = 1u << (bits - 1);
+                    uint32_t insertMask = ((maskMsb - 1u) | maskMsb) << offset;
+                    uint32_t baseMask   = ~insertMask;
+                    if (aggregate->getBasicType() == EbtInt)
+                    {
+                        uint32_t base   = static_cast<uint32_t>(unionArrays[0][i].getIConst());
+                        uint32_t insert = static_cast<uint32_t>(unionArrays[1][i].getIConst());
+                        uint32_t resultUnsigned =
+                            (base & baseMask) | ((insert << offset) & insertMask);
+                        resultArray[i].setIConst(static_cast<int32_t>(resultUnsigned));
+                    }
+                    else
+                    {
+                        ASSERT(aggregate->getBasicType() == EbtUInt);
+                        uint32_t base   = unionArrays[0][i].getUConst();
+                        uint32_t insert = unionArrays[1][i].getUConst();
+                        resultArray[i].setUConst((base & baseMask) |
+                                                 ((insert << offset) & insertMask));
+                    }
+                }
             }
             break;
         }

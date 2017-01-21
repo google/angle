@@ -378,6 +378,8 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate,
         case EOpFaceForward:
         case EOpReflect:
         case EOpRefract:
+        case EOpBitfieldExtract:
+        case EOpBitfieldInsert:
             return aggregate->fold(diagnostics);
         default:
             // TODO: Add support for folding array constructors

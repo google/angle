@@ -110,15 +110,9 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, genType, genType, genType);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpSmoothStep, genType, float1, float1, genType);
 
-    const TType *outFloat1 = TCache::getType(EbtFloat, EvqOut);
-    const TType *outFloat2 = TCache::getType(EbtFloat, EvqOut, 2);
-    const TType *outFloat3 = TCache::getType(EbtFloat, EvqOut, 3);
-    const TType *outFloat4 = TCache::getType(EbtFloat, EvqOut, 4);
+    const TType *outGenType = TCache::getType(EbtGenType, EvqOut);
 
-    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float1, float1, outFloat1);
-    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float2, float2, outFloat2);
-    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float3, float3, outFloat3);
-    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, float4, float4, outFloat4);
+    symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpModf, genType, genType, outGenType);
 
     symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpIsNan, genBType, genType);
     symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpIsInf, genBType, genType);
@@ -230,6 +224,37 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAny, bool1, bvec);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpAll, bool1, bvec);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpLogicalNotComponentWise, bvec, bvec);
+
+    //
+    // Integer functions
+    //
+    const TType *outGenUType = TCache::getType(EbtGenUType, EvqOut);
+    const TType *outGenIType = TCache::getType(EbtGenIType, EvqOut);
+
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldExtract, genIType, genIType, int1,
+                                int1);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldExtract, genUType, genUType, int1,
+                                int1);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldInsert, genIType, genIType, genIType,
+                                int1, int1);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldInsert, genUType, genUType, genUType,
+                                int1, int1);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldReverse, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitfieldReverse, genUType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitCount, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpBitCount, genIType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpFindLSB, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpFindLSB, genIType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpFindMSB, genIType, genIType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpFindMSB, genIType, genUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpUaddCarry, genUType, genUType, genUType,
+                                outGenUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpUsubBorrow, genUType, genUType, genUType,
+                                outGenUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpUmulExtended, voidType, genUType, genUType,
+                                outGenUType, outGenUType);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpImulExtended, voidType, genIType, genIType,
+                                outGenIType, outGenIType);
 
     const TType *sampler2D   = TCache::getType(EbtSampler2D);
     const TType *samplerCube = TCache::getType(EbtSamplerCube);

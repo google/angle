@@ -223,13 +223,14 @@ const TType *SpecificType(const TType *type, int size)
     switch (type->getBasicType())
     {
         case EbtGenType:
-            return TCache::getType(EbtFloat, static_cast<unsigned char>(size));
+            return TCache::getType(EbtFloat, type->getQualifier(),
+                                   static_cast<unsigned char>(size));
         case EbtGenIType:
-            return TCache::getType(EbtInt, static_cast<unsigned char>(size));
+            return TCache::getType(EbtInt, type->getQualifier(), static_cast<unsigned char>(size));
         case EbtGenUType:
-            return TCache::getType(EbtUInt, static_cast<unsigned char>(size));
+            return TCache::getType(EbtUInt, type->getQualifier(), static_cast<unsigned char>(size));
         case EbtGenBType:
-            return TCache::getType(EbtBool, static_cast<unsigned char>(size));
+            return TCache::getType(EbtBool, type->getQualifier(), static_cast<unsigned char>(size));
         default:
             return type;
     }
@@ -364,18 +365,19 @@ void TSymbolTable::insertBuiltIn(ESymbolLevel level,
             insertBuiltIn(level, rvalue, name, unsignedImage, ptype2, ptype3, ptype4, ptype5);
         }
     }
-    else if (IsGenType(rvalue) || IsGenType(ptype1) || IsGenType(ptype2) || IsGenType(ptype3))
+    else if (IsGenType(rvalue) || IsGenType(ptype1) || IsGenType(ptype2) || IsGenType(ptype3) ||
+             IsGenType(ptype4))
     {
-        ASSERT(!ptype4 && !ptype5);
+        ASSERT(!ptype5);
         insertUnmangledBuiltInName(name, level);
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 1), name, SpecificType(ptype1, 1),
-                      SpecificType(ptype2, 1), SpecificType(ptype3, 1));
+                      SpecificType(ptype2, 1), SpecificType(ptype3, 1), SpecificType(ptype4, 1));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 2), name, SpecificType(ptype1, 2),
-                      SpecificType(ptype2, 2), SpecificType(ptype3, 2));
+                      SpecificType(ptype2, 2), SpecificType(ptype3, 2), SpecificType(ptype4, 2));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 3), name, SpecificType(ptype1, 3),
-                      SpecificType(ptype2, 3), SpecificType(ptype3, 3));
+                      SpecificType(ptype2, 3), SpecificType(ptype3, 3), SpecificType(ptype4, 3));
         insertBuiltIn(level, op, ext, SpecificType(rvalue, 4), name, SpecificType(ptype1, 4),
-                      SpecificType(ptype2, 4), SpecificType(ptype3, 4));
+                      SpecificType(ptype2, 4), SpecificType(ptype3, 4), SpecificType(ptype4, 4));
     }
     else if (IsVecType(rvalue) || IsVecType(ptype1) || IsVecType(ptype2) || IsVecType(ptype3))
     {

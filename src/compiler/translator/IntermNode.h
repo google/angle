@@ -618,7 +618,12 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
     bool areChildrenConstQualified();
+
+    void setPrecisionForBuiltInOp();
+
     void setPrecisionFromChildren();
+
+    // Used for built-in functions under EOpFunctionCall.
     void setBuiltInFunctionPrecision();
 
     // Returns true if changing parameter precision may affect the return value.
@@ -641,6 +646,9 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
   private:
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
+
+    // Returns true if precision was set according to special rules for this built-in.
+    bool setPrecisionForSpecialBuiltInOp();
 };
 
 // A list of statements. Either the root node which contains declarations and function definitions,

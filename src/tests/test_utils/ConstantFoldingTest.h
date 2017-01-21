@@ -138,7 +138,7 @@ class ConstantFoldingTest : public ShaderCompileTreeTest
 
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
-    ShShaderSpec getShaderSpec() const override { return SH_GLES3_SPEC; }
+    ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 
     template <typename T>
     bool constantFoundInAST(T constant)
@@ -177,6 +177,8 @@ class ConstantFoldingExpressionTest : public ConstantFoldingTest
     ConstantFoldingExpressionTest() {}
 
     void evaluateFloat(const std::string &floatExpression);
+    void evaluateInt(const std::string &intExpression);
+    void evaluateUint(const std::string &uintExpression);
 };
 
 }  // namespace sh

@@ -27,7 +27,7 @@ class TypeTrackingTest : public testing::Test
         InitBuiltInResources(&resources);
         resources.FragmentPrecisionHigh = 1;
 
-        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_SPEC);
+        mTranslator = new TranslatorESSL(GL_FRAGMENT_SHADER, SH_GLES3_1_SPEC);
         ASSERT_TRUE(mTranslator->Init(resources));
     }
 
@@ -453,4 +453,193 @@ TEST_F(TypeTrackingTest, BuiltInIntBitsToFloatResultTypeAndPrecision)
     ASSERT_FALSE(foundErrorInIntermediateTree());
     ASSERT_TRUE(foundInIntermediateTree("intBitsToFloat (highp float)"));
     ASSERT_TRUE(foundInIntermediateTree("uintBitsToFloat (highp float)"));
+}
+
+// Test that bitfieldExtract returns a precision consistent with its "value" parameter.
+TEST_F(TypeTrackingTest, BuiltInBitfieldExtractResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform mediump int i;\n"
+        "uniform highp uint u;\n"
+        "uniform lowp int offset;\n"
+        "uniform highp int bits;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp int i2 = bitfieldExtract(i, offset, bits);\n"
+        "   lowp uint u2 = bitfieldExtract(u, offset, bits);\n"
+        "   my_FragColor = vec4(i2, u2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldExtract (mediump int)"));
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldExtract (highp uint)"));
+}
+
+// Test that signed bitfieldInsert returns a precision consistent with its "base/insert" parameters.
+TEST_F(TypeTrackingTest, BuiltInBitfieldInsertResultTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform lowp int iBase;\n"
+        "uniform mediump int iInsert;\n"
+        "uniform highp uint uBase;\n"
+        "uniform mediump uint uInsert;\n"
+        "uniform highp int offset;\n"
+        "uniform highp int bits;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp int i = bitfieldInsert(iBase, iInsert, offset, bits);\n"
+        "   lowp uint u = bitfieldInsert(uBase, uInsert, offset, bits);\n"
+        "   my_FragColor = vec4(i, u, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldInsert (mediump int)"));
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldInsert (highp uint)"));
+}
+
+// Test that signed bitfieldInsert returns a precision consistent with its "base/insert" parameters.
+// Another variation on parameter precisions.
+TEST_F(TypeTrackingTest, BuiltInBitfieldInsertResultTypeAndPrecision2)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform highp int iBase;\n"
+        "uniform mediump int iInsert;\n"
+        "uniform lowp uint uBase;\n"
+        "uniform mediump uint uInsert;\n"
+        "uniform lowp int offset;\n"
+        "uniform lowp int bits;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp int i = bitfieldInsert(iBase, iInsert, offset, bits);\n"
+        "   lowp uint u = bitfieldInsert(uBase, uInsert, offset, bits);\n"
+        "   my_FragColor = vec4(i, u, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldInsert (highp int)"));
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldInsert (mediump uint)"));
+}
+
+// Test that bitfieldReverse always results in highp precision.
+TEST_F(TypeTrackingTest, BuiltInBitfieldReversePrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform lowp uint u;\n"
+        "uniform mediump int i;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp uint u2 = bitfieldReverse(u);\n"
+        "   lowp int i2 = bitfieldReverse(i);\n"
+        "   my_FragColor = vec4(u2, i2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldReverse (highp uint)"));
+    ASSERT_TRUE(foundInIntermediateTree("bitfieldReverse (highp int)"));
+}
+
+// Test that bitCount always results in lowp precision integer.
+TEST_F(TypeTrackingTest, BuiltInBitCountTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform highp uint u;\n"
+        "uniform mediump int i;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   highp int count1 = bitCount(u);\n"
+        "   highp int count2 = bitCount(i);\n"
+        "   my_FragColor = vec4(count1, count2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("bitCount (lowp int)"));
+    ASSERT_FALSE(foundInIntermediateTree("bitCount (lowp uint)"));
+}
+
+// Test that findLSB always results in a lowp precision integer.
+TEST_F(TypeTrackingTest, BuiltInFindLSBTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform highp uint u;\n"
+        "uniform mediump int i;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   highp int index1 = findLSB(u);\n"
+        "   highp int index2 = findLSB(i);\n"
+        "   my_FragColor = vec4(index1, index2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("findLSB (lowp int)"));
+    ASSERT_FALSE(foundInIntermediateTree("findLSB (lowp uint)"));
+}
+
+// Test that findMSB always results in a lowp precision integer.
+TEST_F(TypeTrackingTest, BuiltInFindMSBTypeAndPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform highp uint u;\n"
+        "uniform mediump int i;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   highp int index1 = findMSB(u);\n"
+        "   highp int index2 = findMSB(i);\n"
+        "   my_FragColor = vec4(index1, index2, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("findMSB (lowp int)"));
+    ASSERT_FALSE(foundInIntermediateTree("findMSB (lowp uint)"));
+}
+
+// Test that uaddCarry always results in highp precision.
+TEST_F(TypeTrackingTest, BuiltInUaddCarryPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform mediump uvec2 x;\n"
+        "uniform mediump uvec2 y;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp uvec2 carry;\n"
+        "   mediump uvec2 result = uaddCarry(x, y, carry);\n"
+        "   my_FragColor = vec4(result.x, carry.y, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("uaddCarry (highp 2-component vector of uint)"));
+}
+
+// Test that usubBorrow always results in highp precision.
+TEST_F(TypeTrackingTest, BuiltInUsubBorrowPrecision)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform mediump uvec2 x;\n"
+        "uniform mediump uvec2 y;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   lowp uvec2 borrow;\n"
+        "   mediump uvec2 result = usubBorrow(x, y, borrow);\n"
+        "   my_FragColor = vec4(result.x, borrow.y, 0.0, 1.0); \n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_FALSE(foundErrorInIntermediateTree());
+    ASSERT_TRUE(foundInIntermediateTree("usubBorrow (highp 2-component vector of uint)"));
 }

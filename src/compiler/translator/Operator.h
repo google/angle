@@ -160,6 +160,17 @@ enum TOperator
     EOpAll,
     EOpLogicalNotComponentWise,
 
+    EOpBitfieldExtract,
+    EOpBitfieldInsert,
+    EOpBitfieldReverse,
+    EOpBitCount,
+    EOpFindLSB,
+    EOpFindMSB,
+    EOpUaddCarry,
+    EOpUsubBorrow,
+    EOpUmulExtended,
+    EOpImulExtended,
+
     //
     // Branch
     //

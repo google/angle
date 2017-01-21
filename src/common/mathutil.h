@@ -695,6 +695,91 @@ inline void unpackHalf2x16(uint32_t u, float *f1, float *f2)
     *f2 = float16ToFloat32(mostSignificantBits);
 }
 
+// Reverse the order of the bits.
+inline uint32_t BitfieldReverse(uint32_t value)
+{
+    // TODO(oetuaho@nvidia.com): Optimize this if needed. There don't seem to be compiler intrinsics
+    // for this, and right now it's not used in performance-critical paths.
+    uint32_t result = 0u;
+    for (size_t j = 0u; j < 32u; ++j)
+    {
+        result |= (((value >> j) & 1u) << (31u - j));
+    }
+    return result;
+}
+
+// Count the 1 bits.
+inline int BitCount(unsigned int bits)
+{
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    return static_cast<int>(__popcnt(bits));
+#elif defined(ANGLE_PLATFORM_POSIX)
+    return __builtin_popcount(bits);
+#else
+#error Please implement bit count for your platform!
+#endif
+}
+
+// Return the index of the least significant bit set. Indexing is such that bit 0 is the least
+// significant bit.
+inline unsigned long ScanForward(unsigned long bits)
+{
+    ASSERT(bits != 0u);
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    unsigned long firstBitIndex = 0ul;
+    unsigned char ret           = _BitScanForward(&firstBitIndex, bits);
+    ASSERT(ret != 0u);
+    return firstBitIndex;
+#elif defined(ANGLE_PLATFORM_POSIX)
+    return static_cast<unsigned long>(__builtin_ctzl(bits));
+#else
+#error Please implement bit-scan-forward for your platform!
+#endif
+}
+
+// Return the index of the most significant bit set. Indexing is such that bit 0 is the least
+// significant bit.
+inline unsigned long ScanReverse(unsigned long bits)
+{
+    ASSERT(bits != 0u);
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    unsigned long lastBitIndex = 0ul;
+    unsigned char ret          = _BitScanReverse(&lastBitIndex, bits);
+    ASSERT(ret != 0u);
+    return lastBitIndex;
+#elif defined(ANGLE_PLATFORM_POSIX)
+    return static_cast<unsigned long>(sizeof(unsigned long) * CHAR_BIT - 1 - __builtin_clzl(bits));
+#else
+#error Please implement bit-scan-reverse for your platform!
+#endif
+}
+
+// Returns -1 on 0, otherwise the index of the least significant 1 bit as in GLSL.
+inline int FindLSB(uint32_t bits)
+{
+    if (bits == 0u)
+    {
+        return -1;
+    }
+    else
+    {
+        return static_cast<int>(ScanForward(bits));
+    }
+}
+
+// Returns -1 on 0, otherwise the index of the most significant 1 bit as in GLSL.
+inline int FindMSB(uint32_t bits)
+{
+    if (bits == 0u)
+    {
+        return -1;
+    }
+    else
+    {
+        return static_cast<int>(ScanReverse(bits));
+    }
+}
+
 // Returns whether the argument is Not a Number.
 // IEEE 754 single precision NaN representation: Exponent(8 bits) - 255, Mantissa(23 bits) - non-zero.
 inline bool isNaN(float f)

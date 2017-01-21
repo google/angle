@@ -1473,6 +1473,22 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         case EOpLogicalNotComponentWise:
             outputTriplet(out, visit, "(!", "", ")");
             break;
+        case EOpBitfieldReverse:
+            outputTriplet(out, visit, "reversebits(", "", ")");
+            break;
+        case EOpBitCount:
+            outputTriplet(out, visit, "countbits(", "", ")");
+            break;
+        case EOpFindLSB:
+            // Note that it's unclear from the HLSL docs what this returns for 0, but this is tested
+            // in GLSLTest and results are consistent with GL.
+            outputTriplet(out, visit, "firstbitlow(", "", ")");
+            break;
+        case EOpFindMSB:
+            // Note that it's unclear from the HLSL docs what this returns for 0 or -1, but this is
+            // tested in GLSLTest and results are consistent with GL.
+            outputTriplet(out, visit, "firstbithigh(", "", ")");
+            break;
         default:
             UNREACHABLE();
     }
@@ -1996,6 +2012,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             break;
         case EOpMulMatrixComponentWise:
             outputTriplet(out, visit, "(", " * ", ")");
+            break;
+        case EOpBitfieldExtract:
+        case EOpBitfieldInsert:
+        case EOpUaddCarry:
+        case EOpUsubBorrow:
+        case EOpUmulExtended:
+        case EOpImulExtended:
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
             break;
         default:
             UNREACHABLE();

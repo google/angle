@@ -4432,7 +4432,7 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
                     TIntermAggregate *aggregate =
                         intermediate.setAggregateOperator(paramNode, op, loc);
                     aggregate->setType(fnCandidate->getReturnType());
-                    aggregate->setPrecisionFromChildren();
+                    aggregate->setPrecisionForBuiltInOp();
                     if (aggregate->areChildrenConstQualified())
                     {
                         aggregate->getTypePointer()->setQualifier(EvqConst);

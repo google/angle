@@ -458,6 +458,22 @@ class GLSLTest_ES3 : public GLSLTest
     }
 };
 
+class GLSLTest_ES31 : public GLSLTest
+{
+    void SetUp() override
+    {
+        ANGLETest::SetUp();
+
+        mSimpleVSSource =
+            "#version 310 es\n"
+            "in vec4 inputAttribute;"
+            "void main()"
+            "{"
+            "    gl_Position = inputAttribute;"
+            "}";
+    }
+};
+
 TEST_P(GLSLTest, NamelessScopedStructs)
 {
     const std::string fragmentShaderSource = SHADER_SOURCE
@@ -2591,6 +2607,30 @@ TEST_P(WebGLGLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
 
 }  // anonymous namespace
 
+// Test that FindLSB and FindMSB return correct values in their corner cases.
+TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
+{
+    const std::string &fragmentShader =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform int u_zero;\n"
+        "void main() {\n"
+        "    if (findLSB(u_zero) == -1 && findMSB(u_zero) == -1 && findMSB(u_zero - 1) == -1)\n"
+        "    {\n"
+        "        my_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "    }\n"
+        "    else\n"
+        "    {\n"
+        "        my_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "    }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
@@ -2605,3 +2645,5 @@ ANGLE_INSTANTIATE_TEST(GLSLTest,
 ANGLE_INSTANTIATE_TEST(GLSLTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(WebGLGLSLTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(GLSLTest_ES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());

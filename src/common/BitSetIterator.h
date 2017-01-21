@@ -97,21 +97,6 @@ typename BitSetIterator<N>::Iterator &BitSetIterator<N>::Iterator::operator++()
     return *this;
 }
 
-inline unsigned long ScanForward(unsigned long bits)
-{
-    ASSERT(bits != 0);
-#if defined(ANGLE_PLATFORM_WINDOWS)
-    unsigned long firstBitIndex = 0ul;
-    unsigned char ret = _BitScanForward(&firstBitIndex, bits);
-    ASSERT(ret != 0);
-    return firstBitIndex;
-#elif defined(ANGLE_PLATFORM_POSIX)
-    return static_cast<unsigned long>(__builtin_ctzl(bits));
-#else
-#error Please implement bit-scan-forward for your platform!
-#endif
-}
-
 template <size_t N>
 bool BitSetIterator<N>::Iterator::operator==(const Iterator &other) const
 {
@@ -134,7 +119,7 @@ unsigned long BitSetIterator<N>::Iterator::getNextBit()
         unsigned long wordBits = (mBits & wordMask).to_ulong();
         if (wordBits != 0ul)
         {
-            return ScanForward(wordBits) + mOffset;
+            return gl::ScanForward(wordBits) + mOffset;
         }
 
         mBits >>= BitsPerWord;
