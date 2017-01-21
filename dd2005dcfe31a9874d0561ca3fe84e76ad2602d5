@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_846f45a1",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "use emplace_back.",
+      "range": {
+        "startLine": 24,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_e468399d",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "use a range-for.",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 49
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_e40a7907",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "Geoff and Corentin, what about calling these structs:\n\nAttributeBinding\nAttributeFormat\nVertexAttribute { binding, format }",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 22
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_a4c6c199",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "in a few places you allow this structure to be copied. Make sure you always use const \u0026 as parameters to not waste run time copying structs needlessly. You can make this angle:NonCopyable and use a move constructor (\u0026\u0026) and move assignment op for the std::vector.",
+      "range": {
+        "startLine": 50,
+        "startChar": 7,
+        "endLine": 50,
+        "endChar": 17
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_64d0c94e",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "where are these used?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 64
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_842aa5df",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "it would be more efficient here to pull in the array of vertex infos, and select each in turn from the array. do that.",
+      "range": {
+        "startLine": 227,
+        "startChar": 4,
+        "endLine": 227,
+        "endChar": 91
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_24b2d1f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "size_t GetAttribIndex(unsigned long dirtyBit)\n{\n    static_assert(\u003cattrib strie \u003d\u003d binding stride\u003e);\n    return (dirtyBit - 1) % \u003cstride of dirty bits\u003e;\n}",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_a420016b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:36:34Z",
+      "side": 1,
+      "message": "can we go back to the size_t attribIndex code? Why did you remove this? Or can you make the helper function I requested in the last two reviews?",
+      "range": {
+        "startLine": 506,
+        "startChar": 32,
+        "endLine": 506,
+        "endChar": 82
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
