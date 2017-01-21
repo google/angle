@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_29018cee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "thanks for clarifying where the comment came from. can you abstract this into a helper function if it\u0027s used in multiple places? I didn\u0027t see if the previous code was removed - if it\u0027s only in once place, ignore this comment.",
+      "range": {
+        "startLine": 397,
+        "startChar": 24,
+        "endLine": 402,
+        "endChar": 87
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_c97318c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "question: is it necessary to split this off outside the class? sorry if I didn\u0027t check this myself.",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 25
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_49784890",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "you can optionally use unique_ptr for this. Don\u0027t feel like you have to amend the previous objects to use unique_ptr.",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 15
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_a9dd7c51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 8,
+        "startChar": 74,
+        "endLine": 8,
+        "endChar": 75
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_c9b0b8e7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "trailing whitespace",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 40
+      },
+      "revId": "de12946face57efb810ad8ac7a4540b52b9aa8c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
