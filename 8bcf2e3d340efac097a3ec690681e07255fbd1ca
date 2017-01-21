@@ -308,6 +308,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_1195d6cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "That works.",
+      "parentUuid": "6854da0e_693424ff",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 91
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43c7f965_952be4e6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 9
@@ -508,6 +532,30 @@
       "side": 1,
       "message": "Code complexity. I think if updating the floats becomes a bottleneck we can do a smart update, only updating those that change. But leave that for future work. I want to reduce the number of different permutations of state and shader, I\u0027m concerned about the cost in maintainability for the class.",
       "parentUuid": "43c7f965_0f917970",
+      "range": {
+        "startLine": 606,
+        "startChar": 11,
+        "endLine": 606,
+        "endChar": 45
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_31bd72c4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "I would personally prefer having both shaders available and using the appropriate one which doesn\u0027t perform any more work than it needs to especially since float based clears are the majority of clears used.\n\nAlternatively, to reduce code complexity, we could:\n- Combine the helper constant buffer update functions into one\n- Use a single floatClear PS instead of two. The PS would branch based on a bool in the constant buffer to execute either a multicolor or single color clear.\n\nObviously it\u0027s not an ideal solution but it would reduce the number of shaders we would have and performance issues due to shader branching would likely be mitigated by the fact that we\u0027re using a constant buffer value which drivers/HW can optimize around.",
+      "parentUuid": "6854da0e_c959d86d",
       "range": {
         "startLine": 606,
         "startChar": 11,
@@ -814,6 +862,30 @@
       "side": 1,
       "message": "Sorry, I\u0027m trying to understand. Is the CB necessary? Aren\u0027t all of these values from a constant buffer? Is there some use case where one of them is not from the constant buffer? My observation is that the Cb seems redundant, like a common complaint of hungarian notation.",
       "parentUuid": "43c7f965_6d059030",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_518a2eb8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-21T02:06:45Z",
+      "side": 1,
+      "message": "I can get rid of Cb portion if the rest of the naming scheme makes sense. \nMy goal was to draw a distinction between the clear shader type associated with the constant buffer and the data type of elements within the constant buffer. For example, zValueF_UintCb would be \"the zValue of type float inside of the constant buffer for the uint shader\".",
+      "parentUuid": "6854da0e_2902ac2b",
       "range": {
         "startLine": 46,
         "startChar": 11,
