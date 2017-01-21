@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_89f2c022",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "Thank you.",
+      "parentUuid": "43c7f965_0fb099c7",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 78
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43c7f965_95a84464",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 9
@@ -248,6 +272,30 @@
       "side": 1,
       "message": "I would rather keep it as a part of this change since I would like to move on to other things elsewhere in the code. That being said, if it is strongly preferred that I separate the two, I can.\n\nAs for emulating SV_VERTEXID using the VB using say a UINT for each vertex instead of position.xyz along with a lookup table or conditionals to evaluate each position in the shader, there would be almost no benefit realized over the original path. The benefit of not using a VB comes from not having to bind another resource and thus the driver does not have to resolve resource conflicts nor ensure it is resident and coherent, the hardware need not pass color data from VS to PS and on architectures using a vertex cache there is no chance of any cache misses in the VS.",
       "parentUuid": "43c7f965_15dc34f8",
+      "range": {
+        "startLine": 186,
+        "startChar": 16,
+        "endLine": 186,
+        "endChar": 91
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_693424ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "Yeah, on the one hand I really hate to make you dig into something that\u0027s really not part of your plan, but on the other hand I\u0027d like to reduce the complexity of the changes to Clear11. Please for now undo the SV_VertexID changes and leave a TODO to unify our full-screen quad drawing into a helper class. Is that OK?",
+      "parentUuid": "6854da0e_ed55dd64",
       "range": {
         "startLine": 186,
         "startChar": 16,
@@ -436,6 +484,30 @@
       "side": 1,
       "message": "Certainly on the shader side, there isn\u0027t much of a difference as far as reading the values in since it will all easily fit in constant memory. Same goes for the shader size itself which is 10 instructions vs 17 instructions, primarily because each RT needs a unique 4-component value to be constructed.\n\nOn the CPU side, for multicolor clears, 12 floats will need to be updated instead of 5 for single color clears. It isn\u0027t a huge amount of overhead in the grand scheme of things and so this is more of a case of lets avoid doing any extra work if we can.\n\nIs the goal of keeping just using a single shader for all cases to reduce code complexity or shader compilation time or is there some other reason?",
       "parentUuid": "43c7f965_15d6f4a8",
+      "range": {
+        "startLine": 606,
+        "startChar": 11,
+        "endLine": 606,
+        "endChar": 45
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_c959d86d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "Code complexity. I think if updating the floats becomes a bottleneck we can do a smart update, only updating those that change. But leave that for future work. I want to reduce the number of different permutations of state and shader, I\u0027m concerned about the cost in maintainability for the class.",
+      "parentUuid": "43c7f965_0f917970",
       "range": {
         "startLine": 606,
         "startChar": 11,
@@ -718,6 +790,30 @@
       "side": 1,
       "message": "I am aliasing the constant buffer and so for example SintCb would refer to the constant buffer bound for the Sint clear shader. I had the naming as such because some value types differ from the shader type. For example, zValue is always float but putting in zValue_Sint might suggest that it is meant to be of type sint where as zValueF_SintCb would make it clear that it is of type float in the constant buffer bound for the sint clear shader.",
       "parentUuid": "43c7f965_b541c0a2",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_2902ac2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-21T00:07:36Z",
+      "side": 1,
+      "message": "Sorry, I\u0027m trying to understand. Is the CB necessary? Aren\u0027t all of these values from a constant buffer? Is there some use case where one of them is not from the constant buffer? My observation is that the Cb seems redundant, like a common complaint of hungarian notation.",
+      "parentUuid": "43c7f965_6d059030",
       "range": {
         "startLine": 46,
         "startChar": 11,
