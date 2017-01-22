@@ -3419,3 +3419,31 @@ TEST_F(FragmentShaderValidationTest, InvalidMainPrototypeParameters)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Regression test for a crash in the empty constructor of unsized array
+// of a structure with non-basic fields fields. Test with "void".
+TEST_F(FragmentShaderValidationTest, VoidFieldStructUnsizedArrayEmptyConstructor)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "struct S {void a;};"
+        "void main() {S s[] = S[]();}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Regression test for a crash in the empty constructor of unsized array
+// of a structure with non-basic fields fields. Test with something other than "void".
+TEST_F(FragmentShaderValidationTest, SamplerFieldStructUnsizedArrayEmptyConstructor)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "struct S {sampler2D a;};"
+        "void main() {S s[] = S[]();}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
