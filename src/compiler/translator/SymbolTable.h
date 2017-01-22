@@ -41,6 +41,8 @@
 namespace sh
 {
 
+class TIntermAggregate;
+
 // Symbol base class. (Can build functions or variables out of these...)
 class TSymbol : angle::NonCopyable
 {
@@ -423,6 +425,10 @@ class TSymbolTable : angle::NonCopyable
     TSymbol *findGlobal(const TString &name) const;
 
     TSymbol *findBuiltIn(const TString &name, int shaderVersion) const;
+
+    // Helper front-end for regular findBuiltIn that constructs the mangled function name from
+    // callNode.
+    TFunction *findBuiltInOp(TIntermAggregate *callNode, int shaderVersion) const;
 
     TSymbolTableLevel *getOuterLevel()
     {

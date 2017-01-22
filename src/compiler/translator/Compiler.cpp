@@ -373,7 +373,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         bool multiview2 = IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview2");
         if (success && compileResources.OVR_multiview && IsWebGLBasedSpec(shaderSpec) &&
             (IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview") || multiview2))
-            success = ValidateMultiviewWebGL(root, shaderType, multiview2, &mDiagnostics);
+            success = ValidateMultiviewWebGL(root, shaderType, symbolTable, shaderVersion,
+                                             multiview2, &mDiagnostics);
 
         // Fail compilation if precision emulation not supported.
         if (success && getResources().WEBGL_debug_shader_precision &&

@@ -17,11 +17,14 @@ namespace sh
 {
 class TDiagnostics;
 class TIntermBlock;
+class TSymbolTable;
 
 // Check for errors and output error messages with diagnostics.
 // Returns true if there are no errors.
 bool ValidateMultiviewWebGL(TIntermBlock *root,
                             sh::GLenum shaderType,
+                            const TSymbolTable &symbolTable,
+                            int shaderVersion,
                             bool multiview2,
                             TDiagnostics *diagnostics);
 

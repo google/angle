@@ -680,26 +680,9 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             // Find the built-in function corresponding to this op so that we can determine the
             // in/out qualifiers of its parameters.
             TFunction *builtInFunc = nullptr;
-            TString opString       = GetOperatorString(node->getOp());
-            if (!node->isConstructor() && !opString.empty())
+            if (!node->isConstructor() && node->getOp() != EOpFunctionCall)
             {
-                // The return type doesn't affect the mangled name of the function, which is used
-                // to look it up from the symbol table.
-                TType dummyReturnType;
-                TFunction call(&opString, &dummyReturnType, node->getOp());
-                for (auto *child : *sequence)
-                {
-                    TType *paramType = child->getAsTyped()->getTypePointer();
-                    TConstParameter p(paramType);
-                    call.addParameter(p);
-                }
-
-                TSymbol *sym = mSymbolTable.findBuiltIn(call.getMangledName(), mShaderVersion);
-                if (sym != nullptr && sym->isFunction())
-                {
-                    builtInFunc = static_cast<TFunction *>(sym);
-                    ASSERT(builtInFunc->getParamCount() == sequence->size());
-                }
+                builtInFunc = mSymbolTable.findBuiltInOp(node, mShaderVersion);
             }
 
             size_t paramIndex = 0;

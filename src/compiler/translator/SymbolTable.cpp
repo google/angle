@@ -14,7 +14,9 @@
 #endif
 
 #include "compiler/translator/SymbolTable.h"
+
 #include "compiler/translator/Cache.h"
+#include "compiler/translator/IntermNode.h"
 
 #include <stdio.h>
 #include <algorithm>
@@ -151,6 +153,30 @@ TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
     }
 
     return 0;
+}
+
+TFunction *TSymbolTable::findBuiltInOp(TIntermAggregate *callNode, int shaderVersion) const
+{
+    ASSERT(!callNode->isConstructor());
+    ASSERT(callNode->getOp() != EOpFunctionCall);
+    TString opString = GetOperatorString(callNode->getOp());
+    // The return type doesn't affect the mangled name of the function, which is used to look it up.
+    TType dummyReturnType;
+    TFunction call(&opString, &dummyReturnType, callNode->getOp());
+    TIntermSequence *sequence = callNode->getSequence();
+    for (auto *child : *sequence)
+    {
+        TType *paramType = child->getAsTyped()->getTypePointer();
+        TConstParameter p(paramType);
+        call.addParameter(p);
+    }
+
+    TSymbol *sym = findBuiltIn(call.getMangledName(), shaderVersion);
+    ASSERT(sym != nullptr && sym->isFunction());
+
+    TFunction *builtInFunc = static_cast<TFunction *>(sym);
+    ASSERT(builtInFunc->getParamCount() == sequence->size());
+    return builtInFunc;
 }
 
 TSymbolTable::~TSymbolTable()
