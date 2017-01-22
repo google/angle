@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_c201aaef",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_846f45a1",
+      "range": {
+        "startLine": 24,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_e468399d",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 42
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-21T00:36:34Z",
       "side": 1,
       "message": "use a range-for.",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 49
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_a2046efe",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_e468399d",
       "range": {
         "startLine": 31,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_625316d7",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "I felt headache to choose suitable names for these structs...\nI agree with Jamie about these names. It is more suitable to call this struct VertexFormat. Other reviewers, could you give me some advice?",
+      "parentUuid": "6854da0e_e40a7907",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 22
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_a4c6c199",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 42
@@ -82,6 +154,30 @@
       "writtenOn": "2017-01-21T00:36:34Z",
       "side": 1,
       "message": "in a few places you allow this structure to be copied. Make sure you always use const \u0026 as parameters to not waste run time copying structs needlessly. You can make this angle:NonCopyable and use a move constructor (\u0026\u0026) and move assignment op for the std::vector.",
+      "range": {
+        "startLine": 50,
+        "startChar": 7,
+        "endLine": 50,
+        "endChar": 17
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_42213a6d",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Done\nThanks to your suggestion. This is very helpful to clean up such code and avoid potential bugs.\nI think VertexBinding should also be made NonCopyable and only construced by move constructor since BindingPointer\u003cBuffer\u003e cannot be simply copied.",
+      "parentUuid": "6854da0e_a4c6c199",
       "range": {
         "startLine": 50,
         "startChar": 7,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_22f07ee2",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "These operators are used when we intend to update a cached VertexBinding object.\ne.g. VertexArrayGL::updateAttribPointer",
+      "parentUuid": "6854da0e_64d0c94e",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 64
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_842aa5df",
         "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
         "patchSetId": 42
@@ -128,6 +248,30 @@
       "writtenOn": "2017-01-21T00:36:34Z",
       "side": 1,
       "message": "it would be more efficient here to pull in the array of vertex infos, and select each in turn from the array. do that.",
+      "range": {
+        "startLine": 227,
+        "startChar": 4,
+        "endLine": 227,
+        "endChar": 91
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_c2fbea9a",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_842aa5df",
       "range": {
         "startLine": 227,
         "startChar": 4,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_02446207",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Done\nSorry I forgot in D3D maxVertexAttribute is always equal to maxVertexBinding.",
+      "parentUuid": "6854da0e_24b2d1f1",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 21
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_a420016b",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 42
@@ -174,6 +342,30 @@
       "writtenOn": "2017-01-21T00:36:34Z",
       "side": 1,
       "message": "can we go back to the size_t attribIndex code? Why did you remove this? Or can you make the helper function I requested in the last two reviews?",
+      "range": {
+        "startLine": 506,
+        "startChar": 32,
+        "endLine": 506,
+        "endChar": 82
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_bd901335",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-22T08:58:54Z",
+      "side": 1,
+      "message": "Each bit in dirtyBits represents a corresponding GL function call, so even if we can get index from dirtyBit we still need to use the actual value of dirtyBit by this if-else structure.\n\nIn VertexArray11.cpp dirtyBits is just used to set mAttribsToUpdate. So it is reasonable to directly get index from dirtyBit.",
+      "parentUuid": "6854da0e_a420016b",
       "range": {
         "startLine": 506,
         "startChar": 32,
