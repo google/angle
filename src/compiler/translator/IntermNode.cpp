@@ -2313,558 +2313,531 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
     }
 
     TConstantUnion *resultArray = nullptr;
-    if (paramsCount == 2)
+
+    switch (op)
     {
-        //
-        // Binary built-in
-        //
-        switch (op)
+        case EOpAtan:
         {
-            case EOpAtan:
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
             {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float y = unionArrays[0][i].getFConst();
-                    float x = unionArrays[1][i].getFConst();
-                    // Results are undefined if x and y are both 0.
-                    if (x == 0.0f && y == 0.0f)
-                        UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                      &resultArray[i]);
-                    else
-                        resultArray[i].setFConst(atan2f(y, x));
-                }
-                break;
+                float y = unionArrays[0][i].getFConst();
+                float x = unionArrays[1][i].getFConst();
+                // Results are undefined if x and y are both 0.
+                if (x == 0.0f && y == 0.0f)
+                    UndefinedConstantFoldingError(loc, op, basicType, diagnostics, &resultArray[i]);
+                else
+                    resultArray[i].setFConst(atan2f(y, x));
             }
+            break;
+        }
 
-            case EOpPow:
+        case EOpPow:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
             {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float x = unionArrays[0][i].getFConst();
-                    float y = unionArrays[1][i].getFConst();
-                    // Results are undefined if x < 0.
-                    // Results are undefined if x = 0 and y <= 0.
-                    if (x < 0.0f)
-                        UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                      &resultArray[i]);
-                    else if (x == 0.0f && y <= 0.0f)
-                        UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                      &resultArray[i]);
-                    else
-                        resultArray[i].setFConst(powf(x, y));
-                }
-                break;
+                float x = unionArrays[0][i].getFConst();
+                float y = unionArrays[1][i].getFConst();
+                // Results are undefined if x < 0.
+                // Results are undefined if x = 0 and y <= 0.
+                if (x < 0.0f)
+                    UndefinedConstantFoldingError(loc, op, basicType, diagnostics, &resultArray[i]);
+                else if (x == 0.0f && y <= 0.0f)
+                    UndefinedConstantFoldingError(loc, op, basicType, diagnostics, &resultArray[i]);
+                else
+                    resultArray[i].setFConst(powf(x, y));
             }
+            break;
+        }
 
-            case EOpMod:
+        case EOpMod:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
             {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float x = unionArrays[0][i].getFConst();
-                    float y = unionArrays[1][i].getFConst();
-                    resultArray[i].setFConst(x - y * floorf(x / y));
-                }
-                break;
+                float x = unionArrays[0][i].getFConst();
+                float y = unionArrays[1][i].getFConst();
+                resultArray[i].setFConst(x - y * floorf(x / y));
             }
+            break;
+        }
 
-            case EOpMin:
+        case EOpMin:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
             {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
+                switch (basicType)
                 {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setFConst(std::min(unionArrays[0][i].getFConst(),
-                                                              unionArrays[1][i].getFConst()));
-                            break;
-                        case EbtInt:
-                            resultArray[i].setIConst(std::min(unionArrays[0][i].getIConst(),
-                                                              unionArrays[1][i].getIConst()));
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setUConst(std::min(unionArrays[0][i].getUConst(),
-                                                              unionArrays[1][i].getUConst()));
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpMax:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setFConst(std::max(unionArrays[0][i].getFConst(),
-                                                              unionArrays[1][i].getFConst()));
-                            break;
-                        case EbtInt:
-                            resultArray[i].setIConst(std::max(unionArrays[0][i].getIConst(),
-                                                              unionArrays[1][i].getIConst()));
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setUConst(std::max(unionArrays[0][i].getUConst(),
-                                                              unionArrays[1][i].getUConst()));
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpStep:
-            {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                    resultArray[i].setFConst(
-                        unionArrays[1][i].getFConst() < unionArrays[0][i].getFConst() ? 0.0f
-                                                                                      : 1.0f);
-                break;
-            }
-
-            case EOpLessThanComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() <
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() <
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() <
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpLessThanEqualComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() <=
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() <=
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() <=
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpGreaterThanComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() >
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() >
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() >
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-            case EOpGreaterThanEqualComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() >=
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() >=
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() >=
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
+                    case EbtFloat:
+                        resultArray[i].setFConst(
+                            std::min(unionArrays[0][i].getFConst(), unionArrays[1][i].getFConst()));
+                        break;
+                    case EbtInt:
+                        resultArray[i].setIConst(
+                            std::min(unionArrays[0][i].getIConst(), unionArrays[1][i].getIConst()));
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setUConst(
+                            std::min(unionArrays[0][i].getUConst(), unionArrays[1][i].getUConst()));
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
                 }
             }
             break;
-
-            case EOpEqualComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() ==
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() ==
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() ==
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        case EbtBool:
-                            resultArray[i].setBConst(unionArrays[0][i].getBConst() ==
-                                                     unionArrays[1][i].getBConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpNotEqualComponentWise:
-            {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                            resultArray[i].setBConst(unionArrays[0][i].getFConst() !=
-                                                     unionArrays[1][i].getFConst());
-                            break;
-                        case EbtInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getIConst() !=
-                                                     unionArrays[1][i].getIConst());
-                            break;
-                        case EbtUInt:
-                            resultArray[i].setBConst(unionArrays[0][i].getUConst() !=
-                                                     unionArrays[1][i].getUConst());
-                            break;
-                        case EbtBool:
-                            resultArray[i].setBConst(unionArrays[0][i].getBConst() !=
-                                                     unionArrays[1][i].getBConst());
-                            break;
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
-                }
-                break;
-            }
-
-            case EOpDistance:
-            {
-                ASSERT(basicType == EbtFloat);
-                TConstantUnion *distanceArray = new TConstantUnion[maxObjectSize];
-                resultArray                   = new TConstantUnion();
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float x = unionArrays[0][i].getFConst();
-                    float y = unionArrays[1][i].getFConst();
-                    distanceArray[i].setFConst(x - y);
-                }
-                resultArray->setFConst(VectorLength(distanceArray, maxObjectSize));
-                break;
-            }
-
-            case EOpDot:
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion();
-                resultArray->setFConst(
-                    VectorDotProduct(unionArrays[0], unionArrays[1], maxObjectSize));
-                break;
-
-            case EOpCross:
-            {
-                ASSERT(basicType == EbtFloat && maxObjectSize == 3);
-                resultArray = new TConstantUnion[maxObjectSize];
-                float x0    = unionArrays[0][0].getFConst();
-                float x1    = unionArrays[0][1].getFConst();
-                float x2    = unionArrays[0][2].getFConst();
-                float y0    = unionArrays[1][0].getFConst();
-                float y1    = unionArrays[1][1].getFConst();
-                float y2    = unionArrays[1][2].getFConst();
-                resultArray[0].setFConst(x1 * y2 - y1 * x2);
-                resultArray[1].setFConst(x2 * y0 - y2 * x0);
-                resultArray[2].setFConst(x0 * y1 - y0 * x1);
-                break;
-            }
-
-            case EOpReflect:
-            {
-                ASSERT(basicType == EbtFloat);
-                // genType reflect (genType I, genType N) :
-                //     For the incident vector I and surface orientation N, returns the reflection
-                //     direction:
-                //     I - 2 * dot(N, I) * N.
-                resultArray      = new TConstantUnion[maxObjectSize];
-                float dotProduct = VectorDotProduct(unionArrays[1], unionArrays[0], maxObjectSize);
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float result = unionArrays[0][i].getFConst() -
-                                   2.0f * dotProduct * unionArrays[1][i].getFConst();
-                    resultArray[i].setFConst(result);
-                }
-                break;
-            }
-
-            case EOpMulMatrixComponentWise:
-            {
-                ASSERT(basicType == EbtFloat && (*sequence)[0]->getAsTyped()->isMatrix() &&
-                       (*sequence)[1]->getAsTyped()->isMatrix());
-                // Perform component-wise matrix multiplication.
-                resultArray = new TConstantUnion[maxObjectSize];
-                int size    = (*sequence)[0]->getAsTyped()->getNominalSize();
-                angle::Matrix<float> result =
-                    GetMatrix(unionArrays[0], size).compMult(GetMatrix(unionArrays[1], size));
-                SetUnionArrayFromMatrix(result, resultArray);
-                break;
-            }
-
-            case EOpOuterProduct:
-            {
-                ASSERT(basicType == EbtFloat);
-                size_t numRows = (*sequence)[0]->getAsTyped()->getType().getObjectSize();
-                size_t numCols = (*sequence)[1]->getAsTyped()->getType().getObjectSize();
-                resultArray    = new TConstantUnion[numRows * numCols];
-                angle::Matrix<float> result =
-                    GetMatrix(unionArrays[0], static_cast<int>(numRows), 1)
-                        .outerProduct(GetMatrix(unionArrays[1], 1, static_cast<int>(numCols)));
-                SetUnionArrayFromMatrix(result, resultArray);
-                break;
-            }
-
-            default:
-                UNREACHABLE();
-                // TODO: Add constant folding support for other built-in operations that take 2
-                // parameters and not handled above.
-                return nullptr;
         }
-    }
-    else if (paramsCount == 3)
-    {
-        //
-        // Ternary built-in
-        //
-        switch (op)
+
+        case EOpMax:
         {
-            case EOpClamp:
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
             {
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
+                switch (basicType)
                 {
-                    switch (basicType)
-                    {
-                        case EbtFloat:
-                        {
-                            float x   = unionArrays[0][i].getFConst();
-                            float min = unionArrays[1][i].getFConst();
-                            float max = unionArrays[2][i].getFConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                              &resultArray[i]);
-                            else
-                                resultArray[i].setFConst(gl::clamp(x, min, max));
-                            break;
-                        }
-
-                        case EbtInt:
-                        {
-                            int x   = unionArrays[0][i].getIConst();
-                            int min = unionArrays[1][i].getIConst();
-                            int max = unionArrays[2][i].getIConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                              &resultArray[i]);
-                            else
-                                resultArray[i].setIConst(gl::clamp(x, min, max));
-                            break;
-                        }
-                        case EbtUInt:
-                        {
-                            unsigned int x   = unionArrays[0][i].getUConst();
-                            unsigned int min = unionArrays[1][i].getUConst();
-                            unsigned int max = unionArrays[2][i].getUConst();
-                            // Results are undefined if min > max.
-                            if (min > max)
-                                UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                              &resultArray[i]);
-                            else
-                                resultArray[i].setUConst(gl::clamp(x, min, max));
-                            break;
-                        }
-                        default:
-                            UNREACHABLE();
-                            break;
-                    }
+                    case EbtFloat:
+                        resultArray[i].setFConst(
+                            std::max(unionArrays[0][i].getFConst(), unionArrays[1][i].getFConst()));
+                        break;
+                    case EbtInt:
+                        resultArray[i].setIConst(
+                            std::max(unionArrays[0][i].getIConst(), unionArrays[1][i].getIConst()));
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setUConst(
+                            std::max(unionArrays[0][i].getUConst(), unionArrays[1][i].getUConst()));
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
                 }
-                break;
             }
-
-            case EOpMix:
-            {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float x         = unionArrays[0][i].getFConst();
-                    float y         = unionArrays[1][i].getFConst();
-                    TBasicType type = (*sequence)[2]->getAsTyped()->getType().getBasicType();
-                    if (type == EbtFloat)
-                    {
-                        // Returns the linear blend of x and y, i.e., x * (1 - a) + y * a.
-                        float a = unionArrays[2][i].getFConst();
-                        resultArray[i].setFConst(x * (1.0f - a) + y * a);
-                    }
-                    else  // 3rd parameter is EbtBool
-                    {
-                        ASSERT(type == EbtBool);
-                        // Selects which vector each returned component comes from.
-                        // For a component of a that is false, the corresponding component of x is
-                        // returned.
-                        // For a component of a that is true, the corresponding component of y is
-                        // returned.
-                        bool a = unionArrays[2][i].getBConst();
-                        resultArray[i].setFConst(a ? y : x);
-                    }
-                }
-                break;
-            }
-
-            case EOpSmoothStep:
-            {
-                ASSERT(basicType == EbtFloat);
-                resultArray = new TConstantUnion[maxObjectSize];
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float edge0 = unionArrays[0][i].getFConst();
-                    float edge1 = unionArrays[1][i].getFConst();
-                    float x     = unionArrays[2][i].getFConst();
-                    // Results are undefined if edge0 >= edge1.
-                    if (edge0 >= edge1)
-                    {
-                        UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
-                                                      &resultArray[i]);
-                    }
-                    else
-                    {
-                        // Returns 0.0 if x <= edge0 and 1.0 if x >= edge1 and performs smooth
-                        // Hermite interpolation between 0 and 1 when edge0 < x < edge1.
-                        float t = gl::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
-                        resultArray[i].setFConst(t * t * (3.0f - 2.0f * t));
-                    }
-                }
-                break;
-            }
-
-            case EOpFaceForward:
-            {
-                ASSERT(basicType == EbtFloat);
-                // genType faceforward(genType N, genType I, genType Nref) :
-                //     If dot(Nref, I) < 0 return N, otherwise return -N.
-                resultArray      = new TConstantUnion[maxObjectSize];
-                float dotProduct = VectorDotProduct(unionArrays[2], unionArrays[1], maxObjectSize);
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    if (dotProduct < 0)
-                        resultArray[i].setFConst(unionArrays[0][i].getFConst());
-                    else
-                        resultArray[i].setFConst(-unionArrays[0][i].getFConst());
-                }
-                break;
-            }
-
-            case EOpRefract:
-            {
-                ASSERT(basicType == EbtFloat);
-                // genType refract(genType I, genType N, float eta) :
-                //     For the incident vector I and surface normal N, and the ratio of indices of
-                //     refraction eta,
-                //     return the refraction vector. The result is computed by
-                //         k = 1.0 - eta * eta * (1.0 - dot(N, I) * dot(N, I))
-                //         if (k < 0.0)
-                //             return genType(0.0)
-                //         else
-                //             return eta * I - (eta * dot(N, I) + sqrt(k)) * N
-                resultArray      = new TConstantUnion[maxObjectSize];
-                float dotProduct = VectorDotProduct(unionArrays[1], unionArrays[0], maxObjectSize);
-                for (size_t i = 0; i < maxObjectSize; i++)
-                {
-                    float eta = unionArrays[2][i].getFConst();
-                    float k   = 1.0f - eta * eta * (1.0f - dotProduct * dotProduct);
-                    if (k < 0.0f)
-                        resultArray[i].setFConst(0.0f);
-                    else
-                        resultArray[i].setFConst(eta * unionArrays[0][i].getFConst() -
-                                                 (eta * dotProduct + sqrtf(k)) *
-                                                     unionArrays[1][i].getFConst());
-                }
-                break;
-            }
-
-            default:
-                UNREACHABLE();
-                // TODO: Add constant folding support for other built-in operations that take 3
-                // parameters and not handled above.
-                return nullptr;
+            break;
         }
+
+        case EOpStep:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+                resultArray[i].setFConst(
+                    unionArrays[1][i].getFConst() < unionArrays[0][i].getFConst() ? 0.0f : 1.0f);
+            break;
+        }
+
+        case EOpLessThanComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() <
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() <
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() <
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+
+        case EOpLessThanEqualComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() <=
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() <=
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() <=
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+
+        case EOpGreaterThanComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() >
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() >
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() >
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+        case EOpGreaterThanEqualComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() >=
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() >=
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() >=
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+        }
+        break;
+
+        case EOpEqualComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() ==
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() ==
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() ==
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    case EbtBool:
+                        resultArray[i].setBConst(unionArrays[0][i].getBConst() ==
+                                                 unionArrays[1][i].getBConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+
+        case EOpNotEqualComponentWise:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                        resultArray[i].setBConst(unionArrays[0][i].getFConst() !=
+                                                 unionArrays[1][i].getFConst());
+                        break;
+                    case EbtInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getIConst() !=
+                                                 unionArrays[1][i].getIConst());
+                        break;
+                    case EbtUInt:
+                        resultArray[i].setBConst(unionArrays[0][i].getUConst() !=
+                                                 unionArrays[1][i].getUConst());
+                        break;
+                    case EbtBool:
+                        resultArray[i].setBConst(unionArrays[0][i].getBConst() !=
+                                                 unionArrays[1][i].getBConst());
+                        break;
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+
+        case EOpDistance:
+        {
+            ASSERT(basicType == EbtFloat);
+            TConstantUnion *distanceArray = new TConstantUnion[maxObjectSize];
+            resultArray                   = new TConstantUnion();
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float x = unionArrays[0][i].getFConst();
+                float y = unionArrays[1][i].getFConst();
+                distanceArray[i].setFConst(x - y);
+            }
+            resultArray->setFConst(VectorLength(distanceArray, maxObjectSize));
+            break;
+        }
+
+        case EOpDot:
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion();
+            resultArray->setFConst(VectorDotProduct(unionArrays[0], unionArrays[1], maxObjectSize));
+            break;
+
+        case EOpCross:
+        {
+            ASSERT(basicType == EbtFloat && maxObjectSize == 3);
+            resultArray = new TConstantUnion[maxObjectSize];
+            float x0    = unionArrays[0][0].getFConst();
+            float x1    = unionArrays[0][1].getFConst();
+            float x2    = unionArrays[0][2].getFConst();
+            float y0    = unionArrays[1][0].getFConst();
+            float y1    = unionArrays[1][1].getFConst();
+            float y2    = unionArrays[1][2].getFConst();
+            resultArray[0].setFConst(x1 * y2 - y1 * x2);
+            resultArray[1].setFConst(x2 * y0 - y2 * x0);
+            resultArray[2].setFConst(x0 * y1 - y0 * x1);
+            break;
+        }
+
+        case EOpReflect:
+        {
+            ASSERT(basicType == EbtFloat);
+            // genType reflect (genType I, genType N) :
+            //     For the incident vector I and surface orientation N, returns the reflection
+            //     direction:
+            //     I - 2 * dot(N, I) * N.
+            resultArray      = new TConstantUnion[maxObjectSize];
+            float dotProduct = VectorDotProduct(unionArrays[1], unionArrays[0], maxObjectSize);
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float result = unionArrays[0][i].getFConst() -
+                               2.0f * dotProduct * unionArrays[1][i].getFConst();
+                resultArray[i].setFConst(result);
+            }
+            break;
+        }
+
+        case EOpMulMatrixComponentWise:
+        {
+            ASSERT(basicType == EbtFloat && (*sequence)[0]->getAsTyped()->isMatrix() &&
+                   (*sequence)[1]->getAsTyped()->isMatrix());
+            // Perform component-wise matrix multiplication.
+            resultArray = new TConstantUnion[maxObjectSize];
+            int size    = (*sequence)[0]->getAsTyped()->getNominalSize();
+            angle::Matrix<float> result =
+                GetMatrix(unionArrays[0], size).compMult(GetMatrix(unionArrays[1], size));
+            SetUnionArrayFromMatrix(result, resultArray);
+            break;
+        }
+
+        case EOpOuterProduct:
+        {
+            ASSERT(basicType == EbtFloat);
+            size_t numRows = (*sequence)[0]->getAsTyped()->getType().getObjectSize();
+            size_t numCols = (*sequence)[1]->getAsTyped()->getType().getObjectSize();
+            resultArray    = new TConstantUnion[numRows * numCols];
+            angle::Matrix<float> result =
+                GetMatrix(unionArrays[0], static_cast<int>(numRows), 1)
+                    .outerProduct(GetMatrix(unionArrays[1], 1, static_cast<int>(numCols)));
+            SetUnionArrayFromMatrix(result, resultArray);
+            break;
+        }
+
+        case EOpClamp:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                switch (basicType)
+                {
+                    case EbtFloat:
+                    {
+                        float x   = unionArrays[0][i].getFConst();
+                        float min = unionArrays[1][i].getFConst();
+                        float max = unionArrays[2][i].getFConst();
+                        // Results are undefined if min > max.
+                        if (min > max)
+                            UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
+                                                          &resultArray[i]);
+                        else
+                            resultArray[i].setFConst(gl::clamp(x, min, max));
+                        break;
+                    }
+
+                    case EbtInt:
+                    {
+                        int x   = unionArrays[0][i].getIConst();
+                        int min = unionArrays[1][i].getIConst();
+                        int max = unionArrays[2][i].getIConst();
+                        // Results are undefined if min > max.
+                        if (min > max)
+                            UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
+                                                          &resultArray[i]);
+                        else
+                            resultArray[i].setIConst(gl::clamp(x, min, max));
+                        break;
+                    }
+                    case EbtUInt:
+                    {
+                        unsigned int x   = unionArrays[0][i].getUConst();
+                        unsigned int min = unionArrays[1][i].getUConst();
+                        unsigned int max = unionArrays[2][i].getUConst();
+                        // Results are undefined if min > max.
+                        if (min > max)
+                            UndefinedConstantFoldingError(loc, op, basicType, diagnostics,
+                                                          &resultArray[i]);
+                        else
+                            resultArray[i].setUConst(gl::clamp(x, min, max));
+                        break;
+                    }
+                    default:
+                        UNREACHABLE();
+                        break;
+                }
+            }
+            break;
+        }
+
+        case EOpMix:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float x         = unionArrays[0][i].getFConst();
+                float y         = unionArrays[1][i].getFConst();
+                TBasicType type = (*sequence)[2]->getAsTyped()->getType().getBasicType();
+                if (type == EbtFloat)
+                {
+                    // Returns the linear blend of x and y, i.e., x * (1 - a) + y * a.
+                    float a = unionArrays[2][i].getFConst();
+                    resultArray[i].setFConst(x * (1.0f - a) + y * a);
+                }
+                else  // 3rd parameter is EbtBool
+                {
+                    ASSERT(type == EbtBool);
+                    // Selects which vector each returned component comes from.
+                    // For a component of a that is false, the corresponding component of x is
+                    // returned.
+                    // For a component of a that is true, the corresponding component of y is
+                    // returned.
+                    bool a = unionArrays[2][i].getBConst();
+                    resultArray[i].setFConst(a ? y : x);
+                }
+            }
+            break;
+        }
+
+        case EOpSmoothStep:
+        {
+            ASSERT(basicType == EbtFloat);
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float edge0 = unionArrays[0][i].getFConst();
+                float edge1 = unionArrays[1][i].getFConst();
+                float x     = unionArrays[2][i].getFConst();
+                // Results are undefined if edge0 >= edge1.
+                if (edge0 >= edge1)
+                {
+                    UndefinedConstantFoldingError(loc, op, basicType, diagnostics, &resultArray[i]);
+                }
+                else
+                {
+                    // Returns 0.0 if x <= edge0 and 1.0 if x >= edge1 and performs smooth
+                    // Hermite interpolation between 0 and 1 when edge0 < x < edge1.
+                    float t = gl::clamp((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
+                    resultArray[i].setFConst(t * t * (3.0f - 2.0f * t));
+                }
+            }
+            break;
+        }
+
+        case EOpFaceForward:
+        {
+            ASSERT(basicType == EbtFloat);
+            // genType faceforward(genType N, genType I, genType Nref) :
+            //     If dot(Nref, I) < 0 return N, otherwise return -N.
+            resultArray      = new TConstantUnion[maxObjectSize];
+            float dotProduct = VectorDotProduct(unionArrays[2], unionArrays[1], maxObjectSize);
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                if (dotProduct < 0)
+                    resultArray[i].setFConst(unionArrays[0][i].getFConst());
+                else
+                    resultArray[i].setFConst(-unionArrays[0][i].getFConst());
+            }
+            break;
+        }
+
+        case EOpRefract:
+        {
+            ASSERT(basicType == EbtFloat);
+            // genType refract(genType I, genType N, float eta) :
+            //     For the incident vector I and surface normal N, and the ratio of indices of
+            //     refraction eta,
+            //     return the refraction vector. The result is computed by
+            //         k = 1.0 - eta * eta * (1.0 - dot(N, I) * dot(N, I))
+            //         if (k < 0.0)
+            //             return genType(0.0)
+            //         else
+            //             return eta * I - (eta * dot(N, I) + sqrt(k)) * N
+            resultArray      = new TConstantUnion[maxObjectSize];
+            float dotProduct = VectorDotProduct(unionArrays[1], unionArrays[0], maxObjectSize);
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float eta = unionArrays[2][i].getFConst();
+                float k   = 1.0f - eta * eta * (1.0f - dotProduct * dotProduct);
+                if (k < 0.0f)
+                    resultArray[i].setFConst(0.0f);
+                else
+                    resultArray[i].setFConst(eta * unionArrays[0][i].getFConst() -
+                                             (eta * dotProduct + sqrtf(k)) *
+                                                 unionArrays[1][i].getFConst());
+            }
+            break;
+        }
+
+        default:
+            UNREACHABLE();
+            return nullptr;
     }
     return resultArray;
 }
