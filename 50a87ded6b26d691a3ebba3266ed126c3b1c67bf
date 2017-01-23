@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_83de141d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-23T13:14:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6854da0e_44314d0c",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 25
+      },
+      "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_643449ff",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 10
@@ -36,6 +60,30 @@
       "writtenOn": "2017-01-21T00:24:06Z",
       "side": 1,
       "message": "do the work of translation inside Buffer11.cpp.",
+      "range": {
+        "startLine": 2007,
+        "startChar": 4,
+        "endLine": 2060,
+        "endChar": 15
+      },
+      "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_75c2af19",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-23T13:14:54Z",
+      "side": 1,
+      "message": "Hi, Jamie. Please check the newest update to see if it is what you want. But in fact, we still need to get the fist, count, instances value to applyVertexBuffer which is also needed in drawLineLoop/drawTriangleFan. So, one way is get these values from bufferData like this function did. Another way is to move these operations to buffer11.cpp. And expose getFirst() getCount() getInstances() or similar functions in buffer11.h \n\nFor DrawElementsIndirectImpl, the bufferData (which is form storage-\u003egetData(\u0026bufferData)) is not enough for the translation. we need -IndexRange.start as the baseVertex.",
+      "parentUuid": "6854da0e_643449ff",
       "range": {
         "startLine": 2007,
         "startChar": 4,
