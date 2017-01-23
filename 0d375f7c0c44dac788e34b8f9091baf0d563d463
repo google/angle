@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_dd250f79",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-23T03:14:04Z",
+      "side": 1,
+      "message": "question, in what circumstances? just wondering if this is for errors -- basically why it needs \"something\". if there\u0027s a simple reason could add it to the comment.",
+      "range": {
+        "startLine": 455,
+        "startChar": 20,
+        "endLine": 457,
+        "endChar": 51
+      },
+      "revId": "0d375f7c0c44dac788e34b8f9091baf0d563d463",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
