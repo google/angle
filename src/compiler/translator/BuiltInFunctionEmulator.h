@@ -23,17 +23,17 @@ class BuiltInFunctionEmulator
   public:
     BuiltInFunctionEmulator();
 
-    void MarkBuiltInFunctionsForEmulation(TIntermNode *root);
+    void markBuiltInFunctionsForEmulation(TIntermNode *root);
 
-    void Cleanup();
+    void cleanup();
 
     // "name" gets written as "webgl_name_emu".
     static void WriteEmulatedFunctionName(TInfoSinkBase &out, const char *name);
 
-    bool IsOutputEmpty() const;
+    bool isOutputEmpty() const;
 
     // Output function emulation definition. This should be before any other shader source.
-    void OutputEmulatedFunctions(TInfoSinkBase &out) const;
+    void outputEmulatedFunctions(TInfoSinkBase &out) const;
 
     class FunctionId
     {
@@ -42,6 +42,11 @@ class BuiltInFunctionEmulator
         FunctionId(TOperator op, const TType *param);
         FunctionId(TOperator op, const TType *param1, const TType *param2);
         FunctionId(TOperator op, const TType *param1, const TType *param2, const TType *param3);
+        FunctionId(TOperator op,
+                   const TType *param1,
+                   const TType *param2,
+                   const TType *param3,
+                   const TType *param4);
 
         FunctionId(const FunctionId &) = default;
         FunctionId &operator=(const FunctionId &) = default;
@@ -60,6 +65,7 @@ class BuiltInFunctionEmulator
         const TType *mParam1;
         const TType *mParam2;
         const TType *mParam3;
+        const TType *mParam4;
     };
 
     // Add functions that need to be emulated.
@@ -75,11 +81,24 @@ class BuiltInFunctionEmulator
                                    const TType *param2,
                                    const TType *param3,
                                    const char *emulatedFunctionDefinition);
+    FunctionId addEmulatedFunction(TOperator op,
+                                   const TType *param1,
+                                   const TType *param2,
+                                   const TType *param3,
+                                   const TType *param4,
+                                   const char *emulatedFunctionDefinition);
 
     FunctionId addEmulatedFunctionWithDependency(FunctionId dependency,
                                                  TOperator op,
                                                  const TType *param1,
                                                  const TType *param2,
+                                                 const char *emulatedFunctionDefinition);
+    FunctionId addEmulatedFunctionWithDependency(FunctionId dependency,
+                                                 TOperator op,
+                                                 const TType *param1,
+                                                 const TType *param2,
+                                                 const TType *param3,
+                                                 const TType *param4,
                                                  const char *emulatedFunctionDefinition);
 
   private:
@@ -88,14 +107,19 @@ class BuiltInFunctionEmulator
     // Records that a function is called by the shader and might need to be emulated. If the
     // function is not in mEmulatedFunctions, this becomes a no-op. Returns true if the function
     // call needs to be replaced with an emulated one.
-    bool SetFunctionCalled(TOperator op, const TType &param);
-    bool SetFunctionCalled(TOperator op, const TType &param1, const TType &param2);
-    bool SetFunctionCalled(TOperator op,
+    bool setFunctionCalled(TOperator op, const TType &param);
+    bool setFunctionCalled(TOperator op, const TType &param1, const TType &param2);
+    bool setFunctionCalled(TOperator op,
                            const TType &param1,
                            const TType &param2,
                            const TType &param3);
+    bool setFunctionCalled(TOperator op,
+                           const TType &param1,
+                           const TType &param2,
+                           const TType &param3,
+                           const TType &param4);
 
-    bool SetFunctionCalled(const FunctionId &functionId);
+    bool setFunctionCalled(const FunctionId &functionId);
 
     // Map from function id to emulated function definition
     std::map<FunctionId, std::string> mEmulatedFunctions;

@@ -60,7 +60,7 @@ void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOption
     RecordConstantPrecision(root, getTemporaryIndex());
 
     // Write emulated built-in functions if needed.
-    if (!getBuiltInFunctionEmulator().IsOutputEmpty())
+    if (!getBuiltInFunctionEmulator().isOutputEmpty())
     {
         sink << "// BEGIN: Generated code for built-in function emulation\n\n";
         if (getShaderType() == GL_FRAGMENT_SHADER)
@@ -76,7 +76,7 @@ void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOption
             sink << "#define webgl_emu_precision highp\n";
         }
 
-        getBuiltInFunctionEmulator().OutputEmulatedFunctions(sink);
+        getBuiltInFunctionEmulator().outputEmulatedFunctions(sink);
         sink << "// END: Generated code for built-in function emulation\n\n";
     }
 

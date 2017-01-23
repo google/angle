@@ -178,7 +178,7 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
                                                            mShaderVersion);
     }
 
-    builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(treeRoot);
+    builtInFunctionEmulator.markBuiltInFunctionsForEmulation(treeRoot);
 
     // Now that we are done changing the AST, do the analyses need for HLSL generation
     CallDAG::InitResult success = mCallDag.init(treeRoot, nullptr);
@@ -201,7 +201,7 @@ void OutputHLSL::output(TIntermNode *treeRoot, TInfoSinkBase &objSink)
     objSink << mBody.c_str();
     objSink << mFooter.c_str();
 
-    builtInFunctionEmulator.Cleanup();
+    builtInFunctionEmulator.cleanup();
 }
 
 void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs)
@@ -739,7 +739,7 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                "\n";
     }
 
-    builtInFunctionEmulator->OutputEmulatedFunctions(out);
+    builtInFunctionEmulator->outputEmulatedFunctions(out);
 }
 
 void OutputHLSL::visitSymbol(TIntermSymbol *node)

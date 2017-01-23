@@ -114,11 +114,11 @@ void TranslatorGLSL::translate(TIntermNode *root, ShCompileOptions compileOption
     }
 
     // Write emulated built-in functions if needed.
-    if (!getBuiltInFunctionEmulator().IsOutputEmpty())
+    if (!getBuiltInFunctionEmulator().isOutputEmpty())
     {
         sink << "// BEGIN: Generated code for built-in function emulation\n\n";
         sink << "#define webgl_emu_precision\n\n";
-        getBuiltInFunctionEmulator().OutputEmulatedFunctions(sink);
+        getBuiltInFunctionEmulator().outputEmulatedFunctions(sink);
         sink << "// END: Generated code for built-in function emulation\n\n";
     }
 

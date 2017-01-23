@@ -394,7 +394,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             GetGlobalPoolAllocator()->lock();
             initBuiltInFunctionEmulator(&builtInFunctionEmulator, compileOptions);
             GetGlobalPoolAllocator()->unlock();
-            builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(root);
+            builtInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
         }
 
         // Clamping uniform array bounds needs to happen after validateLimitations pass.
@@ -670,7 +670,7 @@ void TCompiler::clearResults()
 
     mNumViews = -1;
 
-    builtInFunctionEmulator.Cleanup();
+    builtInFunctionEmulator.cleanup();
 
     nameMap.clear();
 
