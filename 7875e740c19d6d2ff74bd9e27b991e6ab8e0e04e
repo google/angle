@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_75374f4f",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 46
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-23T14:30:04Z",
+      "side": 1,
+      "message": "Today I discussed this patch with Intel reviewers. They gave me several suggestions on the design of the patch here. Intel reviewers, please help me check if I missed or misunderstood something in this summary.\n\n1. Do not use VertexAttribute and only store vector\u003cAttributeFormat\u003e and vector\u003cAttributeBinding\u003e in a VertexArray object. \nWhen both AttributeFormat and its AttributeBinding are needed, we should always use AttributeFormat as the argument and AttributeBinding is always got from the VAO of AttributeFormat; else, we can pass Both AttributeFormat and its VAO into this function. \nThis design requires VAO is available in the place using AttributeFormat, or we have to use 2 arguments (AttributeFormat and its VAO). We can also use AttributeFormat and AttributeBinding as arguments, but it is concerned whether we should validate the format really matches the binding or not in such places. \n\n2. (Current implementation) Define struct VertexAttribute containing an AttributeFormat and the const pointer to vector\u003cAttributeBinding\u003e or VAO. Store vector\u003cVertexAttribute\u003e and vector\u003cAttributeBinding\u003e in VAO.\nWhen both AttributeFormat and its AttributeBinding are needed, we can use VertexAttrbute and get AttributeBinding by (*bindingptr)[format.bindingIndex]. \nThis design fixes the issue of using both binding pointer and bindingIndex in patchset 42, but the use of AttributeFormat will change from format.xxx to attrib.getAttribFormat().xxx (or attrib.format.xxx), and the use of AttributeBinding will change to attrib.getAttribBinding() which is not so convenient as solution #1 and the extra function calls may cause potential performance issues.\n\n3. Define AttributeFormat and AttributeBinding, and add the extra const pointer mentioned in #2 into AttributeFormat. Store vector\u003cAttributeFormat\u003e and vector\u003cAttributeBinding\u003e in VAO.\nWhen both AttributeFormat and its AttributeBinding are needed, we should always use AttributeFormat as the argument and we can get its AttributeBinding directly from the object AttributeFormat.\nThis design also fixes the issue of using both binding pointer and bindingIndex in patchset 42 and keeps the use of AttributeFormat to format.xxx, but the struct AttributeFormat no longer matches spec as a redundant pointer is added in this struct, which is also useless in storing cached AttributeFormat objects in GL backends (see VertexArrayGL.h/cpp for more details).\n\nOther reviewers, any idea?",
+      "revId": "7875e740c19d6d2ff74bd9e27b991e6ab8e0e04e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
