@@ -22,6 +22,30 @@
       "revId": "1ef2be2181ad968e0c25f724ae8c56b86ec97669",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_f0ffc23a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2512,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-01-23T23:27:51Z",
+      "side": 1,
+      "message": "Sorry, you are correct. Jamie. If the internalformat is not color/depth/stencil renderable, then it can not be multisampled. In addition, I checked the internalformats between GLES 3.0 (Table 3.13 at https://www.khronos.org/registry/gles/specs/3.0/es_spec_3.0.4.pdf) and GLES 3.1 (Table 8.13 at https://www.khronos.org/registry/gles/specs/3.1/es_spec_3.1.pdf), the renderable internalformats are exactly the same.",
+      "parentUuid": "6854da0e_91db06cf",
+      "range": {
+        "startLine": 2510,
+        "startChar": 12,
+        "endLine": 2512,
+        "endChar": 57
+      },
+      "revId": "1ef2be2181ad968e0c25f724ae8c56b86ec97669",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
