@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6854da0e_a9e44e21",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-23T20:06:05Z",
+      "side": 1,
+      "message": "This isn\u0027t present in the .h",
+      "revId": "90c8e3059f89e50b283dea095ccbc0f6b8a2aef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_49f03ae3",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-23T20:06:05Z",
+      "side": 1,
+      "message": "This constructor isn\u0027t present in the .h nor is mParam4",
+      "revId": "90c8e3059f89e50b283dea095ccbc0f6b8a2aef7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
