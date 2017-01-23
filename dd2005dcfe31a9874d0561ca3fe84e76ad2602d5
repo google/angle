@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_f598df55",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-23T14:30:04Z",
+      "side": 1,
+      "message": "Rename done in Patch 46",
+      "parentUuid": "6854da0e_e40a7907",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 22
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_a4c6c199",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 42
@@ -177,6 +201,30 @@
       "writtenOn": "2017-01-22T08:58:54Z",
       "side": 1,
       "message": "Done\nThanks to your suggestion. This is very helpful to clean up such code and avoid potential bugs.\nI think VertexBinding should also be made NonCopyable and only construced by move constructor since BindingPointer\u003cBuffer\u003e cannot be simply copied.",
+      "parentUuid": "6854da0e_a4c6c199",
+      "range": {
+        "startLine": 50,
+        "startChar": 7,
+        "endLine": 50,
+        "endChar": 17
+      },
+      "revId": "dd2005dcfe31a9874d0561ca3fe84e76ad2602d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_15cc9b3e",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-23T14:30:04Z",
+      "side": 1,
+      "message": "I rethink this and find it not a good design because someone may modify the pointer but forget to update the index in attrib, or else; so we have to always check attrib.index is the index of *binding.",
       "parentUuid": "6854da0e_a4c6c199",
       "range": {
         "startLine": 50,
