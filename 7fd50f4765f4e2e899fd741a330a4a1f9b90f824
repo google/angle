@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baf2bdc9_f17810ec",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T17:42:09Z",
+      "side": 1,
+      "message": "nit: can you add a comment that this is a helper front-end to findBuiltIn?",
+      "range": {
+        "startLine": 429,
+        "startChar": 15,
+        "endLine": 429,
+        "endChar": 28
+      },
+      "revId": "7fd50f4765f4e2e899fd741a330a4a1f9b90f824",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
