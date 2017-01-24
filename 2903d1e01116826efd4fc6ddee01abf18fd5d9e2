@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68f3faab_b748aa1e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1019,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T01:53:13Z",
+      "side": 1,
+      "message": "nit: make this a UINT, or add a cast to UINT and use this value to set the RTs in OMSetRenderTargets.",
+      "range": {
+        "startLine": 1019,
+        "startChar": 4,
+        "endLine": 1019,
+        "endChar": 10
+      },
+      "revId": "2903d1e01116826efd4fc6ddee01abf18fd5d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_175a5eeb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T01:53:13Z",
+      "side": 1,
+      "message": "nit: you can make this an ASSERT that maxExistingRT is less than maxDrawBuffers from the native caps. you can leave the TODO.",
+      "range": {
+        "startLine": 1076,
+        "startChar": 4,
+        "endLine": 1077,
+        "endChar": 100
+      },
+      "revId": "2903d1e01116826efd4fc6ddee01abf18fd5d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_970aced3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T01:53:13Z",
+      "side": 1,
+      "message": "call GetDesc on offscreenTextureDesc inside here.",
+      "range": {
+        "startLine": 206,
+        "startChar": 8,
+        "endLine": 206,
+        "endChar": 45
+      },
+      "revId": "2903d1e01116826efd4fc6ddee01abf18fd5d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_570986e1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T01:53:13Z",
+      "side": 1,
+      "message": "move this up outside the IF",
+      "range": {
+        "startLine": 213,
+        "startChar": 8,
+        "endLine": 213,
+        "endChar": 56
+      },
+      "revId": "2903d1e01116826efd4fc6ddee01abf18fd5d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_57e226e5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T01:53:13Z",
+      "side": 1,
+      "message": "you can avoid the extra call to GetDesc by editing as above. I would agree if you were to say it\u0027s a trivial optimization but it couldn\u0027t hurt I think.",
+      "range": {
+        "startLine": 288,
+        "startChar": 4,
+        "endLine": 289,
+        "endChar": 45
+      },
+      "revId": "2903d1e01116826efd4fc6ddee01abf18fd5d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
