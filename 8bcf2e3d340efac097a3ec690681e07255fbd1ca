@@ -568,6 +568,29 @@
     },
     {
       "key": {
+        "uuid": "e6e47cd1_7740e489",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T17:56:51Z",
+      "side": 1,
+      "message": "I think I\u0027d like to go back to the single path, the equivalent of the multi-color clear. We can make a clear perf test that exercises this path at some point, but I\u0027d like to land this change and get your work moving along ASAP. Let\u0027s leave a TODO here to revisit performance analysis for this code path.",
+      "range": {
+        "startLine": 606,
+        "startChar": 11,
+        "endLine": 606,
+        "endChar": 45
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43c7f965_55b94c89",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 9
@@ -886,6 +909,29 @@
       "side": 1,
       "message": "I can get rid of Cb portion if the rest of the naming scheme makes sense. \nMy goal was to draw a distinction between the clear shader type associated with the constant buffer and the data type of elements within the constant buffer. For example, zValueF_UintCb would be \"the zValue of type float inside of the constant buffer for the uint shader\".",
       "parentUuid": "6854da0e_2902ac2b",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "8bcf2e3d340efac097a3ec690681e07255fbd1ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f6fd235_1e40abf9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T17:56:51Z",
+      "side": 1,
+      "message": "Yes, please do get rid of the Cb suffix, thanks.",
       "range": {
         "startLine": 46,
         "startChar": 11,
